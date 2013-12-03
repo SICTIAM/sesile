@@ -1,0 +1,33 @@
+sesile_classeur:
+    resource: "@SesileClasseurBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+sesile_main:
+    resource: "@SesileMainBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+
+sesile_users:
+    resource: "@SesileUserBundle/Controller"
+    type: annotation
+
+_default:
+    pattern: /
+
+oneup_uploader:
+    resource: .
+    type: uploader
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile

@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+html, body{
+    height: 100%;
+
+}
+
+#header {
+    background-color: red;
+    height: 10%;
+}
+#main {
+    height: 80%;
+}
+
+#content {
+    height: 10%;
+}
+
+#menu, #content {
+    height: 100%;
+}
+
+#footer {
+    background-color: pink;
+    height: 10%;
+ }
+
+.dropzone {
+    border-radius: 3px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.13);
+    margin: 30px 0;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.dz-details {
+    float: left;
+    height: 80px;
+}
+
+.user-row:hover {
+    background-color: #ff19b3;
+    cursor: pointer;
+}
