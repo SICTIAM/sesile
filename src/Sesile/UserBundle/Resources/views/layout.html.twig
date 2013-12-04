@@ -1,4 +1,4 @@
-{% extends "SesileMainBundle:index.html.twig" %}
+{% extends "SesileMainBundle:Default:index.html.twig" %}
 {% block content %}
     {% for key, message in app.session.flashbag.all() %}
         <div class="alert alert-{{ key }}">

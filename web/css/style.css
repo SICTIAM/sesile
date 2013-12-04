@@ -8,7 +8,7 @@ html, body{
 }
 
 #header {
-    background-color: red;
+    background-color: #cccccc;
     height: 10%;
 }
 #main {
@@ -41,7 +41,7 @@ html, body{
     height: 80px;
 }
 
-.user-row:hover {
+.user-row:hover, .classeur-row:hover{
     background-color: #ff19b3;
     cursor: pointer;
 }

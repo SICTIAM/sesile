@@ -1,0 +1,15 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <h1>Classeur creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('classeur') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}
