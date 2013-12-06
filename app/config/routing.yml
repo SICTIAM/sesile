@@ -1,3 +1,8 @@
+sesile_document:
+    resource: "@SesileDocumentBundle/Controller/"
+    type:     annotation
+    prefix:   /doc/
+
 sesile_classeur:
     resource: "@SesileClasseurBundle/Controller/"
     type:     annotation
