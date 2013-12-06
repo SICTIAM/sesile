@@ -3,13 +3,46 @@
 {% block content %}
     <h1>Classeur creation</h1>
 
-    {{ form(form) }}
+    <br/>
 
-        <ul class="record_actions">
-    <li>
+
+
+<form class="form-horizontal" role="form">
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+
+        <select id="type" name="type">
+            <option value="elclassico">Classique</option>
+            <option value="elpez">PESV2</option>
+        </select>
+
+
+
+
+
+          </div>
+
+        </div>
+
+
+
+        <div id="contenttypedform"/>
+
+
+    </form>
+
         <a href="{{ path('classeur') }}">
-            Back to the list
+            Retour à la liste des classeur
         </a>
-    </li>
-</ul>
+
+
+{% endblock %}
+
+
+{% block losjavascriptos %}
+    <script type="text/javascript" src="{{ asset("/bundles/sesileclasseur/js/newclasseur.js") }}"></script>
+
 {% endblock %}

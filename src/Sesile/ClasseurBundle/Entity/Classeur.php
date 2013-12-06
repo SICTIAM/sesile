@@ -50,6 +50,14 @@ class Classeur
      */
     private $circuit;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255)
+     */
+    private $type;
+
+
 
     /**
      * Get id
@@ -160,5 +168,28 @@ class Classeur
     public function getCircuit()
     {
         return $this->circuit;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @return Classeur
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

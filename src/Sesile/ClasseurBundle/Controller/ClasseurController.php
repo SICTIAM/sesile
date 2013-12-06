@@ -13,7 +13,6 @@ use Sesile\ClasseurBundle\Form\ClasseurType;
 /**
  * Classeur controller.
  *
- * @Route("/classeur")
  */
 class ClasseurController extends Controller
 {
@@ -92,11 +91,11 @@ class ClasseurController extends Controller
     public function newAction()
     {
         $entity = new Classeur();
-        $form   = $this->createCreateForm($entity);
+        //$form   = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+           // 'form'   => $form->createView(),
         );
     }
 
@@ -247,4 +246,39 @@ class ClasseurController extends Controller
             ->getForm()
         ;
     }
+
+
+
+
+    /**
+     * Creates a form to edit a Classeur entity.
+     *
+     * @Route("/new_factory/{type}", name="classeur_new_type")
+     * @Method("GET")
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    public function formulaireFactory($type)
+    {
+
+        switch($type){
+            case "elclassico":
+                return $this->render(
+                    'SesileClasseurBundle:Formulaires:elclassico.html.twig'
+                );
+                break;
+            case "elpez":
+                return $this->render(
+                    'SesileClasseurBundle:Formulaires:elpez.html.twig'
+                );
+                break;
+
+
+
+        }
+
+
+    }
+
+
 }

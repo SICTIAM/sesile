@@ -6,7 +6,7 @@ sesile_document:
 sesile_classeur:
     resource: "@SesileClasseurBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix:   /classeur/
 
 sesile_main:
     resource: "@SesileMainBundle/Controller/"
