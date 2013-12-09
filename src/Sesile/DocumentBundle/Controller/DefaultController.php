@@ -9,11 +9,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/new", name='new_document',  options={"expose"=true})
+     * @Route("/new", name="new_document",  options={"expose"=true})
      * @Template()
      */
     public function indexAction()
     {
+
+        return array();
 
     }
 }

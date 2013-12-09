@@ -1,3 +1,19 @@
+SesileUserBundle_admin_sesile_user_bundle_sesileUserAdmin:
+    resource: "@SesileUserBundle/Controller/SesileUserAdmin/"
+    type:     admingenerator
+    prefix:   /admin/sesile_user_bundle/sesileUserAdmin
+
+SesileDocumentBundle_admin_sesile_document_bundle_sesileDocHistoryAdmin:
+    resource: "@SesileDocumentBundle/Controller/SesileDocHistoryAdmin/"
+    type:     admingenerator
+    prefix:   /admin/sesile_document_bundle/sesileDocHistoryAdmin
+
+SesileDocumentBundle_admin_sesile_document_bundle_sesileDocAdmin:
+    resource: "@SesileDocumentBundle/Controller/SesileDocAdmin/"
+    type:     admingenerator
+    prefix:   /admin/sesile_document_bundle/sesileDocAdmin
+
+
 sesile_circuit:
     resource: "@SesileCircuitBundle/Controller/"
     type:     annotation
