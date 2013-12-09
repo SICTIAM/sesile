@@ -253,13 +253,17 @@ class ClasseurController extends Controller
     /**
      * Creates a form to edit a Classeur entity.
      *
-     * @Route("/new_factory/{type}", name="classeur_new_type")
-     * @Method("GET")
+     * @Route("/new_factory/", name="classeur_new_type", options={"expose"=true})
+     * @Method("POST")
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    public function formulaireFactory($type)
+    public function formulaireFactory(Request $request)
     {
+
+        $type = $request->request->get('type', 'elclassico');
+      //  var_dump($type);
+
 
         switch($type){
             case "elclassico":
@@ -276,6 +280,9 @@ class ClasseurController extends Controller
 
 
         }
+
+
+
 
 
     }

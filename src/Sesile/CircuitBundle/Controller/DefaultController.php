@@ -1,6 +1,6 @@
 <?php
 
-namespace Sesile\DocumentBundle\Controller;
+namespace Sesile\CircuitBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -9,11 +9,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/new", name='new_document',  options={"expose"=true})
+     * @Route("/new/", name="new_circuit", options={"expose"=true})
      * @Template()
      */
     public function indexAction()
     {
-
+        return array();
     }
 }

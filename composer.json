@@ -21,6 +21,7 @@
         "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
         "friendsofsymfony/user-bundle": "dev-master",
+        "friendsofsymfony/jsrouting-bundle": "~1.1",
         "oneup/uploader-bundle": "1.0.*@dev",
         "jms/security-extra-bundle": "dev-master"
     },
@@ -44,6 +45,7 @@
         "bin-dir": "bin"
     },
     "minimum-stability": "stable",
+    "prefer-stable": true,
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",

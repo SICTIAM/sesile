@@ -22,8 +22,10 @@ class AppKernel extends Kernel {
             new Sesile\MainBundle\SesileMainBundle(),
             new Sesile\UserBundle\SesileUserBundle(),
             new \FOS\UserBundle\FOSUserBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Sesile\ClasseurBundle\SesileClasseurBundle(),
             new Sesile\DocumentBundle\SesileDocumentBundle(),
+            new Sesile\CircuitBundle\SesileCircuitBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
