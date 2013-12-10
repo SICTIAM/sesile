@@ -1,7 +1,9 @@
 
 
 function loadcorrectform(){
+    $('#loadinggif').show();
     datatosend = { 'type': $( "#type").val() };
+
 
     $.ajax({
         url: Routing.generate('classeur_new_type'),
@@ -12,6 +14,8 @@ function loadcorrectform(){
             $('#contenttypedform').html(html);
             $('#circuitcontent').load(Routing.generate('new_circuit'));
             $('#documentcontent').load(Routing.generate('new_document'));
+            $('#loadinggif').hide();
+
 
         }
     });
