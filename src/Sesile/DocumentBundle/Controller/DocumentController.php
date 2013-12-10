@@ -5,8 +5,13 @@ namespace Sesile\DocumentBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class DefaultController extends Controller
+
+
+class DocumentController extends Controller
 {
     /**
      * @Route("/new", name="new_document",  options={"expose"=true})
@@ -17,5 +22,17 @@ class DefaultController extends Controller
 
         return array();
 
+    }
+
+
+    /**
+     * @Route("/", name="create_document")
+     * @Method("POST")
+     */
+    public function createAction(Request $request)
+    {
+
+
+        return new Response('OK');
     }
 }

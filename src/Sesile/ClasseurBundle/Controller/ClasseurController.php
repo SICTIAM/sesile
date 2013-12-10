@@ -66,6 +66,38 @@ class ClasseurController extends Controller
         }
         */
 
+        $respCircuit = $this->forward( 'sesile.circuit:createAction', array('request' => $request) );
+        $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request) );
+
+        $error = false;
+        if($respCircuit->getContent()!='OK'){
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Erreur de création du circuit'
+            );
+            $error=true;
+        }
+        if($respDocument->getContent()!='OK'){
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Erreur de création du circuit'
+            );
+            $error=true;
+        }
+
+
+        if(!$error){
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'Classeur créé'
+            );
+        }
+
+
+
+
+
+
         return array(
 
         );
