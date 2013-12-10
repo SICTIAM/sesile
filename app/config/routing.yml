@@ -1,9 +1,3 @@
-SesileUserBundle_admin_sesile_user_bundle_sesileUserAdmin:
-    resource: "@SesileUserBundle/Controller/SesileUserAdmin/"
-    type:     admingenerator
-    prefix:   /admin/sesile_user_bundle/sesileUserAdmin
-
-
 sesile_circuit:
     resource: "@SesileCircuitBundle/Controller/"
     type:     annotation

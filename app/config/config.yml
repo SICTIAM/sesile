@@ -74,6 +74,3 @@ fos_user:
     db_driver:     orm
     firewall_name: main
     user_class:    Sesile\UserBundle\Entity\User
-
-admingenerator_generator:
-    use_doctrine_orm:     true

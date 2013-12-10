@@ -23,8 +23,7 @@
         "friendsofsymfony/user-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "~1.1",
         "oneup/uploader-bundle": "1.0.*@dev",
-        "jms/security-extra-bundle": "dev-master",
-        "cedriclombardot/admingenerator-generator-bundle": "2.3.*@dev",
+        "jms/security-extra-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
