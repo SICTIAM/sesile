@@ -4,7 +4,6 @@ SesileUserBundle_admin_sesile_user_bundle_sesileUserAdmin:
     prefix:   /admin/sesile_user_bundle/sesileUserAdmin
 
 
-
 sesile_circuit:
     resource: "@SesileCircuitBundle/Controller/"
     type:     annotation
@@ -25,7 +24,6 @@ sesile_main:
     resource: "@SesileMainBundle/Controller/"
     type:     annotation
     prefix:   /
-
 
 sesile_users:
     resource: "@SesileUserBundle/Controller"

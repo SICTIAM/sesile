@@ -21,4 +21,13 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    public function getExpiresAt() {
+        return $this->expiresAt;
+    }
+
+
+    public function getCredentialsExpireAt() {
+        return $this->getCredentialsExpireAt();
+    }
 }

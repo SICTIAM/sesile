@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Sesile\UserBundle\Form\UserType;
 
+
 class DefaultController extends Controller {
     /**
      * @Route("/users/list/", name="liste_users")
@@ -43,5 +44,24 @@ class DefaultController extends Controller {
             'entity' => $entity,
             'form'   => $form->createView(),
         );
+    }
+
+    /**
+     * Creates a form to create a User entity.
+     *
+     * @param Classeur $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(User $entity)
+    {
+        $form = $this->createForm(new UserType(), $entity, array(
+            'action' => $this->generateUrl('ajout_user'),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
     }
 }
