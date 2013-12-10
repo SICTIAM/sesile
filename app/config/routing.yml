@@ -13,7 +13,6 @@ SesileDocumentBundle_admin_sesile_document_bundle_sesileDocAdmin:
     type:     admingenerator
     prefix:   /admin/sesile_document_bundle/sesileDocAdmin
 
-
 sesile_circuit:
     resource: "@SesileCircuitBundle/Controller/"
     type:     annotation

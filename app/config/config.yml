@@ -77,4 +77,3 @@ fos_user:
 
 admingenerator_generator:
     use_doctrine_orm:     true
-

@@ -22,5 +22,12 @@ class User extends BaseUser
      */
     protected $id;
 
+    public function getExpiresAt() {
+        return $this->expiresAt;
+    }
 
+
+    public function getCredentialsExpireAt() {
+        return $this->getCredentialsExpireAt();
+    }
 }

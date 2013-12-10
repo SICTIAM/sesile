@@ -1,6 +1,6 @@
 <?php
 
-namespace Sesile\ClasseursBundle\Form;
+namespace Sesile\UserBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
