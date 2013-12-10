@@ -1,4 +1,5 @@
 app/cache
 app/logs
+/web/components
 /vendor
 .idea
