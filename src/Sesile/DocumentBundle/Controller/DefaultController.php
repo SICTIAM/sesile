@@ -12,7 +12,7 @@ class DefaultController extends Controller
      * @Route("/new", name="new_document",  options={"expose"=true})
      * @Template()
      */
-    public function indexAction()
+    public function newAction()
     {
 
         return array();

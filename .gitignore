@@ -2,4 +2,5 @@ app/cache
 app/logs
 /web/components
 /vendor
+/web/component
 .idea

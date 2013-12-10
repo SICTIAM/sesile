@@ -44,6 +44,8 @@ class ClasseurController extends Controller
      */
     public function createAction(Request $request)
     {
+
+        /*
         $entity = new Classeur();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -55,10 +57,10 @@ class ClasseurController extends Controller
 
             return $this->redirect($this->generateUrl('classeur', array('id' => $entity->getId())));
         }
+        */
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+
         );
     }
 

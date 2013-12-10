@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6f07cf5c4bfbef1f1265ca4daca14079",
+    "hash": "0811169b0d7eb38096dc764e66d05af8",
     "packages": [
         {
             "name": "afarkas/html5shiv",
