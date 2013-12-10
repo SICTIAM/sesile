@@ -35,7 +35,6 @@ sesile_main:
     type:     annotation
     prefix:   /
 
-
 sesile_users:
     resource: "@SesileUserBundle/Controller"
     type: annotation
