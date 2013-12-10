@@ -46,6 +46,13 @@ class ClasseurController extends Controller
     {
 
         /*
+         *
+         * Faites ce que vous voulez avec le request
+         */
+
+
+
+        /*
         $entity = new Classeur();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
