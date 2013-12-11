@@ -6,6 +6,8 @@ use Sesile\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Symfony\Component\HttpFoundation\Request;
 use Sesile\UserBundle\Form\UserType;
 
@@ -46,6 +48,95 @@ class DefaultController extends Controller {
         );
     }
 
+
+    /**
+     * Update an existing User entity.
+     *
+     * @Route("/user_edit/{id}", name="user_update")
+     * @Method("PUT")
+     * @Template("SesileUserBundle:Default:edit.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SesileUserBundle:User')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        //$deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Displays a form to edit an existing Classeur entity.
+     *
+     * @Route("/{id}/edit", name="user_edit")
+     * @Method("GET")
+     * @Template()
+     */
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SesileUserBundle:User')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Deletes a User entity.
+     *
+     * @Route("/{id}", name="user_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('SesileUserBundle:User')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find User entity.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('classeur'));
+    }
+
+
     /**
      * Creates a form to create a User entity.
      *
@@ -60,8 +151,62 @@ class DefaultController extends Controller {
             'method' => 'POST',
         ));
 
+        $form->add('roles', 'choice', array(
+            'choices' => array(
+                'ROLE_USER' => 'Utilisateurs',
+                'ROLE_ADMIN' => 'Admin',
+                'ROLE_SUPER_ADMIN' => 'Super admin'
+            ),
+            'multiple' => true
+        ));
         $form->add('submit', 'submit', array('label' => 'Create'));
+
 
         return $form;
     }
+
+    /**
+     * Creates a form to edit a User entity.
+     *
+     * @param User $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(User $entity)
+    {
+        $form = $this->createForm(new UserType(), $entity, array(
+            'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('roles', 'choice', array(
+        'choices' => array(
+            'ROLE_USER' => 'Utilisateurs',
+            'ROLE_ADMIN' => 'Admin',
+            'ROLE_SUPER_ADMIN' => 'Super admin'
+        ),
+        'multiple' => true
+    ));
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        return $form;
+    }
+
+    /**
+     * Creates a form to delete a User entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('user_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->getForm()
+            ;
+    }
+
 }
