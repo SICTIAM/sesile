@@ -40,7 +40,7 @@ class ClasseurController extends Controller
      *
      * @Route("/", name="classeur_create")
      * @Method("POST")
-     * @Template("SesileClasseurBundle:Classeur:new.html.twig")
+     *
      */
     public function createAction(Request $request)
     {
@@ -94,13 +94,7 @@ class ClasseurController extends Controller
         }
 
 
-
-
-
-
-        return array(
-
-        );
+        return $this->redirect($this->generateUrl('classeur'));
     }
 
     /**

@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="{{ asset('/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.min.css') }}" />
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}" />
+    {% block css %}
+    {% endblock %}
 
 </head>
 <body>
@@ -77,6 +80,12 @@
 
         {% block content %}
             Ceci est le body de base
+
+
+
+
+            <form action="{{ oneup_uploader_endpoint('docs') }}" class="dropzone">
+            </form>
         {% endblock %}
     </div>
 </div>
@@ -88,6 +97,8 @@
 <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+
 {% block losjavascriptos %}{% endblock %}
 
 </body>

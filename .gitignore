@@ -1,6 +1,6 @@
 app/cache
 app/logs
 /web/components
+/web/uploads
 /vendor
-/web/component
 .idea

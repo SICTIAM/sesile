@@ -1,1 +1,39 @@
-Mon cul sur le nouveau document
+<br/>
+
+<div class="row">
+
+
+
+
+<div class="panel panel-default panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Documents</h3>
+    </div>
+    <div class="panel-body">
+
+        <div id="fichiers" class="dropzone"></div>
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+</div>
+
+
+
+
+</div>
+
+<script src="{{ asset('js/dropzone.js') }}"></script>
+<script type="text/javascript">
+
+    $("div#fichiers").dropzone({ url: "/file/post" });
+
+</script>

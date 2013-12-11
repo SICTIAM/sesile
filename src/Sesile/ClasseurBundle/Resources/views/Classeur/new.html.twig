@@ -7,11 +7,13 @@
 
 
 
+
+
 <form class="form-horizontal" role="form" action="{{ path('classeur_create') }}" method="POST">
 
     <div class="row">
 
-        <div class="col-md-6">
+        <div class="col-md-12">
 
 
             <div class="form-group">
@@ -47,6 +49,8 @@
 
 
 
+
+
     <br/>
 
         <a href="{{ path('classeur') }}">
@@ -59,5 +63,7 @@
 
 {% block losjavascriptos %}
     <script type="text/javascript" src="{{ asset("/bundles/sesileclasseur/js/newclasseur.js") }}"></script>
+
+
 
 {% endblock %}
