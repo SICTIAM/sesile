@@ -1,105 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="stylesheet" href="{{ asset('/css/style.css') }}" />
-    <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.min.css') }}" />
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/css/style.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.min.css') }}"/>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
+    <script type="text/javascript" src="{{ asset("/js/jquery-2.0.3.min.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     {% block css %}
     {% endblock %}
-
 </head>
 <body>
-<div class=""  id="header">
-    {% block header %}
-        {% if app.user != null %}
-            Bonjour {{ app.user.username }}<br>
-            <a href="{{ path("fos_user_security_logout") }}">D&eacute;connexion</a>
-        {% else %}
-            <a href="{{ path("fos_user_security_login") }}">Connexion</a>
-        {% endif %}
-    {% endblock %}
+<div class="navbar col-md-2">
+    <div>logo</div>
+{% include 'SesileMainBundle:Default:menu.html.twig' %}
 </div>
-<div class="" id="main">
-    <div class="col-md-2" id="menu">
-        {% block menu %}
-            <ul class="nav navbar-left">
-                <li>Classeurs</li>
-                <li><a href="">Nouveau</a></li>
-                <li><a href="{{ path("classeur") }}">Liste</a></li>
-                <li><a href="">Documents</a></li>
-                <li>Administration</li>
-                <li><a href="">Gestion des circuits</a></li>
-                <li><a href="{{ path("liste_users") }}">Utilisateurs</a></li>
-                <li><a href="">Collectivit&eacute;s</a></li>
-            </ul>
+<div class="col-md-10" id="content">
+    <div class="" id="header">
+        {% block header %}
+            {% if app.user != null %}
+                Bonjour {{ app.user.username }}<br>
+                <a href="{{ path("fos_user_security_logout") }}">D&eacute;connexion</a>
+            {% else %}
+                <a href="{{ path("fos_user_security_login") }}">Connexion</a>
+            {% endif %}
         {% endblock %}
     </div>
-
-
-    <div class="col-md-10" id="content">
-        <br/>
-
-        <div class="row">
-
-            <div class="col-md-10" >
-
-
-        {% for flashMessage in app.session.flashbag.get('notice') %}
-            <div class="alert alert-info alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ flashMessage }}
-            </div>
-        {% endfor %}
-
-        {% for flashMessage in app.session.flashbag.get('error') %}
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ flashMessage }}
-            </div>
-        {% endfor %}
-
-        {% for flashMessage in app.session.flashbag.get('warning') %}
-            <div class="alert alert-warning alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ flashMessage }}
-            </div>
-        {% endfor %}
-
-        {% for flashMessage in app.session.flashbag.get('success') %}
-            <div class="alert alert-success alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ flashMessage }}
-            </div>
-        {% endfor %}
+    <div class="row">
+        <div class="col-md-10">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-info alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ flashMessage }}
                 </div>
+            {% endfor %}
 
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            {% for flashMessage in app.session.flashbag.get('warning') %}
+                <div class="alert alert-warning alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
         </div>
 
-        {% block content %}
-            Ceci est le body de base
-
-
-
-
-            <form action="{{ oneup_uploader_endpoint('docs') }}" class="dropzone">
-            </form>
-        {% endblock %}
     </div>
-</div>
 
-<div class="" id="footer">
-    yep c le footer
-</div>
-<script type="text/javascript" src="{{ asset("/js/jquery-2.0.3.min.js") }}"></script>
-<script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
-<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-<script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-
-
-{% block losjavascriptos %}{% endblock %}
+    {% block content %}
+        Ceci est le body de base
+    {% endblock %}
+    <div class="" id="footer">
+    </div>
+    {% block losjavascriptos %}{% endblock %}
 
 </body>
 </html>

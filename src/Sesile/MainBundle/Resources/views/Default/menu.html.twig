@@ -1,0 +1,29 @@
+{% block menu %}
+    <div class="navbar-inner">
+        <div class="container">
+            <nav class="nav-collapse" role="navigation">
+                <ul class="nav">
+                    <li><a href="{{ path("classeur_new") }}">Création d'un circuit</a></li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">Classeurs<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path("classeur") }}">Liste des classeurs</a></li>
+                            <li><a href="{{ path("classeur_new") }}">Ajout d'un classeur</a></li>
+                            <li><a href="">A valider</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">Utilisateurs<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path("liste_users") }}">Liste des utilisateurs</a></li>
+                            <li><a href="{{ path("liste_users") }}">Voir son compte</a></li>
+                            <li><a href="{{ path("liste_users") }}">Groupes</a></li>
+                            <li><a href="{{ path("liste_users") }}">Hiérarchie</a></li>
+                        </ul>
+                    </li>
+                    <li class="divider-vertical"></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}

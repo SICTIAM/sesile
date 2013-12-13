@@ -22,6 +22,7 @@ sesile_main:
 sesile_users:
     resource: "@SesileUserBundle/Controller"
     type: annotation
+    prefix: /user
 
 _default:
     pattern: /

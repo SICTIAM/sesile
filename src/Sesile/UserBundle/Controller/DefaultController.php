@@ -14,7 +14,7 @@ use Sesile\UserBundle\Form\UserType;
 
 class DefaultController extends Controller {
     /**
-     * @Route("/users/list/", name="liste_users")
+     * @Route("/", name="liste_users")
      * @Template("SesileUserBundle:Default:index.html.twig")
      */
     public function listAction() {
@@ -26,7 +26,7 @@ class DefaultController extends Controller {
     }
 
     /**
-     * @Route("/users/add/", name="ajout_user")
+     * @Route("/creation/", name="ajout_user")
      * @Template("SesileUserBundle:Default:ajout.html.twig")
      */
     public function ajoutAction(Request $request) {
@@ -48,11 +48,37 @@ class DefaultController extends Controller {
         );
     }
 
+    /**
+     * Displays a form to edit an existing Classeur entity.
+     *
+     * @Route("/edit/{id}/", name="user_edit", options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SesileUserBundle:User')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
 
     /**
      * Update an existing User entity.
      *
-     * @Route("/user_edit/{id}", name="user_update")
+     * @Route("/{id}", name="user_update")
      * @Method("PUT")
      * @Template("SesileUserBundle:Default:edit.html.twig")
      */
@@ -84,33 +110,6 @@ class DefaultController extends Controller {
     }
 
     /**
-     * Displays a form to edit an existing Classeur entity.
-     *
-     * @Route("/{id}/edit", name="user_edit")
-     * @Method("GET")
-     * @Template()
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('SesileUserBundle:User')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
      * Deletes a User entity.
      *
      * @Route("/{id}", name="user_delete")
@@ -135,6 +134,7 @@ class DefaultController extends Controller {
 
         return $this->redirect($this->generateUrl('classeur'));
     }
+
 
 
     /**
@@ -187,7 +187,7 @@ class DefaultController extends Controller {
         ),
         'multiple' => true
     ));
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 
         return $form;
     }
@@ -204,9 +204,8 @@ class DefaultController extends Controller {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('user_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Supprimer'))
             ->getForm()
             ;
     }
-
 }

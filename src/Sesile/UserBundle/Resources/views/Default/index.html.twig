@@ -22,7 +22,7 @@
     <a href="{{ path("ajout_user") }}">Ajouter un utilisateur</a>
     <script type="text/javascript">
         $(".user-row").click(function() {
-            alert($(this).data("id"));
+            document.location.href = Routing.generate('user_edit', { id: $(this).data("id") })
         });
     </script>
 {% endblock %}

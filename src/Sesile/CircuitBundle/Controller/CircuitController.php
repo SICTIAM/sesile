@@ -18,7 +18,9 @@ class CircuitController extends Controller
      */
     public function newAction()
     {
-        return array();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $users = $userManager->findUsers();
+        return array('users' => $users);
     }
 
     /**
@@ -27,6 +29,9 @@ class CircuitController extends Controller
      */
     public function createAction(Request $request)
     {
+
+
+        var_dump($request);exit();
 
 
         return new Response('OK');

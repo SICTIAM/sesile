@@ -26,6 +26,7 @@ class AppKernel extends Kernel {
             new Sesile\ClasseurBundle\SesileClasseurBundle(),
             new Sesile\DocumentBundle\SesileDocumentBundle(),
             new Sesile\CircuitBundle\SesileCircuitBundle(),
+
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

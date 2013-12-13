@@ -16,7 +16,6 @@ use Sesile\ClasseurBundle\Form\ClasseurType;
  */
 class ClasseurController extends Controller
 {
-
     /**
      * Lists all Classeur entities.
      *
@@ -42,31 +41,10 @@ class ClasseurController extends Controller
      * @Method("POST")
      *
      */
-    public function createAction(Request $request)
-    {
-
-        /*
-         *
-         * Faites ce que vous voulez avec le request
-         */
-
-
-
-        /*
-        $entity = new Classeur();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('classeur', array('id' => $entity->getId())));
-        }
-        */
-
-        $respCircuit = $this->forward( 'sesile.circuit:createAction', array('request' => $request) );
+    public function createAction(Request $request) {
+        //$respCircuit = $this->forward( 'sesile.circuit:createAction', array('request' => $request) );
+        $respCircuit = $request->request->get('circuit');
+        var_dump($respCircuit);exit;
         $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request) );
 
         $error = false;
@@ -84,7 +62,6 @@ class ClasseurController extends Controller
             );
             $error=true;
         }
-
 
         if(!$error){
             $this->get('session')->getFlashBag()->add(
@@ -284,7 +261,6 @@ class ClasseurController extends Controller
 
 
 
-
     /**
      * Creates a form to edit a Classeur entity.
      *
@@ -321,6 +297,4 @@ class ClasseurController extends Controller
 
 
     }
-
-
 }
