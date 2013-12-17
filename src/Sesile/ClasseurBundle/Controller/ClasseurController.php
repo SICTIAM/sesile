@@ -42,7 +42,6 @@ class ClasseurController extends Controller
      *
      */
     public function createAction(Request $request) {
-        //$respCircuit = $this->forward( 'sesile.circuit:createAction', array('request' => $request) );
         $respCircuit = $request->request->get('circuit');
         var_dump($respCircuit);exit;
         $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request) );
