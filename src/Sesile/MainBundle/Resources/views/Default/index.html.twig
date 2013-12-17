@@ -1,74 +1,77 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="stylesheet" href="{{ asset('/css/style.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.min.css') }}"/>
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
-    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
-    <script type="text/javascript" src="{{ asset("/js/jquery-2.0.3.min.js") }}"></script>
-    <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-    {% block css %}
-    {% endblock %}
-</head>
-<body>
-<div class="navbar col-md-2">
-    <div>logo</div>
-{% include 'SesileMainBundle:Default:menu.html.twig' %}
-</div>
-<div class="col-md-10" id="content">
-    <div class="" id="header">
-        {% block header %}
-            {% if app.user != null %}
-                Bonjour {{ app.user.username }}<br>
-                <a href="{{ path("fos_user_security_logout") }}">D&eacute;connexion</a>
-            {% else %}
-                <a href="{{ path("fos_user_security_login") }}">Connexion</a>
-            {% endif %}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('/css/style.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.css') }}"/>
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+        <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
+        <script type="text/javascript" src="{{ asset("/js/jquery-2.0.3.min.js") }}"></script>
+        <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        {% block css %}
         {% endblock %}
-    </div>
-    <div class="row">
-        <div class="col-md-10">
-            {% for flashMessage in app.session.flashbag.get('notice') %}
-                <div class="alert alert-info alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{ flashMessage }}
-                </div>
-            {% endfor %}
-
-            {% for flashMessage in app.session.flashbag.get('error') %}
-                <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{ flashMessage }}
-                </div>
-            {% endfor %}
-
-            {% for flashMessage in app.session.flashbag.get('warning') %}
-                <div class="alert alert-warning alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{ flashMessage }}
-                </div>
-            {% endfor %}
-
-            {% for flashMessage in app.session.flashbag.get('success') %}
-                <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{ flashMessage }}
-                </div>
-            {% endfor %}
+    </head>
+    <body>
+    <div id="maman">
+        <div class="navbar col-md-2" id="lemenu">
+            <div>logo</div>
+            {% include 'SesileMainBundle:Default:menu.html.twig' %}
         </div>
+        <div class="col-md-10" id="content">
+            <div id="header">
+                {% block header %}
+                    {% if app.user != null %}
+                        Bonjour {{ app.user.username }}<br>
+                        <a href="{{ path("fos_user_security_logout") }}">D&eacute;connexion</a>
+                    {% else %}
+                        <a href="{{ path("fos_user_security_login") }}">Connexion</a>
+                    {% endif %}
+                {% endblock %}
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    {% for flashMessage in app.session.flashbag.get('notice') %}
+                        <div class="alert alert-info alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
 
+                    {% for flashMessage in app.session.flashbag.get('error') %}
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+
+                    {% for flashMessage in app.session.flashbag.get('warning') %}
+                        <div class="alert alert-warning alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+
+                    {% for flashMessage in app.session.flashbag.get('success') %}
+                        <div class="alert alert-success alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+                <div id="lecontent">
+                {% block content %}
+                    Ceci est le body de base<br />
+                {% endblock %}
+                </div>
+            <div class="" id="footer">
+                BLABLA
+            </div>
+            {% block losjavascriptos %}{% endblock %}
+        </div>
     </div>
-
-    {% block content %}
-        Ceci est le body de base
-    {% endblock %}
-    <div class="" id="footer">
-    </div>
-    {% block losjavascriptos %}{% endblock %}
-
-</body>
-</html>
+    </body>
+    </html>

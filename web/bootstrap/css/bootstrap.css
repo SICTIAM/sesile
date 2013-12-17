@@ -4319,7 +4319,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .navbar {
   position: relative;
   min-height: 50px;
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
   border: 1px solid transparent;
 }
 
@@ -4344,9 +4344,9 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 @media (min-width: 768px) {
-  .navbar {
-    border-radius: 4px;
-  }
+  /*.navbar {*/
+    /*border-radius: 4px;*/
+  /*}*/
 }
 
 .navbar-header:before,
