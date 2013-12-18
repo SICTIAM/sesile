@@ -25,6 +25,36 @@ class ClasseurController extends Controller
      */
     public function indexAction()
     {
+        return $this->listeAction();
+    }
+
+    /**
+     * Liste des classeurs en cours
+     *
+     * @Route("/liste", name="liste_classeurs")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
+     */
+    public function listeAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
+
+        return array(
+            'classeurs' => $entities,
+        );
+    }
+
+    /**
+     * Liste des classeurs à valider
+     *
+     * @Route("/valider", name="classeur_a_valider")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:valider_liste.html.twig")
+     */
+    public function aValiderAction()
+    {
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
@@ -218,8 +248,8 @@ class ClasseurController extends Controller
     /**
      * Deletes a Classeur entity.
      *
-     * @Route("/{id}", name="classeur_delete")
-     * @Method("DELETE")
+     * @Route("/{id}/delete", name="classeur_delete")
+     * @Method("GET")
      */
     public function deleteAction(Request $request, $id)
     {

@@ -82,6 +82,12 @@ $("#circuitadd_btn").click(function() {
     var sel_circuit = $('#circuits_list option:selected');
     var ordre = sel_circuit.attr("data-ordre").split(",");
     if(ordre.length > 0) {
+        /*elem = ui.item;
+        $("<option/>").val(elem.data("id")).text(elem.find(".nom_perso").text()).appendTo("#users_list");
+        elem.remove();
+        $('#users_list option:first').attr("selected", "selected");
+        $("#useradd_btn").prop('disabled', false);
+        */
         $("#circuit").empty();
         $.each(ordre, function (k, v) {
             ajoutUser(v);
