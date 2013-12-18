@@ -3,7 +3,9 @@
 }
 
 .menu-elem {
-    min-height: 30px;
+    min-height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
     height: auto;
     width: 100%;
     text-indent: 10px;
@@ -14,26 +16,29 @@
     padding: 0 0 0 10px;
 }
 
-.menu-1 {
-    background-color: #ca4c4d;
-    /*jaune : dba209*/
+.dd-toggle  {
+    width: 100%;
 }
 
-.menu-2 {
-    background-color: #3285ab;
+.menu-rouge  .entete-menu {
+    background-color: rgba(202, 76, 77, 1);
 }
 
-.menu-2 .dd-menu {
-    background-color: red;
+.menu-bleu .entete-menu  {
+   background-color: rgba(50, 133, 171, 1);
+}
+
+.menu-bleu .dd-menu {
+    background-color: rgba(50, 133, 171, 0.7);
 }
 
 
-.menu-3 {
-    background-color: #83b13a;
+.menu-jaune .entete-menu  {
+    background-color: rgba(219, 162, 9, 1);
 }
 
-.menu-3 .dd-menu {
-    background-color: #83b13a;
+.menu-jaune .dd-menu {
+    background-color: rgba(219, 162, 9, 0.7);
 }
 
 .menu ul li a {
@@ -42,3 +47,10 @@
     text-decoration: none;
 }
 
+.menu-vert .entete-menu  {
+    background-color: rgba(131, 177, 58, 1);
+}
+
+.menu-vert .dd-menu {
+    background-color: rgba(131, 177, 58, 0.7);
+}
