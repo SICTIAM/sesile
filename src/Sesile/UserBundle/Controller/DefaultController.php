@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Component\HttpFoundation\Request;
 use Sesile\UserBundle\Form\UserType;
-
+use Symfony\Component\Form\AbstractType;
 
 class DefaultController extends Controller {
     /**
@@ -18,11 +18,16 @@ class DefaultController extends Controller {
      * @Template("SesileUserBundle:Default:index.html.twig")
      */
     public function listAction() {
+
+
         $userManager = $this->get('fos_user.user_manager');
         $users = $userManager->findUsers();
         return array(
             "users" => $users
         );
+
+
+
     }
 
     /**
@@ -30,6 +35,8 @@ class DefaultController extends Controller {
      * @Template("SesileUserBundle:Default:ajout.html.twig")
      */
     public function ajoutAction(Request $request) {
+
+
         $entity = new User();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -38,14 +45,16 @@ class DefaultController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
-
+            mail($entity->getEmail(),'nouvel utilisateur','bonjour '.$entity->getUsername()."\r\n ".'Bienvenue sur le portail Sesile');
             return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
         }
+
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
+
     }
 
     /**
@@ -208,4 +217,7 @@ class DefaultController extends Controller {
             ->getForm()
             ;
     }
+
+
 }
+
