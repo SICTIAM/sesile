@@ -46,7 +46,7 @@ class Classeur
     /**
      * @var array
      *
-     * @ORM\Column(name="circuit", type="array")
+     * @ORM\Column(name="circuit", type="string", length=255)
      */
     private $circuit;
 

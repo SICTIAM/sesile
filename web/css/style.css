@@ -23,7 +23,7 @@ html, body{
 /*-------------------------     FIN MENU =>  DÉBUT CONTENU     -------------------------*/
 #content {
     min-height: 100%;
-    background-color:greenyellow ;
+    background-color:greenyellow;
     display: inline-block;
 }
 
@@ -34,8 +34,20 @@ html, body{
 #lecontent {
     width: 90%;
     margin: auto;
+    padding: 10px;
+}
+
+.bloc_accueil {
     background-color: #ffffff;
     padding: 10px;
+    margin-bottom: 20px;
+}
+
+.titre_bloc_accueil {
+    background-color: #ffffff;
+    padding: 10px;
+    border-bottom: 3px dotted #555555;
+    text-transform: uppercase;
 }
 
 #footer {

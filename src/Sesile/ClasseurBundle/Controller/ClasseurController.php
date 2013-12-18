@@ -31,7 +31,7 @@ class ClasseurController extends Controller
     /**
      * Liste des classeurs en cours
      *
-     * @Route("/liste", name="classeurs_en_cours")
+     * @Route("/liste", name="liste_classeurs")
      * @Method("GET")
      * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
      */
