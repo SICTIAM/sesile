@@ -19,6 +19,7 @@ html, body{
     background: orange;
     box-shadow: 2px 0 12px #3A3A3A;
     z-index: 2;
+    padding: 0;
 }
 /*-------------------------     FIN MENU =>  DÉBUT CONTENU     -------------------------*/
 #content {
@@ -58,10 +59,19 @@ html, body{
     bottom: 0px;
 }
 
+.classeur-row a img {
+    visibility: hidden;
+}
+
 .user-row:hover, .classeur-row:hover {
-    background-color: #ff19b3;
+    background-color: rgba(50, 133, 171, 0.5);
     cursor: pointer;
 }
+
+.classeur-row:hover a img {
+    visibility: visible;
+}
+
 /*-------------------------     FIN CONTENU     -------------------------*/
 
 .titre_page {
@@ -82,57 +92,3 @@ html, body{
     border: 5px dashed #cccccc;
 }
 
-#circuit {
-    width: 100%;
-    min-height: 120px;
-    border: 1px solid #cccccc;
-}
-
-.selects_circuit {
-    display: inline-block;
-    width: 30%;
-}
-
-.selects_circuit select {
-    width: 100%;
-}
-
-.perso_circuit {
-    text-align: center;
-    cursor: pointer;
-    margin: 10px;
-}
-
-.perso_circuit img {
-    width: 80px;
-    height: 80px;
-    display: block;
-}
-
-.emplacement {
-    width: 80px;
-    height: 80px;
-    background-color: #eeeeee;
-}
-
-.fleche_circuit, .perso_circuit, .emplacement {
-    float: left;
-}
-
-.favoris_circuit {
-    height: 32px;
-    width: 32px;
-    cursor: pointer;
-}
-
-#pop_favoris {
-    display: none;
-    position: absolute;
-    border: 1px solid #cccccc;
-    padding: 10px;
-    background-color: #ffffff;
-}
-
-.delete_circuit {
-    cursor: pointer;
-}
