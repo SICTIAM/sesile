@@ -1,0 +1,44 @@
+.menu ul {
+    list-style-type: none;
+}
+
+.menu-elem {
+    min-height: 30px;
+    height: auto;
+    width: 100%;
+    text-indent: 10px;
+}
+
+.dd-menu {
+    display: none;
+    padding: 0 0 0 10px;
+}
+
+.menu-1 {
+    background-color: #ca4c4d;
+    /*jaune : dba209*/
+}
+
+.menu-2 {
+    background-color: #3285ab;
+}
+
+.menu-2 .dd-menu {
+    background-color: red;
+}
+
+
+.menu-3 {
+    background-color: #83b13a;
+}
+
+.menu-3 .dd-menu {
+    background-color: #83b13a;
+}
+
+.menu ul li a {
+    color: #ffffff;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+

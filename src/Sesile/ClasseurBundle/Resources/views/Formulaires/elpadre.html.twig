@@ -1,55 +1,25 @@
+<div class="titre_form_element">Titre</div>
+<input class="form-control" id="name" name="name" placeholder="Nom">
+<br>
 
+<div class="titre_form_element">Description</div>
+<textarea class="form-control" rows="3" name="desc" id="desc"></textarea>
+<br>
 
+<div class="titre_form_element">Documents</div>
+<div id="documentcontent"></div>
+<br>
 
+<div class="titre_form_element">Circuit</div>
+<div id="circuitcontent"></div>
+<br>
 
-    <div class="row">
+{% block extraform %}
+{% endblock %}
 
-
-
-        <div class="col-md-12">
-
-                <div class="form-group">
-                    <label for="name" class="col-sm-2 control-label">Nom</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="name" name="name" placeholder="Nom">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="desc" class="col-sm-2 control-label">Description</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="3" name="desc" id="desc"></textarea>
-                    </div>
-                </div>
-            <div id="circuitcontent">
-
-            </div>
-            <div id="documentcontent">
-
-
-            </div>
-
-
-
-
-        </div>
-
-
-
-    </div>
-
-
-
-
-
-    {% block extraform %}
-    {% endblock %}
-
-
-
-<div class="row">
- <br/>
-<!-- Indicates a successful or positive action -->
-<button type="button" class="btn">Annuler</button>
-<button type="submit" class="btn btn-success">Envoyer</button>
+<div>
+    <br/>
+    <button type="button" class="btn">Annuler</button>
+    <button type="submit" class="btn btn-success">Envoyer</button>
 
 </div>

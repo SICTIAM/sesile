@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="stylesheet" href="{{ asset('/css/style.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/css/menu.css') }}"/>
         <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.css') }}"/>
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
         <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
@@ -16,7 +17,7 @@
     </head>
     <body>
     <div id="maman">
-        <div class="navbar col-md-2" id="lemenu">
+        <div class="col-md-2" id="lemenu">
             <div>logo</div>
             {% include 'SesileMainBundle:Default:menu.html.twig' %}
         </div>

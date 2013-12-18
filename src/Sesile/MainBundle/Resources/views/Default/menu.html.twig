@@ -1,61 +1,29 @@
 {% block menu %}
-    <div class="navbar-inner">
-        <div class="container">
-            <nav class="nav-collapse" role="navigation">
-                <ul class="nav">
-                    <li><a href="{{ path("classeur_new") }}">Création d'un circuit</a></li>
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">Classeurs<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ path("classeur") }}">Liste des classeurs</a></li>
-                            <li><a href="{{ path("classeur_new") }}">Ajout d'un classeur</a></li>
-                            <li><a href="">A valider</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">Utilisateurs<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ path("liste_users") }}">Liste des utilisateurs</a></li>
-                            <li><a href="{{ path("liste_users") }}">Voir son compte</a></li>
-                            <li><a href="{{ path("liste_users") }}">Groupes</a></li>
-                            <li><a href="{{ path("liste_users") }}">Hiérarchie</a></li>
-                        </ul>
-                    </li>
-                    <li class="divider-vertical"></li>
+    <div class="menu">
+        <ul>
+            <li class="menu-elem menu-1"><a href="{{ path("classeur_new") }}">Création d'un circuit</a></li>
+            <li class="menu-elem menu-2">
+                <a class="dd-toggle" href="#">Classeurs<b class="caret"></b></a>
+                <ul class="dd-menu">
+                    <li><a href="{{ path("classeur") }}">Liste des classeurs</a></li>
+                    <li><a href="{{ path("classeur_new") }}">Ajout d'un classeur</a></li>
+                    <li><a href="">A valider</a></li>
                 </ul>
-            </nav>
-        </div>
+            </li>
+            <li class="menu-elem menu-3">
+                <a data-toggle="dropdown" class="dd-toggle" href="#">Utilisateurs<b class="caret"></b></a>
+                <ul class="dd-menu">
+                    <li><a href="{{ path("liste_users") }}">Liste des utilisateurs</a></li>
+                    <li><a href="{{ path("liste_users") }}">Voir son compte</a></li>
+                    <li><a href="{{ path("liste_users") }}">Groupes</a></li>
+                    <li><a href="{{ path("liste_users") }}">Hiérarchie</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
-
-    <div class="container">
-        <div class="row">
-            <ul class="nav-bar">
-                <li class="has-flyout">
-                    <a href="" class="main">Lien #1</a>
-                    <a href="" class="flyout-toggle"><span> </span></a>
-                    <div class="flyout small">
-                        <ul>
-                            <li><a href="#">Lien #1-a</a></li>
-                            <li><a href="#">Lien #1-b</a></li>
-                            <li><a href="#">Lien #1-c</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li><a href="#" class="main">Lien #2</a></li>
-                <li class="has-flyout">
-                    <a href="" class="main">Lien #3</a>
-                    <a href="" class="flyout-toggle"><span> </span></a>
-                    <div class="flyout small">
-                        <ul>
-                            <li><a href="#">Lien #3-a</a></li>
-                            <li><a href="#">Lien #3-b</a></li>
-                            <li><a href="#">Lien #3-c</a></li>
-                            <li><a href="#">Lien #4-c</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li><a href="#" class="main">Lien #4</a></li>
-            </ul>
-        </div>
-    </div>
+    <script type="text/javascript">
+        $(".dd-toggle").click(function () {
+            $(this).next(".dd-menu").toggle();
+        });
+    </script>
 {% endblock %}
