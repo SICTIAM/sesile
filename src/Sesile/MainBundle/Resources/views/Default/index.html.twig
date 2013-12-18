@@ -1,78 +1,63 @@
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="stylesheet" href="{{ asset('/css/style.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('/css/menu.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.css') }}"/>
-        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
-        <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
-        <script type="text/javascript" src="{{ asset("/js/jquery-2.0.3.min.js") }}"></script>
-        <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
-        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-        {% block css %}
-        {% endblock %}
-    </head>
-    <body>
-    <div id="maman">
-        <div class="col-md-2" id="lemenu">
-            <div>logo</div>
-            {% include 'SesileMainBundle:Default:menu.html.twig' %}
-        </div>
-        <div class="col-md-10" id="content">
-            <div id="header">
-                {% block header %}
-                    {% if app.user != null %}
-                        Bonjour {{ app.user.username }}<br>
-                        <a href="{{ path("fos_user_security_logout") }}">D&eacute;connexion</a>
-                    {% else %}
-                        <a href="{{ path("fos_user_security_login") }}">Connexion</a>
-                    {% endif %}
-                {% endblock %}
-            </div>
-            <div class="row">
-                <div class="col-md-10">
-                    {% for flashMessage in app.session.flashbag.get('notice') %}
-                        <div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            {{ flashMessage }}
-                        </div>
-                    {% endfor %}
-
-                    {% for flashMessage in app.session.flashbag.get('error') %}
-                        <div class="alert alert-danger alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            {{ flashMessage }}
-                        </div>
-                    {% endfor %}
-
-                    {% for flashMessage in app.session.flashbag.get('warning') %}
-                        <div class="alert alert-warning alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            {{ flashMessage }}
-                        </div>
-                    {% endfor %}
-
-                    {% for flashMessage in app.session.flashbag.get('success') %}
-                        <div class="alert alert-success alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            {{ flashMessage }}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-                <div id="lecontent">
-                {% block content %}
-                    Ceci est le body de base<br />
-                {% endblock %}
-                </div>
-            <div class="" id="footer">
-                BLABLA
-            </div>
-            {% block losjavascriptos %}{% endblock %}
-        </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('/css/style.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('/css/menu.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.css') }}"/>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
+    <script type="text/javascript" src="{{ asset("/js/jquery-2.0.3.min.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    {% block css %}
+    {% endblock %}
+</head>
+<body>
+<div id="maman">
+    <div class="col-md-2" id="lemenu">
+        <div>logo</div>
+        {% include 'SesileMainBundle:Default:menu.html.twig' %}
     </div>
-    </body>
-    </html>
+    <div class="col-md-10" id="content">
+        <div id="header">
+            {% block header %}
+                {% if app.user != null %}
+                    Bonjour {{ app.user.username }}<br>
+                    <a href="{{ path("fos_user_security_logout") }}">D&eacute;connexion</a>
+                {% else %}
+                    <a href="{{ path("fos_user_security_login") }}">Connexion</a>
+                {% endif %}
+            {% endblock %}
+        </div>
+        <div id="lecontent">
+            {% block content %}
+                <div id="bienvenue">
+                    Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant
+                    impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand
+                    un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de
+                    polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la b<br>
+                    Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant
+                    impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand
+                    un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de
+                    polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la b<br>
+                    Le Lorem
+                </div>
+                <div id="classeurs_a_valider"></div>
+                <div id="liste_classeurs"></div>
+            {% endblock %}
+        </div>
+        <div class="" id="footer">
+            BLABLA
+        </div>
+        {% block losjavascriptos %}
+            <script type="text/javascript">
+
+            </script>
+        {% endblock %}
+    </div>
+</div>
+</body>
+</html>

@@ -25,6 +25,36 @@ class ClasseurController extends Controller
      */
     public function indexAction()
     {
+        return $this->listeAction();
+    }
+
+    /**
+     * Liste des classeurs en cours
+     *
+     * @Route("/liste", name="classeurs_en_cours")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
+     */
+    public function listeAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
+
+        return array(
+            'entities' => $entities,
+        );
+    }
+
+    /**
+     * Liste des classeurs à valider
+     *
+     * @Route("/valider", name="classeur_a_valider")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:valider_liste.html.twig")
+     */
+    public function aValiderAction()
+    {
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
