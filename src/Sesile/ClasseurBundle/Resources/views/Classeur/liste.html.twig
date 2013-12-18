@@ -10,17 +10,17 @@
     </tr>
     </thead>
     <tbody>
-    {% for entity in entities %}
-        <tr class="classeur-row" data-id="{{ entity.id }}">
-            <td>{{ entity.nom }}</td>
+    {% for classeur in classeurs %}
+        <tr class="classeur-row" data-id="{{ classeur.id }}">
+            <td>{{ classeur.nom }}</td>
             <td>inter</td>
-            <td>{% if entity.creation %}{{ entity.creation | date('Y-m-d H:i:s') }}{% endif %}</td>
-            <td>{% if entity.creation %}{{ entity.creation | date('Y-m-d H:i:s') }}{% endif %}</td>
+            <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
+            <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
             <td>Statut</td>
             <td class="boutons_action">
-                <a href=""><img src="{{  asset("/images/pen.png") }}" /></a>
-                <a href=""><img src="{{  asset("/images/eye.png") }}" /></a>
-                <a href=""><img src="{{  asset("/images/trash.png") }}" /></a>
+                <a href="{{ path("classeur_edit", { 'id': classeur.id  }) }}"><img src="{{  asset("/images/pen.png") }}" /></a>
+                <a href="{{ path("classeur_show", {'id' : classeur.id }) }}"><img src="{{  asset("/images/eye.png") }}" /></a>
+                <a href="{{ path("classeur_delete", {'id' : classeur.id }) }}"><img src="{{  asset("/images/trash.png") }}" /></a>
             </td>
         </tr>
     {% endfor %}

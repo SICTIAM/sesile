@@ -42,7 +42,7 @@ class ClasseurController extends Controller
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
 
         return array(
-            'entities' => $entities,
+            'classeurs' => $entities,
         );
     }
 
@@ -248,8 +248,8 @@ class ClasseurController extends Controller
     /**
      * Deletes a Classeur entity.
      *
-     * @Route("/{id}", name="classeur_delete")
-     * @Method("DELETE")
+     * @Route("/{id}/delete", name="classeur_delete")
+     * @Method("GET")
      */
     public function deleteAction(Request $request, $id)
     {
