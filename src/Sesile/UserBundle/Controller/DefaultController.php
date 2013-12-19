@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sesile\UserBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
 
+
 class DefaultController extends Controller {
     /**
      * @Route("/", name="liste_users")
@@ -45,6 +46,7 @@ class DefaultController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+            // TODO utiliser le mailer symfony et eventuellement ouvrir à d'autres serveur mails
             mail($entity->getEmail(),'nouvel utilisateur','bonjour '.$entity->getUsername()."\r\n ".'Bienvenue sur le portail Sesile');
             return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
         }
