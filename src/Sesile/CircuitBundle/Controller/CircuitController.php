@@ -30,6 +30,14 @@ class CircuitController extends Controller
     }
 
     /**
+     * @Route("/nouveau/", name="nouveau_circuit")
+     * @Template()
+     */
+    public function nouveauAction() {
+        return $this->newAction();
+    }
+
+    /**
      * @Route("/", name="create_circuit")
      * @Method("POST")
      */
