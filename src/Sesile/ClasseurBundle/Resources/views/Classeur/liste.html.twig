@@ -1,33 +1,33 @@
 <table class="table">
     <thead>
-    <tr>
-        <th>Titre du classeur</th>
-        <th>Intervention</th>
-        <th>Date de création</th>
-        <th>Date limite de validation</th>
-        <th>Statut actuel</th>
-        <th>Action</th>
-    </tr>
+        <tr>
+            <th>Titre du classeur</th>
+            <th>Intervention</th>
+            <th>Date de création</th>
+            <th>Date limite de validation</th>
+            <th>Statut actuel</th>
+            <th>Action</th>
+        </tr>
     </thead>
     <tbody>
-    {% for classeur in classeurs %}
-        <tr class="classeur-row" data-id="{{ classeur.id }}">
-            <td>{{ classeur.nom }}</td>
-            <td>inter</td>
-            <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
-            <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
-            <td>Statut</td>
-            <td class="boutons_action">
-                <a href="{{ path("classeur_edit", { 'id': classeur.id  }) }}"><img src="{{  asset("/images/pen.png") }}" /></a>
-                <a href="{{ path("classeur_show", {'id' : classeur.id }) }}"><img src="{{  asset("/images/eye.png") }}" /></a>
-                <a href="{{ path("classeur_delete", {'id' : classeur.id }) }}"><img src="{{  asset("/images/trash.png") }}" /></a>
-            </td>
-        </tr>
-    {% endfor %}
+        {% for classeur in classeurs %}
+            <tr class="classeur-row" data-id="{{ classeur.id }}">
+                <td>{{ classeur.nom }}</td>
+                <td>inter</td>
+                <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
+                <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
+                <td>Statut</td>
+                <td class="boutons_action">
+                    <a href="{{ path("classeur_edit", { 'id': classeur.id  }) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="{{ path("classeur_show", {'id' : classeur.id }) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                    <a href="{{ path("classeur_delete", {'id' : classeur.id }) }}"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        {% endfor %}
     </tbody>
 </table>
 <script type="text/javascript">
-    $(".classeur-row").click(function () {
-        document.location.href = "" + $(this).data("id");
+    $(".classeur-row").click(function (e) {
+        suivreUrl("" + $(this).data("id"), e);
     });
 </script>

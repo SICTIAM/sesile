@@ -1,3 +1,9 @@
+.arrows{
+    position: relative;
+    right: 10px;
+    bottom: 6px;
+}
+
 .menu ul {
     list-style-type: none;
 }
@@ -11,6 +17,14 @@
     text-indent: 10px;
 }
 
+.titremenu a {
+    font-weight: bolder;
+}
+
+.titremenu + .dd-menu {
+    display: block;
+}
+
 .dd-menu {
     display: none;
     padding: 0 0 0 10px;
@@ -20,25 +34,42 @@
     width: 100%;
 }
 
+.rectanglemenu{
+    width: 8px;
+    height: 40px;
+    float: left;
+}
+
 .menu-rouge  .entete-menu {
     background-color: rgba(202, 76, 77, 1);
 }
 
+#rougeclair {
+    background-color: rgba(222, 96, 97, 1);
+}
+
 .menu-bleu .entete-menu  {
-   background-color: rgba(50, 133, 171, 1);
+    background-color: rgba(50, 133, 171, 1);
 }
 
 .menu-bleu .dd-menu {
-    background-color: rgba(50, 133, 171, 0.7);
+    background-color: rgba(50, 133, 171, 0.6);
 }
 
+#bleuclair {
+    background-color: rgba(70, 153, 191, 1);
+}
 
 .menu-jaune .entete-menu  {
     background-color: rgba(219, 162, 9, 1);
 }
 
 .menu-jaune .dd-menu {
-    background-color: rgba(219, 162, 9, 0.7);
+    background-color: rgba(219, 162, 9, 0.6);
+}
+
+#jauneclair {
+    background-color: rgba(239, 186, 29, 1);
 }
 
 .menu ul li a {
@@ -53,4 +84,8 @@
 
 .menu-vert .dd-menu {
     background-color: rgba(131, 177, 58, 0.7);
+}
+
+#vertclair {
+    background-color: rgba(151, 197, 78, 1);
 }
