@@ -1,7 +1,6 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
-    <div class="bloc_page">
         <table class="table">
         <thead>
             <tr>
@@ -21,7 +20,6 @@
         </tbody>
         </table>
         <a href="{{ path("ajout_user") }}">Ajouter un utilisateur</a>
-    </div>
     <script type="text/javascript">
         $(".user-row").click(function() {
             document.location.href = Routing.generate('user_edit', { id: $(this).data("id") })

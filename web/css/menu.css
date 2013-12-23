@@ -89,3 +89,11 @@
 #vertclair {
     background-color: rgba(151, 197, 78, 1);
 }
+
+.carette {
+
+	float: right;
+	position: relative;
+	top:20px;
+	right:12px;
+}
