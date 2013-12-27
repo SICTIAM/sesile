@@ -26,12 +26,12 @@
 </head>
 <body>
 <div id="maman">
-    <div class="col-md-2" id="lemenu">
+    <div class="" id="gauche">
         <a href="/app_dev.php"><div id="logo"><img src="{{  asset("/images/badlogo.png") }}" /></div></a>
         {% include 'SesileMainBundle:Default:menu.html.twig' %}
     </div>
-    <div class="col-md-10" id="content">
-        <div id="header">
+    <div class="" id="droite">
+            <div id="header">
                 {% if app.user != null %}
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -47,8 +47,8 @@
                 {% else %}
                     <a class="btn btn-success" href="{{ path("fos_user_security_login") }}">Connexion</a>
                 {% endif %}
-        </div>
-        <div id="lecontent">
+            </div>
+            <div id="lecontenu">
             {% block content %}
                 <div id="contenu_acceuil">
                 <div class="bloc_accueil">
@@ -73,37 +73,39 @@
                 </div>
                 </div>
             {% endblock %}
-        </div>
-        <div class="" id="footer">
-            <div id="textefooter">
-                <span class="legal">
-                    <a class="contact" href="mailto:internet@sictiam.fr">
-                    CONTACT
-                    </a>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a  class="sesiletooltip mentionlegales" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode" target="_blank" data-toggle="tooltip"
-                        title="Parapheur Sesile - 2013">
-                    MENTIONS L&Eacute;GALES
-                    </a>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a  class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank" data-toggle="tooltip"
-                       title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France">
-                       CREATIVE COMMONS
-                    </a>
-                </span>
-                <br />
-                <span class="signature">
-                    <a class="sitesictiam" href="http://www.sictiam.fr/" target="_blank">
-                        COPYRIGHT &copy;2013
-                        &nbsp; &ndash; &nbsp;
-                        R&Eacute;ALIS&Eacute; PAR LE SICTIAM
-                    </a>
-                </span>
             </div>
-            <div id="logosictiampetit">
-                <img src="/images/logosictiampetit.png" />
+            <div class="" id="footer">
+                <div id="textefooter">
+                    <span class="legal">
+                        <a class="contact" href="mailto:internet@sictiam.fr">
+                        CONTACT
+                        </a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a  class="sesiletooltip mentionlegales" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode" target="_blank" data-toggle="tooltip"
+                            title="Parapheur Sesile - 2013">
+                        MENTIONS L&Eacute;GALES
+
+                        </a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a  class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank" data-toggle="tooltip"
+                           title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France">
+                           CREATIVE COMMONS
+                        </a>
+                    </span>
+                    <br />
+                    <span class="signature">
+                        <a class="sitesictiam" href="http://www.sictiam.fr/" target="_blank">
+                            COPYRIGHT &copy;2013
+                            &nbsp; &ndash; &nbsp;
+                            R&Eacute;ALIS&Eacute; PAR LE SICTIAM
+                        </a>
+                    </span>
+                </div>
+                <div id="logosictiampetit">
+                    <img src="/images/logosictiampetit.png" />
+                </div>
             </div>
-        </div>
+    </div>
         {% block losjavascriptos %}
         {% endblock %}
         <script>
@@ -113,7 +115,6 @@
                 html: true
             });
         </script>
-    </div>
 </div>
 </body>
 </html>

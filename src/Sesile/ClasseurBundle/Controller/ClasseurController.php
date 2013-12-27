@@ -57,8 +57,9 @@ class ClasseurController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
             array(
-                "validant" => $this->getUser()->getId(),
+                "validant" => $this->getUser()?$this->getUser()->getId():0,
                 "status" => 1
+
             ));
 
         return array(
