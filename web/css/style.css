@@ -4,28 +4,31 @@
 }
 
 html, body {
-	height: 100%;
 	background-color: #eaeaea;
+	font-size: 13px;
 }
 
 #maman {
 	background-color: #cccccc;
 	width: 100%;
-	height: 100%;
+	height: auto;
+	overflow: auto;
 }
 
 /*-------------------------     DÉBUT MENU     -------------------------*/
 #lemenu {
-	min-height: 100%;
+	height: 100%;
 	background: white url("/images/vichy.png");
-	box-shadow: 2px 0 12px #3a3a3a;
+	box-shadow: 0.143em 0 0.857em #3a3a3a;
 	z-index: 2;
 	padding: 0;
 }
 
 #logo {
 	width: 75px;
+	/*5.357em*/
 	height: 107px;
+	/*7.643em*/
 	margin: auto;
 	margin-bottom: 15%;
 	margin-top: 5%;
@@ -50,7 +53,7 @@ html, body {
 	min-height: 3em;
 	text-align: center;
 	position: absolute;
-	bottom: 0px;
+	bottom: 0em;
 	margin-left: 5%;
 }
 
@@ -89,15 +92,15 @@ html, body {
 .titre_bloc_accueil .glyphicon-home,
 .titre_bloc_accueil .glyphicon-edit,
 .titre_bloc_accueil .glyphicon-eye-open {
-	font-size: 18px;
-	margin: 0px 8px 0px 0px;
+	margin: 0 0.571em 0 0;
 	color: rgba(109, 109, 109, 1);
 }
 
 #lecontent {
 	width: 90%;
 	margin: auto;
-
+	margin-bottom: 10%;
+	min-height: 70%;
 	background-color: #ffffff;
 }
 
@@ -109,41 +112,42 @@ html, body {
 .bloc_accueil,
 .bloc_page {
 	background-color: #ffffff;
-	padding: 10px;
-	margin-bottom: 20px;
+	padding: 0.714em;
+	margin-bottom: 1.429em;
 }
 
 .titre_bloc_accueil {
 	background-color: #ffffff;
-	padding: 10px;
+	padding: 0.714em;
 	border-bottom: 3px dotted #555555;
 	text-transform: uppercase;
 	color: rgba(109, 109,109, 1);
-	font-size: 18px;
 	font-weight: bold;
 }
 
 .boutons_action {
-	width: 100px;
+	width: 7.143em;
+	text-align: center;
 }
 
-.classeur-row .glyphicon {
+.classeur-row .boutons_action .glyphicon {
 	visibility: hidden;
+	margin: 0 .3em 0 .3em ;
+}
+
+.classeur-row:hover .boutons_action .glyphicon {
+	color: rgba(109, 109, 109, 1);
+	visibility: visible;
+}
+
+.classeur-row:hover .boutons_action .glyphicon:hover {
+	visibility: visible;
+	color: rgba(50, 133, 171, 1);
 }
 
 .user-row:hover, .classeur-row:hover {
 	background-color: rgba(50, 133, 171, 0.5);
 	cursor: pointer;
-}
-
-.classeur-row:hover .glyphicon {
-	color: rgba(109, 109, 109, 1);
-	visibility: visible;
-}
-
-.classeur-row:hover .glyphicon:hover {
-	visibility: visible;
-	color: rgba(50, 133, 171, 1);
 }
 
 .titre_page {
@@ -155,7 +159,7 @@ html, body {
 
 .titre_form_element {
 	background-color: #3285ab;
-	margin: 10px 0 10px 0;
+	margin: 0.714em 0 0.714em 0;
 	text-transform: uppercase;
 	color: #ffffff;
 }
@@ -183,6 +187,7 @@ html, body {
 .userpicture{
 	width: 2em;
 	height: 2em;
+	height: 2em;
 	background-color: deeppink;
 }
 
@@ -190,11 +195,53 @@ html, body {
 
 .tableau{
 	margin-top: 1em;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	border: 1px solid pink;
+	/*-webkit-border-radius: 4px;*/
+	/*-moz-border-radius: 4px;*/
+	/*border-radius: 4px;*/
+	border: 1px solid rgb(204, 204, 204);
 	color: rgba(109, 110, 112, 1);
+	text-align: center;
+}
+
+.tableau th {
+	border: 1px solid rgb(204, 204, 204);
+	text-align: center;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjY2NjY2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(230,230,230,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(230,230,230,1)));
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(230,230,230,1) 100%);
+	background: -o-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(230,230,230,1) 100%);
+	background: -ms-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(230,230,230,1) 100%);
+	background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(230,230,230,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#cccccc',GradientType=0 );
+	color: rgb(109, 110, 112);
+	font-size: .9em;
+	vertical-align: middle;
+
+}
+
+.tableau tr td {
+	font-size: .9em;
+}
+
+.statut_1{
+	color: rgb(0, 131, 201);
+}
+
+.statut_2{
+	color: rgb(15, 148, 0);
+}
+
+.statut_4{
+	color: rgb(240, 117, 0);
+}
+
+.statut_3{
+	color: rgb(109, 109, 109);
+}
+
+.statut_0{
+	color: rgb(213, 0, 25);
 }
 
 /*-------------------------     FIN TABLEAU =>   DÉBUT BLABLA     -------------------------*/

@@ -305,7 +305,7 @@ html {
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:  "Arial", Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
   line-height: 1.428571429;
   color: #333333;
@@ -1643,12 +1643,10 @@ th {
   padding: 8px;
   line-height: 1.428571429;
   vertical-align: top;
-  border-top: 1px solid #dddddd;
 }
 
 .table > thead > tr > th {
   vertical-align: bottom;
-  border-bottom: 2px solid #dddddd;
 }
 
 .table > caption + thead > tr:first-child > th,
@@ -2766,7 +2764,8 @@ input[type="button"].btn-block {
   content: "\e022";
 }
 
-.glyphicon-time:before {
+.glyphicon-time:before,
+.statut_1:before {
   content: "\e023";
 }
 
@@ -3002,7 +3001,8 @@ input[type="button"].btn-block {
   content: "\e082";
 }
 
-.glyphicon-remove-sign:before {
+.glyphicon-remove-sign:before,
+.statut_3:before{
   content: "\e083";
 }
 
@@ -3086,7 +3086,9 @@ input[type="button"].btn-block {
   content: "\e106";
 }
 
-.glyphicon-warning-sign:before {
+.glyphicon-warning-sign:before,
+.statut_4:before,
+.statut_0:before{
   content: "\e107";
 }
 
@@ -3326,7 +3328,8 @@ input[type="button"].btn-block {
   content: "\e167";
 }
 
-.glyphicon-saved:before {
+.glyphicon-saved:before,
+.statut_2:before{
   content: "\e168";
 }
 
