@@ -14,8 +14,7 @@ use Sesile\ClasseurBundle\Form\ClasseurType;
  * Classeur controller.
  *
  */
-class ClasseurController extends Controller
-{
+class ClasseurController extends Controller {
     /**
      * Lists all Classeur entities.
      *
@@ -49,18 +48,21 @@ class ClasseurController extends Controller
     /**
      * Liste des classeurs à valider
      *
-     * @Route("/valider", name="classeur_a_valider")
+     * @Route("/a_valider", name="classeur_a_valider")
      * @Method("GET")
      * @Template("SesileClasseurBundle:Classeur:valider_liste.html.twig")
      */
     public function aValiderAction()
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+            array(
+                "validant" => $this->getUser()->getId(),
+                "status" => 1
+            ));
 
         return array(
-            'entities' => $entities,
+            'entities' => $entities
         );
     }
 
@@ -77,11 +79,15 @@ class ClasseurController extends Controller
         $classeur->setDescription($request->request->get('desc'));
         $classeur->setType($request->request->get('type'));
         $classeur->setCircuit($request->request->get('circuit'));
+        // enregistrer les users du circuit
+        $users = explode();
+        $classeur->addUser();
+
         $classeur->setUser($this->getUser()->getId());
         $em = $this->getDoctrine()->getManager();
         $em->persist($classeur);
         $em->flush();
-        //$respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request) );
+        //$respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
 
         $error = false;
         if($respCircuit->getContent()!='OK'){
@@ -295,8 +301,6 @@ class ClasseurController extends Controller
         ;
     }
 
-
-
     /**
      * Creates a form to edit a Classeur entity.
      *
@@ -323,14 +327,6 @@ class ClasseurController extends Controller
                     'SesileClasseurBundle:Formulaires:elpez.html.twig'
                 );
                 break;
-
-
-
         }
-
-
-
-
-
     }
 }

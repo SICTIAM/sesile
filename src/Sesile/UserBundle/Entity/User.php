@@ -34,15 +34,23 @@ class User extends BaseUser
     /**
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="user")
      */
-    protected $classeurs;
+    protected $classeurs_deposes;
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="validant")
      */
     protected $classeurs_a_valider;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\ClasseurUsers", mappedBy="userId")
+     */
+    protected $classeurs;
+
+
     public function __construct() {
-        $this->classeurs = new ArrayCollection();
+        $this->$classeurs_a_valider = new ArrayCollection();
+        $this->$classeurs_deposes = new ArrayCollection();
+        $this->$classeurs = new ArrayCollection();
         parent::__construct();
     }
 
@@ -56,37 +64,39 @@ class User extends BaseUser
         return $this->id;
     }
 
+    
+
     /**
-     * Add classeurs
+     * Add classeurs_deposes
      *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurs
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes
      * @return User
      */
-    public function addClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeurs)
+    public function addClasseursDepose(\Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes)
     {
-        $this->classeurs[] = $classeurs;
+        $this->classeurs_deposes[] = $classeursDeposes;
     
         return $this;
     }
 
     /**
-     * Remove classeurs
+     * Remove classeurs_deposes
      *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurs
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes
      */
-    public function removeClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeurs)
+    public function removeClasseursDepose(\Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes)
     {
-        $this->classeurs->removeElement($classeurs);
+        $this->classeurs_deposes->removeElement($classeursDeposes);
     }
 
     /**
-     * Get classeurs
+     * Get classeurs_deposes
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getClasseurs()
+    public function getClasseursDeposes()
     {
-        return $this->classeurs;
+        return $this->classeurs_deposes;
     }
 
     /**
@@ -120,5 +130,38 @@ class User extends BaseUser
     public function getClasseursAValider()
     {
         return $this->classeurs_a_valider;
+    }
+
+    /**
+     * Add classeurs
+     *
+     * @param \Sesile\ClasseurBundle\Entity\ClasseurUsers $classeurs
+     * @return User
+     */
+    public function addClasseur(\Sesile\ClasseurBundle\Entity\ClasseurUsers $classeurs)
+    {
+        $this->classeurs[] = $classeurs;
+    
+        return $this;
+    }
+
+    /**
+     * Remove classeurs
+     *
+     * @param \Sesile\ClasseurBundle\Entity\ClasseurUsers $classeurs
+     */
+    public function removeClasseur(\Sesile\ClasseurBundle\Entity\ClasseurUsers $classeurs)
+    {
+        $this->classeurs->removeElement($classeurs);
+    }
+
+    /**
+     * Get classeurs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getClasseurs()
+    {
+        return $this->classeurs;
     }
 }

@@ -44,13 +44,6 @@ class Classeur
     private $creation;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="circuit", type="string", length=255)
-     */
-    private $circuit;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
@@ -59,7 +52,7 @@ class Classeur
 
     /**
      * @var integer
-     * En cours = 1, terminé = 2, erreur = 0
+     * En cours = 1 finalisé = 2, refusé = 0, retiré = 3, retracté = 4
      * @ORM\Column(name="status", type="integer")
      */
     private $status;
@@ -85,6 +78,28 @@ class Classeur
      *
      */
     private $validant;
+
+    /**
+     * @var int
+     *
+     * -1 = privé, 0 = public, id user = à partir de
+     * @ORM\Column(name="visibilite", type="integer")
+     *
+     */
+    private $visibilite;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="circuit", type="string", length=255)
+     */
+    private $circuit;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\ClasseurUsers", mappedBy="userId")
+     */
+    private $users;
 
     /**
      * Get id
@@ -128,7 +143,6 @@ class Classeur
     public function setDescription($description)
     {
         $this->description = $description;
-    
         return $this;
     }
 
@@ -300,5 +314,78 @@ class Classeur
     public function getValidant()
     {
         return $this->validant;
+    }
+
+    /**
+     * Set visibilite
+     *
+     * @param integer $visibilite
+     * @return Classeur
+     */
+    public function setVisibilite($visibilite)
+    {
+        $this->visibilite = $visibilite;
+    
+        return $this;
+    }
+
+    /**
+     * Get visibilite
+     *
+     * @return integer 
+     */
+    public function getVisibilite()
+    {
+        return $this->visibilite;
+    }
+
+    /**
+     * Set users
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $users
+     * @return Classeur
+     */
+    public function setUsers(\Sesile\ClasseurBundle\Entity\Classeur $users = null) {
+        $this->users = $users;
+        return $this;
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Sesile\ClasseurBundle\Entity\Classeur 
+     */
+    public function getUsers() {
+        return $this->users;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add users
+     *
+     * @param \Sesile\ClasseurBundle\Entity\ClasseurUsers $users
+     * @return Classeur
+     */
+    public function addUser(\Sesile\ClasseurBundle\Entity\ClasseurUsers $users)
+    {
+        $this->users[] = $users;
+    
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \Sesile\ClasseurBundle\Entity\ClasseurUsers $users
+     */
+    public function removeUser(\Sesile\ClasseurBundle\Entity\ClasseurUsers $users)
+    {
+        $this->users->removeElement($users);
     }
 }
