@@ -41,11 +41,6 @@ class User extends BaseUser
      */
     protected $classeurs_a_valider;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\ClasseurUsers", mappedBy="userId")
-     */
-    protected $classeurs;
-
 
     public function __construct() {
         $this->$classeurs_a_valider = new ArrayCollection();
@@ -130,38 +125,5 @@ class User extends BaseUser
     public function getClasseursAValider()
     {
         return $this->classeurs_a_valider;
-    }
-
-    /**
-     * Add classeurs
-     *
-     * @param \Sesile\ClasseurBundle\Entity\ClasseurUsers $classeurs
-     * @return User
-     */
-    public function addClasseur(\Sesile\ClasseurBundle\Entity\ClasseurUsers $classeurs)
-    {
-        $this->classeurs[] = $classeurs;
-    
-        return $this;
-    }
-
-    /**
-     * Remove classeurs
-     *
-     * @param \Sesile\ClasseurBundle\Entity\ClasseurUsers $classeurs
-     */
-    public function removeClasseur(\Sesile\ClasseurBundle\Entity\ClasseurUsers $classeurs)
-    {
-        $this->classeurs->removeElement($classeurs);
-    }
-
-    /**
-     * Get classeurs
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getClasseurs()
-    {
-        return $this->classeurs;
     }
 }

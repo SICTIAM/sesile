@@ -12,14 +12,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class ClasseurRepository extends EntityRepository {
 
-    /**
-     *
-     * @return int l'id du prochain validant dans le circuit. 0 si le circuit est terminé
-     */
-    public function getNextvalidant() {
-        $circuit = explode(",", $this->getCircuit());
-        $curr_validant = key($this->validant, $circuit);
-        $next_validant = $curr_validant + 1;
-        return ($next_validant <= count($circuit))?$circuit[$next_validant]:0;
-    }
+
 }

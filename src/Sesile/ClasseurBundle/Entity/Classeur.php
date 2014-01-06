@@ -81,7 +81,6 @@ class Classeur
 
     /**
      * @var int
-     *
      * -1 = privé, 0 = public, id user = à partir de
      * @ORM\Column(name="visibilite", type="integer")
      *
@@ -94,12 +93,6 @@ class Classeur
      * @ORM\Column(name="circuit", type="string", length=255)
      */
     private $circuit;
-
-    /**
-     *
-     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\ClasseurUsers", mappedBy="userId")
-     */
-    private $users;
 
     /**
      * Get id
@@ -340,52 +333,72 @@ class Classeur
     }
 
     /**
-     * Set users
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $users
-     * @return Classeur
-     */
-    public function setUsers(\Sesile\ClasseurBundle\Entity\Classeur $users = null) {
-        $this->users = $users;
-        return $this;
-    }
-
-    /**
-     * Get users
-     *
-     * @return \Sesile\ClasseurBundle\Entity\Classeur 
-     */
-    public function getUsers() {
-        return $this->users;
-    }
-
-    /**
      * Constructor
      */
     public function __construct() {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
+
     /**
-     * Add users
      *
-     * @param \Sesile\ClasseurBundle\Entity\ClasseurUsers $users
-     * @return Classeur
+     * @return int l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
      */
-    public function addUser(\Sesile\ClasseurBundle\Entity\ClasseurUsers $users)
-    {
-        $this->users[] = $users;
-    
-        return $this;
+    private function getPrevValidant() {
+        $circuit = explode(",", $this->getCircuit());
+        $curr_validant = array_search($this->validant, $circuit);
+        $prev_validant = $curr_validant - 1;
+        return ($next_validant >= 0)?$circuit[$prev_validant]:$this->getUser();
     }
 
     /**
-     * Remove users
      *
-     * @param \Sesile\ClasseurBundle\Entity\ClasseurUsers $users
+     * @return int l'id du prochain validant dans le circuit. 0 si le circuit est terminé
      */
-    public function removeUser(\Sesile\ClasseurBundle\Entity\ClasseurUsers $users)
-    {
-        $this->users->removeElement($users);
+    private function getNextValidant() {
+        $circuit = explode(",", $this->getCircuit());
+        $curr_validant = array_search($this->validant, $circuit);
+        $next_validant = $curr_validant + 1;
+        return ($next_validant < count($circuit))?$circuit[$next_validant]:0;
+    }
+
+    public function valider() {
+        $this->setValidant($this->getNextValidant());
+        // le classeur est arrivé à la derniere étape, on le finalise
+        if($this->getValidant() == 0) {
+            $this->setStatus(2);
+        }
+    }
+
+    public function refuser() {
+        $this->$this->setValidant($this->getPrevValidant());
+        $this->setStatus(0);
+    }
+
+    public function retracter() {
+        $this->setValidant($this->getUser()->getId());
+        $this->setStatus(4);
+    }
+
+
+
+    public function isValidable($userid) {
+        return ($this->getValidant() == $userid);
+    }
+
+    public function isRetractable($userid) {
+        $c = new ClasseursUsers();
+        $classeurs = $c->getClasseursRetractables($userid);
+
+        foreach($classeurs as $classeur) {
+            if($classeur->getId() == $this->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function isSupprimable($userid) {
+        return ($this->getUser() == $userid);
     }
 }
