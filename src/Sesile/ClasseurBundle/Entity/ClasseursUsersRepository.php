@@ -38,7 +38,7 @@ class ClasseursUsersRepository extends EntityRepository
                 self::$classeursVisibles = null;
             }
         }
-        return self::$classeurVisibles;
+        return self::$classeursVisibles;
     }
 
     public function getClasseursRetractables($userid) {
