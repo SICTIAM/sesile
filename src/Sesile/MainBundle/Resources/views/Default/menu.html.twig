@@ -84,6 +84,8 @@
         $(".entete-menu").click(function () {
             $(".titremenu").removeClass("titremenu");
             $(this).addClass("titremenu");
+            $(".dd-menu:visible").slideUp();
+            $(this).next(".dd-menu").slideDown();
         });
 
         $(".dd-menu li").click(function () {

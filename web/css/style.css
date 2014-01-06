@@ -4,28 +4,27 @@
 }
 
 html, body {
+	font-family: 'Droid Sans', sans-serif;
 	background-color: #eaeaea;
-	font-size: 13px;
-    height: 100%;
+	height: 100%;
 }
 
 #maman {
 	background-color: #cccccc;
 	width: 100%;
-    height: 100%;
-    display: table;
-    table-layout: fixed;
+	height: 100%;
+	display: table;
 }
 
 /*-------------------------     DÉBUT MENU     -------------------------*/
 #gauche {
 	background: white url("/images/vichy.png");
-    display: table-cell;
-    position: relative;
-    z-index: 2;
-    min-height: 100%;
-    width: 15%;
-    box-shadow: 0.143em 0 0.8em #3a3a3a;
+	display: table-cell;
+	position: relative;
+	z-index: 2;
+	min-height: 100%;
+	width: 15%;
+	box-shadow: 0.143em 0 0.8em #3a3a3a;
 }
 
 #logo {
@@ -40,65 +39,61 @@ html, body {
 
 /*-------------------------     FIN MENU =>  DÉBUT HEADER FOOTER     -------------------------*/
 #droite {
-    position: relative;
 	min-height: 100%;
 	background-color: #eaeaea;
-    z-index: 0;
-    display: table-cell;
+	display: table-cell;
+	padding: 0 1em 0 1em;
+	vertical-align: top;
+}
+
+#header, #lecontenu, #footer {
 }
 
 #header {
-	width:90%;
-	height: 2em;
+	min-height: 5%;
 	text-align: right;
 	margin: auto;
 }
 
 #lecontenu {
-    width: 90%;
-    margin: auto;
-    margin-bottom: 10%;
-    min-height: 100%;
-    background-color: #ffffff;
+	margin: auto;
+	min-height: 85%;
+	background-color: #ffffff;
+	padding: 1em;
 }
 
-
 #footer {
-    bottom: 0;
-    min-height: 3em;
-    position: absolute;
-    right: 0;
-    text-align: center;
-    width: 100%;
+	margin: auto;
+	text-align: center;
 }
 
 .legal,
-.legal a{
+.legal a {
 	font-size: 0.9em;
 	color: rgba(147, 147, 147, 1);
 }
 
 .signature,
-.signature a{
+.signature a {
 	font-size: 0.8em;
 	color: rgba(147, 147, 147, 1);
 }
 
-.tooltip-inner  .creativecommons  {
+.tooltip-inner .creativecommons {
 	text-transform: lowercase !important;
-	color: #000;
-	background: #fff;
-	border: solid 1px #fff;
+	color: #000000;
+	background: #ffffff;
+	border: solid 1px #ffffff;
 }
 
-#textefooter{
-	width:90%;
+#textefooter {
+	width: 90%;
 	position: relative;
 	top: 1em;
 	display: inline-block;
 }
 
-#logosictiampetit{
+#logosictiampetit {
 	width: 7%;
 	display: inline-block;
 }
@@ -128,7 +123,7 @@ html, body {
 	padding: 0.714em;
 	border-bottom: 3px dotted #555555;
 	text-transform: uppercase;
-	color: rgba(109, 109,109, 1);
+	color: rgba(109, 109, 109, 1);
 	font-weight: bold;
 }
 
@@ -137,9 +132,12 @@ html, body {
 	text-align: center;
 }
 
+.boutons_action a:hover{
+	text-decoration: none;
+}
 .classeur-row .boutons_action .glyphicon {
 	visibility: hidden;
-	margin: 0 .3em 0 .3em ;
+	margin: 0 .3em 0 .3em;
 }
 
 .classeur-row:hover .boutons_action .glyphicon {
@@ -174,6 +172,7 @@ html, body {
 #documentcontent {
 	border: 5px dashed #cccccc;
 }
+
 /*-------------------------     DÉBUT MENU CONNEXION    -------------------------*/
 
 .menu_connexion {
@@ -181,17 +180,17 @@ html, body {
 }
 
 .menu_connexion
-.glyphicon{
+.glyphicon {
 	float: left;
 }
 
 .menu_connexion li:hover
-.glyphicon{
+.glyphicon {
 	color: rgba(50, 133, 171, 1);
 
 }
 
-.userpicture{
+.userpicture {
 	width: 2em;
 	height: 2em;
 	height: 2em;
@@ -200,8 +199,8 @@ html, body {
 
 /*-------------------------     FIN MENU CONNEXION =>   DÉBUT TABLEAU     -------------------------*/
 
-.tableau{
-	margin-top: 1em;
+.tableau {
+	top: 1em;
 	/*-webkit-border-radius: 4px;*/
 	/*-moz-border-radius: 4px;*/
 	/*border-radius: 4px;*/
@@ -214,13 +213,13 @@ html, body {
 	border: 1px solid rgb(204, 204, 204);
 	text-align: center;
 	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjY2NjY2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-	background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(230,230,230,1) 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(230,230,230,1)));
-	background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(230,230,230,1) 100%);
-	background: -o-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(230,230,230,1) 100%);
-	background: -ms-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(230,230,230,1) 100%);
-	background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(230,230,230,1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#cccccc',GradientType=0 );
+	background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, rgba(230, 230, 230, 1)));
+	background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
+	background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
+	background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
+	background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#cccccc', GradientType=0);
 	color: rgb(109, 110, 112);
 	font-size: .9em;
 	vertical-align: middle;
@@ -231,23 +230,23 @@ html, body {
 	font-size: .9em;
 }
 
-.statut_1{
+.statut_1 {
 	color: rgb(0, 131, 201);
 }
 
-.statut_2{
+.statut_2 {
 	color: rgb(15, 148, 0);
 }
 
-.statut_4{
+.statut_4 {
 	color: rgb(240, 117, 0);
 }
 
-.statut_3{
+.statut_3 {
 	color: rgb(109, 109, 109);
 }
 
-.statut_0{
+.statut_0 {
 	color: rgb(213, 0, 25);
 }
 
