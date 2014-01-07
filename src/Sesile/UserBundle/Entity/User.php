@@ -46,9 +46,9 @@ class User extends BaseUser
 
     public function __construct()
     {
-        $this->$classeurs_a_valider = new ArrayCollection();
-        $this->$classeurs_deposes = new ArrayCollection();
-        $this->$classeurs = new ArrayCollection();
+        $this->classeurs_a_valider = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->classeurs_deposes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->classeurs = new \Doctrine\Common\Collections\ArrayCollection();
         parent::__construct();
     }
 
