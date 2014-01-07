@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
+<div id="new_circuit_content">
+    <div id="circuit_listes">
+
+        <div class="selects_circuit">
+            <select id="users_list" size="5">
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" id="useradd_btn">&darr;</button>
+        </div>
+
+        <div class="selects_circuit">
+            <select id="circuits_list" size="5">
+                {% for circuit in circuits %}
+                    <option value="{{ circuit.id }}" data-ordre="{{ circuit.ordre }}">{{ circuit.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" id="circuitadd_btn">&darr;</button>
+        </div>
+
+    </div>
+    <div id="circuit"></div>
+</div>
+
+<script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>

@@ -23,11 +23,13 @@ class User extends BaseUser
      */
     protected $id;
 
-    public function getExpiresAt() {
+    public function getExpiresAt()
+    {
         return $this->expiresAt;
     }
 
-    public function getCredentialsExpireAt() {
+    public function getCredentialsExpireAt()
+    {
         return $this->getCredentialsExpireAt();
     }
 
@@ -42,7 +44,8 @@ class User extends BaseUser
     protected $classeurs_a_valider;
 
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->$classeurs_a_valider = new ArrayCollection();
         $this->$classeurs_deposes = new ArrayCollection();
         $this->$classeurs = new ArrayCollection();
@@ -52,14 +55,13 @@ class User extends BaseUser
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
 
-    
 
     /**
      * Add classeurs_deposes
@@ -70,7 +72,7 @@ class User extends BaseUser
     public function addClasseursDepose(\Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes)
     {
         $this->classeurs_deposes[] = $classeursDeposes;
-    
+
         return $this;
     }
 
@@ -87,7 +89,7 @@ class User extends BaseUser
     /**
      * Get classeurs_deposes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getClasseursDeposes()
     {
@@ -103,7 +105,7 @@ class User extends BaseUser
     public function addClasseursAValider(\Sesile\ClasseurBundle\Entity\Classeur $classeursAValider)
     {
         $this->classeurs_a_valider[] = $classeursAValider;
-    
+
         return $this;
     }
 
@@ -120,7 +122,7 @@ class User extends BaseUser
     /**
      * Get classeurs_a_valider
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getClasseursAValider()
     {

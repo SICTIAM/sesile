@@ -56,10 +56,10 @@ html, body {
 }
 
 #lecontenu {
+	width: 91%;
 	margin: auto;
 	min-height: 85%;
 	background-color: #ffffff;
-	padding: 1em;
 }
 
 #footer {
@@ -93,6 +93,11 @@ html, body {
 	display: inline-block;
 }
 
+#textefooter a {
+	text-decoration: none;
+	cursor: pointer;
+}
+
 #logosictiampetit {
 	width: 7%;
 	display: inline-block;
@@ -114,13 +119,13 @@ html, body {
 .bloc_accueil,
 .bloc_page {
 	background-color: #ffffff;
-	padding: 0.714em;
+	padding: 1.2em;
 	margin-bottom: 1.429em;
 }
 
 .titre_bloc_accueil {
 	background-color: #ffffff;
-	padding: 0.714em;
+	margin: 1em 0em .95em 0em;
 	border-bottom: 3px dotted #555555;
 	text-transform: uppercase;
 	color: rgba(109, 109, 109, 1);
@@ -198,7 +203,7 @@ html, body {
 }
 
 /*-------------------------     FIN MENU CONNEXION =>   DÉBUT TABLEAU     -------------------------*/
-
+/* TABLEAU */
 .tableau {
 	top: 1em;
 	/*-webkit-border-radius: 4px;*/
@@ -248,6 +253,41 @@ html, body {
 
 .statut_0 {
 	color: rgb(213, 0, 25);
+}
+
+/* BUTTON FORMULAIRE */
+
+.form_action {
+	display: inline-block;
+}
+
+.btn-valider,
+.btn-modifier,
+.btn-refuser,
+.btn-retracter,
+.btn-supprimer {
+	color: white;
+	padding: 3px 6px !important;
+}
+
+.btn-valider {
+	background-color: rgb(15, 148, 0);
+}
+
+.btn-modifier {
+	background-color: rgb(15, 148, 0);
+}
+
+.btn-refuser {
+	background-color: rgb(213, 0, 25);
+}
+
+.btn-supprimer {
+	background-color: rgb(109, 109, 109);
+}
+
+.btn-retracter {
+	background-color: rgb(240, 117, 0);
 }
 
 /*-------------------------     FIN TABLEAU =>   DÉBUT BLABLA     -------------------------*/

@@ -17,8 +17,9 @@ class ClasseursUsersRepository extends EntityRepository
     private static $classeursRetractables = null;
 
 
-    public function getClasseursVisibles($userid) {
-        if(self::$classeursVisibles === null) {
+    public function getClasseursVisibles($userid)
+    {
+        if (self::$classeursVisibles === null) {
             $em = $this->getEntityManager();
             $rsm = new ResultSetMappingBuilder($em);
             $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
@@ -41,8 +42,9 @@ class ClasseursUsersRepository extends EntityRepository
         return self::$classeursVisibles;
     }
 
-    public function getClasseursRetractables($userid) {
-        if(self::$classeursRetractables === null) {
+    public function getClasseursRetractables($userid)
+    {
+        if (self::$classeursRetractables === null) {
             $em = $this->getEntityManager();
             $rsm = new ResultSetMappingBuilder($em);
             $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');

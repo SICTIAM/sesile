@@ -42,14 +42,14 @@ class ClasseursUsers
     public function setOrdre($ordre)
     {
         $this->ordre = $ordre;
-    
+
         return $this;
     }
 
     /**
      * Get ordre
      *
-     * @return integer 
+     * @return integer
      */
     public function getOrdre()
     {
@@ -65,14 +65,14 @@ class ClasseursUsers
     public function setClasseur($classeur)
     {
         $this->classeur = $classeur;
-    
+
         return $this;
     }
 
     /**
      * Get classeur
      *
-     * @return integer 
+     * @return integer
      */
     public function getClasseur()
     {
@@ -88,14 +88,14 @@ class ClasseursUsers
     public function setUser($user)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
     /**
      * Get user
      *
-     * @return integer 
+     * @return integer
      */
     public function getUser()
     {

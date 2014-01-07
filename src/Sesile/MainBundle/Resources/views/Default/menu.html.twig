@@ -1,15 +1,6 @@
 {% block menu %}
     <div class="menu">
         <ul>
-            <li class="menu-elem menu-rouge">
-                <div class="entete-menu">
-                    <a href="{{ path("nouveau_circuit") }}">
-                        <div class="rectanglemenu" id="rougeclair"></div>
-                        Création d'un circuit
-                    </a>
-                </div>
-            </li>
-
             <li class="menu-elem menu-bleu">
                 <div class="dd-toggle entete-menu {% if( '/classeur/' in app.request.requestUri ) %}titremenu{% endif %}">
                     <a href="#">
@@ -42,6 +33,14 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li class="menu-elem menu-rouge">
+                <div class="entete-menu">
+                    <a href="{{ path("gestion_circuit") }}">
+                        <div class="rectanglemenu" id="rougeclair"></div>
+                        Gestion des circuits
+                    </a>
+                </div>
             </li>
             <li class="menu-elem menu-jaune">
                 <div class="entete-menu">

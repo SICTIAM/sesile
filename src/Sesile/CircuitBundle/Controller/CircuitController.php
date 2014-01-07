@@ -21,6 +21,11 @@ class CircuitController extends Controller
         // recup la liste des users en base
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();
+        foreach ($users as &$user) {
+            if ($user->getId() == $this->getUser()->getId()) {
+
+            }
+        }
 
         // recup la list des circuits
         // TODO recup uniquement pour le user connecté
@@ -30,10 +35,11 @@ class CircuitController extends Controller
     }
 
     /**
-     * @Route("/nouveau/", name="nouveau_circuit")
+     * @Route("/gerer/", name="gestion_circuit")
      * @Template()
      */
-    public function nouveauAction() {
+    public function indexAction()
+    {
         return $this->newAction();
     }
 

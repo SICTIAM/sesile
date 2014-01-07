@@ -1,54 +1,64 @@
+#new_circuit_content {
+	display: table;
+}
+
+#circuit_listes {
+	display: table-row;
+}
+
 #circuit {
-    width: 100%;
-    min-height: 120px;
-    border: 1px solid #cccccc;
+	width: 100%;
+	min-height: 120px;
+	border: 1px solid #cccccc;
+	display: table-row;
 }
 
 .selects_circuit {
-    display: inline-block;
-    width: 30%;
+	margin: auto;
+	display: table-cell;
+	width: 45%;
 }
 
 .selects_circuit select {
-    width: 100%;
+	width: 100%;
 }
 
 .perso_circuit {
-    text-align: center;
-    cursor: pointer;
-    margin: 10px;
+	text-align: center;
+	cursor: pointer;
+	margin: 10px;
 }
 
 .perso_circuit img {
-    width: 80px;
-    height: 80px;
-    display: block;
+	width: 80px;
+	height: 80px;
+	display: block;
 }
 
 .emplacement {
-    width: 80px;
-    height: 80px;
-    background-color: #eeeeee;
+	width: 80px;
+	height: 80px;
+	background-color: #eeeeee;
 }
 
 .fleche_circuit, .perso_circuit, .emplacement {
-    float: left;
+	float: left;
 }
 
 .favoris_circuit {
-    height: 32px;
-    width: 32px;
-    cursor: pointer;
+	height: 32px;
+	width: 32px;
+	cursor: pointer;
 }
 
 #pop_favoris {
-    display: none;
-    position: absolute;
-    border: 1px solid #cccccc;
-    padding: 10px;
-    background-color: #ffffff;
+	display: none;
+	position: absolute;
+	border: 1px solid #cccccc;
+	padding: 10px;
+	background-color: #ffffff;
 }
 
 .delete_circuit {
-    cursor: pointer;
+	cursor: pointer;
 }

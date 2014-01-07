@@ -1,29 +1,33 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    <div class="titre_page">Déposer un nouveau classeur</div>
-    <br>
-    <form class="form-horizontal" role="form" action="{{ path('classeur_create') }}" method="POST">
-        <div class="">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="type" class="col-sm-2 control-label">Type</label>
-                    <div class="col-sm-10">
-                        <select id="type" name="type">
-                            <option value="elclassico" selected>Classique</option>
-                            <option value="elpez">PESV2</option>
-                        </select>
-                        <img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+    <div class="bloc_page">
+        <div class="titre_page">Déposer un nouveau classeur</div>
+        <br>
+
+        <form class="form-horizontal" role="form" action="{{ path('classeur_create') }}" method="POST">
+            <div class="">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="type" class="col-sm-2 control-label">Type</label>
+                        <div class="col-sm-10">
+                            <select id="type" name="type">
+                                <option value="elclassico" selected>Classique</option>
+                                <option value="elpez">PESV2</option>
+                            </select>
+                            <img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="contenttypedform"></div>
-    </form>
-    <br/>
-    <a href="{{ path('classeur') }}">
-        Retour à la liste des classeur
-    </a>
+            <div id="contenttypedform"></div>
+        </form>
+        <br/>
+
+        <a href="{{ path('classeur') }}">
+            Retour à la liste des classeur
+        </a>
+    </div>
 {% endblock %}
 
 {% block losjavascriptos %}
