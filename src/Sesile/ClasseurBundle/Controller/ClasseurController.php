@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sesile\ClasseurBundle\Entity\Classeur;
+use Sesile\DocumentBundle\Entity\Document;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 
 /**
@@ -157,6 +158,16 @@ class ClasseurController extends Controller
             if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
                 unlink($file->getPathname());
             } else { // Pas d'erreur, on crée un document correspondant
+                $document = new Document();
+                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
+                $document->setRepourl($file->getPathname()); //Temporairement associé au nom du fichier en attendant les repository git
+                $document->setType($file->getMimeType());
+                $document->setSigned(false);
+                $document->setClasseur($classeur);
+                $em->persist($document);
+                $em->flush();
+                $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur", null);
+
 
             }
         }

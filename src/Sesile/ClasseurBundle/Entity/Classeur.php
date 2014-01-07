@@ -4,6 +4,7 @@ namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * Classeur
  *
@@ -93,6 +94,12 @@ class Classeur
      * @ORM\Column(name="circuit", type="string", length=255)
      */
     private $circuit;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\DocumentBundle\Entity\Document", mappedBy="classeur")
+     */
+    protected $documents;
+
 
     /**
      * Get id
@@ -340,6 +347,7 @@ class Classeur
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -352,7 +360,7 @@ class Classeur
         $circuit = explode(",", $this->getCircuit());
         $curr_validant = array_search($this->validant, $circuit);
         $prev_validant = $curr_validant - 1;
-        return ($next_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
+        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
     }
 
     /**
@@ -422,5 +430,38 @@ class Classeur
     public function isSignable($userid)
     {
         return true;
+    }
+
+    /**
+     * Add documents
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Document $documents
+     * @return Classeur
+     */
+    public function addDocument(\Sesile\ClasseurBundle\Entity\Document $documents)
+    {
+        $this->documents[] = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Remove documents
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Document $documents
+     */
+    public function removeDocument(\Sesile\ClasseurBundle\Entity\Document $documents)
+    {
+        $this->documents->removeElement($documents);
+    }
+
+    /**
+     * Get documents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
     }
 }
