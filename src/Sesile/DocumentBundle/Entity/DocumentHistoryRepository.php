@@ -3,6 +3,7 @@
 namespace Sesile\DocumentBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Sesile\DocumentBundle\Entity\DocumentHistory;
 
 /**
  * DocumentHistoryRepository
@@ -12,4 +13,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class DocumentHistoryRepository extends EntityRepository
 {
+
+    public function writeLog($document, $comment, $sha)
+    {
+        $em = $this->getEntityManager();
+        $documentHistory = new DocumentHistory();
+        $documentHistory->setDate(new \DateTime("now"));
+        $documentHistory->setComment($comment);
+        $documentHistory->setSha($sha);
+        $documentHistory->setDocument($document);
+        $em->persist($documentHistory);
+        $em->flush();
+
+    }
 }
+
+
+

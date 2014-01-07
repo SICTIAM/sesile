@@ -24,7 +24,7 @@ class DocumentHistory
     /**
      * @var string
      *
-     * @ORM\Column(name="sha", type="string", length=255)
+     * @ORM\Column(name="sha", type="string", length=255, nullable=true)
      */
     private $sha;
 
