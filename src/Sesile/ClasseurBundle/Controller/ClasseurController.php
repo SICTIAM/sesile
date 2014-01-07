@@ -2,14 +2,11 @@
 
 namespace Sesile\ClasseurBundle\Controller;
 
-use Sesile\ClasseurBundle\Entity\ClasseursUsers;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sesile\ClasseurBundle\Entity\Classeur;
-use Sesile\ClasseurBundle\Form\ClasseurType;
+use Sesile\ClasseurBundle\Entity\ClasseursUsers;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Classeur controller.
@@ -113,6 +110,8 @@ class ClasseurController extends Controller {
      *
      */
     public function createAction(Request $request) {
+
+
         $em = $this->getDoctrine()->getManager();
         $classeur = new Classeur();
         $classeur->setNom($request->request->get('name'));
@@ -141,10 +140,27 @@ class ClasseurController extends Controller {
         }
         $em->flush();
 
-        //$respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
 
-        /*
-        $error = false;
+        //Gestion des documents
+
+
+        //Sauvegarde des enregistrements
+        $manager = $this->container->get('oneup_uploader.orphanage_manager')->get('docs');
+        $files = $manager->uploadFiles();
+
+        var_dump($request->request);
+        foreach ($files as $file) {
+            //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
+            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
+                unlink($file->getPathname());
+            } else { // Pas d'erreur, on crée un document correspondant
+
+            }
+        }
+
+        // $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
+
+        $error = false; /*
         if($respCircuit->getContent()!='OK') {
             $this->get('session')->getFlashBag()->add(
                 'error',
@@ -160,16 +176,16 @@ class ClasseurController extends Controller {
             );
             $error=true;
         }
-
+*/
         if(!$error){
             $this->get('session')->getFlashBag()->add(
                 'success',
                 'Classeur créé'
             );
         }
-        */
 
-        return $this->redirect($this->generateUrl('liste_classeurs'));
+
+        // return $this->redirect($this->generateUrl('liste_classeurs'));
     }
 
     /**

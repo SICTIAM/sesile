@@ -12,7 +12,7 @@ function loadcorrectform(){
                 success: function(html){
 
                     $('#contenttypedform').html(html);
-                    //$('#circuitcontent').load(Routing.generate('new_circuit'));
+                    $('#circuitcontent').load(Routing.generate('new_circuit'));
                     $('#documentcontent').load(Routing.generate('new_document'));
                     $('#loadinggif').hide();
 
