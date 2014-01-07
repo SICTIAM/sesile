@@ -4,9 +4,14 @@ namespace Sesile\ClasseurBundle\Controller;
 
 use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\ClasseurBundle\Entity\ClasseursUsers;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+use Sesile\ClasseurBundle\Form\ClasseurType;
+
 
 /**
  * Classeur controller.
