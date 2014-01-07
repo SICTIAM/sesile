@@ -190,7 +190,7 @@ class ClasseurController extends Controller {
         }
 
 
-        // return $this->redirect($this->generateUrl('liste_classeurs'));
+        return $this->redirect($this->generateUrl('liste_classeurs'));
     }
 
     /**
