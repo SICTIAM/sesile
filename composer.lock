@@ -143,11 +143,11 @@
             ],
             "authors": [
                 {
-                    "name": "Cédric Lombardot",
+                    "name": "CÃ©dric Lombardot",
                     "email": "cedric.lombardot@gmail.com"
                 },
                 {
-                    "name": "François Zaninotto"
+                    "name": "FranÃ§ois Zaninotto"
                 }
             ],
             "description": "A generator for PHP code based on Twig template engine",
@@ -2004,7 +2004,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pablo Díez",
+                    "name": "Pablo DÃ­ez",
                     "email": "pablodip@gmail.com",
                     "homepage": "http://github.com/pablodip"
                 }
@@ -2804,7 +2804,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pablo Díez",
+                    "name": "Pablo DÃ­ez",
                     "email": "pablodip@gmail.com",
                     "homepage": "http://github.com/pablodip"
                 }

@@ -5,6 +5,13 @@
 <script src="{{ asset('js/dropzone.js') }}"></script>
 <script type="text/javascript">
 
-    $("div#fichiers").dropzone({ url: "/file/post" });
+    var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}" });
+
+    dropzone.on('success', function (file, response) {
+        $.each(response, function (serverfilename, originalname) {
+            $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
+        });
+    });
+
 
 </script>

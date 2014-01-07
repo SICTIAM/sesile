@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-
 class DocumentController extends Controller
 {
     /**
@@ -20,19 +19,11 @@ class DocumentController extends Controller
     public function newAction()
     {
 
+
         return array();
 
     }
 
 
-    /**
-     * @Route("/", name="create_document")
-     * @Method("POST")
-     */
-    public function createAction(Request $request)
-    {
 
-
-        return new Response('OK');
-    }
 }
