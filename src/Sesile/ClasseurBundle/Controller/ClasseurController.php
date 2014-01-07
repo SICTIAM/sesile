@@ -163,9 +163,11 @@ class ClasseurController extends Controller
                 $document->setRepourl($file->getPathname()); //Temporairement associé au nom du fichier en attendant les repository git
                 $document->setType($file->getMimeType());
                 $document->setSigned(false);
+                $document->setClasseur($classeur);
                 $em->persist($document);
                 $em->flush();
                 $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur", null);
+
 
             }
         }
