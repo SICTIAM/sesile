@@ -7,24 +7,24 @@ security:
     encoders:
         Sesile\UserBundle\Entity\User: sha512
 
-    role_hierarchy:
-        ROLE_ADMIN:       [ROLE_USER]
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN]
-
     providers:
-        main:
+        webservice:
             id: fos_user.user_provider.username
-
     firewalls:
-        main:
-            pattern:        ^/
-            anonymous:      true
-            provider:       main
-            form_login:
-                login_path: fos_user_security_login
-                check_path: fos_user_security_check
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        secured_area:
+            pattern:    ^/
+            anonymous: true
+            provider: webservice
             logout:
-                path:       fos_user_security_logout
-                target:     /
-            remember_me:
-                key:        %secret%
+                success_handler: security.logout.success_handler
+            cas:
+                cas_server: sso.dev.sictiam.fr
+                cas_port: 443
+                cas_path: ~
+                ca_cert_path: ~
+                cas_protocol: S1
+                cas_mapping_attribute:
+                check_path: /login_check

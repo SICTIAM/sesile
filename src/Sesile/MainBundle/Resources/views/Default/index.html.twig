@@ -28,9 +28,9 @@
             {% block header %}
                 {% if app.user != null %}
                     Bonjour {{ app.user.username }}<br>
-                    <a href="{{ path("fos_user_security_logout") }}">D&eacute;connexion</a>
+                    <a href="{{ path("logout") }}">D&eacute;connexion</a>
                 {% else %}
-                    <a href="{{ path("fos_user_security_login") }}">Connexion</a>
+                    <a href="{{ path("login_check") }}">Connexion</a>
                 {% endif %}
             {% endblock %}
         </div>

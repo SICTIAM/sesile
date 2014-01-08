@@ -45,3 +45,12 @@ fos_user_change_password:
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+login:
+    pattern:   /login_check
+
+login_check:
+    pattern:   /login_check
+
+logout:
+    pattern:   /logout

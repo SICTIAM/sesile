@@ -23,6 +23,8 @@ class AppKernel extends Kernel {
             new Sesile\UserBundle\SesileUserBundle(),
             new \FOS\UserBundle\FOSUserBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
+            new Gorg\Bundle\CasBundle\GorgCasBundle(),
             new Sesile\ClasseurBundle\SesileClasseurBundle(),
             new Sesile\DocumentBundle\SesileDocumentBundle(),
             new Sesile\CircuitBundle\SesileCircuitBundle(),

@@ -4,6 +4,7 @@ namespace Sesile\UsersBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
+use Sesile\UserBundle\phpCAS;
 
 class DefaultController extends Controller
 {

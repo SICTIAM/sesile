@@ -6,7 +6,7 @@
  * Time: 12:13
  */
 
-namespace Sesile\UsersBundle;
+namespace Sesile\MainBundle;
 
 
 class phpCAS
