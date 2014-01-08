@@ -27,25 +27,25 @@ class User extends BaseUser
      *
      * @ORM\Column(name="Nom", type="string", length=255)
      */
-    protected $nom;
+    protected $Nom;
 
     /**
      * @var string
      *
      * @ORM\Column(name="Prenom", type="string", length=255)
      */
-    protected $prenom;
+    protected $Prenom;
 
-    public function setPrenom($prenom)
+    public function setPrenom($Prenom)
     {
-        $this->username = $prenom;
+        $this->Prenom = $Prenom;
 
         return $this;
     }
 
-    public function setNom($nom)
+    public function setNom($Nom)
     {
-        $this->username = $nom;
+        $this->Nom = $Nom;
 
         return $this;
     }
@@ -57,7 +57,7 @@ class User extends BaseUser
      */
     public function getNom()
     {
-        return $this->nom;
+        return $this->Nom;
     }
 
 
@@ -68,15 +68,17 @@ class User extends BaseUser
      */
     public function getPrenom()
     {
-        return $this->prenom;
+        return $this->Prenom;
     }
 
-    public function getExpiresAt() {
+    public function getExpiresAt()
+    {
         return $this->expiresAt;
     }
 
 
-    public function getCredentialsExpireAt() {
+    public function getCredentialsExpireAt()
+    {
         return $this->getCredentialsExpireAt();
     }
 }

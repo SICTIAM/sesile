@@ -62,22 +62,20 @@ class DefaultController extends Controller {
 
             if ($form->isValid()) {
 
-                $entity->setNom("Nom");
-                $entity->setPrenom("Prenom");
-
+                $entity->setEmail($form->get('username')->getData());
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
 
                 $plainpwd = $form->get('plainPassword')->getData();
-                $email = $entity->getEmail();
+                $email = $entity->getUsername();
 //création du tableau d'attributs
                 $entry["objectClass"][0] = "inetOrgPerson";
                 $entry["objectClass"][1] = "organizationalPerson";
                 $entry["objectClass"][2] = "person";
                 $entry["objectClass"][3] = "shadowAccount";
                 $entry["cn"] = $email;
-                $entry["sn"] = "Prenom Nom";
+                $entry["sn"] = $entity->getPrenom() . ' ' . $entity->getNom();
                 $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
                 $entry["givenName"] = $email;
                 $entry["shadowInactive"] = -1;
@@ -261,8 +259,7 @@ class DefaultController extends Controller {
             ),
             'multiple' => true
         ));
-        $form->add('Nom','text');
-        $form->add('Prenom','text');
+
         $form->add('submit', 'submit', array('label' => 'Create'));
 
 
