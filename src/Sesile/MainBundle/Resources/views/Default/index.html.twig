@@ -68,6 +68,9 @@
                         <a class="btn btn-success" href="{{ path("fos_user_security_login") }}">Connexion</a>
                     {% endif %}
                 </div>
+
+                {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
+
                 <div id="lecontenu">
                     {% block content %}
                         <div id="contenu_acceuil">
@@ -159,6 +162,8 @@
                 textill.on('mouseenter', function () {
                     $(this).textillate('start');
                 });
+
+
             </script>
         </div>
     </body>
