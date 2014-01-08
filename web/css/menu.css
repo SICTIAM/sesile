@@ -1,7 +1,7 @@
 .arrows{
     position: relative;
-    right: 10px;
-    bottom: 6px;
+    right: 0.714em;
+    bottom: 0.429em;
 }
 
 .menu ul {
@@ -9,12 +9,12 @@
 }
 
 .menu-elem {
-    min-height: 40px;
-    line-height: 40px;
+    min-height: 2.857em;
+    line-height: 2.857em;
     vertical-align: middle;
     height: auto;
     width: 100%;
-    text-indent: 10px;
+    text-indent: 0.714em;
 }
 
 .titremenu a {
@@ -22,12 +22,12 @@
 }
 
 .titremenu + .dd-menu {
-    display: block;
+    
 }
 
 .dd-menu {
     display: none;
-    padding: 0 0 0 10px;
+    padding: 0 0 0 0.714em;
 }
 
 .dd-toggle  {
@@ -35,9 +35,13 @@
 }
 
 .rectanglemenu{
-    width: 8px;
-    height: 40px;
+    width: 0.571em;
+    height:100%;
     float: left;
+}
+
+.entete-menu{
+	height: 3em;
 }
 
 .menu-rouge  .entete-menu {
@@ -76,6 +80,7 @@
     color: #ffffff;
     text-transform: uppercase;
     text-decoration: none;
+    font-size: .7em;
 }
 
 .menu-vert .entete-menu  {
@@ -88,4 +93,12 @@
 
 #vertclair {
     background-color: rgba(151, 197, 78, 1);
+}
+
+.carette {
+
+	float: right;
+	position: relative;
+	top:1.429em;
+	right:0.857em;
 }

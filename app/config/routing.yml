@@ -20,9 +20,15 @@ sesile_main:
     prefix:   /
 
 sesile_users:
-    resource: "@SesileUserBundle/Controller"
+    resource: "@SesileUserBundle/Controller/DefaultController.php"
     type: annotation
     prefix: /user
+
+sesile_hierarchy:
+    resource: "@SesileUserBundle/Controller/HierarchieController.php"
+    type: annotation
+    prefix: /hierarchy
+
 
 _default:
     pattern: /

@@ -1,25 +1,25 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
-    <table class="table">
-    <thead>
-        <tr>
-            <th>Identifiant</th>
-            <th>Mail</th>
-            <th>Actif</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for user in users %}
-        <tr class="user-row" data-id="{{ user.id }}">
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.enabled }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-    </table>
-    <a href="{{ path("ajout_user") }}">Ajouter un utilisateur</a>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Identifiant</th>
+                <th>Mail</th>
+                <th>Actif</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr class="user-row" data-id="{{ user.id }}">
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.enabled }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        <a href="{{ path("ajout_user") }}">Ajouter un utilisateur</a>
     <script type="text/javascript">
         $(".user-row").click(function() {
             document.location.href = Routing.generate('user_edit', { id: $(this).data("id") })

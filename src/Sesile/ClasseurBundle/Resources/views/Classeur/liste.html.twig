@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table tableau">
     <thead>
         <tr>
             <th>Titre du classeur</th>
@@ -16,11 +16,16 @@
                 <td>inter</td>
                 <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
                 <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
-                <td>Statut</td>
+                <td class="statut">
+                    <span class="glyphicon statut_{{ classeur.status }}"></span>
+                </td>
                 <td class="boutons_action">
-                    <a href="{{ path("classeur_edit", { 'id': classeur.id  }) }}"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="{{ path("classeur_show", {'id' : classeur.id }) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
-                    <a href="{{ path("classeur_delete", {'id' : classeur.id }) }}"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="{{ path("classeur_edit", {'id' : classeur.id }) }}">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    {% if classeur.isSupprimable(app.user.id) %}
+                    <a href="{{ path("classeur_edit", {'id' : classeur.id }) }}">
+                            <span class="glyphicon glyphicon-trash"></span></a>{% endif %}
                 </td>
             </tr>
         {% endfor %}
@@ -31,3 +36,5 @@
         suivreUrl("" + $(this).data("id"), e);
     });
 </script>
+
+

@@ -3,6 +3,7 @@
 namespace Sesile\DocumentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Sesile\ClasseurBundle\Entity\Classeur;
 
 /**
  * Document
@@ -53,6 +54,13 @@ class Document
      * @ORM\OneToMany(targetEntity="DocumentHistory", mappedBy="document")
      */
     protected $histories;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="documents")
+     * @ORM\JoinColumn(name="classeur_id", referencedColumnName="id")
+     */
+    private $classeur;
 
 
     /**
@@ -195,5 +203,28 @@ class Document
     public function getHistories()
     {
         return $this->histories;
+    }
+
+    /**
+     * Set classeur
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeur
+     * @return Document
+     */
+    public function setClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeur = null)
+    {
+        $this->classeur = $classeur;
+
+        return $this;
+    }
+
+    /**
+     * Get classeur
+     *
+     * @return \Sesile\ClasseurBundle\Entity\Classeur
+     */
+    public function getClasseur()
+    {
+        return $this->classeur;
     }
 }
