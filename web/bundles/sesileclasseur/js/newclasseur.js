@@ -13,6 +13,8 @@ function loadcorrectform() {
             $('#circuitcontent').load(Routing.generate('new_circuit'));
             $('#documentcontent').load(Routing.generate('new_document'));
             $('#loadinggif').hide();
+
+
         }
     });
 }
