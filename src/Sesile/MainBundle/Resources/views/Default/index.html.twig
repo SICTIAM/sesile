@@ -71,6 +71,9 @@
                 {% else %}
                 <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
                 {% endif %}
+        </div>
+
+                {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
                 <div id="lecontenu">
                     {% block content %}
                         <div id="contenu_acceuil">

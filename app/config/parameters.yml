@@ -12,6 +12,4 @@ parameters:
     mailer_password: null
     locale: fr
     secret: ThisTokenIsNotSoSecretChangeIt
-    cas_server:        172.17.100.78
-    cas_port:          389
-    cas_path:          /cas/
+

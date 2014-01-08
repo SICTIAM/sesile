@@ -25,4 +25,17 @@ class DocumentController extends Controller
     }
 
 
+    /**
+     * @Route("/editforclasseur/{id}", name="new_document",  options={"expose"=true})
+     * @Template()
+     */
+    public function editAction(Request $request, $id)
+    {
+
+
+        return array();
+
+    }
+
+
 }
