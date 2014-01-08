@@ -1,29 +1,94 @@
 {% block menu %}
     <div class="menu">
         <ul>
-            <li class="menu-elem menu-1"><a href="{{ path("classeur_new") }}">Création d'un circuit</a></li>
-            <li class="menu-elem menu-2">
-                <a class="dd-toggle" href="#">Classeurs<b class="caret"></b></a>
+            <li class="menu-elem menu-rouge">
+                <div class="entete-menu">
+                    <a href="{{ path("nouveau_circuit") }}">
+                        <div class="rectanglemenu" id="rougeclair"></div>
+                        Création d'un circuit
+                    </a>
+                </div>
+            </li>
+
+            <li class="menu-elem menu-bleu">
+                <div class="dd-toggle entete-menu {% if( '/classeur/' in app.request.requestUri ) %}titremenu{% endif %}">
+                    <a href="#">
+                        <div class="rectanglemenu" id="bleuclair"></div>
+                        Classeurs<b class="caret"></b></a>
+                </div>
                 <ul class="dd-menu">
-                    <li><a href="{{ path("classeur") }}">Liste des classeurs</a></li>
-                    <li><a href="{{ path("classeur_new") }}">Ajout d'un classeur</a></li>
-                    <li><a href="">A valider</a></li>
+                    <li>
+                        <a href="{{ path("classeur") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                            Liste des classeurs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("classeur_new") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                            Ajout d'un classeur
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                            A valider
+                        </a>
+                    </li>
                 </ul>
             </li>
-            <li class="menu-elem menu-3">
-                <a data-toggle="dropdown" class="dd-toggle" href="#">Utilisateurs<b class="caret"></b></a>
+            <li class="menu-elem menu-jaune">
+                <div class="entete-menu">
+                    <a href="#">
+                        <div class="rectanglemenu" id="jauneclair"></div>
+                        D&eacute;l&eacute;gations
+                    </a>
+                </div>
+            </li>
+            <li class="menu-elem menu-vert ">
+                <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
+                    <a href="#">
+                        <div class="rectanglemenu" id="vertclair"></div>
+                        Utilisateurs<b class="caret"></b></a>
+                </div>
                 <ul class="dd-menu">
-                    <li><a href="{{ path("liste_users") }}">Liste des utilisateurs</a></li>
-                    <li><a href="{{ path("liste_users") }}">Voir son compte</a></li>
-                    <li><a href="{{ path("liste_users") }}">Groupes</a></li>
-                    <li><a href="{{ path("liste_users") }}">Hiérarchie</a></li>
+                    <li>
+                        <a href="{{ path("liste_users") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Liste des utilisateurs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("liste_users") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Voir son compte
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("liste_users") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Groupes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("liste_users") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Hiérarchie
+                        </a>
+                    </li>
                 </ul>
             </li>
         </ul>
     </div>
     <script type="text/javascript">
-        $(".dd-toggle").click(function () {
-            $(this).next(".dd-menu").toggle();
+        $(".entete-menu").click(function () {
+            $(".titremenu").removeClass("titremenu");
+            $(this).addClass("titremenu");
+        });
+
+        $(".dd-menu li").click(function () {
+            $(".dd-menu .titremenu").removeClass("titremenu");
+            $(this).addClass("titremenu");
         });
     </script>
 {% endblock %}

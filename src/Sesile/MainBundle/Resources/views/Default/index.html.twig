@@ -13,13 +13,14 @@
     <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
     {% block css %}
     {% endblock %}
 </head>
 <body>
 <div id="maman">
     <div class="col-md-2" id="lemenu">
-        <div>logo</div>
+        <a href="/app_dev.php"><div id="logo"><img src="{{  asset("/images/badlogo.png") }}" /></div></a>
         {% include 'SesileMainBundle:Default:menu.html.twig' %}
     </div>
     <div class="col-md-10" id="content">
@@ -37,29 +38,65 @@
             {% block content %}
                 <div class="bloc_accueil">
                     <div id="bienvenue">
-                        <div class="titre_bloc_accueil">Bienvenue</div>
+                        <div class="titre_bloc_accueil"><span class="glyphicon glyphicon-home"></span>Bienvenue</div>
                         Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant
-                        impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand
+                        impression. Le Lorem Ipsum est le le le lel (je vous le donne)
+                        <a href="#" data-toggle="tooltip" class="sesiletooltip" title="test tooltip">lel lelllllelelfaux texte</a>
+                        standard de l'imprimerie depuis les années 1500, quand
                         un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de
                     </div>
                 </div>
                 <div class="bloc_accueil">
                     <div id="classeurs_a_valider">
-                        <div class="titre_bloc_accueil">Classeurs à valider</div>
+                        <div class="titre_bloc_accueil"><span class="glyphicon glyphicon-edit"></span>Classeurs à valider</div>
                         {% render url("liste_classeurs") %}
                     </div>
                     <div id="liste_classeurs">
-                        <div class="titre_bloc_accueil">Classeurs visibles</div>
+                        <div class="titre_bloc_accueil"><span class="glyphicon glyphicon-eye-open"></span>Classeurs visibles</div>
                         {% render url("liste_classeurs") %}
                     </div>
                 </div>
             {% endblock %}
         </div>
         <div class="" id="footer">
-            BLABLA
+            <div id="textefooter">
+                <span class="legal">
+                    <a class="contact" href="mailto:internet@sictiam.fr">
+                    CONTACT
+                    </a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a  class="sesiletooltip mentionlegales" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode" target="_blank" data-toggle="tooltip"
+                        title="Parapheur Sesile - 2013">
+                    MENTIONS L&Eacute;GALES
+                    </a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a  class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank" data-toggle="tooltip"
+                       title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France">
+                       CREATIVE COMMONS
+                    </a>
+                </span>
+                <br />
+                <span class="signature">
+                    COPYRIGHT &copy;2013
+                    &nbsp; &ndash; &nbsp;
+                    <a class="sitesictiam" href="http://www.sictiam.fr/" target="_blank">
+                    R&Eacute;ALIS&Eacute; PAR LE SICTIAM
+                    </a>
+                </span>
+            </div>
+            <div id="logosictiampetit">
+                <img src="/images/logosictiampetit.png" />
+            </div>
         </div>
         {% block losjavascriptos %}
         {% endblock %}
+        <script>
+
+            $('.sesiletooltip').tooltip({
+                placement: 'top',
+                html: true
+            });
+        </script>
     </div>
 </div>
 </body>

@@ -72,9 +72,16 @@ class ClasseurController extends Controller
      *
      */
     public function createAction(Request $request) {
-        $respCircuit = $request->request->get('circuit');
-        var_dump($respCircuit);exit;
-        $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request) );
+        $classeur = new Classeur();
+        $classeur->setNom($request->request->get('name'));
+        $classeur->setDescription($request->request->get('desc'));
+        $classeur->setType($request->request->get('type'));
+        $classeur->setCircuit($request->request->get('circuit'));
+        $classeur->setUser($this->getUser()->getId());
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($classeur);
+        $em->flush();
+        //$respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request) );
 
         $error = false;
         if($respCircuit->getContent()!='OK'){
@@ -100,7 +107,7 @@ class ClasseurController extends Controller
         }
 
 
-        return $this->redirect($this->generateUrl('classeur'));
+        return $this->redirect($this->generateUrl('liste_classeurs'));
     }
 
     /**

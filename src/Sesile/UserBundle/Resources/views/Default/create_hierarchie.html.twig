@@ -1,0 +1,12 @@
+{% extends "SesileMainBundle:Default:main.html.twig" %}
+
+{% block content %}
+    <form id="formulaire" action="{{ path('create_hierarchie') }}"method="POST">
+        <input type ="text" value="Nom du groupe" name="Nom"/>
+        <input type ="hidden" name="GroupeId"/>
+        <input type ="hidden" name="UserId"/>
+        <input type ="hidden" name="ParentId"/>
+        <input type ="hidden" name="Collectivite"/>
+        <Button>Valider</Button>
+    </form>
+{% endblock %}

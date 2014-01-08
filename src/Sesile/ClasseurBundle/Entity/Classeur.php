@@ -57,7 +57,34 @@ class Classeur
      */
     private $type;
 
+    /**
+     * @var integer
+     * En cours = 1, terminé = 2, erreur = 0
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
 
+    /**
+ * @var int
+ *
+ * @ORM\Column(name="user", type="integer")
+ *
+ * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs")
+ * @ORM\JoinColumn(name="user", referencedColumnName="id")
+ *
+ */
+    private $user;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="validant", type="integer")
+     *
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs_a_valider")
+     * @ORM\JoinColumn(name="validant", referencedColumnName="id")
+     *
+     */
+    private $validant;
 
     /**
      * Get id
@@ -146,7 +173,6 @@ class Classeur
         $this->creation = new \DateTime();
     }
 
-
     /**
      * Set circuit
      *
@@ -191,5 +217,88 @@ class Classeur
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set user
+     *
+     * @param integer $user
+     * @return Classeur
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return integer 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     * @return Classeur
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer 
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set validant
+     *
+     * @param integer $validant
+     * @return Classeur
+     */
+    public function setValidant($validant)
+    {
+        $this->validant = $validant;
+    
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setValidantValue() {
+        $this->validant = $this->circuit[0];
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setStatusValue() {
+        $this->status = 1;
+    }
+
+    /**
+     * Get validant
+     *
+     * @return integer 
+     */
+    public function getValidant()
+    {
+        return $this->validant;
     }
 }

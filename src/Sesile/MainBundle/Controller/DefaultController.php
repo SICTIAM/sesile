@@ -6,8 +6,6 @@ use Sesile\CircuitBundle\Controller\CircuitController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 
 class DefaultController extends Controller
 {
@@ -17,10 +15,15 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $bienvenue = "a";
-       $this->redirect('http://sesile.dev.jm/app_dev.php/user/',$status = 302);
-        return array("bienvenue" => $bienvenue);
+        return array();
     }
 
-
+    /**
+     * @Route("/accueil", name="accueil")
+     * @Template()
+     */
+    public function accueilAction() {
+        $bienvenue = "a";
+        return array("bienvenue" => $bienvenue);
+    }
 }
