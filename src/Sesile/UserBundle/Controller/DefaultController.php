@@ -62,10 +62,8 @@ class DefaultController extends Controller {
 
             if ($form->isValid()) {
 
-                $entity->setNom($form->get('Nom')->getData());
-                $entity->setPrenom($form->get('Prenom')->getData());
-                $entity->setUsername($form->get('username')->getData());
-                $entity->setPlainPassword($form->get('plainPassword')->getData());
+                $entity->setNom("Nom");
+                $entity->setPrenom("Prenom");
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);

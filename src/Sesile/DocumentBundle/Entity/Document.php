@@ -66,7 +66,7 @@ class Document
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -82,14 +82,14 @@ class Document
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -105,14 +105,14 @@ class Document
     public function setRepourl($repourl)
     {
         $this->repourl = $repourl;
-    
+
         return $this;
     }
 
     /**
      * Get repourl
      *
-     * @return string 
+     * @return string
      */
     public function getRepourl()
     {
@@ -128,14 +128,14 @@ class Document
     public function setType($type)
     {
         $this->type = $type;
-    
+
         return $this;
     }
 
     /**
      * Get type
      *
-     * @return string 
+     * @return string
      */
     public function getType()
     {
@@ -151,19 +151,20 @@ class Document
     public function setSigned($signed)
     {
         $this->signed = $signed;
-    
+
         return $this;
     }
 
     /**
      * Get signed
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getSigned()
     {
         return $this->signed;
     }
+
     /**
      * Constructor
      */
@@ -171,7 +172,7 @@ class Document
     {
         $this->histories = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Add histories
      *
@@ -181,7 +182,7 @@ class Document
     public function addHistorie(\Sesile\DocumentBundle\Entity\DocumentHistory $histories)
     {
         $this->histories[] = $histories;
-    
+
         return $this;
     }
 
@@ -198,7 +199,7 @@ class Document
     /**
      * Get histories
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getHistories()
     {

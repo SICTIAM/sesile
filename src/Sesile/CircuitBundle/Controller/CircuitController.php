@@ -49,7 +49,8 @@ class CircuitController extends Controller
      */
     public function createAction(Request $request)
     {
-        var_dump($request);exit();
+        var_dump($request);
+        exit();
 
 
         return new Response('OK');
@@ -64,7 +65,7 @@ class CircuitController extends Controller
         $circuits_du_user = $em->getRepository('SesileCircuitBundle:Circuit')->findAll();
 
         $circuits = array();
-        foreach($circuits_du_user as $circuit) {
+        foreach ($circuits_du_user as $circuit) {
             $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre());
         }
 
@@ -78,15 +79,15 @@ class CircuitController extends Controller
      * @Route("/delete", name="del_circuits_favoris", options={"expose"=true})
      * @Method("POST")
      */
-    public function deleteAction(Request $request) {
+    public function deleteAction(Request $request)
+    {
         $id_circuit = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         try {
             $circuit = $em->getRepository('SesileCircuitBundle:Circuit')->find($id_circuit);
             $em->remove($circuit);
             $em->flush();
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             return new Response("NOK");
         }
 

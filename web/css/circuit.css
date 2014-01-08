@@ -1,89 +1,89 @@
 .top_selects_circuits {
-	display: table;
-	width: 100%;
-	text-align: center;
+    display: table;
+    width: 100%;
+    text-align: center;
 }
 
 .selects_circuit {
-	display: table-cell;
-	width: 50%;
+    display: table-cell;
+    width: 50%;
 }
 
 #users_list, #circuits_list {
-	height: 80px;
-	overflow: auto;
-	border: 1px solid #cccccc;
-	text-align: left;
+    height: 80px;
+    overflow: auto;
+    border: 1px solid #cccccc;
+    text-align: left;
 }
 
 #users_list p:hover, #circuits_list p:hover {
-	background-color: green;
+    background-color: green;
 }
 
 .titre_select {
-	text-align: center;
-	width: 100%;
-	border: 1px solid #ccccff;
-	border-bottom: 0px;
+    text-align: center;
+    width: 100%;
+    border: 1px solid #ccccff;
+    border-bottom: 0px;
 }
 
 #circuit {
-	width: 100%;
-	min-height: 120px;
-	border: 1px solid #cccccc;
+    width: 100%;
+    min-height: 120px;
+    border: 1px solid #cccccc;
 }
 
 .perso_circuit {
-	text-align: center;
-	cursor: pointer;
-	margin: 10px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px;
 }
 
 .perso_circuit img {
-	width: 80px;
-	height: 80px;
-	display: block;
+    width: 80px;
+    height: 80px;
+    display: block;
 }
 
 .emplacement {
-	width: 80px;
-	height: 80px;
-	background-color: #eeeeee;
+    width: 80px;
+    height: 80px;
+    background-color: #eeeeee;
 }
 
 .fleche_circuit, .perso_circuit, .emplacement {
-	float: left;
+    float: left;
 }
 
 .favoris_circuit {
-	height: 32px;
-	width: 32px;
-	cursor: pointer;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
 }
 
 #pop_favoris {
-	display: none;
-	position: absolute;
-	border: 1px solid #cccccc;
-	padding: 10px;
-	background-color: #ffffff;
+    display: none;
+    position: absolute;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    background-color: #ffffff;
 }
 
 .delete_circuit {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .titre_select .glyphicon-search {
-	float: right;
+    float: right;
 }
 
 .nametitle {
-	position: absolute;
-	width: 20%;
-	color: #a9a9a9;
+    position: absolute;
+    width: 20%;
+    color: #a9a9a9;
 }
 
 .nameinput {
-	width: 100%;
-	padding-left: 20%;
+    width: 100%;
+    padding-left: 20%;
 }
