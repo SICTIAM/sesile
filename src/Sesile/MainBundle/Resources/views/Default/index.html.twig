@@ -62,6 +62,7 @@
                         <li class="divider"></li>
                         <li class="li2">
                             <a href="{{ path("logout") }}">
+                                {# <a href="{{ path("fos_user_security_logout") }}"> #}
                                 <span class="glyphicon glyphicon-off"></span>
                                 D&eacute;connexion
                             </a>
@@ -70,7 +71,9 @@
                 </div>
                 {% else %}
                 <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
-                {% endif %}
+
+                    {# <a class="btn btn-success" href="{{ path("fos_user_security_login") }}">Connexion</a> #}
+            {% endif %}
         </div>
 
                 {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
