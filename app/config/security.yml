@@ -23,7 +23,7 @@ security:
             cas:
                 cas_server: sso.dev.sictiam.fr
                 cas_port: 443
-                cas_path: ~
+                cas_path: /cas/
                 ca_cert_path: ~
                 cas_protocol: S1
                 cas_mapping_attribute:
