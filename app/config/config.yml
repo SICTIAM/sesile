@@ -90,4 +90,4 @@ swiftmailer:
 parameters:
      cas_server: sso.dev.sictiam.fr
      cas_port: 389
-     cas_path: /cas/
+     cas_path: /

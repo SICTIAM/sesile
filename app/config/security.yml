@@ -21,10 +21,10 @@ security:
             logout:
                 success_handler: security.logout.success_handler
             cas:
-                cas_server: sso.dev.sictiam.fr
+                cas_server: 172.17.100.78
                 cas_port: 443
-                cas_path: /cas/
+                cas_path: /
                 ca_cert_path: ~
-                cas_protocol: S1
+                cas_protocol: '2.0'
                 cas_mapping_attribute:
                 check_path: /login_check
