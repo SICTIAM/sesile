@@ -1,26 +1,36 @@
-#new_circuit_content {
+.top_selects_circuits {
 	display: table;
+	width: 100%;
+	text-align: center;
 }
 
-#circuit_listes {
-	display: table-row;
+.selects_circuit {
+	display: table-cell;
+	width: 50%;
+}
+
+#users_list, #circuits_list {
+	height: 80px;
+	overflow: auto;
+	border: 1px solid #cccccc;
+	text-align: left;
+}
+
+#users_list p:hover, #circuits_list p:hover {
+	background-color: green;
+}
+
+.titre_select {
+	text-align: center;
+	width: 100%;
+	border: 1px solid #ccccff;
+	border-bottom: 0px;
 }
 
 #circuit {
 	width: 100%;
 	min-height: 120px;
 	border: 1px solid #cccccc;
-	display: table-row;
-}
-
-.selects_circuit {
-	margin: auto;
-	display: table-cell;
-	width: 45%;
-}
-
-.selects_circuit select {
-	width: 100%;
 }
 
 .perso_circuit {
@@ -61,4 +71,19 @@
 
 .delete_circuit {
 	cursor: pointer;
+}
+
+.titre_select .glyphicon-search {
+	float: right;
+}
+
+.nametitle {
+	position: absolute;
+	width: 20%;
+	color: #a9a9a9;
+}
+
+.nameinput {
+	width: 100%;
+	padding-left: 20%;
 }
