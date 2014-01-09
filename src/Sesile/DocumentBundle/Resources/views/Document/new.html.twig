@@ -5,11 +5,90 @@
 <script src="{{ asset('js/dropzone.js') }}"></script>
 <script type="text/javascript">
 
-    var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}" });
+    var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
+        previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
+                '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
+                ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
+                ' <div class="dz-error-message"><span data-dz-errormessage></span></div> <a class="btn btn-default" onclick="alert(\'Coucou !\')">Détails</a></div>'
+
+    });
 
     dropzone.on('success', function (file, response) {
         $.each(response, function (serverfilename, originalname) {
             $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
+        });
+
+    });
+
+    dropzone.on("addedfile", function (file) {
+        // Access the preview element with file.previewElement and add event listeners, etc... to it.
+        $(file.previewElement).find('img').map(function () {
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
+            // alert(file.type);
+            if (file.type == "application/pdf") {
+
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
+
+            }
+            if (file.type == "application/msword" || file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/WORD/icon_doc_256.png') }}");
+
+            }
+
+            if (file.type == "application/zip") {
+
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/ZIP/icon_zip_256.png') }}");
+
+            }
+
+            if (file.type == "image/png") {
+
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+
+            }
+            if (file.type == "image/png") {
+
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+
+            }
+
+            if (file.type == "image/jpeg") {
+
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/JPG/icon_jpg_256.png') }}");
+
+            }
+
+            if (file.type == "text/xml") {
+
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
+
+            }
+
+
+            $(this).attr("onmouseover", "");
+            $(this).unbind('mouseenter mouseleave');
+        });
+        $(file.previewElement).find('div').map(function () {
+            $(this).attr("onmouseover", "");
+            $(this).unbind('mouseenter mouseleave mouseover');
+            $(this).hover(function (e) {
+                e.preventDefault();
+            });
+        });
+
+        $(file.previewElement).find('.dropzonereducedfilename').map(function () {
+            // alert(file.name);
+            if (file.name.length > 18) {
+                $(this).html(file.name.substr(0, 15) + "...");
+            }
+        });
+
+
+        $(file.previewElement).attr("onmouseover", "");
+        $(file.previewElement).unbind('mouseenter mouseleave mouseover');
+        $(file.previewElement).hover(function (e) {
+            e.preventDefault();
         });
     });
 
