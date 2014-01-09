@@ -1,125 +1,126 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('/css/style.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('/css/menu.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('/css/table.css') }}"/>
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
-    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('css/animate.css') }}"/>
-    <script type="text/javascript" src="{{ asset("/js/jquery-2.0.3.min.js") }}"></script>
-    <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-    <script src="{{ asset('/js/lettering.js') }}"></script>
-    <script src="{{ asset('/js/textillate.js') }}"></script>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/css/style.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/css/menu.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/css/table.css') }}"/>
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+        <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('css/animate.css') }}"/>
+        <script type="text/javascript" src="{{ asset("/js/jquery-2.0.3.min.js") }}"></script>
+        <script type="text/javascript" src="{{ asset("/bootstrap/js/bootstrap.min.js") }}"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        <script src="{{ asset('/js/lettering.js') }}"></script>
+        <script src="{{ asset('/js/textillate.js') }}"></script>
 
-    <!--[if gte IE 9]>
-    <style type="text/css">
-        .gradient {
-            filter: none;
-        }
-    </style>
-    <![endif]-->
-    {% block css %}
-    {% endblock %}
-</head>
-<body>
-<div id="maman">
-    <div id="gauche">
-        <a href="/app_dev.php">
-            <div id="logo">
-                <img src="{{ asset("/images/badlogo.png") }}"/>
+        <!--[if gte IE 9]>
+        <style type="text/css">
+            .gradient {
+                filter: none;
+            }
+        </style>
+        <![endif]-->
+        {% block css %}
+        {% endblock %}
+    </head>
+    <body>
+        <div id="maman">
+            <div id="gauche">
+                <a href="/app_dev.php">
+                    <div id="logo">
+                        <img src="{{ asset("/images/badlogo.png") }}"/>
+                    </div>
+                </a>
+                {% include 'SesileMainBundle:Default:menu.html.twig' %}
+
             </div>
-        </a>
-        {% include 'SesileMainBundle:Default:menu.html.twig' %}
 
-    </div>
-
-    <div id="droite">
-        <div id="header">
-            {% if app.user != null %}
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <img class="userpicture"
-                             src="http://static.colourlovers.com/images/lovers/3522/3522185t.jpg?1387813886"/>
-                        &nbsp;
-                        {{ app.user.username }}&nbsp;&nbsp;&nbsp;
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu menu_connexion" role="menu">
-                        <li class="li1">
-                            <a href="{{ path("fos_user_profile_edit") }}">
-                                <span class="glyphicon glyphicon-user"></span>
-                                Compte
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="li2">
-                            <a href="{{ path("logout") }}">
-                                {# <a href="{{ path("fos_user_security_logout") }}"> #}
-                                <span class="glyphicon glyphicon-off"></span>
-                                D&eacute;connexion
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            {% else %}
-                <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
-
-                {# <a class="btn btn-success" href="{{ path("fos_user_security_login") }}">Connexion</a> #}
-            {% endif %}
-        </div>
-
-        {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
-        <div id="lecontenu">
-            {% block content %}
-                <div id="contenu_acceuil">
-                    <div class="bloc_accueil">
-                        <div id="bienvenue">
-                            <div class="titre_bloc_accueil">
-                                <span class="glyphicon glyphicon-home"></span>
-                                Bienvenue
-                            </div>
-                            Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page
-                            avant
-                            impression. Le Lorem Ipsum est le le le lel (je vous le donne)*
-                            <a href="#" data-toggle="tooltip" class="sesiletooltip" title="test tooltip">lel
-                                lelllllelelfaux texte</a>
-                            standard de l'imprimerie depuis les années 1500, quand
-                            un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen
-                            de
+            <div id="droite">
+                <div id="header">
+                    {% if app.user != null %}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <img class="userpicture"
+                                     src="http://static.colourlovers.com/images/lovers/3522/3522185t.jpg?1387813886"/>
+                                &nbsp;
+                                {{ app.user.username }}&nbsp;&nbsp;&nbsp;
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu menu_connexion" role="menu">
+                                <li class="li1">
+                                    <a href="{{ path("fos_user_profile_edit") }}">
+                                        <span class="glyphicon glyphicon-user"></span>
+                                        Compte
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="li2">
+                                    <a href="{{ path("logout") }}">
+                                        {# <a href="{{ path("fos_user_security_logout") }}"> #}
+                                        <span class="glyphicon glyphicon-off"></span>
+                                        D&eacute;connexion
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                    </div>
-                    <div class="bloc_accueil">
-                        {% if app.user %}
-                            <div id="classeurs_a_valider">
-                                <div class="titre_bloc_accueil">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                    Classeurs à valider
-                                </div>
-                                {% render url("classeur_a_valider") %}
-                            </div>
-                            <div id="liste_classeurs">
-                                <div class="titre_bloc_accueil">
-                                    <span class="glyphicon glyphicon-eye-open"></span>
-                                    Classeurs visibles
-                                </div>
-                                {% render url("liste_classeurs") %}
-                            </div>
-                        {% else %}
-                            <img src="http://www.purina.fr/images/articles/illustrations/chat/coaching/entretenir_poils_longs_chat.jpg">
-                        {% endif %}
-                    </div>
+                    {% else %}
+                        <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
+
+                        {# <a class="btn btn-success" href="{{ path("fos_user_security_login") }}">Connexion</a> #}
+                    {% endif %}
                 </div>
-            {% endblock %}
-        </div>
-        <div id="footer">
-            <div id="textefooter">
+
+                {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
+                <div id="lecontenu">
+                    {% block content %}
+                        <div id="contenu_acceuil">
+                            <div class="bloc_accueil">
+                                <div id="bienvenue">
+                                    <div class="titre_bloc_accueil">
+                                        <span class="glyphicon glyphicon-home"></span>
+                                        Bienvenue
+                                    </div>
+                                    Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page
+                                    avant
+                                    impression. Le Lorem Ipsum est le le le lel (je vous le donne)*
+                                    <a href="#" data-toggle="tooltip" class="sesiletooltip" title="test tooltip">lel
+                                        lelllllelelfaux texte
+                                    </a>
+                                    standard de l'imprimerie depuis les années 1500, quand
+                                    un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen
+                                    de
+                                </div>
+                            </div>
+                            <div class="bloc_accueil">
+                                {% if app.user %}
+                                    <div id="classeurs_a_valider">
+                                        <div class="titre_bloc_accueil">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                            Classeurs à valider
+                                        </div>
+                                        {% render url("classeur_a_valider") %}
+                                    </div>
+                                    <div id="liste_classeurs">
+                                        <div class="titre_bloc_accueil">
+                                            <span class="glyphicon glyphicon-eye-open"></span>
+                                            Classeurs visibles
+                                        </div>
+                                        {% render url("liste_classeurs") %}
+                                    </div>
+                                {% else %}
+                                    <img src="http://www.purina.fr/images/articles/illustrations/chat/coaching/entretenir_poils_longs_chat.jpg">
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+                <div id="footer">
+                    <div id="textefooter">
 <span class="legal">
 <a class="contact" href="mailto:internet@sictiam.fr">
     <span class="lettersmove">CONTACT</span>
@@ -137,7 +138,7 @@
     <span class="lettersmove">CREATIVE COMMONS</span>
 </a>
 </span>
-                <br/>
+                        <br/>
 <span class="signature">
 <a class="sitesictiam" href="http://www.sictiam.fr/" target="_blank">
     COPYRIGHT &copy;2013
@@ -146,32 +147,32 @@
 </a>
 </span>
             </div>
-            <div id="logosictiampetit">
-                <img src="/images/logosictiampetit.png"/>
+                    <div id="logosictiampetit">
+                        <img src="/images/logosictiampetit.png"/>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    {% block losjavascriptos %}
-    {% endblock %}
-    <script type="text/javascript">
-        $('.sesiletooltip').tooltip({
-            placement: 'top',
-            html: true
-        });
+            {% block losjavascriptos %}
+            {% endblock %}
+            <script type="text/javascript">
+                $('.sesiletooltip').tooltip({
+                    placement: 'top',
+                    html: true
+                });
 
-        var textill = $('.lettersmove').textillate({
-            autoStart: false,
-            in: {
-                effect: 'wobble',
-                shuffle: true,
-                delayScale: 1,
-                delay: 200
-            }
-        });
-        textill.on('mouseenter', function () {
-            $(this).textillate('start');
-        });
-    </script>
-</div>
-</body>
+                var textill = $('.lettersmove').textillate({
+                    autoStart: false,
+                    in: {
+                        effect: 'wobble',
+                        shuffle: true,
+                        delayScale: 1,
+                        delay: 200
+                    }
+                });
+                textill.on('mouseenter', function () {
+                    $(this).textillate('start');
+                });
+            </script>
+        </div>
+    </body>
 </html>

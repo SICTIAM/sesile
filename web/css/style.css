@@ -54,6 +54,7 @@ html, body {
 	min-height: 5%;
 	text-align: right;
 	margin: auto;
+	width: 91%;
 }
 
 #lecontenu {
@@ -66,6 +67,7 @@ html, body {
 #footer {
 	margin: auto;
 	text-align: center;
+	width: 91%;
 }
 
 .legal,
@@ -102,6 +104,7 @@ html, body {
 #logosictiampetit {
 	width: 7%;
 	display: inline-block;
+	right: 0;
 }
 
 /*-------------------------     FIN HEADER FOOTER     -------------------------*/

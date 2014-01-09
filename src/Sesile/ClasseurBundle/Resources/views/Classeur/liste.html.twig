@@ -1,34 +1,34 @@
 <table class="table tableau">
     <thead>
-    <tr>
-        <th>Titre du classeur</th>
-        <th>Intervention</th>
-        <th>Date de création</th>
-        <th>Date limite de validation</th>
-        <th>Statut actuel</th>
-        <th>Action</th>
-    </tr>
+        <tr>
+            <th>Titre du classeur</th>
+            <th>Intervention</th>
+            <th>Date de création</th>
+            <th>Date limite de validation</th>
+            <th>Statut actuel</th>
+            <th>Action</th>
+        </tr>
     </thead>
     <tbody>
-    {% for classeur in classeurs %}
-        <tr class="classeur-row" data-id="{{ classeur.id }}">
-            <td>{{ classeur.nom }}</td>
-            <td>inter</td>
-            <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
-            <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
-            <td class="statut">
-                <span class="glyphicon statut_{{ classeur.status }}"></span>
-            </td>
-            <td class="boutons_action">
-                <a href="{{ path("classeur_edit", {'id' : classeur.id }) }}">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-                {% if classeur.isSupprimable(app.user.id) %}
-                <a href="{{ path("classeur_edit", {'id' : classeur.id }) }}">
-                        <span class="glyphicon glyphicon-trash"></span></a>{% endif %}
-            </td>
-        </tr>
-    {% endfor %}
+        {% for classeur in classeurs %}
+            <tr class="classeur-row" data-id="{{ classeur.id }}">
+                <td>{{ classeur.nom }}</td>
+                <td>inter</td>
+                <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
+                <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
+                <td class="statut">
+                    <span class="glyphicon statut_{{ classeur.status }}"></span>
+                </td>
+                <td class="boutons_action">
+                    <a href="{{ path("classeur_edit", {'id' : classeur.id }) }}">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    {% if classeur.isSupprimable(app.user.id) %}
+                    <a href="{{ path("classeur_edit", {'id' : classeur.id }) }}">
+                            <span class="glyphicon glyphicon-trash"></span></a>{% endif %}
+                </td>
+            </tr>
+        {% endfor %}
     </tbody>
 </table>
 <script type="text/javascript">

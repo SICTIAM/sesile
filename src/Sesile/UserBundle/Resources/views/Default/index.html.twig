@@ -4,20 +4,20 @@
     <div class="bloc_page">
         <table class="table tableau">
             <thead>
-            <tr>
-                <th>Mail</th>
-                <th>Nom</th>
-                <th>Actif</th>
-            </tr>
+                <tr>
+                    <th>Mail</th>
+                    <th>Nom</th>
+                    <th>Actif</th>
+                </tr>
             </thead>
             <tbody>
-            {% for user in users %}
-                <tr class="user-row" data-id="{{ user.id }}">
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.Nom }} {{ user.Prenom }}</td>
-                    <td>{% if user.enabled %}oui{% else %}non{% endif %}</td>
-                </tr>
-            {% endfor %}
+                {% for user in users %}
+                    <tr class="user-row" data-id="{{ user.id }}">
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.Nom }} {{ user.Prenom }}</td>
+                        <td>{% if user.enabled %}oui{% else %}non{% endif %}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
         <a href="{{ path("ajout_user") }}">Ajouter un utilisateur</a>
