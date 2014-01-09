@@ -39,7 +39,7 @@ class Groupe
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -55,14 +55,14 @@ class Groupe
     public function setNom($nom)
     {
         $this->nom = $nom;
-    
+
         return $this;
     }
 
     /**
      * Get nom
      *
-     * @return string 
+     * @return string
      */
     public function getNom()
     {
@@ -78,14 +78,14 @@ class Groupe
     public function setCollectivite($collectivite)
     {
         $this->collectivite = $collectivite;
-    
+
         return $this;
     }
 
     /**
      * Get collectivite
      *
-     * @return string 
+     * @return string
      */
     public function getCollectivite()
     {

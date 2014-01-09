@@ -17,7 +17,8 @@ use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\Groupe;
 use Sesile\UserBundle\Entity\UserHierarchie;
 
-class UserHierarchieController extends Controller {
+class UserHierarchieController extends Controller
+{
 
     /**
      * Creates a new Hierarchy entity
@@ -27,7 +28,8 @@ class UserHierarchieController extends Controller {
      * @Method("POST")
      *
      */
-    public function createHierarchy(Request $request, $IdGroupe) {
+    public function createHierarchy(Request $request, $IdGroupe)
+    {
 
         $Groupe = new Groupe();
         $Groupe->setNom($request->request->get('Nom'));
@@ -36,15 +38,14 @@ class UserHierarchieController extends Controller {
         $em->persist($Groupe);
         $em->flush();
 
-        $repository  = $this->getDoctrine()
-                            ->getManager()
-                            ->getRepository('SesileUserBundle:Groupe');
+        $repository = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('SesileUserBundle:Groupe');
         $Res = $repository->find($IdGroupe);
-        $coordonnees = array ();
-        foreach($coordonnees as $element)
-        {
+        $coordonnees = array();
+        foreach ($coordonnees as $element) {
             $element->$request->request->get('UserId');
-            array_push($element,$request->request->get('UserId'),$request->request->get('ParentId'),$Res);
+            array_push($element, $request->request->get('UserId'), $request->request->get('ParentId'), $Res);
             $element->$Id;
         }
 

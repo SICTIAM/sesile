@@ -46,7 +46,7 @@ class UserHierarchie
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -62,14 +62,14 @@ class UserHierarchie
     public function setUserId($userId)
     {
         $this->userId = $userId;
-    
+
         return $this;
     }
 
     /**
      * Get userId
      *
-     * @return string 
+     * @return string
      */
     public function getUserId()
     {
@@ -85,14 +85,14 @@ class UserHierarchie
     public function setParentId($parentId)
     {
         $this->parentId = $parentId;
-    
+
         return $this;
     }
 
     /**
      * Get parentId
      *
-     * @return string 
+     * @return string
      */
     public function getParentId()
     {
@@ -108,14 +108,14 @@ class UserHierarchie
     public function setGroupeId($groupeId)
     {
         $this->groupeId = $groupeId;
-    
+
         return $this;
     }
 
     /**
      * Get groupeId
      *
-     * @return string 
+     * @return string
      */
     public function getGroupeId()
     {

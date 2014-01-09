@@ -1,6 +1,7 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
+    <div class="bloc_page">
     <style type="text/css">
         .ligne_hierarchie {
             border-top: 1px dashed #ccc;
@@ -37,4 +38,5 @@
             $("<div/>").addClass("user_in_hierarchy").appendTo("#hierarchie .ligne_hierarchie:first");
         });
     </script>
+    </div>
 {% endblock %}

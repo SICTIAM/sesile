@@ -1,7 +1,9 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    <h1>Liste des classeurs à valider</h1>
-    {% include 'SesileClasseurBundle:Classeur:liste.html.twig' %}
-    <a href="{{ path('classeur_new') }}">Créer un classeur</a>
+    <div class="bloc_page">
+        <h1>Liste des classeurs à valider</h1>
+        {% include 'SesileClasseurBundle:Classeur:liste.html.twig' %}
+        <a href="{{ path('classeur_new') }}">Créer un classeur</a>
+    </div>
 {% endblock %}
