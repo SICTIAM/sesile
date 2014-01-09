@@ -1,16 +1,19 @@
 <br/>
 
 <div id="fichiers" class="dropzone"></div>
+<div id="filedescription" style="display:none"></div>
 
 <script src="{{ asset('js/dropzone.js') }}"></script>
 <script type="text/javascript">
+
+    var selected = null;
 
 
     var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
         previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
                 '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
                 ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
-                ' <div class="dz-error-message"><span data-dz-errormessage></span></div> <a class="btn btn-default" rel="popover">Détails</a></div>'
+                ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>'
 
     });
 
@@ -107,31 +110,25 @@
 
         //Ajout de la popover
 
-        $(file.previewElement).find('[rel=popover]').map(function () {
-            $(this).click(function (e) {
+        $(file.previewElement).click(function (e) {
 
-                var button = $(this);
+            if (selected != null) {
+                selected.removeClass('selectedfile');
+            }
 
-                // $('[rel=popover]').not(button).popover('hide');
+            selected = $(this);
+
+            selected.addClass('selectedfile');
+
+            // $('[rel=popover]').not(button).popover('hide');
 
 
                 $.ajax(Routing.generate('show_document', {id: 10}), {
                     method: 'POST',
                     success: function (html) {
 
-                        $('[rel=popover]').popover('hide');
-                        $('[rel=popover]').popover('destroy');
-
-                        $(file.previewElement).popover({
-                            selector: '[rel=popover]',
-                            html: true,
-                            placement: "bottom",
-                            animation: "true",
-                            trigger: "click",
-
-                            content: html,
-                            title: "Détails du fichier"
-                        }).popover('show');
+                        $("#filedescription").html(html);
+                        $("#filedescription").show("slow");
 
                     }
 
@@ -139,7 +136,7 @@
 
 
             });
-        });
+
 
         /*
 
