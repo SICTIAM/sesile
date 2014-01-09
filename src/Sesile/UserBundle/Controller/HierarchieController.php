@@ -14,11 +14,12 @@ class HierarchieController extends Controller
 {
 
     /**
-    * @Route("/hierarchy/new", name="create_hierarchy")
-    * @Method("GET")
-    * @Template()
-    */
-    public function createAction() {
+     * @Route("/hierarchy/new", name="create_hierarchy")
+     * @Method("GET")
+     * @Template()
+     */
+    public function createAction()
+    {
         // recup la liste des users en base
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();

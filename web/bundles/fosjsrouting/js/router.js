@@ -2,7 +2,7 @@
  * Portions of this code are from the Google Closure Library,
  * received from the Closure Authors under the Apache 2.0 license.
  *
- * All other code is (C) 2011 FriendsOfSymfony and subject to the MIT license.
+ * All other code is (C) FriendsOfSymfony and subject to the MIT license.
  */
 (function () {
     var f = !1, i, k = this;

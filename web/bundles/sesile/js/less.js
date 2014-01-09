@@ -286,8 +286,8 @@ void 0 === less && (less = exports, tree = require("./tree"), less.mode = "node"
                 return a.join("")
             })
         }([
-            []
-        ]), h)return c(new n(h, a));
+                []
+            ]), h)return c(new n(h, a));
         try {
             d = new tree.Ruleset([], f(this.parsers.primary)), d.root = !0, d.firstRoot = !0
         } catch (i) {
@@ -1581,9 +1581,9 @@ void 0 === less && (less = exports, tree = require("./tree"), less.mode = "node"
         var c = this, d = this.value.replace(/`([^`]+)`/g,function (d, e) {
             return new a.JavaScript(e, c.index, !0).eval(b).value
         }).replace(/@\{([\w-]+)\}/g, function (d, e) {
-            var f = new a.Variable("@" + e, c.index, c.currentFileInfo).eval(b, !0);
-            return f instanceof a.Quoted ? f.value : f.toCSS()
-        });
+                var f = new a.Variable("@" + e, c.index, c.currentFileInfo).eval(b, !0);
+                return f instanceof a.Quoted ? f.value : f.toCSS()
+            });
         return new a.Quoted(this.quote + d + this.quote, d, this.escaped, this.index, this.currentFileInfo)
     }, compare: function (a) {
         if (!a.toCSS)return-1;

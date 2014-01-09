@@ -43,7 +43,6 @@ class DocumentHistory
     private $comment;
 
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Document", inversedBy="histories")
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id")
@@ -51,12 +50,10 @@ class DocumentHistory
     private $document;
 
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -72,14 +69,14 @@ class DocumentHistory
     public function setSha($sha)
     {
         $this->sha = $sha;
-    
+
         return $this;
     }
 
     /**
      * Get sha
      *
-     * @return string 
+     * @return string
      */
     public function getSha()
     {
@@ -95,14 +92,14 @@ class DocumentHistory
     public function setDate($date)
     {
         $this->date = $date;
-    
+
         return $this;
     }
 
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -118,14 +115,14 @@ class DocumentHistory
     public function setComment($comment)
     {
         $this->comment = $comment;
-    
+
         return $this;
     }
 
     /**
      * Get comment
      *
-     * @return string 
+     * @return string
      */
     public function getComment()
     {
@@ -141,14 +138,14 @@ class DocumentHistory
     public function setDocument(\Sesile\DocumentBundle\Entity\Document $document = null)
     {
         $this->document = $document;
-    
+
         return $this;
     }
 
     /**
      * Get document
      *
-     * @return \Sesile\DocumentBundle\Entity\Document 
+     * @return \Sesile\DocumentBundle\Entity\Document
      */
     public function getDocument()
     {

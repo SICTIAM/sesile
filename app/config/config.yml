@@ -85,3 +85,9 @@ swiftmailer:
     transport:  %mailer_transport%
     username:   %mailer_user%
     password:   %mailer_password%
+
+
+parameters:
+     cas_server: sso.dev.sictiam.fr
+     cas_port: 389
+     cas_path: /

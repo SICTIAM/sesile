@@ -11,6 +11,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Sesile\UserBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\Email;
+
 
 class DefaultController extends Controller {
     /**
@@ -37,23 +40,75 @@ class DefaultController extends Controller {
     public function ajoutAction(Request $request) {
 
 
+
         $entity = new User();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-            mail($entity->getEmail(),'nouvel utilisateur','bonjour '.$entity->getUsername()."\r\n ".'Bienvenue sur le portail Sesile');
-            return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
-        }
+       //connexion au serveur LDAP
+        $ldapconn = ldap_connect("172.17.100.78")
+        or die("Could not connect to LDAP server."); //security
+        ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
+        if ($ldapconn) {
+
+            //binding au serveur LDAP
+            if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
+                echo "LDAP bind successful...";
+            } else {
+                echo "LDAP bind failed...";
+            }
+
+
+            if ($form->isValid()) {
+
+                $entity->setEmail($form->get('username')->getData());
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($entity);
+                $em->flush();
+
+                $plainpwd = $form->get('plainPassword')->getData();
+                $email = $entity->getUsername();
+//création du tableau d'attributs
+                $entry["objectClass"][0] = "inetOrgPerson";
+                $entry["objectClass"][1] = "organizationalPerson";
+                $entry["objectClass"][2] = "person";
+                $entry["objectClass"][3] = "shadowAccount";
+                $entry["cn"] = $email;
+                $entry["sn"] = $entity->getPrenom() . ' ' . $entity->getNom();
+                $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
+                $entry["givenName"] = $email;
+                $entry["shadowInactive"] = -1;
+                $entry["uid"] = $entity->getId();
+                $entry["displayName"] = $entity->getNom()." ".$entity->getPrenom();
+
+                //création du Distinguished Name
+                $dn = "mail=".$email.",cn=Users,dc=sictiam,dc=local";
+                ldap_add($ldapconn, $dn, $entry);
+                ldap_close($ldapconn);
+
+
+                //envoi d'un mail à l'utilisateur nouvellement créé
+                $message = \Swift_Message::newInstance()
+                    ->setContentType('text/html')
+                    ->setSubject('Nouvel utilisateur')
+                    ->setFrom('j.mercier@sictiam.fr')
+                    ->setTo($email)
+                    ->setBody('Bienvenue dans Sesile '.$entity->getUsername());
+                $this->get('mailer')->send($message);
+
+
+               return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
+
+            }
+
+        }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
+
 
     }
 
@@ -93,6 +148,7 @@ class DefaultController extends Controller {
      */
     public function updateAction(Request $request, $id)
     {
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SesileUserBundle:User')->find($id);
@@ -106,11 +162,25 @@ class DefaultController extends Controller {
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
 
-            return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
-        }
+            $ldapconn = ldap_connect("172.17.100.78")
+            or die("Could not connect to LDAP server."); //security
+            ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
+            if ($ldapconn) {
+
+                //binding au serveur LDAP
+                if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
+                    echo "LDAP bind successful...";
+                } else {
+                    echo "LDAP bind failed...";
+                }
+             //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
+
+                $em->flush();
+                return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+            }
+            }
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
@@ -131,17 +201,38 @@ class DefaultController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SesileUserBundle:User')->find($id);
+            $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
 
+            $ldapconn = ldap_connect("172.17.100.78")
+            or die("Could not connect to LDAP server.");
+            ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+            if ($ldapconn) {
+
+                // binding to ldap server
+                //  $ldapbind = ldap_bind($ldapconn/*, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI'*/);
+
+                // verify binding
+
+                if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
+                    echo "LDAP bind successful...";
+                } else {
+                    echo "LDAP bind failed...";
+                }
+
+            }
+
+            $dn = "mail=".$entity.",cn=Users,dc=sictiam,dc=local";
+            ldap_delete($ldapconn, $dn);
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }
 
             $em->remove($entity);
             $em->flush();
-        }
 
-        return $this->redirect($this->generateUrl('classeur'));
+        }
+        return $this->redirect($this->generateUrl('classeur'));// rediriger vers liste_user non?
     }
 
 
@@ -149,7 +240,7 @@ class DefaultController extends Controller {
     /**
      * Creates a form to create a User entity.
      *
-     * @param Classeur $entity The entity
+     * @param User $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
@@ -168,6 +259,7 @@ class DefaultController extends Controller {
             ),
             'multiple' => true
         ));
+
         $form->add('submit', 'submit', array('label' => 'Create'));
 
 

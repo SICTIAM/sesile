@@ -12,7 +12,6 @@ use FOS\UserBundle\Entity\User as BaseUser;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Sesile\UserBundle\Entity\UserRepository")
  * @ORM\HasLifecycleCallbacks()
- *
  */
 class User extends BaseUser
 {
@@ -23,109 +22,63 @@ class User extends BaseUser
      */
     protected $id;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Nom", type="string", length=255)
+     */
+    protected $Nom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Prenom", type="string", length=255)
+     */
+    protected $Prenom;
+
+    public function setPrenom($Prenom)
+    {
+        $this->Prenom = $Prenom;
+
+        return $this;
+    }
+
+    public function setNom($Nom)
+    {
+        $this->Nom = $Nom;
+
+        return $this;
+    }
+
+    /**
+     * renvoie le nom
+     *
+     * @return string
+     */
+    public function getNom()
+    {
+        return $this->Nom;
+    }
+
+
+    /**
+     * renvoie le prenom
+     *
+     * @return string
+     */
+    public function getPrenom()
+    {
+        return $this->Prenom;
+    }
+
     public function getExpiresAt()
     {
         return $this->expiresAt;
     }
 
+
     public function getCredentialsExpireAt()
     {
         return $this->getCredentialsExpireAt();
-    }
-
-    /**
-     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="user")
-     */
-    protected $classeurs_deposes;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="validant")
-     */
-    protected $classeurs_a_valider;
-
-
-    public function __construct()
-    {
-        $this->classeurs_a_valider = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->classeurs_deposes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->classeurs = new \Doctrine\Common\Collections\ArrayCollection();
-        parent::__construct();
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-
-    /**
-     * Add classeurs_deposes
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes
-     * @return User
-     */
-    public function addClasseursDepose(\Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes)
-    {
-        $this->classeurs_deposes[] = $classeursDeposes;
-
-        return $this;
-    }
-
-    /**
-     * Remove classeurs_deposes
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes
-     */
-    public function removeClasseursDepose(\Sesile\ClasseurBundle\Entity\Classeur $classeursDeposes)
-    {
-        $this->classeurs_deposes->removeElement($classeursDeposes);
-    }
-
-    /**
-     * Get classeurs_deposes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getClasseursDeposes()
-    {
-        return $this->classeurs_deposes;
-    }
-
-    /**
-     * Add classeurs_a_valider
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursAValider
-     * @return User
-     */
-    public function addClasseursAValider(\Sesile\ClasseurBundle\Entity\Classeur $classeursAValider)
-    {
-        $this->classeurs_a_valider[] = $classeursAValider;
-
-        return $this;
-    }
-
-    /**
-     * Remove classeurs_a_valider
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursAValider
-     */
-    public function removeClasseursAValider(\Sesile\ClasseurBundle\Entity\Classeur $classeursAValider)
-    {
-        $this->classeurs_a_valider->removeElement($classeursAValider);
-    }
-
-    /**
-     * Get classeurs_a_valider
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getClasseursAValider()
-    {
-        return $this->classeurs_a_valider;
     }
 }

@@ -191,14 +191,14 @@ class ClasseurController extends Controller
             $error=true;
         }
 */
-        if(!$error){
+        if (!$error) {
             $this->get('session')->getFlashBag()->add(
                 'success',
-                'Classeur créé'
+                'Classeur créé avec succès !'
             );
         }
 
-        return $this->redirect($this->generateUrl('liste_classeurs'));
+        return $this->redirect($this->generateUrl('index_valider'));
     }
 
     /**

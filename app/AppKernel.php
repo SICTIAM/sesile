@@ -5,8 +5,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    public function registerBundles()
-    {
+    public function registerBundles() {
         $bundles = array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
@@ -25,10 +24,11 @@ class AppKernel extends Kernel
             new Sesile\UserBundle\SesileUserBundle(),
             new \FOS\UserBundle\FOSUserBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
+            new Gorg\Bundle\CasBundle\GorgCasBundle(),
             new Sesile\ClasseurBundle\SesileClasseurBundle(),
             new Sesile\DocumentBundle\SesileDocumentBundle(),
             new Sesile\CircuitBundle\SesileCircuitBundle(),
-
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
@@ -40,8 +40,7 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
-    {
+    public function registerContainerConfiguration(LoaderInterface $loader) {
         $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 }
