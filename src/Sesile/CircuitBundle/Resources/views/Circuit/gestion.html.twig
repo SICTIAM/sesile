@@ -1,9 +1,10 @@
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 <div class="top_selects_circuits">
+
     <div class="selects_circuit">
         <div class="titre_select">
-            <label class="nametitle" id="users_complete">Utilisateurs</label>
-            <input class="nameinput" type="text">
+            <label class="nametitle" id="users_complete">&nbsp;Utilisateurs</label>
+            <input class="nameinput bleudesmersdusud" type="text">
         </div>
         <div id="users_list">
             {% for user in users %}
@@ -12,10 +13,11 @@
         </div>
         <button type="button" id="useradd_btn">&darr;</button>
     </div>
+
     <div class="selects_circuit">
         <div class="titre_select">
-            <label class="nametitle">Circuits</label>
-            <input class="nameinput" type="text">
+            <label class="nametitle">&nbsp;Circuits</label>
+            <input class="nameinput bleudesmersdusud" type="text">
         </div>
         <div id="circuits_list">
             {% for circuit in circuits %}
