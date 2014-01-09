@@ -2,41 +2,41 @@
 
 {% block content %}
     <div class="bloc_page">
-    <style type="text/css">
-        .ligne_hierarchie {
-            border-top: 1px dashed #ccc;
-            height: 200px;
-            width: 100%;
-        }
+        <style type="text/css">
+            .ligne_hierarchie {
+                border-top: 1px dashed #ccc;
+                height: 200px;
+                width: 100%;
+            }
 
-        #hierarchie {
-            width: 80%;
-            border-bottom: 1px solid #ccc;
-        }
+            #hierarchie {
+                width: 80%;
+                border-bottom: 1px solid #ccc;
+            }
 
-        .user_in_hierarchy {
-            width: 80px;
-            height: 80px;
-            background-color: #555;
-            display: inline-block;
-            float: left;
-            margin: 10px;
-        }
-    </style>
+            .user_in_hierarchy {
+                width: 80px;
+                height: 80px;
+                background-color: #555;
+                display: inline-block;
+                float: left;
+                margin: 10px;
+            }
+        </style>
 
-    <select>
-        {% for user in users %}
-            <option value="{{ user.id }}">{{ user.username }}</option>
-        {% endfor %}
-    </select>
-    <button type="button" id="user_add">Ajouter</button>
-    <div id="hierarchie">
-        <div class="ligne_hierarchie"></div>
-    </div>
-    <script type="text/javascript">
-        $("#user_add").click(function () {
-            $("<div/>").addClass("user_in_hierarchy").appendTo("#hierarchie .ligne_hierarchie:first");
-        });
-    </script>
+        <select>
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" id="user_add">Ajouter</button>
+        <div id="hierarchie">
+            <div class="ligne_hierarchie"></div>
+        </div>
+        <script type="text/javascript">
+            $("#user_add").click(function () {
+                $("<div/>").addClass("user_in_hierarchy").appendTo("#hierarchie .ligne_hierarchie:first");
+            });
+        </script>
     </div>
 {% endblock %}

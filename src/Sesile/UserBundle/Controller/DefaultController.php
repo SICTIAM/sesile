@@ -109,8 +109,6 @@ class DefaultController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
         );
-
-
     }
 
     /**
@@ -204,27 +202,6 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
 
-            $ldapconn = ldap_connect("172.17.100.78")
-            or die("Could not connect to LDAP server.");
-            ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-            if ($ldapconn) {
-
-                // binding to ldap server
-                //  $ldapbind = ldap_bind($ldapconn/*, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI'*/);
-
-                // verify binding
-
-                if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
-                    echo "LDAP bind successful...";
-                } else {
-                    echo "LDAP bind failed...";
-                }
-
-            }
-
-            $dn = "mail=" . $entity . ",cn=Users,dc=sictiam,dc=local";
-            ldap_delete($ldapconn, $dn);
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }
@@ -235,7 +212,6 @@ class DefaultController extends Controller
         }
         return $this->redirect($this->generateUrl('classeur')); // rediriger vers liste_user non?
     }
-
 
     /**
      * Creates a form to create a User entity.
