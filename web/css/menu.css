@@ -80,7 +80,7 @@
 	color: #ffffff;
 	text-transform: uppercase;
 	text-decoration: none;
-	font-size: .7em;
+	font-size: 0.875em;
 }
 
 .menu-vert .entete-menu {
@@ -100,5 +100,5 @@
 	float: right;
 	position: relative;
 	top: 1.429em;
-	right: 0.857em;
+	right: 0.8em;
 }
