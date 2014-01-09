@@ -235,7 +235,8 @@ class ClasseurController extends Controller
         }
 
         return array(
-            'classeur' => $entity
+            'classeur' => $entity,
+            'retractable' => $entity->isRetractable($this->getUser()->getId(), $em)
         );
     }
 
@@ -347,7 +348,7 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
-        $classeur->valider();
+        $classeur->retracter($this->getUser()->getId());
         $em->persist($classeur);
         $em->flush();
 
@@ -361,13 +362,13 @@ class ClasseurController extends Controller
      * Deletes a Classeur entity.
      *
      * @Route("/supprimer", name="classeur_supprimer")
-     * @Method("GET")
+     * @Method("POST")
      */
-    public function supprimerAction(Request $request, $id)
+    public function supprimerAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
-        $classeur->valider();
+        $classeur->supprimer();
         $em->persist($classeur);
         $em->flush();
 

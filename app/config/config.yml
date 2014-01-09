@@ -93,6 +93,11 @@ swiftmailer:
 
 
 parameters:
-     cas_server: sso.dev.sictiam.fr
-     cas_port: 389
-     cas_path: /
+    cas_server: sso.dev.sictiam.fr
+    cas_port: 389
+    cas_path: /
+
+
+jms_di_extra:
+    locations:
+        all_bundles: true
