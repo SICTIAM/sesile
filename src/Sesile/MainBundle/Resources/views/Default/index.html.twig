@@ -40,41 +40,40 @@
 
             </div>
 
-
             <div id="droite">
-        <div id="header">
-            {% if app.user != null %}
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <img class="userpicture"
-                             src="http://static.colourlovers.com/images/lovers/3522/3522185t.jpg?1387813886"/>
-                        &nbsp;
-                        {{ app.user.username }}&nbsp;&nbsp;&nbsp;
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu menu_connexion" role="menu">
-                        <li class="li1">
-                            <a href="{{ path("fos_user_profile_edit") }}">
-                                <span class="glyphicon glyphicon-user"></span>
-                                Compte
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="li2">
-                            <a href="{{ path("logout") }}">
-                                {# <a href="{{ path("fos_user_security_logout") }}"> #}
-                                <span class="glyphicon glyphicon-off"></span>
-                                D&eacute;connexion
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                {% else %}
-                <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
+                <div id="header">
+                    {% if app.user != null %}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <img class="userpicture"
+                                     src="http://static.colourlovers.com/images/lovers/3522/3522185t.jpg?1387813886"/>
+                                &nbsp;
+                                {{ app.user.username }}&nbsp;&nbsp;&nbsp;
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu menu_connexion" role="menu">
+                                <li class="li1">
+                                    <a href="{{ path("fos_user_profile_edit") }}">
+                                        <span class="glyphicon glyphicon-user"></span>
+                                        Compte
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="li2">
+                                    <a href="{{ path("logout") }}">
+                                        {# <a href="{{ path("fos_user_security_logout") }}"> #}
+                                        <span class="glyphicon glyphicon-off"></span>
+                                        D&eacute;connexion
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
 
-                    {# <a class="btn btn-success" href="{{ path("fos_user_security_login") }}">Connexion</a> #}
-            {% endif %}
-        </div>
+                        {# <a class="btn btn-success" href="{{ path("fos_user_security_login") }}">Connexion</a> #}
+                    {% endif %}
+                </div>
 
                 {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
                 <div id="lecontenu">

@@ -6,15 +6,17 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserType extends AbstractType {
-        /**
+class UserType extends AbstractType
+{
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add('username', null, array('label' => 'Email'))
-            ->add('email','hidden')
+            ->add('email', 'hidden')
             ->add('plainPassword', 'repeated', array(
                 'type' => 'password',
                 'options' => array('translation_domain' => 'FOSUserBundle'),
@@ -24,15 +26,15 @@ class UserType extends AbstractType {
             ))
             ->add('Nom')
             ->add('Prenom')
-            ->add('enabled', null, array('label' => 'Activé'))
-        ;
+            ->add('enabled', null, array('label' => 'Activé'));
 
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults(array(
             'data_class' => 'Sesile\UserBundle\Entity\User'
         ));
@@ -41,7 +43,8 @@ class UserType extends AbstractType {
     /**
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return 'sesile_userbundle_user';
     }
 }
