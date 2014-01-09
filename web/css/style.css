@@ -17,6 +17,11 @@ html, body {
 	display: table;
 }
 
+.popover {
+    max-width: 58em;
+    width: auto;
+}
+
 /*-------------------------     DÉBUT MENU     -------------------------*/
 #gauche {
 	background: white url("/images/vichy.png");
