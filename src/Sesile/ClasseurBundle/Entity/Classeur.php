@@ -3,13 +3,15 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Service;
 
 /**
  * Classeur
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Sesile\ClasseurBundle\Entity\ClasseurRepository")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  */
 class Classeur
@@ -390,10 +392,16 @@ class Classeur
         $this->setStatus(0);
     }
 
-    public function retracter()
+    public function retracter($userid)
     {
-        $this->setValidant($this->getUser()->getId());
+        $this->setValidant($userid);
         $this->setStatus(4);
+    }
+
+    public function supprimer()
+    {
+        $this->setValidant(0);
+        $this->setStatus(3);
     }
 
 
@@ -404,32 +412,33 @@ class Classeur
 
     public function isModifiable($userid)
     {
-        return (($this->getValidant() == $userid) || ($this->getUser() == $userid));
+        return ((($this->getValidant() == $userid) || ($this->getUser() == $userid)) && $this->getStatus() != 3);
     }
 
-    public function isRetractable($userid)
+    /**
+     * FIXME : désolé j'ai pas trouvé rapidement de méthode moins crade que passer l'entitymanager donc tant pis... :(
+     */
+    public function isRetractable($userid, \Doctrine\ORM\EntityManager $em)
     {
-        $c = new ClasseursUsers();
-        // $classeurs = $c->getClasseursRetractables($userid);
-        $classeurs = array(); //$c->getClasseursRetractables($userid);
+        $c = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
+        $classeurs = $c->getClasseursRetractables($userid);
 
         foreach ($classeurs as $classeur) {
             if ($classeur->getId() == $this->getId()) {
                 return true;
             }
         }
-        //return false;
-        return true;
+        return false;
     }
 
     public function isSupprimable($userid)
     {
-        return ($this->getUser() == $userid);
+        return ($this->getUser() == $userid && $this->getStatus() != 3);
     }
 
     public function isSignable($userid)
     {
-        return true;
+        return false;
     }
 
     /**
