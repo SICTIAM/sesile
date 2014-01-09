@@ -1,15 +1,19 @@
 <br/>
 
 <div id="fichiers" class="dropzone"></div>
+<div id="filedescription" style="display:none"></div>
 
 <script src="{{ asset('js/dropzone.js') }}"></script>
 <script type="text/javascript">
+
+    var selected = null;
+
 
     var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
         previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
                 '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
                 ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
-                ' <div class="dz-error-message"><span data-dz-errormessage></span></div> <a class="btn btn-default" onclick="alert(\'Coucou !\')">Détails</a></div>'
+                ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>'
 
     });
 
@@ -24,7 +28,7 @@
         // Access the preview element with file.previewElement and add event listeners, etc... to it.
         $(file.previewElement).find('img').map(function () {
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
-            // alert(file.type);
+            //alert(file.type);
             if (file.type == "application/pdf") {
 
                 $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
@@ -65,6 +69,18 @@
 
             }
 
+            if (file.type == "application/vnd.ms-excel" || file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XLS/icon_xls_256.png') }}");
+            }
+
+            if (file.type == "application/x-rar") {
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/RAR/icon_rar_256.png') }}");
+            }
+
+            if (file.type == "text/plain") {
+                $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
+            }
+
 
             $(this).attr("onmouseover", "");
             $(this).unbind('mouseenter mouseleave');
@@ -90,6 +106,88 @@
         $(file.previewElement).hover(function (e) {
             e.preventDefault();
         });
+
+
+        //Ajout de la popover
+
+        $(file.previewElement).click(function (e) {
+
+            if (selected != null) {
+                selected.removeClass('selectedfile');
+            }
+
+            selected = $(this);
+
+            selected.addClass('selectedfile');
+
+            // $('[rel=popover]').not(button).popover('hide');
+
+
+                $.ajax(Routing.generate('show_document', {id: 10}), {
+                    method: 'POST',
+                    success: function (html) {
+
+                        $("#filedescription").html(html);
+                        $("#filedescription").show("slow");
+
+                    }
+
+                });
+
+
+            });
+
+
+        /*
+
+         $(file.previewElement).popover({
+         selector: '[rel=popover]',
+         html:true,
+         placement:"bottom",
+         animation:"true",
+         trigger:"click",
+
+         content:"<img src='
+        {{ asset('bundles/sesilemain/img/load.gif') }}'/>",
+         title:"Détails du fichier"
+         });
+
+
+         $(file.previewElement).find('[rel=popover]').map(function (){
+         var pop = $(this);
+         $(this).on('shown.bs.popover', function (e) {
+         // alert(JSON.stringify(e));
+
+         $.ajax(Routing.generate('show_document',{id: 10}),{
+         method:'POST',
+         success:function(html){
+         $('.popover-content').html(html);
+         pop.popover({ content:html});
+         pop.unbind('shown.bs.popover');
+         // pop.popover('show');
+
+         }
+
+         });
+
+         });
+         });
+
+
+
+         /*
+         $(file.previewElement).find("a").map(function (){
+         //alert("pouet");
+         $(this).popover({
+         html:"MonculSurlacommode",
+         placement:"right",
+         animation:"true",
+         trigger:"click",
+         container: 'body'
+         });
+         $(this).popover('show');
+         });*/
     });
+
 
 </script>

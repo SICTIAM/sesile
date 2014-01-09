@@ -17,6 +17,11 @@ html, body {
 	display: table;
 }
 
+.popover {
+    max-width: 58em;
+    width: auto;
+}
+
 /*-------------------------     DÉBUT MENU     -------------------------*/
 #gauche {
 	background: white url("/images/vichy.png");
@@ -179,8 +184,16 @@ html, body {
 	color: #ffffff;
 }
 
-#documentcontent {
-	border: 5px dashed #cccccc;
+#fichiers {
+    border: 5px dashed #cccccc;
+}
+
+.selectedfile {
+    border-color: #66afe9;
+    outline: 2;
+    -webkit-box-shadow: inset 0 10px 10px rgba(0, 0, 0, 0.075), 0 0 20px rgba(102, 175, 233, 1.0);
+    box-shadow: inset 0 10px 10px rgba(0, 0, 0, 0.075), 0 0 20px rgba(102, 175, 233, 1.0);
+
 }
 
 /*-------------------------     DÉBUT MENU CONNEXION    -------------------------*/
