@@ -1,4 +1,40 @@
 <br/>
 
+{% if doc is null %}
 
-Mon cul sur le documentzkjd a jdmandjnzdpiazjndpiazudiazdpiajzndojzandojanzdojkazdojanzùonaz
+    <div class="row well descriptionfichier">
+        <h4>Description de {{ name }}</h4>
+
+        <div class="col-md-4">
+            <h5>Historique</h5>
+            {% if doc is null %}
+                Aucun historique pour ce document
+            {% else %}
+                Blablabla
+            {% endif %}
+        </div>
+        <div class="col-md-4"><h3>Contenu</h3></div>
+        <div class="col-md-4">
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                    Supprimer <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a id="deleteconfirm" href="#">Je confirme !</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("#deleteconfirm").click(function (e) {
+            {% if doc is null %}
+            removedropzonefile("{{ name }}");
+            {% else %}
+
+            {% endif %}
+        });
+    </script>
+
+{% endif %}
