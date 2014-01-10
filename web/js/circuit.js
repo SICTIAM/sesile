@@ -6,26 +6,23 @@ favoris_url = "";
 del_favoris_url = "";
 
 
-$('#users_list option:first').attr("selected", "selected");
+$('#users_list p:first, #circuits_list p:first').addClass("list_selected_element");
 
 
 /*
  Ajoute un utilisateur dans le cadre "circuits"
  */
 function ajoutUser(id) {
-    var sel_user = $('#users_list option[value="' + id + '"]');
+    var sel_user = $('#users_list p[data-id="' + id + '"]');
     if(sel_user.length == 0) {
         return false;
     }
     var new_perso = $('<div/>').data('id', id).addClass('perso_circuit').appendTo("#circuit");
+    $("<span/>").addClass("suppr_perso glyphicon glyphicon-remove").appendTo(new_perso);
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);
 
     sel_user.remove();
-
-    if ($('#users_list option').length == 0) {
-        $("#useradd_btn").prop('disabled', true);
-    }
 
     if ($(".perso_circuit").length > 1) {
         creerFleches();
@@ -34,15 +31,15 @@ function ajoutUser(id) {
 
 function creerFleches () {
     $(".fleche_circuit").remove();
-    $("<img/>").attr("src", fleche_src).addClass("fleche_circuit").insertAfter(".perso_circuit:not(:last)");
+    $("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(:last)");
 }
 
 function recreerCircuit (circuitArray) {
     // si des users ont été spécifiés on les ajoute en personnages :)
     if(circuitArray.length > 0) {
         $.each(circuitArray, function(k, v) {
-            var sel_user = $('#users_list option[value="' + v + '"]');
-            ajoutUser(sel_user.val());
+            var sel_user = $('#users_list p[data-id="' + v + '"]');
+            ajoutUser(v);
         });
         creerFleches();
     }
@@ -50,11 +47,11 @@ function recreerCircuit (circuitArray) {
 
 
 $("#useradd_btn").click(function() {
-    var sel_user = $('#users_list option:selected');
+    var sel_user = $('#users_list .list_selected_element');
     if(sel_user.length > 0) {
-        ajoutUser(sel_user.val());
+        ajoutUser(sel_user.attr("data-id"));
     }
-    $('#users_list option:first').attr("selected", "selected");
+    $('#users_list p:first').addClass("list_selected_element");
 });
 
 $("#circuit").sortable({
@@ -68,10 +65,9 @@ $("#circuit").sortable({
     beforeStop: function (event, ui) {
         if (sortableIn == 0) {
             elem = ui.item;
-            $("<option/>").val(elem.data("id")).text(elem.find(".nom_perso").text()).appendTo("#users_list");
+            $("<p/>").attr("data-id", elem.data("id")).text(elem.find(".nom_perso").text()).appendTo("#users_list");
             elem.remove();
-            $('#users_list option:first').attr("selected", "selected");
-            $("#useradd_btn").prop('disabled', false);
+            $('#users_list p:first').addClass("list_selected_element");
             creerFleches();
         }
     }
@@ -79,7 +75,7 @@ $("#circuit").sortable({
 
 
 $("#circuitadd_btn").click(function() {
-    var sel_circuit = $('#circuits_list option:selected');
+    var sel_circuit = $('#circuits_list .list_selected_element');
     var ordre = sel_circuit.attr("data-ordre").split(",");
     if(ordre.length > 0) {
         /*elem = ui.item;
@@ -93,7 +89,9 @@ $("#circuitadd_btn").click(function() {
             ajoutUser(v);
         });
     }
-    $('#users_list option:first').attr("selected", "selected");
+    $('#users_list p:first').addClass(".list_selected_element");
+    $("#circuit_name").val(sel_circuit.text());
+    $("#circuit_modifier").show();
 });
 
 

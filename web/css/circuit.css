@@ -20,9 +20,9 @@
     margin: auto;
 }
 
-#users_list p:hover, #circuits_list p:hover {
-	background-color: rgba(50, 133, 171, 0.5);
-	cursor: pointer;
+#users_list p:hover, #circuits_list p:hover, .list_selected_element {
+    background-color: rgba(50, 133, 171, 0.5);
+    cursor: pointer;
 	padding-left: 0.5em;
 }
 
@@ -41,18 +41,33 @@
 #circuit {
 	width: 100%;
 	min-height: 120px;
+    border: 1px solid #ccc;
+    border-top: 0;
+    margin: 0 0 2em 0;
 }
 
 .perso_circuit {
-	text-align: center;
-	cursor: pointer;
+    background-color: red;
+    text-align: center;
+    cursor: pointer;
 	margin: 10px;
+    max-width: 90px;
+    word-break: break-all;
 }
 
 .perso_circuit img {
 	width: 80px;
 	height: 80px;
 	display: block;
+    margin: auto;
+}
+
+.nom_perso {
+}
+
+.suppr_perso {
+    color: red;
+    position: relative;
 }
 
 .emplacement {
@@ -99,10 +114,23 @@
 	padding-left: 36%;
 }
 
-.glyphicon-chevron-down {
-	margin: 1em;
+#circuit_name {
+    border-radius: 0px;
 }
 
-.glyphicon-chevron-down: {
+.glyphicon-search-blue {
+    color: rgb(50, 133, 171);
+}
+
+.glyphicon-chevron-down {
 	margin: 1em;
+    cursor: pointer;
+}
+
+.glyphicon-chevron-down:hover {
+    color: rgb(50, 133, 171);
+}
+
+#circuit_modifier {
+    display: none;
 }
