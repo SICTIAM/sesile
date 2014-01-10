@@ -10,6 +10,8 @@
 
     var openeddesc = false;
 
+    var docsjson = {{ types|json_encode|raw }};
+
 
     var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
         previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
@@ -37,6 +39,11 @@
 
     }
 
+
+    function removefile(file) {
+
+    }
+
     dropzone.on('success', function (file, response) {
         $.each(response, function (serverfilename, originalname) {
             $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
@@ -47,8 +54,24 @@
     dropzone.on("addedfile", function (file) {
         // Access the preview element with file.previewElement and add event listeners, etc... to it.
         $(file.previewElement).find('img').map(function () {
+
+
+            $.each(docsjson, function (key, value) {
+
+                if (key == file.name) {
+
+                    file.type = value;
+
+                    $(file.previewElement).find('.dz-progress').map(function () {
+                        $(this).remove();
+                    });
+
+
+                }
+            });
+
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
-            //alert(file.type);
+
             if (file.type == "application/pdf") {
 
                 $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
@@ -83,7 +106,7 @@
 
             }
 
-            if (file.type == "text/xml") {
+            if (file.type == "text/xml" || file.type == "application/xml") {
 
                 $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
 
@@ -164,6 +187,24 @@
 
 
         });
+
+    });
+
+
+    $(document).ready(function () {
+
+
+        {% for file in docs %}
+
+
+        var mockFile = { name: "{{ file.name }}", size: {{ tailles[file.id] }} };
+
+
+        dropzone.addFile(mockFile);
+
+
+        {% endfor %}
+
 
     });
 

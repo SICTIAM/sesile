@@ -71,7 +71,14 @@
             $("#btn_modifier").click(function () {
                 $("#name, #desc").removeAttr("disabled");
                 $("#enregistrer_modif").show();
+
             });
+
+            $(document).ready(function () {
+                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
+            });
+
+
         </script>
     </div>
 {% endblock %}

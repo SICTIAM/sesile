@@ -32,8 +32,18 @@ class DocumentController extends Controller
     public function editForClasseurAction(Request $request, $id)
     {
 
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+        $docs = $classeur->getDocuments();
+        $tailles = array();
+        $types = array();
+        foreach ($docs as $doc) {
+            $tailles[$doc->getId()] = filesize('uploads/docs/' . $doc->getRepoUrl());
+            $types[$doc->getName()] = $doc->getType();
+        }
 
-        return array();
+
+        return array('docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types);
 
     }
 

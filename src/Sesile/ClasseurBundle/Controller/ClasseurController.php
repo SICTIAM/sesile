@@ -160,7 +160,7 @@ class ClasseurController extends Controller
             } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
                 $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
-                $document->setRepourl($file->getPathname()); //Temporairement associé au nom du fichier en attendant les repository git
+                $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
                 $document->setType($file->getMimeType());
                 $document->setSigned(false);
                 $document->setClasseur($classeur);
