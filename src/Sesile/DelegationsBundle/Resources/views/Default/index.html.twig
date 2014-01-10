@@ -1,0 +1,26 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+        <h1>Délégations</h1>
+        <table class="table tableau">
+            <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Début</th>
+                <th>Fin</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            {% for delegation in delegations %}
+                <tr>
+                    <td>{{ delegation.user }}</td>
+                    <td>{{ delegation.debut | date('d-m-Y H:i:s') }}</td>
+                    <td>{{ delegation.fin | date('d-m-Y H:i:s') }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <a href="{{ path('delegation_ajouter') }}">Déléguer ses droits</a>
+    </div>
+{% endblock %}

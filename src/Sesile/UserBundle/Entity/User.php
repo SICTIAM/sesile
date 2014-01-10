@@ -36,6 +36,11 @@ class User extends BaseUser
      */
     protected $Prenom;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\DelegationsBundle\Entity\Delegations", mappedBy="user")
+     */
+    protected $delegations;
+
     public function setPrenom($Prenom)
     {
         $this->Prenom = $Prenom;
@@ -80,5 +85,56 @@ class User extends BaseUser
     public function getCredentialsExpireAt()
     {
         return $this->getCredentialsExpireAt();
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Add delegations
+     *
+     * @param \Sesile\DelegationsBundle\Entity\Delegations $delegations
+     * @return User
+     */
+    public function addDelegation(\Sesile\DelegationsBundle\Entity\Delegations $delegations)
+    {
+        $this->delegations[] = $delegations;
+
+        return $this;
+    }
+
+    /**
+     * Remove delegations
+     *
+     * @param \Sesile\DelegationsBundle\Entity\Delegations $delegations
+     */
+    public function removeDelegation(\Sesile\DelegationsBundle\Entity\Delegations $delegations)
+    {
+        $this->delegations->removeElement($delegations);
+    }
+
+    /**
+     * Get delegations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDelegations()
+    {
+        return $this->delegations;
     }
 }

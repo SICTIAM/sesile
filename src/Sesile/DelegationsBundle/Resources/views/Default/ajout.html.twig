@@ -1,0 +1,24 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
+    <div class="bloc_page">
+        <form>
+            <select>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.Prenom }} {{ user.Nom }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <input class="datepicker" type="datetime"/>
+            <br>
+            <input class="datepicker" type="datetime"/>
+            <br>
+            <button type="submit" class="btn btn-success">Enregistrer</button>
+        </form>
+    </div>
+    <script type="text/javascript">
+        $('.datepicker').datepicker();
+    </script>
+{% endblock %}
