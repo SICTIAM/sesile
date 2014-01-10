@@ -21,7 +21,8 @@
 }
 
 #users_list p:hover, #circuits_list p:hover {
-	background-color: #ebebeb;
+	background-color: rgba(50, 133, 171, 0.5);
+	cursor: pointer;
 	padding-left: 0.5em;
 }
 
@@ -95,9 +96,13 @@
 .nameinput {
 	width: 100%;
 	height: 1.8em;
-	padding-left: 30%;
+	padding-left: 36%;
 }
 
 .glyphicon-chevron-down {
+	margin: 1em;
+}
+
+.glyphicon-chevron-down: {
 	margin: 1em;
 }
