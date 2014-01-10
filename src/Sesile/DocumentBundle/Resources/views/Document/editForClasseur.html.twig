@@ -1,4 +1,3 @@
-
 <div id="fichiers" class="dropzone"></div>
 <div id="filedescription" style="display:none"></div>
 
@@ -148,18 +147,18 @@
 
             $.ajax(Routing.generate('show_document', {id: file.name}), {
                 method: 'POST',
-                    success: function (html) {
+                success: function (html) {
 
-                        if (openeddesc) {
-                            $("#filedescription").html(html);
-                        } else {
-                            $("#filedescription").html(html).slideDown();
-
-                        }
-                        openeddesc = true;
-
+                    if (openeddesc) {
+                        $("#filedescription").html(html);
+                    } else {
+                        $("#filedescription").html(html).slideDown();
 
                     }
+                    openeddesc = true;
+
+
+                }
 
             });
 

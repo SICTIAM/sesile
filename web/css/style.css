@@ -172,16 +172,22 @@ html, body {
 
 .titre_page {
 	font-size: 1.5em;
+	margin-bottom: 1em;
 	text-transform: uppercase;
 	color: #222222;
 	border-bottom: 3px dotted #555555;
 }
 
 .titre_form_element {
-	background-color: #3285ab;
 	margin: 0.714em 0 0.714em 0;
 	text-transform: uppercase;
 	color: #ffffff;
+	width: 100%;
+	height: 1.8em;
+	line-height: 1.8em;
+	vertical-align: middle;
+	background-color: rgb(50, 133, 171);
+	padding-left: 0.214em;
 }
 
 #fichiers {
@@ -191,9 +197,21 @@ html, body {
 .selectedfile {
     border-color: #66afe9;
     outline: 2;
-    -webkit-box-shadow: inset 0 10px 10px rgba(0, 0, 0, 0.075), 0 0 20px rgba(102, 175, 233, 1.0);
-    box-shadow: inset 0 10px 10px rgba(0, 0, 0, 0.075), 0 0 20px rgba(102, 175, 233, 1.0);
+	-webkit-box-shadow: inset 0 7px 7px rgba(0, 0, 0, 0.075), 0 0 9px rgba(102, 175, 233, 1.0);
+	box-shadow: inset 0 7px 7px rgba(0, 0, 0, 0.075), 0 0 9px rgba(102, 175, 233, 1.0);
 
+}
+
+/*.bleudesmersdusud{*/
+/*outline: 0;*/
+/*-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);*/
+/*box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);*/
+/*}*/
+
+.bleudesmersdusud:focus {
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 
 /*-------------------------     DÉBUT MENU CONNEXION    -------------------------*/
@@ -309,3 +327,7 @@ html, body {
 }
 
 /*-------------------------     FIN TABLEAU =>   DÉBUT BLABLA     -------------------------*/
+
+.fos_user_profile_edit .required {
+	color: red;
+}

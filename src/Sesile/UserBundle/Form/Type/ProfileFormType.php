@@ -22,9 +22,8 @@ class ProfileFormType extends BaseType
 
         $builder->add('plainPassword', 'repeated', array(
             'type' => 'password',
-            'options' => array('translation_domain' => 'FOSUserBundle'),
-            'first_options' => array('label' => 'form.password'),
-            'second_options' => array('label' => 'form.password_confirmation'),
+            'first_options' => array('label' => 'Mot de passe'),
+            'second_options' => array('label' => 'Confirmation'),
             'invalid_message' => 'fos_user.password.mismatch',
         ));
     }
@@ -43,8 +42,9 @@ class ProfileFormType extends BaseType
     protected function buildUserForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
-            ->add('email', 'email', array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'));
+            ->add('Prenom', null, array('label' => 'Prénom', 'attr' => array('class' => 'pouet')))
+            ->add('Nom', null, array('label' => ' Nom', 'attr' => array('class' => 'pouet')))
+            ->add('email', 'email', array('label' => 'Adresse e-mail', 'attr' => array('class' => 'pouet')));
     }
 
 }

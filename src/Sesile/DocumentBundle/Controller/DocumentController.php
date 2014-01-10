@@ -45,7 +45,24 @@ class DocumentController extends Controller
     public function showAction(Request $request, $id)
     {
 
-        return array();
+
+        if (ctype_digit($id)) {
+            $em = $this->getDoctrine()->getManager();
+            $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+            $name = $doc->getName();
+
+        } else {
+            $doc = null;
+            $name = $id;
+
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+
+        return array('doc' => $doc, 'name' => $name);
 
     }
 
