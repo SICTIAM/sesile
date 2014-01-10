@@ -3,7 +3,9 @@
 
     <div class="selects_circuit">
         <div class="titre_select">
-            <label class="nametitle" id="users_complete">&nbsp;Utilisateurs</label>
+            <label class="nametitle" id="users_complete">
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
             <input class="nameinput bleudesmersdusud" type="text">
         </div>
         <div id="users_list">
@@ -11,12 +13,14 @@
                 <p data-id="{{ user.id }}">{{ user.username }}</p>
             {% endfor %}
         </div>
-        <button type="button" id="useradd_btn">&darr;</button>
+        <span class="glyphicon glyphicon-chevron-down"></span>
     </div>
 
     <div class="selects_circuit">
         <div class="titre_select">
-            <label class="nametitle">&nbsp;Circuits</label>
+            <label class="nametitle">
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;&nbsp;Circuits&nbsp;&nbsp;</label>
             <input class="nameinput bleudesmersdusud" type="text">
         </div>
         <div id="circuits_list">
@@ -24,7 +28,7 @@
                 <p data-id="{{ circuit.id }}" data-ordre="{{ circuit.ordre }}">{{ circuit.name }}</p>
             {% endfor %}
         </div>
-        <button type="button" id="circuitadd_btn">&darr;</button>
+        <span class="glyphicon glyphicon-chevron-down"></span>
     </div>
 </div>
 
@@ -47,6 +51,7 @@
     var users_list = new Array();
     $("#users_list p").each(function () {
         users_list.push($(this).text());
-    })
-    $("#users_complete").autocomplete({ lookup: users_list })
+    });
+    $("#users_complete").autocomplete({ lookup: users_list });
+
 </script>
