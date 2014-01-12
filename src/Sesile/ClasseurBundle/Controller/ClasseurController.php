@@ -208,13 +208,8 @@ class ClasseurController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
-    {
-        $entity = new Classeur();
-
-        return array(
-            'entity' => $entity
-        );
+    public function newAction() {
+        return array();
     }
 
     /**

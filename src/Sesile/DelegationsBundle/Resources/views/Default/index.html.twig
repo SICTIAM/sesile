@@ -15,12 +15,12 @@
             {% for delegation in delegations %}
                 <tr>
                     <td>{{ delegation.user }}</td>
-                    <td>{{ delegation.debut | date('d-m-Y H:i:s') }}</td>
-                    <td>{{ delegation.fin | date('d-m-Y H:i:s') }}</td>
+                    <td>{{ delegation.debut | date('d-m-Y') }}</td>
+                    <td>{{ delegation.fin | date('d-m-Y') }}</td>
                     <td></td>
                 </tr>
             {% endfor %}
         </table>
-        <a href="{{ path('delegation_ajouter') }}">Déléguer ses droits</a>
+        <a href="{{ path('delegation_new') }}">Déléguer ses droits</a>
     </div>
 {% endblock %}

@@ -24,7 +24,15 @@ class Delegations
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="delegations")
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="delegationsDonnees")
+     * @ORM\JoinColumn(name="delegant", referencedColumnName="id")
+     */
+    private $delegant;
+
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="delegationsRecues")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
      */
     private $user;
@@ -121,5 +129,28 @@ class Delegations
     public function getFin()
     {
         return $this->fin;
+    }
+
+    /**
+     * Set delegant
+     *
+     * @param \Sesile\UserBundle\Entity\User $delegant
+     * @return Delegations
+     */
+    public function setDelegant(\Sesile\UserBundle\Entity\User $delegant = null)
+    {
+        $this->delegant = $delegant;
+    
+        return $this;
+    }
+
+    /**
+     * Get delegant
+     *
+     * @return \Sesile\UserBundle\Entity\User 
+     */
+    public function getDelegant()
+    {
+        return $this->delegant;
     }
 }
