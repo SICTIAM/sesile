@@ -34,6 +34,39 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/recues", name="delegations_recues")
+     * @Template()
+     */
+    public function index_recuesAction()
+    {
+        return $this->recuesAction();
+    }
+
+    /**
+     * @Route("/recues", name="delegations_recues_list")
+     * @Template("@SesileDelegationsBundle:Default:liste.html.twig")
+     */
+    public function recuesAction()
+    {
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+
+        $query = $repository->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $this->getUser())
+            ->andWhere('p.fin >= :fin')
+            ->setParameter('fin', new \DateTime())
+            ->orderBy('p.debut', 'ASC')
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+        return array(
+            'delegations' => $delegations
+        );
+    }
+
+
+    /**
      * @Route("/ajout", name="delegation_new")
      * @Template()
      * @method("GET")
@@ -74,6 +107,24 @@ class DefaultController extends Controller
                 'Délégations ajoutée avec succès !'
             );
         }
+
+        return $this->redirect($this->generateUrl('delegations_list'));
+    }
+
+    /**
+     * @Route("/delete", name="delegation_delete")
+     * @method("POST")
+     */
+    public function deleteAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $delegation = $em->getRepository('SesiledelegationsBundle:Delegation')->find($request->get("id"));
+        if (!$delegation) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+        $em->remove($delegation);
+        $em->flush();
+
 
         return $this->redirect($this->generateUrl('delegations_list'));
     }

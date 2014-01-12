@@ -1,34 +1,14 @@
-/* =========================================================
- * bootstrap-datepicker.js 
- * http://www.eyecon.ro/bootstrap-datepicker
- * =========================================================
- * Copyright 2012 Stefan Petre
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================= */
-
 !function ($) {
 
     // Picker object
 
     var Datepicker = function (element, options) {
         this.element = $(element);
-        this.format = DPGlobal.parseFormat(options.format || this.element.data('date-format') || 'mm/dd/yyyy');
+        this.format = DPGlobal.parseFormat('dd/mm/yyyy');
         this.picker = $(DPGlobal.template)
             .appendTo('body')
             .on({
                 click: $.proxy(this.click, this)//,
-                //mousedown: $.proxy(this.mousedown, this)
             });
         this.isInput = this.element.is('input');
         this.component = this.element.is('.date') ? this.element.find('.add-on') : false;
@@ -36,7 +16,6 @@
         if (this.isInput) {
             this.element.on({
                 focus: $.proxy(this.show, this),
-                //blur: $.proxy(this.hide, this),
                 keyup: $.proxy(this.update, this)
             });
         } else {
@@ -47,37 +26,10 @@
             }
         }
 
-        this.minViewMode = options.minViewMode || this.element.data('date-minviewmode') || 0;
-        if (typeof this.minViewMode === 'string') {
-            switch (this.minViewMode) {
-                case 'months':
-                    this.minViewMode = 1;
-                    break;
-                case 'years':
-                    this.minViewMode = 2;
-                    break;
-                default:
-                    this.minViewMode = 0;
-                    break;
-            }
-        }
-        this.viewMode = options.viewMode || this.element.data('date-viewmode') || 0;
-        if (typeof this.viewMode === 'string') {
-            switch (this.viewMode) {
-                case 'months':
-                    this.viewMode = 1;
-                    break;
-                case 'years':
-                    this.viewMode = 2;
-                    break;
-                default:
-                    this.viewMode = 0;
-                    break;
-            }
-        }
-        this.startViewMode = this.viewMode;
-        this.weekStart = options.weekStart || this.element.data('date-weekstart') || 0;
-        this.weekEnd = this.weekStart === 0 ? 6 : this.weekStart - 1;
+        this.minViewMode = 0;
+        this.viewMode = this.startViewMode = 0;
+        this.weekStart = 1;
+        this.weekEnd = 0;
         this.onRender = options.onRender;
         this.fillDow();
         this.fillMonths();
@@ -370,11 +322,9 @@
             }
         ],
         dates: {
-            days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-            daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-            months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            daysMin: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa", "Di"],
+            months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+            monthsShort: ["Jan", "Fév", "Mar", "Avr", "Mai", "Jui", "Jui", "Aoû", "Sep", "Oct", "Nov", "Déc"]
         },
         isLeapYear: function (year) {
             return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0))
