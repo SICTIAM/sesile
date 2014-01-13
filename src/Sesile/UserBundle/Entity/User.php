@@ -97,6 +97,8 @@ class User extends BaseUser
      */
     public function __construct()
     {
+
+        parent::__construct();
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -119,7 +121,7 @@ class User extends BaseUser
     public function addDelegationsRecue(\Sesile\DelegationsBundle\Entity\Delegations $delegationsRecues)
     {
         $this->delegationsRecues[] = $delegationsRecues;
-    
+
         return $this;
     }
 
@@ -136,7 +138,7 @@ class User extends BaseUser
     /**
      * Get delegationsRecues
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDelegationsRecues()
     {
@@ -152,7 +154,7 @@ class User extends BaseUser
     public function addDelegationsDonnee(\Sesile\DelegationsBundle\Entity\Delegations $delegationsDonnees)
     {
         $this->delegationsDonnees[] = $delegationsDonnees;
-    
+
         return $this;
     }
 
@@ -169,7 +171,7 @@ class User extends BaseUser
     /**
      * Get delegationsDonnees
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDelegationsDonnees()
     {

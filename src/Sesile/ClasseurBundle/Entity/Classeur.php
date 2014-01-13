@@ -49,7 +49,7 @@ class Classeur
     /**
      * @var \Date
      *
-     * @ORM\Column(name="validation", type="date")
+     * @ORM\Column(name="validation", type="datetime")
      */
     private $validation;
 

@@ -1,6 +1,37 @@
 <div class="row descriptionfichier">
 
 
+    <script type="text/javascript">
+        var fNewDoc = false;
+        var EditDocumentButton = null;
+        try {
+            EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3');
+            if (EditDocumentButton != null) {
+                fNewDoc = true;
+            }
+        } catch (e) {
+        }
+
+        var L_EditDocumentError_Text = "Editing not supported.";
+        var L_EditDocumentRuntimeError_Text = "Sorry, couldn't open the document.";
+
+        function editDocument(strDocument) {
+            if (fNewDoc) {
+                if (!EditDocumentButton.EditDocument(strDocument)) {
+                    alert(L_EditDocumentRuntimeError_Text);
+                }
+            } else {
+                // try {
+                var hownowPlugin = document.getElementById("winFirefoxPlugin");
+                hownowPlugin.EditDocument(strDocument, null);
+                // } catch (e) { alert(L_EditDocumentError_Text); }
+            }
+        }
+
+
+    </script>
+
+
     <div class="col-md-3">
         <div class="thumbnail">
             <img id="fileimgpreview" style="width: 180px; height: 180px">
@@ -10,7 +41,8 @@
 
                 <p>...</p>
 
-                <p><a href="#" class="btn btn-primary" role="button">Modifier</a></p>
+                <p><a id="javascript:editDocument('/server.php/{{ doc.repoUrl }}');return false;" href="#"
+                      class="btn btn-primary" role="button">Modifier</a></p>
             </div>
         </div>
     </div>
@@ -146,7 +178,17 @@
             $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
         }
 
+        $('#buttonmodif').click(function () {
+            editDocument('server.php/{{ doc.repoUrl }}');
+        });
+
+
         {% endif %}
 
 
     </script>
+
+
+
+
+
