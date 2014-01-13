@@ -325,3 +325,7 @@ html, body {
 .fos_user_profile_edit .required {
 	color: red;
 }
+
+.h3break {
+    word-break: break-all;
+}

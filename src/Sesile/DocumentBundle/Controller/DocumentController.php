@@ -37,13 +37,15 @@ class DocumentController extends Controller
         $docs = $classeur->getDocuments();
         $tailles = array();
         $types = array();
+        $ids = array();
         foreach ($docs as $doc) {
             $tailles[$doc->getId()] = filesize('uploads/docs/' . $doc->getRepoUrl());
             $types[$doc->getName()] = $doc->getType();
+            $ids[$doc->getId()] = $doc->getName();
         }
 
 
-        return array('docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types);
+        return array('docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types, 'ids' => $ids);
 
     }
 
@@ -57,6 +59,8 @@ class DocumentController extends Controller
 
 
         if (ctype_digit($id)) {
+
+
             $em = $this->getDoctrine()->getManager();
             $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
             $name = $doc->getName();
@@ -66,10 +70,6 @@ class DocumentController extends Controller
             $name = $id;
 
         }
-
-
-        $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
 
         return array('doc' => $doc, 'name' => $name);

@@ -39,7 +39,12 @@ class User extends BaseUser
     /**
      * @ORM\OneToMany(targetEntity="Sesile\DelegationsBundle\Entity\Delegations", mappedBy="user")
      */
-    protected $delegations;
+    protected $delegationsRecues;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\DelegationsBundle\Entity\Delegations", mappedBy="delegant")
+     */
+    protected $delegationsDonnees;
 
     public function setPrenom($Prenom)
     {
@@ -106,35 +111,68 @@ class User extends BaseUser
     }
 
     /**
-     * Add delegations
+     * Add delegationsRecues
      *
-     * @param \Sesile\DelegationsBundle\Entity\Delegations $delegations
+     * @param \Sesile\DelegationsBundle\Entity\Delegations $delegationsRecues
      * @return User
      */
-    public function addDelegation(\Sesile\DelegationsBundle\Entity\Delegations $delegations)
+    public function addDelegationsRecue(\Sesile\DelegationsBundle\Entity\Delegations $delegationsRecues)
     {
-        $this->delegations[] = $delegations;
-
+        $this->delegationsRecues[] = $delegationsRecues;
+    
         return $this;
     }
 
     /**
-     * Remove delegations
+     * Remove delegationsRecues
      *
-     * @param \Sesile\DelegationsBundle\Entity\Delegations $delegations
+     * @param \Sesile\DelegationsBundle\Entity\Delegations $delegationsRecues
      */
-    public function removeDelegation(\Sesile\DelegationsBundle\Entity\Delegations $delegations)
+    public function removeDelegationsRecue(\Sesile\DelegationsBundle\Entity\Delegations $delegationsRecues)
     {
-        $this->delegations->removeElement($delegations);
+        $this->delegationsRecues->removeElement($delegationsRecues);
     }
 
     /**
-     * Get delegations
+     * Get delegationsRecues
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getDelegations()
+    public function getDelegationsRecues()
     {
-        return $this->delegations;
+        return $this->delegationsRecues;
+    }
+
+    /**
+     * Add delegationsDonnees
+     *
+     * @param \Sesile\DelegationsBundle\Entity\Delegations $delegationsDonnees
+     * @return User
+     */
+    public function addDelegationsDonnee(\Sesile\DelegationsBundle\Entity\Delegations $delegationsDonnees)
+    {
+        $this->delegationsDonnees[] = $delegationsDonnees;
+    
+        return $this;
+    }
+
+    /**
+     * Remove delegationsDonnees
+     *
+     * @param \Sesile\DelegationsBundle\Entity\Delegations $delegationsDonnees
+     */
+    public function removeDelegationsDonnee(\Sesile\DelegationsBundle\Entity\Delegations $delegationsDonnees)
+    {
+        $this->delegationsDonnees->removeElement($delegationsDonnees);
+    }
+
+    /**
+     * Get delegationsDonnees
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDelegationsDonnees()
+    {
+        return $this->delegationsDonnees;
     }
 }

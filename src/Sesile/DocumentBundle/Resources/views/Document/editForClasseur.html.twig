@@ -11,13 +11,18 @@
     var openeddesc = false;
 
     var docsjson = {{ types|json_encode|raw }};
+    var ids = {{ ids|json_encode|raw }};
 
 
     var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
         previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
                 '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
                 ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
-                ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>'
+                ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
+
+        maxFiles:{{ docs|length }},
+        dictMaxFilesExceeded: "Vous n'êtes pas en mode modification, cliquez sur modifier puis réessayez !"
+
 
 
     });
@@ -42,6 +47,10 @@
 
     function removefile(file) {
 
+    }
+
+    function enableUploads() {
+        dropzone.options.maxFiles = null;
     }
 
     dropzone.on('success', function (file, response) {
@@ -167,8 +176,27 @@
 
             // $('[rel=popover]').not(button).popover('hide');
 
+            var idfile = -1;
 
-            $.ajax(Routing.generate('show_document', {id: file.name}), {
+
+            $.each(ids, function (key, value) {
+
+                if (value == file.name) {
+
+
+                    idfile = key;
+
+
+                }
+            });
+
+
+            if (idfile == -1) {
+                idfile = file.name;
+            }
+
+
+            $.ajax(Routing.generate('show_document', {id: idfile}), {
                 method: 'POST',
                 success: function (html) {
 

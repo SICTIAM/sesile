@@ -31,20 +31,20 @@
         <span id="circuitadd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
 </div>
-
-<div id="circuit_editor">
-    <div class="titre_select">
-        <input class="form-control" id="circuit_name" name="circuit_name" placeholder="Titre du circuit">
+<form action="{{ path("create_circuit") }}" method="post">
+    <div id="circuit_editor">
+        <div class="titre_select">
+            <input required="required" class="form-control" id="circuit_name" name="circuit_name" placeholder="Titre du circuit">
+        </div>
+        <div id="circuit"></div>
     </div>
-    <div id="circuit"></div>
-</div>
-
-<button class="btn  btn-success">
-    Créer un nouveau circuit
-</button>
-<button id="circuit_modifier" class="btn  btn-success">
-    Enregistrer les modifications
-</button>
+    <button class="btn  btn-success">
+        Créer un nouveau circuit
+    </button>
+    <button type="submit" id="circuit_modifier" class="btn  btn-success">
+        Enregistrer les modifications
+    </button>
+</form>
 
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
@@ -55,7 +55,7 @@
         users_list.push($(this).text());
     });
 
-    $("#users_complete").autocomplete({ lookup: users_list });
+    // $("#users_complete").autocomplete({ lookup: users_list });
 
 
     $(".nameinput").focus(function () {

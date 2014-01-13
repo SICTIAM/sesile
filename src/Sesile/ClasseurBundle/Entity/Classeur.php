@@ -444,10 +444,10 @@ class Classeur
     /**
      * Add documents
      *
-     * @param \Sesile\ClasseurBundle\Entity\Document $documents
+     * @param \Sesile\DocumentBundle\Entity\Document $documents
      * @return Classeur
      */
-    public function addDocument(\Sesile\ClasseurBundle\Entity\Document $documents)
+    public function addDocument(\Sesile\DocumentBundle\Entity\Document $documents)
     {
         $this->documents[] = $documents;
 
@@ -457,9 +457,9 @@ class Classeur
     /**
      * Remove documents
      *
-     * @param \Sesile\ClasseurBundle\Entity\Document $documents
+     * @param \Sesile\DocumentBundle\Entity\Document $documents
      */
-    public function removeDocument(\Sesile\ClasseurBundle\Entity\Document $documents)
+    public function removeDocument(\Sesile\DocumentBundle\Entity\Document $documents)
     {
         $this->documents->removeElement($documents);
     }

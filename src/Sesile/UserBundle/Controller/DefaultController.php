@@ -13,7 +13,7 @@ use Sesile\UserBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Email;
-
+use Symfony\Component\Yaml\Yaml;
 
 class DefaultController extends Controller
 {
@@ -40,14 +40,13 @@ class DefaultController extends Controller
      */
     public function ajoutAction(Request $request)
     {
-
-
         $entity = new User();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         //connexion au serveur LDAP
-        $ldapconn = ldap_connect("172.17.100.78")
+        $cas = $this->getCASParams();
+        $ldapconn = ldap_connect($cas['cas_server'])
         or die("Could not connect to LDAP server."); //security
         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
@@ -59,8 +58,6 @@ class DefaultController extends Controller
             } else {
                 echo "LDAP bind failed...";
             }
-
-
             if ($form->isValid()) {
 
                 $entity->setEmail($form->get('username')->getData());
@@ -161,8 +158,8 @@ class DefaultController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-
-            $ldapconn = ldap_connect("172.17.100.78")
+            $cas = $this->getCASParams();
+            $ldapconn = ldap_connect($cas['cas_server'])
             or die("Could not connect to LDAP server."); //security
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
@@ -285,6 +282,12 @@ class DefaultController extends Controller
             ->getForm();
     }
 
+    private function getCASParams () {
+        $file   = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+        $parsed = Yaml::parse(file_get_contents($file));
 
+        $cas = $parsed['security']['firewalls']['secured_area']['cas'];
+        return $cas;
+    }
 }
 

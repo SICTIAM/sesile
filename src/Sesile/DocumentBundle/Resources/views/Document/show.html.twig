@@ -1,23 +1,49 @@
-<br/>
+<div class="row descriptionfichier">
 
-{% if doc is null %}
 
-    <div class="row well descriptionfichier">
-        <h4>Description de {{ name }}</h4>
+    <div class="col-md-3">
+        <div class="thumbnail">
+            <img id="fileimgpreview" style="width: 180px; height: 180px">
 
-        <div class="col-md-4">
-            <h5>Historique</h5>
-            {% if doc is null %}
+            <div class="caption">
+                <h3 class="h3break">{{ name }}</h3>
+
+                <p>...</p>
+
+                <p><a href="#" class="btn btn-primary" role="button">Modifier</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <h4>Historique</h4>
+
+        {% if doc is null %}
                 Aucun historique pour ce document
             {% else %}
-                Blablabla
-            {% endif %}
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for histo in doc.histories %}
+                        <tr>
+                            <td><strong>{{ histo.date|date('d.m.Y H:i:s') }} </strong></td>
+                            <td> {{ histo.comment }} </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+        {% endif %}
         </div>
-        <div class="col-md-4"><h3>Contenu</h3>
-            <img id="fileimgpreview">
-        </div>
-        <div class="col-md-4">
-            <div class="btn-group pull-right">
+
+
+    <div class="col-md-2 pull-right">
+    <div class="btn-group pull-right">
                 <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
                     Supprimer <span class="caret"></span>
                 </button>
@@ -40,92 +66,87 @@
 
         {% if doc is null %}
 
-
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
 
         {% else %}
 
-        $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
-        //alert(
-        {{ doc.type }});
-        if ({{ doc.type }} == "application/pdf"
-        )
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
+
+        if ("{{ doc.type }}" == "application/pdf"
+                )
         {
 
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
 
         }
-        if ({{ doc.type }} == "application/msword" ||
-        {{ doc.type }} ==
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        if ("{{ doc.type }}" == "application/msword" ||
+                "{{ doc.type }}" ==
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
         {
 
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/WORD/icon_doc_256.png') }}");
-
-        }
-
-        if ({{ doc.type }} == "application/zip"
-        )
-        {
-
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/ZIP/icon_zip_256.png') }}");
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/WORD/icon_doc_256.png') }}");
 
         }
 
-        if ({{ doc.type }} == "image/png"
-        )
+        if ("{{ doc.type }}" == "application/zip"
+                )
         {
 
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
-
-        }
-        if ({{ doc.type }} == "image/png"
-        )
-        {
-
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/ZIP/icon_zip_256.png') }}");
 
         }
 
-        if ({{ doc.type }} == "image/jpeg"
-        )
+        if ("{{ doc.type }}" == "image/png"
+                )
         {
 
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/JPG/icon_jpg_256.png') }}");
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+
+        }
+        if ("{{ doc.type }}" == "image/png"
+                )
+        {
+
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
 
         }
 
-        if ({{ doc.type }} == "text/xml"
-        )
+        if ("{{ doc.type }}" == "image/jpeg"
+                )
         {
 
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/JPG/icon_jpg_256.png') }}");
 
         }
 
-        if ({{ doc.type }} == "application/vnd.ms-excel" ||
-        {{ doc.type }} ==
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
-        {
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XLS/icon_xls_256.png') }}");
+        if ("{{ doc.type }}" == "text/xml" || "{{ doc.type }}" == "application/xml") {
+
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
+
         }
 
-        if ({{ doc.type }} == "application/x-rar"
+        if ("{{ doc.type }}" == "application/vnd.ms-excel" ||
+                "{{ doc.type }}" ==
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
         {
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/RAR/icon_rar_256.png') }}");
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XLS/icon_xls_256.png') }}");
         }
 
-        if ({{ doc.type }} == "text/plain"
-        )
+        if ("{{ doc.type }}" == "application/x-rar"
+                )
         {
-            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/RAR/icon_rar_256.png') }}");
+        }
+
+        if ("{{ doc.type }}" == "text/plain"
+                )
+        {
+            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
         }
 
         {% endif %}
 
 
     </script>
-
-{% endif %}

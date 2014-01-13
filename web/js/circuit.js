@@ -78,18 +78,18 @@ $("#circuitadd_btn").click(function() {
     var sel_circuit = $('#circuits_list .list_selected_element');
     var ordre = sel_circuit.attr("data-ordre").split(",");
     if(ordre.length > 0) {
-        /*elem = ui.item;
-        $("<option/>").val(elem.data("id")).text(elem.find(".nom_perso").text()).appendTo("#users_list");
-        elem.remove();
-        $('#users_list option:first').attr("selected", "selected");
-        $("#useradd_btn").prop('disabled', false);
-        */
-        $("#circuit").empty();
+        $.each($("#circuit .perso_circuit"), function(k,v) {
+            var elem = $(this);
+            $("<p/>").attr("data-id", elem.data("id")).text(elem.find(".nom_perso").text()).appendTo("#users_list");
+            elem.remove();
+        });
+        creerFleches();
+
         $.each(ordre, function (k, v) {
             ajoutUser(v);
         });
     }
-    $('#users_list p:first').addClass(".list_selected_element");
+    $('#users_list p:first').addClass("list_selected_element");
     $("#circuit_name").val(sel_circuit.text());
     $("#circuit_modifier").show();
 });
