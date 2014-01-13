@@ -27,7 +27,8 @@
         "oneup/uploader-bundle": "1.0.*@dev",
         "jms/security-extra-bundle": "dev-master",
         "gorg/cas-bundle": "master",
-        "gorg/user-bundle": "master"
+        "gorg/user-bundle": "master",
+        "sabre/dav": "1.8.*"
 
     },
     "scripts": {
