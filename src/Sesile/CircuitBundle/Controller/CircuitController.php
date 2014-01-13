@@ -2,6 +2,7 @@
 
 namespace Sesile\CircuitBundle\Controller;
 
+use Sesile\CircuitBundle\Entity\Circuit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -49,11 +50,24 @@ class CircuitController extends Controller
      */
     public function createAction(Request $request)
     {
-        var_dump($request);
-        exit();
+        $em = $this->getDoctrine()->getManager();
+        $circuit = new Circuit();
+        $circuit->setName($request->request->get('circuit_name'));
+        $circuit->setOrdre($request->request->get('circuit'));
+        $circuit->setUserId($this->getUser()->getId());
 
+        $em->persist($circuit);
+        $em->flush();
 
-        return new Response('OK');
+        $error = false;
+        if (!$error) {
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'Circuit créé avec succès !'
+            );
+        }
+
+        return $this->redirect($this->generateUrl('gestion_circuit'));
     }
 
     /**
