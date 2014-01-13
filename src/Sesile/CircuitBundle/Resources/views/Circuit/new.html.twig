@@ -1,23 +1,62 @@
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
-<div id="new_circuit_content">
+<div class="top_selects_circuits">
+
     <div class="selects_circuit">
-        <select id="users_list" size="5">
+        <div class="titre_select">
+            <label class="nametitle" id="users_complete">
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
+            <input class="nameinput bleudesmersdusud" type="text">
+        </div>
+        <div id="users_list">
             {% for user in users %}
-                <option value="{{ user.id }}">{{ user.username }}</option>
+                <p data-id="{{ user.id }}">{{ user.username }}</p>
             {% endfor %}
-        </select>
-        <button type="button" id="useradd_btn">&darr;</button>
+        </div>
+        <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
+
     <div class="selects_circuit">
-        <select id="circuits_list" size="5">
+        <div class="titre_select">
+            <label class="nametitle">
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;&nbsp;Circuits&nbsp;&nbsp;</label>
+            <input class="nameinput bleudesmersdusud" type="text">
+        </div>
+        <div id="circuits_list">
             {% for circuit in circuits %}
-                <option value="{{ circuit.id }}" data-ordre="{{ circuit.ordre }}">{{ circuit.name }}</option>
+                <p data-id="{{ circuit.id }}" data-ordre="{{ circuit.ordre }}">{{ circuit.name }}</p>
             {% endfor %}
-        </select>
-        <button type="button" id="circuitadd_btn">&darr;</button>
+        </div>
+        <span id="circuitadd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
-    <div id="circuit"></div>
 </div>
+<form action="{{ path("create_circuit") }}" method="post">
+    <div id="circuit_editor">
+        <div id="circuit"></div>
+    </div>
+</form>
 
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
+<script type="text/javascript">
+    var users_list = new Array();
+    $("#users_list p").each(function () {
+        users_list.push($(this).text());
+    });
+
+    // $("#users_complete").autocomplete({ lookup: users_list });
+
+
+    $(".nameinput").focus(function () {
+        $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
+        $(this).prev("label").addClass("glyphicon-search-blue");
+    });
+
+    $("#users_list p, #circuits_list p").click(function () {
+        $(this).siblings(".list_selected_element").removeClass("list_selected_element");
+        $(this).addClass("list_selected_element");
+    });
+
+</script>

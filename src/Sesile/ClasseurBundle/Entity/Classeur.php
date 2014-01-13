@@ -47,6 +47,13 @@ class Classeur
     private $creation;
 
     /**
+     * @var \Date
+     *
+     * @ORM\Column(name="validation", type="date")
+     */
+    private $validation;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
@@ -472,5 +479,28 @@ class Classeur
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * Set validation
+     *
+     * @param \DateTime $validation
+     * @return Classeur
+     */
+    public function setValidation($validation)
+    {
+        $this->validation = $validation;
+
+        return $this;
+    }
+
+    /**
+     * Get validation
+     *
+     * @return \DateTime
+     */
+    public function getValidation()
+    {
+        return $this->validation;
     }
 }

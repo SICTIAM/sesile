@@ -42,7 +42,6 @@
 	width: 100%;
 	min-height: 120px;
     border: 1px solid #ccc;
-    border-top: 0;
     margin: 0 0 2em 0;
 }
 
@@ -131,6 +130,6 @@
     color: rgb(50, 133, 171);
 }
 
-#circuit_modifier {
+#circuit_modifier, #btn-group-supp {
     display: none;
 }
