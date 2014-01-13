@@ -91,7 +91,7 @@ $("#circuitadd_btn").click(function() {
     }
     $('#users_list p:first').addClass("list_selected_element");
     $("#circuit_name").val(sel_circuit.text());
-    $("#circuit_modifier").show();
+    $("#circuit_modifier, #btn-group-supp").show();
 });
 
 
