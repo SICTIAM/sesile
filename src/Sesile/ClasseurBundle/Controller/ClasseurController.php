@@ -120,6 +120,11 @@ class ClasseurController extends Controller
         $classeur = new Classeur();
         $classeur->setNom($request->request->get('name'));
         $classeur->setDescription($request->request->get('desc'));
+        $classeur->setValidation(new \DateTime());
+
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        $valid = new \DateTime($m . "/" . $d . "/" . $a);
+        $classeur->setValidation($valid);
         $classeur->setType($request->request->get('type'));
         $circuit = $request->request->get('circuit');
         $classeur->setCircuit($circuit);
