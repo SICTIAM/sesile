@@ -62,7 +62,7 @@ $("#useradd_btn").click(function () {
 });
 
 $("#circuit").sortable({
-    items: '.perso_circuit',
+    cancel: '.fleche_circuit',
     placeholder: 'emplacement',
     update: function (event, ui) {
         creerFleches();
@@ -73,8 +73,12 @@ $("#circuit").sortable({
     out: function (e, ui) {
         sortableIn = 0;
     },
+    start: function () {
+        $(".fleche_circuit").remove();
+    },
     beforeStop: function (event, ui) {
         if (sortableIn == 0) {
+            $(".")
             elem = ui.item;
             $("<p/>").attr("data-id", elem.data("id")).text(elem.find(".nom_perso").text()).appendTo("#users_list");
             elem.remove();
