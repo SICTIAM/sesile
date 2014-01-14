@@ -76,8 +76,11 @@
 
 .nom_perso {
 	width: 80px;
-	height: 150px;
-	text-overflow: ellipsis;
+    max-height: 80px;
+    word-wrap: break-word;
+    display: block;
+    margin: auto;
+    text-overflow: ellipsis;
 }
 
 .suppr_perso {
