@@ -24,7 +24,7 @@ function afterWriteContent($path, \Sabre\DAV\IFile $node) {
     // Do some logging here
 
 
-    error_log("Hook  : ".$path."   url = ".'http://'.$_SERVER['HTTP_HOST'].'/app_dev.php/doc/notifymodif/'.$path, 0);
+    error_log("Hook  : ".$path."   url = ".'http://'.$_SERVER['HTTP_HOST'].'/app_dev.php/doc/notifymodif/'.$path." result : ".$osef, 0);
 
 }
 

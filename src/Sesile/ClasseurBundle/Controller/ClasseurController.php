@@ -338,6 +338,19 @@ class ClasseurController extends Controller
     }
 
     /**
+     * Valider_et_signer an existing Classeur entity.
+     *
+     * @Route("/signform/{id}", name="signform")
+     * @Template()
+     *
+     */
+    public function signAction(Request $request, $id){
+
+        return array();
+
+    }
+
+    /**
      * retracter an existing Classeur entity.
      *
      * @Route("/retracter", name="classeur_retracter")
