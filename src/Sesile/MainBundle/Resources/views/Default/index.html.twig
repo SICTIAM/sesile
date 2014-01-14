@@ -46,16 +46,15 @@
             {% if app.user != null %}
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <img class="userpicture"
-                             src="http://static.colourlovers.com/images/lovers/3522/3522185t.jpg?1387813886"/>
+                        <img class="userpicture" src="{{ asset(app.user.path) }}" height="30px" width="30px"/>
                         &nbsp;
-                        {{ app.user.username }}&nbsp;&nbsp;&nbsp;
+                        {{ app.user.Prenom }} {{ app.user.Nom }}&nbsp;&nbsp;&nbsp;
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu menu_connexion" role="menu">
                         <li class="li1">
-                            <a href="{{ path("fos_user_profile_edit") }}">
-                                <span class="glyphicon glyphicon-user"></span>
+                            <a href="{{ path("sesile_profile_edit") }}">
+                            <span class="glyphicon glyphicon-user"></span>
                                 Compte
                             </a>
                         </li>

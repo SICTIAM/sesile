@@ -7,46 +7,57 @@
                         <div class="rectanglemenu" id="bleuclair"></div>
                         Classeurs<b class="caret carette"></b></a>
                 </div>
-                <ul class="dd-menu">
-                    <li>
-                        <a href="{{ path("classeur") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            Liste des classeurs
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("classeur_new") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            Ajout d'un classeur
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("index_valider") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            A valider
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("index_retractables") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            Droit de retractation
-                        </a>
-                    </li>
-                </ul>
+                {% if is_granted('ROLE_USER') %}
+                    <ul class="dd-menu">
+                        <li>
+
+                            <a href="{{ path("classeur") }}">
+                                <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                                Liste des classeurs
+                            </a>
+
+                        </li>
+                        <li>
+
+                            <a href="{{ path("classeur_new") }}">
+                                <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                                Ajout d'un classeur
+                            </a>
+
+                        </li>
+                        <li>
+
+                            <a href="{{ path("index_valider") }}">
+                                <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                                A valider
+                            </a>
+
+                        </li>
+                        <li>
+
+                            <a href="{{ path("index_retractables") }}">
+                                <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                                Droit de retractation
+                            </a>
+
+                        </li>
+                    </ul>
+                {% endif %}
             </li>
             <li class="menu-elem menu-rouge">
                 <div class="entete-menu">
-                    <a href="{{ path("gestion_circuit") }}">
-                        <div class="rectanglemenu" id="rougeclair"></div>
-                        Gestion des circuits
+                    <a href={% if is_granted('ROLE_USER') %} "{{ path("gestion_circuit") }}" {% else %} "#" {% endif %}
+                    >
+                    <div class="rectanglemenu" id="rougeclair"></div>
+                    Gestion des circuits
                     </a>
                 </div>
             </li>
             <li class="menu-elem menu-jaune">
                 <div class="entete-menu">
-                    <a href="#">
-                        <div class="rectanglemenu" id="jauneclair"></div>
-                        D&eacute;l&eacute;gations
+                    <a href={% if is_granted('ROLE_USER') %} "#" {% else %} "#" {% endif %} >
+                    <div class="rectanglemenu" id="jauneclair"></div>
+                    D&eacute;l&eacute;gations
                     </a>
                 </div>
             </li>
@@ -57,30 +68,36 @@
                         Utilisateurs<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li>
+                            <a href="{{ path("liste_users") }}">
+                                <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                                Liste des utilisateurs
+                            </a>
+                        </li>
+                    {% endif %}
                     <li>
-                        <a href="{{ path("liste_users") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Liste des utilisateurs
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("fos_user_profile_show") }}">
+                        <a href="{{ path("sesile_profile_show") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Voir son compte
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ path("liste_users") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Groupes
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("create_hierarchy") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Hiérarchie
-                        </a>
-                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li>
+                            <a href="{{ path("liste_users") }}">
+                                <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                                Groupes
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li>
+                            <a href="{{ path("create_hierarchy") }}">
+                                <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                                Hiérarchie
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </li>
         </ul>

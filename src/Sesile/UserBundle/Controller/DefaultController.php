@@ -7,18 +7,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Sesile\UserBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Email;
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 
 class DefaultController extends Controller {
+
     /**
      * @Route("/", name="liste_users")
      * @Template("SesileUserBundle:Default:index.html.twig")
+     *
      */
     public function listAction() {
 
@@ -36,11 +41,15 @@ class DefaultController extends Controller {
     /**
      * @Route("/creation/", name="ajout_user")
      * @Template("SesileUserBundle:Default:ajout.html.twig")
+     * @Secure (roles="ROLE_ADMIN")
      */
     public function ajoutAction(Request $request) {
 
 
-
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            // Sinon on déclenche une exception « Accès interdit »
+            return $this->redirect($this->generateUrl('liste_users'));
+        }
         $entity = new User();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -64,8 +73,12 @@ class DefaultController extends Controller {
 
                 $entity->setEmail($form->get('username')->getData());
                 $em = $this->getDoctrine()->getManager();
+
+                $entity->preUpload();
                 $em->persist($entity);
+                $entity->upload();
                 $em->flush();
+
 
                 $plainpwd = $form->get('plainPassword')->getData();
                 $email = $entity->getUsername();
@@ -121,6 +134,10 @@ class DefaultController extends Controller {
      */
     public function editAction($id)
     {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            // Sinon on déclenche une exception « Accès interdit »
+            return $this->redirect($this->generateUrl('liste_users'));
+        }
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SesileUserBundle:User')->find($id);
@@ -128,9 +145,11 @@ class DefaultController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity');
         }
+        //  var_dump($entity);exit;
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
+
 
         return array(
             'entity'      => $entity,
@@ -156,11 +175,18 @@ class DefaultController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
+        $ExValues = array("mail" => $entity->getUsername(),
+            "Nom" => $entity->getNom(),
+            "Prenom" => $entity->getPrenom()
+        );
 
-        //$deleteForm = $this->createDeleteForm($id);
+
         $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
         $editForm->handleRequest($request);
 
+        //echo $entity;exit;
         if ($editForm->isValid()) {
 
             $ldapconn = ldap_connect("172.17.100.78")
@@ -171,20 +197,44 @@ class DefaultController extends Controller {
 
                 //binding au serveur LDAP
                 if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
-                    echo "LDAP bind successful...";
+                    $entry["cn"] = $entity->getUsername();
+                    $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
+                    $pwd = trim($editForm->get('plainPassword')->getData());
+                    if ($pwd) {
+
+                        $entity->setPlainPassword($pwd);
+                        $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($pwd)));
+                    }
+                    $entity->setEmail($editForm->get('username')->getData());
+                    $entry["givenName"] = $entity->getUsername();
+                    $entry["displayName"] = $entity->getNom() . ' ' . $entity->getPrenom();
+
+                    //création du Distinguished Name
+                    $parent = "cn=Users,dc=sictiam,dc=local";
+                    $dn = "mail=" . $ExValues["mail"] . "," . $parent;
+
+                    if (ldap_rename($ldapconn, $dn, "mail=" . $entity->getUsername(), $parent, true) && ldap_modify($ldapconn, "mail=" . $entity->getUsername() . "," . $parent, $entry)) {
+                        ldap_close($ldapconn);
+                        $em->flush();
+                    } else {
+                        ldap_close($ldapconn);
+                        echo "pb rename ldap";
+                        exit;
+                    }
+
+                    return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
                 } else {
                     echo "LDAP bind failed...";
+                    exit;
                 }
-             //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
-                $em->flush();
-                return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+
             }
             }
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            //'delete_form' => $deleteForm->createView(),
+            'delete_form' => $deleteForm->createView(),
         );
     }
 
@@ -259,6 +309,7 @@ class DefaultController extends Controller {
             ),
             'multiple' => true
         ));
+
 
         $form->add('submit', 'submit', array('label' => 'Create'));
 
