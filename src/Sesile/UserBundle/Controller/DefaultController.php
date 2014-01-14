@@ -19,7 +19,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
 
-class DefaultController extends Controller {
+class DefaultController extends Controller
+{
     /**
      * @Route("/", name="liste_users")
      * @Template("SesileUserBundle:Default:index.html.twig")
@@ -36,14 +37,14 @@ class DefaultController extends Controller {
         );
 
 
-
     }
 
     /**
      * @Route("/creation/", name="ajout_user")
      * @Template("SesileUserBundle:Default:ajout.html.twig")
      */
-    public function ajoutAction(Request $request) {
+    public function ajoutAction(Request $request)
+    {
 
 
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
@@ -64,9 +65,9 @@ class DefaultController extends Controller {
 
             //binding au serveur LDAP
             if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
-                echo "LDAP bind successful...";
+
             } else {
-                echo "LDAP bind failed...";
+
             }
 
 
@@ -223,15 +224,15 @@ class DefaultController extends Controller {
                 } else {
                     echo "LDAP bind failed...";
                 }
-             //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
+                //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
                 $em->flush();
                 return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
             }
-            }
+        }
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -270,7 +271,7 @@ class DefaultController extends Controller {
 
             }
 
-            $dn = "mail=".$entity.",cn=Users,dc=sictiam,dc=local";
+            $dn = "mail=" . $entity . ",cn=Users,dc=sictiam,dc=local";
             ldap_delete($ldapconn, $dn);
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find User entity.');
@@ -282,7 +283,6 @@ class DefaultController extends Controller {
         }
         return $this->redirect($this->generateUrl('classeur')); // rediriger vers liste_user non?
     }
-
 
 
     /**
@@ -329,13 +329,13 @@ class DefaultController extends Controller {
         ));
 
         $form->add('roles', 'choice', array(
-        'choices' => array(
-            'ROLE_USER' => 'Utilisateurs',
-            'ROLE_ADMIN' => 'Admin',
-            'ROLE_SUPER_ADMIN' => 'Super admin'
-        ),
-        'multiple' => true
-    ));
+            'choices' => array(
+                'ROLE_USER' => 'Utilisateurs',
+                'ROLE_ADMIN' => 'Admin',
+                'ROLE_SUPER_ADMIN' => 'Super admin'
+            ),
+            'multiple' => true
+        ));
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 
         return $form;
@@ -354,12 +354,12 @@ class DefaultController extends Controller {
             ->setAction($this->generateUrl('user_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Supprimer'))
-            ->getForm()
-            ;
+            ->getForm();
     }
 
-    private function getCASParams () {
-        $file   = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+    private function getCASParams()
+    {
+        $file = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
         $parsed = Yaml::parse(file_get_contents($file));
 
         $cas = $parsed['security']['firewalls']['secured_area']['cas'];
