@@ -51,7 +51,7 @@
                                 <img class="userpicture"
                                      src="http://static.colourlovers.com/images/lovers/3522/3522185t.jpg?1387813886"/>
                                 &nbsp;
-                                {{ app.user.username }}&nbsp;&nbsp;&nbsp;
+                                {{ app.user.prenom }}&nbsp;{{ app.user.nom }}&nbsp;&nbsp;&nbsp;
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu menu_connexion" role="menu">
@@ -131,13 +131,13 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a class="sesiletooltip mentionlegales" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode"
    target="_blank"><!-- data-toggle="tooltip"
-   title="Parapheur Sesile - 2013" -->
+title="Parapheur Sesile - 2013" -->
     <span class="lettersmove">MENTIONS L&Eacute;GALES</span>
 
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank"> <!--data-toggle="tooltip"
-   title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France"-->
+title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France"-->
     <span class="lettersmove">CREATIVE COMMONS</span>
 </a>
 </span>
@@ -149,7 +149,7 @@
     R&Eacute;ALIS&Eacute; PAR LE SICTIAM
 </a>
 </span>
-            </div>
+                    </div>
                     <div id="logosictiampetit">
                         <img src="/images/logosictiampetit.png"/>
                     </div>
@@ -175,6 +175,19 @@
                 textill.on('mouseenter', function () {
                     $(this).textillate('start');
                 });
+
+                footer();
+                $(window).resize(function () {
+                    footer()
+                });
+
+                function footer() {
+                    var w_contenu = $("#lecontenu").width();
+                    var off_contenu = $("#lecontenu").offset();
+                    var posr_contenu = $("#maman").width() - (off_contenu.left + w_contenu);
+
+                    $("#footer").width(w_contenu).css({ right: posr_contenu, bottom: 0 });
+                }
             </script>
         </div>
     </body>
