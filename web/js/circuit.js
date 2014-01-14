@@ -18,7 +18,14 @@ function ajoutUser(id) {
         return false;
     }
     var new_perso = $('<div/>').data('id', id).addClass('perso_circuit').appendTo("#circuit");
-    $("<span/>").addClass("suppr_perso glyphicon glyphicon-remove").appendTo(new_perso);
+
+    $("<span/>").addClass("suppr_perso glyphicon glyphicon-remove").appendTo(new_perso).click(function () {
+        $("<p/>").attr("data-id", id).text(sel_user.text()).appendTo("#users_list");
+        new_perso.remove();
+        $('#users_list p:first').addClass("list_selected_element");
+        creerFleches();
+    });
+
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);
 
@@ -95,7 +102,7 @@ $("#circuitadd_btn").click(function () {
     }
     $('#users_list p:first').addClass("list_selected_element");
     $("#circuit_name").val(sel_circuit.text());
-    $("#circuit_modifier, #btn-group-supp").show();
+    $("#circuit_modifier, #btn-group-supp").css("display", "inline-block");
 });
 
 // si on est dans un form on lui passe le circuit qd on walid
