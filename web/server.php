@@ -7,6 +7,28 @@ use
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+
+
+
+function afterWriteContent($path, \Sabre\DAV\IFile $node) {
+
+
+
+
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, 'http://'.$_SERVER['HTTP_HOST'].'/app_dev.php/doc/notifymodif/'.$path);
+    $osef = curl_exec($curl);
+    curl_close($curl);
+
+    // Do some logging here
+
+
+    error_log("Hook  : ".$path."   url = ".'http://'.$_SERVER['HTTP_HOST'].'/app_dev.php/doc/notifymodif/'.$path, 0);
+
+}
+
+
 // Now we're creating a whole bunch of objects
 
 // Change public to something else, if you are using a different directory for your files
@@ -28,6 +50,8 @@ $lockBackend = new DAV\Locks\Backend\File('data/locks');
 $lockPlugin = new DAV\Locks\Plugin($lockBackend);
 
 $server->addPlugin($lockPlugin);
+$server->subscribeEvent('afterWriteContent','afterWriteContent');
+
 
 // All we need to do now, is to fire up the server
 $server->exec();

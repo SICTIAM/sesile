@@ -10,6 +10,44 @@
 
     var openeddesc = false;
 
+    var currentDocHtml = null;
+
+
+    var launchtim=false;
+
+    var filetocheck=null;
+
+
+    var allowmodif = false;
+
+
+    function tim() {
+        $.ajax(Routing.generate('show_document', {id: filetocheck}), {
+            method: 'POST',
+            success: function (html) {
+
+                if(html!=currentDocHtml){
+                    $("#filedescription").html(html);
+                    currentDocHtml=html;
+
+                }
+
+                buttonModifRoutine();
+
+                if(launchtim){
+                    setTimeout(function(){tim()}, 2000);
+                }
+
+
+            }
+
+        });
+    }
+
+
+
+
+
     var docsjson = {{ types|json_encode|raw }};
     var ids = {{ ids|json_encode|raw }};
 
@@ -31,6 +69,8 @@
 
         $("#filedescription").slideUp();
         openeddesc = false;
+        currentDocHtml = null;
+        launchtim=false;
         $("input[type=hidden]").each(function () {
 
             if ($(this).val() == selectedFile.name) {
@@ -50,7 +90,19 @@
     }
 
     function enableUploads() {
-        dropzone.options.maxFiles = null;
+        dropzone.options.maxFiles = null
+        allowmodif = true;
+        buttonModifRoutine();
+
+    }
+
+
+    function buttonModifRoutine(){
+
+        if(allowmodif){
+            $('#modifbutton').show();
+        }
+
     }
 
     dropzone.on('success', function (file, response) {
@@ -202,11 +254,21 @@
 
                     if (openeddesc) {
                         $("#filedescription").html(html);
+
                     } else {
                         $("#filedescription").html(html).slideDown();
 
                     }
+
+                    buttonModifRoutine();
                     openeddesc = true;
+                    currentDocHtml = html;
+                    launchtim=true;
+
+                    filetocheck = idfile;
+
+                    setTimeout(function(){tim()}, 2000);
+
 
 
                 }
