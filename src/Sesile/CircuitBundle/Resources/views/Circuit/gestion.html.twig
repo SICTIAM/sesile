@@ -34,7 +34,8 @@
 <form action="{{ path("create_circuit") }}" method="post">
     <div id="circuit_editor">
         <div class="titre_select">
-            <input required="required" class="form-control" id="circuit_name" name="circuit_name" placeholder="Titre du circuit">
+            <input required="required" class="form-control" id="circuit_name" name="circuit_name"
+                   placeholder="Titre du circuit">
         </div>
         <div id="circuit">
 
@@ -58,6 +59,15 @@
     <button type="submit" id="circuit_modifier" class="btn  btn-success">
         Enregistrer les modifications
     </button>
+    <div class="btn-group" id="btn-group-supp">
+        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+            Supprimer <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a id="deleteconfirm" href="#">Je confirme !</a></li>
+
+        </ul>
+    </div>
 </form>
 
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>

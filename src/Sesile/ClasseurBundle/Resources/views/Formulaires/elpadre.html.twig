@@ -1,9 +1,16 @@
+<script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
+
 <div class="titre_form_element">Titre</div>
 <input class="form-control" id="name" name="name" placeholder="Nom">
 <br>
 
 <div class="titre_form_element">Description</div>
 <textarea class="form-control" rows="3" name="desc" id="desc"></textarea>
+<br>
+
+<div class="titre_form_element">Date limite de validation</div>
+<input class="datepicker" id="validation" name="validation" type="datetime"/>
 <br>
 
 <div class="titre_form_element">Documents</div>
@@ -21,5 +28,13 @@
     <br/>
     <button type="button" class="btn">Annuler</button>
     <button type="submit" class="btn btn-success">Envoyer</button>
-
 </div>
+<script type="text/javascript">
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+    $('#validation').datepicker({
+        onRender: function (date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+        }
+    });
+</script>
