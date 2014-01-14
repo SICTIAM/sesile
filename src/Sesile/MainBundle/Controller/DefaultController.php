@@ -15,6 +15,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+
         return array();
     }
 
@@ -22,7 +23,8 @@ class DefaultController extends Controller
      * @Route("/accueil", name="accueil")
      * @Template()
      */
-    public function accueilAction() {
+    public function accueilAction()
+    {
         $bienvenue = "a";
         return array("bienvenue" => $bienvenue);
     }

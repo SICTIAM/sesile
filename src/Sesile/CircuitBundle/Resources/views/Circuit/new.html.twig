@@ -6,7 +6,7 @@
             <label class="nametitle" id="users_complete">
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-            <input class="nameinput bleudesmersdusud" type="text">
+            <input class="nameinput" type="text">
         </div>
         <div id="users_list">
             {% for user in users %}
@@ -21,7 +21,7 @@
             <label class="nametitle">
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;&nbsp;Circuits&nbsp;&nbsp;</label>
-            <input class="nameinput bleudesmersdusud" type="text">
+            <input class="nameinput" type="text">
         </div>
         <div id="circuits_list">
             {% for circuit in circuits %}
@@ -33,7 +33,14 @@
 </div>
 <form action="{{ path("create_circuit") }}" method="post">
     <div id="circuit_editor">
-        <div id="circuit"></div>
+        <div class="titre_select">
+            <label class="nametitle nomcircuit">
+                <span class="glyphicon glyphicon-retweet"></span>&nbsp;&nbsp;Nom du circuit&nbsp;&nbsp;</label>
+            <input class=" nameinput" id="circuit_name" name="circuit_name" placeholder="Titre du circuit">
+        </div>
+        <div id="circuit">
+            <img id="debut_circuit" src="{{ asset("/images/buttonlist.png") }}"/>
+        </div>
     </div>
 </form>
 

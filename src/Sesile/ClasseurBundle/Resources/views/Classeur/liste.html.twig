@@ -15,8 +15,8 @@
             <tr class="classeur-row" data-id="{{ classeur.id }}">
                 <td>{{ classeur.nom }}</td>
                 <td>inter</td>
-                <td>{% if classeur.creation %}{{ classeur.creation | date('d/m/Y H:i:s') }}{% endif %}</td>
-                <td>{% if classeur.validation %}{{ classeur.validation | date('d/m/Y H:i:s') }}{% endif %}</td>
+                <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
+                <td>{% if classeur.validation %}{{ classeur.validation | date('d-m-Y') }}{% endif %}</td>
                 <td class="statut">
                     <span class="glyphicon statut_{{ classeur.status }}"></span>
                 </td>
@@ -26,7 +26,9 @@
                     </a>
                     {% if classeur.isSupprimable(app.user.id) %}
                     <a href="{{ path("classeur_edit", {'id' : classeur.id }) }}">
-                            <span class="glyphicon glyphicon-trash"></span></a>{% endif %}
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
