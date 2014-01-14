@@ -36,7 +36,21 @@
         <div class="titre_select">
             <input required="required" class="form-control" id="circuit_name" name="circuit_name" placeholder="Titre du circuit">
         </div>
-        <div id="circuit"></div>
+        <div id="circuit">
+
+            <div class="perso_circuit">
+                <span class="suppr_perso glyphicon glyphicon-remove"></span>
+                <img src="{{ asset("/images/imghomme.png") }}">
+                <span class="nom_perso">Laplante</span>
+            </div>
+            <span class="fleche_circuit glyphicon glyphicon-arrow-right"></span>
+            <div class="perso_circuit">
+                <span class="suppr_perso glyphicon glyphicon-remove"></span>
+                <img src="{{ asset("/images/imghomme.png") }}">
+                <span class="nom_perso">m.humbert@sictiam.fr</span>
+            </div>
+
+        </div>
     </div>
     <button class="btn  btn-success">
         Créer un nouveau circuit

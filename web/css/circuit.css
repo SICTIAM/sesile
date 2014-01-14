@@ -16,13 +16,13 @@
 	border: 1px solid #cccccc;
 	text-align: left;
 	padding: .5em;
-    width: 80%;
-    margin: auto;
+	width: 80%;
+	margin: auto;
 }
 
 #users_list p:hover, #circuits_list p:hover, .list_selected_element {
-    background-color: rgba(50, 133, 171, 0.5);
-    cursor: pointer;
+	background-color: rgba(50, 133, 171, 0.5);
+	cursor: pointer;
 	padding-left: 0.5em;
 }
 
@@ -30,44 +30,51 @@
 	text-align: center;
 	border: 1px solid #ccccff;
 	border-bottom: 0px;
-    width: 100%;
-    margin: auto;
+	width: 100%;
+	margin: auto;
 }
 
 .top_selects_circuits .titre_select {
-    width: 80%;
+	width: 80%;
 }
 
 #circuit {
 	width: 100%;
-	min-height: 120px;
-    border: 1px solid #ccc;
-    border-top: 0;
-    margin: 0 0 2em 0;
+	min-height: 180px;
+	border: 1px solid #cccccc;
+	border-top: 0;
+	margin: 0 0 2em 0;
 }
 
 .perso_circuit {
-    background-color: red;
-    text-align: center;
-    cursor: pointer;
+	background-color: greenyellow;
+	text-align: center;
+	cursor: pointer;
 	margin: 10px;
-    max-width: 90px;
-    word-break: break-all;
+	max-width: 90px;
+	width: 90px;
+	max-height: 50px;
+	height: 50px;
+	word-break: break-all;
+	overflow: hidden;
 }
 
 .perso_circuit img {
 	width: 80px;
 	height: 80px;
 	display: block;
-    margin: auto;
+	margin: auto;
 }
 
 .nom_perso {
+	width: 80px;
+	height: 150px;
+	text-overflow: ellipsis;
 }
 
 .suppr_perso {
-    color: red;
-    position: relative;
+	color: red;
+	position: relative;
 }
 
 .emplacement {
@@ -115,22 +122,22 @@
 }
 
 #circuit_name {
-    border-radius: 0px;
+	border-radius: 0px;
 }
 
 .glyphicon-search-blue {
-    color: rgb(50, 133, 171);
+	color: rgb(50, 133, 171);
 }
 
 .glyphicon-chevron-down {
 	margin: 1em;
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .glyphicon-chevron-down:hover {
-    color: rgb(50, 133, 171);
+	color: rgb(50, 133, 171);
 }
 
 #circuit_modifier {
-    display: none;
+	display: none;
 }
