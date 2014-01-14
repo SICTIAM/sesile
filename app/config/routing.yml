@@ -1,3 +1,8 @@
+sesile_delegations:
+    resource: "@SesileDelegationsBundle/Controller/"
+    type:     annotation
+    prefix:   /delegation/
+
 sesile_circuit:
     resource: "@SesileCircuitBundle/Controller/"
     type:     annotation

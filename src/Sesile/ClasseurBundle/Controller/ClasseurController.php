@@ -120,6 +120,11 @@ class ClasseurController extends Controller
         $classeur = new Classeur();
         $classeur->setNom($request->request->get('name'));
         $classeur->setDescription($request->request->get('desc'));
+        $classeur->setValidation(new \DateTime());
+
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        $valid = new \DateTime($m . "/" . $d . "/" . $a);
+        $classeur->setValidation($valid);
         $classeur->setType($request->request->get('type'));
         $circuit = $request->request->get('circuit');
         $classeur->setCircuit($circuit);
@@ -160,7 +165,7 @@ class ClasseurController extends Controller
             } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
                 $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
-                $document->setRepourl($file->getPathname()); //Temporairement associé au nom du fichier en attendant les repository git
+                $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
                 $document->setType($file->getMimeType());
                 $document->setSigned(false);
                 $document->setClasseur($classeur);
@@ -208,13 +213,8 @@ class ClasseurController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
-    {
-        $entity = new Classeur();
-
-        return array(
-            'entity' => $entity
-        );
+    public function newAction() {
+        return array();
     }
 
     /**
@@ -235,7 +235,8 @@ class ClasseurController extends Controller
         }
 
         return array(
-            'classeur' => $entity
+            'classeur' => $entity,
+            'retractable' => $entity->isRetractable($this->getUser()->getId(), $em)
         );
     }
 
@@ -347,7 +348,7 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
-        $classeur->valider();
+        $classeur->retracter($this->getUser()->getId());
         $em->persist($classeur);
         $em->flush();
 
@@ -361,13 +362,13 @@ class ClasseurController extends Controller
      * Deletes a Classeur entity.
      *
      * @Route("/supprimer", name="classeur_supprimer")
-     * @Method("GET")
+     * @Method("POST")
      */
-    public function supprimerAction(Request $request, $id)
+    public function supprimerAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
-        $classeur->valider();
+        $classeur->supprimer();
         $em->persist($classeur);
         $em->flush();
 

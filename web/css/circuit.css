@@ -1,89 +1,143 @@
 .top_selects_circuits {
-    display: table;
-    width: 100%;
-    text-align: center;
+	display: table;
+	width: 100%;
+	text-align: center;
+	position: relative;
 }
 
 .selects_circuit {
-    display: table-cell;
-    width: 50%;
+	display: table-cell;
+	width: 50%;
 }
 
 #users_list, #circuits_list {
-    height: 80px;
-    overflow: auto;
-    border: 1px solid #cccccc;
-    text-align: left;
+	height: 80px;
+	overflow: auto;
+	border: 1px solid #cccccc;
+	text-align: left;
+	padding: .5em;
+	width: 80%;
+	margin: auto;
 }
 
-#users_list p:hover, #circuits_list p:hover {
-    background-color: green;
+#users_list p:hover, #circuits_list p:hover, .list_selected_element {
+	background-color: rgba(50, 133, 171, 0.5);
+	cursor: pointer;
+	padding-left: 0.5em;
 }
 
 .titre_select {
-    text-align: center;
-    width: 100%;
-    border: 1px solid #ccccff;
-    border-bottom: 0px;
+	text-align: center;
+	border: 1px solid #ccccff;
+	border-bottom: 0px;
+	width: 100%;
+	margin: auto;
+}
+
+.top_selects_circuits .titre_select {
+	width: 80%;
 }
 
 #circuit {
-    width: 100%;
-    min-height: 120px;
-    border: 1px solid #cccccc;
+	width: 100%;
+	min-height: 180px;
+	border: 1px solid #cccccc;
+	border-top: 0;
+	margin: 0 0 2em 0;
 }
 
 .perso_circuit {
-    text-align: center;
-    cursor: pointer;
-    margin: 10px;
+	background-color: greenyellow;
+	text-align: center;
+	cursor: pointer;
+	margin: 10px;
+	max-width: 90px;
+	width: 90px;
+	max-height: 50px;
+	height: 50px;
+	word-break: break-all;
+	overflow: hidden;
 }
 
 .perso_circuit img {
-    width: 80px;
-    height: 80px;
-    display: block;
+	width: 80px;
+	height: 80px;
+	display: block;
+	margin: auto;
+}
+
+.nom_perso {
+	width: 80px;
+	height: 150px;
+	text-overflow: ellipsis;
+}
+
+.suppr_perso {
+	color: red;
+	position: relative;
 }
 
 .emplacement {
-    width: 80px;
-    height: 80px;
-    background-color: #eeeeee;
+	width: 80px;
+	height: 80px;
+	background-color: #eeeeee;
 }
 
 .fleche_circuit, .perso_circuit, .emplacement {
-    float: left;
+	float: left;
 }
 
 .favoris_circuit {
-    height: 32px;
-    width: 32px;
-    cursor: pointer;
+	height: 32px;
+	width: 32px;
+	cursor: pointer;
 }
 
 #pop_favoris {
-    display: none;
-    position: absolute;
-    border: 1px solid #cccccc;
-    padding: 10px;
-    background-color: #ffffff;
+	display: none;
+	position: absolute;
+	border: 1px solid #cccccc;
+	padding: 10px;
+	background-color: #ffffff;
 }
 
 .delete_circuit {
-    cursor: pointer;
-}
-
-.titre_select .glyphicon-search {
-    float: right;
+	cursor: pointer;
 }
 
 .nametitle {
-    position: absolute;
-    width: 20%;
-    color: #a9a9a9;
+	cursor: hand;
+	position: absolute;
+	color: #a9a9a9;
+	line-height: 1.7em;
+	width: 14%;
+	background-color: #ebebeb;
+	border: 1px solid #adadad;
 }
 
 .nameinput {
-    width: 100%;
-    padding-left: 20%;
+	width: 100%;
+	height: 1.8em;
+	padding-left: 36%;
+}
+
+#circuit_name {
+	border-radius: 0px;
+}
+
+.glyphicon-search-blue {
+	color: rgb(50, 133, 171);
+}
+
+.glyphicon-chevron-down {
+	margin: 1em;
+	cursor: pointer;
+}
+
+.glyphicon-chevron-down:hover {
+	color: rgb(50, 133, 171);
+}
+
+#circuit_modifier {
+	display: none;
 }

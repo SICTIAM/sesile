@@ -1,6 +1,8 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
-    {{ form(edit_form) }}
-    {{ form(delete_form) }}
+    <div class="bloc_page">
+        {{ form(edit_form) }}
+        {{ form(delete_form) }}
+    </div>
 {% endblock %}

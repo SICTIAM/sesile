@@ -21,7 +21,7 @@
             </form>
         {% endif %}
 
-        {% if classeur.isRetractable(app.user.id) %}
+        {% if retractable %}
             <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
                 <button type="submit" class="btn btn-retracter">Se r&eacute;tracter</button>
                 <input type="hidden" value="{{ classeur.id }}" name="id"/>
@@ -71,7 +71,15 @@
             $("#btn_modifier").click(function () {
                 $("#name, #desc").removeAttr("disabled");
                 $("#enregistrer_modif").show();
+                enableUploads();
+
             });
+
+            $(document).ready(function () {
+                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
+            });
+
+
         </script>
     </div>
 {% endblock %}

@@ -1,42 +1,74 @@
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 <div class="top_selects_circuits">
+
     <div class="selects_circuit">
         <div class="titre_select">
-            <label class="nametitle" id="users_complete">Utilisateurs</label>
-            <input class="nameinput" type="text">
+            <label class="nametitle" id="users_complete">
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
+            <input class="nameinput bleudesmersdusud" type="text">
         </div>
         <div id="users_list">
             {% for user in users %}
                 <p data-id="{{ user.id }}">{{ user.username }}</p>
             {% endfor %}
         </div>
-        <button type="button" id="useradd_btn">&darr;</button>
+        <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
+
     <div class="selects_circuit">
         <div class="titre_select">
-            <label class="nametitle">Circuits</label>
-            <input class="nameinput" type="text">
+            <label class="nametitle">
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;&nbsp;Circuits&nbsp;&nbsp;</label>
+            <input class="nameinput bleudesmersdusud" type="text">
         </div>
         <div id="circuits_list">
             {% for circuit in circuits %}
                 <p data-id="{{ circuit.id }}" data-ordre="{{ circuit.ordre }}">{{ circuit.name }}</p>
             {% endfor %}
         </div>
-        <button type="button" id="circuitadd_btn">&darr;</button>
+        <span id="circuitadd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
 </div>
+<form action="{{ path("create_circuit") }}" method="post">
+    <div id="circuit_editor">
+        <div class="titre_select">
+            <input required="required" class="form-control" id="circuit_name" name="circuit_name"
+                   placeholder="Titre du circuit">
+        </div>
+        <div id="circuit">
 
-<div class="titre_select">
-    <input class="form-control" id="name" name="name" placeholder="Titre du circuit">
-</div>
-<div id="circuit"></div>
+            <div class="perso_circuit">
+                <span class="suppr_perso glyphicon glyphicon-remove"></span>
+                <img src="{{ asset("/images/imghomme.png") }}">
+                <span class="nom_perso">Laplante</span>
+            </div>
+            <span class="fleche_circuit glyphicon glyphicon-arrow-right"></span>
+            <div class="perso_circuit">
+                <span class="suppr_perso glyphicon glyphicon-remove"></span>
+                <img src="{{ asset("/images/imghomme.png") }}">
+                <span class="nom_perso">m.humbert@sictiam.fr</span>
+            </div>
 
-<button class="btn  btn-success">
-    Enregistrer le nouveau circuit
-</button>
-<button class="btn  btn-success">
-    Enregistrer les modifications
-</button>
+        </div>
+    </div>
+    <button class="btn  btn-success">
+        Créer un nouveau circuit
+    </button>
+    <button type="submit" id="circuit_modifier" class="btn  btn-success">
+        Enregistrer les modifications
+    </button>
+    <div class="btn-group" id="btn-group-supp">
+        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+            Supprimer <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a id="deleteconfirm" href="#">Je confirme !</a></li>
+
+        </ul>
+    </div>
+</form>
 
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
@@ -45,6 +77,19 @@
     var users_list = new Array();
     $("#users_list p").each(function () {
         users_list.push($(this).text());
-    })
-    $("#users_complete").autocomplete({ lookup: users_list })
+    });
+
+    // $("#users_complete").autocomplete({ lookup: users_list });
+
+
+    $(".nameinput").focus(function () {
+        $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
+        $(this).prev("label").addClass("glyphicon-search-blue");
+    });
+
+    $("#users_list p, #circuits_list p").click(function () {
+        $(this).siblings(".list_selected_element").removeClass("list_selected_element");
+        $(this).addClass("list_selected_element");
+    });
+
 </script>

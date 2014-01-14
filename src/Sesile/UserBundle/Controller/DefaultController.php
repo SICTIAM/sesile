@@ -13,19 +13,20 @@ use Sesile\UserBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Yaml\Yaml;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
 
 class DefaultController extends Controller {
-
     /**
      * @Route("/", name="liste_users")
      * @Template("SesileUserBundle:Default:index.html.twig")
      *
      */
-    public function listAction() {
+    public function listAction()
+    {
 
 
         $userManager = $this->get('fos_user.user_manager');
@@ -41,7 +42,6 @@ class DefaultController extends Controller {
     /**
      * @Route("/creation/", name="ajout_user")
      * @Template("SesileUserBundle:Default:ajout.html.twig")
-     * @Secure (roles="ROLE_ADMIN")
      */
     public function ajoutAction(Request $request) {
 
@@ -54,8 +54,9 @@ class DefaultController extends Controller {
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-       //connexion au serveur LDAP
-        $ldapconn = ldap_connect("172.17.100.78")
+        //connexion au serveur LDAP
+        $cas = $this->getCASParams();
+        $ldapconn = ldap_connect($cas['cas_server'])
         or die("Could not connect to LDAP server."); //security
         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
@@ -79,7 +80,6 @@ class DefaultController extends Controller {
                 $entity->upload();
                 $em->flush();
 
-
                 $plainpwd = $form->get('plainPassword')->getData();
                 $email = $entity->getUsername();
 //création du tableau d'attributs
@@ -89,14 +89,14 @@ class DefaultController extends Controller {
                 $entry["objectClass"][3] = "shadowAccount";
                 $entry["cn"] = $email;
                 $entry["sn"] = $entity->getPrenom() . ' ' . $entity->getNom();
-                $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
+                $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($plainpwd)));
                 $entry["givenName"] = $email;
                 $entry["shadowInactive"] = -1;
                 $entry["uid"] = $entity->getId();
-                $entry["displayName"] = $entity->getNom()." ".$entity->getPrenom();
+                $entry["displayName"] = $entity->getNom() . " " . $entity->getPrenom();
 
                 //création du Distinguished Name
-                $dn = "mail=".$email.",cn=Users,dc=sictiam,dc=local";
+                $dn = "mail=" . $email . ",cn=Users,dc=sictiam,dc=local";
                 ldap_add($ldapconn, $dn, $entry);
                 ldap_close($ldapconn);
 
@@ -107,11 +107,11 @@ class DefaultController extends Controller {
                     ->setSubject('Nouvel utilisateur')
                     ->setFrom('j.mercier@sictiam.fr')
                     ->setTo($email)
-                    ->setBody('Bienvenue dans Sesile '.$entity->getUsername());
+                    ->setBody('Bienvenue dans Sesile ' . $entity->getUsername());
                 $this->get('mailer')->send($message);
 
 
-               return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
+                return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
 
             }
 
@@ -119,7 +119,7 @@ class DefaultController extends Controller {
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
 
 
@@ -145,15 +145,13 @@ class DefaultController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity');
         }
-        //  var_dump($entity);exit;
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
-
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -186,7 +184,6 @@ class DefaultController extends Controller {
 
         $editForm->handleRequest($request);
 
-        //echo $entity;exit;
         if ($editForm->isValid()) {
 
             $ldapconn = ldap_connect("172.17.100.78")
@@ -225,10 +222,11 @@ class DefaultController extends Controller {
                     return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
                 } else {
                     echo "LDAP bind failed...";
-                    exit;
                 }
+             //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
-
+                $em->flush();
+                return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
             }
             }
         return array(
@@ -282,7 +280,7 @@ class DefaultController extends Controller {
             $em->flush();
 
         }
-        return $this->redirect($this->generateUrl('classeur'));// rediriger vers liste_user non?
+        return $this->redirect($this->generateUrl('classeur')); // rediriger vers liste_user non?
     }
 
 
@@ -309,7 +307,6 @@ class DefaultController extends Controller {
             ),
             'multiple' => true
         ));
-
 
         $form->add('submit', 'submit', array('label' => 'Create'));
 
@@ -361,6 +358,12 @@ class DefaultController extends Controller {
             ;
     }
 
+    private function getCASParams () {
+        $file   = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+        $parsed = Yaml::parse(file_get_contents($file));
 
+        $cas = $parsed['security']['firewalls']['secured_area']['cas'];
+        return $cas;
+    }
 }
 
