@@ -63,11 +63,15 @@
                 <h3 class="h3break">{{ name }}</h3>
 
 
-                <a  id='modifbutton' style="display: none" onclick="javascript:fireDocument('http://{{  servername  }}/server.php/{{ doc.repoUrl }}');return false;" href="#"
+
+                {% if doc is not null %}
+                <a  id='modifbutton' style="display: none" onclick="javascript:fireDocument('http://{{  servername  }}/server.php/{{ doc.repourl }}');return false;" href="#"
                       class="btn btn-primary" role="button"> <span class="glyphicon glyphicon-pencil"></span>  Editer</a>
                 &nbsp;<a id='download'   href="{{ path('download_doc', {'id':doc.id}) }}"
                                                                                                                             class="btn btn-default" role="button">
                     <span class="glyphicon glyphicon-download-alt"></span>  Télécharger</a>&nbsp;
+
+                {% endif %}
                 <button id='deleteconfirm' type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-trash"> </span>
                         Supprimer
