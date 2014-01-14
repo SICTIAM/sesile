@@ -449,6 +449,16 @@ class Classeur
 
     public function isSignable($userid)
     {
+
+        if($this->getType()=='elpez'){
+            $docs=$this->getDocuments();
+            foreach($docs as $doc){
+                if($doc->getType()=='application/xml'){
+                    return true;
+                }
+            }
+
+        }
         return false;
     }
 
