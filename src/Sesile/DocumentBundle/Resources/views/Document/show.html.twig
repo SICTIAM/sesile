@@ -29,25 +29,61 @@
         }
 
 
+        function showDocument(strDocument){
+
+            if (fNewDoc) {
+                if (!EditDocumentButton.ViewDocument(strDocument)) {
+                    alert(L_EditDocumentRuntimeError_Text);
+                }
+            } else {
+                // try {
+                var hownowPlugin = document.getElementById("winFirefoxPlugin");
+                hownowPlugin.ViewDocument(strDocument, null);
+                // } catch (e) { alert(L_EditDocumentError_Text); }
+            }
+
+        }
+
+
+        function fireDocument(strDocument){
+            if(allowmodif){
+                editDocument(strDocument);
+            }
+        }
+
+
     </script>
 
 
-    <div class="col-md-3">
+    <div class="col-md-5">
         <div class="thumbnail">
             <img id="fileimgpreview" style="width: 180px; height: 180px">
 
             <div class="caption">
                 <h3 class="h3break">{{ name }}</h3>
 
-                <p>...</p>
 
-                <p><a id="javascript:editDocument('/server.php/{{ doc.repoUrl }}');return false;" href="#"
-                      class="btn btn-primary" role="button">Modifier</a></p>
+
+                {% if doc is not null %}
+                <a  id='modifbutton' style="display: none" onclick="javascript:fireDocument('http://{{  servername  }}/server.php/{{ doc.repourl }}');return false;" href="#"
+                      class="btn btn-primary" role="button"> <span class="glyphicon glyphicon-pencil"></span>  Editer</a>
+                &nbsp;<a id='download'   href="{{ path('download_doc', {'id':doc.id}) }}"
+                                                                                                                            class="btn btn-default" role="button">
+                    <span class="glyphicon glyphicon-download-alt"></span>  Télécharger</a>&nbsp;
+
+                {% endif %}
+                <button id='deleteconfirm' type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-trash"> </span>
+                        Supprimer
+                    </button>
+
+
+
             </div>
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-7">
         <h4>Historique</h4>
 
         {% if doc is null %}
@@ -61,8 +97,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for histo in doc.histories %}
-                        <tr>
+                    {% for histo in historyinverse %}
+
+                        {% if histo.date|date("U") > "-30 seconds"|date("U") %}
+                            <tr class="success">
+
+                        {% else %}
+                            <tr>
+                        {% endif %}
+
                             <td><strong>{{ histo.date|date('d.m.Y H:i:s') }} </strong></td>
                             <td> {{ histo.comment }} </td>
                         </tr>
@@ -73,11 +116,11 @@
         {% endif %}
         </div>
 
-
+{#
     <div class="col-md-2 pull-right">
     <div class="btn-group pull-right">
-                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                    Supprimer <span class="caret"></span>
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-trash"> </span>
+                      Supprimer <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li><a id="deleteconfirm" href="#">Je confirme !</a></li>
@@ -85,15 +128,21 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div> #}
 
     <script type="text/javascript">
         $("#deleteconfirm").click(function (e) {
-            {% if doc is null %}
-            removedropzonefile("{{ name }}");
-            {% else %}
-            removefile("{{ name }}");
-            {% endif %}
+
+            if (confirm('Confirmez-vous la suppression du fichier ?')) {
+                {% if doc is null %}
+                removedropzonefile("{{ name }}");
+                {% else %}
+                removefile("{{ name }}");
+                {% endif %}
+            } else {
+
+            }
+
         });
 
         {% if doc is null %}
@@ -178,9 +227,6 @@
             $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
         }
 
-        $('#buttonmodif').click(function () {
-            editDocument('server.php/{{ doc.repoUrl }}');
-        });
 
 
         {% endif %}

@@ -1,0 +1,11 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class="fos_user_user_show">
+    <p>Identifiant: {{ user.username }}</p>
+
+    <p>Nom: {{ user.Nom }}</p>
+
+    <p>Prenom: {{ user.Prenom }}</p>
+
+    <p>avatar : <img src="{{ asset(user.path) }}" height="60px" width="60px"/></p>
+</div>

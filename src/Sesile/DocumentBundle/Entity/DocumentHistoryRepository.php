@@ -26,6 +26,15 @@ class DocumentHistoryRepository extends EntityRepository
         $em->flush();
 
     }
+
+    public function getHistory($document){
+        $q = $this->createQueryBuilder('e')
+            ->where('e.document = :document')
+            ->setParameter('document', $document)
+            ->orderBy('e.date', 'DESC')
+        ->getQuery();
+        return $q->getResult();
+    }
 }
 
 

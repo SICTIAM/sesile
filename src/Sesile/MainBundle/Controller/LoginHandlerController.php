@@ -1,0 +1,119 @@
+<?php
+
+/*
+ * This file is part of the FOSUserBundle package.
+ *
+ * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Sesile\MainBundle\Controller;
+
+use FOS\UserBundle\FOSUserEvents;
+use FOS\UserBundle\Event\FormEvent;
+use FOS\UserBundle\Event\FilterUserResponseEvent;
+use FOS\UserBundle\Event\GetResponseUserEvent;
+use FOS\UserBundle\Model\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\SecurityContext;
+use Sesile\UserBundle\Entity\User;
+
+/**
+ * Controller managing the user profile
+ *
+ * @author Christophe Coevoet <stof@notk.org>
+ */
+class LoginHandlerController extends Controller
+{
+
+    /**
+     * @Route("/login", name="sesile_login")
+     *
+     */
+    public function loginAction(Request $request)
+    {
+
+        /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
+        $session = $request->getSession();
+
+        // get the error if any (works with forward and redirect -- see below)
+        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+        } elseif (null !== $session && $session->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            /* Call CAS API to do authentication */
+            require_once('/home/sesile/vendor/gorg/phpcas/CAS.php');
+            \phpCAS::client('2.0', 'sso.dev.sictiam.fr', 389, '/', false);
+            \phpCAS::forceAuthentication();
+            $user = \phpCAS::getUser();
+            $dn = "cn=Users,dc=sictiam,dc=local";
+            $filter = "(|(mail=" . $user . "))";
+            $justthese = array("cn", "mail", "userPassword");
+
+            $ldapconn = ldap_connect("172.17.100.78")
+            or die("Could not connect to LDAP server."); //security
+            ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+            if ($ldapconn) {
+
+                //binding au serveur LDAP
+                if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
+                    echo "LDAP bind successful...";
+                    $sr = ldap_search($ldapconn, $dn, $filter, $justthese);
+                    $info = ldap_get_entries($ldapconn, $sr);
+                    //    var_dump($info);exit;
+                    //echo "mail = ".$info[0]["mail"][0]." cn = ".$info[0]["cn"][0]." pwd = ".$info[0]["userpassword"][0];exit;
+                    if (stripos($info[0]["cn"][0], ' ') === false) {
+                        $nom = $info[0]["cn"][0];
+                        $prenom = ' ';
+                    } else {
+                        list($prenom, $nom) = explode(' ', $info[0]["cn"][0]);
+                    }
+
+                    //  echo "nom = ".$nom." prenom = ".$prenom;exit;
+                    $entity = new User();
+                    $entity->setNom($nom);
+                    $entity->setPrenom($prenom);
+                    $entity->setUsername($info[0]["mail"][0]);
+                    $entity->setEmail($info[0]["mail"][0]);
+                    $entity->setPlainPassword("sictiam");
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($entity);
+                    $em->flush();
+
+                } else {
+                    echo "LDAP bind failed...";
+                }
+            }
+            $error = '';
+            //   $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+            //   $session->remove(SecurityContext::AUTHENTICATION_ERROR);
+        } else {
+            $error = '';
+        }
+
+        if ($error) {
+            // TODO: this is a potential security risk (see http://trac.symfony-project.org/ticket/9523)
+            $error = $error->getMessage();
+        }
+        // last username entered by the user
+        $lastUsername = (null === $session) ? '' : $session->get(SecurityContext::LAST_USERNAME);
+
+        $csrfToken = $this->container->has('form.csrf_provider')
+            ? $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate')
+            : null;
+        return $this->redirect($this->generateUrl('sesile_profile_show'));
+
+    }
+}
