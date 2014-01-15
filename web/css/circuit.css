@@ -44,24 +44,24 @@
 	border: 1px solid #cccccc;
 	border-top: 0;
 	margin: 0 0 2em 0;
-    background-color: #fafafa;
+	background-color: #fafafa;
 }
 
 #debut_circuit {
-    width: 2em;
-    position: relative;
-    top: 70px;
-    margin-left: 1em;
+	width: 2em;
+	position: relative;
+	top: 70px;
+	margin-left: 1em;
 }
 
 .perso_circuit {
 	text-align: center;
-    margin: auto;
-    max-width: 100px;
-    max-height: 150px;
-    padding: .5em;
-    cursor: -webkit-grab;
-    cursor: -moz-grab;
+	margin: auto;
+	max-width: 100px;
+	max-height: 150px;
+	padding: .5em;
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
 }
 
 .perso_circuit img {
@@ -72,42 +72,42 @@
 
 .nom_perso {
 	width: 80px;
-    max-height: 80px;
-    word-wrap: break-word;
-    display: block;
-    margin: auto;
-    text-overflow: ellipsis;
+	height: 80px;
+	word-wrap: break-word;
+	display: block;
+	margin: auto;
+	text-overflow: ellipsis;
 }
 
 .suppr_perso {
 	color: red;
 	position: relative;
-    float: right;
-    font-size: 1.2em;
-    top: .6em;
-    left: .1em;
-    cursor: pointer;
+	float: right;
+	font-size: 1.2em;
+	top: .6em;
+	left: .1em;
+	cursor: pointer;
 }
 
 .suppr_perso:hover {
-    color: indianred;
+	color: indianred;
 }
 
 .emplacement {
-    width: 100px;
-    height: 120px;
-    margin-top: 1em;
-    background-color: rgba(50, 133, 171, 0.2);
+	width: 100px;
+	height: 120px;
+	margin-top: 1em;
+	background-color: rgba(50, 133, 171, 0.2);
 }
 
 .fleche_circuit {
-    position: relative;
-    top: 70px;
-    font-size: 1.3em;
+	position: relative;
+	top: 70px;
+	font-size: 1.3em;
 }
 
 .fleche_circuit, .perso_circuit, .emplacement, #debut_circuit {
-    float: left;
+	float: left;
 }
 
 .favoris_circuit {
@@ -139,7 +139,7 @@
 }
 
 .nomcircuit {
-    line-height: 2.2em;
+	line-height: 2.2em;
 }
 
 .nameinput {
@@ -150,9 +150,9 @@
 
 #circuit_name {
 	border-radius: 0px;
-    height: 2.3em;
-    border: 1px solid #cccccc;
-    padding-left: 20%;
+	height: 2.3em;
+	border: 1px solid #cccccc;
+	padding-left: 20%;
 }
 
 .glyphicon-search-blue {
@@ -162,7 +162,7 @@
 .glyphicon-chevron-down {
 	margin: 1em;
 	cursor: pointer;
-    font-size: 1.2em;
+	font-size: 1.2em;
 }
 
 .glyphicon-chevron-down:hover {
@@ -170,5 +170,5 @@
 }
 
 #circuit_modifier, #btn-group-supp {
-    display: none;
+	display: none;
 }
