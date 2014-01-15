@@ -230,7 +230,7 @@ class User extends BaseUser
     }
 
     /**
-     * @ORM\PostRemove()
+     *
      */
     public function removeUpload()
     {
