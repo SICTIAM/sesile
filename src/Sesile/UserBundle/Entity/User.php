@@ -55,6 +55,44 @@ class User extends BaseUser
      */
     protected $file;
 
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ville", type="string", length=255, nullable=true)
+     */
+    protected $ville;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code_postal", type="string", length=6, nullable=true)
+     */
+    protected $cp;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pays", type="string", length=255, nullable=true)
+     */
+    protected $pays;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="departement", type="string", length=255, nullable=true)
+     */
+    protected $departement;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="role", type="string", length=255, nullable=true)
+     */
+    protected $role;
+
+
     public function setPath($path)
     {
         return $this->path = $path;
@@ -79,12 +117,12 @@ class User extends BaseUser
 
     public function getAbsolutePath()
     {
-        return null === $this->path ? null : $this->getUploadRootDir() . '/' . $this->path;
+        return null === $this->path ? null : $this->getUploadRootDir() . $this->path;
     }
 
     public function getWebPath()
     {
-        return null === $this->path ? null : $this->getUploadDir() . '/' . $this->path;
+        return null === $this->path ? null : $this->getUploadDir() . $this->path;
     }
 
     protected function getUploadRootDir()
@@ -158,10 +196,11 @@ class User extends BaseUser
 
     /**
      * @ORM\PrePersist()
-     * @ORM\PreUpdate()
+     *
      */
     public function preUpload()
     {
+
         if (null !== $this->file) {
             // faites ce que vous voulez pour générer un nom unique
             $this->path = "/images/avatars/" . sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
@@ -195,7 +234,7 @@ class User extends BaseUser
      */
     public function removeUpload()
     {
-        if ($file = $this->getAbsolutePath()) {
+        if ($file = "/home/sesile/web" . $this->path) {
             unlink($file);
         }
     }
@@ -284,5 +323,120 @@ class User extends BaseUser
     public function getDelegationsDonnees()
     {
         return $this->delegationsDonnees;
+    }
+
+    /**
+     * Set ville
+     *
+     * @param string $ville
+     * @return User
+     */
+    public function setVille($ville)
+    {
+        $this->ville = $ville;
+
+        return $this;
+    }
+
+    /**
+     * Get ville
+     *
+     * @return string
+     */
+    public function getVille()
+    {
+        return $this->ville;
+    }
+
+    /**
+     * Set cp
+     *
+     * @param string $cp
+     * @return User
+     */
+    public function setCp($cp)
+    {
+        $this->cp = $cp;
+
+        return $this;
+    }
+
+    /**
+     * Get cp
+     *
+     * @return string
+     */
+    public function getCp()
+    {
+        return $this->cp;
+    }
+
+    /**
+     * Set pays
+     *
+     * @param string $pays
+     * @return User
+     */
+    public function setPays($pays)
+    {
+        $this->pays = $pays;
+
+        return $this;
+    }
+
+    /**
+     * Get pays
+     *
+     * @return string
+     */
+    public function getPays()
+    {
+        return $this->pays;
+    }
+
+    /**
+     * Set departement
+     *
+     * @param string $departement
+     * @return User
+     */
+    public function setDepartement($departement)
+    {
+        $this->departement = $departement;
+
+        return $this;
+    }
+
+    /**
+     * Get departement
+     *
+     * @return string
+     */
+    public function getDepartement()
+    {
+        return $this->departement;
+    }
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     * @return User
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return string
+     */
+    public function getRole()
+    {
+        return $this->role;
     }
 }

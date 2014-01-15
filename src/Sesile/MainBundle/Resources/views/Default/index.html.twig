@@ -30,8 +30,7 @@
         {% endblock %}
     </head>
     <body>
-    <object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0"
-            style="display: none;"></object>
+
     <div id="maman">
             <div id="gauche">
                 <a href="/app_dev.php">
@@ -109,8 +108,10 @@
                                         </div>
                                         {% render url("delegations_recues_list") %}
                                     </div>
+                                    <object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0"
+                                            style="display: none;"></object>
                                     <div id="classeurs_a_valider">
-                                        <div class="titre_bloc_accueil">
+                                    <div class="titre_bloc_accueil">
                                             <span class="glyphicon glyphicon-edit"></span>
                                             Classeurs à valider
                                         </div>
@@ -246,5 +247,7 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
                 }
             </script>
         </div>
+    <object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0"
+            style="display: none;"></object>
     </body>
 </html>

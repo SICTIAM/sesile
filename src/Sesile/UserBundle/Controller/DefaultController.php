@@ -19,8 +19,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
 
-class DefaultController extends Controller
-{
+class DefaultController extends Controller {
     /**
      * @Route("/", name="liste_users")
      * @Template("SesileUserBundle:Default:index.html.twig")
@@ -37,14 +36,14 @@ class DefaultController extends Controller
         );
 
 
+
     }
 
     /**
      * @Route("/creation/", name="ajout_user")
      * @Template("SesileUserBundle:Default:ajout.html.twig")
      */
-    public function ajoutAction(Request $request)
-    {
+    public function ajoutAction(Request $request) {
 
 
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
@@ -76,7 +75,6 @@ class DefaultController extends Controller
                 $entity->setEmail($form->get('username')->getData());
                 $em = $this->getDoctrine()->getManager();
 
-                $entity->preUpload();
                 $em->persist($entity);
                 $entity->upload();
                 $em->flush();
@@ -213,6 +211,16 @@ class DefaultController extends Controller
 
                     if (ldap_rename($ldapconn, $dn, "mail=" . $entity->getUsername(), $parent, true) && ldap_modify($ldapconn, "mail=" . $entity->getUsername() . "," . $parent, $entry)) {
                         ldap_close($ldapconn);
+                        if ($editForm->get('file')->getData()) {
+                            // echo "true";exit;
+                            if ($entity->getPath()) {
+                                $entity->removeUpload();
+                            }
+                            $entity->preUpload();
+                            $entity->upload();
+
+                        }
+                        //echo "false";exit;
                         $em->flush();
                     } else {
                         ldap_close($ldapconn);
@@ -220,19 +228,18 @@ class DefaultController extends Controller
                         exit;
                     }
 
-                    return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+                    return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
                     echo "LDAP bind failed...";
                 }
-                //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
+             //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
-                $em->flush();
-                return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+                return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
             }
-        }
+            }
         return array(
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -252,27 +259,6 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
 
-            $ldapconn = ldap_connect("172.17.100.78")
-            or die("Could not connect to LDAP server.");
-            ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-            if ($ldapconn) {
-
-                // binding to ldap server
-                //  $ldapbind = ldap_bind($ldapconn/*, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI'*/);
-
-                // verify binding
-
-                if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
-                    echo "LDAP bind successful...";
-                } else {
-                    echo "LDAP bind failed...";
-                }
-
-            }
-
-            $dn = "mail=" . $entity . ",cn=Users,dc=sictiam,dc=local";
-            ldap_delete($ldapconn, $dn);
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }
@@ -281,8 +267,9 @@ class DefaultController extends Controller
             $em->flush();
 
         }
-        return $this->redirect($this->generateUrl('classeur')); // rediriger vers liste_user non?
+        return $this->redirect($this->generateUrl('liste_users')); // rediriger vers liste_user non?
     }
+
 
 
     /**
