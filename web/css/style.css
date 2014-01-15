@@ -347,3 +347,10 @@ html, body {
 .h3break {
     word-break: break-all;
 }
+
+/* FLASHBAG */
+.alert {
+    position: absolute;
+    width: 50%;
+    left: 25%;
+}
