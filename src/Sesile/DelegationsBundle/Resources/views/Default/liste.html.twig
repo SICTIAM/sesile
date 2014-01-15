@@ -1,12 +1,12 @@
-<table class="table tableau">
+<table class="table tableau dtables">
     <thead>
-    <tr>
-        <th>Utilisateur</th>
-        <th>Début</th>
-        <th>Fin</th>
-        {% if donnees is defined %}
-            <th>Action</th>{% endif %}
-    </tr>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Début</th>
+            <th>Fin</th>
+            {% if donnees is defined %}
+                <th>Action</th>{% endif %}
+        </tr>
     </thead>
     {% for delegation in delegations %}
         <tr class="{% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">

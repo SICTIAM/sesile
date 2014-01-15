@@ -2,7 +2,10 @@
 
 {% block content %}
     <div class="bloc_page">
-        <h1>Délégations reçues</h1>
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-import"></span>
+            &nbsp;&nbsp;&nbsp;Délégations reçues
+        </div>
         {% include 'SesileDelegationsBundle:Default:liste.html.twig' %}
     </div>
 {% endblock %}
