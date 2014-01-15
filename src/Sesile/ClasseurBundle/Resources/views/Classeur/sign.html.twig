@@ -1,8 +1,30 @@
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title" id="myModalLabel">Signature</h4>
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+<div class="bloc_page">
+
+<div class="titre_page">
+    <span class="glyphicon glyphicon-edit"></span>
+    &nbsp;&nbsp;&nbsp;Signer le classeur
 </div>
-<div class="modal-body">
+
+<h3>{{ classeur.nom }}</h3>
+
+<div class='pull-right' id="bouttons" style="display:none">
+    <br/>
+    <button type="button"  class="btn btn-default" data-dismiss="modal">Annuler</button>
+    <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le classeur</button>
+</div>
+
+
+<form action="{{ path("classeur_retracter") }}" method="post">
+
+
+    <strong>Role : </strong>{{ user.role }}<br/>
+    <strong>Ville : </strong>{{ user.ville }}<br/>
+    <strong>Code postal : </strong>{{ user.cp }}<br/>
+    <strong>D&eacute;partement : </strong>{{ user.departement }}<br/>
+    <strong>Pays : </strong>{{ user.pays }}<br/>
 
 
     <div id='listemethod' name='listemethod'></div>
@@ -11,21 +33,13 @@
 
     <br>
 
-    <div id='avancement' name='avancement'> Applet de signature en cours de chargement...</div>
+    <div id='avancement' name='avancement'> Système de signature en cours de chargement..<br/>Ceci peut prendre
+        plusieurs minutes. Merci d'accepter toutes les demandes qui vous seront formulés par des boites de dialogues.
+    </div>
     <br>
 
 
-    <script type="text/javascript">
 
-        function launchapplet() {
-            alert('moncul');
-            var attributes = {width: 1, height: 1, id: "javaapplet"};
-            var parameters = {jnlp_href: '/parapheur/sesilesign/launch.jnlp'};
-            var version = '1.7';
-            deployJava.runApplet(attributes, parameters, version);
-        }
-
-    </script>
 
     <div class='progress progress-striped active'>
         <div class='progress-bar' id='progressbar' role='progressbar' aria-valuenow='100' aria-valuemin='0'
@@ -34,39 +48,52 @@
         </div>
     </div>
 
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-    <button type="button" class="btn btn-success">Signer et valider le classeur</button>
-</div>
+
+</form>
+
+<script type="text/javascript" src="http://www.java.com/js/deployJava.js">
+</script>
 
 <script type="text/javascript">
-
     var docstosign = {{ docstosign|json_encode|raw }}
 
 
+    var attributes = {width: 1, height: 1, id: "javaapplet"};
+    var parameters = {jnlp_href: '/sesilesign/launch.jnlp'};
+    var version = '1.7';
+    deployJava.runApplet(attributes, parameters, version);
 
-        //function de test
-            function appletReady() {
-                var divmethod = $('#listemethod');
 
-                var divcertif = $('#listecertif');
-                var selectcertif = $('#select');
-                selectcertif.setAttribute('name', 'selectcertif');
-                selectcertif.setAttribute('id', 'selectcertif');
-                var nbcertif = document.javaapplet.getNumberSigningCertificates();
-                for (i = 0; i < nbcertif; i++) {
-                    var nomcertif = document.javaapplet.getSigningCertificateName(i);
-                    var element = document.createElement('option');
-                    element.setAttribute('value', i);
-                    element.text = nomcertif;
-                    selectcertif.appendChild(element);
-                }
-                divcertif.appendChild(selectcertif);
+    function appletReady() {
+        var divmethod = document.getElementById('listemethod');
+        /*
+         var selectmethod = document.createElement('select');
+         selectmethod.setAttribute('name','selectmethod');
+         selectmethod.setAttribute('id','selectmethod');
 
-                var btnsign = document.getElementById('Signature');
-                btnsign.style.display = '';
-            }
+         var element = document.createElement('option');
+         element.setAttribute('value',0);
+         element.text = 'Xemelios';
+         selectmethod.appendChild(element);
+
+         divmethod.appendChild(selectmethod);*/
+        var divcertif = document.getElementById('listecertif');
+        var selectcertif = document.createElement('select');
+        selectcertif.setAttribute('name', 'selectcertif');
+        selectcertif.setAttribute('id', 'selectcertif');
+        var nbcertif = document.javaapplet.getNumberSigningCertificates();
+        for (i = 0; i < nbcertif; i++) {
+            var nomcertif = document.javaapplet.getSigningCertificateName(i);
+            var element = document.createElement('option');
+            element.setAttribute('value', i);
+            element.text = nomcertif;
+            selectcertif.appendChild(element);
+        }
+        divcertif.appendChild(selectcertif);
+        $('#bouttons').show('slow');
+
+
+    }
 
     //function pour faire apparaître le bouton signer
     function test() {
@@ -85,7 +112,8 @@
     //function donnant le chemin du fichier
     function getFileLinkFromNumber(i) {
 
-        document.javaapplet.setFileLinkFromNumber(i, Routing.generate('downloadAction', {'id': docstosign[i]}), docstosign[i].name);
+        alert('http://{{ servername }}/uploads/docs/'+docstosign[i].repourl);
+        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/'+docstosign[i].repourl , docstosign[i].name);
 
 
     }
@@ -112,23 +140,23 @@
 
     //Fonction qui va envoyer le rol
     function envoiChaineRole() {
-        document.javaapplet.recevoirChaineRole('{{ user.role }}');
+        document.javaapplet.recevoirChaineRole("{{ user.role }}");
     }
     //Fonction qui va envoyer la ville
     function envoiChaineVille() {
-        document.javaapplet.recevoirChaineVille('{{ user.ville }}');
+        document.javaapplet.recevoirChaineVille("{{ user.ville }}");
     }
     //Fonction qui va envoyer le code postal
     function envoiChaineCP() {
-        document.javaapplet.recevoirChaineCP('{{ user.cp }}');
+        document.javaapplet.recevoirChaineCP("{{ user.cp }}");
     }
     //Fonction qui va envoyer le département
     function envoiChaineDepartement() {
-        document.javaapplet.recevoirChaineDepartement('{{ user.departement }}');
+        document.javaapplet.recevoirChaineDepartement("{{ user.departement }}");
     }
     //Fonction qui va envoyer le pays
     function envoiChainePays() {
-        document.javaapplet.recevoirChainePays('{{ user.pays }}');
+        document.javaapplet.recevoirChainePays("{{ user.pays }}");
     }
 
     //Fonction qui va envoyer le sessionid
@@ -156,27 +184,38 @@
     //function permettant de signifier la fin du téléchargement d'un fichier
     function signature() {
 
-        var method = document.getElementById('selectmethod');
         var certif = document.getElementById('selectcertif');
         //alert('lancement signature '+method.value+'  '+certif.value);
-        if (document.signatureFORM.nbfic != undefined) {
-            nbfic = document.signatureFORM.nbfic.value;
-        }
-        else {
-            nbfic = 0;
-        }
+
+            nbfic = {{docstosign|length  }}
+
         if (nbfic > 0) {
             document.javaapplet.launchSigningWithCertificate(certif.value);
         }
         else {
             document.signatureFORM.submit();
         }
-        //document.javaapplet.launchSigningWithCertificate(par, 0);
+
     }
 
     //function permettant de signifier la fin du téléchargement d'un fichier
     function signature2() {
         document.signatureFORM.submit();
     }
-
 </script>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+

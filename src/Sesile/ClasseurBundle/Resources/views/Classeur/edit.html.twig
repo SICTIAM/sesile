@@ -1,19 +1,15 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
     <div class="bloc_page">
         {% if classeur.isValidable(app.user.id) %}
             {% if classeur.isSignable(app.user.id) %}
-                <form class="form_action" id="signform">
+                <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
                     <button type="submit" class="btn btn-success">Valider et Signer</button>
                     <input type="hidden" value="{{ classeur.id }}" name="id"/>
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div id='modalcontent' class="modal-content">
 
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
                 </form>
             {% else %}
                 <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
@@ -47,7 +43,9 @@
         {% endif %}
         <br>
 
-        <form action="{{ path("classeur_retracter") }}" method="post">
+        <form action="{{ path("classeur_update") }}" method="post">
+            <input type="hidden" name="id" value="{{ classeur.id }}"/>
+
             <div class="titre_form_element">Titre</div>
             <input class="form-control" id="name" name="name" disabled placeholder="Nom" value="{{ classeur.nom }}">
             <br>
@@ -56,20 +54,23 @@
             <textarea class="form-control" rows="3" name="desc" disabled id="desc">{{ classeur.description }}</textarea>
             <br>
 
+            <div class="titre_form_element">Date limite de validation</div>
+            <input class="datepicker" id="validation" name="validation" type="datetime" disabled
+                   value="{{ classeur.validation  | date('d/m/Y') }}"/>
+            <br>
+
             <div class="titre_form_element">Documents</div>
             <div id="documentcontent"></div>
             <br>
 
             <div class="titre_form_element">Circuit</div>
-            <div id="circuitcontent"></div>
+            <div id="circuitcontent">
+                <script type="application/javascript">
+                    var circuit_users = "{{ classeur.circuit }}";
+                </script>
+                {% render url("new_circuit") %}
+            </div>
             <br>
-
-
-
-
-
-            {% block extraform %}
-            {% endblock %}
 
             <div>
                 <br/>
@@ -78,57 +79,39 @@
                 </button>
             </div>
         </form>
-
-
-
-
-
-
         <script type="application/javascript">
+            $(".top_selects_circuits, .suppr_perso").hide();
+            $("#circuit").sortable("disable");
+            $(".perso_circuit").css("cursor", "Default");
+
+
             $("#btn_modifier").click(function () {
                 $("#name, #desc").removeAttr("disabled");
                 $("#enregistrer_modif").show();
                 enableUploads();
-
+                $(".top_selects_circuits, .suppr_perso").show();
+                $("#circuit").sortable("enable");
+                $(".perso_circuit").css("cursor", "-moz-grab");
             });
 
             $(document).ready(function () {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
-                $('#signform').submit(function(e){
 
-                    $.ajax('{{ path('signform', {'id':classeur.id}) }}',
-                            {
-                                method: 'GET',
-                                success: function (html) {
-
-                                    $('#modalcontent').html(html);
-
-
-                                    $('#myModal').modal({
-                                        backdrop: 'static'
-                                    });
-
-                                }
-
-                            }
-                    );
-
-
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    return false;
-
-                });
             });
 
-
-
-
+            var nowTemp = new Date();
+            var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+            var valid = $('#validation').datepicker({
+                onRender: function (date) {
+                    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate', function (ev) {
+                        ev.hide();
+                    });
         </script>
     </div>
 {% endblock %}
 
 {% block losjavascriptos %}
-    <script type="text/javascript" src="http://www.java.com/js/deployJava.js">
-    </script>
+    <script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 {% endblock %}

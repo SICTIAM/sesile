@@ -1,18 +1,20 @@
-<table class="table tableau">
+<table class="table tableau dtables">
     <thead>
         <tr>
             <th>Utilisateur</th>
             <th>Début</th>
             <th>Fin</th>
-            <th>Action</th>
+            {% if donnees is defined %}
+                <th>Action</th>{% endif %}
         </tr>
     </thead>
     {% for delegation in delegations %}
-        <tr>
+        <tr class="{% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
             <td>{{ delegation.user }}</td>
             <td>{{ delegation.debut | date('d/m/Y') }}</td>
             <td>{{ delegation.fin | date('d/m/Y') }}</td>
-            <td></td>
+            {% if donnees is defined %}
+                <td></td>{% endif %}
         </tr>
     {% endfor %}
 </table>

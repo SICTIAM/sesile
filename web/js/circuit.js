@@ -9,6 +9,15 @@ del_favoris_url = "";
 $('#users_list p:first, #circuits_list p:first').addClass("list_selected_element");
 
 
+if (typeof circuit_users != 'undefined') {
+    user_a_charger = circuit_users.split(",");
+    if (user_a_charger.length > 0) {
+        $.each(user_a_charger, function (k, v) {
+            ajoutUser(v);
+        });
+    }
+}
+
 /*
  Ajoute un utilisateur dans le cadre "circuits"
  */
@@ -88,7 +97,6 @@ $("#circuit").sortable({
         }
     }
 }).disableSelection();
-
 
 $("#circuitadd_btn").click(function () {
     var sel_circuit = $('#circuits_list .list_selected_element');
