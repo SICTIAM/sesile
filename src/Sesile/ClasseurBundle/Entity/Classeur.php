@@ -11,8 +11,8 @@ use JMS\DiExtraBundle\Annotation\Service;
  * Classeur
  *
  * @ORM\Table()
- * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
+ * @ORM\Entity(repositoryClass="Sesile\ClasseurBundle\Entity\ClasseursUsersRepository")
  */
 class Classeur
 {
@@ -376,13 +376,17 @@ class Classeur
      *
      * @return int l'id du prochain validant dans le circuit. 0 si le circuit est terminé
      */
-    private function getNextValidant()
+    private function getNextValidant(\Doctrine\ORM\EntityManager $em)
     {
+        $d = $em->getRepository("SesileDelegationsBundle:Delegations");
+        $delegation = $c->getClasseursRetractables($userid);
+
         $circuit = explode(",", $this->getCircuit());
         $curr_validant = array_search($this->validant, $circuit);
         $next_validant = $curr_validant + 1;
         return ($next_validant < count($circuit)) ? $circuit[$next_validant] : 0;
     }
+
 
     public function valider()
     {
@@ -445,7 +449,29 @@ class Classeur
 
     public function isSignable($userid)
     {
+
+        if($this->getType()=='elpez'){
+            $docs=$this->getDocuments();
+            foreach($docs as $doc){
+                if($doc->getType()=='application/xml'){
+                    return true;
+                }
+            }
+
+        }
         return false;
+    }
+
+    public function getXmlDocuments()
+    {
+        $docs = $this->getDocuments();
+        $xmldocuments = new \Doctrine\Common\Collections\ArrayCollection();
+        foreach ($docs as $doc) {
+            if ($doc->getType() == 'application/xml') {
+                $xmldocuments->add($doc);
+            }
+        }
+        return $xmldocuments;
     }
 
     /**

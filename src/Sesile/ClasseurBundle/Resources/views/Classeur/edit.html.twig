@@ -4,37 +4,44 @@
     <div class="bloc_page">
         {% if classeur.isValidable(app.user.id) %}
             {% if classeur.isSignable(app.user.id) %}
-                <form class="form_action" action="{{ path("classeur_valider_et_signer") }}" method="post">
-                    <button type="submit" class="btn btn-valider">Valider et Signer</button>
+                <form class="form_action" id="signform">
+                    <button type="submit" class="btn btn-success">Valider et Signer</button>
                     <input type="hidden" value="{{ classeur.id }}" name="id"/>
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div id='modalcontent' class="modal-content">
+
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
                 </form>
             {% else %}
                 <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
-                    <button type="submit" class="btn btn-valider">Valider</button>
+                    <button type="submit" class="btn btn-success">Valider</button>
                     <input type="hidden" value="{{ classeur.id }}" name="id"/>
                 </form>
             {% endif %}
 
             <form class="form_action" action="{{ path("classeur_refuser") }}" method="post">
-                <button type="submit" class="btn btn-refuser">Refuser</button>
+                <button type="submit" class="btn btn-danger">Refuser</button>
                 <input type="hidden" value="{{ classeur.id }}" name="id"/>
             </form>
         {% endif %}
 
         {% if retractable %}
             <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
-                <button type="submit" class="btn btn-retracter">Se r&eacute;tracter</button>
+                <button type="submit" class="btn btn-warning">Se r&eacute;tracter</button>
                 <input type="hidden" value="{{ classeur.id }}" name="id"/>
             </form>
         {% endif %}
 
         {% if classeur.isModifiable(app.user.id) %}
-            <button id="btn_modifier" type="button" class="btn btn-modifier">Modifier</button>
+            <button id="btn_modifier" type="button" class="btn btn-info">Modifier</button>
         {% endif %}
 
         {% if classeur.isSupprimable(app.user.id) %}
-            <form class="form_action" action="{{ path("classeur_supprimer") }}" method="post">
-                <button type="submit" class="btn btn-supprimer">Supprimer</button>
+            <form class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
                 <input type="hidden" value="{{ classeur.id }}" name="id"/>
             </form>
         {% endif %}
@@ -57,6 +64,10 @@
             <div id="circuitcontent"></div>
             <br>
 
+
+
+
+
             {% block extraform %}
             {% endblock %}
 
@@ -67,6 +78,12 @@
                 </button>
             </div>
         </form>
+
+
+
+
+
+
         <script type="application/javascript">
             $("#btn_modifier").click(function () {
                 $("#name, #desc").removeAttr("disabled");
@@ -77,9 +94,41 @@
 
             $(document).ready(function () {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
+                $('#signform').submit(function(e){
+
+                    $.ajax('{{ path('signform', {'id':classeur.id}) }}',
+                            {
+                                method: 'GET',
+                                success: function (html) {
+
+                                    $('#modalcontent').html(html);
+
+
+                                    $('#myModal').modal({
+                                        backdrop: 'static'
+                                    });
+
+                                }
+
+                            }
+                    );
+
+
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return false;
+
+                });
             });
+
+
 
 
         </script>
     </div>
+{% endblock %}
+
+{% block losjavascriptos %}
+    <script type="text/javascript" src="http://www.java.com/js/deployJava.js">
+    </script>
 {% endblock %}

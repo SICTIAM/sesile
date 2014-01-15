@@ -44,46 +44,69 @@
 	border: 1px solid #cccccc;
 	border-top: 0;
 	margin: 0 0 2em 0;
+	background-color: #fafafa;
+}
+
+#debut_circuit {
+	width: 2em;
+	position: relative;
+	top: 70px;
+	margin-left: 1em;
 }
 
 .perso_circuit {
-	background-color: greenyellow;
 	text-align: center;
-	cursor: pointer;
-	margin: 10px;
-	max-width: 90px;
-	width: 90px;
-	max-height: 50px;
-	height: 50px;
-	word-break: break-all;
-	overflow: hidden;
+	margin: auto;
+	max-width: 100px;
+	max-height: 150px;
+	padding: .5em;
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
 }
 
 .perso_circuit img {
 	width: 80px;
 	height: 80px;
-	display: block;
 	margin: auto;
 }
 
 .nom_perso {
 	width: 80px;
-	height: 150px;
+	height: 80px;
+	word-wrap: break-word;
+	display: block;
+	margin: auto;
 	text-overflow: ellipsis;
 }
 
 .suppr_perso {
 	color: red;
 	position: relative;
+	float: right;
+	font-size: 1.2em;
+	top: .6em;
+	left: .1em;
+	cursor: pointer;
+}
+
+.suppr_perso:hover {
+	color: indianred;
 }
 
 .emplacement {
-	width: 80px;
-	height: 80px;
-	background-color: #eeeeee;
+	width: 100px;
+	height: 120px;
+	margin-top: 1em;
+	background-color: rgba(50, 133, 171, 0.2);
 }
 
-.fleche_circuit, .perso_circuit, .emplacement {
+.fleche_circuit {
+	position: relative;
+	top: 70px;
+	font-size: 1.3em;
+}
+
+.fleche_circuit, .perso_circuit, .emplacement, #debut_circuit {
 	float: left;
 }
 
@@ -115,6 +138,10 @@
 	border: 1px solid #adadad;
 }
 
+.nomcircuit {
+	line-height: 2.2em;
+}
+
 .nameinput {
 	width: 100%;
 	height: 1.8em;
@@ -123,6 +150,9 @@
 
 #circuit_name {
 	border-radius: 0px;
+	height: 2.3em;
+	border: 1px solid #cccccc;
+	padding-left: 20%;
 }
 
 .glyphicon-search-blue {
@@ -132,12 +162,13 @@
 .glyphicon-chevron-down {
 	margin: 1em;
 	cursor: pointer;
+	font-size: 1.2em;
 }
 
 .glyphicon-chevron-down:hover {
 	color: rgb(50, 133, 171);
 }
 
-#circuit_modifier {
+#circuit_modifier, #btn-group-supp {
 	display: none;
 }

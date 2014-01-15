@@ -338,6 +338,29 @@ class ClasseurController extends Controller
     }
 
     /**
+     * Valider_et_signer an existing Classeur entity.
+     *
+     * @Route("/signform/{id}", name="signform")
+     * @Template()
+     *
+     */
+    public function signAction(Request $request, $id){
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        //  var_dump($user);
+
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+
+
+        $session = $this->get('session');
+        $session->start();
+
+        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $classeur->getXmlDocuments());
+
+    }
+
+    /**
      * retracter an existing Classeur entity.
      *
      * @Route("/retracter", name="classeur_retracter")

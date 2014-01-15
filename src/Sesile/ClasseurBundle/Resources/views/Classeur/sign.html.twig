@@ -1,0 +1,182 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Signature</h4>
+</div>
+<div class="modal-body">
+
+
+    <div id='listemethod' name='listemethod'></div>
+
+    <div id='listecertif' name='listecertif'></div>
+
+    <br>
+
+    <div id='avancement' name='avancement'> Applet de signature en cours de chargement...</div>
+    <br>
+
+
+    <script type="text/javascript">
+
+        function launchapplet() {
+            alert('moncul');
+            var attributes = {width: 1, height: 1, id: "javaapplet"};
+            var parameters = {jnlp_href: '/parapheur/sesilesign/launch.jnlp'};
+            var version = '1.7';
+            deployJava.runApplet(attributes, parameters, version);
+        }
+
+    </script>
+
+    <div class='progress progress-striped active'>
+        <div class='progress-bar' id='progressbar' role='progressbar' aria-valuenow='100' aria-valuemin='0'
+             aria-valuemax='100' style='width: 100%'>
+            <span class='sr-only'>45% Complete</span>
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+    <button type="button" class="btn btn-success">Signer et valider le classeur</button>
+</div>
+
+<script type="text/javascript">
+
+    var docstosign = {{ docstosign|json_encode|raw }}
+
+
+
+        //function de test
+            function appletReady() {
+                var divmethod = $('#listemethod');
+
+                var divcertif = $('#listecertif');
+                var selectcertif = $('#select');
+                selectcertif.setAttribute('name', 'selectcertif');
+                selectcertif.setAttribute('id', 'selectcertif');
+                var nbcertif = document.javaapplet.getNumberSigningCertificates();
+                for (i = 0; i < nbcertif; i++) {
+                    var nomcertif = document.javaapplet.getSigningCertificateName(i);
+                    var element = document.createElement('option');
+                    element.setAttribute('value', i);
+                    element.text = nomcertif;
+                    selectcertif.appendChild(element);
+                }
+                divcertif.appendChild(selectcertif);
+
+                var btnsign = document.getElementById('Signature');
+                btnsign.style.display = '';
+            }
+
+    //function pour faire apparaître le bouton signer
+    function test() {
+        alert('applet est active');
+    }
+
+    //function donnant le nombre de fichier
+    function getNumberFiles() {
+
+
+        document.javaapplet.setNumberFiles({{ docstosign|length }});
+
+
+    }
+
+    //function donnant le chemin du fichier
+    function getFileLinkFromNumber(i) {
+
+        document.javaapplet.setFileLinkFromNumber(i, Routing.generate('downloadAction', {'id': docstosign[i]}), docstosign[i].name);
+
+
+    }
+
+
+    //function permettant de signifier la fin du dépôt d'un fichier
+    function fileUploaded(i, nameficsigne, indicembraquee, errormessage) {
+
+        if (errormessage == 'ok') {
+
+
+        }
+        else {
+
+        }
+    }
+
+    //function permettant de signifier la fin de la signature d'un classeur
+    function signingProcessEnded(i, errormessage) {
+        document.signatureFORM.submit();
+
+    }
+
+
+    //Fonction qui va envoyer le rol
+    function envoiChaineRole() {
+        document.javaapplet.recevoirChaineRole('{{ user.role }}');
+    }
+    //Fonction qui va envoyer la ville
+    function envoiChaineVille() {
+        document.javaapplet.recevoirChaineVille('{{ user.ville }}');
+    }
+    //Fonction qui va envoyer le code postal
+    function envoiChaineCP() {
+        document.javaapplet.recevoirChaineCP('{{ user.cp }}');
+    }
+    //Fonction qui va envoyer le département
+    function envoiChaineDepartement() {
+        document.javaapplet.recevoirChaineDepartement('{{ user.departement }}');
+    }
+    //Fonction qui va envoyer le pays
+    function envoiChainePays() {
+        document.javaapplet.recevoirChainePays('{{ user.pays }}');
+    }
+
+    //Fonction qui va envoyer le sessionid
+    function getsessionid() {
+        document.javaapplet.setsessionid("{{ session_id }}");
+    }
+
+
+    function setStatusText(txt) {
+        $('#avancement').html(txt);
+    }
+
+    function setProgress(permil) {
+
+        $('#progressbar').attr('aria-valuenow', permil / 10 + '%');
+        $('#progressbar').attr('style', 'width: ' + permil / 10 + '%');
+    }
+
+    function setColor(col) {
+
+        $('#progressbar').removeClass('progress-bar-success progress-bar-info progress-bar-warning progress-bar-danger').addClass('progress-bar-' + col);
+    }
+
+
+    //function permettant de signifier la fin du téléchargement d'un fichier
+    function signature() {
+
+        var method = document.getElementById('selectmethod');
+        var certif = document.getElementById('selectcertif');
+        //alert('lancement signature '+method.value+'  '+certif.value);
+        if (document.signatureFORM.nbfic != undefined) {
+            nbfic = document.signatureFORM.nbfic.value;
+        }
+        else {
+            nbfic = 0;
+        }
+        if (nbfic > 0) {
+            document.javaapplet.launchSigningWithCertificate(certif.value);
+        }
+        else {
+            document.signatureFORM.submit();
+        }
+        //document.javaapplet.launchSigningWithCertificate(par, 0);
+    }
+
+    //function permettant de signifier la fin du téléchargement d'un fichier
+    function signature2() {
+        document.signatureFORM.submit();
+    }
+
+</script>

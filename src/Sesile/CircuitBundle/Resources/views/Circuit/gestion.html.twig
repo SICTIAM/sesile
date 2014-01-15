@@ -6,11 +6,11 @@
             <label class="nametitle" id="users_complete">
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-            <input class="nameinput bleudesmersdusud" type="text">
+            <input class="nameinput" type="text">
         </div>
         <div id="users_list">
             {% for user in users %}
-                <p data-id="{{ user.id }}">{{ user.username }}</p>
+                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.username }}</p>
             {% endfor %}
         </div>
         <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
@@ -21,7 +21,7 @@
             <label class="nametitle">
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;&nbsp;Circuits&nbsp;&nbsp;</label>
-            <input class="nameinput bleudesmersdusud" type="text">
+            <input class="nameinput" type="text">
         </div>
         <div id="circuits_list">
             {% for circuit in circuits %}
@@ -34,23 +34,13 @@
 <form action="{{ path("create_circuit") }}" method="post">
     <div id="circuit_editor">
         <div class="titre_select">
-            <input required="required" class="form-control" id="circuit_name" name="circuit_name"
-                   placeholder="Titre du circuit">
+            <label class="nametitle nomcircuit">
+                <span class="glyphicon glyphicon-retweet"></span>
+                &nbsp;&nbsp;Nom du circuit&nbsp;&nbsp;</label>
+            <input class=" nameinput" id="circuit_name" name="circuit_name" placeholder="Titre du circuit">
         </div>
         <div id="circuit">
-
-            <div class="perso_circuit">
-                <span class="suppr_perso glyphicon glyphicon-remove"></span>
-                <img src="{{ asset("/images/imghomme.png") }}">
-                <span class="nom_perso">Laplante</span>
-            </div>
-            <span class="fleche_circuit glyphicon glyphicon-arrow-right"></span>
-            <div class="perso_circuit">
-                <span class="suppr_perso glyphicon glyphicon-remove"></span>
-                <img src="{{ asset("/images/imghomme.png") }}">
-                <span class="nom_perso">m.humbert@sictiam.fr</span>
-            </div>
-
+            <img id="debut_circuit" src="{{ asset("/images/buttonlist.png") }}"/>
         </div>
     </div>
     <button class="btn  btn-success">
@@ -61,10 +51,13 @@
     </button>
     <div class="btn-group" id="btn-group-supp">
         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-            Supprimer <span class="caret"></span>
+            Supprimer
+            <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-            <li><a id="deleteconfirm" href="#">Je confirme !</a></li>
+            <li>
+                <a id="deleteconfirm" href="#">Je confirme !</a>
+            </li>
 
         </ul>
     </div>

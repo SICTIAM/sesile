@@ -64,9 +64,9 @@ class DefaultController extends Controller {
 
             //binding au serveur LDAP
             if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
-                echo "LDAP bind successful...";
+
             } else {
-                echo "LDAP bind failed...";
+
             }
 
 
@@ -96,7 +96,6 @@ class DefaultController extends Controller {
 
                 //création du Distinguished Name
                 $dn = "mail=" . $email . ",cn=Users,dc=sictiam,dc=local";
-
                 ldap_add($ldapconn, $dn, $entry);
                 ldap_close($ldapconn);
 
@@ -317,13 +316,13 @@ class DefaultController extends Controller {
         ));
 
         $form->add('roles', 'choice', array(
-        'choices' => array(
-            'ROLE_USER' => 'Utilisateurs',
-            'ROLE_ADMIN' => 'Admin',
-            'ROLE_SUPER_ADMIN' => 'Super admin'
-        ),
-        'multiple' => true
-    ));
+            'choices' => array(
+                'ROLE_USER' => 'Utilisateurs',
+                'ROLE_ADMIN' => 'Admin',
+                'ROLE_SUPER_ADMIN' => 'Super admin'
+            ),
+            'multiple' => true
+        ));
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 
         return $form;
@@ -342,12 +341,12 @@ class DefaultController extends Controller {
             ->setAction($this->generateUrl('user_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Supprimer'))
-            ->getForm()
-            ;
+            ->getForm();
     }
 
-    private function getCASParams () {
-        $file   = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+    private function getCASParams()
+    {
+        $file = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
         $parsed = Yaml::parse(file_get_contents($file));
 
         $cas = $parsed['security']['firewalls']['secured_area']['cas'];

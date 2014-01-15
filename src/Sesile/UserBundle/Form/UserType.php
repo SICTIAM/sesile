@@ -8,15 +8,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\Email;
 
 
-class UserType extends AbstractType {
-        /**
+class UserType extends AbstractType
+{
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add('username', 'email', array('label' => 'Email'))
-            ->add('email','hidden')
+            ->add('email', 'hidden')
             ->add('plainPassword', 'repeated', array(
                 'type' => 'password',
                 'required' => false,
@@ -27,18 +29,24 @@ class UserType extends AbstractType {
             ))
             ->add('Nom')
             ->add('Prenom')
+            ->add('ville')
+            ->add('cp', 'text', array('label' => 'Code Postal'))
+            ->add('departement', 'text', array('label' => 'Département'))
+            ->add('pays')
+            ->add('role', 'text', array('label' => 'Rôle'))
             ->add('enabled', null, array('label' => 'Activé'))
             ->add('file', 'file', array('label' => 'Avatar',
                 'data_class' => null,
                 'required' => false,
-            ));
+            ));;
 
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults(array(
             'data_class' => 'Sesile\UserBundle\Entity\User'
         ));
@@ -47,7 +55,8 @@ class UserType extends AbstractType {
     /**
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return 'sesile_userbundle_user';
     }
 }
