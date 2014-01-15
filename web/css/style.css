@@ -1,118 +1,118 @@
 * {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 html, body {
-	font-family: 'Droid Sans', sans-serif;
-	background-color: #eaeaea;
-	height: 100%;
-	overflow-x: hidden;
+    font-family: 'Droid Sans', sans-serif;
+    background-color: #eaeaea;
+    height: 100%;
+    overflow-x: hidden;
 }
 
 #maman {
-	background-color: #cccccc;
-	width: 100%;
-	height: 100%;
-	display: table;
-	position: relative;
+    background-color: #cccccc;
+    width: 100%;
+    height: 100%;
+    display: table;
+    position: relative;
 }
 
 .popover {
-	max-width: 58em;
-	width: auto;
+    max-width: 58em;
+    width: auto;
 }
 
 /*-------------------------     DÉBUT MENU     -------------------------*/
 #gauche {
-	background: white url("/images/vichy.png");
-	display: table-cell;
-	position: relative;
-	z-index: 2;
-	min-height: 100%;
-	width: 15%;
-	box-shadow: 0.143em 0 0.8em #3a3a3a;
+    background: white url("/images/vichy.png");
+    display: table-cell;
+    position: relative;
+    z-index: 2;
+    min-height: 100%;
+    width: 15%;
+    box-shadow: 0.143em 0 0.8em #3a3a3a;
 }
 
 #logo {
-	width: 75px;
-	/*5.357em*/
-	height: 107px;
-	/*7.643em*/
-	margin: auto;
-	margin-bottom: 15%;
-	margin-top: 5%;
+    width: 75px;
+    /*5.357em*/
+    height: 107px;
+    /*7.643em*/
+    margin: auto;
+    margin-bottom: 15%;
+    margin-top: 5%;
 }
 
 /*-------------------------     FIN MENU =>  DÉBUT HEADER FOOTER     -------------------------*/
 #droite {
-	min-height: 100%;
-	background-color: #eaeaea;
-	display: table-cell;
-	padding: 0 1em 7% 1em;
-	vertical-align: top;;
+    min-height: 100%;
+    background-color: #eaeaea;
+    display: table-cell;
+    padding: 0 1em 7% 1em;
+    vertical-align: top;;
 }
 
 #header, #lecontenu, #footer {
 }
 
 #header {
-	min-height: 5%;
-	text-align: right;
-	margin: auto;
-	padding: .5em 0em 1em 0em;
-	width: 91%;
+    min-height: 5%;
+    text-align: right;
+    margin: auto;
+    padding: .5em 0em 1em 0em;
+    width: 91%;
 }
 
 #lecontenu {
-	width: 91%;
-	margin: auto;
-	min-height: 85%;
-	background-color: #ffffff;
+    width: 91%;
+    margin: auto;
+    min-height: 85%;
+    background-color: #ffffff;
 }
 
 #footer {
-	max-height: 10%;
-	margin: auto;
-	padding-bottom: 1em;
-	text-align: center;
-	position: absolute;
+    max-height: 10%;
+    margin: auto;
+    padding-bottom: 1em;
+    text-align: center;
+    position: absolute;
 }
 
 .legal,
 .legal a {
-	font-size: 0.9em;
-	color: rgba(147, 147, 147, 1);
+    font-size: 0.9em;
+    color: rgba(147, 147, 147, 1);
 }
 
 .signature,
 .signature a {
-	font-size: 0.8em;
-	color: rgba(147, 147, 147, 1);
+    font-size: 0.8em;
+    color: rgba(147, 147, 147, 1);
 }
 
 .tooltip-inner .creativecommons {
-	text-transform: lowercase !important;
-	color: #000000;
-	background: #ffffff;
-	border: solid 1px #ffffff;
+    text-transform: lowercase !important;
+    color: #000000;
+    background: #ffffff;
+    border: solid 1px #ffffff;
 }
 
 #textefooter {
-	width: 90%;
-	position: relative;
-	top: 1em;
-	display: inline-block;
+    width: 90%;
+    position: relative;
+    top: 1em;
+    display: inline-block;
 }
 
 #textefooter a {
-	text-decoration: none;
-	cursor: pointer;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 #logosictiampetit {
-	display: inline-block;
-	float: right;
+    display: inline-block;
+    float: right;
 }
 
 /*-------------------------     FIN HEADER FOOTER     -------------------------*/
@@ -120,168 +120,179 @@ html, body {
 .titre_bloc_accueil .glyphicon-edit,
 .titre_bloc_accueil .glyphicon-eye-open,
 .titre_bloc_accueil .glyphicon-share {
-	margin: 0 0.571em 0 0;
-	color: rgba(109, 109, 109, 1);
-	font-size: 1.125em;
+    margin: 0 0.571em 0 0;
+    color: rgba(109, 109, 109, 1);
+    font-size: 1.125em;
 }
 
 #contenu_acceuil {
-	background-color: #eaeaea;
-	width: 100%;
+    background-color: #eaeaea;
+    width: 100%;
 }
 
 .bloc_accueil,
 .bloc_page {
-	background-color: #ffffff;
-	padding: 1.2em;
-	margin-bottom: 1.429em;
+    background-color: #ffffff;
+    padding: 1.2em;
+    margin-bottom: 1.429em;
 }
 
 .titre_bloc_accueil {
-	background-color: #ffffff;
-	margin: 1em 0em .95em 0em;
-	border-bottom: 3px dotted #555555;
-	text-transform: uppercase;
-	color: rgba(109, 109, 109, 1);
-	font-weight: bold;
+    background-color: #ffffff;
+    margin: 1em 0em .95em 0em;
+    border-bottom: 3px dotted #555555;
+    text-transform: uppercase;
+    color: rgba(109, 109, 109, 1);
+    font-weight: bold;
 }
 
 .boutons_action {
-	width: 7.143em;
-	text-align: center;
+    width: 7.143em;
+    text-align: center;
 }
 
 .boutons_action a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 
+.user-row .boutons_action .glyphicon,
 .classeur-row .boutons_action .glyphicon {
-	visibility: hidden;
-	margin: 0 .3em 0 .3em;
+    visibility: hidden;
+    margin: 0 .3em 0 .3em;
 }
 
+.user-row:hover .boutons_action .glyphicon,
 .classeur-row:hover .boutons_action .glyphicon {
-	color: rgba(109, 109, 109, 1);
-	visibility: visible;
+    color: rgba(109, 109, 109, 1);
+    visibility: visible;
 }
 
+.user-row:hover .boutons_action .glyphicon:hover,
 .classeur-row:hover .boutons_action .glyphicon:hover {
-	visibility: visible;
-	color: rgba(50, 133, 171, 1);
+    visibility: visible;
+    color: rgba(50, 133, 171, 1);
 }
 
 .user-row:hover, .classeur-row:hover {
-	background-color: rgba(50, 133, 171, 0.5);
-	cursor: pointer;
+    background-color: rgba(50, 133, 171, 0.5);
+    cursor: pointer;
 }
 
 .titre_page {
-	font-size: 1.5em;
-	margin-bottom: 1em;
-	text-transform: uppercase;
-	color: #222222;
-	border-bottom: 3px dotted #555555;
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    color: #222222;
+    border-bottom: 3px dotted #555555;
 }
 
 .titre_form_element {
-	margin: 0.714em 0 0.714em 0;
-	text-transform: uppercase;
-	color: #ffffff;
-	width: 100%;
-	height: 1.8em;
-	line-height: 1.8em;
-	vertical-align: middle;
-	background-color: rgb(50, 133, 171);
-	padding-left: 0.214em;
+    margin: 0.714em 0 0.714em 0;
+    text-transform: uppercase;
+    color: #ffffff;
+    width: 100%;
+    height: 1.8em;
+    line-height: 1.8em;
+    vertical-align: middle;
+    background-color: rgb(50, 133, 171);
+    padding-left: 0.214em;
 }
 
 #fichiers {
-	border: 5px dashed #cccccc;
+    border: 5px dashed #cccccc;
 }
 
 .selectedfile {
-	border-color: #66afe9;
-	outline: 2;
-	-webkit-box-shadow: inset 0 7px 7px rgba(0, 0, 0, 0.075), 0 0 9px rgba(102, 175, 233, 1.0);
-	box-shadow: inset 0 7px 7px rgba(0, 0, 0, 0.075), 0 0 9px rgba(102, 175, 233, 1.0);
+    border-color: #66afe9;
+    outline: 2;
+    -webkit-box-shadow: inset 0 7px 7px rgba(0, 0, 0, 0.075), 0 0 9px rgba(102, 175, 233, 1.0);
+    box-shadow: inset 0 7px 7px rgba(0, 0, 0, 0.075), 0 0 9px rgba(102, 175, 233, 1.0);
 
 }
 
 .nameinput:focus {
-	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 
 /*-------------------------     DÉBUT MENU CONNEXION    -------------------------*/
 
 .menu_connexion {
-	text-align: right;
+    text-align: right;
 }
 
 .menu_connexion
 .glyphicon {
-	float: left;
+    float: left;
 }
 
 .menu_connexion li:hover
 .glyphicon {
-	color: rgba(50, 133, 171, 1);
+    color: rgba(50, 133, 171, 1);
 
 }
 
 .userpicture {
-	width: 2em;
-	height: 2em;
-	height: 2em;
-	background-color: deeppink;
+    width: 2em;
+    height: 2em;
+    height: 2em;
+    background-color: deeppink;
 }
 
 /*-------------------------     FIN MENU CONNEXION =>   DÉBUT TABLEAU     -------------------------*/
 /* TABLEAU */
 .tableau {
-	top: 1em;
-	border: 1px solid rgb(204, 204, 204);
-	color: rgba(109, 110, 112, 1);
-	text-align: center;
+    top: 1em;
+    border: 1px solid rgb(204, 204, 204);
+    color: rgba(109, 110, 112, 1);
+    text-align: center;
 }
 
 .tableau th {
-	border: 1px solid rgb(204, 204, 204);
-	text-align: center;
-	color: rgb(109, 110, 112);
-	font-size: .9em;
-	vertical-align: middle;
+    border: 1px solid rgb(204, 204, 204);
+    text-align: center;
+    color: rgb(109, 110, 112);
+    font-size: .9em;
+    vertical-align: middle;
 
 }
 
+.tableau tr.odd {
+    background-color: rgba(50, 133, 171, 0.2);
+}
+
+.tableau tr.even {
+    background-color: white;
+}
+
 .tableau tr td {
-	font-size: .9em;
+    font-size: .9em;
 }
 
 .statut_1,
 .tl1 {
-	color: rgb(0, 131, 201);
+    color: rgb(0, 131, 201);
 }
 
 .statut_2,
 .tl2 {
-	color: rgb(15, 148, 0);
+    color: rgb(15, 148, 0);
 }
 
 .statut_4,
 .tl4 {
-	color: rgb(240, 117, 0);
+    color: rgb(240, 117, 0);
 }
 
 .statut_3,
 .tl3 {
-	color: rgb(109, 109, 109);
+    color: rgb(109, 109, 109);
 }
 
 .statut_0,
 .tl0 {
-	color: rgb(213, 0, 25);
+    color: rgb(213, 0, 25);
 }
 
 .legende {
@@ -295,7 +306,7 @@ html, body {
 /* BUTTON FORMULAIRE */
 
 .form_action {
-	display: inline-block;
+    display: inline-block;
 }
 
 .btn-valider,
@@ -303,34 +314,34 @@ html, body {
 .btn-refuser,
 .btn-retracter,
 .btn-supprimer {
-	color: white;
-	padding: 3px 6px !important;
+    color: white;
+    padding: 3px 6px !important;
 }
 
 .btn-valider {
-	background-color: rgb(15, 148, 0);
+    background-color: rgb(15, 148, 0);
 }
 
 .btn-modifier {
-	background-color: rgb(15, 148, 0);
+    background-color: rgb(15, 148, 0);
 }
 
 .btn-refuser {
-	background-color: rgb(213, 0, 25);
+    background-color: rgb(213, 0, 25);
 }
 
 .btn-supprimer {
-	background-color: rgb(109, 109, 109);
+    background-color: rgb(109, 109, 109);
 }
 
 .btn-retracter {
-	background-color: rgb(240, 117, 0);
+    background-color: rgb(240, 117, 0);
 }
 
 /*-------------------------     FIN TABLEAU =>   DÉBUT BLABLA     -------------------------*/
 
 .fos_user_profile_edit .required {
-	color: red;
+    color: red;
 }
 
 .h3break {

@@ -8,6 +8,7 @@
                     <th>Mail</th>
                     <th>Nom</th>
                     <th>Actif</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -15,7 +16,15 @@
                     <tr class="user-row" data-id="{{ user.id }}">
                         <td>{{ user.username }}</td>
                         <td>{{ user.Nom }} {{ user.Prenom }}</td>
-                        <td>{% if user.enabled %}oui{% else %}non{% endif %}</td>
+                        <td><img src="{% if user.enabled %}oui{% else %}non{% endif %}"/></td>
+                        <td class="boutons_action">
+                            <a href="{{ path("classeur_edit", {'id' : user.id }) }}">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                            <a href="{{ path("classeur_edit", {'id' : user.id }) }}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
