@@ -5,6 +5,9 @@ namespace Sesile\ClasseurBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
+use Sesile\ClasseurBundle\Entity\ClasseursUsers;
+
+
 /**
  * ClasseursUsersRepository
  *
@@ -64,5 +67,12 @@ class ClasseursUsersRepository extends EntityRepository
             }
         }
         return self::$classeursRetractables;
+    }
+
+    public function deleteClasseurUser($classeur, $circuit)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('DELETE FROM SesileClasseurBundle:ClasseursUsers cu WHERE cu.user in (' . $circuit . ') AND cu.classeur = ' . $classeur->getId());
+        $query->execute();
     }
 }
