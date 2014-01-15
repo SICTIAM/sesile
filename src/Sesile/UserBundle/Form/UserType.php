@@ -27,11 +27,16 @@ class UserType extends AbstractType {
             ))
             ->add('Nom')
             ->add('Prenom')
+            ->add('ville')
+            ->add('cp', 'text', array('label' => 'Code Postal'))
+            ->add('departement', 'text', array('label' => 'Département'))
+            ->add('pays')
+            ->add('role', 'text', array('label' => 'Rôle'))
             ->add('enabled', null, array('label' => 'Activé'))
             ->add('file', 'file', array('label' => 'Avatar',
                 'data_class' => null,
                 'required' => false,
-            ));
+            ));;
 
     }
     

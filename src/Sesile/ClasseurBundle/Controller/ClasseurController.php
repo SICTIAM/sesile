@@ -346,7 +346,17 @@ class ClasseurController extends Controller
      */
     public function signAction(Request $request, $id){
 
-        return array();
+        $user = $this->get('security.context')->getToken()->getUser();
+        //  var_dump($user);
+
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+
+
+        $session = $this->get('session');
+        $session->start();
+
+        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $classeur->getXmlDocuments());
 
     }
 

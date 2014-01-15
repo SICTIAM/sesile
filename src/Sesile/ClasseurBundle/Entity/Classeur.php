@@ -462,6 +462,18 @@ class Classeur
         return false;
     }
 
+    public function getXmlDocuments()
+    {
+        $docs = $this->getDocuments();
+        $xmldocuments = new \Doctrine\Common\Collections\ArrayCollection();
+        foreach ($docs as $doc) {
+            if ($doc->getType() == 'application/xml') {
+                $xmldocuments->add($doc);
+            }
+        }
+        return $xmldocuments;
+    }
+
     /**
      * Add documents
      *
