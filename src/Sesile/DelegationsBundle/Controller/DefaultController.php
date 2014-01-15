@@ -94,8 +94,12 @@ class DefaultController extends Controller
         $delegation->setDelegant($this->getUser());
         $userManager = $this->container->get('fos_user.user_manager');
         $delegation->setUser($userManager->findUserBy(array('id' => $request->request->get('user'))));
-        $delegation->setDebut(new \DateTime($request->request->get('debut')));
-        $delegation->setFin(new \DateTime($request->request->get('fin')));
+        list($d, $m, $a) = explode("/", $request->request->get('debut'));
+        $debut = new \DateTime($m . "/" . $d . "/" . $a);
+        $delegation->setDebut($debut);
+        list($d, $m, $a) = explode("/", $request->request->get('fin'));
+        $fin = new \DateTime($m . "/" . $d . "/" . $a);
+        $delegation->setFin($fin);
 
         $em->persist($delegation);
         $em->flush();
