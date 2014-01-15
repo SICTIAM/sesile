@@ -4,16 +4,10 @@
     <div class="bloc_page">
         {% if classeur.isValidable(app.user.id) %}
             {% if classeur.isSignable(app.user.id) %}
-                <form class="form_action" id="signform">
-                    <button type="submit" class="btn btn-success">Valider et Signer</button>
+                <form class="form_action" id="signform" action="{{ path('signform', {'id':classeur.id}) }}">
+                <button type="submit" class="btn btn-success">Valider et Signer</button>
                     <input type="hidden" value="{{ classeur.id }}" name="id"/>
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div id='modalcontent' class="modal-content">
 
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
                 </form>
             {% else %}
                 <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
@@ -94,31 +88,8 @@
 
             $(document).ready(function () {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
-                $('#signform').submit(function(e){
-
-                    $.ajax('{{ path('signform', {'id':classeur.id}) }}',
-                            {
-                                method: 'GET',
-                                success: function (html) {
-
-                                    $('#modalcontent').html(html);
 
 
-                                    $('#myModal').modal({
-                                        backdrop: 'static'
-                                    });
-
-                                }
-
-                            }
-                    );
-
-
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    return false;
-
-                });
             });
 
 
@@ -126,9 +97,4 @@
 
         </script>
     </div>
-{% endblock %}
-
-{% block losjavascriptos %}
-    <script type="text/javascript" src="http://www.java.com/js/deployJava.js">
-    </script>
 {% endblock %}
