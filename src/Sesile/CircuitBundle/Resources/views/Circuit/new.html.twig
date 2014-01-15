@@ -45,18 +45,7 @@
     </div>
 </form>
 
-<script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
 <script type="text/javascript">
-    var users_list = new Array();
-    $("#users_list p").each(function () {
-        users_list.push($(this).text());
-    });
-
-    // $("#users_complete").autocomplete({ lookup: users_list });
-
-
     $(".nameinput").focus(function () {
         $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
         $(this).prev("label").addClass("glyphicon-search-blue");
@@ -67,4 +56,15 @@
         $(this).addClass("list_selected_element");
     });
 
+    var circuit = "";
+</script>
+<script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
+<script type="text/javascript">
+    var users_list = new Array();
+    $("#users_list p").each(function () {
+        users_list.push($(this).text());
+    });
+    // $("#users_complete").autocomplete({ lookup: users_list });
 </script>
