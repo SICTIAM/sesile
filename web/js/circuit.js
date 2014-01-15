@@ -9,7 +9,7 @@ del_favoris_url = "";
 $('#users_list p:first, #circuits_list p:first').addClass("list_selected_element");
 
 
-if (circuit_users) {
+if (typeof circuit_users != 'undefined') {
     user_a_charger = circuit_users.split(",");
     if (user_a_charger.length > 0) {
         $.each(user_a_charger, function (k, v) {
