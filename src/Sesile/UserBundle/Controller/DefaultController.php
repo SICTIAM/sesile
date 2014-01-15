@@ -75,7 +75,6 @@ class DefaultController extends Controller {
                 $entity->setEmail($form->get('username')->getData());
                 $em = $this->getDoctrine()->getManager();
 
-                $entity->preUpload();
                 $em->persist($entity);
                 $entity->upload();
                 $em->flush();
@@ -97,6 +96,7 @@ class DefaultController extends Controller {
 
                 //création du Distinguished Name
                 $dn = "mail=" . $email . ",cn=Users,dc=sictiam,dc=local";
+
                 ldap_add($ldapconn, $dn, $entry);
                 ldap_close($ldapconn);
 
@@ -212,6 +212,16 @@ class DefaultController extends Controller {
 
                     if (ldap_rename($ldapconn, $dn, "mail=" . $entity->getUsername(), $parent, true) && ldap_modify($ldapconn, "mail=" . $entity->getUsername() . "," . $parent, $entry)) {
                         ldap_close($ldapconn);
+                        if ($editForm->get('file')->getData()) {
+                            // echo "true";exit;
+                            if ($entity->getPath()) {
+                                $entity->removeUpload();
+                            }
+                            $entity->preUpload();
+                            $entity->upload();
+
+                        }
+                        //echo "false";exit;
                         $em->flush();
                     } else {
                         ldap_close($ldapconn);
@@ -219,14 +229,13 @@ class DefaultController extends Controller {
                         exit;
                     }
 
-                    return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+                    return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
                     echo "LDAP bind failed...";
                 }
              //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
-                $em->flush();
-                return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+                return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
             }
             }
         return array(
@@ -251,27 +260,6 @@ class DefaultController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
 
-            $ldapconn = ldap_connect("172.17.100.78")
-            or die("Could not connect to LDAP server.");
-            ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-            if ($ldapconn) {
-
-                // binding to ldap server
-                //  $ldapbind = ldap_bind($ldapconn/*, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI'*/);
-
-                // verify binding
-
-                if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
-                    echo "LDAP bind successful...";
-                } else {
-                    echo "LDAP bind failed...";
-                }
-
-            }
-
-            $dn = "mail=".$entity.",cn=Users,dc=sictiam,dc=local";
-            ldap_delete($ldapconn, $dn);
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }
@@ -280,7 +268,7 @@ class DefaultController extends Controller {
             $em->flush();
 
         }
-        return $this->redirect($this->generateUrl('classeur')); // rediriger vers liste_user non?
+        return $this->redirect($this->generateUrl('liste_users')); // rediriger vers liste_user non?
     }
 
 

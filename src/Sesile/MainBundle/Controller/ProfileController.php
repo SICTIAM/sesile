@@ -26,6 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sesile\UserBundle\Entity\User;
 
 
 /**
@@ -57,7 +58,7 @@ class ProfileController extends ContainerAware
      */
     public function editAction(Request $request)
     {
-
+        $user = new User();
         $user = $this->container->get('security.context')->getToken()->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
@@ -95,6 +96,16 @@ class ProfileController extends ContainerAware
                 $event = new FormEvent($form, $request);
                 $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
                 $user->setEmail($form->get('username')->getData());
+                if ($form->get('file')->getData()) {
+
+                    if ($user->getPath()) {
+
+                        $user->removeUpload();
+                    }
+                    $user->preUpload();
+                    $user->upload();
+
+                }
                 $userManager->updateUser($user);
                 //new
 
@@ -110,12 +121,19 @@ class ProfileController extends ContainerAware
                         $entry["sn"] = $user->getNom() . ' ' . $user->getPrenom();
                         $entry["givenName"] = $user->getUsername();
                         $entry["displayName"] = $user->getNom() . ' ' . $user->getPrenom();
+                        $pwd = trim($form->get('plainPassword')->getData());
+                        if ($pwd) {
 
+                            $user->setPlainPassword($pwd);
+                            $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($pwd)));
+                        }
                         //création du Distinguished Name
                         $parent = "cn=Users,dc=sictiam,dc=local";
                         $dn = "mail=" . $ExValues["mail"] . "," . $parent;
 
                         if (ldap_rename($ldapconn, $dn, "mail=" . $user->getUsername(), $parent, true) && ldap_modify($ldapconn, "mail=" . $user->getUsername() . "," . $parent, $entry)) {
+
+
                             ldap_close($ldapconn);
                         } else {
                             ldap_close($ldapconn);
@@ -129,7 +147,7 @@ class ProfileController extends ContainerAware
                     }
                     // var_dump($user);exit;
                     if (null === $response = $event->getResponse()) {
-                        $url = $this->container->get('router')->generate('fos_user_profile_show');
+                        $url = $this->container->get('router')->generate('sesile_profile_show');
                         $response = new RedirectResponse($url);
                     }
 

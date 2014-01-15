@@ -22,6 +22,7 @@ class ProfileFormType extends BaseType
 
         $builder->add('plainPassword', 'repeated', array(
             'type' => 'password',
+            'required' => false,
             'first_options' => array('label' => 'Mot de passe'),
             'second_options' => array('label' => 'Confirmation'),
             'invalid_message' => 'fos_user.password.mismatch',
@@ -44,7 +45,11 @@ class ProfileFormType extends BaseType
         $builder
             ->add('Prenom', null, array('label' => 'Prénom', 'attr' => array('class' => 'pouet')))
             ->add('Nom', null, array('label' => ' Nom', 'attr' => array('class' => 'pouet')))
-            ->add('email', 'email', array('label' => 'Adresse e-mail', 'attr' => array('class' => 'pouet')));
+            ->add('username', 'email', array('label' => 'Adresse E-mail', 'attr' => array('class' => 'pouet')))
+            ->add('file', 'file', array('label' => 'Avatar',
+                'data_class' => null,
+                'required' => false,
+            ));
     }
 
 }

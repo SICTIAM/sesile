@@ -79,12 +79,12 @@ class User extends BaseUser
 
     public function getAbsolutePath()
     {
-        return null === $this->path ? null : $this->getUploadRootDir() . '/' . $this->path;
+        return null === $this->path ? null : $this->getUploadRootDir() . $this->path;
     }
 
     public function getWebPath()
     {
-        return null === $this->path ? null : $this->getUploadDir() . '/' . $this->path;
+        return null === $this->path ? null : $this->getUploadDir() . $this->path;
     }
 
     protected function getUploadRootDir()
@@ -158,10 +158,11 @@ class User extends BaseUser
 
     /**
      * @ORM\PrePersist()
-     * @ORM\PreUpdate()
+     *
      */
     public function preUpload()
     {
+
         if (null !== $this->file) {
             // faites ce que vous voulez pour générer un nom unique
             $this->path = "/images/avatars/" . sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
@@ -195,7 +196,7 @@ class User extends BaseUser
      */
     public function removeUpload()
     {
-        if ($file = $this->getAbsolutePath()) {
+        if ($file = "/home/sesile/web" . $this->path) {
             unlink($file);
         }
     }
