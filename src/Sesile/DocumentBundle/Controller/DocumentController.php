@@ -113,13 +113,47 @@ class DocumentController extends Controller
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
-        $response->headers->set('Content-length', filesize('uploads/docs/' . $doc->getRepourl()));
+
 
 
         $response->sendHeaders();
 
         $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
+
+        return $response;
     }
+
+
+    /**
+     * @Route("/uploadfile", name="upload_doc",  options={"expose"=true})
+     *
+     */
+    public function uploadAction(Request $request)
+    {
+
+
+
+        $uploadedfile = $request->files->get('signedFile');
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $uploadedfile->getClientOriginalName()));
+
+        if(file_exists('uploads/docs/' . $doc->getRepourl())){
+            unlink('uploads/docs/' . $doc->getRepourl());
+            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+            $doc->setSigned(true);
+            $em->flush();
+            return new JsonResponse(array("error"=>"ok", "url"=>'uploads/docs/'. $doc->getRepourl()));
+
+        }else{
+
+            return new JsonResponse(array("error"=>"nodocumentwiththisname"));
+
+        }
+
+
+    }
+
+
+
 
 
 }
