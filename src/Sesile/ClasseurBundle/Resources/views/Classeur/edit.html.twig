@@ -1,6 +1,8 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
     <div class="bloc_page">
         {% if classeur.isValidable(app.user.id) %}
             {% if classeur.isSignable(app.user.id) %}
@@ -42,28 +44,45 @@
         <br>
 
         <form action="{{ path("classeur_retracter") }}" method="post">
-            <div class="titre_form_element">Titre</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Titre
+            </div>
             <input class="form-control" id="name" name="name" disabled placeholder="Nom" value="{{ classeur.nom }}">
             <br>
 
-            <div class="titre_form_element">Description</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Description
+            </div>
             <textarea class="form-control" rows="3" name="desc" disabled id="desc">{{ classeur.description }}</textarea>
             <br>
 
-            <div class="titre_form_element">Documents</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Date limite de validation
+            </div>
+            <input class="datepicker" id="validation" name="validation" type="datetime"/>
+            <br>
+
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Documents
+            </div>
             <div id="documentcontent"></div>
             <br>
 
-            <div class="titre_form_element">Circuit</div>
-            <div id="circuitcontent"></div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Circuit
+            </div>
+            <div id="circuitcontent">
+                <script type="application/javascript">
+                    var circuit_users = "{{ classeur.circuit }}";
+                </script>
+                {% render url("new_circuit") %}
+            </div>
             <br>
-
-
-
-
-
-            {% block extraform %}
-            {% endblock %}
 
             <div>
                 <br/>
@@ -72,18 +91,19 @@
                 </button>
             </div>
         </form>
-
-
-
-
-
-
         <script type="application/javascript">
+            $(".top_selects_circuits, .suppr_perso").hide();
+            $("#circuit").sortable("disable");
+            $(".perso_circuit").css("cursor", "Default");
+
+
             $("#btn_modifier").click(function () {
                 $("#name, #desc").removeAttr("disabled");
                 $("#enregistrer_modif").show();
                 enableUploads();
-
+                $(".top_selects_circuits, .suppr_perso").show();
+                $("#circuit").sortable("enable");
+                $(".perso_circuit").css("cursor", "-moz-grab");
             });
 
             $(document).ready(function () {
@@ -92,9 +112,15 @@
 
             });
 
-
-
-
+            var nowTemp = new Date();
+            var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+            var valid = $('#validation').datepicker({
+                onRender: function (date) {
+                    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate', function (ev) {
+                        ev.hide();
+                    });
         </script>
     </div>
 {% endblock %}

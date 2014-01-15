@@ -2,7 +2,10 @@
 
 {% block content %}
     <div class="bloc_page">
-        <h1>Liste des classeurs retractables</h1>
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-thumbs-down"></span>
+            &nbsp;&nbsp;&nbsp;Liste des classeurs retractables
+        </div>
         {% include 'SesileClasseurBundle:Classeur:liste.html.twig' %}
     </div>
 {% endblock %}

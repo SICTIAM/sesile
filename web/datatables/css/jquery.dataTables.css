@@ -1,152 +1,144 @@
 .dataTables_wrapper table {
-	margin-bottom: 5px !important;
+    margin-bottom: 5px !important;
 }
 
 table.dataTable {
-	clear: both;
+    clear: both;
 }
 
 table.dataTable td {
-	padding: 3px 10px;
+    padding: 3px 10px;
 }
 
 table.dataTable td.center,
 table.dataTable td.dataTables_empty {
-	text-align: center;
-}
-
-table.dataTable tr.odd {
-	background-color: rgba(50, 133, 171, 0.2);
-}
-
-table.dataTable tr.even {
-	background-color: white;
+    text-align: center;
 }
 
 table.dataTable tr.odd td.sorting_1 {
-	background-color: rgba(50, 133, 171, 0.2);;
+    background-color: rgba(50, 133, 171, 0.2);;
 }
 
 table.dataTable tr.even td.sorting_1 {
-	background-color: rgba(230, 230, 230, 0.3);
+    background-color: rgba(230, 230, 230, 0.3);
 }
 
 .dataTables_wrapper {
-	position: relative;
-	clear: both;
-	*zoom: 1;
-	margin-bottom: 1em;
+    position: relative;
+    clear: both;
+    *zoom: 1;
+    margin-bottom: 1em;
 }
 
 .dataTables_filter {
-	float: right;
-	text-align: right;
-	color: #6d6e70;
+    float: right;
+    text-align: right;
+    color: #6d6e70;
 }
 
 .dataTables_info {
-	clear: both;
-	float: left;
+    clear: both;
+    float: left;
 }
 
 .dataTables_paginate {
-	float: right;
-	text-align: right;
-	display: inline-block;
+    float: right;
+    text-align: right;
+    display: inline-block;
 }
 
 .footer_datatables {
-	width: 100%;
-	display: inline-block;
+    width: 100%;
+    display: inline-block;
 }
 
 .paging_full_numbers {
-	height: 1.5em;
-	line-height: 1.5em;
+    height: 1.5em;
+    line-height: 1.5em;
 }
 
 .paging_full_numbers a:active {
-	outline: none
+    outline: none
 }
 
 .paging_full_numbers a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .paging_full_numbers a.paginate_button,
 .paging_full_numbers a.paginate_active {
-	border: 1px solid #cccccc;
-	padding: 2px 5px;
-	cursor: pointer;
-	*cursor: hand;
-	color: #6d6e70 !important;
+    border: 1px solid #cccccc;
+    padding: 2px 5px;
+    cursor: pointer;
+    *cursor: hand;
+    color: #6d6e70 !important;
 }
 
 .paging_full_numbers .first,
 .paging_full_numbers .previous,
 .paging_full_numbers .next,
 .paging_full_numbers .last {
-	position: relative;
-	display: inline-block;
-	font-family: 'Glyphicons Halflings';
-	-webkit-font-smoothing: antialiased;
-	font-style: normal;
-	font-weight: normal;
-	height: 1.75em;
-	line-height: 1.3em;
-	top: .1em;
+    position: relative;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    height: 1.75em;
+    line-height: 1.3em;
+    top: .1em;
 }
 
 .paging_full_numbers .first:before {
-	content: "\e070";
+    content: "\e070";
 }
 
 .paging_full_numbers .previous:before {
-	content: "\e069";
+    content: "\e069";
 }
 
 .paging_full_numbers .next:before {
-	content: "\e077";
+    content: "\e077";
 }
 
 .paging_full_numbers .last:before {
-	content: "\e076";
+    content: "\e076";
 }
 
 .paging_full_numbers a.paginate_button:hover {
-	background-color: rgba(230, 230, 230, 0.6);
-	text-decoration: none !important;
+    background-color: rgba(230, 230, 230, 0.6);
+    text-decoration: none !important;
 }
 
 .paging_full_numbers a.paginate_active {
-	background-color: rgba(50, 133, 171, 0.5);
-	color: white !important;
+    background-color: rgba(50, 133, 171, 0.5);
+    color: white !important;
 }
 
 /*
  * Sorting
  */
 .sorting {
-	background: url('../images/sort_both.png') no-repeat center right;
+    background: url('../images/sort_both.png') no-repeat center right;
 }
 
 .sorting_asc {
-	background: url('../images/sort_asc.png') no-repeat center right;
+    background: url('../images/sort_asc.png') no-repeat center right;
 }
 
 .sorting_desc {
-	background: url('../images/sort_desc.png') no-repeat center right;
+    background: url('../images/sort_desc.png') no-repeat center right;
 }
 
 .sorting_asc_disabled {
-	background: url('../images/sort_asc_disabled.png') no-repeat center right;
+    background: url('../images/sort_asc_disabled.png') no-repeat center right;
 }
 
 .sorting_desc_disabled {
-	background: url('../images/sort_desc_disabled.png') no-repeat center right;
+    background: url('../images/sort_desc_disabled.png') no-repeat center right;
 }
 
 table.dataTable thead th:active,
 table.dataTable thead td:active {
-	outline: none;
+    outline: none;
 }

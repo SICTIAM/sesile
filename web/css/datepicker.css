@@ -8,6 +8,11 @@
 	border-radius: 4px;
 }
 
+.dropdown-menu {
+	min-width: 18em !important;
+	width: 22% !important;
+}
+
 .datepicker:before {
 	content: '';
 	display: inline-block;
@@ -50,7 +55,7 @@
 	cursor: pointer;
 }
 .datepicker td.day.disabled {
-	color: #eeeeee;
+	color: #cccccc;
 }
 .datepicker td.old,
 .datepicker td.new {
@@ -59,19 +64,11 @@
 .datepicker td.active,
 .datepicker td.active:hover {
 	color: #ffffff;
-	background-color: #006dcc;
-	background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
-	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
-	background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-	background-image: -o-linear-gradient(top, #0088cc, #0044cc);
-	background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+	background-color: #3285af;
 	background-repeat: repeat-x;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
-	border-color: #0044cc #0044cc #002a80;
-	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-	*background-color: #0044cc;
+	*background-color: #3285af;
 	/* Darken IE7 buttons by default so they stand out more given they won't have borders */
-
 	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 	color: #fff;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -89,8 +86,8 @@
 .datepicker td.active[disabled],
 .datepicker td.active:hover[disabled] {
 	color: #ffffff;
-	background-color: #0044cc;
-	*background-color: #003bb3;
+	background-color: #3285af;
+	*background-color: #3285af;
 }
 .datepicker td.active:active,
 .datepicker td.active:hover:active,
@@ -116,16 +113,16 @@
 .datepicker td span.active {
 	color: #ffffff;
 	background-color: #006dcc;
-	background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
-	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
-	background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-	background-image: -o-linear-gradient(top, #0088cc, #0044cc);
-	background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+	background-image: -moz-linear-gradient(top, #0088cc, #3285af);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#3285af));
+	background-image: -webkit-linear-gradient(top, #0088cc, #3285af);
+	background-image: -o-linear-gradient(top, #0088cc, #3285af);
+	background-image: linear-gradient(to bottom, #0088cc, #3285af);
 	background-repeat: repeat-x;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
-	border-color: #0044cc #0044cc #002a80;
+	border-color: #3285af #3285af #002a80;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-	*background-color: #0044cc;
+	*background-color: #3285af;
 	/* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
 	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
@@ -139,7 +136,7 @@
 .datepicker td span.active.disabled,
 .datepicker td span.active[disabled] {
 	color: #ffffff;
-	background-color: #0044cc;
+	background-color: #3285af;
 	*background-color: #003bb3;
 }
 .datepicker td span.active:active,
