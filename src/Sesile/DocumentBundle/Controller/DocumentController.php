@@ -113,13 +113,46 @@ class DocumentController extends Controller
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
-        $response->headers->set('Content-length', filesize('uploads/docs/' . $doc->getRepourl()));
+
 
 
         $response->sendHeaders();
 
         $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
+
+        return $response;
     }
+
+
+    /**
+     * @Route("/uploadfile", name="upload_doc",  options={"expose"=true})
+     *
+     */
+    public function downloadAction(Request $request)
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+        $response = new Response();
+
+
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
+
+
+
+        $response->sendHeaders();
+
+        $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
+
+        return $response;
+    }
+
+
+
 
 
 }

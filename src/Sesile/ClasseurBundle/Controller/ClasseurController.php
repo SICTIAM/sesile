@@ -356,7 +356,21 @@ class ClasseurController extends Controller
         $session = $this->get('session');
         $session->start();
 
-        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $classeur->getXmlDocuments());
+        $tmpdocs = $classeur->getXmlDocuments();
+
+        $docstosign = array();
+
+        foreach($tmpdocs as $key=>$value){
+            $tmpdo= array();
+            $tmpdo['name']= $value->getName();
+            $tmpdo['id']=$value->getId();
+            $tmpdo['repourl']=$value->getRepourl();
+            $docstosign[$key]=$tmpdo;
+        }
+
+        $servername = $_SERVER['HTTP_HOST'];
+
+        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername'=>$servername);
 
     }
 
