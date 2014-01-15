@@ -203,7 +203,7 @@ class ClasseurController extends Controller
             );
         }
 
-        return $this->redirect($this->generateUrl('index_valider'));
+        return $this->redirect($this->generateUrl('classeur'));
     }
 
     /**

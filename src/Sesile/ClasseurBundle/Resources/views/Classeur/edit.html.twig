@@ -50,23 +50,38 @@
         <br>
 
         <form action="{{ path("classeur_retracter") }}" method="post">
-            <div class="titre_form_element">Titre</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Titre
+            </div>
             <input class="form-control" id="name" name="name" disabled placeholder="Nom" value="{{ classeur.nom }}">
             <br>
 
-            <div class="titre_form_element">Description</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Description
+            </div>
             <textarea class="form-control" rows="3" name="desc" disabled id="desc">{{ classeur.description }}</textarea>
             <br>
 
-            <div class="titre_form_element">Date limite de validation</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Date limite de validation
+            </div>
             <input class="datepicker" id="validation" name="validation" type="datetime"/>
             <br>
 
-            <div class="titre_form_element">Documents</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Documents
+            </div>
             <div id="documentcontent"></div>
             <br>
 
-            <div class="titre_form_element">Circuit</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;Circuit
+            </div>
             <div id="circuitcontent">
                 <script type="application/javascript">
                     var circuit_users = "{{ classeur.circuit }}";
