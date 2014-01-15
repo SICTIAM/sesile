@@ -49,7 +49,9 @@
         {% endif %}
         <br>
 
-        <form action="{{ path("classeur_retracter") }}" method="post">
+        <form action="{{ path("classeur_update") }}" method="post">
+            <input type="hidden" name="id" value="{{ classeur.id }}"/>
+
             <div class="titre_form_element">Titre</div>
             <input class="form-control" id="name" name="name" disabled placeholder="Nom" value="{{ classeur.nom }}">
             <br>
@@ -59,7 +61,8 @@
             <br>
 
             <div class="titre_form_element">Date limite de validation</div>
-            <input class="datepicker" id="validation" name="validation" type="datetime"/>
+            <input class="datepicker" id="validation" name="validation" type="datetime" disabled
+                   value="{{ classeur.validation  | date('d/m/Y') }}"/>
             <br>
 
             <div class="titre_form_element">Documents</div>
@@ -74,13 +77,10 @@
                 {% render url("new_circuit") %}
             </div>
             <br>
-
-            <div>
-                <br/>
-                <button type="submit" id="enregistrer_modif" style="display: none;" class="btn btn-success">Enregistrer
-                    les modifications
-                </button>
-            </div>
+            <br/>
+            <button type="submit" id="enregistrer_modif" style="display: none;" class="btn btn-success">Enregistrer les
+                modifications
+            </button>
         </form>
         <script type="application/javascript">
             $(".top_selects_circuits, .suppr_perso").hide();
@@ -89,7 +89,7 @@
 
 
             $("#btn_modifier").click(function () {
-                $("#name, #desc").removeAttr("disabled");
+                $("#name, #desc, #validation ").removeAttr("disabled");
                 $("#enregistrer_modif").show();
                 enableUploads();
                 $(".top_selects_circuits, .suppr_perso").show();

@@ -120,9 +120,7 @@ class ClasseurController extends Controller
         $classeur = new Classeur();
         $classeur->setNom($request->request->get('name'));
         $classeur->setDescription($request->request->get('desc'));
-        $classeur->setValidation(new \DateTime());
-
-        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        list($d, $m, $a) = explode("-", $request->request->get('validation'));
         $valid = new \DateTime($m . "/" . $d . "/" . $a);
         $classeur->setValidation($valid);
         $classeur->setType($request->request->get('type'));
@@ -157,7 +155,6 @@ class ClasseurController extends Controller
         $manager = $this->container->get('oneup_uploader.orphanage_manager')->get('docs');
         $files = $manager->uploadFiles();
 
-        var_dump($request->request);
         foreach ($files as $file) {
             //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
             if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
@@ -227,7 +224,6 @@ class ClasseurController extends Controller
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
 
         if (!$entity) {
@@ -243,35 +239,65 @@ class ClasseurController extends Controller
     /**
      * Edits an existing Classeur entity.
      *
-     * @Route("/{id}", name="classeur_update")
-     * @Method("PUT")
+     * @Route("/update_classeur", name="classeur_update")
+     * @Method("POST")
      * @Template("SesileClasseurBundle:Classeur:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->request->get('id'));
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Classeur entity.');
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Classeur introuvable.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
+        $classeur->setNom($request->request->get('name'));
+        $classeur->setDescription($request->request->get('desc'));
 
-        if ($editForm->isValid()) {
-            $em->flush();
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        $valid = new \DateTime($m . "/" . $d . "/" . $a);
+        $classeur->setValidation($valid);
+        $circuit = $request->request->get('circuit');
+        $classeur->setCircuit($circuit);
+        $classeur->setUser($this->getUser()->getId());
+        $classeur->setVisibilite(1);
+        $em->persist($classeur);
+        $em->flush();
 
-            return $this->redirect($this->generateUrl('classeur_edit', array('id' => $id)));
+        /**
+         * TODO modifier le fonctionnement : on doit updater les users par la collection et non par suppression / rajout (un peu de propreté qd même!!!)
+         */
+        // gestion du circuit
+        $users = explode(',', $circuit);
+        $classeurUserObj = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
+
+        for ($i = 0; $i < count($users); $i++) {
+            $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
+            $cu = $classeurUserObj->findOneBy(array("user" => $userObj, "classeur" => $classeur));
+            if ($cu != null) {
+                continue;
+            }
+
+            $classeurUser = new ClasseursUsers();
+            $classeurUser->setClasseur($classeur);
+            $classeurUser->setUser($userObj);
+            $classeurUser->setOrdre($i + 1);
+            $em->persist($classeurUser);
         }
 
-        return array(
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+        $classeurUserObj->deleteClasseurUser($classeur, $circuit);
+        $error = false;
+        if (!$error) {
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'Classeur modifié avec succès !'
+            );
+        }
+
+        return $this->redirect($this->generateUrl('classeur'));
     }
 
     /**
