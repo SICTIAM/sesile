@@ -27,7 +27,6 @@ class CircuitController extends Controller
 
             }
         }
-
         // recup la list des circuits
         // TODO recup uniquement pour le user connecté
         $em = $this->getDoctrine()->getManager();
