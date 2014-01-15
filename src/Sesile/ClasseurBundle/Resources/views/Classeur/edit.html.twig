@@ -77,10 +77,13 @@
                 {% render url("new_circuit") %}
             </div>
             <br>
-            <br/>
-            <button type="submit" id="enregistrer_modif" style="display: none;" class="btn btn-success">Enregistrer les
-                modifications
-            </button>
+
+            <div>
+                <br/>
+                <button type="submit" id="enregistrer_modif" style="display: none;" class="btn btn-success">Enregistrer
+                    les modifications
+                </button>
+            </div>
         </form>
         <script type="application/javascript">
             $(".top_selects_circuits, .suppr_perso").hide();
@@ -89,7 +92,7 @@
 
 
             $("#btn_modifier").click(function () {
-                $("#name, #desc, #validation ").removeAttr("disabled");
+                $("#name, #desc").removeAttr("disabled");
                 $("#enregistrer_modif").show();
                 enableUploads();
                 $(".top_selects_circuits, .suppr_perso").show();
