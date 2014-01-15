@@ -128,27 +128,28 @@ class DocumentController extends Controller
      * @Route("/uploadfile", name="upload_doc",  options={"expose"=true})
      *
      */
-    public function downloadAction(Request $request)
+    public function uploadAction(Request $request)
     {
 
 
-        $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
-        $response = new Response();
+        $uploadedfile = $request->files->get('signedFile');
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $uploadedfile->getClientOriginalName()));
+
+        if(file_exists('uploads/docs/' . $doc->getRepourl())){
+            unlink('uploads/docs/' . $doc->getRepourl());
+            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+            $doc->setSigned(true);
+            $em->flush();
+            return new JsonResponse(array("error"=>"ok", "url"=>'uploads/docs/'. $doc->getRepourl()));
+
+        }else{
+
+            return new JsonResponse(array("error"=>"nodocumentwiththisname"));
+
+        }
 
 
-        $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
-
-
-
-        $response->sendHeaders();
-
-        $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
-
-        return $response;
     }
 
 
