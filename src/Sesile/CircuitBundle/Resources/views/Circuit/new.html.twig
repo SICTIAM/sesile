@@ -31,15 +31,14 @@
         <span id="circuitadd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
 </div>
-<form action="{{ path("create_circuit") }}" method="post">
-    <div id="circuit_editor">
-        <div class="titre_select">
-        </div>
-        <div id="circuit">
-            <img id="debut_circuit" src="{{ asset("/images/buttonlist.png") }}"/>
-        </div>
+
+<div id="circuit_editor">
+    <div class="titre_select">
     </div>
-</form>
+    <div id="circuit">
+        <img id="debut_circuit" src="{{ asset("/images/buttonlist.png") }}"/>
+    </div>
+</div>
 
 <script type="text/javascript">
     $(".nameinput").focus(function () {
