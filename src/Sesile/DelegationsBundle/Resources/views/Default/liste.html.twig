@@ -1,17 +1,17 @@
 <table class="table tableau">
     <thead>
-    <tr>
-        <th>Utilisateur</th>
-        <th>Début</th>
-        <th>Fin</th>
-        <th>Action</th>
-    </tr>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Début</th>
+            <th>Fin</th>
+            <th>Action</th>
+        </tr>
     </thead>
     {% for delegation in delegations %}
         <tr>
             <td>{{ delegation.user }}</td>
-            <td>{{ delegation.debut | date('d-m-Y') }}</td>
-            <td>{{ delegation.fin | date('d-m-Y') }}</td>
+            <td>{{ delegation.debut | date('d/m/Y') }}</td>
+            <td>{{ delegation.fin | date('d/m/Y') }}</td>
             <td></td>
         </tr>
     {% endfor %}

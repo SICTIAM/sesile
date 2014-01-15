@@ -31,7 +31,7 @@
     </head>
     <body>
     <object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0"
-            style="visibility: hidden;"></object>
+            style="display: none;"></object>
     <div id="maman">
             <div id="gauche">
                 <a href="/app_dev.php">
@@ -40,7 +40,6 @@
                     </div>
                 </a>
                 {% include 'SesileMainBundle:Default:menu.html.twig' %}
-
             </div>
 
             <div id="droite">
@@ -49,7 +48,7 @@
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <img class="userpicture"
-                                     src="http://static.colourlovers.com/images/lovers/3522/3522185t.jpg?1387813886"/>
+                                     src="{{ app.user.path }}"/>
                                 &nbsp;
                                 {{ app.user.prenom }}&nbsp;{{ app.user.nom }}&nbsp;&nbsp;&nbsp;
                                 <span class="caret"></span>
@@ -64,7 +63,6 @@
                                 <li class="divider"></li>
                                 <li class="li2">
                                     <a href="{{ path("logout") }}">
-                                        {# <a href="{{ path("fos_user_security_logout") }}"> #}
                                         <span class="glyphicon glyphicon-off"></span>
                                         D&eacute;connexion
                                     </a>
@@ -73,8 +71,6 @@
                         </div>
                     {% else %}
                         <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
-
-                        {# <a class="btn btn-success" href="{{ path("fos_user_security_login") }}">Connexion</a> #}
                     {% endif %}
                 </div>
 
@@ -82,7 +78,8 @@
                 <div id="lecontenu">
                     {% block content %}
                         <div id="contenu_acceuil">
-                            <div class="bloc_accueil">
+                            {% if app.user == null %}
+                                <div class="bloc_accueil">
                                 <div id="bienvenue">
                                     <div class="titre_bloc_accueil">
                                         <span class="glyphicon glyphicon-home"></span>
@@ -99,8 +96,19 @@
                                     de
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="bloc_accueil">
                                 {% if app.user %}
+                                    <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+                                    <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+
+                                    <div id="delegations_recues">
+                                        <div class="titre_bloc_accueil">
+                                            <span class="glyphicon glyphicon-share"></span>
+                                            Délégations
+                                        </div>
+                                        {% render url("delegations_recues_list") %}
+                                    </div>
                                     <div id="classeurs_a_valider">
                                         <div class="titre_bloc_accueil">
                                             <span class="glyphicon glyphicon-edit"></span>
@@ -115,6 +123,54 @@
                                         </div>
                                         {% render url("liste_classeurs") %}
                                     </div>
+                                    {% include 'SesileClasseurBundle:Classeur:legende.html.twig' %}
+
+                                    <script type="application/javascript">
+                                        $(document).ready(function () {
+                                            $("#classeurs_a_valider .dtables").dataTable({
+                                                "oLanguage": {
+                                                    "sSearch": "Rechercher&nbsp;:",
+                                                    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                                                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                                                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                                                    "oPaginate": {
+                                                        "sFirst": "",
+                                                        "sPrevious": "",
+                                                        "sNext": "",
+                                                        "sLast": ""
+                                                    }
+                                                },
+                                                "iDisplayLength": 5,
+                                                "sDom": 'ift<"footer_datatables"p>',
+                                                "aoColumnDefs": [
+                                                    { "bSortable": false, "aTargets": [ 4, 5 ] }
+                                                ],
+                                                "sPaginationType": "full_numbers"
+                                            });
+
+                                            $("#liste_classeurs .dtables").dataTable({
+                                                "oLanguage": {
+                                                    "sSearch": "Rechercher&nbsp;:",
+                                                    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                                                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                                                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                                                    "oPaginate": {
+                                                        "sFirst": "",
+                                                        "sPrevious": "",
+                                                        "sNext": "",
+                                                        "sLast": ""
+                                                    }
+                                                },
+                                                "iDisplayLength": 5,
+                                                "sDom": 'ift<"footer_datatables"p>',
+                                                "aoColumnDefs": [
+                                                    { "bSortable": false, "aTargets": [ 4, 5 ] }
+                                                ],
+                                                "sPaginationType": "full_numbers"
+                                            });
+                                        });
+                                    </script>
+
                                 {% else %}
                                     <img src="http://www.purina.fr/images/articles/illustrations/chat/coaching/entretenir_poils_longs_chat.jpg">
                                 {% endif %}

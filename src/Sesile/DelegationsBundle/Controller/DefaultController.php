@@ -43,8 +43,8 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/recues", name="delegations_recues_list")
-     * @Template("@SesileDelegationsBundle:Default:liste.html.twig")
+     * @Route("/liste_recues", name="delegations_recues_list")
+     * @Template("SesileDelegationsBundle:Default:liste.html.twig")
      */
     public function recuesAction()
     {

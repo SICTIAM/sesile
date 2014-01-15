@@ -26,6 +26,8 @@ function ajoutUser(id) {
         creerFleches();
     });
 
+    perso_src = sel_user.data("img") || perso_src;
+
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);
 
@@ -64,7 +66,8 @@ $("#useradd_btn").click(function () {
 $("#circuit").sortable({
     cancel: '.fleche_circuit',
     placeholder: 'emplacement',
-    update: function (event, ui) {
+    tolerance: "pointer",
+    stop: function (e, ui) {
         creerFleches();
     },
     over: function (e, ui) {
@@ -73,17 +76,15 @@ $("#circuit").sortable({
     out: function (e, ui) {
         sortableIn = 0;
     },
-    start: function () {
+    start: function (e, ui) {
         $(".fleche_circuit").remove();
     },
     beforeStop: function (event, ui) {
         if (sortableIn == 0) {
-            $(".")
             elem = ui.item;
             $("<p/>").attr("data-id", elem.data("id")).text(elem.find(".nom_perso").text()).appendTo("#users_list");
             elem.remove();
             $('#users_list p:first').addClass("list_selected_element");
-            creerFleches();
         }
     }
 }).disableSelection();

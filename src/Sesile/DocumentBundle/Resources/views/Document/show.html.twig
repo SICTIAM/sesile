@@ -1,120 +1,121 @@
 <div class="row descriptionfichier">
 
+<script type="text/javascript">
+    var fNewDoc = false;
+    var EditDocumentButton = null;
+    try {
+        EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3');
+        if (EditDocumentButton != null) {
+            fNewDoc = true;
+        }
+    } catch (e) {
+    }
 
-    <script type="text/javascript">
-        var fNewDoc = false;
-        var EditDocumentButton = null;
-        try {
-            EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3');
-            if (EditDocumentButton != null) {
-                fNewDoc = true;
+    var L_EditDocumentError_Text = "Editing not supported.";
+    var L_EditDocumentRuntimeError_Text = "Sorry, couldn't open the document.";
+
+    function editDocument(strDocument) {
+        if (fNewDoc) {
+            if (!EditDocumentButton.EditDocument(strDocument)) {
+                alert(L_EditDocumentRuntimeError_Text);
             }
-        } catch (e) {
+        } else {
+            // try {
+            var hownowPlugin = document.getElementById("winFirefoxPlugin");
+            hownowPlugin.EditDocument(strDocument, null);
+            // } catch (e) { alert(L_EditDocumentError_Text); }
+        }
+    }
+
+
+    function showDocument(strDocument) {
+
+        if (fNewDoc) {
+            if (!EditDocumentButton.ViewDocument(strDocument)) {
+                alert(L_EditDocumentRuntimeError_Text);
+            }
+        } else {
+            // try {
+            var hownowPlugin = document.getElementById("winFirefoxPlugin");
+            hownowPlugin.ViewDocument(strDocument, null);
+            // } catch (e) { alert(L_EditDocumentError_Text); }
         }
 
-        var L_EditDocumentError_Text = "Editing not supported.";
-        var L_EditDocumentRuntimeError_Text = "Sorry, couldn't open the document.";
+    }
 
-        function editDocument(strDocument) {
-            if (fNewDoc) {
-                if (!EditDocumentButton.EditDocument(strDocument)) {
-                    alert(L_EditDocumentRuntimeError_Text);
-                }
-            } else {
-                // try {
-                var hownowPlugin = document.getElementById("winFirefoxPlugin");
-                hownowPlugin.EditDocument(strDocument, null);
-                // } catch (e) { alert(L_EditDocumentError_Text); }
-            }
+
+    function fireDocument(strDocument) {
+        if (allowmodif) {
+            editDocument(strDocument);
         }
+    }
 
+</script>
 
-        function showDocument(strDocument){
+<div class="col-md-5">
+    <div class="thumbnail">
+        <img id="fileimgpreview" style="width: 180px; height: 180px">
 
-            if (fNewDoc) {
-                if (!EditDocumentButton.ViewDocument(strDocument)) {
-                    alert(L_EditDocumentRuntimeError_Text);
-                }
-            } else {
-                // try {
-                var hownowPlugin = document.getElementById("winFirefoxPlugin");
-                hownowPlugin.ViewDocument(strDocument, null);
-                // } catch (e) { alert(L_EditDocumentError_Text); }
-            }
-
-        }
-
-
-        function fireDocument(strDocument){
-            if(allowmodif){
-                editDocument(strDocument);
-            }
-        }
-
-
-    </script>
-
-
-    <div class="col-md-5">
-        <div class="thumbnail">
-            <img id="fileimgpreview" style="width: 180px; height: 180px">
-
-            <div class="caption">
-                <h3 class="h3break">{{ name }}</h3>
+        <div class="caption">
+            <h3 class="h3break">{{ name }}</h3>
 
 
 
-                {% if doc is not null %}
-                <a  id='modifbutton' style="display: none" onclick="javascript:fireDocument('http://{{  servername  }}/server.php/{{ doc.repourl }}');return false;" href="#"
-                      class="btn btn-primary" role="button"> <span class="glyphicon glyphicon-pencil"></span>  Editer</a>
-                &nbsp;<a id='download'   href="{{ path('download_doc', {'id':doc.id}) }}"
-                                                                                                                            class="btn btn-default" role="button">
-                    <span class="glyphicon glyphicon-download-alt"></span>  Télécharger</a>&nbsp;
+            {% if doc is not null %}
+                <a id='modifbutton' style="display: none" onclick="javascript:fireDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');return false;" href="#"
+                   class="btn btn-primary" role="button">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    Editer
+                </a>
+                &nbsp;
+                <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}"
+                   class="btn btn-default" role="button">
+                    <span class="glyphicon glyphicon-download-alt"></span>
+                    Télécharger
+                </a>&nbsp;
 
-                {% endif %}
-                <button id='deleteconfirm' type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-trash"> </span>
-                        Supprimer
-                    </button>
+            {% endif %}
+            <button id='deleteconfirm' type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-trash"> </span>
+                Supprimer
+            </button>
 
-
-
-            </div>
         </div>
     </div>
+</div>
 
-    <div class="col-md-7">
-        <h4>Historique</h4>
+<div class="col-md-7">
+    <h4>Historique</h4>
 
-        {% if doc is null %}
-                Aucun historique pour ce document
-            {% else %}
-                <table class="table table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Message</th>
+    {% if doc is null %}
+        Aucun historique pour ce document
+    {% else %}
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for histo in historyinverse %}
+
+                    {% if histo.date|date("U") > "-30 seconds"|date("U") %}
+                        <tr class="success">
+
+                    {% else %}
+                        <tr>
+                    {% endif %}
+
+                    <td><strong>{{ histo.date|date('d.m.Y H:i:s') }} </strong></td>
+                    <td> {{ histo.comment }} </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for histo in historyinverse %}
+                {% endfor %}
 
-                        {% if histo.date|date("U") > "-30 seconds"|date("U") %}
-                            <tr class="success">
-
-                        {% else %}
-                            <tr>
-                        {% endif %}
-
-                            <td><strong>{{ histo.date|date('d.m.Y H:i:s') }} </strong></td>
-                            <td> {{ histo.comment }} </td>
-                        </tr>
-                    {% endfor %}
-
-                    </tbody>
-                </table>
-        {% endif %}
-        </div>
+            </tbody>
+        </table>
+    {% endif %}
+</div>
 
 {#
     <div class="col-md-2 pull-right">
@@ -130,109 +131,98 @@
         </div>
     </div> #}
 
-    <script type="text/javascript">
-        $("#deleteconfirm").click(function (e) {
+<script type="text/javascript">
+    $("#deleteconfirm").click(function (e) {
 
-            if (confirm('Confirmez-vous la suppression du fichier ?')) {
-                {% if doc is null %}
-                removedropzonefile("{{ name }}");
-                {% else %}
-                removefile("{{ name }}");
-                {% endif %}
-            } else {
-
-            }
-
-        });
-
-        {% if doc is null %}
-
-        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
-
-        {% else %}
-
-        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
-
-        if ("{{ doc.type }}" == "application/pdf"
-                )
-        {
-
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
-
-        }
-        if ("{{ doc.type }}" == "application/msword" ||
-                "{{ doc.type }}" ==
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
-        {
-
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/WORD/icon_doc_256.png') }}");
+        if (confirm('Confirmez-vous la suppression du fichier ?')) {
+            {% if doc is null %}
+            removedropzonefile("{{ name }}");
+            {% else %}
+            removefile("{{ name }}");
+            {% endif %}
+        } else {
 
         }
 
-        if ("{{ doc.type }}" == "application/zip"
-                )
-        {
+    });
 
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/ZIP/icon_zip_256.png') }}");
+    {% if doc is null %}
 
-        }
+    $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
 
-        if ("{{ doc.type }}" == "image/png"
-                )
-        {
+    {% else %}
 
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+    $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
 
-        }
-        if ("{{ doc.type }}" == "image/png"
-                )
-        {
+    if ("{{ doc.type }}" == "application/pdf"
+            ) {
 
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
 
-        }
+    }
+    if ("{{ doc.type }}" == "application/msword" ||
+            "{{ doc.type }}" ==
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            ) {
 
-        if ("{{ doc.type }}" == "image/jpeg"
-                )
-        {
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/WORD/icon_doc_256.png') }}");
 
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/JPG/icon_jpg_256.png') }}");
+    }
 
-        }
+    if ("{{ doc.type }}" == "application/zip"
+            ) {
 
-        if ("{{ doc.type }}" == "text/xml" || "{{ doc.type }}" == "application/xml") {
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/ZIP/icon_zip_256.png') }}");
 
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
+    }
 
-        }
+    if ("{{ doc.type }}" == "image/png"
+            ) {
 
-        if ("{{ doc.type }}" == "application/vnd.ms-excel" ||
-                "{{ doc.type }}" ==
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
-        {
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XLS/icon_xls_256.png') }}");
-        }
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
 
-        if ("{{ doc.type }}" == "application/x-rar"
-                )
-        {
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/RAR/icon_rar_256.png') }}");
-        }
+    }
+    if ("{{ doc.type }}" == "image/png"
+            ) {
 
-        if ("{{ doc.type }}" == "text/plain"
-                )
-        {
-            $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
-        }
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+
+    }
+
+    if ("{{ doc.type }}" == "image/jpeg"
+            ) {
+
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/JPG/icon_jpg_256.png') }}");
+
+    }
+
+    if ("{{ doc.type }}" == "text/xml" || "{{ doc.type }}" == "application/xml") {
+
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
+
+    }
+
+    if ("{{ doc.type }}" == "application/vnd.ms-excel" ||
+            "{{ doc.type }}" ==
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            ) {
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XLS/icon_xls_256.png') }}");
+    }
+
+    if ("{{ doc.type }}" == "application/x-rar"
+            ) {
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/RAR/icon_rar_256.png') }}");
+    }
+
+    if ("{{ doc.type }}" == "text/plain"
+            ) {
+        $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
+    }
 
 
+    {% endif %}
 
-        {% endif %}
-
-
-    </script>
+</script>
 
 
 

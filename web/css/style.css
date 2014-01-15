@@ -118,9 +118,11 @@ html, body {
 /*-------------------------     FIN HEADER FOOTER     -------------------------*/
 .titre_bloc_accueil .glyphicon-home,
 .titre_bloc_accueil .glyphicon-edit,
-.titre_bloc_accueil .glyphicon-eye-open {
+.titre_bloc_accueil .glyphicon-eye-open,
+.titre_bloc_accueil .glyphicon-share {
 	margin: 0 0.571em 0 0;
 	color: rgba(109, 109, 109, 1);
+	font-size: 1.125em;
 }
 
 #contenu_acceuil {
@@ -206,7 +208,7 @@ html, body {
 }
 
 .nameinput:focus {
-    outline: 0;
+	outline: 0;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
@@ -239,9 +241,6 @@ html, body {
 /* TABLEAU */
 .tableau {
 	top: 1em;
-	/*-webkit-border-radius: 4px;*/
-	/*-moz-border-radius: 4px;*/
-	/*border-radius: 4px;*/
 	border: 1px solid rgb(204, 204, 204);
 	color: rgba(109, 110, 112, 1);
 	text-align: center;
@@ -250,14 +249,6 @@ html, body {
 .tableau th {
 	border: 1px solid rgb(204, 204, 204);
 	text-align: center;
-	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjY2NjY2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-	background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, rgba(230, 230, 230, 1)));
-	background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
-	background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
-	background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
-	background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(230, 230, 230, 1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#cccccc', GradientType=0);
 	color: rgb(109, 110, 112);
 	font-size: .9em;
 	vertical-align: middle;
@@ -268,24 +259,37 @@ html, body {
 	font-size: .9em;
 }
 
-.statut_1 {
+.statut_1,
+.tl1 {
 	color: rgb(0, 131, 201);
 }
 
-.statut_2 {
+.statut_2,
+.tl2 {
 	color: rgb(15, 148, 0);
 }
 
-.statut_4 {
+.statut_4,
+.tl4 {
 	color: rgb(240, 117, 0);
 }
 
-.statut_3 {
+.statut_3,
+.tl3 {
 	color: rgb(109, 109, 109);
 }
 
-.statut_0 {
+.statut_0,
+.tl0 {
 	color: rgb(213, 0, 25);
+}
+
+.legende {
+
+}
+
+.texte_legende {
+
 }
 
 /* BUTTON FORMULAIRE */

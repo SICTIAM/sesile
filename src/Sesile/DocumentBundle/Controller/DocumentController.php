@@ -59,7 +59,6 @@ class DocumentController extends Controller
     {
 
 
-
         $servername = $this->getRequest()->getHost();
 
         if (ctype_digit($id)) {
@@ -78,7 +77,7 @@ class DocumentController extends Controller
         }
 
 
-        return array('doc' => $doc, 'name' => $name, 'servername'=>$servername, 'historyinverse'=>$historyinverse);
+        return array('doc' => $doc, 'name' => $name, 'servername' => $servername, 'historyinverse' => $historyinverse);
 
     }
 
@@ -86,21 +85,23 @@ class DocumentController extends Controller
      * @Route("/notifymodif/{name}", name="notify_modif_doc",  options={"expose"=true})
      * @Template()
      */
-    public function notifyModificationAction(Request $request, $name){
+    public function notifyModificationAction(Request $request, $name)
+    {
 
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $name));
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Modification du document", null);
 
-        return array('name'=>$name);
+        return array('name' => $name);
     }
 
     /**
      * @Route("/download/{id}", name="download_doc",  options={"expose"=true})
      *
      */
-    public function downloadAction(Request $request, $id){
+    public function downloadAction(Request $request, $id)
+    {
 
 
         $em = $this->getDoctrine()->getManager();
@@ -110,20 +111,15 @@ class DocumentController extends Controller
 
 
         $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', mime_content_type('uploads/docs/'.$doc->getRepourl()));
+        $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
-        $response->headers->set('Content-length', filesize('uploads/docs/'.$doc->getRepourl()));
+        $response->headers->set('Content-length', filesize('uploads/docs/' . $doc->getRepourl()));
 
 
         $response->sendHeaders();
 
-        $response->setContent(readfile('uploads/docs/'.$doc->getRepourl()));
+        $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
     }
-
-
-
-
-
 
 
 }

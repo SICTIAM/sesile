@@ -10,7 +10,7 @@
         </div>
         <div id="users_list">
             {% for user in users %}
-                <p data-id="{{ user.id }}">{{ user.username }}</p>
+                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.username }}</p>
             {% endfor %}
         </div>
         <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
@@ -35,7 +35,8 @@
     <div id="circuit_editor">
         <div class="titre_select">
             <label class="nametitle nomcircuit">
-                <span class="glyphicon glyphicon-retweet"></span>&nbsp;&nbsp;Nom du circuit&nbsp;&nbsp;</label>
+                <span class="glyphicon glyphicon-retweet"></span>
+                &nbsp;&nbsp;Nom du circuit&nbsp;&nbsp;</label>
             <input class=" nameinput" id="circuit_name" name="circuit_name" placeholder="Titre du circuit">
         </div>
         <div id="circuit">
@@ -50,10 +51,13 @@
     </button>
     <div class="btn-group" id="btn-group-supp">
         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-            Supprimer <span class="caret"></span>
+            Supprimer
+            <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-            <li><a id="deleteconfirm" href="#">Je confirme !</a></li>
+            <li>
+                <a id="deleteconfirm" href="#">Je confirme !</a>
+            </li>
 
         </ul>
     </div>
