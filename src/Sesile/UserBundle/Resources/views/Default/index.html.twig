@@ -2,7 +2,11 @@
 
 {% block content %}
     <div class="bloc_page">
-        <table class="table tableau">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-user"></span>
+            &nbsp;&nbsp;&nbsp;Liste des utilisateurs
+        </div>
+        <table class="table tableau dtables">
             <thead>
                 <tr>
                     <th>Mail</th>
@@ -16,7 +20,9 @@
                     <tr class="user-row" data-id="{{ user.id }}">
                         <td>{{ user.username }}</td>
                         <td>{{ user.Nom }} {{ user.Prenom }}</td>
-                        <td><img src="{% if user.enabled %}oui{% else %}non{% endif %}"/></td>
+                        <td>
+                            <img src="{% if user.enabled %}{% else %}{% endif %}"/>
+                        </td>
                         <td class="boutons_action">
                             <a href="{{ path("classeur_edit", {'id' : user.id }) }}">
                                 <span class="glyphicon glyphicon-pencil"></span>
@@ -30,7 +36,32 @@
             </tbody>
         </table>
         <a href="{{ path("ajout_user") }}">Ajouter un utilisateur</a>
+        <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
         <script type="text/javascript">
+            $(".dtables").dataTable({
+                "oLanguage": {
+                    "sSearch": "Rechercher&nbsp;:",
+                    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    "oPaginate": {
+                        "sFirst": "",
+                        "sPrevious": "",
+                        "sNext": "",
+                        "sLast": "",
+                        "sZeroRecords": "Aucun utilisateur &agrave; afficher",
+                        "sEmptyTable": "Aucun utilisateur &agrave; afficher"
+                    }
+                },
+                "iDisplayLength": 5,
+                "sDom": 'ift<"footer_datatables"p>',
+                "aoColumnDefs": [
+                    { "bSortable": false, "aTargets": [ 3 ] }
+                ],
+                "sPaginationType": "full_numbers"
+            });
+
             $(".user-row").click(function () {
                 document.location.href = Routing.generate('user_edit', { id: $(this).data("id") })
             });
