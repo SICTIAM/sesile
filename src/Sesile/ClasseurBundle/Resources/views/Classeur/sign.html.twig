@@ -17,8 +17,10 @@
 </div>
 
 
-<form action="{{ path("classeur_retracter") }}" method="post">
+<form id="lacommode" action="{{ path("classeur_valider") }}" method="post">
 
+
+    <input type="hidden" name="id" value="{{ classeur.id }}">
 
     <strong>Role : </strong>{{ user.role }}<br/>
     <strong>Ville : </strong>{{ user.ville }}<br/>
@@ -64,8 +66,8 @@
 
     function appletReady() {
 
-        setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
-        setUploadUrl('http://sesile.sictiam.fr/doc/uploadfile') // Prod
+        //document.javaapplet.setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
+        document.javaapplet.setUploadUrl('http://sesile.sictiam.fr/doc/uploadfile') // Prod
 
         var divmethod = document.getElementById('listemethod');
         /*
@@ -114,7 +116,7 @@
     //function donnant le chemin du fichier
     function getFileLinkFromNumber(i) {
 
-        alert('http://{{ servername }}/uploads/docs/'+docstosign[i].repourl);
+        //alert('http://{{ servername }}/uploads/docs/'+docstosign[i].repourl);
         document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/'+docstosign[i].repourl , docstosign[i].repourl, docstosign[i].id);
 
 
@@ -135,7 +137,7 @@
 
     //function permettant de signifier la fin de la signature d'un classeur
     function signingProcessEnded(i, errormessage) {
-        document.signatureFORM.submit();
+        $('#lacommode').submit();
 
     }
 
@@ -186,6 +188,8 @@
     //function permettant de signifier la fin du téléchargement d'un fichier
     function signature() {
 
+
+        $('#bouttons').hide('slow');
         var certif = document.getElementById('selectcertif');
         //alert('lancement signature '+method.value+'  '+certif.value);
 
@@ -195,15 +199,11 @@
             document.javaapplet.launchSigningWithCertificate(certif.value);
         }
         else {
-            document.signatureFORM.submit();
+            $('#lacommode').submit();
         }
 
     }
 
-    //function permettant de signifier la fin du téléchargement d'un fichier
-    function signature2() {
-        document.signatureFORM.submit();
-    }
 </script>
 
 
