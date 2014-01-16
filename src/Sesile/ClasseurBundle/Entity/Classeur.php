@@ -360,8 +360,11 @@ class Classeur
      */
     public function __construct()
     {
+
+
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->actions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
