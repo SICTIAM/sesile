@@ -53,7 +53,10 @@ class LoginHandlerController extends Controller
             $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
         } elseif (null !== $session && $session->has(SecurityContext::AUTHENTICATION_ERROR)) {
             /* Call CAS API to do authentication */
-            require_once('/home/sesile/vendor/gorg/phpcas/CAS.php');
+            $upload = $this->container->getParameter('gorg');
+            $DirPath = $upload['path'];
+            //  var_dump($DirPath);exit;
+            require_once($DirPath . 'CAS.php');
             \phpCAS::client('2.0', 'sso.dev.sictiam.fr', 389, '/', false);
             \phpCAS::forceAuthentication();
             $user = \phpCAS::getUser();

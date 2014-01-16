@@ -8,6 +8,6 @@
     <p>Prenom: {{ user.Prenom }}</p>
 
     <p>avatar :
-        <img src="{{ asset(user.path) }}" height="60px" width="60px"/>
+        <img src="{{ asset(upload_path ~ app.user.path) }}" height="60px" width="60px"/>
     </p>
 </div>

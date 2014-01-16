@@ -7,6 +7,7 @@ use FOS\UserBundle\Entity\User as BaseUser;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 /**
@@ -28,14 +29,14 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="Nom", type="string", length=255)
+     * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
      */
     protected $Nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Prenom", type="string", length=255)
+     * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
      */
     protected $Prenom;
 
@@ -93,6 +94,12 @@ class User extends BaseUser
     protected $role;
 
 
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="user")
+     */
+    protected $actions_classeurs;
+
+
     public function setPath($path)
     {
         return $this->path = $path;
@@ -135,7 +142,9 @@ class User extends BaseUser
     {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
         // le document/image dans la vue.
-        return '/home/sesile/web/images/avatars';
+        $controller = new Controller();
+        $upload = $controller->container->getParameter('upload');
+        return $upload['path'];
     }
 
     /**
@@ -203,7 +212,8 @@ class User extends BaseUser
 
         if (null !== $this->file) {
             // faites ce que vous voulez pour générer un nom unique
-            $this->path = "/images/avatars/" . sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
+
+            $this->path = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
         }
     }
 
@@ -211,7 +221,7 @@ class User extends BaseUser
      *
      *
      */
-    public function upload()
+    public function upload($Dirpath)
     {
         if (null === $this->file) {
             return;
@@ -223,7 +233,7 @@ class User extends BaseUser
         // proprement l'entité d'être persistée dans la base de données si
         // erreur il y a
         //   var_dump($this->getUploadDir());var_dump($this->file->getClientOriginalName());exit;
-        $this->file->move($this->getUploadDir(), $this->path);
+        $this->file->move($Dirpath, $this->path);
 
 
         unset($this->file);
@@ -232,9 +242,10 @@ class User extends BaseUser
     /**
      *
      */
-    public function removeUpload()
+    public function removeUpload($Dirpath)
     {
-        if ($file = "/home/sesile/web" . $this->path) {
+
+        if ($file = $Dirpath . $this->path) {
             unlink($file);
         }
     }
@@ -438,5 +449,38 @@ class User extends BaseUser
     public function getRole()
     {
         return $this->role;
+    }
+
+    /**
+     * Add actions_classeurs
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $actionsClasseurs
+     * @return User
+     */
+    public function addActionsClasseur(\Sesile\ClasseurBundle\Entity\Classeur $actionsClasseurs)
+    {
+        $this->actions_classeurs[] = $actionsClasseurs;
+
+        return $this;
+    }
+
+    /**
+     * Remove actions_classeurs
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $actionsClasseurs
+     */
+    public function removeActionsClasseur(\Sesile\ClasseurBundle\Entity\Classeur $actionsClasseurs)
+    {
+        $this->actions_classeurs->removeElement($actionsClasseurs);
+    }
+
+    /**
+     * Get actions_classeurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getActionsClasseurs()
+    {
+        return $this->actions_classeurs;
     }
 }

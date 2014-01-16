@@ -111,6 +111,11 @@ class Classeur
 
 
     /**
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="classeur")
+     */
+    protected $actions;
+
+    /**
      * Get id
      *
      * @return integer
@@ -528,5 +533,38 @@ class Classeur
     public function getValidation()
     {
         return $this->validation;
+    }
+
+    /**
+     * Add actions
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $actions
+     * @return Classeur
+     */
+    public function addAction(\Sesile\ClasseurBundle\Entity\Classeur $actions)
+    {
+        $this->actions[] = $actions;
+
+        return $this;
+    }
+
+    /**
+     * Remove actions
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $actions
+     */
+    public function removeAction(\Sesile\ClasseurBundle\Entity\Classeur $actions)
+    {
+        $this->actions->removeElement($actions);
+    }
+
+    /**
+     * Get actions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getActions()
+    {
+        return $this->actions;
     }
 }

@@ -20,6 +20,8 @@ framework:
     session:         ~
     fragments:       ~
     http_method_override: true
+    session:
+            save_path: "%kernel.root_dir%/sessions/"
 
 # Twig Configuration
 twig:
@@ -28,6 +30,8 @@ twig:
     form:
         resources:
             - 'SesileMainBundle:Form:fields.html.twig'
+    globals:
+        upload_path: uploads/avatars/
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -96,6 +100,10 @@ parameters:
     cas_server: sso.dev.sictiam.fr
     cas_port: 389
     cas_path: /
+    gorg:
+        path: %kernel.root_dir%/../vendor/gorg/phpcas/
+    upload:
+        path: %kernel.root_dir%/../web/uploads/avatars/
 
 
 jms_di_extra:
