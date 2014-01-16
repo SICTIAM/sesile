@@ -63,6 +63,10 @@
 
 
     function appletReady() {
+
+        setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
+        setUploadUrl('http://sesile.sictiam.fr/doc/uploadfile') // Prod
+
         var divmethod = document.getElementById('listemethod');
         /*
          var selectmethod = document.createElement('select');
@@ -111,7 +115,7 @@
     function getFileLinkFromNumber(i) {
 
         alert('http://{{ servername }}/uploads/docs/'+docstosign[i].repourl);
-        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/'+docstosign[i].repourl , docstosign[i].repourl);
+        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/'+docstosign[i].repourl , docstosign[i].repourl, docstosign[i].id);
 
 
     }
