@@ -1,0 +1,7 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+    <form action="{{ path('admin') }}" {{ form_enctype(form) }} method="POST">
+        {{ form_widget(form) }}
+    </form>
+{% endblock %}

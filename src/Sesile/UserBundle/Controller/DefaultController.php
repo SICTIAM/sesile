@@ -48,7 +48,7 @@ class DefaultController extends Controller {
 
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
-            return $this->redirect($this->generateUrl('liste_users'));
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
         $entity = new User();
         $form = $this->createCreateForm($entity);
@@ -77,36 +77,50 @@ class DefaultController extends Controller {
 
                 $em->persist($entity);
                 $entity->upload();
-                $em->flush();
 
-                $plainpwd = $form->get('plainPassword')->getData();
-                $email = $entity->getUsername();
+
+                $res = array("nom" => $form->get('Nom')->getData(),
+                    "prenom" => $form->get('Prenom')->getData(),
+                    "email" => $form->get('username')->getData(),
+                    "plainpassword" => $form->get('plainPassword')->getData());
+
 //création du tableau d'attributs
                 $entry["objectClass"][0] = "inetOrgPerson";
                 $entry["objectClass"][1] = "organizationalPerson";
                 $entry["objectClass"][2] = "person";
                 $entry["objectClass"][3] = "shadowAccount";
-                $entry["cn"] = $email;
-                $entry["sn"] = $entity->getPrenom() . ' ' . $entity->getNom();
-                $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($plainpwd)));
-                $entry["givenName"] = $email;
+                $entry["cn"] = $res["email"];
+                $entry["sn"] = $res["prenom"] . ' ' . $res["nom"];
+                $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($res["plainpassword"])));
+                $entry["givenName"] = $res["email"];
                 $entry["shadowInactive"] = -1;
-                $entry["uid"] = $entity->getId();
-                $entry["displayName"] = $entity->getNom() . " " . $entity->getPrenom();
+                $entry["uid"] = "100";
+                $entry["displayName"] = $res["nom"] . " " . $res["prenom"];
 
                 //création du Distinguished Name
-                $dn = "mail=" . $email . ",cn=Users,dc=sictiam,dc=local";
-                ldap_add($ldapconn, $dn, $entry);
-                ldap_close($ldapconn);
+                $dn = "mail=" . $res["email"] . ",cn=Users,dc=sictiam,dc=local";
+                $justthese = array("sn", "givenname", "mail");
+                $sr = ldap_search($ldapconn, "cn=Users,dc=sictiam,dc=local", "(|(mail=" . $res["email"] . "*))");
 
+                $info = ldap_get_entries($ldapconn, $sr);
+
+                if ($info["count"]) {
+                    ldap_close($ldapconn);
+                    return $this->redirect($this->generateUrl('error'));
+                } else {
+                    //  var_dump($dn);exit;
+                    ldap_add($ldapconn, "mail=" . $res["email"] . ",cn=Users,dc=sictiam,dc=local", $entry);
+                    $em->flush();
+                }
+                ldap_close($ldapconn);
 
                 //envoi d'un mail à l'utilisateur nouvellement créé
                 $message = \Swift_Message::newInstance()
                     ->setContentType('text/html')
                     ->setSubject('Nouvel utilisateur')
                     ->setFrom('j.mercier@sictiam.fr')
-                    ->setTo($email)
-                    ->setBody('Bienvenue dans Sesile ' . $entity->getUsername());
+                    ->setTo($entity->getUsername())
+                    ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
                 $this->get('mailer')->send($message);
 
 
@@ -135,7 +149,7 @@ class DefaultController extends Controller {
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
-            return $this->redirect($this->generateUrl('liste_users'));
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
         $em = $this->getDoctrine()->getManager();
 
@@ -258,6 +272,9 @@ class DefaultController extends Controller {
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
+            if ($entity->getPath()) {
+                $entity->removeUpload();
+            }
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find User entity.');
@@ -352,5 +369,17 @@ class DefaultController extends Controller {
         $cas = $parsed['security']['firewalls']['secured_area']['cas'];
         return $cas;
     }
+
+
+    /**
+     * @Route("/error", name="error")
+     * @Template()
+     */
+    public function errorAction()
+    {
+
+        return array();
+    }
+
 }
 
