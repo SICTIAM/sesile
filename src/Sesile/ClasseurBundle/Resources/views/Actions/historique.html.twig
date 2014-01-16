@@ -1,12 +1,18 @@
 <table class="table tableau">
     <thead>
         <tr>
-            <th>tetete</th>
-            <th>tete</th>
-            <th>tetet</th>
+            <th>Utilisateur</th>
+            <th>Date</th>
+            <th>Action</th>
         </tr>
     </thead>
-    {% for action in classeur.actions %}
-
+    <tbody>
+    {% for action in  actions %}
+        <tr>
+            <td>{{ action.username }}</td>
+            <td>{{ action.date | date("d/m/Y H:i:s") }}</td>
+            <td>{{ action.action }}</td>
+        </tr>
     {% endfor %}
+    </tbody>
 </table>
