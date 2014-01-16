@@ -329,7 +329,7 @@ class ClasseurController extends Controller
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
-        $classeur->valider();
+        $classeur->valider($em);
         $em->persist($classeur);
         $em->flush();
 
@@ -386,7 +386,7 @@ class ClasseurController extends Controller
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
-        $classeur->valider();
+        $classeur->valider($em);
         $em->persist($classeur);
         $em->flush();
 

@@ -109,9 +109,8 @@ class Classeur
      */
     protected $documents;
 
-
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="classeur")
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Action", mappedBy="classeur")
      */
     protected $actions;
 
@@ -386,8 +385,8 @@ class Classeur
      */
     private function getNextValidant(\Doctrine\ORM\EntityManager $em)
     {
-        $d = $em->getRepository("SesileDelegationsBundle:Delegations");
-        $delegation = $c->getClasseursRetractables($userid);
+        //$d = $em->getRepository("SesileDelegationsBundle:Delegations");
+        //$delegation = $d->getClasseursRetractables($userid);
 
         $circuit = explode(",", $this->getCircuit());
         $curr_validant = array_search($this->validant, $circuit);
@@ -396,9 +395,9 @@ class Classeur
     }
 
 
-    public function valider()
+    public function valider(\Doctrine\ORM\EntityManager $em)
     {
-        $this->setValidant($this->getNextValidant());
+        $this->setValidant($this->getNextValidant($em));
         // le classeur est arrivé à la derniere étape, on le finalise
         if ($this->getValidant() == 0) {
             $this->setStatus(2);
