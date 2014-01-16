@@ -1,0 +1,174 @@
+.top_selects_circuits {
+	display: table;
+	width: 100%;
+	text-align: center;
+	position: relative;
+}
+
+.selects_circuit {
+	display: table-cell;
+	width: 50%;
+}
+
+#users_list, #circuits_list {
+	height: 80px;
+	overflow: auto;
+	border: 1px solid #cccccc;
+	text-align: left;
+	padding: .5em;
+	width: 80%;
+	margin: auto;
+}
+
+#users_list p:hover, #circuits_list p:hover, .list_selected_element {
+	background-color: rgba(50, 133, 171, 0.5);
+	cursor: pointer;
+	padding-left: 0.5em;
+}
+
+.titre_select {
+	text-align: center;
+	border: 1px solid #ccccff;
+	border-bottom: 0px;
+	width: 100%;
+	margin: auto;
+}
+
+.top_selects_circuits .titre_select {
+	width: 80%;
+}
+
+#circuit {
+	width: 100%;
+	min-height: 180px;
+	border: 1px solid #cccccc;
+	border-top: 0;
+	margin: 0 0 2em 0;
+	background-color: #fafafa;
+}
+
+#debut_circuit {
+	width: 2em;
+	position: relative;
+	top: 70px;
+	margin-left: 1em;
+}
+
+.perso_circuit {
+	text-align: center;
+	margin: auto;
+	max-width: 100px;
+	max-height: 150px;
+	padding: .5em;
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+}
+
+.perso_circuit img {
+	width: 80px;
+	height: 80px;
+	margin: auto;
+}
+
+.nom_perso {
+	width: 80px;
+	height: 80px;
+	word-wrap: break-word;
+	display: block;
+	margin: auto;
+	text-overflow: ellipsis;
+}
+
+.suppr_perso {
+	color: red;
+	position: relative;
+	float: right;
+	font-size: 1.2em;
+	top: .6em;
+	left: .1em;
+	cursor: pointer;
+}
+
+.suppr_perso:hover {
+	color: indianred;
+}
+
+.emplacement {
+	width: 100px;
+	height: 120px;
+	margin-top: 1em;
+	background-color: rgba(50, 133, 171, 0.2);
+}
+
+.fleche_circuit {
+	position: relative;
+	top: 70px;
+	font-size: 1.3em;
+}
+
+.fleche_circuit, .perso_circuit, .emplacement, #debut_circuit {
+	float: left;
+}
+
+.favoris_circuit {
+	height: 32px;
+	width: 32px;
+	cursor: pointer;
+}
+
+#pop_favoris {
+	display: none;
+	position: absolute;
+	border: 1px solid #cccccc;
+	padding: 10px;
+	background-color: #ffffff;
+}
+
+.delete_circuit {
+	cursor: pointer;
+}
+
+.nametitle {
+	cursor: hand;
+	position: absolute;
+	color: #a9a9a9;
+	line-height: 1.7em;
+	width: 14%;
+	background-color: #ebebeb;
+	border: 1px solid #adadad;
+}
+
+.nomcircuit {
+	line-height: 2.2em;
+}
+
+.nameinput {
+	width: 100%;
+	height: 1.8em;
+	padding-left: 36%;
+}
+
+#circuit_name {
+	border-radius: 0px;
+	height: 2.3em;
+	border: 1px solid #cccccc;
+	padding-left: 20%;
+}
+
+.glyphicon-search-blue {
+	color: rgb(50, 133, 171);
+}
+
+.glyphicon-chevron-down {
+	margin: 1em;
+	cursor: pointer;
+	font-size: 1.2em;
+}
+
+.glyphicon-chevron-down:hover {
+	color: rgb(50, 133, 171);
+}
+
+#circuit_modifier, #btn-group-supp {
+	display: none;
+}

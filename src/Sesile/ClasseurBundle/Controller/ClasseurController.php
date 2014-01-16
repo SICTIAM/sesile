@@ -2,24 +2,24 @@
 
 namespace Sesile\ClasseurBundle\Controller;
 
+use Sesile\ClasseurBundle\Entity\ClasseursUsers;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sesile\ClasseurBundle\Entity\Classeur;
+use Sesile\DocumentBundle\Entity\Document;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 
 /**
  * Classeur controller.
  *
- * @Route("/classeur")
  */
 class ClasseurController extends Controller
 {
-
     /**
-     * Lists all Classeur entities.
+     * Page qui affiche la liste des classeurs visibles pour le user connecté.
      *
      * @Route("/", name="classeur")
      * @Method("GET")
@@ -27,12 +27,83 @@ class ClasseurController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        return $this->listeAction();
+    }
 
-        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
+    /**
+     * Liste des classeurs en cours
+     *
+     * @Route("/liste", name="liste_classeurs")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
+     */
+    public function listeAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($this->getUser()->getId());
+        return array(
+            'classeurs' => $entities,
+        );
+    }
+
+    /**
+     * Page qui affiche la liste des classeurs à valider pour le user connecté.
+     *
+     * @Route("/liste-a-valider", name="index_valider")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:a_valider.html.twig")
+     */
+    public function indexAValiderAction()
+    {
+        return $this->aValiderAction();
+    }
+
+    /**
+     * Liste des classeurs à valider
+     *
+     * @Route("/a_valider", name="classeur_a_valider")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
+     */
+    public function aValiderAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+            array(
+                "validant" => $this->getUser() ? $this->getUser()->getId() : 0,
+                "status" => 1
+            ));
 
         return array(
-            'entities' => $entities,
+            'classeurs' => $entities
+        );
+    }
+
+    /**
+     * Page qui affiche la liste des classeurs retractables pour le user connecté.
+     *
+     * @Route("/liste-retractables", name="index_retractables")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:a_retracter.html.twig")
+     */
+    public function indexARetracterAction()
+    {
+        return $this->retractationAction();
+    }
+
+    /**
+     * Liste des classeurs retractables
+     *
+     * @Route("/a_retracter", name="classeur_a_retracter")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
+     */
+    public function retractationAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursRetractables($this->getUser()->getId());
+        return array(
+            'classeurs' => $entities,
         );
     }
 
@@ -41,45 +112,95 @@ class ClasseurController extends Controller
      *
      * @Route("/", name="classeur_create")
      * @Method("POST")
-     * @Template("SesileClasseurBundle:Classeur:new.html.twig")
+     *
      */
     public function createAction(Request $request)
     {
-        $entity = new Classeur();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $classeur = new Classeur();
+        $classeur->setNom($request->request->get('name'));
+        $classeur->setDescription($request->request->get('desc'));
+        list($d, $m, $a) = explode("-", $request->request->get('validation'));
+        $valid = new \DateTime($m . "/" . $d . "/" . $a);
+        $classeur->setValidation($valid);
+        $classeur->setType($request->request->get('type'));
+        $circuit = $request->request->get('circuit');
+        $classeur->setCircuit($circuit);
+        $classeur->setUser($this->getUser()->getId());
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        // TODO ajouter visibilité
+        $classeur->setVisibilite(1);
+        $em->persist($classeur);
+        $em->flush();
 
-            return $this->redirect($this->generateUrl('classeur', array('id' => $entity->getId())));
+        // enregistrer les users du circuit
+        $users = explode(',', $circuit);
+
+        for ($i = 0; $i < count($users); $i++) {
+            $classeurUser = new ClasseursUsers();
+            $classeurUser->setClasseur($classeur);
+
+            $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
+            $classeurUser->setUser($userObj);
+            $classeurUser->setOrdre($i + 1);
+            $em->persist($classeurUser);
+        }
+        $em->flush();
+
+
+        //Gestion des documents
+
+
+        //Sauvegarde des enregistrements
+        $manager = $this->container->get('oneup_uploader.orphanage_manager')->get('docs');
+        $files = $manager->uploadFiles();
+
+        foreach ($files as $file) {
+            //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
+            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
+                unlink($file->getPathname());
+            } else { // Pas d'erreur, on crée un document correspondant
+                $document = new Document();
+                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
+                $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
+                $document->setType($file->getMimeType());
+                $document->setSigned(false);
+                $document->setClasseur($classeur);
+                $em->persist($document);
+                $em->flush();
+                $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur", null);
+
+
+            }
         }
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
+        // $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
 
-    /**
-    * Creates a form to create a Classeur entity.
-    *
-    * @param Classeur $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createCreateForm(Classeur $entity)
-    {
-        $form = $this->createForm(new ClasseurType(), $entity, array(
-            'action' => $this->generateUrl('classeur_create'),
-            'method' => 'POST',
-        ));
+        $error = false; /*
+        if($respCircuit->getContent()!='OK') {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Erreur de création du circuit'
+            );
+            $error = true;
+        }
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        if($respDocument->getContent()!='OK'){
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Erreur de création du circuit'
+            );
+            $error=true;
+        }
+*/
+        if (!$error) {
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'Classeur créé avec succès !'
+            );
+        }
 
-        return $form;
+        return $this->redirect($this->generateUrl('classeur'));
     }
 
     /**
@@ -89,162 +210,260 @@ class ClasseurController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
-    {
-        $entity = new Classeur();
-        $form   = $this->createCreateForm($entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-     * Finds and displays a Classeur entity.
-     *
-     * @Route("/{id}", name="classeur_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Classeur entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
+    public function newAction() {
+        return array();
     }
 
     /**
      * Displays a form to edit an existing Classeur entity.
      *
-     * @Route("/{id}/edit", name="classeur_edit")
+     * @Route("/{id}", name="classeur_edit")
      * @Method("GET")
      * @Template()
      */
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'classeur' => $entity,
+            'retractable' => $entity->isRetractable($this->getUser()->getId(), $em)
         );
-    }
-
-    /**
-    * Creates a form to edit a Classeur entity.
-    *
-    * @param Classeur $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Classeur $entity)
-    {
-        $form = $this->createForm(new ClasseurType(), $entity, array(
-            'action' => $this->generateUrl('classeur_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
     }
 
     /**
      * Edits an existing Classeur entity.
      *
-     * @Route("/{id}", name="classeur_update")
-     * @Method("PUT")
+     * @Route("/update_classeur", name="classeur_update")
+     * @Method("POST")
      * @Template("SesileClasseurBundle:Classeur:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->request->get('id'));
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Classeur entity.');
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Classeur introuvable.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
+        $classeur->setNom($request->request->get('name'));
+        $classeur->setDescription($request->request->get('desc'));
 
-        if ($editForm->isValid()) {
-            $em->flush();
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        $valid = new \DateTime($m . "/" . $d . "/" . $a);
+        $classeur->setValidation($valid);
+        $circuit = $request->request->get('circuit');
+        $classeur->setCircuit($circuit);
+        $classeur->setUser($this->getUser()->getId());
+        $classeur->setVisibilite(1);
+        $em->persist($classeur);
+        $em->flush();
 
-            return $this->redirect($this->generateUrl('classeur_edit', array('id' => $id)));
-        }
+        /**
+         * TODO modifier le fonctionnement : on doit updater les users par la collection et non par suppression / rajout (un peu de propreté qd même!!!)
+         */
+        // gestion du circuit
+        $users = explode(',', $circuit);
+        $classeurUserObj = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
 
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-     * Deletes a Classeur entity.
-     *
-     * @Route("/{id}", name="classeur_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Classeur entity.');
+        for ($i = 0; $i < count($users); $i++) {
+            $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
+            $cu = $classeurUserObj->findOneBy(array("user" => $userObj, "classeur" => $classeur));
+            if ($cu != null) {
+                continue;
             }
 
-            $em->remove($entity);
-            $em->flush();
+            $classeurUser = new ClasseursUsers();
+            $classeurUser->setClasseur($classeur);
+            $classeurUser->setUser($userObj);
+            $classeurUser->setOrdre($i + 1);
+            $em->persist($classeurUser);
+        }
+
+        $classeurUserObj->deleteClasseurUser($classeur, $circuit);
+        $error = false;
+        if (!$error) {
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'Classeur modifié avec succès !'
+            );
         }
 
         return $this->redirect($this->generateUrl('classeur'));
     }
 
     /**
-     * Creates a form to delete a Classeur entity by id.
+     * Edits an existing Classeur entity.
      *
-     * @param mixed $id The entity id
+     * @Route("/valider", name="classeur_valider")
+     * @Method("POST")
+     *
+     */
+    public function validerAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        $classeur->valider();
+        $em->persist($classeur);
+        $em->flush();
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+    }
+
+    /**
+     * refuser  an existing Classeur entity.
+     *
+     * @Route("/refuser", name="classeur_refuser")
+     * @Method("POST")
+     *
+     */
+    public function refuserAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        $classeur->refuser();
+        $em->persist($classeur);
+        $em->flush();
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+    }
+
+    /**
+     * Valider_et_signer an existing Classeur entity.
+     *
+     * @Route("/valider_et_signer", name="classeur_valider_et_signer")
+     * @Method("POST")
+     *
+     */
+    public function valider_et_signerAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        $classeur->valider();
+        $em->persist($classeur);
+        $em->flush();
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+    }
+
+    /**
+     * Valider_et_signer an existing Classeur entity.
+     *
+     * @Route("/signform/{id}", name="signform")
+     * @Template()
+     *
+     */
+    public function signAction(Request $request, $id){
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        //  var_dump($user);
+
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+
+
+        $session = $this->get('session');
+        $session->start();
+
+        $tmpdocs = $classeur->getXmlDocuments();
+
+        $docstosign = array();
+
+        foreach($tmpdocs as $key=>$value){
+            $tmpdo= array();
+            $tmpdo['name']= $value->getName();
+            $tmpdo['id']=$value->getId();
+            $tmpdo['repourl']=$value->getRepourl();
+            $docstosign[$key]=$tmpdo;
+        }
+
+        $servername = $_SERVER['HTTP_HOST'];
+
+        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername'=>$servername);
+
+    }
+
+    /**
+     * retracter an existing Classeur entity.
+     *
+     * @Route("/retracter", name="classeur_retracter")
+     * @Method("POST")
+     *
+     */
+    public function retracterAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        $classeur->retracter($this->getUser()->getId());
+        $em->persist($classeur);
+        $em->flush();
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+    }
+
+    /**
+     * Deletes a Classeur entity.
+     *
+     * @Route("/supprimer", name="classeur_supprimer")
+     * @Method("POST")
+     */
+    public function supprimerAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        $classeur->supprimer();
+        $em->persist($classeur);
+        $em->flush();
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+    }
+
+    /**
+     * Creates a form to edit a Classeur entity.
+     *
+     * @Route("/new_factory/", name="classeur_new_type", options={"expose"=true})
+     * @Method("POST")
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
+    public function formulaireFactory(Request $request)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('classeur_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+        $type = $request->request->get('type', 'elclassico');
+
+        switch ($type) {
+            case "elclassico":
+                return $this->render(
+                    'SesileClasseurBundle:Formulaires:elclassico.html.twig'
+                );
+                break;
+            case "elpez":
+                return $this->render(
+                    'SesileClasseurBundle:Formulaires:elpez.html.twig'
+                );
+                break;
+        }
     }
 }

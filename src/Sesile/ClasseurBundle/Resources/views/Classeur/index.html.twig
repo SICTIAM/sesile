@@ -1,30 +1,38 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    <h1>Liste des classeurs</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Creation</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr class="classeur-row" data-id="{{ entity.id }}">
-                <td><a href="{{ path('classeur_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.nom }}</td>
-                <td>{% if entity.creation %}{{ entity.creation|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-            <a href="{{ path('classeur_new') }}">Créer un classeur</a>
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-list"></span>
+            &nbsp;&nbsp;&nbsp;Liste des classeurs
+        </div>
+        {% include 'SesileClasseurBundle:Classeur:liste.html.twig' %}
+        <a href="{{ path('classeur_new') }}">Créer un classeur</a>
+    </div>
+    <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+    <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="text/javascript">
-        $(".classeur-row").click(function() {
-            document.location.href = ""+$(this).data("id");
+        $(".dtables").dataTable({
+            "oLanguage": {
+                "sSearch": "Rechercher&nbsp;:",
+                "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sPrevious": "",
+                    "sNext": "",
+                    "sLast": "",
+                    "sZeroRecords": "Vous n'avez attribu&eacute; aucune d&eacute;l&eacute;gation ",
+                    "sEmptyTable": "Vous n'avez attribu&eacute; aucune d&eacute;l&eacute;gation "
+                }
+            },
+            "iDisplayLength": 15,
+            "sDom": 'ift<"footer_datatables"p>',
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [ 4, 5 ] }
+            ],
+            "sPaginationType": "full_numbers"
         });
     </script>
-    {% endblock %}
+{% endblock %}

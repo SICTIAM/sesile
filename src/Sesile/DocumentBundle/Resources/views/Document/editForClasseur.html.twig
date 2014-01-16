@@ -1,0 +1,301 @@
+<div id="fichiers" class="dropzone"></div>
+<div id="filedescription" style="display:none"></div>
+
+<script src="{{ asset('js/dropzone.js') }}"></script>
+<script type="text/javascript">
+
+var selected = null;
+
+var selectedFile = null;
+
+var openeddesc = false;
+
+var currentDocHtml = null;
+
+
+var launchtim = false;
+
+var filetocheck = null;
+
+
+var allowmodif = false;
+
+
+function tim() {
+    $.ajax(Routing.generate('show_document', {id: filetocheck}), {
+        method: 'POST',
+        success: function (html) {
+
+            if (html != currentDocHtml) {
+                $("#filedescription").html(html);
+                currentDocHtml = html;
+
+            }
+
+            buttonModifRoutine();
+
+            if (launchtim) {
+                setTimeout(function () {
+                    tim()
+                }, 2000);
+            }
+
+
+        }
+
+    });
+}
+
+
+var docsjson = {{ types|json_encode|raw }};
+var ids = {{ ids|json_encode|raw }};
+
+
+var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
+    previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
+            '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
+            ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
+            ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
+
+    maxFiles:{{ docs|length }},
+    dictMaxFilesExceeded: "Vous n'êtes pas en mode modification, cliquez sur modifier puis réessayez !"
+
+
+
+});
+
+function removedropzonefile(file) {
+
+    $("#filedescription").slideUp();
+    openeddesc = false;
+    currentDocHtml = null;
+    launchtim = false;
+    $("input[type=hidden]").each(function () {
+
+        if ($(this).val() == selectedFile.name) {
+
+            $(this).remove();
+        } //do something with
+    });
+
+    dropzone.removeFile(selectedFile);
+
+
+}
+
+
+function removefile(file) {
+
+}
+
+function enableUploads() {
+    dropzone.options.maxFiles = null
+    allowmodif = true;
+    buttonModifRoutine();
+
+}
+
+
+function buttonModifRoutine() {
+
+    if (allowmodif) {
+        $('#modifbutton').show();
+    }
+
+}
+
+dropzone.on('success', function (file, response) {
+    $.each(response, function (serverfilename, originalname) {
+        $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
+    });
+
+});
+
+dropzone.on("addedfile", function (file) {
+    // Access the preview element with file.previewElement and add event listeners, etc... to it.
+    $(file.previewElement).find('img').map(function () {
+
+
+        $.each(docsjson, function (key, value) {
+
+            if (key == file.name) {
+
+                file.type = value;
+
+                $(file.previewElement).find('.dz-progress').map(function () {
+                    $(this).remove();
+                });
+
+
+            }
+        });
+
+        $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
+
+        if (file.type == "application/pdf") {
+
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
+
+        }
+        if (file.type == "application/msword" || file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/WORD/icon_doc_256.png') }}");
+
+        }
+
+        if (file.type == "application/zip") {
+
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/ZIP/icon_zip_256.png') }}");
+
+        }
+
+        if (file.type == "image/png") {
+
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+
+        }
+        if (file.type == "image/png") {
+
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
+
+        }
+
+        if (file.type == "image/jpeg") {
+
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/JPG/icon_jpg_256.png') }}");
+
+        }
+
+        if (file.type == "text/xml" || file.type == "application/xml") {
+
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
+
+        }
+
+        if (file.type == "application/vnd.ms-excel" || file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XLS/icon_xls_256.png') }}");
+        }
+
+        if (file.type == "application/x-rar") {
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/RAR/icon_rar_256.png') }}");
+        }
+
+        if (file.type == "text/plain") {
+            $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
+        }
+
+
+        $(this).attr("onmouseover", "");
+        $(this).unbind('mouseenter mouseleave');
+    });
+    $(file.previewElement).find('div').map(function () {
+        $(this).attr("onmouseover", "");
+        $(this).unbind('mouseenter mouseleave mouseover');
+        $(this).hover(function (e) {
+            e.preventDefault();
+        });
+    });
+
+    $(file.previewElement).find('.dropzonereducedfilename').map(function () {
+        // alert(file.name);
+        if (file.name.length > 18) {
+            $(this).html(file.name.substr(0, 15) + "...");
+        }
+    });
+
+
+    $(file.previewElement).attr("onmouseover", "");
+    $(file.previewElement).unbind('mouseenter mouseleave mouseover');
+    $(file.previewElement).hover(function (e) {
+        e.preventDefault();
+    });
+
+
+    //Ajout de la popover
+
+    $(file.previewElement).click(function (e) {
+
+        selectedFile = file;
+
+        if (selected != null) {
+            selected.removeClass('selectedfile');
+        }
+
+        selected = $(this);
+
+        selected.addClass('selectedfile');
+
+        // $('[rel=popover]').not(button).popover('hide');
+
+        var idfile = -1;
+
+
+        $.each(ids, function (key, value) {
+
+            if (value == file.name) {
+
+
+                idfile = key;
+
+
+            }
+        });
+
+
+        if (idfile == -1) {
+            idfile = file.name;
+        }
+
+
+        $.ajax(Routing.generate('show_document', {id: idfile}), {
+            method: 'POST',
+            success: function (html) {
+
+                if (openeddesc) {
+                    $("#filedescription").html(html);
+
+                } else {
+                    $("#filedescription").html(html).slideDown();
+
+                }
+
+                buttonModifRoutine();
+                openeddesc = true;
+                currentDocHtml = html;
+                launchtim = true;
+
+                filetocheck = idfile;
+
+                setTimeout(function () {
+                    tim()
+                }, 2000);
+
+
+            }
+
+        });
+
+
+    });
+
+});
+
+
+$(document).ready(function () {
+
+
+    {% for file in docs %}
+
+
+    var mockFile = { name: "{{ file.name }}", size: {{ tailles[file.id] }} };
+
+
+    dropzone.addFile(mockFile);
+
+
+    {% endfor %}
+
+
+});
+
+</script>

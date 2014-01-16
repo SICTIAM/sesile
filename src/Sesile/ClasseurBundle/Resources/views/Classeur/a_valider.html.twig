@@ -1,0 +1,11 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-thumbs-up"></span>
+            &nbsp;&nbsp;&nbsp;Liste des classeurs à valider
+        </div>
+        {% include 'SesileClasseurBundle:Classeur:liste.html.twig' %}
+    </div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% block menu %}
+    <div class="menu">
+        <ul>
+            <li class="menu-elem menu-bleu">
+                <div class="dd-toggle entete-menu {% if( '/classeur/' in app.request.requestUri ) %}titremenu{% endif %}">
+                    <a href="#">
+                        <div class="rectanglemenu" id="bleuclair"></div>
+                        Classeurs<b class="caret carette"></b></a>
+                </div>
+                <ul class="dd-menu">
+                    <li>
+                        <a href="{{ path("classeur") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                            Liste des classeurs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("classeur_new") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                            Créer un classeur
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("index_valider") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                            A valider
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("index_retractables") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                            Droit de retractation
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-elem menu-rouge">
+                <div class="entete-menu">
+                    <a href="{{ path("gestion_circuit") }}">
+                        <div class="rectanglemenu" id="rougeclair"></div>
+                        Gestion des circuits
+                    </a>
+                </div>
+            </li>
+            <li class="menu-elem menu-jaune">
+                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
+                    <a href="#">
+                        <div class="rectanglemenu" id="jauneclair"></div>
+                        D&eacute;l&eacute;gations<b class="caret carette"></b></a>
+                </div>
+                <ul class="dd-menu">
+                    <li>
+                        <a href="{{ path("delegations_list") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
+                            Gérer les délégations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("delegations_recues") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
+                            délégations reçues
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-elem menu-vert ">
+                <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
+                    <a href="#">
+                        <div class="rectanglemenu" id="vertclair"></div>
+                        Utilisateurs<b class="caret carette"></b></a>
+                </div>
+                <ul class="dd-menu">
+                    <li>
+                        <a href="{{ path("liste_users") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Liste des utilisateurs
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="menu-elem menu-vert ">
+                    <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
+                        <a href="{{ path("admin") }}">
+                            <div class="rectanglemenu" id="vertclair"></div>
+                            Administration<b class="caret carette"></b></a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <script type="text/javascript">
+        $(".entete-menu").click(function () {
+            $(".titremenu").removeClass("titremenu");
+            $(this).addClass("titremenu");
+            $(".dd-menu:visible").slideUp();
+            $(this).next(".dd-menu").slideDown();
+        });
+
+        $(".dd-menu li").click(function () {
+            $(".dd-menu .titremenu").removeClass("titremenu");
+            $(this).addClass("titremenu");
+        });
+    </script>
+{% endblock %}

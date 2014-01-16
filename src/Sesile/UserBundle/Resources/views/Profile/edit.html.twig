@@ -1,0 +1,9 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+    <div class="titre_page">
+        <span class="glyphicon glyphicon-user"></span>
+        &nbsp;&nbsp;&nbsp;Éditer mon compte
+    </div>
+    {% include "FOSUserBundle:Profile:edit_content.html.twig" %}
+{% endblock fos_user_content %}

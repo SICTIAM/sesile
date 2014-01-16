@@ -25,7 +25,9 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-
+    form:
+        resources:
+            - 'SesileMainBundle:Form:fields.html.twig'
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -68,9 +70,35 @@ swiftmailer:
 oneup_uploader:
     mappings:
         docs:
-            frontend: dropzone
+            frontend: custom
+            custom_frontend:
+                class: Sesile\DocumentBundle\Controller\DocumentUploader
+                name: DocumentUploader
+            use_orphanage: true
+
 
 fos_user:
     db_driver:     orm
     firewall_name: main
     user_class:    Sesile\UserBundle\Entity\User
+    profile:
+        form:
+            type: sesile_user_profile
+
+
+swiftmailer:
+    transport:  %mailer_transport%
+    username:   %mailer_user%
+    password:   %mailer_password%
+
+
+parameters:
+    cas_server: sso.dev.sictiam.fr
+    cas_port: 389
+    cas_path: /
+
+
+jms_di_extra:
+    locations:
+        all_bundles: true
+

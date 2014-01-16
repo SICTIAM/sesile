@@ -1,10 +1,12 @@
 <?php
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
-class AppKernel extends Kernel {
-    public function registerBundles() {
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
         $bundles = array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
@@ -15,14 +17,20 @@ class AppKernel extends Kernel {
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new \Oneup\UploaderBundle\OneupUploaderBundle(),
+            new Oneup\UploaderBundle\OneupUploaderBundle(),
             new \JMS\AopBundle\JMSAopBundle(),
             new \JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new \JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new Sesile\MainBundle\SesileMainBundle(),
             new Sesile\UserBundle\SesileUserBundle(),
             new \FOS\UserBundle\FOSUserBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
+            new Gorg\Bundle\CasBundle\GorgCasBundle(),
             new Sesile\ClasseurBundle\SesileClasseurBundle(),
+            new Sesile\DocumentBundle\SesileDocumentBundle(),
+            new Sesile\CircuitBundle\SesileCircuitBundle(),
+            new Sesile\DelegationsBundle\SesileDelegationsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
@@ -36,6 +44,6 @@ class AppKernel extends Kernel {
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 }

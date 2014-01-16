@@ -1,16 +1,117 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    <h1>Classeur edit</h1>
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
+    <div class="bloc_page">
+        {% if classeur.isValidable(app.user.id) %}
+            {% if classeur.isSignable(app.user.id) %}
+                <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
+                    <button type="submit" class="btn btn-success">Valider et Signer</button>
+                    <input type="hidden" value="{{ classeur.id }}" name="id"/>
 
-    {{ form(edit_form) }}
+                </form>
+            {% else %}
+                <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
+                    <button type="submit" class="btn btn-success">Valider</button>
+                    <input type="hidden" value="{{ classeur.id }}" name="id"/>
+                </form>
+            {% endif %}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('classeur') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+            <form class="form_action" action="{{ path("classeur_refuser") }}" method="post">
+                <button type="submit" class="btn btn-danger">Refuser</button>
+                <input type="hidden" value="{{ classeur.id }}" name="id"/>
+            </form>
+        {% endif %}
+
+        {% if retractable %}
+            <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
+                <button type="submit" class="btn btn-warning">Se r&eacute;tracter</button>
+                <input type="hidden" value="{{ classeur.id }}" name="id"/>
+            </form>
+        {% endif %}
+
+        {% if classeur.isModifiable(app.user.id) %}
+            <button id="btn_modifier" type="button" class="btn btn-info">Modifier</button>
+        {% endif %}
+
+        {% if classeur.isSupprimable(app.user.id) %}
+            <form class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+                <input type="hidden" value="{{ classeur.id }}" name="id"/>
+            </form>
+        {% endif %}
+        <br>
+
+        <form action="{{ path("classeur_update") }}" method="post">
+            <input type="hidden" name="id" value="{{ classeur.id }}"/>
+
+            <div class="titre_form_element">Titre</div>
+            <input class="form-control" id="name" name="name" disabled placeholder="Nom" value="{{ classeur.nom }}">
+            <br>
+
+            <div class="titre_form_element">Description</div>
+            <textarea class="form-control" rows="3" name="desc" disabled id="desc">{{ classeur.description }}</textarea>
+            <br>
+
+            <div class="titre_form_element">Date limite de validation</div>
+            <input class="datepicker" id="validation" name="validation" type="datetime" disabled
+                   value="{{ classeur.validation  | date('d/m/Y') }}"/>
+            <br>
+
+            <div class="titre_form_element">Documents</div>
+            <div id="documentcontent"></div>
+            <br>
+
+            <div class="titre_form_element">Circuit</div>
+            <div id="circuitcontent">
+                <script type="application/javascript">
+                    var circuit_users = "{{ classeur.circuit }}";
+                </script>
+                {% render url("new_circuit") %}
+            </div>
+            <br>
+
+            <div>
+                <br/>
+                <button type="submit" id="enregistrer_modif" style="display: none;" class="btn btn-success">Enregistrer
+                    les modifications
+                </button>
+            </div>
+        </form>
+        <script type="application/javascript">
+            $(".top_selects_circuits, .suppr_perso").hide();
+            $("#circuit").sortable("disable");
+            $(".perso_circuit").css("cursor", "Default");
+
+
+            $("#btn_modifier").click(function () {
+                $("#name, #desc").removeAttr("disabled");
+                $("#enregistrer_modif").show();
+                enableUploads();
+                $(".top_selects_circuits, .suppr_perso").show();
+                $("#circuit").sortable("enable");
+                $(".perso_circuit").css("cursor", "-moz-grab");
+            });
+
+            $(document).ready(function () {
+                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
+
+            });
+
+            var nowTemp = new Date();
+            var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+            var valid = $('#validation').datepicker({
+                onRender: function (date) {
+                    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate', function (ev) {
+                        ev.hide();
+                    });
+        </script>
+    </div>
+{% endblock %}
+
+{% block losjavascriptos %}
+    <script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 {% endblock %}
