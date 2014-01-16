@@ -35,7 +35,7 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="Prenom", type="string", length=255)
+     * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
      */
     protected $Prenom;
 
