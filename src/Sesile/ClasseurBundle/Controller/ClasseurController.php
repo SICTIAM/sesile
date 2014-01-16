@@ -215,7 +215,8 @@ class ClasseurController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction() {
+    public function newAction()
+    {
         return array();
     }
 
@@ -405,7 +406,8 @@ class ClasseurController extends Controller
      * @Template()
      *
      */
-    public function signAction(Request $request, $id){
+    public function signAction(Request $request, $id)
+    {
 
         $user = $this->get('security.context')->getToken()->getUser();
         //  var_dump($user);
@@ -421,17 +423,17 @@ class ClasseurController extends Controller
 
         $docstosign = array();
 
-        foreach($tmpdocs as $key=>$value){
-            $tmpdo= array();
-            $tmpdo['name']= $value->getName();
-            $tmpdo['id']=$value->getId();
-            $tmpdo['repourl']=$value->getRepourl();
-            $docstosign[$key]=$tmpdo;
+        foreach ($tmpdocs as $key => $value) {
+            $tmpdo = array();
+            $tmpdo['name'] = $value->getName();
+            $tmpdo['id'] = $value->getId();
+            $tmpdo['repourl'] = $value->getRepourl();
+            $docstosign[$key] = $tmpdo;
         }
 
         $servername = $_SERVER['HTTP_HOST'];
 
-        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername'=>$servername);
+        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername' => $servername);
 
     }
 
