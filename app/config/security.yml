@@ -32,6 +32,7 @@ security:
         ROLE_ADMIN: [ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN]
     access_control:
+        - { path: ^/doc/uploadfile, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/notifymodif, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/circuit, roles: ROLE_USER }
