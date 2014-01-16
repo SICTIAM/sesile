@@ -12,20 +12,17 @@
 
 <div class='pull-right' id="bouttons" style="display:none">
     <br/>
-    <button type="button"  class="btn btn-default" data-dismiss="modal">Annuler</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
     <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le classeur</button>
 </div>
 
-
 <form action="{{ path("classeur_retracter") }}" method="post">
-
 
     <strong>Role : </strong>{{ user.role }}<br/>
     <strong>Ville : </strong>{{ user.ville }}<br/>
     <strong>Code postal : </strong>{{ user.cp }}<br/>
     <strong>D&eacute;partement : </strong>{{ user.departement }}<br/>
     <strong>Pays : </strong>{{ user.pays }}<br/>
-
 
     <div id='listemethod' name='listemethod'></div>
 
@@ -38,7 +35,6 @@
     </div>
     <br>
 
-
     <div class='progress progress-striped active'>
         <div class='progress-bar' id='progressbar' role='progressbar' aria-valuenow='100' aria-valuemin='0'
              aria-valuemax='100' style='width: 100%'>
@@ -46,14 +42,14 @@
         </div>
     </div>
 
-
 </form>
 
 <script type="text/javascript" src="http://www.java.com/js/deployJava.js">
 </script>
 
 <script type="text/javascript">
-    var docstosign = {{ docstosign|json_encode|raw }}
+    var docstosign =
+    {{ docstosign|json_encode|raw }}
 
 
     var attributes = {width: 1, height: 1, id: "javaapplet"};
@@ -110,8 +106,8 @@
     //function donnant le chemin du fichier
     function getFileLinkFromNumber(i) {
 
-        alert('http://{{ servername }}/uploads/docs/'+docstosign[i].repourl);
-        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/'+docstosign[i].repourl , docstosign[i].repourl);
+        alert('http://{{ servername }}/uploads/docs/' + docstosign[i].repourl);
+        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/' + docstosign[i].repourl, docstosign[i].repourl);
 
 
     }
@@ -185,7 +181,8 @@
         var certif = document.getElementById('selectcertif');
         //alert('lancement signature '+method.value+'  '+certif.value);
 
-            nbfic = {{docstosign|length  }}
+        nbfic =
+        {{docstosign|length  }}
 
         if (nbfic > 0) {
             document.javaapplet.launchSigningWithCertificate(certif.value);

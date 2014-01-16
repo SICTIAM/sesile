@@ -60,25 +60,25 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $uploadedfile = $request->files->get('signedFile');
-        if(empty($uploadedfile)){
-            return new JsonResponse(array("error"=>"nothinguploaded"));
+        if (empty($uploadedfile)) {
+            return new JsonResponse(array("error" => "nothinguploaded"));
         }
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $uploadedfile->getClientOriginalName()));
-        if(empty($doc)){
-            return new JsonResponse(array("error"=>"nodocumentwiththisname", "name"=>$uploadedfile->getClientOriginalName()));
+        if (empty($doc)) {
+            return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
         }
 
-        if(file_exists('uploads/docs/' . $doc->getRepourl())){
+        if (file_exists('uploads/docs/' . $doc->getRepourl())) {
             unlink('uploads/docs/' . $doc->getRepourl());
             $uploadedfile->move('uploads/docs/', $doc->getRepourl());
             $doc->setSigned(true);
             $em->flush();
-            return new JsonResponse(array("error"=>"ok", "url"=>'uploads/docs/'. $doc->getRepourl()));
+            return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
 
-        }else{
+        } else {
             unlink($uploadedfile->getRealPath());
 
-            return new JsonResponse(array("error"=>"nodocumentwiththisname"));
+            return new JsonResponse(array("error" => "nodocumentwiththisname"));
 
         }
 
@@ -150,19 +150,12 @@ class DocumentController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
 
 
-
         $response->sendHeaders();
 
         $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
 
         return $response;
     }
-
-
-
-
-
-
 
 
 }
