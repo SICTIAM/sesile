@@ -12,3 +12,7 @@ parameters:
     mailer_password: null
     locale: fr
     secret: ThisTokenIsNotSoSecretChangeIt
+    gorg:
+        path: %kernel.root_dir%/../vendor/gorg/phpcas/
+    upload:
+        path: %kernel.root_dir%/../web/uploads/avatars/

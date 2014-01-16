@@ -1,0 +1,8 @@
+#src/SesileUserBundle/Resources/config/validation.yml
+
+Sesile\UserBundle\Entity\User:
+    properties:
+        email:
+            - Email:
+                message: '{{ value }}'
+                checkMX: true

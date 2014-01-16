@@ -30,6 +30,8 @@ twig:
     form:
         resources:
             - 'SesileMainBundle:Form:fields.html.twig'
+    globals:
+        upload_path: uploads/avatars/
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%

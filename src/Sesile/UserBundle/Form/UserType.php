@@ -27,8 +27,8 @@ class UserType extends AbstractType
                 'second_options' => array('label' => 'form.password_confirmation'),
                 'invalid_message' => 'fos_user.password.mismatch',
             ))
-            ->add('Nom', 'text', array('required' => false,))
-            ->add('Prenom', 'text', array('required' => false,))
+            ->add('Nom', 'text')
+            ->add('Prenom', 'text')
             ->add('ville', 'text', array('required' => false,))
             ->add('cp', 'text', array('label' => 'Code Postal', 'required' => false,))
             ->add('departement', 'text', array('label' => 'Département', 'required' => false,))
