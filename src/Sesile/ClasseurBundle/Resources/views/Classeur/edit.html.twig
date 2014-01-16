@@ -3,7 +3,13 @@
 {% block content %}
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
+
+
     <div class="bloc_page">
+        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+            &nbsp;&nbsp;Historique
+        </button>
         {% if classeur.isValidable(app.user.id) %}
             {% if classeur.isSignable(app.user.id) %}
                 <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
@@ -79,6 +85,30 @@
                 </button>
             </div>
         </form>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Historique du classeur</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% for action in  classeur.actions %}
+                            <p>action.username</p>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
         <script type="application/javascript">
             $(".top_selects_circuits, .suppr_perso").hide();
             $("#circuit").sortable("disable");

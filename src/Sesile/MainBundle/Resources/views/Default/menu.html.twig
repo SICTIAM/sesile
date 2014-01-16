@@ -78,15 +78,6 @@
                     </li>
                 </ul>
             </li>
-            {% if is_granted('ROLE_ADMIN') %}
-                <li class="menu-elem menu-vert ">
-                    <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
-                        <a href="{{ path("admin") }}">
-                            <div class="rectanglemenu" id="vertclair"></div>
-                            Administration<b class="caret carette"></b></a>
-                    </div>
-                </li>
-            {% endif %}
         </ul>
     </div>
     <script type="text/javascript">
