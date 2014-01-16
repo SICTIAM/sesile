@@ -63,7 +63,8 @@ class ProfileController extends ContainerAware
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
-
+        $upload = $this->container->getParameter('upload');
+        $DirPath = $upload['path'];
         /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
         $dispatcher = $this->container->get('event_dispatcher');
 
@@ -100,10 +101,10 @@ class ProfileController extends ContainerAware
 
                     if ($user->getPath()) {
 
-                        $user->removeUpload();
+                        $user->removeUpload($DirPath);
                     }
                     $user->preUpload();
-                    $user->upload();
+                    $user->upload($DirPath);
 
                 }
                 $userManager->updateUser($user);

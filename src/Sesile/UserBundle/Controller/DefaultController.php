@@ -17,7 +17,7 @@ use Symfony\Component\Yaml\Yaml;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
-
+use vendor\symfony\src\Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
 
 class DefaultController extends Controller {
     /**
@@ -45,7 +45,9 @@ class DefaultController extends Controller {
      */
     public function ajoutAction(Request $request) {
 
-
+        $upload = $this->container->getParameter('upload');
+        $DirPath = $upload['path'];
+        //  var_dump($this->container->get('twig.extension.assets')->getAssetUrl(''));exit;
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
@@ -76,7 +78,7 @@ class DefaultController extends Controller {
                 $em = $this->getDoctrine()->getManager();
 
                 $em->persist($entity);
-                $entity->upload();
+                $entity->upload($DirPath);
 
 
                 $res = array("nom" => $form->get('Nom')->getData(),
@@ -178,6 +180,8 @@ class DefaultController extends Controller {
      */
     public function updateAction(Request $request, $id)
     {
+        $upload = $this->container->getParameter('upload');
+        $DirPath = $upload['path'];
 
         $em = $this->getDoctrine()->getManager();
 
@@ -228,10 +232,10 @@ class DefaultController extends Controller {
                         if ($editForm->get('file')->getData()) {
                             // echo "true";exit;
                             if ($entity->getPath()) {
-                                $entity->removeUpload();
+                                $entity->removeUpload($DirPath);
                             }
                             $entity->preUpload();
-                            $entity->upload();
+                            $entity->upload($DirPath);
 
                         }
                         //echo "false";exit;
@@ -266,6 +270,9 @@ class DefaultController extends Controller {
      */
     public function deleteAction(Request $request, $id)
     {
+        $upload = $this->container->getParameter('upload');
+        $DirPath = $upload['path'];
+
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -273,7 +280,7 @@ class DefaultController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
             if ($entity->getPath()) {
-                $entity->removeUpload();
+                $entity->removeUpload($DirPath);
             }
 
             if (!$entity) {
