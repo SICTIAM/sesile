@@ -38,9 +38,10 @@ class AdminController extends Controller
             // $data is a simply array with your form fields
             // like "query" and "category" as defined above.
             $data = $request->request->get('msg');
+            //   var_dump($data);exit;
 
         }
-        //   var_dump($data);exit;
+
         return $this->render('SesileMainBundle:Default:admin.html.twig', array('form' => $form->createView(),));
 
     }

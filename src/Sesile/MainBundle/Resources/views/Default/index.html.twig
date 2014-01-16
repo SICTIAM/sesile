@@ -46,8 +46,7 @@
                     {% if app.user != null %}
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <img class="userpicture"
-                                     src="{{ app.user.path }}"/>
+                                <img class="userpicture" src="{{ asset(upload_path ~ app.user.path) }}"/>
                                 &nbsp;
                                 {{ app.user.prenom }}&nbsp;{{ app.user.nom }}&nbsp;&nbsp;&nbsp;
                                 <span class="caret"></span>
