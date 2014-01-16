@@ -29,7 +29,7 @@ class Action
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="actions")
-     * @ORM\JoinColumn(name="classeur_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="classeur", referencedColumnName="id")
      */
     private $classeur;
 
@@ -187,12 +187,12 @@ class Action
      * @param string $username
      * @return Action
      */
-//    private function setUsername($username)
-//    {
-//        $this->username = $username;
-//
-//        return $this;
-//    }
+    private function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
 
     /**
      * Get username

@@ -95,9 +95,7 @@
                         <h4 class="modal-title" id="myModalLabel">Historique du classeur</h4>
                     </div>
                     <div class="modal-body">
-                        {% for action in  classeur.actions %}
-                            <p>action.username</p>
-                        {% endfor %}
+                        {% include "SesileClasseurBundle:Actions:Historique.html.twig" with {'actions': classeur.actions} %}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
