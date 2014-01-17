@@ -48,6 +48,9 @@ class DefaultController extends Controller
 
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
+
+        $LdapInfo = $this->container->getParameter('ldap');
+
         //  var_dump($this->container->get('twig.extension.assets')->getAssetUrl(''));exit;
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
@@ -66,7 +69,7 @@ class DefaultController extends Controller
         if ($ldapconn) {
 
             //binding au serveur LDAP
-            if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
+            if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
 
             } else {
 
@@ -101,9 +104,9 @@ class DefaultController extends Controller
                 $entry["displayName"] = $res["nom"] . " " . $res["prenom"];
 
                 //création du Distinguished Name
-                $dn = "mail=" . $res["email"] . ",cn=Users,dc=sictiam,dc=local";
+                $dn = "mail=" . $res["email"] . "," . $LdapInfo["dn_user"];
                 $justthese = array("sn", "givenname", "mail");
-                $sr = ldap_search($ldapconn, "cn=Users,dc=sictiam,dc=local", "(|(mail=" . $res["email"] . "*))");
+                $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], "(|(mail=" . $res["email"] . "*))");
 
                 $info = ldap_get_entries($ldapconn, $sr);
 
@@ -112,7 +115,7 @@ class DefaultController extends Controller
                     return $this->redirect($this->generateUrl('error'));
                 } else {
                     //  var_dump($dn);exit;
-                    ldap_add($ldapconn, "mail=" . $res["email"] . ",cn=Users,dc=sictiam,dc=local", $entry);
+                    ldap_add($ldapconn, "mail=" . $res["email"] . "," . $LdapInfo["dn_user"], $entry);
                     $em->flush();
                 }
                 ldap_close($ldapconn);
@@ -183,6 +186,9 @@ class DefaultController extends Controller
     {
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
+        $cas = $this->getCASParams();
+
+        $LdapInfo = $this->container->getParameter('ldap');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -204,14 +210,14 @@ class DefaultController extends Controller
 
         if ($editForm->isValid()) {
 
-            $ldapconn = ldap_connect("172.17.100.78")
+            $ldapconn = ldap_connect($cas["cas_server"])
             or die("Could not connect to LDAP server."); //security
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
             if ($ldapconn) {
 
                 //binding au serveur LDAP
-                if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
+                if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     $entry["cn"] = $entity->getUsername();
                     $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
                     $pwd = trim($editForm->get('plainPassword')->getData());
@@ -225,7 +231,7 @@ class DefaultController extends Controller
                     $entry["displayName"] = $entity->getNom() . ' ' . $entity->getPrenom();
 
                     //création du Distinguished Name
-                    $parent = "cn=Users,dc=sictiam,dc=local";
+                    $parent = $LdapInfo["dn_user"];
                     $dn = "mail=" . $ExValues["mail"] . "," . $parent;
 
                     if (ldap_rename($ldapconn, $dn, "mail=" . $entity->getUsername(), $parent, true) && ldap_modify($ldapconn, "mail=" . $entity->getUsername() . "," . $parent, $entry)) {

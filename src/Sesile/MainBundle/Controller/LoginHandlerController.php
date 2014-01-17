@@ -29,6 +29,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sesile\UserBundle\Entity\User;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Controller managing the user profile
@@ -55,23 +56,27 @@ class LoginHandlerController extends Controller
             /* Call CAS API to do authentication */
             $upload = $this->container->getParameter('gorg');
             $DirPath = $upload['path'];
+
+            $LdapInfo = $this->container->getParameter('ldap');
+
+            $cas = $this->getCASParams();
             //  var_dump($DirPath);exit;
             require_once($DirPath . 'CAS.php');
-            \phpCAS::client('2.0', 'sso.dev.sictiam.fr', 389, '/', false);
+            \phpCAS::client($cas["cas_protocol"], $cas["cas_server"], $cas["cas_port"], $cas['cas_path'], false);
             \phpCAS::forceAuthentication();
             $user = \phpCAS::getUser();
-            $dn = "cn=Users,dc=sictiam,dc=local";
+            $dn = $LdapInfo["dn_user"];
             $filter = "(|(mail=" . $user . "))";
             $justthese = array("cn", "mail", "userPassword");
 
-            $ldapconn = ldap_connect("172.17.100.78")
+            $ldapconn = ldap_connect($cas["cas_server"])
             or die("Could not connect to LDAP server."); //security
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
             if ($ldapconn) {
 
                 //binding au serveur LDAP
-                if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
+                if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     echo "LDAP bind successful...";
                     $sr = ldap_search($ldapconn, $dn, $filter, $justthese);
                     $info = ldap_get_entries($ldapconn, $sr);
@@ -91,6 +96,7 @@ class LoginHandlerController extends Controller
                     $entity->setUsername($info[0]["mail"][0]);
                     $entity->setEmail($info[0]["mail"][0]);
                     $entity->setPlainPassword("sictiam");
+                    $entity->setEnabled(true);
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($entity);
                     $em->flush();
@@ -118,5 +124,14 @@ class LoginHandlerController extends Controller
             : null;
         return $this->redirect($this->generateUrl('sesile_profile_show'));
 
+    }
+
+    private function getCASParams()
+    {
+        $file = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+        $parsed = Yaml::parse(file_get_contents($file));
+
+        $cas = $parsed['security']['firewalls']['secured_area']['cas'];
+        return $cas;
     }
 }
