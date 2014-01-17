@@ -19,7 +19,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 use vendor\symfony\src\Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
 
-class DefaultController extends Controller {
+class DefaultController extends Controller
+{
     /**
      * @Route("/", name="liste_users")
      * @Template("SesileUserBundle:Default:index.html.twig")
@@ -36,14 +37,14 @@ class DefaultController extends Controller {
         );
 
 
-
     }
 
     /**
      * @Route("/creation/", name="ajout_user")
      * @Template("SesileUserBundle:Default:ajout.html.twig")
      */
-    public function ajoutAction(Request $request) {
+    public function ajoutAction(Request $request)
+    {
 
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
@@ -256,14 +257,14 @@ class DefaultController extends Controller {
                 } else {
                     echo "LDAP bind failed...";
                 }
-             //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
+                //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
             }
-            }
+        }
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -299,7 +300,6 @@ class DefaultController extends Controller {
         }
         return $this->redirect($this->generateUrl('liste_users')); // rediriger vers liste_user non?
     }
-
 
 
     /**

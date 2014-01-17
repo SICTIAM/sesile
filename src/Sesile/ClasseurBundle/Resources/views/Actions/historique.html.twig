@@ -1,0 +1,18 @@
+<table class="table tableau">
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for action in  actions %}
+        <tr>
+            <td>{{ action.username }}</td>
+            <td>{{ action.date | date("d/m/Y H:i:s") }}</td>
+            <td>{{ action.action }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -60,10 +60,12 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $uploadedfile = $request->files->get('signedFile');
+        $id = $request->request->get('id');
         if(empty($uploadedfile)){
             return new JsonResponse(array("error"=>"nothinguploaded"));
         }
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $uploadedfile->getClientOriginalName()));
+
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
         if(empty($doc)){
             return new JsonResponse(array("error"=>"nodocumentwiththisname", "name"=>$uploadedfile->getClientOriginalName()));
         }
