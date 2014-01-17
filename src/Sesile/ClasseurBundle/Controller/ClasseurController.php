@@ -231,6 +231,7 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+        $isSignable = $entity->isSignable($em);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
@@ -238,7 +239,8 @@ class ClasseurController extends Controller
 
         return array(
             'classeur' => $entity,
-            'retractable' => $entity->isRetractable($this->getUser()->getId(), $em)
+            'retractable' => $entity->isRetractable($this->getUser()->getId(), $em),
+            'signable'=>$isSignable
         );
     }
 

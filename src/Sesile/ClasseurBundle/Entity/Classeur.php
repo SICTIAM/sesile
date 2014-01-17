@@ -394,6 +394,10 @@ class Classeur
         return ($next_validant < count($circuit)) ? $circuit[$next_validant] : 0;
     }
 
+    public function isAtLastValidant(\Doctrine\ORM\EntityManager $em){
+        return ($this->getNextValidant($em)==0);
+    }
+
 
     public function valider(\Doctrine\ORM\EntityManager $em)
     {
@@ -454,10 +458,10 @@ class Classeur
         return ($this->getUser() == $userid && $this->getStatus() != 3);
     }
 
-    public function isSignable($userid)
+    public function isSignable(\Doctrine\ORM\EntityManager $em)
     {
 
-        if($this->getType()=='elpez'){
+        if($this->getType()=='elpez' || $this->isAtLastValidant($em)){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
                 if($doc->getType()=='application/xml'){
