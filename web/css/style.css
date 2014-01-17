@@ -300,11 +300,21 @@ html, body {
 /*LEGENDE*/
 .legende {
 	border: 1px solid #cccccc;
-	padding: 1em;
+	padding: 0.5em 1em 0.5em 1em;
+	margin: 3em 0em 1em 0em;
 }
 
 .txt_legende {
 	display: block;
+	margin-bottom: 0.5em;
+	border-bottom: 1px solid #cccccc;
+	text-transform: uppercase;
+	color: rgba(109, 109, 109, 1);
+	font-weight: bold;
+}
+
+.pipe{
+	color: #cccccc;
 }
 
 /*BOUTONS FORMULAIRE*/
