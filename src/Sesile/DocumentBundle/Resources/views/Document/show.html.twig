@@ -15,6 +15,7 @@
     var L_EditDocumentRuntimeError_Text = "Sorry, couldn't open the document.";
 
     function editDocument(strDocument) {
+
         if (fNewDoc) {
             if (!EditDocumentButton.EditDocument(strDocument)) {
                 alert(L_EditDocumentRuntimeError_Text);

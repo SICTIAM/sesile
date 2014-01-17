@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sesile\UserBundle\Entity\User;
+use Symfony\Component\Yaml\Yaml;
 
 
 /**
@@ -63,8 +64,12 @@ class ProfileController extends ContainerAware
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
+
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
+
+        $LdapInfo = $this->container->getParameter('ldap');
+
         /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
         $dispatcher = $this->container->get('event_dispatcher');
 
@@ -109,15 +114,15 @@ class ProfileController extends ContainerAware
                 }
                 $userManager->updateUser($user);
                 //new
-
-                $ldapconn = ldap_connect("172.17.100.78")
+                $cas = $this->getCASParams();
+                $ldapconn = ldap_connect($cas["cas_server"])
                 or die("Could not connect to LDAP server."); //security
                 ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
                 if ($ldapconn) {
 
                     //binding au serveur LDAP
-                    if (ldap_bind($ldapconn, 'cn=admin,dc=sictiam,dc=local', 'WcJa37BI')) {
+                    if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                         $entry["cn"] = $user->getUsername();
                         $entry["sn"] = $user->getNom() . ' ' . $user->getPrenom();
                         $entry["givenName"] = $user->getUsername();
@@ -129,7 +134,7 @@ class ProfileController extends ContainerAware
                             $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($pwd)));
                         }
                         //création du Distinguished Name
-                        $parent = "cn=Users,dc=sictiam,dc=local";
+                        $parent = $LdapInfo["dn_user"];
                         $dn = "mail=" . $ExValues["mail"] . "," . $parent;
 
                         if (ldap_rename($ldapconn, $dn, "mail=" . $user->getUsername(), $parent, true) && ldap_modify($ldapconn, "mail=" . $user->getUsername() . "," . $parent, $entry)) {
@@ -164,4 +169,14 @@ class ProfileController extends ContainerAware
             array('form' => $form->createView())
         );
     }
+
+    private function getCASParams()
+    {
+        $file = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+        $parsed = Yaml::parse(file_get_contents($file));
+
+        $cas = $parsed['security']['firewalls']['secured_area']['cas'];
+        return $cas;
+    }
 }
+
