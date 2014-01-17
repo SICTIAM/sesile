@@ -242,7 +242,7 @@ html, body {
 	background-color: deeppink;
 }
 
-/* TABLEAU */
+/*TABLEAU*/
 .tableau {
 	top: 1em;
 	border: 1px solid rgb(204, 204, 204);
@@ -297,15 +297,17 @@ html, body {
 	color: rgb(213, 0, 25);
 }
 
+/*LEGENDE*/
 .legende {
-
+	border: 1px solid #cccccc;
+	padding: 1em;
 }
 
-.texte_legende {
-
+.txt_legende {
+	display: block;
 }
 
-/* BOUTONS FORMULAIRE */
+/*BOUTONS FORMULAIRE*/
 .form_action {
 	display: inline-block;
 }
@@ -339,7 +341,7 @@ html, body {
 	background-color: rgb(240, 117, 0);
 }
 
-/* BUTTON TABLEAU */
+/*BUTTON TABLEAU*/
 .active_inactive_user .glyphicon-ok {
 	color: #83b13a;
 }
@@ -356,7 +358,7 @@ html, body {
 	word-break: break-all;
 }
 
-/* FLASHBAG */
+/*FLASHBAG*/
 .alert {
 	position: absolute;
 	width: 50%;
