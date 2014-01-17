@@ -29,7 +29,7 @@ class Action
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="actions")
-     * @ORM\JoinColumn(name="classeur", referencedColumnName="id")
+     * @ORM\JoinColumn(name="classeur_id", referencedColumnName="id")
      */
     private $classeur;
 
