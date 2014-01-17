@@ -14,8 +14,8 @@
             <tr class="classeur-row" data-id="{{ classeur.id }}">
                 <td>{{ classeur.nom }}</td>
                 <td>inter</td>
-                <td>{% if classeur.creation %}{{ classeur.creation | date('d-m-Y H:i:s') }}{% endif %}</td>
-                <td>{% if classeur.validation %}{{ classeur.validation | date('d-m-Y') }}{% endif %}</td>
+                <td>{% if classeur.creation %}{{ classeur.creation | date('d/m/Y H:i:s') }}{% endif %}</td>
+                <td>{% if classeur.validation %}{{ classeur.validation | date('d/m/Y') }}{% endif %}</td>
                 <td class="statut">
                     <span class="glyphicon statut_{{ classeur.status }}"></span>
                 </td>
@@ -35,6 +35,6 @@
 </table>
 <script type="text/javascript">
     $(".classeur-row").click(function (e) {
-        suivreUrl("" + $(this).data("id"), e);
+        document.location.href = Routing.generate('classeur_edit', { id: $(this).data("id") });
     });
 </script>
