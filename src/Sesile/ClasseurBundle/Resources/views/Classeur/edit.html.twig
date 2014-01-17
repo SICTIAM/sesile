@@ -10,45 +10,8 @@
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
             &nbsp;&nbsp;Historique
         </button>
-        {% if classeur.isValidable(app.user.id) %}
-            {% if classeur.isSignable(app.user.id) %}
-                <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
-                    <button type="submit" class="btn btn-success">Valider et Signer</button>
-                    <input type="hidden" value="{{ classeur.id }}" name="id"/>
-
-                </form>
-            {% else %}
-                <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
-                    <button type="submit" class="btn btn-success"> <span class="glyphicon glyphicon-ok"></span> Valider</button>
-                    <input type="hidden" value="{{ classeur.id }}" name="id"/>
-                </form>
-            {% endif %}
-
-            <form class="form_action" action="{{ path("classeur_refuser") }}" method="post">
-                <button type="submit" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span> Refuser</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
-
-        {% if retractable %}
-            <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
-                <button type="submit" class="btn btn-warning">Se r&eacute;tracter</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
-
-        {% if classeur.isModifiable(app.user.id) %}
-            <button id="btn_modifier" type="button" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span>   Modifier</button>
-        {% endif %}
-
-        {% if classeur.isSupprimable(app.user.id) %}
-            <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-                <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>  Retirer</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         <br>
-
         <form action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
@@ -76,16 +39,10 @@
                 </script>
                 {% render url("new_circuit") %}
             </div>
-            <br>
-
-            <div>
-                <br/>
-                <button type="submit" id="enregistrer_modif" style="display: none;" class="btn btn-success">Enregistrer
-                    les modifications
-                </button>
-            </div>
         </form>
-
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+        <br>
+        <br>
         <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -108,23 +65,23 @@
         <!-- /.modal -->
 
         <script type="application/javascript">
-            $(".top_selects_circuits, .suppr_perso").hide();
-            $("#circuit").sortable("disable");
-            $(".perso_circuit").css("cursor", "Default");
+            $(document).ready(function () {
+                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
+                    enableUploads();
+                });
+
+                $(".top_selects_circuits, .suppr_perso").hide();
+                //$("#circuit").sortable("disable");
+                $(".perso_circuit").css("cursor", "Default");
 
 
-            $("#btn_modifier").click(function () {
-                $("#name, #desc").removeAttr("disabled");
+                {% if classeur.isModifiable(app.user.id) %}
+                $("#name, #desc, #validation").removeAttr("disabled");
                 $("#enregistrer_modif").show();
-                enableUploads();
                 $(".top_selects_circuits, .suppr_perso").show();
                 $("#circuit").sortable("enable");
                 $(".perso_circuit").css("cursor", "-moz-grab");
-            });
-
-            $(document).ready(function () {
-                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
-
+                {% endif %}
             });
 
             var nowTemp = new Date();
