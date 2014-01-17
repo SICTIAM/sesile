@@ -37,10 +37,6 @@
             </form>
         {% endif %}
 
-        {% if classeur.isModifiable(app.user.id) %}
-            <button id="btn_modifier" type="button" class="btn btn-info">Modifier</button>
-        {% endif %}
-
         {% if classeur.isSupprimable(app.user.id) %}
             <form class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
                 <button type="submit" class="btn btn-danger">Supprimer</button>
@@ -95,7 +91,7 @@
                         <h4 class="modal-title" id="myModalLabel">Historique du classeur</h4>
                     </div>
                     <div class="modal-body">
-                        {% include "SesileClasseurBundle:Actions:Historique.html.twig" with {'actions': classeur.actions} %}
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -108,19 +104,16 @@
         <!-- /.modal -->
 
         <script type="application/javascript">
-            $(".top_selects_circuits, .suppr_perso").hide();
-            $("#circuit").sortable("disable");
-            $(".perso_circuit").css("cursor", "Default");
-
-
-            $("#btn_modifier").click(function () {
+            {% if classeur.isModifiable(app.user.id) %}
                 $("#name, #desc").removeAttr("disabled");
                 $("#enregistrer_modif").show();
                 enableUploads();
-                $(".top_selects_circuits, .suppr_perso").show();
-                $("#circuit").sortable("enable");
                 $(".perso_circuit").css("cursor", "-moz-grab");
-            });
+            {% else %}
+                $(".top_selects_circuits, .suppr_perso").hide();
+                $("#circuit").sortable("disable");
+                $(".perso_circuit").css("cursor", "Default");
+            {% endif %}
 
             $(document).ready(function () {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
