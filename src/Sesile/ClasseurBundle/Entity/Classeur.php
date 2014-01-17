@@ -109,6 +109,10 @@ class Classeur
      */
     protected $documents;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Action", mappedBy="classeur")
+     */
+    protected $actions;
 
     /**
      * Get id
@@ -355,8 +359,11 @@ class Classeur
      */
     public function __construct()
     {
+
+
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->actions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -378,8 +385,8 @@ class Classeur
      */
     private function getNextValidant(\Doctrine\ORM\EntityManager $em)
     {
-        $d = $em->getRepository("SesileDelegationsBundle:Delegations");
-        $delegation = $c->getClasseursRetractables($userid);
+        //$d = $em->getRepository("SesileDelegationsBundle:Delegations");
+        //$delegation = $d->getClasseursRetractables($userid);
 
         $circuit = explode(",", $this->getCircuit());
         $curr_validant = array_search($this->validant, $circuit);
@@ -388,9 +395,9 @@ class Classeur
     }
 
 
-    public function valider()
+    public function valider(\Doctrine\ORM\EntityManager $em)
     {
-        $this->setValidant($this->getNextValidant());
+        $this->setValidant($this->getNextValidant($em));
         // le classeur est arrivé à la derniere étape, on le finalise
         if ($this->getValidant() == 0) {
             $this->setStatus(2);
@@ -450,10 +457,10 @@ class Classeur
     public function isSignable($userid)
     {
 
-        if ($this->getType() == 'elpez') {
-            $docs = $this->getDocuments();
-            foreach ($docs as $doc) {
-                if ($doc->getType() == 'application/xml') {
+        if($this->getType()=='elpez'){
+            $docs=$this->getDocuments();
+            foreach($docs as $doc){
+                if($doc->getType()=='application/xml'){
                     return true;
                 }
             }
@@ -528,5 +535,38 @@ class Classeur
     public function getValidation()
     {
         return $this->validation;
+    }
+
+    /**
+     * Add actions
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $actions
+     * @return Classeur
+     */
+    public function addAction(\Sesile\ClasseurBundle\Entity\Classeur $actions)
+    {
+        $this->actions[] = $actions;
+
+        return $this;
+    }
+
+    /**
+     * Remove actions
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $actions
+     */
+    public function removeAction(\Sesile\ClasseurBundle\Entity\Classeur $actions)
+    {
+        $this->actions->removeElement($actions);
+    }
+
+    /**
+     * Get actions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getActions()
+    {
+        return $this->actions;
     }
 }

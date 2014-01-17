@@ -12,15 +12,15 @@
 
 <div class='pull-right' id="bouttons" style="display:none">
     <br/>
-    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-    <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le
-        classeur
-    </button>
+    <button type="button"  class="btn btn-default" data-dismiss="modal">Annuler</button>
+    <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le classeur</button>
 </div>
 
 
-<form action="{{ path("classeur_retracter") }}" method="post">
+<form id="lacommode" action="{{ path("classeur_valider") }}" method="post">
 
+
+    <input type="hidden" name="id" value="{{ classeur.id }}">
 
     <strong>Role : </strong>{{ user.role }}<br/>
     <strong>Ville : </strong>{{ user.ville }}<br/>
@@ -55,8 +55,7 @@
 </script>
 
 <script type="text/javascript">
-    var docstosign =
-    {{ docstosign|json_encode|raw }}
+    var docstosign = {{ docstosign|json_encode|raw }}
 
 
     var attributes = {width: 1, height: 1, id: "javaapplet"};
@@ -66,6 +65,10 @@
 
 
     function appletReady() {
+
+        //document.javaapplet.setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
+        document.javaapplet.setUploadUrl('http://sesile.sictiam.fr/doc/uploadfile') // Prod
+
         var divmethod = document.getElementById('listemethod');
         /*
          var selectmethod = document.createElement('select');
@@ -113,8 +116,8 @@
     //function donnant le chemin du fichier
     function getFileLinkFromNumber(i) {
 
-        alert('http://{{ servername }}/uploads/docs/' + docstosign[i].repourl);
-        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/' + docstosign[i].repourl, docstosign[i].name);
+        //alert('http://{{ servername }}/uploads/docs/'+docstosign[i].repourl);
+        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/'+docstosign[i].repourl , docstosign[i].repourl, docstosign[i].id);
 
 
     }
@@ -134,7 +137,7 @@
 
     //function permettant de signifier la fin de la signature d'un classeur
     function signingProcessEnded(i, errormessage) {
-        document.signatureFORM.submit();
+        $('#lacommode').submit();
 
     }
 
@@ -185,25 +188,22 @@
     //function permettant de signifier la fin du téléchargement d'un fichier
     function signature() {
 
+
+        $('#bouttons').hide('slow');
         var certif = document.getElementById('selectcertif');
         //alert('lancement signature '+method.value+'  '+certif.value);
 
-        nbfic =
-        {{docstosign|length  }}
+            nbfic = {{docstosign|length  }}
 
         if (nbfic > 0) {
             document.javaapplet.launchSigningWithCertificate(certif.value);
         }
         else {
-            document.signatureFORM.submit();
+            $('#lacommode').submit();
         }
 
     }
 
-    //function permettant de signifier la fin du téléchargement d'un fichier
-    function signature2() {
-        document.signatureFORM.submit();
-    }
 </script>
 
 

@@ -15,12 +15,8 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $Upload = $this->container->getParameter('upload');
-        $DocPath = $Upload["doc_path"];
-        $handle = fopen($DocPath . "msg_accueil.txt", 'a+');
-        $msg_accueil = fread($handle, filesize($DocPath . "msg_accueil.txt"));
-        fclose($handle);
-        return array('msg_acc' => $msg_accueil,);
+
+        return array();
     }
 
     /**

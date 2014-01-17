@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\DocumentBundle\Entity\Document;
 use Sesile\ClasseurBundle\Form\ClasseurType;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Sesile\ClasseurBundle\Entity\Action;
 
 /**
  * Classeur controller.
@@ -28,7 +28,6 @@ class ClasseurController extends Controller
      */
     public function indexAction()
     {
-
         return $this->listeAction();
     }
 
@@ -122,7 +121,7 @@ class ClasseurController extends Controller
         $classeur = new Classeur();
         $classeur->setNom($request->request->get('name'));
         $classeur->setDescription($request->request->get('desc'));
-        list($d, $m, $a) = explode("-", $request->request->get('validation'));
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
         $valid = new \DateTime($m . "/" . $d . "/" . $a);
         $classeur->setValidation($valid);
         $classeur->setType($request->request->get('type'));
@@ -149,9 +148,12 @@ class ClasseurController extends Controller
         }
         $em->flush();
 
-
-        //Gestion des documents
-
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Dépot du classeur");
+        $em->persist($action);
+        $em->flush();
 
         //Sauvegarde des enregistrements
         $manager = $this->container->get('oneup_uploader.orphanage_manager')->get('docs');
@@ -177,6 +179,7 @@ class ClasseurController extends Controller
         }
 
         // $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
+
 
         $error = false; /*
         if($respCircuit->getContent()!='OK') {
@@ -269,6 +272,13 @@ class ClasseurController extends Controller
         $em->persist($classeur);
         $em->flush();
 
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Modification du classeur");
+        $em->persist($action);
+        $em->flush();
+
         /**
          * TODO modifier le fonctionnement : on doit updater les users par la collection et non par suppression / rajout (un peu de propreté qd même!!!)
          */
@@ -313,13 +323,23 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
-        $classeur->valider();
-        $em->persist($classeur);
-        $em->flush();
 
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+
+        $classeur->valider($em);
+        $em->persist($classeur);
+        $em->flush();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action_libelle = ($classeur->getValidant() == 0) ? "Classeur finalisé" : "Validation";
+        $action->setAction($action_libelle);
+        $em->persist($action);
+        $em->flush();
+
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
@@ -336,6 +356,13 @@ class ClasseurController extends Controller
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
         $classeur->refuser();
         $em->persist($classeur);
+        $em->flush();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Refus");
+        $em->persist($action);
         $em->flush();
 
         if (!$classeur) {
@@ -355,13 +382,19 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
-        $classeur->valider();
-        $em->persist($classeur);
-        $em->flush();
-
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+        $classeur->valider($em);
+        $em->persist($classeur);
+        $em->flush();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Signature");
+        $em->persist($action);
+        $em->flush();
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
@@ -414,13 +447,21 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+
         $classeur->retracter($this->getUser()->getId());
         $em->persist($classeur);
         $em->flush();
 
-        if (!$classeur) {
-            throw $this->createNotFoundException('Unable to find Classeur entity.');
-        }
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Rétractation");
+        $em->persist($action);
+        $em->flush();
+
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
@@ -434,13 +475,20 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
         $classeur->supprimer();
         $em->persist($classeur);
         $em->flush();
 
-        if (!$classeur) {
-            throw $this->createNotFoundException('Unable to find Classeur entity.');
-        }
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Classeur retiré");
+        $em->persist($action);
+        $em->flush();
+
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 

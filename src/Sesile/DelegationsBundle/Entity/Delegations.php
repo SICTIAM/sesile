@@ -25,7 +25,7 @@ class Delegations
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="delegationsDonnees")
-     * @ORM\JoinColumn(name="delegant", referencedColumnName="id")
+     * @ORM\JoinColumn(name="delegant", referencedColumnName="id", onDelete="CASCADE")
      */
     private $delegant;
 
@@ -33,7 +33,7 @@ class Delegations
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="delegationsRecues")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 
