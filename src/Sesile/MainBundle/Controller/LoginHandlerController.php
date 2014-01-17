@@ -67,7 +67,7 @@ class LoginHandlerController extends Controller
             $user = \phpCAS::getUser();
             $dn = $LdapInfo["dn_user"];
             $filter = "(|(mail=" . $user . "))";
-            $justthese = array("sn", "mail", "userPassword");
+            $justthese = array("cn", "mail", "userPassword");
 
             $ldapconn = ldap_connect($cas["cas_server"])
             or die("Could not connect to LDAP server."); //security
@@ -82,11 +82,11 @@ class LoginHandlerController extends Controller
                     $info = ldap_get_entries($ldapconn, $sr);
                     //    var_dump($info);exit;
                     //echo "mail = ".$info[0]["mail"][0]." cn = ".$info[0]["cn"][0]." pwd = ".$info[0]["userpassword"][0];exit;
-                    if (stripos($info[0]["sn"][0], ' ') === false) {
-                        $nom = $info[0]["sn"][0];
+                    if (stripos($info[0]["cn"][0], ' ') === false) {
+                        $nom = $info[0]["cn"][0];
                         $prenom = ' ';
                     } else {
-                        list($prenom, $nom) = explode(' ', $info[0]["sn"][0]);
+                        list($prenom, $nom) = explode(' ', $info[0]["cn"][0]);
                     }
 
                     //  echo "nom = ".$nom." prenom = ".$prenom;exit;
