@@ -300,6 +300,7 @@ class ClasseurController extends Controller
             $em->persist($classeurUser);
         }
 
+        $em->flush();
         $classeurUserObj->deleteClasseurUser($classeur, $circuit);
         $error = false;
         if (!$error) {
