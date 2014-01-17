@@ -1,5 +1,7 @@
+<div id="doc">
 <div id="fichiers" class="dropzone"></div>
 <div id="filedescription" style="display:none"></div>
+</div>
 
 <script src="{{ asset('js/dropzone.js') }}"></script>
 <script type="text/javascript">
@@ -289,11 +291,22 @@ $(document).ready(function () {
 
     var mockFile = { name: "{{ file.name }}", size: {{ tailles[file.id] }} };
 
-
     dropzone.addFile(mockFile);
 
-
     {% endfor %}
+
+
+    $('html').click(function() {
+        $("#filedescription").slideUp();
+        openeddesc = false;
+        currentDocHtml = null;
+        launchtim = false;
+    });
+
+    $('#doc').click(function(event){
+        event.stopPropagation();
+
+    });
 
 
 });

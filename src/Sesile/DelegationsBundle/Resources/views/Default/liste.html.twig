@@ -1,5 +1,6 @@
-<table class="table tableau dtables">
-    <thead>
+{% if delegations|length > 0 %}
+    <table class="table tableau dtables">
+        <thead>
         <tr>
             <th>Utilisateur</th>
             <th>Début</th>
@@ -7,22 +8,23 @@
             {% if donnees is defined %}
                 <th>Action</th>{% endif %}
         </tr>
-    </thead>
-    {% for delegation in delegations %}
-        <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
-            <td>{{ delegation.user }}</td>
-            <td>{{ delegation.debut | date('d/m/Y') }}</td>
-            <td>{{ delegation.fin | date('d/m/Y') }}</td>
-            {% if donnees is defined %}
-                <td class="boutons_action">
-                    <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                </td>
-            {% endif %}
-        </tr>
-    {% endfor %}
-</table>
+        </thead>
+        {% for delegation in delegations %}
+            <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
+                <td>{{ delegation.user }}</td>
+                <td>{{ delegation.debut | date('d/m/Y') }}</td>
+                <td>{{ delegation.fin | date('d/m/Y') }}</td>
+                {% if donnees is defined %}
+                    <td class="boutons_action">
+                        <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
