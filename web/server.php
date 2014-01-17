@@ -17,14 +17,14 @@ function afterWriteContent($path, \Sabre\DAV\IFile $node) {
 
 
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, 'http://'.$_SERVER['HTTP_HOST'].'/app_dev.php/doc/notifymodif/'.$path);
+    curl_setopt($curl, CURLOPT_URL, 'http://'.$_SERVER['HTTP_HOST'].'/doc/notifymodif/'.$path);
     $osef = curl_exec($curl);
     curl_close($curl);
 
     // Do some logging here
 
 
-    error_log("Hook  : ".$path."   url = ".'http://'.$_SERVER['HTTP_HOST'].'/app_dev.php/doc/notifymodif/'.$path." result : ".$osef, 0);
+    error_log("Hook  : ".$path."   url = ".'http://'.$_SERVER['HTTP_HOST'].'/doc/notifymodif/'.$path." result : ".$osef, 0);
 
 }
 
