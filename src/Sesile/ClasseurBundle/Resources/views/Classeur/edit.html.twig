@@ -10,41 +10,8 @@
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
             &nbsp;&nbsp;Historique
         </button>
-        {% if classeur.isValidable(app.user.id) %}
-            {% if classeur.isSignable(app.user.id) %}
-                <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
-                    <button type="submit" class="btn btn-success">Valider et Signer</button>
-                    <input type="hidden" value="{{ classeur.id }}" name="id"/>
-
-                </form>
-            {% else %}
-                <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
-                    <button type="submit" class="btn btn-success">Valider</button>
-                    <input type="hidden" value="{{ classeur.id }}" name="id"/>
-                </form>
-            {% endif %}
-
-            <form class="form_action" action="{{ path("classeur_refuser") }}" method="post">
-                <button type="submit" class="btn btn-danger">Refuser</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
-
-        {% if retractable %}
-            <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
-                <button type="submit" class="btn btn-warning">Se r&eacute;tracter</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
-
-        {% if classeur.isSupprimable(app.user.id) %}
-            <form class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-                <button type="submit" class="btn btn-danger">Supprimer</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         <br>
-
         <form action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
@@ -72,16 +39,10 @@
                 </script>
                 {% render url("new_circuit") %}
             </div>
-            <br>
-
-            <div>
-                <br/>
-                <button type="submit" id="enregistrer_modif" style="display: none;" class="btn btn-success">Enregistrer
-                    les modifications
-                </button>
-            </div>
         </form>
-
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+        <br>
+        <br>
         <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -91,7 +52,7 @@
                         <h4 class="modal-title" id="myModalLabel">Historique du classeur</h4>
                     </div>
                     <div class="modal-body">
-
+                        {% include "SesileClasseurBundle:Actions:Historique.html.twig" with {'actions': classeur.actions} %}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -104,20 +65,23 @@
         <!-- /.modal -->
 
         <script type="application/javascript">
-            {% if classeur.isModifiable(app.user.id) %}
-                $("#name, #desc").removeAttr("disabled");
-                $("#enregistrer_modif").show();
-                enableUploads();
-                $(".perso_circuit").css("cursor", "-moz-grab");
-            {% else %}
-                $(".top_selects_circuits, .suppr_perso").hide();
-                $("#circuit").sortable("disable");
-                $(".perso_circuit").css("cursor", "Default");
-            {% endif %}
-
             $(document).ready(function () {
-                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
+                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
+                    enableUploads();
+                });
 
+                $(".top_selects_circuits, .suppr_perso").hide();
+                //$("#circuit").sortable("disable");
+                $(".perso_circuit").css("cursor", "Default");
+
+
+                {% if classeur.isModifiable(app.user.id) %}
+                $("#name, #desc, #validation").removeAttr("disabled");
+                $("#enregistrer_modif").show();
+                $(".top_selects_circuits, .suppr_perso").show();
+                $("#circuit").sortable("enable");
+                $(".perso_circuit").css("cursor", "-moz-grab");
+                {% endif %}
             });
 
             var nowTemp = new Date();
@@ -129,6 +93,23 @@
             }).on('changeDate', function (ev) {
                         ev.hide();
                     });
+
+            $("#suprclasseur").submit(function (e) {
+
+
+
+
+                if (confirm('Confirmez-vous le retrait du classeur ?')) {
+
+                } else {
+                    e.preventDefault();
+                    return false;
+
+                }
+
+
+
+            });
         </script>
     </div>
 {% endblock %}
