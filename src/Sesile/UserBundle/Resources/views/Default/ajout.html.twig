@@ -7,7 +7,7 @@
             &nbsp;&nbsp;&nbsp;Créer un nouveau utilisateur
         </div>
 
-        <div class="label_form label-form-input">
+        <div class="label_form">
             {{ form_label(form.username) }}
             {{ form_widget(form.username) }}
         </div>
@@ -15,18 +15,14 @@
         <br/>
 
         {% for passwordField in form.plainPassword %}
-            <div class="label_form label-form-input">
-                {% if loop.index  != 1 %}
-                    {{ form_label(passwordField, 'Confirmation') }}
-                {% else %}
-                    {{ form_label(passwordField, 'Mot de passe') }}
-                {% endif %}
+            <div class="label_form">
+                {{ form_label(passwordField) }}
                 {{ form_widget(passwordField) }}
             </div>
             <br/>
         {% endfor %}
 
-        <div class="label_form label-form-input">
+        <div class="label_form">
             {{ form_label(form.Nom) }}
             {{ form_widget(form.Nom) }}
 
@@ -34,86 +30,62 @@
 
         <br/>
 
-        <div class="label_form label-form-input">
+        <div class="label_form">
             {{ form_label(form.Prenom) }}
             {{ form_widget(form.Prenom) }}
         </div>
         <br/>
 
-        <div class="label_form label-form-input">
+        <div class="label_form">
             {{ form_label(form.ville) }}
             {{ form_widget(form.ville) }}
         </div>
         <br/>
 
-        <div class="label_form label-form-input">
+        <div class="label_form">
             {{ form_label(form.cp) }}
             {{ form_widget(form.cp) }}
         </div>
         <br/>
 
-        <div class="label_form label-form-input">
+        <div class="label_form">
             {{ form_label(form.departement) }}
             {{ form_widget(form.departement) }}
         </div>
         <br/>
 
-        <div class="label_form label-form-input">
+        <div class="label_form">
             {{ form_label(form.pays) }}
             {{ form_widget(form.pays) }}
         </div>
         <br/>
 
-        <div class="label_form label-form-input">
+        <div class="label_form">
             {{ form_label(form.role) }}
             {{ form_widget(form.role) }}
         </div>
         <br/>
 
-        <div class="label_form parcou">
+        <div class="label_form">
+            {{ form_label(form.enabled) }}
+            {{ form_widget(form.enabled) }}
+        </div>
+        <br/>
+
+        <div class="label_form">
             {{ form_label(form.file) }}
             {{ form_widget(form.file) }}
         </div>
         <br/>
 
-        <div class="label_form pickuser">
+        <div class="label_form">
             {{ form_label(form.roles) }}
             {{ form_widget(form.roles) }}
         </div>
         <br/>
 
-        <div class="acti">
-            <label for="{{ form.enabled.vars.id }}" class="cb-enable selected">
-                <span>Activé</span>
-            </label>
-            <label for="{{ form.enabled.vars.id }}" class="cb-disable">
-                <span>Désactivé</span>
-            </label>
-            {{ form_widget(form.enabled, {'attr': {'class': 'checkbox' }}) }}
-        </div>
+        {{ form_widget(form.submit) }}
         <br/>
-        <br/>
-        <br/>
-        {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
-        <br/>
-    </div>
-    <script type="text/javascript">
-        $(".label_form input").focus(function () {
-            $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
-            $(this).prev("label").addClass("glyphicon-search-blue");
-        });
 
-        $(".cb-enable").click(function () {
-            var parent = $(this).parents('.acti');
-            $('.cb-disable', parent).removeClass('selected');
-            $(this).addClass('selected');
-            $('.checkbox', parent).attr('checked', true);
-        });
-        $(".cb-disable").click(function () {
-            var parent = $(this).parents('.acti');
-            $('.cb-enable', parent).removeClass('selected');
-            $(this).addClass('selected');
-            $('.checkbox', parent).attr('checked', false);
-        });
-    </script>
+    </div>
 {% endblock %}

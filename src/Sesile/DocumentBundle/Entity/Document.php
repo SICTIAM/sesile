@@ -58,7 +58,7 @@ class Document
 
     /**
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="documents")
-     * @ORM\JoinColumn(name="classeur_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="classeur_id", referencedColumnName="id")
      */
     private $classeur;
 

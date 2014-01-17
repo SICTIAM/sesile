@@ -1,14 +1,9 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
-    <div class="bloc_page">
-        <div class="titre_page">
-            <span class="glyphicon glyphicon-cog"></span>
-            &nbsp;&nbsp;&nbsp;Administration
-        </div>
-        <form action="{{ path('admin') }}" {{ form_enctype(form) }} method="POST">
-            {{ form_label(form.msg) }}
-            {{ form_widget(form.msg) }}
-        </form>
-    </div>
+    <form class="form_action" action="{{ path("admin_msg") }}" method="post">
+        <button type="submit" class="btn btn-success">Mettre à jour</button>
+        <textarea name="msg" cols="80" rows="10"></textarea>
+
+    </form>
 {% endblock %}

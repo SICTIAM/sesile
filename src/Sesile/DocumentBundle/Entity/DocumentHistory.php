@@ -45,7 +45,7 @@ class DocumentHistory
 
     /**
      * @ORM\ManyToOne(targetEntity="Document", inversedBy="histories")
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id")
      */
     private $document;
 

@@ -29,14 +29,14 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
+     * @ORM\Column(name="Nom", type="string", length=255)
      */
     protected $Nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
+     * @ORM\Column(name="Prenom", type="string", length=255)
      */
     protected $Prenom;
 
@@ -92,12 +92,6 @@ class User extends BaseUser
      * @ORM\Column(name="role", type="string", length=255, nullable=true)
      */
     protected $role;
-
-
-    /**
-     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="user")
-     */
-    protected $actions_classeurs;
 
 
     public function setPath($path)
@@ -449,38 +443,5 @@ class User extends BaseUser
     public function getRole()
     {
         return $this->role;
-    }
-
-    /**
-     * Add actions_classeurs
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $actionsClasseurs
-     * @return User
-     */
-    public function addActionsClasseur(\Sesile\ClasseurBundle\Entity\Classeur $actionsClasseurs)
-    {
-        $this->actions_classeurs[] = $actionsClasseurs;
-
-        return $this;
-    }
-
-    /**
-     * Remove actions_classeurs
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $actionsClasseurs
-     */
-    public function removeActionsClasseur(\Sesile\ClasseurBundle\Entity\Classeur $actionsClasseurs)
-    {
-        $this->actions_classeurs->removeElement($actionsClasseurs);
-    }
-
-    /**
-     * Get actions_classeurs
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getActionsClasseurs()
-    {
-        return $this->actions_classeurs;
     }
 }

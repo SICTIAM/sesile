@@ -3,13 +3,7 @@
 {% block content %}
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
-
-
     <div class="bloc_page">
-        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
-            <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-            &nbsp;&nbsp;Historique
-        </button>
         {% if classeur.isValidable(app.user.id) %}
             {% if classeur.isSignable(app.user.id) %}
                 <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
@@ -19,13 +13,13 @@
                 </form>
             {% else %}
                 <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
-                    <button type="submit" class="btn btn-success"> <span class="glyphicon glyphicon-ok"></span> Valider</button>
+                    <button type="submit" class="btn btn-success">Valider</button>
                     <input type="hidden" value="{{ classeur.id }}" name="id"/>
                 </form>
             {% endif %}
 
             <form class="form_action" action="{{ path("classeur_refuser") }}" method="post">
-                <button type="submit" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span> Refuser</button>
+                <button type="submit" class="btn btn-danger">Refuser</button>
                 <input type="hidden" value="{{ classeur.id }}" name="id"/>
             </form>
         {% endif %}
@@ -38,12 +32,12 @@
         {% endif %}
 
         {% if classeur.isModifiable(app.user.id) %}
-            <button id="btn_modifier" type="button" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span>   Modifier</button>
+            <button id="btn_modifier" type="button" class="btn btn-info">Modifier</button>
         {% endif %}
 
         {% if classeur.isSupprimable(app.user.id) %}
-            <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-                <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>  Retirer</button>
+            <form class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
                 <input type="hidden" value="{{ classeur.id }}" name="id"/>
             </form>
         {% endif %}
@@ -85,28 +79,6 @@
                 </button>
             </div>
         </form>
-
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">Historique du classeur</h4>
-                    </div>
-                    <div class="modal-body">
-                        {% include "SesileClasseurBundle:Actions:Historique.html.twig" with {'actions': classeur.actions} %}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-
         <script type="application/javascript">
             $(".top_selects_circuits, .suppr_perso").hide();
             $("#circuit").sortable("disable");
@@ -136,23 +108,10 @@
             }).on('changeDate', function (ev) {
                         ev.hide();
                     });
-
-            $("#suprclasseur").submit(function (e) {
-
-
-
-
-                if (confirm('Confirmez-vous le retrait du classeur ?')) {
-
-                } else {
-                    e.preventDefault();
-                    return false;
-
-                }
-
-
-
-            });
         </script>
     </div>
+{% endblock %}
+
+{% block losjavascriptos %}
+    <script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 {% endblock %}

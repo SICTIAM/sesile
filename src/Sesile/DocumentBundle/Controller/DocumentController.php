@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class DocumentController extends Controller
 {
@@ -47,43 +47,6 @@ class DocumentController extends Controller
 
 
         return array('docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types, 'ids' => $ids);
-
-    }
-
-    /**
-     * @Route("/uploadfile", name="upload_doc",  options={"expose"=true})
-     *
-     */
-    public function uploadAction(Request $request)
-    {
-
-
-        $em = $this->getDoctrine()->getManager();
-        $uploadedfile = $request->files->get('signedFile');
-        $id = $request->request->get('id');
-        if(empty($uploadedfile)){
-            return new JsonResponse(array("error"=>"nothinguploaded"));
-        }
-
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
-        if(empty($doc)){
-            return new JsonResponse(array("error"=>"nodocumentwiththisname", "name"=>$uploadedfile->getClientOriginalName()));
-        }
-
-        if(file_exists('uploads/docs/' . $doc->getRepourl())){
-            unlink('uploads/docs/' . $doc->getRepourl());
-            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
-            $doc->setSigned(true);
-            $em->flush();
-            return new JsonResponse(array("error"=>"ok", "url"=>'uploads/docs/'. $doc->getRepourl()));
-
-        }else{
-            unlink($uploadedfile->getRealPath());
-
-            return new JsonResponse(array("error"=>"nodocumentwiththisname"));
-
-        }
-
 
     }
 
@@ -152,7 +115,6 @@ class DocumentController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
 
 
-
         $response->sendHeaders();
 
         $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
@@ -161,10 +123,32 @@ class DocumentController extends Controller
     }
 
 
+    /**
+     * @Route("/uploadfile", name="upload_doc",  options={"expose"=true})
+     *
+     */
+    public function uploadAction(Request $request)
+    {
 
 
+        $uploadedfile = $request->files->get('signedFile');
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $uploadedfile->getClientOriginalName()));
+
+        if (file_exists('uploads/docs/' . $doc->getRepourl())) {
+            unlink('uploads/docs/' . $doc->getRepourl());
+            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+            $doc->setSigned(true);
+            $em->flush();
+            return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
+
+        } else {
+
+            return new JsonResponse(array("error" => "nodocumentwiththisname"));
+
+        }
 
 
+    }
 
 
 }

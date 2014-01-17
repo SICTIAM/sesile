@@ -94,12 +94,8 @@ class DefaultController extends Controller
         $delegation->setDelegant($this->getUser());
         $userManager = $this->container->get('fos_user.user_manager');
         $delegation->setUser($userManager->findUserBy(array('id' => $request->request->get('user'))));
-        list($d, $m, $a) = explode("/", $request->request->get('debut'));
-        $debut = new \DateTime($m . "/" . $d . "/" . $a);
-        $delegation->setDebut($debut);
-        list($d, $m, $a) = explode("/", $request->request->get('fin'));
-        $fin = new \DateTime($m . "/" . $d . "/" . $a);
-        $delegation->setFin($fin);
+        $delegation->setDebut(new \DateTime($request->request->get('debut')));
+        $delegation->setFin(new \DateTime($request->request->get('fin')));
 
         $em->persist($delegation);
         $em->flush();
@@ -122,62 +118,13 @@ class DefaultController extends Controller
     public function deleteAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($request->get("id"));
+        $delegation = $em->getRepository('SesiledelegationsBundle:Delegation')->find($request->get("id"));
         if (!$delegation) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
         $em->remove($delegation);
         $em->flush();
 
-
-        return $this->redirect($this->generateUrl('delegations_list'));
-    }
-
-    /**
-     * @Route("/edit/{id}", name="delegation_edit")
-     * @method("GET")
-     * @template("SesileDelegationsBundle:Default:edit.html.twig")
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($id);
-
-        $userManager = $this->container->get('fos_user.user_manager');
-        $users = $userManager->findUsers();
-        foreach ($users as &$user) {
-            if ($user->getId() == $this->getUser()->getId()) {
-
-            }
-        }
-
-        if (!$delegation) {
-            throw $this->createNotFoundException('Unable to find délégation entity.');
-        }
-
-        return array("delegation" => $delegation, "users" => $users);
-    }
-
-    /**
-     * @Route("/update", name="delegation_update")
-     * @method("POST")
-     */
-    public function updateAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($request->request->get("id"));
-        if (!$delegation) {
-            throw $this->createNotFoundException('Unable to find délégation entity.');
-        }
-        $userManager = $this->container->get('fos_user.user_manager');
-        $delegation->setUser($userManager->findUserBy(array('id' => $request->request->get('user'))));
-        list($d, $m, $a) = explode("/", $request->request->get('debut'));
-        $debut = new \DateTime($m . "/" . $d . "/" . $a);
-        $delegation->setDebut($debut);
-        list($d, $m, $a) = explode("/", $request->request->get('fin'));
-        $fin = new \DateTime($m . "/" . $d . "/" . $a);
-        $delegation->setFin($fin);
-        $em->flush();
 
         return $this->redirect($this->generateUrl('delegations_list'));
     }
