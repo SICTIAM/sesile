@@ -223,7 +223,7 @@ class ClasseurController extends Controller
     /**
      * Displays a form to edit an existing Classeur entity.
      *
-     * @Route("/{id}", name="classeur_edit")
+     * @Route("/{id}", name="classeur_edit", options={"expose"=true})
      * @Method("GET")
      * @Template()
      */
@@ -247,7 +247,6 @@ class ClasseurController extends Controller
      *
      * @Route("/update_classeur", name="classeur_update")
      * @Method("POST")
-     * @Template("SesileClasseurBundle:Classeur:edit.html.twig")
      */
     public function updateAction(Request $request)
     {
