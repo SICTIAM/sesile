@@ -83,8 +83,7 @@
         </form>
 
         <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -106,14 +105,14 @@
 
         <script type="application/javascript">
             {% if classeur.isModifiable(app.user.id) %}
-            $("#name, #desc").removeAttr("disabled");
-            $("#enregistrer_modif").show();
-            enableUploads();
-            $(".perso_circuit").css("cursor", "-moz-grab");
+                $("#name, #desc").removeAttr("disabled");
+                $("#enregistrer_modif").show();
+                enableUploads();
+                $(".perso_circuit").css("cursor", "-moz-grab");
             {% else %}
-            $(".top_selects_circuits, .suppr_perso").hide();
-            $("#circuit").sortable("disable");
-            $(".perso_circuit").css("cursor", "Default");
+                $(".top_selects_circuits, .suppr_perso").hide();
+                $("#circuit").sortable("disable");
+                $(".perso_circuit").css("cursor", "Default");
             {% endif %}
 
             $(document).ready(function () {
