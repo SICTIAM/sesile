@@ -241,7 +241,13 @@ class ClasseurController extends Controller
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
+        $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
+        $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom()." ".$d->getNom(), "path" => $d->getPath());
+        $validant = $entity->getvalidant();
+
         return array(
+            'deposant' => $deposant,
+            'validant' => $validant,
             'classeur' => $entity,
             'retractable' => $entity->isRetractable($this->getUser()->getId(), $em)
         );

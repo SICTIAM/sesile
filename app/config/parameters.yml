@@ -5,7 +5,7 @@ parameters:
     database_port: null
     database_name: sesile
     database_user: root
-    database_password: sictiam
+    database_password: 324qre#
     mailer_transport: smtp
     mailer_host: mail.sictiam.fr
     mailer_user: r.lasry@sictiam.fr
