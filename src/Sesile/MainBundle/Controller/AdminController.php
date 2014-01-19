@@ -21,11 +21,11 @@ class AdminController extends Controller {
      *
      */
     public function PageAdminAction(Request $request) {
-        /*
+
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }*/
+        }
         $defaultData = array('msg' => 'Type your message here');
         $form = $this->createFormBuilder($defaultData)
             ->add('msg', 'textarea', array('label' => 'Message d\'accueil',))
@@ -70,11 +70,11 @@ class AdminController extends Controller {
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['logo_coll'];
 
-        /*
+
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
-        */
+
 
         $entity = new Collectivite();
         $form = $this->createCreateForm($entity);
@@ -104,12 +104,12 @@ class AdminController extends Controller {
      * @Template("SesileMainBundle:Collectivite:edit.html.twig")
      */
     public function editCollectiviteAction($id) {
-        /*
+
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
-        */
+
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileMainBundle:Collectivite')->find($id);
 
