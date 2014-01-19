@@ -7,7 +7,6 @@ html, body {
 	font-family: 'Droid Sans', sans-serif;
 	background-color: #eaeaea;
 	height: 100%;
-	overflow-x: hidden;
 }
 
 #maman {
@@ -27,7 +26,7 @@ html, body {
 #gauche {
 	background: white url("/images/vichy.png");
 	display: table-cell;
-	position: relative;
+	position: fixed;
 	z-index: 2;
 	min-height: 100%;
 	width: 15%;
@@ -51,6 +50,7 @@ html, body {
 	display: table-cell;
 	padding: 0 1em 7% 1em;
 	vertical-align: top;;
+	width: 85%;
 }
 
 #header, #lecontenu, #footer {

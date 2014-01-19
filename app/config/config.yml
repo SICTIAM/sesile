@@ -65,11 +65,13 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: %mailer_transport%
-    host:      %mailer_host%
-    username:  %mailer_user%
-    password:  %mailer_password%
-    spool:     { type: memory }
+    transport: smtp
+    host:      servermail2.sictiam.fr
+    username:  r.lasry@sictiam.fr
+    password:  S|cti@m06
+    spool:
+            type: file
+            path: "%kernel.root_dir%/spool"
 
 oneup_uploader:
     mappings:
@@ -88,12 +90,6 @@ fos_user:
     profile:
         form:
             type: sesile_user_profile
-
-
-swiftmailer:
-    transport:  %mailer_transport%
-    username:   %mailer_user%
-    password:   %mailer_password%
 
 
 parameters:
