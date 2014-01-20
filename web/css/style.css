@@ -166,8 +166,8 @@ html, body {
 .coll-row .boutons_action .glyphicon,
 .classeur-row .boutons_action .glyphicon,
 .delegation_row .boutons_action .glyphicon {
-	visibility: hidden;
-	margin: 0 .3em 0 .3em;
+    /*visibility: hidden;*/
+    margin: 0 .3em 0 .3em;
 }
 
 .coll-row:hover .boutons_action .glyphicon,
