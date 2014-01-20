@@ -3,5 +3,6 @@ app/logs
 app/sessions
 /web/components
 /web/uploads
+/web/uploads/avatars
 /vendor
 .idea
