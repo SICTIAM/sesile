@@ -41,13 +41,39 @@ html, body {
 	margin-top: 5%;
 }
 
-#img_imposetonstyle {
-	background-color: red;
-	width: 75px;
-	height: 75px;
-	margin: auto;
-	margin-bottom: 15%;
-	margin-top: 5%;
+#img_imposetonstyle{
+	margin: 8% auto 12% auto;
+	width: 80px;
+}
+
+.border_imposetonstyle{
+	position: relative;
+	border-top: 5px solid #cccccc;
+}
+
+.border_imposetonstyle:after, .border_imposetonstyle:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.border_imposetonstyle:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: #ffffff;
+	border-width: 22px;
+	margin-left: -22px;
+}
+
+.border_imposetonstyle:before {
+	border-color: rgba(204, 204, 204, 0);
+	border-bottom-color: #cccccc;
+	border-width: 29px;
+	margin-left: -29px;
 }
 
 /*HEADER FOOTER*/
@@ -323,7 +349,7 @@ html, body {
 	font-weight: bold;
 }
 
-.pipe{
+.pipe {
 	color: #cccccc;
 }
 
@@ -378,8 +404,8 @@ html, body {
 	word-break: break-all;
 }
 
-.btn-default{
-	color:#6d6e70 !important;
+.btn-default {
+	color: #6d6e70 !important;
 }
 
 /*FLASHBAG*/
@@ -458,6 +484,7 @@ html, body {
 	display: block;
 	background-repeat: no-repeat;
 	font-weight: bold;
+	color: #a9a9a9;
 }
 
 .cb-enable span {
