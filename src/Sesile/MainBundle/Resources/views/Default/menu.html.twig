@@ -9,6 +9,12 @@
                 </div>
                 <ul class="dd-menu">
                     <li>
+                        <a href="{{ path("delegation_new") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
+                            Ajout d’une délégation
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ path("delegations_list") }}">
                             <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
                             Gérer les délégations
@@ -17,7 +23,7 @@
                     <li>
                         <a href="{{ path("delegations_recues") }}">
                             <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            délégations reçues
+                            Délégations reçues
                         </a>
                     </li>
                 </ul>
@@ -37,15 +43,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ path("classeur_new") }}">
+                        <a href="{{ path("index_valider") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            Créer un classeur
+                            Classeur(s) reçu(s)
                         </a>
                     </li>
                     <li>
-                        <a href="{{ path("index_valider") }}">
+                        <a href="{{ path("classeur_new") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            A valider
+                            Ajout d'un classeur
                         </a>
                     </li>
                     <li>
@@ -58,12 +64,19 @@
             </li>
 
             <li class="menu-elem menu-rouge">
-                <div class="entete-menu">
-                    <a href="">
+                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
+                    <a href="#">
                         <div class="rectanglemenu" id="rougeclair"></div>
-                        Préférences
-                    </a>
+                        Préférences<b class="caret carette"></b></a>
                 </div>
+                <ul class="dd-menu">
+                    <li>
+                        <a href="{{ path("classeur") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
+                            Notifications
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="menu-elem menu-vert ">
                 <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
@@ -73,15 +86,27 @@
                 </div>
                 <ul class="dd-menu">
                     <li>
-                        <a href="{{ path("liste_users") }}">
+                        <a href="{{ path("gestion_circuit") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Liste des utilisateurs
+                            Gestion des circuits
                         </a>
                     </li>
                     <li>
                         <a href="{{ path("gestion_circuit") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Gestion des circuits
+                            Types de classeurs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("gestion_circuit") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Message d'accueil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("liste_users") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Gestion des utilisateurs
                         </a>
                     </li>
                 </ul>
