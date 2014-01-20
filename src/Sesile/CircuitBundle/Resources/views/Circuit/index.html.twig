@@ -1,0 +1,11 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-retweet"></span>
+            &nbsp;&nbsp;&nbsp;Gestion des circuits
+        </div>
+        {% include 'SesileCircuitBundle:Circuit:gestion.html.twig' %}
+    </div>
+{% endblock %}

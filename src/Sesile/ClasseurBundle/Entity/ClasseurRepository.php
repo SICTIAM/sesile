@@ -3,6 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * ClasseurRepository
@@ -12,4 +13,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class ClasseurRepository extends EntityRepository
 {
+
 }

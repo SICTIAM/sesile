@@ -1,28 +1,77 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
-    <table class="table">
-    <thead>
-        <tr>
-            <th>Identifiant</th>
-            <th>Mail</th>
-            <th>Actif</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for user in users %}
-        <tr class="user-row" data-id="{{ user.id }}">
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.enabled }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-    </table>
-    <a href="{{ path("ajout_user") }}">Ajouter un utilisateur</a>
-    <script type="text/javascript">
-        $(".user-row").click(function() {
-            alert($(this).data("id"));
-        });
-    </script>
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-user"></span>
+            &nbsp;&nbsp;&nbsp;Liste des utilisateurs
+        </div>
+        <table class="table tableau dtables">
+            <thead>
+                <tr>
+                    <th>Mail</th>
+                    <th>Nom</th>
+                    <th>Actif</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr class="user-row" data-id="{{ user.id }}">
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.Nom }} {{ user.Prenom }}</td>
+                        <td>
+                            <div class="active_inactive_user">{% if user.enabled %}
+                                    <span class="glyphicon glyphicon-ok"></span>{% else %}
+                                    <span class="glyphicon glyphicon-remove"></span>{% endif %}</div>
+                        </td>
+                        <td class="boutons_action">
+                            <a href="{{ path("user_edit", {'id' : user.id }) }}">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                            <a class="" href="#"{{ path("user_edit", {'id' : user.id }) }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path("ajout_user") }}">
+            <button type="button" class="btn btn-default navbar-btn">
+                Ajouter un utilisateur
+            </button>
+        </a>
+        <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+        <script type="text/javascript">
+            $(".dtables").dataTable({
+                "oLanguage": {
+                    "sSearch": "Rechercher&nbsp;:",
+                    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    "oPaginate": {
+                        "sFirst": "",
+                        "sPrevious": "",
+                        "sNext": "",
+                        "sLast": "",
+                        "sZeroRecords": "Aucun utilisateur &agrave; afficher",
+                        "sEmptyTable": "Aucun utilisateur &agrave; afficher"
+                    }
+                },
+                "iDisplayLength": 15,
+                "aLengthMenu": [15, 30, 50, 100],
+                "sDom": 'lift<"footer_datatables"p>',
+                "aoColumnDefs": [
+                    { "bSortable": false, "aTargets": [ 3 ] }
+                ],
+                "sPaginationType": "full_numbers"
+            });
+
+            $(".user-row").click(function () {
+                document.location.href = Routing.generate('user_edit', { id: $(this).data("id") });
+            });
+        </script>
+    </div>
 {% endblock %}

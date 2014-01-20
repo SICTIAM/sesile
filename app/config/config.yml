@@ -20,12 +20,19 @@ framework:
     session:         ~
     fragments:       ~
     http_method_override: true
+    session:
+            save_path: "%kernel.root_dir%/sessions/"
 
 # Twig Configuration
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-
+    form:
+        resources:
+            - 'SesileMainBundle:Form:fields.html.twig'
+    globals:
+        upload_path: uploads/avatars/
+        upload_path_logo: uploads/logo_coll/
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -59,18 +66,52 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: %mailer_transport%
-    host:      %mailer_host%
-    username:  %mailer_user%
-    password:  %mailer_password%
-    spool:     { type: memory }
+    transport: smtp
+    host:      servermail2.sictiam.fr
+    username:  r.lasry@sictiam.fr
+    password:  S|cti@m06
+    spool:
+            type: file
+            path: "%kernel.root_dir%/spool"
 
 oneup_uploader:
     mappings:
         docs:
-            frontend: dropzone
+            frontend: custom
+            custom_frontend:
+                class: Sesile\DocumentBundle\Controller\DocumentUploader
+                name: DocumentUploader
+            use_orphanage: true
+
 
 fos_user:
     db_driver:     orm
     firewall_name: main
     user_class:    Sesile\UserBundle\Entity\User
+    profile:
+        form:
+            type: sesile_user_profile
+
+
+parameters:
+    cas_server: 172.17.100.78
+    cas_port: 389
+    cas_path: /
+    cas_protocol: '2.0'
+    gorg:
+        path: %kernel.root_dir%/../vendor/gorg/phpcas/
+    upload:
+        path: %kernel.root_dir%/../web/uploads/avatars/
+        logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
+        msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
+    ldap:
+        dn_admin: cn=admin,dc=sictiam,dc=local
+        dn_user: cn=Users,dc=sictiam,dc=local
+        password: WcJa37BI
+
+
+
+jms_di_extra:
+    locations:
+        all_bundles: true
+

@@ -1,0 +1,11 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-import"></span>
+            &nbsp;&nbsp;&nbsp;Délégations reçues
+        </div>
+        {% include 'SesileDelegationsBundle:Default:liste.html.twig' %}
+    </div>
+{% endblock %}

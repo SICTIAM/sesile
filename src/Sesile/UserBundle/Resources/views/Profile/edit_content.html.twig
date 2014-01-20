@@ -1,0 +1,62 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{{ form_start(form) }}
+<div class="label_form label-form-input">
+    {{ form_label(form.Prenom) }}
+    {{ form_widget(form.Prenom) }}
+</div>
+
+<br/>
+
+<div class="label_form label-form-input">
+    {{ form_label(form.Nom) }}
+    {{ form_widget(form.Nom) }}
+</div>
+
+<br/>
+
+<div class="label_form label-form-input">
+    {{ form_label(form.username, 'E-mail') }}
+    {{ form_widget(form.username) }}
+</div>
+
+<br/>
+
+<div class="label_form parcou">
+    {{ form_label(form.file) }}
+    {{ form_widget(form.file) }}
+</div>
+<br/>
+
+{% for passwordField in form.plainPassword %}
+    <div class="label_form label-form-input">
+        {% if loop.index  != 1 %}
+            {{ form_label(passwordField, 'Confirmation') }}
+        {% else %}
+            {{ form_label(passwordField, 'Mot de passe') }}
+        {% endif %}
+        {{ form_widget(passwordField) }}
+    </div>
+    <br/>
+{% endfor %}
+<br/>
+<button class="btn btn-success" type="submit">{{ 'profile.edit.submit'|trans }}</button>
+{{ form_end(form) }}
+<script type="text/javascript">
+    $(".label_form input").focus(function () {
+        $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
+        $(this).prev("label").addClass("glyphicon-search-blue");
+    });
+
+    $(".cb-enable").click(function () {
+        var parent = $(this).parents('.acti');
+        $('.cb-disable', parent).removeClass('selected');
+        $(this).addClass('selected');
+        $('.checkbox', parent).attr('checked', true);
+    });
+    $(".cb-disable").click(function () {
+        var parent = $(this).parents('.acti');
+        $('.cb-enable', parent).removeClass('selected');
+        $(this).addClass('selected');
+        $('.checkbox', parent).attr('checked', false);
+    });
+</script>

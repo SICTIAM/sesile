@@ -1,0 +1,3 @@
+services:
+     sesile.document:
+        class: Sesile\DocumentBundle\Controller\DocumentController

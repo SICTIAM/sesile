@@ -1,0 +1,3 @@
+services:
+     sesile.circuit:
+        class: Sesile\CircuitBundle\Controller\CircuitController

@@ -11,13 +11,14 @@ imports:
 #        result_cache_driver: apc
 #        query_cache_driver: apc
 
-monolog:
-    handlers:
-        main:
-            type:         fingers_crossed
-            action_level: error
-            handler:      nested
-        nested:
-            type:  stream
-            path:  %kernel.logs_dir%/%kernel.environment%.log
-            level: debug
+
+
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: sesile
+    database_user: root
+    database_password: ***REMOVED***
+    secret: ***REMOVED***
+

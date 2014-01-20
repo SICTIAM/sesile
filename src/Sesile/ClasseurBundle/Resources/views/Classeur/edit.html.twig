@@ -1,16 +1,140 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    <h1>Classeur edit</h1>
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}" xmlns="http://www.w3.org/1999/html"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
-    {{ form(edit_form) }}
+    <div class="bloc_page">
+        {% if classeur.isModifiable(app.user.id) %}
+            <div class="titre_page">
+                <span class="glyphicon glyphicon-pencil"></span>
+                &nbsp;&nbsp;&nbsp;Édition du classeur
+            </div>
+        {% else %}
+            <div class="titre_page">
+                <span class="glyphicon glyphicon-eye"></span>
+                &nbsp;&nbsp;&nbsp;Visualisation du classeur
+            </div>
+        {% endif %}
+        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+            &nbsp;Historique
+        </button>
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+        <br>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('classeur') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+        <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
+            <input type="hidden" name="id" value="{{ classeur.id }}"/>
+
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Titre
+            </div>
+            <input class="form-control" id="name" name="name" disabled placeholder="Nom" value="{{ classeur.nom }}">
+            <br>
+
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Description
+            </div>
+            <textarea class="form-control" rows="3" name="desc" disabled id="desc">{{ classeur.description }}</textarea>
+            <br>
+
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Date limite de validation
+            </div>
+            <input class="datepicker" id="validation" name="validation" type="datetime" disabled
+                   value="{{ classeur.validation  | date('d/m/Y') }}"/>
+            <br>
+
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Documents
+            </div>
+            <div id="documentcontent"></div>
+            <br>
+
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Circuit
+            </div>
+            <div id="circuitcontent">
+                <script type="application/javascript">
+                    var circuit_users = "{{ classeur.circuit }}";
+                    var validant = {{ validant }};
+                    var deposant = {{ deposant|json_encode|raw }};
+                    var path = "{{ asset(upload_path) }}";
+                </script>
+                {% render url("new_circuit") %}
+            </div>
+        </form>
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+        <br>
+        <br>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Historique du classeur</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% include "SesileClasseurBundle:Actions:Historique.html.twig" with {'actions': classeur.actions} %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <script type="application/javascript">
+            $(document).ready(function () {
+                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
+                    enableUploads();
+                });
+
+                $(".top_selects_circuits, .suppr_perso").hide();
+                //$("#circuit").sortable("disable");
+                $(".perso_circuit").css("cursor", "Default");
+
+
+                {% if classeur.isModifiable(app.user.id) %}
+                $("#name, #desc, #validation").removeAttr("disabled");
+                $("#enregistrer_modif").show();
+                $(".top_selects_circuits, .suppr_perso").show();
+                $("#circuit").sortable("enable");
+                $(".perso_circuit").css("cursor", "-moz-grab");
+                {% endif %}
+            });
+
+            var nowTemp = new Date();
+            var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+            var valid = $('#validation').datepicker({
+                onRender: function (date) {
+                    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate', function (ev) {
+                        ev.hide();
+                    });
+
+            $("#suprclasseur").submit(function (e) {
+                if (confirm('Confirmez-vous le retrait du classeur ?')) {
+
+                } else {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $(".btn-modifs").click(function() {
+                $("#form_edit").submit();
+            });
+        </script>
+    </div>
 {% endblock %}
