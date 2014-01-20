@@ -4,6 +4,10 @@
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
     <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-pencil"></span>
+            &nbsp;&nbsp;&nbsp;Ajouter une délégation
+        </div>
         <form action="{{ path("delegation_create") }}" method="post">
             <select name="user">
                 {% for user in users %}
