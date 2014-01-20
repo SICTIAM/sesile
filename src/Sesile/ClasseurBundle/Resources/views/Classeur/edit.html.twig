@@ -132,8 +132,8 @@
                 }
             });
 
-            $(".btn-modifs").click(function() {
-                $("#form_edit").submit();
+            $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer").click(function () {
+                $("#form_edit").attr("action", $(this).attr("data-action")).submit();
             });
         </script>
     </div>
