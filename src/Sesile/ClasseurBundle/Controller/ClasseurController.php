@@ -129,9 +129,10 @@ class ClasseurController extends Controller
         $classeur->setCircuit($circuit);
         $classeur->setUser($this->getUser()->getId());
 
-        // TODO ajouter visibilité
-        $classeur->setVisibilite(1);
+        $classeur->setVisibilite($request->request->get('visibilite'));
         $em->persist($classeur);
+
+
         $em->flush();
 
         // enregistrer les users du circuit
@@ -355,6 +356,8 @@ class ClasseurController extends Controller
         // envoi d'un mail validant suivant
         $this->sendValidationMail($classeur);
 
+        $this->updateAction($request);
+
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
@@ -369,6 +372,9 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
         $classeur->refuser();
         $em->persist($classeur);
         $em->flush();
@@ -383,9 +389,8 @@ class ClasseurController extends Controller
         // envoi d'un mail validant suivant
         $this->sendRefusMail($classeur);
 
-        if (!$classeur) {
-            throw $this->createNotFoundException('Unable to find Classeur entity.');
-        }
+        $this->updateAction($request);
+
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
@@ -413,6 +418,8 @@ class ClasseurController extends Controller
         $action->setAction("Signature");
         $em->persist($action);
         $em->flush();
+
+        $this->updateAction($request);
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
