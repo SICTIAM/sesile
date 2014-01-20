@@ -39,10 +39,13 @@
 
     </div>
     </a>
-
+    <div class="border_imposetonstyle">
+        <div id="img_imposetonstyle">
+            {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
+            <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg")}}" width="80px" height="80px"/>
+        </div>
+    </div>
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
-    <img src="{{ asset(upload_path_logo ~ app.session.get('logo')) }}" width="60px" height="60px"/>
-
 </div>
 
 <div id="droite">
@@ -108,7 +111,6 @@
                                 Bienvenue
                             </div>
                             {{ msg_acc }}
-
                         </div>
                     </div>
                 {% endif %}
