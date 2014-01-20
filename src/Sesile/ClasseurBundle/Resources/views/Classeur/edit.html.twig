@@ -47,6 +47,8 @@
             <div id="circuitcontent">
                 <script type="application/javascript">
                     var circuit_users = "{{ classeur.circuit }}";
+                    var validant = {{ validant }};
+                    var deposant = {{ deposant|json_encode|raw }};
                 </script>
                 {% render url("new_circuit") %}
             </div>

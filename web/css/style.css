@@ -7,7 +7,6 @@ html, body {
 	font-family: 'Droid Sans', sans-serif;
 	background-color: #eaeaea;
 	height: 100%;
-	overflow-x: hidden;
 }
 
 #maman {
@@ -27,7 +26,7 @@ html, body {
 #gauche {
 	background: white url("/images/vichy.png");
 	display: table-cell;
-	position: relative;
+	position: fixed;
 	z-index: 2;
 	min-height: 100%;
 	width: 15%;
@@ -51,6 +50,7 @@ html, body {
 	display: table-cell;
 	padding: 0 1em 7% 1em;
 	vertical-align: top;;
+	width: 85%;
 }
 
 #header, #lecontenu, #footer {
@@ -156,12 +156,14 @@ html, body {
 }
 
 .user-row .boutons_action .glyphicon,
+.coll-row .boutons_action .glyphicon,
 .classeur-row .boutons_action .glyphicon,
 .delegation_row .boutons_action .glyphicon {
 	visibility: hidden;
 	margin: 0 .3em 0 .3em;
 }
 
+.coll-row:hover .boutons_action .glyphicon,
 .user-row:hover .boutons_action .glyphicon,
 .classeur-row:hover .boutons_action .glyphicon,
 .delegation_row:hover .boutons_action .glyphicon {
@@ -169,6 +171,7 @@ html, body {
 	visibility: visible;
 }
 
+.coll-row:hover .boutons_action .glyphicon:hover,
 .user-row:hover .boutons_action .glyphicon:hover,
 .classeur-row:hover .boutons_action .glyphicon:hover,
 .delegation_row:hover .boutons_action .glyphicon:hover {
@@ -176,7 +179,7 @@ html, body {
 	color: rgba(50, 133, 171, 1);
 }
 
-.user-row:hover, .classeur-row:hover, .delegation_row:hover {
+.user-row:hover, .classeur-row:hover, .delegation_row:hover, .coll-row:hover {
 	background-color: rgba(50, 133, 171, 0.5);
 	cursor: pointer;
 }

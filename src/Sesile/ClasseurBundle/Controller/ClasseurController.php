@@ -180,6 +180,11 @@ class ClasseurController extends Controller
 
         // $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
 
+        // envoi d'un mail au premier validant
+        $this->sendCreationMail($classeur);
+
+        // TODO envoi du mail au déposant et aux autres personnes du circuit ?
+
 
         $error = false; /*
         if($respCircuit->getContent()!='OK') {
@@ -236,7 +241,13 @@ class ClasseurController extends Controller
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
+        $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
+        $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom()." ".$d->getNom(), "path" => $d->getPath());
+        $validant = $entity->getvalidant();
+
         return array(
+            'deposant' => $deposant,
+            'validant' => $validant,
             'classeur' => $entity,
             'retractable' => $entity->isRetractable($this->getUser()->getId(), $em)
         );
@@ -341,6 +352,9 @@ class ClasseurController extends Controller
         $em->persist($action);
         $em->flush();
 
+        // envoi d'un mail validant suivant
+        $this->sendValidationMail($classeur);
+
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
@@ -365,6 +379,9 @@ class ClasseurController extends Controller
         $action->setAction("Refus");
         $em->persist($action);
         $em->flush();
+
+        // envoi d'un mail validant suivant
+        $this->sendRefusMail($classeur);
 
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
@@ -516,6 +533,71 @@ class ClasseurController extends Controller
                     'SesileClasseurBundle:Formulaires:elpez.html.twig'
                 );
                 break;
+        }
+    }
+
+    /*                MAILS DE NOTIFICATION                      */
+
+    private function sendMail($sujet, $to, $body) {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($sujet)
+            ->setFrom('sesile@sictiam.fr')
+            ->setTo($to)
+            ->setBody($body, "text/html");
+        $this->get('mailer')->send($message);
+    }
+
+    private function sendValidationMail($classeur) {
+        $body = $this->renderView('SesileClasseurBundle:Mail:valide.html.twig',
+            array(
+                'validant' => $this->getUser(),
+                'titre_classeur' => $classeur->getNom(),
+                'date_limite' => $classeur->getValidation(),
+                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+            )
+        );
+
+        $em = $this->getDoctrine()->getManager();
+        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+
+        if($validant_obj != null) {
+            $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
+        }
+    }
+
+    private function sendCreationMail($classeur) {
+        $body = $this->renderView('SesileClasseurBundle:Mail:refuse.html.twig',
+            array(
+                'deposant' => $classeur->getUser(),
+                'titre_classeur' => $classeur->getNom(),
+                'date_limite' => $classeur->getValidation(),
+                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+            )
+        );
+
+        $em = $this->getDoctrine()->getManager();
+        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+
+        if($validant_obj != null) {
+            $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
+        }
+    }
+
+    private function sendRefusMail($classeur) {
+        $body = $this->renderView('SesileClasseurBundle:Mail:refuse.html.twig',
+            array(
+                'deposant' => $classeur->getUser(),
+                'titre_classeur' => $classeur->getNom(),
+                'date_limite' => $classeur->getValidation(),
+                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+            )
+        );
+
+        $em = $this->getDoctrine()->getManager();
+        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+
+        if($validant_obj != null) {
+            $this->sendMail("SESILE - Classeur refusé", $validant_obj->getEmail(), $body);
         }
     }
 }
