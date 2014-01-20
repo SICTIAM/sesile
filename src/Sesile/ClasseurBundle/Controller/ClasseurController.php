@@ -262,6 +262,8 @@ class ClasseurController extends Controller
      */
     public function updateAction(Request $request)
     {
+
+        var_dump($request->request->get('circuit'));
         $em = $this->getDoctrine()->getManager();
 
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->request->get('id'));
@@ -301,9 +303,6 @@ class ClasseurController extends Controller
         for ($i = 0; $i < count($users); $i++) {
             $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
             $cu = $classeurUserObj->findOneBy(array("user" => $userObj, "classeur" => $classeur));
-            if ($cu != null) {
-                continue;
-            }
 
             $classeurUser = new ClasseursUsers();
             $classeurUser->setClasseur($classeur);

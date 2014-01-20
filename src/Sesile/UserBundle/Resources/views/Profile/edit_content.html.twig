@@ -1,10 +1,5 @@
 {% trans_default_domain 'FOSUserBundle' %}
-<div class="bloc_page">
-    <div class="titre_page">
-        <span class="glyphicon glyphicon-folder-open"></span>
-        &nbsp;&nbsp;&nbsp;Modifier un utilisateur
-    </div>
-    {{ form_start(form) }}
+{{ form_start(form) }}
 <div class="label_form label-form-input">
     {{ form_label(form.Prenom) }}
     {{ form_widget(form.Prenom) }}
@@ -46,10 +41,6 @@
 <br/>
 <button class="btn btn-success" type="submit">{{ 'profile.edit.submit'|trans }}</button>
 {{ form_end(form) }}
-
-</div>
-
-
 <script type="text/javascript">
     $(".label_form input").focus(function () {
         $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
