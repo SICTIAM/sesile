@@ -64,6 +64,14 @@
 	cursor: -moz-grab;
 }
 
+.no_sort {
+	cursor: default;
+}
+
+.deposant{
+	margin-top: 1.5em;
+}
+
 .perso_circuit img {
 	width: 80px;
 	height: 80px;
@@ -79,14 +87,39 @@
 	text-overflow: ellipsis;
 }
 
-.suppr_perso {
-	color: red;
+.curr_user {
+
+}
+
+.btn-modifs {
+
+}
+
+.suppr_perso,
+.valid_perso,
+.ok_perso {
 	position: relative;
 	float: right;
 	font-size: 1.2em;
 	top: .6em;
 	left: .1em;
 	cursor: pointer;
+	background-color: #ffffff;
+	border-radius: 1em;
+	width: 1.5em !important;
+	height: 1.2em !important;
+}
+
+.suppr_perso {
+	color: red;
+}
+
+.valid_perso {
+	color: #DBA209;
+}
+
+.ok_perso {
+	color: #759E1A;
 }
 
 .suppr_perso:hover {

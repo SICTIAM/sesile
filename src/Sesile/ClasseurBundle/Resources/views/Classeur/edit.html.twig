@@ -18,12 +18,12 @@
         {% endif %}
         <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-            &nbsp;&nbsp;Historique
+            &nbsp;Historique
         </button>
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         <br>
 
-        <form action="{{ path("classeur_update") }}" method="post">
+        <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
             <div class="titre_form_element">
@@ -37,9 +37,7 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Description
             </div>
-            <textarea class="form-control" rows="3" name="desc" disabled id="desc">
-                {{ classeur.description }}
-            </textarea>
+            <textarea class="form-control" rows="3" name="desc" disabled id="desc">{{ classeur.description }}</textarea>
             <br>
 
             <div class="titre_form_element">
@@ -66,10 +64,10 @@
                     var circuit_users = "{{ classeur.circuit }}";
                     var validant = {{ validant }};
                     var deposant = {{ deposant|json_encode|raw }};
+                    var path = "{{ asset(upload_path) }}";
                 </script>
                 {% render url("new_circuit") %}
             </div>
-            <button class="btn btn-success" type="submit">Enregistrer</button>
         </form>
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         <br>
@@ -126,17 +124,16 @@
                     });
 
             $("#suprclasseur").submit(function (e) {
-
-
                 if (confirm('Confirmez-vous le retrait du classeur ?')) {
 
                 } else {
                     e.preventDefault();
                     return false;
-
                 }
+            });
 
-
+            $(".btn-modifs").click(function() {
+                $("#form_edit").submit();
             });
         </script>
     </div>

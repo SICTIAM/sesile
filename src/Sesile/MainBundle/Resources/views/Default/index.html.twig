@@ -34,10 +34,14 @@
 <div id="maman">
 <div id="gauche">
     <a href="{{ app.request.getBaseURL() }}">
-    <div id="logo">
+        <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
         </div>
     </a>
+    <div id="img_imposetonstyle">
+            {# TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
+        <img src="/images/logosictiampetit.png" width="60px" height="60px"/>
+    </div>
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
 </div>
 
@@ -47,7 +51,7 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <img class="userpicture"
-                         src="{{ app.user.path }}"/>
+                         src="{{ asset(upload_path ~ app.user.path) }}"/>
                     &nbsp;
                     {{ app.user.prenom }}&nbsp;{{ app.user.nom }}&nbsp;&nbsp;&nbsp;
                     <span class="caret"></span>
@@ -94,15 +98,7 @@
                                 <span class="glyphicon glyphicon-home"></span>
                                 Bienvenue
                             </div>
-                            Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page
-                            avant
-                            impression. Le Lorem Ipsum est le le le lel (je vous le donne)*
-                            <a href="#" data-toggle="tooltip" class="sesiletooltip" title="test tooltip">lel
-                                lelllllelelfaux texte
-                            </a>
-                            standard de l'imprimerie depuis les années 1500, quand
-                            un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen
-                            de
+                            {{ msg_acc }}
                         </div>
                     </div>
                 {% endif %}

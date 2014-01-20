@@ -32,6 +32,7 @@ twig:
             - 'SesileMainBundle:Form:fields.html.twig'
     globals:
         upload_path: uploads/avatars/
+        upload_path_logo: uploads/logo_coll/
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -102,6 +103,7 @@ parameters:
     upload:
         path: %kernel.root_dir%/../web/uploads/avatars/
         logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
+        msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
     ldap:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local
