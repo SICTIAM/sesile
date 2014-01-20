@@ -37,9 +37,7 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Description
             </div>
-            <textarea class="form-control" rows="3" name="desc" disabled id="desc">
-                {{ classeur.description }}
-            </textarea>
+            <textarea class="form-control" rows="3" name="desc" disabled id="desc">{{ classeur.description }}</textarea>
             <br>
 
             <div class="titre_form_element">
@@ -66,10 +64,10 @@
                     var circuit_users = "{{ classeur.circuit }}";
                     var validant = {{ validant }};
                     var deposant = {{ deposant|json_encode|raw }};
+                    var path = "{{ asset(upload_path) }}";
                 </script>
                 {% render url("new_circuit") %}
             </div>
-            <button class="btn btn-success" type="submit">Enregistrer</button>
         </form>
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         <br>

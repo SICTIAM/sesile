@@ -10,7 +10,7 @@
         <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
             <button type="submit" class="btn btn-success">
                 <span class="glyphicon glyphicon-ok"></span>
-                Valider
+                Valider le classeur
             </button>
             <input type="hidden" value="{{ classeur.id }}" name="id"/>
         </form>
@@ -40,4 +40,9 @@
         </button>
         <input type="hidden" value="{{ classeur.id }}" name="id"/>
     </form>
+{% endif %}
+
+
+{% if classeur.isModifiable(app.user.id) %}
+    <button class="btn btn-success pull-right" type="submit">Enregistrer les modifications</button>
 {% endif %}
