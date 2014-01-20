@@ -1,19 +1,17 @@
 {% if classeur.isValidable(app.user.id) %}
 
     {% if classeur.isSignable(app.user.id) %}
-            <button type="submit" class="btn btn-success btn-valider-signer">
+        <button type="submit" class="btn btn-success btn-valider-signer"
+                data-action="{{ path('signform',{'id':classeur.id}) }}">
                 <span class="glyphicon glyphicon-ok"></span>
-                &nbsp;Valider et Signer {{ path('signform',{'id':classeur.id}) }}
-            </button>
-
-        </form>
+        &nbsp;Valider et Signer
+        </button>
     {% else %}
         <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_valider") }}">
             <span class="glyphicon glyphicon-ok"></span>
             &nbsp;Valider le classeur
         </button>
     {% endif %}
-
     <button type="submit" class="btn btn-danger btn-refuser" data-action="{{ path("classeur_refuser") }}">
         <span class="glyphicon glyphicon-remove"></span>
         &nbsp;Refuser
@@ -41,7 +39,7 @@
 
 
 {% if classeur.isModifiable(app.user.id) %}
-    <button class="btn btn-success pull-right" class="btn-modifs">
-        <span class="glyphicon glyphicon-saved"></span>
+    <button class="btn btn-success pull-right" class="btn-modifs" data-action="{{ path("classeur_update") }}">
+    <span class="glyphicon glyphicon-saved"></span>
         &nbsp;Enregistrer les modifications</button>
 {% endif %}
