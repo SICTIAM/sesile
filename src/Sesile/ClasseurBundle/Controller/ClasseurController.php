@@ -129,9 +129,10 @@ class ClasseurController extends Controller
         $classeur->setCircuit($circuit);
         $classeur->setUser($this->getUser()->getId());
 
-        // TODO ajouter visibilité
         $classeur->setVisibilite($request->request->get('visibilite'));
         $em->persist($classeur);
+
+
         $em->flush();
 
         // enregistrer les users du circuit
