@@ -10,7 +10,7 @@
         </div>
         <div id="users_list">
             {% for user in users %}
-                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.username }}</p>
+                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
             {% endfor %}
         </div>
         <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
@@ -51,7 +51,7 @@
         $(this).addClass("list_selected_element");
     });
 
-    var circuit = "";
+    var path = "{{ asset(upload_path) }}";
 </script>
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>

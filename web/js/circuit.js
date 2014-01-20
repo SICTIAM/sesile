@@ -29,7 +29,7 @@ if (typeof circuit_users != 'undefined') {
 
 if (typeof deposant != 'undefined') {
     var new_perso = $('<div/>').addClass('deposant no_sort perso_circuit').insertBefore("#debut_circuit");
-    perso_src = deposant.path || perso_src;
+    perso_src = path+deposant.path || perso_src;
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
@@ -44,22 +44,28 @@ function ajoutUser(id, sort) {
     }
     var new_perso = $('<div/>').data('id', id).addClass('perso_circuit').appendTo("#circuit");
 
-    if(!sort) {
-        new_perso.addClass("no_sort");
-    }
-
     if (typeof validant != 'undefined' && validant > 0 && validant == id) {
         new_perso.addClass("curr_user");
+        $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);
     }
 
-    $("<span/>").addClass("suppr_perso glyphicon glyphicon-remove").appendTo(new_perso).click(function () {
-        $("<p/>").attr("data-id", id).text(sel_user.text()).appendTo("#users_list");
-        new_perso.remove();
-        $('#users_list p:first').addClass("list_selected_element");
-        creerFleches();
-    });
 
-    perso_src = sel_user.data("img") || perso_src;
+    if(!sort) {
+        new_perso.addClass("no_sort");
+        if (typeof validant != 'undefined' && validant > 0 && validant != id) {
+            $("<span/>").addClass("ok_perso glyphicon glyphicon-ok").appendTo(new_perso);
+        }
+    }
+    else {
+        $("<span/>").addClass("suppr_perso glyphicon glyphicon-remove").appendTo(new_perso).click(function () {
+            $("<p/>").attr("data-id", id).text(sel_user.text()).appendTo("#users_list");
+            new_perso.remove();
+            $('#users_list p:first').addClass("list_selected_element");
+            creerFleches();
+        });
+    }
+
+    perso_src = path+sel_user.data("img") || perso_src;
 
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);
