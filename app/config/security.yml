@@ -21,7 +21,7 @@ security:
             logout:
                 success_handler: security.logout.success_handler
             cas:
-                cas_server: sso.dev.sictiam.fr
+                cas_server: 172.17.100.78
                 cas_port: 443
                 cas_path: /
                 ca_cert_path: ~
@@ -38,4 +38,3 @@ security:
         - { path: ^/circuit, roles: ROLE_USER }
         - { path: ^/classeur, roles: ROLE_USER }
         - { path: ^/doc, roles: ROLE_USER }
-

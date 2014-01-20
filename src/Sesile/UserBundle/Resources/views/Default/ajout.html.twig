@@ -7,7 +7,7 @@
             <span class="glyphicon glyphicon-folder-open"></span>
             &nbsp;&nbsp;&nbsp;Créer un nouveau utilisateur
         </div>
-
+        {{ form_start(form) }}
         <div class="label_form label-form-input">
             {{ form_label(form.username) }}
             {{ form_widget(form.username) }}
@@ -96,6 +96,7 @@
         <br/>
         <br/>
         {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+        {{ form_end(form) }}
         <br/>
     </div>
 
