@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}SESILE 2.0 - Système Electronique de SIgnature LEgale{% endblock %}</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
     <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.css') }}"/>
@@ -33,8 +33,8 @@
 
 <div id="maman">
 <div id="gauche">
-    <a href="/app_dev.php">
-        <div id="logo">
+    <a href="{{ app.request.getBaseURL() }}">
+    <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
         </div>
     </a>
@@ -144,6 +144,7 @@
                                         "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
                                         "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                                         "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                                        "sZeroRecords": "Aucun enregistrement &agrave; afficher",
                                         "oPaginate": {
                                             "sFirst": "",
                                             "sPrevious": "",
@@ -151,8 +152,9 @@
                                             "sLast": ""
                                         }
                                     },
-                                    "iDisplayLength": 5,
-                                    "sDom": 'ift<"footer_datatables"p>',
+                                    "iDisplayLength": 15,
+                                    "aLengthMenu": [15, 30, 50, 100],
+                                    "sDom": 'lift<"footer_datatables"p>',
                                     "aoColumnDefs": [
                                         { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
@@ -165,6 +167,7 @@
                                         "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
                                         "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                                         "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                                        "sZeroRecords": "Aucun enregistrement &agrave; afficher",
                                         "oPaginate": {
                                             "sFirst": "",
                                             "sPrevious": "",
@@ -172,8 +175,9 @@
                                             "sLast": ""
                                         }
                                     },
-                                    "iDisplayLength": 5,
-                                    "sDom": 'ift<"footer_datatables"p>',
+                                    "iDisplayLength": 15,
+                                    "aLengthMenu": [15, 30, 50, 100],
+                                    "sDom": 'lift<"footer_datatables"p>',
                                     "aoColumnDefs": [
                                         { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
@@ -183,6 +187,10 @@
                         </script>
 
                     {% else %}
+                        <div class="titre_bloc_accueil">
+                            <span class="glyphicon glyphicon-home"></span>
+                            Informations
+                        </div>
                         <img src="http://www.purina.fr/images/articles/illustrations/chat/coaching/entretenir_poils_longs_chat.jpg">
                     {% endif %}
                 </div>
@@ -211,7 +219,7 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
             <br/>
 <span class="signature">
 <a class="sitesictiam" href="http://www.sictiam.fr/" target="_blank">
-    COPYRIGHT &copy;2013
+    COPYRIGHT &copy;2014
     &nbsp; &ndash; &nbsp;
     R&Eacute;ALIS&Eacute; PAR LE SICTIAM
 </a>
@@ -230,6 +238,7 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
         html: true
     });
 
+    var o_textill_color = $('.lettersmove').css('color');
     var textill = $('.lettersmove').textillate({
         autoStart: false,
         in: {
@@ -237,10 +246,25 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
             shuffle: true,
             delayScale: 1,
             delay: 200
+        },
+        callback: function () {
+            var lettres = $(this);
+            $.each(lettres, function (k, v) {
+                $(this).css({ color: o_textill_color, 'font-weight': 'normal', 'font-size': parseInt($(this).css("font-size")) - 1 + 'px' });
+            });
         }
+
     });
+
+    var colours = ["#3285AB", "#CA4C4D", "#DBA209", "#83B13A"], idx;
+
     textill.on('mouseenter', function () {
         $(this).textillate('start');
+        var lettres = $(this).find("span span span");
+        $.each(lettres, function (k, v) {
+            idx = Math.floor(Math.random() * colours.length);
+            $(this).css({ color: colours[idx], 'font-weight': 'bold', 'font-size': parseInt($(this).css("font-size")) + 1 + 'px'  });
+        });
     });
 
     footer();

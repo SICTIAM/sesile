@@ -35,8 +35,6 @@ class DefaultController extends Controller
         return array(
             "users" => $users
         );
-
-
     }
 
     /**
@@ -376,10 +374,10 @@ class DefaultController extends Controller
 
     private function getCASParams()
     {
-        $file = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+        $file = sprintf("%s/config/config.yml", $this->container->getParameter('kernel.root_dir'));
         $parsed = Yaml::parse(file_get_contents($file));
 
-        $cas = $parsed['security']['firewalls']['secured_area']['cas'];
+        $cas = $parsed['parameters'];
         return $cas;
     }
 

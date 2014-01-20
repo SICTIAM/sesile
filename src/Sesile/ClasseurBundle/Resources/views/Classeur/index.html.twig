@@ -7,7 +7,11 @@
             &nbsp;&nbsp;&nbsp;Liste des classeurs
         </div>
         {% include 'SesileClasseurBundle:Classeur:liste.html.twig' %}
-        <a href="{{ path('classeur_new') }}">Créer un classeur</a>
+        <a href="{{ path('classeur_new') }}">
+            <button type="button" class="btn btn-default navbar-btn">
+                Créer un classeur
+            </button>
+        </a>
     </div>
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
@@ -28,7 +32,8 @@
                 }
             },
             "iDisplayLength": 15,
-            "sDom": 'ift<"footer_datatables"p>',
+            "aLengthMenu": [15, 30, 50, 100],
+            "sDom": 'lift<"footer_datatables"p>',
             "aoColumnDefs": [
                 { "bSortable": false, "aTargets": [ 4, 5 ] }
             ],

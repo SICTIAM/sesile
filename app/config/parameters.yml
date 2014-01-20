@@ -7,9 +7,8 @@ parameters:
     database_user: root
     database_password: sictiam
     mailer_transport: smtp
-    mailer_host: 127.0.0.1
-    mailer_user: null
-    mailer_password: null
+    mailer_host: mail.sictiam.fr
+    mailer_user: r.lasry@sictiam.fr
+    mailer_password: S|cti@m06
     locale: fr
     secret: ThisTokenIsNotSoSecretChangeIt
-

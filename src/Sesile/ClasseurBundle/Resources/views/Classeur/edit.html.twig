@@ -1,91 +1,79 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}" xmlns="http://www.w3.org/1999/html"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
-
     <div class="bloc_page">
+        {% if classeur.isModifiable(app.user.id) %}
+            <div class="titre_page">
+                <span class="glyphicon glyphicon-pencil"></span>
+                &nbsp;&nbsp;&nbsp;Édition du classeur
+            </div>
+        {% else %}
+            <div class="titre_page">
+                <span class="glyphicon glyphicon-eye"></span>
+                &nbsp;&nbsp;&nbsp;Visualisation du classeur
+            </div>
+        {% endif %}
         <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
             &nbsp;&nbsp;Historique
         </button>
-        {% if classeur.isValidable(app.user.id) %}
-            {% if classeur.isSignable(app.user.id) %}
-                <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
-                    <button type="submit" class="btn btn-success">Valider et Signer</button>
-                    <input type="hidden" value="{{ classeur.id }}" name="id"/>
-
-                </form>
-            {% else %}
-                <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
-                    <button type="submit" class="btn btn-success"> <span class="glyphicon glyphicon-ok"></span> Valider</button>
-                    <input type="hidden" value="{{ classeur.id }}" name="id"/>
-                </form>
-            {% endif %}
-
-            <form class="form_action" action="{{ path("classeur_refuser") }}" method="post">
-                <button type="submit" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span> Refuser</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
-
-        {% if retractable %}
-            <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
-                <button type="submit" class="btn btn-warning">Se r&eacute;tracter</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
-
-        {% if classeur.isModifiable(app.user.id) %}
-            <button id="btn_modifier" type="button" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span>   Modifier</button>
-        {% endif %}
-
-        {% if classeur.isSupprimable(app.user.id) %}
-            <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-                <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>  Retirer</button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         <br>
 
         <form action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
-            <div class="titre_form_element">Titre</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Titre
+            </div>
             <input class="form-control" id="name" name="name" disabled placeholder="Nom" value="{{ classeur.nom }}">
             <br>
 
-            <div class="titre_form_element">Description</div>
-            <textarea class="form-control" rows="3" name="desc" disabled id="desc">{{ classeur.description }}</textarea>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Description
+            </div>
+            <textarea class="form-control" rows="3" name="desc" disabled id="desc">
+                {{ classeur.description }}
+            </textarea>
             <br>
 
-            <div class="titre_form_element">Date limite de validation</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Date limite de validation
+            </div>
             <input class="datepicker" id="validation" name="validation" type="datetime" disabled
                    value="{{ classeur.validation  | date('d/m/Y') }}"/>
             <br>
 
-            <div class="titre_form_element">Documents</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Documents
+            </div>
             <div id="documentcontent"></div>
             <br>
 
-            <div class="titre_form_element">Circuit</div>
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Circuit
+            </div>
             <div id="circuitcontent">
                 <script type="application/javascript">
                     var circuit_users = "{{ classeur.circuit }}";
+                    var validant = {{ validant }};
+                    var deposant = {{ deposant|json_encode|raw }};
                 </script>
                 {% render url("new_circuit") %}
             </div>
-            <br>
-
-            <div>
-                <br/>
-                <button type="submit" id="enregistrer_modif" style="display: none;" class="btn btn-success">Enregistrer
-                    les modifications
-                </button>
-            </div>
+            <button class="btn btn-success" type="submit">Enregistrer</button>
         </form>
-
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+        <br>
+        <br>
         <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -108,23 +96,23 @@
         <!-- /.modal -->
 
         <script type="application/javascript">
-            $(".top_selects_circuits, .suppr_perso").hide();
-            $("#circuit").sortable("disable");
-            $(".perso_circuit").css("cursor", "Default");
+            $(document).ready(function () {
+                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
+                    enableUploads();
+                });
+
+                $(".top_selects_circuits, .suppr_perso").hide();
+                //$("#circuit").sortable("disable");
+                $(".perso_circuit").css("cursor", "Default");
 
 
-            $("#btn_modifier").click(function () {
-                $("#name, #desc").removeAttr("disabled");
+                {% if classeur.isModifiable(app.user.id) %}
+                $("#name, #desc, #validation").removeAttr("disabled");
                 $("#enregistrer_modif").show();
-                enableUploads();
                 $(".top_selects_circuits, .suppr_perso").show();
                 $("#circuit").sortable("enable");
                 $(".perso_circuit").css("cursor", "-moz-grab");
-            });
-
-            $(document).ready(function () {
-                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}));
-
+                {% endif %}
             });
 
             var nowTemp = new Date();
@@ -140,8 +128,6 @@
             $("#suprclasseur").submit(function (e) {
 
 
-
-
                 if (confirm('Confirmez-vous le retrait du classeur ?')) {
 
                 } else {
@@ -149,7 +135,6 @@
                     return false;
 
                 }
-
 
 
             });

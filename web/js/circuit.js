@@ -12,21 +12,45 @@ $('#users_list p:first, #circuits_list p:first').addClass("list_selected_element
 if (typeof circuit_users != 'undefined') {
     user_a_charger = circuit_users.split(",");
     if (user_a_charger.length > 0) {
+        var sort = false;
         $.each(user_a_charger, function (k, v) {
-            ajoutUser(v);
+            if (typeof validant != 'undefined' && validant > 0 ) {
+                if(v == validant) {
+                    ajoutUser(v, sort);
+                    sort = true;
+                }
+                else {
+                    ajoutUser(v, sort);
+                }
+            }
         });
     }
+}
+
+if (typeof deposant != 'undefined') {
+    var new_perso = $('<div/>').addClass('deposant no_sort perso_circuit').insertBefore("#debut_circuit");
+    perso_src = deposant.path || perso_src;
+    $('<img />').attr("src", perso_src).appendTo(new_perso);
+    $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
 
 /*
  Ajoute un utilisateur dans le cadre "circuits"
  */
-function ajoutUser(id) {
+function ajoutUser(id, sort) {
     var sel_user = $('#users_list p[data-id="' + id + '"]');
     if (sel_user.length == 0) {
         return false;
     }
     var new_perso = $('<div/>').data('id', id).addClass('perso_circuit').appendTo("#circuit");
+
+    if(!sort) {
+        new_perso.addClass("no_sort");
+    }
+
+    if (typeof validant != 'undefined' && validant > 0 && validant == id) {
+        new_perso.addClass("curr_user");
+    }
 
     $("<span/>").addClass("suppr_perso glyphicon glyphicon-remove").appendTo(new_perso).click(function () {
         $("<p/>").attr("data-id", id).text(sel_user.text()).appendTo("#users_list");
@@ -49,31 +73,19 @@ function ajoutUser(id) {
 
 function creerFleches() {
     $(".fleche_circuit").remove();
-    $("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(:last)");
+    $("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(:last, .deposant)");
 }
-
-function recreerCircuit(circuitArray) {
-    // si des users ont été spécifiés on les ajoute en personnages :)
-    if (circuitArray.length > 0) {
-        $.each(circuitArray, function (k, v) {
-            var sel_user = $('#users_list p[data-id="' + v + '"]');
-            ajoutUser(v);
-        });
-        creerFleches();
-    }
-}
-
 
 $("#useradd_btn").click(function () {
     var sel_user = $('#users_list .list_selected_element');
     if (sel_user.length > 0) {
-        ajoutUser(sel_user.attr("data-id"));
+        ajoutUser(sel_user.attr("data-id"), true);
     }
     $('#users_list p:first').addClass("list_selected_element");
 });
 
 $("#circuit").sortable({
-    cancel: '.fleche_circuit',
+    items: ".perso_circuit:not(.fleche_circuit, .no_sort)",
     placeholder: 'emplacement',
     tolerance: "pointer",
     stop: function (e, ui) {
@@ -110,7 +122,7 @@ $("#circuitadd_btn").click(function () {
         creerFleches();
 
         $.each(ordre, function (k, v) {
-            ajoutUser(v);
+            ajoutUser(v, true);
         });
     }
     $('#users_list p:first').addClass("list_selected_element");

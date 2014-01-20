@@ -8,7 +8,7 @@
         </div>
         <form action="{{ path('admin') }}" {{ form_enctype(form) }} method="POST">
             {{ form_label(form.msg) }}
-            {{ form_widget(form.msg) }}
+            {{ form_widget(form.msg, attr: ) }}
         </form>
     </div>
 {% endblock %}

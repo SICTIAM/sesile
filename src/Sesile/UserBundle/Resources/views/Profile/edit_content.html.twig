@@ -1,5 +1,5 @@
 {% trans_default_domain 'FOSUserBundle' %}
-
+{{ form_start(form) }}
 <div class="label_form label-form-input">
     {{ form_label(form.Prenom) }}
     {{ form_widget(form.Prenom) }}
@@ -40,7 +40,7 @@
 {% endfor %}
 <br/>
 <button class="btn btn-success" type="submit">{{ 'profile.edit.submit'|trans }}</button>
-
+{{ form_end(form) }}
 <script type="text/javascript">
     $(".label_form input").focus(function () {
         $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");

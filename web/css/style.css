@@ -7,7 +7,6 @@ html, body {
 	font-family: 'Droid Sans', sans-serif;
 	background-color: #eaeaea;
 	height: 100%;
-	overflow-x: hidden;
 }
 
 #maman {
@@ -27,7 +26,7 @@ html, body {
 #gauche {
 	background: white url("/images/vichy.png");
 	display: table-cell;
-	position: relative;
+	position: fixed;
 	z-index: 2;
 	min-height: 100%;
 	width: 15%;
@@ -51,6 +50,7 @@ html, body {
 	display: table-cell;
 	padding: 0 1em 7% 1em;
 	vertical-align: top;;
+	width: 85%;
 }
 
 #header, #lecontenu, #footer {
@@ -156,12 +156,14 @@ html, body {
 }
 
 .user-row .boutons_action .glyphicon,
+.coll-row .boutons_action .glyphicon,
 .classeur-row .boutons_action .glyphicon,
 .delegation_row .boutons_action .glyphicon {
 	visibility: hidden;
 	margin: 0 .3em 0 .3em;
 }
 
+.coll-row:hover .boutons_action .glyphicon,
 .user-row:hover .boutons_action .glyphicon,
 .classeur-row:hover .boutons_action .glyphicon,
 .delegation_row:hover .boutons_action .glyphicon {
@@ -169,6 +171,7 @@ html, body {
 	visibility: visible;
 }
 
+.coll-row:hover .boutons_action .glyphicon:hover,
 .user-row:hover .boutons_action .glyphicon:hover,
 .classeur-row:hover .boutons_action .glyphicon:hover,
 .delegation_row:hover .boutons_action .glyphicon:hover {
@@ -176,7 +179,7 @@ html, body {
 	color: rgba(50, 133, 171, 1);
 }
 
-.user-row:hover, .classeur-row:hover, .delegation_row:hover {
+.user-row:hover, .classeur-row:hover, .delegation_row:hover, .coll-row:hover {
 	background-color: rgba(50, 133, 171, 0.5);
 	cursor: pointer;
 }
@@ -242,7 +245,7 @@ html, body {
 	background-color: deeppink;
 }
 
-/* TABLEAU */
+/*TABLEAU*/
 .tableau {
 	top: 1em;
 	border: 1px solid rgb(204, 204, 204);
@@ -297,15 +300,27 @@ html, body {
 	color: rgb(213, 0, 25);
 }
 
+/*LEGENDE*/
 .legende {
-
+	border: 1px solid #cccccc;
+	padding: 0.5em 1em 0.5em 1em;
+	margin: 3em 0em 1em 0em;
 }
 
-.texte_legende {
-
+.txt_legende {
+	display: block;
+	margin-bottom: 0.5em;
+	border-bottom: 1px solid #cccccc;
+	text-transform: uppercase;
+	color: rgba(109, 109, 109, 1);
+	font-weight: bold;
 }
 
-/* BOUTONS FORMULAIRE */
+.pipe{
+	color: #cccccc;
+}
+
+/*BOUTONS FORMULAIRE*/
 .form_action {
 	display: inline-block;
 }
@@ -339,7 +354,7 @@ html, body {
 	background-color: rgb(240, 117, 0);
 }
 
-/* BUTTON TABLEAU */
+/*BUTTON TABLEAU*/
 .active_inactive_user .glyphicon-ok {
 	color: #83b13a;
 }
@@ -356,7 +371,11 @@ html, body {
 	word-break: break-all;
 }
 
-/* FLASHBAG */
+.btn-default{
+	color:#6d6e70 !important;
+}
+
+/*FLASHBAG*/
 .alert {
 	position: absolute;
 	width: 50%;
