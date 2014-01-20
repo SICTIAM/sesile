@@ -14,8 +14,8 @@ if (typeof circuit_users != 'undefined') {
     if (user_a_charger.length > 0) {
         var sort = false;
         $.each(user_a_charger, function (k, v) {
-            if (typeof validant != 'undefined' && validant > 0 ) {
-                if(v == validant) {
+            if (typeof validant != 'undefined' && validant > 0) {
+                if (v == validant) {
                     ajoutUser(v, sort);
                     sort = true;
                 }
@@ -29,7 +29,7 @@ if (typeof circuit_users != 'undefined') {
 
 if (typeof deposant != 'undefined') {
     var new_perso = $('<div/>').addClass('deposant no_sort perso_circuit').insertBefore("#debut_circuit");
-    perso_src = path+deposant.path || perso_src;
+    perso_src = path + deposant.path || perso_src;
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
@@ -50,7 +50,7 @@ function ajoutUser(id, sort) {
     }
 
 
-    if(!sort) {
+    if (!sort) {
         new_perso.addClass("no_sort");
         if (typeof validant != 'undefined' && validant > 0 && validant != id) {
             $("<span/>").addClass("ok_perso glyphicon glyphicon-ok").appendTo(new_perso);
@@ -65,7 +65,7 @@ function ajoutUser(id, sort) {
         });
     }
 
-    perso_src = path+sel_user.data("img") || perso_src;
+    perso_src = path + sel_user.data("img") || perso_src;
 
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);
@@ -143,7 +143,7 @@ if (form_parent.length > 0) {
     form_parent.submit(function (e) {
         e.preventDefault();
         var ordre_circuit = new Array();
-        $("#circuit .perso_circuit").each(function (k, v) {
+        $("#circuit .perso_circuit:not(.deposant)").each(function (k, v) {
             ordre_circuit.push($(this).data("id"));
         });
         $('<input />')
