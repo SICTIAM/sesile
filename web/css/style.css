@@ -35,9 +35,16 @@ html, body {
 
 #logo {
 	width: 75px;
-	/*5.357em*/
 	height: 107px;
-	/*7.643em*/
+	margin: auto;
+	margin-bottom: 15%;
+	margin-top: 5%;
+}
+
+#img_imposetonstyle {
+	background-color: red;
+	width: 75px;
+	height: 75px;
 	margin: auto;
 	margin-bottom: 15%;
 	margin-top: 5%;

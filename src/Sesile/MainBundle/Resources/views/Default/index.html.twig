@@ -34,14 +34,15 @@
 <div id="maman">
 <div id="gauche">
     <a href="{{ app.request.getBaseURL() }}">
-    <div id="logo">
+        <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
-
-    </div>
+        </div>
     </a>
-    {% include 'SesileMainBundle:Default:menu.html.twig' with {'image': image } %}
-
-
+    <div id="img_imposetonstyle">
+            {# TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
+        <img src="/images/logosictiampetit.png" width="60px" height="60px"/>
+    </div>
+    {% include 'SesileMainBundle:Default:menu.html.twig' %}
 </div>
 
 <div id="droite">
