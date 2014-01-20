@@ -41,17 +41,14 @@ html, body {
 	margin-top: 5%;
 }
 
-#img_imposetonstyle {
-	width: 90px;
-	height: 90px;
-	margin: auto;
-	margin-bottom: 15%;
-	margin-top: 5%;
+#img_imposetonstyle{
+	margin: 8% auto 12% auto;
+	width: 80px;
 }
 
 .border_imposetonstyle{
 	position: relative;
-	border: 5px solid #cccccc;
+	border-top: 5px solid #cccccc;
 }
 
 .border_imposetonstyle:after, .border_imposetonstyle:before {
