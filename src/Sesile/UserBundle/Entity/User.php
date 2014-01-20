@@ -49,6 +49,7 @@ class User extends BaseUser
 
     /**
      * @Assert\Image(
+     *
      *      mimeTypesMessage = "Ce fichier n'est pas une image",
      *      maxSize = "5M",
      *      maxSizeMessage = "Too big."

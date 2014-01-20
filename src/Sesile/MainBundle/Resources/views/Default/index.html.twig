@@ -34,9 +34,10 @@
 <div id="maman">
 <div id="gauche">
     <a href="{{ app.request.getBaseURL() }}">
-        <div id="logo">
+    <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
-        </div>
+
+    </div>
     </a>
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
         <div id="img_collectivite">
@@ -72,7 +73,16 @@
                             </a>
                         </li>
                     {% endif %}
-                    <li class="divider"></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="divider"></li>
+                        <li class="li2">
+                            <a href="{{ path("index_collectivite") }}">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                Collectivité
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    {% endif %}
                     <li class="li2">
                         <a href="{{ path("logout") }}">
                             <span class="glyphicon glyphicon-off"></span>
