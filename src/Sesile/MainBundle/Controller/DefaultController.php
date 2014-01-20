@@ -15,8 +15,19 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+        $Upload = $this->container->getParameter('upload');
+        $DocPath = $Upload["msg_acc"];
+        $handle = fopen($DocPath, 'a+');
+        if (filesize($DocPath)) {
+            $msg_accueil = fread($handle, filesize($DocPath));
+            fclose($handle);
 
-        return array();
+        } else {
+            $msg_accueil = "Bienvenue sur le parapheur sesile";
+        }
+        $image = 'f69fa0f49e660d38ccf33c6c5fa7a57a21ee3ca8.png';
+        return array('msg_acc' => $msg_accueil,
+            'image' => $image);
     }
 
     /**

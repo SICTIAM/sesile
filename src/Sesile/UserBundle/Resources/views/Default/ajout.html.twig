@@ -1,6 +1,7 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
+
     <div class="bloc_page">
         <div class="titre_page">
             <span class="glyphicon glyphicon-folder-open"></span>
@@ -97,6 +98,7 @@
         {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
         <br/>
     </div>
+
     <script type="text/javascript">
         $(".label_form input").focus(function () {
             $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
