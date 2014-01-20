@@ -371,6 +371,11 @@ select  [name=user]{
     background-color: rgb(240, 117, 0);
 }
 
+/*.add-on {*/
+	/*background: none repeat scroll 0 0 #F5F5F5;*/
+	/*border: 1px solid #CCCCCC;*/
+/*}*/
+
 /*BUTTON TABLEAU*/
 .active_inactive_user .glyphicon-ok {
     color: #83b13a;
