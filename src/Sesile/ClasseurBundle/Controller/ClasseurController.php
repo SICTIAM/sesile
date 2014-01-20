@@ -566,7 +566,7 @@ class ClasseurController extends Controller
     }
 
     private function sendCreationMail($classeur) {
-        $body = $this->renderView('SesileClasseurBundle:Mail:refuse.html.twig',
+        $body = $this->renderView('SesileClasseurBundle:Mail:nouveau.html.twig',
             array(
                 'deposant' => $classeur->getUser(),
                 'titre_classeur' => $classeur->getNom(),

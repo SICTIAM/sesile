@@ -26,9 +26,14 @@ class AdminController extends Controller {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
+
+        $Upload = $this->container->getParameter('upload');
+        $DocPath = $Upload["msg_acc"];
+
         $defaultData = array('msg' => 'Type your message here');
         $form = $this->createFormBuilder($defaultData)
             ->add('msg', 'textarea', array('label' => 'Message d\'accueil',))
+
             ->add('submit', 'submit', array('label' => 'Mettre à jour', 'attr' => array('class' => 'btn btn-success'),))
             ->getForm();
 
@@ -38,7 +43,11 @@ class AdminController extends Controller {
 
             // $data is a simply array with your form fields
             // like "query" and "category" as defined above.
-            $data = $request->request->get('msg');
+            $msg = $request->request->get('msg');
+
+            $handle = fopen($DocPath, 'w+');
+            fwrite($handle, $msg);
+            fclose($handle);
             //   var_dump($data);exit;
 
         }

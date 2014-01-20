@@ -8,7 +8,11 @@
         </div>
         {% set donnees = true %}
         {% include 'SesileDelegationsBundle:Default:liste.html.twig' %}
-        <a href="{{ path('delegation_new') }}">Déléguer ses droits</a>
+        <a href="{{ path('delegation_new') }}">
+            <button type="button" class="btn btn-default navbar-btn">
+                Déléguer ses droits
+            </button>
+        </a>
     </div>
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
