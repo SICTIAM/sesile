@@ -76,7 +76,7 @@ class LoginHandlerController extends Controller
             if ($ldapconn) {
 
                 //binding au serveur LDAP
-                if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
+                if (@ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     echo "LDAP bind successful...";
                     $sr = ldap_search($ldapconn, $dn, $filter, $justthese);
                     $info = ldap_get_entries($ldapconn, $sr);
@@ -128,10 +128,10 @@ class LoginHandlerController extends Controller
 
     private function getCASParams()
     {
-        $file = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+        $file = sprintf("%s/config/config.yml", $this->container->getParameter('kernel.root_dir'));
         $parsed = Yaml::parse(file_get_contents($file));
 
-        $cas = $parsed['security']['firewalls']['secured_area']['cas'];
+        $cas = $parsed['parameters'];
         return $cas;
     }
 }
