@@ -371,6 +371,10 @@ html, body {
 	word-break: break-all;
 }
 
+.btn-default{
+	color:#6d6e70 !important;
+}
+
 /*FLASHBAG*/
 .alert {
 	position: absolute;

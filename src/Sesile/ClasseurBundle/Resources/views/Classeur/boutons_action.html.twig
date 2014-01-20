@@ -1,4 +1,5 @@
 {% if classeur.isValidable(app.user.id) %}
+
     {% if classeur.isSignable(app.user.id) %}
         <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
             <button type="submit" class="btn btn-success">Valider et Signer</button>
@@ -7,13 +8,19 @@
         </form>
     {% else %}
         <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
-            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Valider</button>
+            <button type="submit" class="btn btn-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                Valider
+            </button>
             <input type="hidden" value="{{ classeur.id }}" name="id"/>
         </form>
     {% endif %}
 
     <form class="form_action" action="{{ path("classeur_refuser") }}" method="post">
-        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Refuser</button>
+        <button type="submit" class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove"></span>
+            Refuser
+        </button>
         <input type="hidden" value="{{ classeur.id }}" name="id"/>
     </form>
 {% endif %}
@@ -27,7 +34,10 @@
 
 {% if classeur.isSupprimable(app.user.id) %}
     <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Retirer</button>
+        <button type="submit" class="btn btn-danger">
+            <span class="glyphicon glyphicon-trash"></span>
+            Retirer
+        </button>
         <input type="hidden" value="{{ classeur.id }}" name="id"/>
     </form>
 {% endif %}
