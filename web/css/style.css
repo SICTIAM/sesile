@@ -324,6 +324,19 @@ html, body {
     color: #cccccc;
 }
 
+/*DELEGATIONS*/
+#deleg_debut{
+	margin: 1em 1em 1em 0em  ;
+}
+
+#deleg_fin{
+	margin: 1em 1em 1em 0em;
+}
+
+select  [name=user]{
+
+}
+
 /*BOUTONS FORMULAIRE*/
 .form_action {
     display: inline-block;

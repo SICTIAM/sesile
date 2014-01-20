@@ -1,6 +1,28 @@
 {% block menu %}
     <div class="menu">
         <ul>
+            <li class="menu-elem menu-jaune">
+                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
+                    <a href="#">
+                        <div class="rectanglemenu" id="jauneclair"></div>
+                        D&eacute;l&eacute;gations<b class="caret carette"></b></a>
+                </div>
+                <ul class="dd-menu">
+                    <li>
+                        <a href="{{ path("delegations_list") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
+                            Gérer les délégations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("delegations_recues") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
+                            délégations reçues
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="menu-elem menu-bleu">
                 <div class="dd-toggle entete-menu {% if( 'classeur' in app.request.requestUri ) %}titremenu{% endif %}">
                 <a href="#">
@@ -34,34 +56,14 @@
                     </li>
                 </ul>
             </li>
+
             <li class="menu-elem menu-rouge">
                 <div class="entete-menu">
-                    <a href="{{ path("gestion_circuit") }}">
+                    <a href="">
                         <div class="rectanglemenu" id="rougeclair"></div>
-                        Gestion des circuits
+                        Préférences
                     </a>
                 </div>
-            </li>
-            <li class="menu-elem menu-jaune">
-                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
-                    <a href="#">
-                        <div class="rectanglemenu" id="jauneclair"></div>
-                        D&eacute;l&eacute;gations<b class="caret carette"></b></a>
-                </div>
-                <ul class="dd-menu">
-                    <li>
-                        <a href="{{ path("delegations_list") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            Gérer les délégations
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("delegations_recues") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            délégations reçues
-                        </a>
-                    </li>
-                </ul>
             </li>
             <li class="menu-elem menu-vert ">
                 <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
@@ -74,6 +76,12 @@
                         <a href="{{ path("liste_users") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Liste des utilisateurs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("gestion_circuit") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Gestion des circuits
                         </a>
                     </li>
                 </ul>
