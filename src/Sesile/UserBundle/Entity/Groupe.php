@@ -91,4 +91,51 @@ class Groupe
     {
         return $this->collectivite;
     }
+
+    /**
+     * @ORM\PrePersist()
+     *
+     */
+    public function preUpload()
+    {
+
+        if (null !== $this->file) {
+            // faites ce que vous voulez pour générer un nom unique
+
+            $this->path = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
+        }
+    }
+
+    /**
+     *
+     *
+     */
+    public function upload($Dirpath)
+    {
+        if (null === $this->file) {
+            return;
+        }
+
+
+        // s'il y a une erreur lors du déplacement du fichier, une exception
+        // va automatiquement être lancée par la méthode move(). Cela va empêcher
+        // proprement l'entité d'être persistée dans la base de données si
+        // erreur il y a
+        //   var_dump($this->getUploadDir());var_dump($this->file->getClientOriginalName());exit;
+        $this->file->move($Dirpath, $this->path);
+
+
+        unset($this->file);
+    }
+
+    /**
+     *
+     */
+    public function removeUpload($Dirpath)
+    {
+
+        if ($file = $Dirpath . $this->path) {
+            unlink($file);
+        }
+    }
 }

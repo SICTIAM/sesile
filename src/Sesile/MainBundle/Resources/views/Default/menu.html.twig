@@ -1,6 +1,6 @@
 {% block menu %}
     <div class="menu">
-        <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/>
+
         <ul>
             <li class="menu-elem menu-bleu">
                 <div class="dd-toggle entete-menu {% if( 'classeur' in app.request.requestUri ) %}titremenu{% endif %}">
@@ -16,7 +16,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ path("classeur_new") }}">
+
+                    <a href="{{ path("classeur_new") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
                             Créer un classeur
                         </a>

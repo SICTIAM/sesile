@@ -39,8 +39,9 @@
 
     </div>
     </a>
-    {% include 'SesileMainBundle:Default:menu.html.twig' with {'image': image } %}
 
+    {% include 'SesileMainBundle:Default:menu.html.twig' %}
+    <img src="{{ asset(upload_path_logo ~ app.session.get('logo')) }}" width="60px" height="60px"/>
 
 </div>
 
@@ -71,7 +72,16 @@
                             </a>
                         </li>
                     {% endif %}
-                    <li class="divider"></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="divider"></li>
+                        <li class="li2">
+                            <a href="{{ path("index_collectivite") }}">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                Collectivité
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    {% endif %}
                     <li class="li2">
                         <a href="{{ path("logout") }}">
                             <span class="glyphicon glyphicon-off"></span>
@@ -98,6 +108,7 @@
                                 Bienvenue
                             </div>
                             {{ msg_acc }}
+
                         </div>
                     </div>
                 {% endif %}
