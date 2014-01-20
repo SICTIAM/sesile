@@ -4,14 +4,25 @@
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
-
     <div class="bloc_page">
+        {% if classeur.isModifiable(app.user.id) %}
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-pencil"></span>
+            &nbsp;&nbsp;&nbsp;Édition du classeur
+        </div>
+        {% else %}
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-eye"></span>
+            &nbsp;&nbsp;&nbsp;Visualisation du classeur
+        </div>
+        {% endif %}
         <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
             &nbsp;&nbsp;Historique
         </button>
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         <br>
+
         <form action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
@@ -98,8 +109,6 @@
             $("#suprclasseur").submit(function (e) {
 
 
-
-
                 if (confirm('Confirmez-vous le retrait du classeur ?')) {
 
                 } else {
@@ -107,7 +116,6 @@
                     return false;
 
                 }
-
 
 
             });
