@@ -42,6 +42,11 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($this->getUser()->getId());
+        foreach ($entities as $key => $value) {
+            $user = $em->getRepository('SesileUserBundle:User')->findOneById($value->getValidant());
+            $value->validantName = $user->getPrenom() . " " . $user->getNom();
+        }
+
         return array(
             'classeurs' => $entities,
         );
