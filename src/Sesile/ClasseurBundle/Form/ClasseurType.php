@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ClasseurType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -17,10 +17,9 @@ class ClasseurType extends AbstractType
         $builder
             ->add('nom')
             ->add('description')
-            ->add('circuit')
-        ;
+            ->add('circuit');
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

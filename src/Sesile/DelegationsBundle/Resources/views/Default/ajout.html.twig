@@ -15,11 +15,14 @@
                 {% endfor %}
             </select>
             <br>
+            <span class="add-on">Début délégation : &nbsp;</span>
             <input class="datepicker" id="deleg_debut" name="debut" type="datetime"/>
             <br>
+            <span class="add-on">Fin délégation : &nbsp;</span>
             <input class="datepicker" id="deleg_fin" name="fin" type="datetime"/>
             <br>
             <button type="submit" class="btn btn-success">Enregistrer</button>
+            <a href="{{ path("delegations_list") }}" class="btn btn-danger">Annuler</a>
         </form>
     </div>
     <script type="text/javascript">

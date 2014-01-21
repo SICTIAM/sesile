@@ -2,7 +2,7 @@
 
 {% block content %}
     <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('/css/jquery.jOrgChart.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/css/jquery.jOrgChart.css') }}"/>
     <div class="bloc_page">
         <select id="users_list">
             {% for user in users %}
@@ -15,9 +15,9 @@
         <div id="hierarchie">
         </div>
     </div>
-    <script type="text/javascript" src="{{  asset('/js/jquery.jOrgChart.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/jquery.jOrgChart.js') }}"></script>
     <script type="text/javascript">
-        if($("#org li").length > 0) {
+        if ($("#org li").length > 0) {
             $("#org").jOrgChart({
                 chartElement: "#hierarchie",
                 dragAndDrop: true
@@ -25,19 +25,19 @@
         }
 
         var i = 0;
-        $("#user_add").click(function() {
+        $("#user_add").click(function () {
             $("#hierarchie").empty();
             var opt_sel = $("#users_list option:selected");
 
-            if($("#org li").length == 0) {
-                $("<li/>").text(opt_sel.text()+"_"+i++).appendTo("#org");
+            if ($("#org li").length == 0) {
+                $("<li/>").text(opt_sel.text() + "_" + i++).appendTo("#org");
             }
             else {
                 var premier_ul = $("#org li ul:first");
-                if(premier_ul.length == 0) {
+                if (premier_ul.length == 0) {
                     premier_ul = $("<ul/>").appendTo($("#org li:first"));
                 }
-                $("<li/>").text(opt_sel.text()+"_"+i++).appendTo(premier_ul);
+                $("<li/>").text(opt_sel.text() + "_" + i++).appendTo(premier_ul);
             }
 
             $("#org").jOrgChart({

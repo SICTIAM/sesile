@@ -13,13 +13,14 @@ body {
 }
 
 @media (max-width: 979px) {
-  body {
-      padding-top: 0px;
-  }
-  .navbar-blue .nav-collapse .nav > li > a, 
-  .navbar-blue .nav-collapse .dropdown-menu a {
-      color: #FFFFFF;
-  }
+    body {
+        padding-top: 0px;
+    }
+
+    .navbar-blue .nav-collapse .nav > li > a,
+    .navbar-blue .nav-collapse .dropdown-menu a {
+        color: #FFFFFF;
+    }
 }
 
 /* Navbar styles */
@@ -38,7 +39,7 @@ body {
 .navbar-blue .brand {
     color: #FFFFFF;
     text-shadow: 0 1px 0 #777777;
-    
+
     -webkit-transition: all 0.35s ease-in;
     -moz-transition: all 0.35s ease-in;
     -ms-transition: all 0.35s ease-in;
@@ -66,7 +67,7 @@ body {
     background-color: #62A8D1;
 }
 
-.navbar-blue .nav li.dropdown > .dropdown-toggle:focus .caret, 
+.navbar-blue .nav li.dropdown > .dropdown-toggle:focus .caret,
 .navbar-blue .nav li.dropdown > .dropdown-toggle:hover .caret {
     border-top-color: #FFFFFF;
     border-bottom-color: #FFFFFF;
@@ -86,8 +87,8 @@ body {
     border-bottom-color: #FFFFFF;
 }
 
-.navbar-blue .nav > .active > a, 
-.navbar-blue .nav > .active > a:hover, 
+.navbar-blue .nav > .active > a,
+.navbar-blue .nav > .active > a:hover,
 .navbar-blue .nav > .active > a:focus {
     color: #FFFFFF;
     background-color: #438EB9;
@@ -108,4 +109,6 @@ body {
     filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff438EB9', endColorstr='#ff62A8D1', GradientType=0);
 }
 
-div[class^='object-actions-'],div[class*=' object-actions-'] {margin-bottom: 10px}
+div[class^='object-actions-'], div[class*=' object-actions-'] {
+    margin-bottom: 10px
+}

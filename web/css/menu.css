@@ -1,24 +1,24 @@
 .arrows {
-	position: relative;
-	right: 0.714em;
-	bottom: 0.429em;
+    position: relative;
+    right: 0.714em;
+    bottom: 0.429em;
 }
 
 .menu ul {
-	list-style-type: none;
+    list-style-type: none;
 }
 
 .menu-elem {
-	min-height: 2.857em;
-	line-height: 2.857em;
-	vertical-align: middle;
-	height: auto;
-	width: 100%;
-	text-indent: 0.714em;
+    min-height: 2.857em;
+    line-height: 2.857em;
+    vertical-align: middle;
+    height: auto;
+    width: 100%;
+    text-indent: 0.714em;
 }
 
 .titremenu a {
-	font-weight: bolder;
+    font-weight: bolder;
 }
 
 .titremenu + .dd-menu {
@@ -26,83 +26,83 @@
 }
 
 .dd-menu {
-	display: none;
-	padding: 0 0 0 0.714em;
+    display: none;
+    padding: 0 0 0 0.714em;
 }
 
 .dd-toggle {
-	width: 100%;
+    width: 100%;
 }
 
 .rectanglemenu {
-	width: 0.571em;
-	height: 100%;
-	float: left;
+    width: 0.571em;
+    height: 100%;
+    float: left;
 }
 
 .entete-menu {
-	height: 3em;
+    height: 3em;
 }
 
 .menu-rouge .entete-menu {
-	background-color: rgba(202, 76, 77, 1);
+    background-color: rgba(202, 76, 77, 1);
 }
 
 #rougeclair {
-	background-color: rgba(222, 96, 97, 1);
+    background-color: rgba(222, 96, 97, 1);
 }
 
 .menu-bleu .entete-menu {
-	background-color: rgba(50, 133, 171, 1);
+    background-color: rgba(50, 133, 171, 1);
 }
 
 .menu-bleu .dd-menu {
-	background-color: rgba(50, 133, 171, 0.6);
+    background-color: rgba(50, 133, 171, 0.6);
 }
 
 .menu-rouge .dd-menu {
-	background-color: rgba(222, 96, 97, 0.6);
+    background-color: rgba(222, 96, 97, 0.6);
 }
 
 #bleuclair {
-	background-color: rgba(70, 153, 191, 1);
+    background-color: rgba(70, 153, 191, 1);
 }
 
 .menu-jaune .entete-menu {
-	background-color: rgba(219, 162, 9, 1);
+    background-color: rgba(219, 162, 9, 1);
 }
 
 .menu-jaune .dd-menu {
-	background-color: rgba(219, 162, 9, 0.6);
+    background-color: rgba(219, 162, 9, 0.6);
 }
 
 #jauneclair {
-	background-color: rgba(239, 186, 29, 1);
+    background-color: rgba(239, 186, 29, 1);
 }
 
 .menu ul li a {
-	color: #ffffff;
-	text-transform: uppercase;
-	text-decoration: none;
-	font-size: 0.875em;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 0.875em;
 }
 
 .menu-vert .entete-menu {
-	background-color: rgba(131, 177, 58, 1);
+    background-color: rgba(131, 177, 58, 1);
 }
 
 .menu-vert .dd-menu {
-	background-color: rgba(131, 177, 58, 0.7);
+    background-color: rgba(131, 177, 58, 0.7);
 }
 
 #vertclair {
-	background-color: rgba(151, 197, 78, 1);
+    background-color: rgba(151, 197, 78, 1);
 }
 
 .carette {
 
-	float: right;
-	position: relative;
-	top: 1.429em;
-	right: 0.8em;
+    float: right;
+    position: relative;
+    top: 1.429em;
+    right: 0.8em;
 }

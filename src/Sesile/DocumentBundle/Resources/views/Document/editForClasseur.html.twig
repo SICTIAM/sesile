@@ -1,6 +1,6 @@
 <div id="doc">
-<div id="fichiers" class="dropzone"></div>
-<div id="filedescription" style="display:none"></div>
+    <div id="fichiers" class="dropzone"></div>
+    <div id="filedescription" style="display:none"></div>
 </div>
 
 <script src="{{ asset('js/dropzone.js') }}"></script>
@@ -296,14 +296,14 @@ $(document).ready(function () {
     {% endfor %}
 
 
-    $('html').click(function() {
+    $('html').click(function () {
         $("#filedescription").slideUp();
         openeddesc = false;
         currentDocHtml = null;
         launchtim = false;
     });
 
-    $('#doc').click(function(event){
+    $('#doc').click(function (event) {
         event.stopPropagation();
 
     });
