@@ -42,7 +42,7 @@
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
     <div id="img_collectivite">
         {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
-        <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg") }}" width="75px" height="75px"/>
+        <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg") }}" width="100px" height="100px"/>
     </div>
 </div>
 
@@ -77,7 +77,6 @@
             <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
         {% endif %}
     </div>
-
 
     {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
     <div id="lecontenu">
@@ -183,7 +182,9 @@
                             <span class="glyphicon glyphicon-home"></span>
                             Informations
                         </div>
-                        <img src="http://www.purina.fr/images/articles/illustrations/chat/coaching/entretenir_poils_longs_chat.jpg">
+                        <div id="img_accueil">
+                            <img src="{{ asset("/images/paraph_img_accueil.jpg") }}"/>
+                        </div>
                     {% endif %}
                 </div>
             </div>

@@ -89,6 +89,8 @@ class Classeur
      */
     private $validant;
 
+    public $validantName;
+
     /**
      * @var int
      * -1 = privé, 0 = public, id user = à partir de

@@ -9,17 +9,19 @@
             &nbsp;&nbsp;&nbsp;Déléguer ses droits
         </div>
         <form action="{{ path("delegation_create") }}" method="post">
+            <span class="deleg-to-someone">Déléguer à : &nbsp;</span>
             <select name="user">
                 {% for user in users %}
                     <option value="{{ user.id }}">{{ user.Prenom }} {{ user.Nom }}</option>
                 {% endfor %}
             </select>
             <br>
-            <span class="add-on">Début délégation : &nbsp;</span>
-            <input class="datepicker" id="deleg_debut" name="debut" type="datetime"/>
             <br>
-            <span class="add-on">Fin délégation : &nbsp;</span>
-            <input class="datepicker" id="deleg_fin" name="fin" type="datetime"/>
+            <span class="deleg-to-someone">Début délégation : &nbsp;</span>
+            <input class="datepicker deleg_debut_fin" id="deleg_debut" name="debut" type="datetime"/>
+            <br>
+            <span class="deleg-to-someone">Fin délégation : &nbsp;</span>
+            <input class="datepicker deleg_debut_fin" id="deleg_fin" name="fin" type="datetime"/>
             <br>
             <button type="submit" class="btn btn-success">Enregistrer</button>
             <a href="{{ path("delegations_list") }}" class="btn btn-danger">Annuler</a>

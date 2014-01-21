@@ -18,6 +18,17 @@
         <br>
         {{ form_label(form.file) }}
         {{ form_widget(form.file) }}
+
+        <br>
+        {{ form_label(form.textmailnew) }}
+        {{ form_widget(form.textmailnew) }}
+        <br>
+        {{ form_label(form.textmailrefuse) }}
+        {{ form_widget(form.textmailrefuse) }}
+        <br>
+        {{ form_label(form.textmailwalid) }}
+        {{ form_widget(form.textmailwalid) }}
+
         <br>
         {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
         {{ form_end(form) }}
