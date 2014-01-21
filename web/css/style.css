@@ -238,6 +238,27 @@ html, body {
 	padding-left: 0.214em;
 }
 
+.visi_button div {
+    width: 5em;
+    padding: .125em 1em;
+    border: 1px solid black;
+    display: inline;
+    background-color: red;
+    cursor: pointer;
+}
+
+#visi_publique {
+
+}
+
+#visi_prive {
+
+}
+
+.visi_button_actif {
+    background-color: green !important;
+}
+
 #fichiers {
 	border: 5px dashed #cccccc;
 }

@@ -536,7 +536,7 @@ class ClasseurController extends Controller
 
         switch ($type) {
             case "Classique":
-            return $this->render(
+                return $this->render(
                     'SesileClasseurBundle:Formulaires:elclassico.html.twig'
                 );
                 break;
@@ -545,7 +545,7 @@ class ClasseurController extends Controller
                     'SesileClasseurBundle:Formulaires:elpez.html.twig'
                 );
                 break;
-                default:
+            default:
                 return $this->render(
                     'SesileClasseurBundle:Formulaires:elclassico.html.twig'
                 );

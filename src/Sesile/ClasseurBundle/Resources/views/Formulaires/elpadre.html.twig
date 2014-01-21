@@ -13,7 +13,23 @@
     <input id="radio-prive" type="radio" name="visibilite" value="-1">
     Priv&eacute;
 </label>
+
+
+<div class="visi_button">
+    <div id="visi_publique" class="visi_button_actif">
+        Publique
+    </div>
+    <div id="visi_prive">
+        Privée
+    </div>
 </div>
+<script type="text/javascript">
+    $('.visi_button div').click(function () {
+        $('.visi_button_actif').removeClass('visi_button_actif');
+        $(this).addClass('visi_button_actif');
+
+    });
+</script>
 
 <div class="titre_form_element">
     <span class="glyphicon glyphicon-play"></span>
