@@ -531,14 +531,19 @@ class ClasseurController extends Controller
         $type = $request->request->get('type', 'elclassico');
 
         switch ($type) {
-            case "elclassico":
-                return $this->render(
+            case "Classique":
+            return $this->render(
                     'SesileClasseurBundle:Formulaires:elclassico.html.twig'
                 );
                 break;
-            case "elpez":
+            case "Helios":
                 return $this->render(
                     'SesileClasseurBundle:Formulaires:elpez.html.twig'
+                );
+                break;
+                default:
+                return $this->render(
+                    'SesileClasseurBundle:Formulaires:elclassico.html.twig'
                 );
                 break;
         }
