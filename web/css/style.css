@@ -247,14 +247,6 @@ html, body {
     cursor: pointer;
 }
 
-#visi_publique {
-
-}
-
-#visi_prive {
-
-}
-
 .visi_button_actif {
     background-color: green !important;
 }

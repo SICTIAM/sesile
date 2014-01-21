@@ -5,21 +5,17 @@
     <span class="glyphicon glyphicon-play"></span>
     &nbsp;&nbsp;&nbsp;Visibilit&eacute;
 </div>
-<label>
-    <input id="radio-publique" type="radio" value="0" name="visibilite" checked="checked">
-    Publique
-</label>
-<label>
-    <input id="radio-prive" type="radio" name="visibilite" value="-1">
-    Priv&eacute;
-</label>
 
 
 <div class="visi_button">
-    <div id="visi_publique" class="visi_button_actif">
+        <input id="radio-publique" type="radio" value="0" name="visibilite" checked="checked">
+        Publique
+        <input id="radio-prive" type="radio" name="visibilite" value="-1">
+        Priv&eacute;
+    <div id="visi_publique" rel="#radio-publique"  class="visi_button_actif">
         Publique
     </div>
-    <div id="visi_prive">
+    <div id="visi_prive" rel="#radio-prive">
         Privée
     </div>
 </div>
@@ -28,6 +24,8 @@
         $('.visi_button_actif').removeClass('visi_button_actif');
         $(this).addClass('visi_button_actif');
 
+        var id_du_radio = $(this).attr("rel");
+        $(id_du_radio).attr('checked', 'checked');
     });
 </script>
 
