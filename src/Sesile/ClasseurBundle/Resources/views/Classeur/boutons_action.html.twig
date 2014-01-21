@@ -1,6 +1,6 @@
 {% if classeur.isValidable(app.user.id) %}
 
-    {% if classeur.isSignable(app.user.id) %}
+    {% if signable %}
         <button type="submit" class="btn btn-success btn-valider-signer"
                 data-action="{{ path('signform',{'id':classeur.id}) }}">
             <span class="glyphicon glyphicon-ok"></span>
