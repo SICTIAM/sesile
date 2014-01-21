@@ -8,7 +8,11 @@
         </div>
         {% set donnees = true %}
         {% include 'SesileDelegationsBundle:Default:liste.html.twig' %}
-        <a href="{{ path('delegation_new') }}">Déléguer ses droits</a>
+        <a href="{{ path('delegation_new') }}">
+            <button type="button" class="btn btn-default navbar-btn">
+                Déléguer ses droits
+            </button>
+        </a>
     </div>
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
@@ -19,6 +23,7 @@
                 "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
                 "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                 "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "sLengthMenu": "Afficher _MENU_ classeurs par page",
                 "oPaginate": {
                     "sFirst": "",
                     "sPrevious": "",
@@ -29,7 +34,8 @@
                 "sEmptyTable": "Vous n'avez attribu&eacute; aucune d&eacute;l&eacute;gation "
             },
             "iDisplayLength": 15,
-            "sDom": 'ift<"footer_datatables"p>',
+            "aLengthMenu": [15, 30, 50, 100],
+            "sDom": 'lft<"footer_datatables"p>',
             "aoColumnDefs": [
                 { "bSortable": false, "aTargets": [ 3 ] }
             ],

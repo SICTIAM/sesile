@@ -60,6 +60,10 @@
 	background-color: rgba(50, 133, 171, 0.6);
 }
 
+.menu-rouge .dd-menu {
+	background-color: rgba(222, 96, 97, 0.6);
+}
+
 #bleuclair {
 	background-color: rgba(70, 153, 191, 1);
 }

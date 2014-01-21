@@ -35,8 +35,6 @@ class DefaultController extends Controller
         return array(
             "users" => $users
         );
-
-
     }
 
     /**
@@ -121,10 +119,11 @@ class DefaultController extends Controller
                 ldap_close($ldapconn);
 
                 //envoi d'un mail à l'utilisateur nouvellement créé
+                $MailParam = $this->container->getParameter('swiftmailer');
                 $message = \Swift_Message::newInstance()
                     ->setContentType('text/html')
                     ->setSubject('Nouvel utilisateur')
-                    ->setFrom('j.mercier@sictiam.fr')
+                    ->setFrom($MailParam['username'])
                     ->setTo($entity->getUsername())
                     ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
                 $this->get('mailer')->send($message);
@@ -376,10 +375,10 @@ class DefaultController extends Controller
 
     private function getCASParams()
     {
-        $file = sprintf("%s/config/security.yml", $this->container->getParameter('kernel.root_dir'));
+        $file = sprintf("%s/config/config.yml", $this->container->getParameter('kernel.root_dir'));
         $parsed = Yaml::parse(file_get_contents($file));
 
-        $cas = $parsed['security']['firewalls']['secured_area']['cas'];
+        $cas = $parsed['parameters'];
         return $cas;
     }
 

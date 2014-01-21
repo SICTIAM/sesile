@@ -7,7 +7,6 @@
             &nbsp;&nbsp;&nbsp;Créer un nouveau classeur
         </div>
         <br>
-
         <form class="form-horizontal" role="form" action="{{ path('classeur_create') }}" method="POST">
             <div class="">
                 <div class="col-md-12">
@@ -29,7 +28,9 @@
         <br/>
 
         <a href="{{ path('classeur') }}">
-            Retour à la liste des classeur
+            <button type="button" class="btn btn-default navbar-btn">
+                Retour à la liste des classeur
+            </button>
         </a>
     </div>
 {% endblock %}

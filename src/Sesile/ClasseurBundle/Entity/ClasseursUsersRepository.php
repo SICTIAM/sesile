@@ -72,7 +72,7 @@ class ClasseursUsersRepository extends EntityRepository
     public function deleteClasseurUser($classeur, $circuit)
     {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('DELETE FROM SesileClasseurBundle:ClasseursUsers cu WHERE cu.user in (' . $circuit . ') AND cu.classeur = ' . $classeur->getId());
+        $query = $em->createQuery('DELETE FROM SesileClasseurBundle:ClasseursUsers cu WHERE cu.user not in (' . $circuit . ') AND cu.classeur = ' . $classeur->getId());
         $query->execute();
     }
 }

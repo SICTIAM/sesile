@@ -1,0 +1,25 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-cog"></span>
+            &nbsp;&nbsp;&nbsp;Ajouter une nouvelle collectivité
+        </div>
+        {{ form_start(form) }}
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom) }}
+            <br>
+            {{ form_label(form.domain) }}
+            {{ form_widget(form.domain) }}
+            <br>
+            {{ form_label(form.active) }}
+            {{ form_widget(form.active) }}
+            <br>
+            {{ form_label(form.file) }}
+            {{ form_widget(form.file) }}
+            <br>
+            {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success'}}) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

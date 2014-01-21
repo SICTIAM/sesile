@@ -38,4 +38,3 @@ security:
         - { path: ^/circuit, roles: ROLE_USER }
         - { path: ^/classeur, roles: ROLE_USER }
         - { path: ^/doc, roles: ROLE_USER }
-

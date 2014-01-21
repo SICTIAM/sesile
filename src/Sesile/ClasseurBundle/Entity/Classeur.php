@@ -406,6 +406,9 @@ class Classeur
         if ($this->getValidant() == 0) {
             $this->setStatus(2);
         }
+        else {
+            $this->setStatus(1);
+        }
     }
 
     public function refuser()

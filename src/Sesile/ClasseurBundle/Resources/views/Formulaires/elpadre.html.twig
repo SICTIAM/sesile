@@ -3,6 +3,20 @@
 
 <div class="titre_form_element">
     <span class="glyphicon glyphicon-play"></span>
+    &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+    </div>
+    <label>
+        <input id="radio-publique" type="radio" value="0" name="visibilite" checked="checked">
+        Publique
+    </label>
+    <label>
+        <input id="radio-prive" type="radio" name="visibilite" value="-1">
+        Priv&eacute;
+    </label>
+</div>
+
+<div class="titre_form_element">
+    <span class="glyphicon glyphicon-play"></span>
     &nbsp;&nbsp;&nbsp;Titre
 </div>
 <input class="form-control" id="name" name="name" placeholder="Nom">
@@ -12,14 +26,14 @@
     <span class="glyphicon glyphicon-play"></span>
     &nbsp;&nbsp;&nbsp;Description
 </div>
-<textarea class="form-control" rows="3" name="desc" id="desc"></textarea>
+<textarea class="form-control" rows="3" name="desc" id="desc" placeholder="Description"></textarea>
 <br>
 
 <div class="titre_form_element">
     <span class="glyphicon glyphicon-play"></span>
     &nbsp;&nbsp;&nbsp;Date limite de validation
 </div>
-<input class="datepicker" id="validation" name="validation" type="datetime"/>
+<input class="datepicker" id="validation" name="validation" type="datetime" required="required"/>
 <br>
 
 <div class="titre_form_element">
@@ -41,7 +55,6 @@
 
 <div>
     <br/>
-    <button type="button" class="btn">Annuler</button>
     <button type="submit" class="btn btn-success">Envoyer</button>
 </div>
 <script type="text/javascript">

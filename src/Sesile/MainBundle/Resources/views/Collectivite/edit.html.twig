@@ -1,0 +1,30 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-folder-open"></span>
+            &nbsp;&nbsp;&nbsp;Editer une collectivité
+        </div>
+        <br>
+
+        {{ form_start(edit_form) }}
+            {{ form_label(edit_form.nom) }}
+            {{ form_widget(edit_form.nom) }}
+            <br>
+            {{ form_label(edit_form.domain) }}
+            {{ form_widget(edit_form.domain) }}
+            <br>
+            {{ form_label(edit_form.active) }}
+            {{ form_widget(edit_form.active) }}
+            <br>
+            {{ form_label(edit_form.file) }}
+            {{ form_widget(edit_form.file) }}
+            <br>
+            {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success'}}) }}
+            <br>
+        {{ form_end(edit_form) }}
+        {{ form_start(delete_form) }}
+        {{ form_end(delete_form) }}
+    </div>
+{% endblock %}

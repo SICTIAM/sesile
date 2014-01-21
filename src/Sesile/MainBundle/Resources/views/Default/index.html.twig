@@ -36,9 +36,14 @@
     <a href="{{ app.request.getBaseURL() }}">
     <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
-        </div>
+
+    </div>
     </a>
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
+        <div id="img_collectivite">
+            {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
+            <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg")}}" width="75px" height="75px"/>
+        </div>
 </div>
 
 <div id="droite">
@@ -47,7 +52,7 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <img class="userpicture"
-                         src="{{ app.user.path }}"/>
+                         src="{{ asset(upload_path ~ app.user.path) }}"/>
                     &nbsp;
                     {{ app.user.prenom }}&nbsp;{{ app.user.nom }}&nbsp;&nbsp;&nbsp;
                     <span class="caret"></span>
@@ -68,7 +73,16 @@
                             </a>
                         </li>
                     {% endif %}
-                    <li class="divider"></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="divider"></li>
+                        <li class="li2">
+                            <a href="{{ path("index_collectivite") }}">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                Collectivité
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    {% endif %}
                     <li class="li2">
                         <a href="{{ path("logout") }}">
                             <span class="glyphicon glyphicon-off"></span>
@@ -94,15 +108,7 @@
                                 <span class="glyphicon glyphicon-home"></span>
                                 Bienvenue
                             </div>
-                            Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page
-                            avant
-                            impression. Le Lorem Ipsum est le le le lel (je vous le donne)*
-                            <a href="#" data-toggle="tooltip" class="sesiletooltip" title="test tooltip">lel
-                                lelllllelelfaux texte
-                            </a>
-                            standard de l'imprimerie depuis les années 1500, quand
-                            un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen
-                            de
+                            {{ msg_acc }}
                         </div>
                     </div>
                 {% endif %}
@@ -130,7 +136,7 @@
                         <div id="liste_classeurs">
                             <div class="titre_bloc_accueil">
                                 <span class="glyphicon glyphicon-eye-open"></span>
-                                Classeurs visibles
+                                Liste des classeurs
                             </div>
                             {% render url("liste_classeurs") %}
                         </div>
@@ -145,6 +151,7 @@
                                         "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                                         "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                                         "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+                                        "sLengthMenu": "Afficher _MENU_ classeurs par page",
                                         "oPaginate": {
                                             "sFirst": "",
                                             "sPrevious": "",
@@ -152,8 +159,9 @@
                                             "sLast": ""
                                         }
                                     },
-                                    "iDisplayLength": 5,
-                                    "sDom": 'ift<"footer_datatables"p>',
+                                    "iDisplayLength": 15,
+                                    "aLengthMenu": [15, 30, 50, 100],
+                                    "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
                                         { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
@@ -167,6 +175,7 @@
                                         "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                                         "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                                         "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+                                        "sLengthMenu": "Afficher _MENU_ classeurs par page",
                                         "oPaginate": {
                                             "sFirst": "",
                                             "sPrevious": "",
@@ -174,8 +183,9 @@
                                             "sLast": ""
                                         }
                                     },
-                                    "iDisplayLength": 5,
-                                    "sDom": 'ift<"footer_datatables"p>',
+                                    "iDisplayLength": 15,
+                                    "aLengthMenu": [15, 30, 50, 100],
+                                    "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
                                         { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
@@ -217,7 +227,7 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
             <br/>
 <span class="signature">
 <a class="sitesictiam" href="http://www.sictiam.fr/" target="_blank">
-    COPYRIGHT &copy;2013
+    COPYRIGHT &copy;2014
     &nbsp; &ndash; &nbsp;
     R&Eacute;ALIS&Eacute; PAR LE SICTIAM
 </a>

@@ -9,6 +9,8 @@
         <form action="{{ path('admin') }}" {{ form_enctype(form) }} method="POST">
             {{ form_label(form.msg) }}
             {{ form_widget(form.msg) }}
+
+            {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
         </form>
     </div>
 {% endblock %}

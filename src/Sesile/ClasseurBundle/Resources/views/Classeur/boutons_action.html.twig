@@ -1,33 +1,45 @@
 {% if classeur.isValidable(app.user.id) %}
-    {% if signable %}
-        <form class="form_action" id="signform" action="{{ path('signform',{'id':classeur.id}) }}">
-            <button type="submit" class="btn btn-success">Valider et Signer</button>
-            <input type="hidden" value="{{ classeur.id }}" name="id"/>
 
-        </form>
+    {% if classeur.isSignable(app.user.id) %}
+        <button type="submit" class="btn btn-success btn-valider-signer"
+                data-action="{{ path('signform',{'id':classeur.id}) }}">
+                <span class="glyphicon glyphicon-ok"></span>
+        &nbsp;Valider et Signer
+        </button>
     {% else %}
-        <form class="form_action" action="{{ path("classeur_valider") }}" method="post">
-            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Valider</button>
-            <input type="hidden" value="{{ classeur.id }}" name="id"/>
-        </form>
+        <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_valider") }}">
+            <span class="glyphicon glyphicon-ok"></span>
+            &nbsp;Valider le classeur
+        </button>
     {% endif %}
-
-    <form class="form_action" action="{{ path("classeur_refuser") }}" method="post">
-        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Refuser</button>
-        <input type="hidden" value="{{ classeur.id }}" name="id"/>
-    </form>
+    <button type="submit" class="btn btn-danger btn-refuser" data-action="{{ path("classeur_refuser") }}">
+        <span class="glyphicon glyphicon-remove"></span>
+        &nbsp;Refuser
+    </button>
 {% endif %}
 
 {% if retractable %}
     <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
-        <button type="submit" class="btn btn-warning">Se r&eacute;tracter</button>
+        <button type="submit" class="btn btn-warning">
+            <span class="glyphicon glyphicon-thumbs-down"></span>
+            &nbsp;Se r&eacute;tracter</button>
         <input type="hidden" value="{{ classeur.id }}" name="id"/>
     </form>
 {% endif %}
 
 {% if classeur.isSupprimable(app.user.id) %}
     <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Retirer</button>
+        <button type="submit" class="btn btn-danger">
+            <span class="glyphicon glyphicon-trash"></span>
+            &nbsp;Retirer
+        </button>
         <input type="hidden" value="{{ classeur.id }}" name="id"/>
     </form>
+{% endif %}
+
+
+{% if classeur.isModifiable(app.user.id) %}
+    <button class="btn btn-success pull-right" class="btn-modifs" data-action="{{ path("classeur_update") }}">
+        <span class="glyphicon glyphicon-saved"></span>
+        &nbsp;Enregistrer les modifications</button>
 {% endif %}
