@@ -8,24 +8,23 @@
 
 
 <div class="visi_button">
-        <input id="radio-publique" type="radio" value="0" name="visibilite" checked="checked">
-        Publique
-        <input id="radio-prive" type="radio" name="visibilite" value="-1">
-        Priv&eacute;
-    <div id="visi_publique" rel="#radio-publique"  class="visi_button_actif">
+    <div id="visi_publique" rel="0"  class="visi_button_actif">
+        <input id="radio-publique" type="radio" value="0" name="visibilite" checked="true">
         Publique
     </div>
-    <div id="visi_prive" rel="#radio-prive">
+    <div id="visi_prive" rel="-1">
+        <input id="radio-prive" type="radio" name="visibilite" value="-1">
         Privée
     </div>
 </div>
 <script type="text/javascript">
     $('.visi_button div').click(function () {
         $('.visi_button_actif').removeClass('visi_button_actif');
+
         $(this).addClass('visi_button_actif');
 
-        var id_du_radio = $(this).attr("rel");
-        $(id_du_radio).attr('checked', 'checked');
+
+        $("input[name='visibilite']").val([$(this).attr("rel")])
     });
 </script>
 
