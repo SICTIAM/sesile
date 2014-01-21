@@ -289,7 +289,6 @@ class ClasseurController extends Controller
         $circuit = $request->request->get('circuit');
         $classeur->setCircuit($circuit);
         $classeur->setUser($this->getUser()->getId());
-        $classeur->setVisibilite(1);
         $em->persist($classeur);
         $em->flush();
 
@@ -306,6 +305,7 @@ class ClasseurController extends Controller
         // gestion du circuit
         $users = explode(',', $circuit);
         $classeurUserObj = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
+        $classeurUserObj->deleteClasseurUser($classeur, $circuit);
 
         for ($i = 0; $i < count($users); $i++) {
             $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
@@ -319,7 +319,6 @@ class ClasseurController extends Controller
         }
 
         $em->flush();
-        $classeurUserObj->deleteClasseurUser($classeur, $circuit);
         $error = false;
         if (!$error) {
             $this->get('session')->getFlashBag()->add(
@@ -362,7 +361,7 @@ class ClasseurController extends Controller
         // envoi d'un mail validant suivant
         $this->sendValidationMail($classeur);
 
-        $this->updateAction($request);
+        //$this->updateAction($request);
 
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
@@ -395,7 +394,7 @@ class ClasseurController extends Controller
         // envoi d'un mail validant suivant
         $this->sendRefusMail($classeur);
 
-        $this->updateAction($request);
+        //$this->updateAction($request);
 
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
@@ -425,7 +424,7 @@ class ClasseurController extends Controller
         $em->persist($action);
         $em->flush();
 
-        $this->updateAction($request);
+        //$this->updateAction($request);
         return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
