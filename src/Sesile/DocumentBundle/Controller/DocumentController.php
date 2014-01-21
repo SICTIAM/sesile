@@ -149,14 +149,19 @@ class DocumentController extends Controller
 
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getName() . '"');
+        $response->headers->set('Content-Length', filesize('uploads/docs/' . $doc->getRepourl()));
 
 
-        $response->sendHeaders();
+        // $response->sendHeaders();
 
-        $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
 
+        $response->setContent(file_get_contents('uploads/docs/' . $doc->getRepourl()));
+
+
+        //  var_dump($response);
         return $response;
+
     }
 
 

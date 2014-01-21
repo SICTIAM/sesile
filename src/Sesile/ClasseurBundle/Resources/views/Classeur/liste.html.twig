@@ -17,7 +17,7 @@
             <td>{% if classeur.creation %}{{ classeur.creation | date('d/m/Y') }}{% endif %}</td>
             <td>{% if classeur.validation %}{{ classeur.validation | date('d/m/Y') }}{% endif %}</td>
             <td>{{ classeur.type }}</td>
-            <td>{{ classeur.validant }}</td>
+            <td>{{ classeur.validantName }}</td>
             <td class="statut">
                 <span class="glyphicon statut_{{ classeur.status }}"></span>
             </td>
