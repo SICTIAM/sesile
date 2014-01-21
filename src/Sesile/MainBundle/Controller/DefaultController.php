@@ -16,15 +16,24 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+
+        $image = "/images/Logo-Officiel-SICTIAM_taille250px.jpg";
+
         $em = $this->getDoctrine()->getManager();
         if (isset($_SESSION["phpCAS"])) {
             $session = new Session();
             $tab = $_SESSION["phpCAS"];
             $username = $tab["user"];
             $UserEntity = $em->getRepository('SesileUserBundle:User')->findOneByUsername($username);
-            $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($UserEntity->getCollectivite());
-            $session->set('logo', $CollecEntity->getImage());
-            $session->set('idCollec', $CollecEntity->getId());
+
+            $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
+
+            if ($CollecEntity != null) {
+                $image = $CollecEntity->getImage();
+            }
+
+            $session->set('logo', $image);
+            $session->set('idCollec', 1);
         } else {
             $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
         }
@@ -34,7 +43,7 @@ class DefaultController extends Controller
         } else {
             $msg_accueil = "Bienvenue sur le parapheur sesile";
         }
-        return array('msg_acc' => $msg_accueil,);
+        return array('msg_acc' => $msg_accueil, "img_accueil" => $image);
     }
 
     /**
