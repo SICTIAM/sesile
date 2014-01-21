@@ -102,6 +102,8 @@
 
         <script type="application/javascript">
             $(document).ready(function () {
+                $(".selects_circuit:nth-child(2)").hide();
+
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
                     enableUploads();
                 });
