@@ -10,7 +10,7 @@
     </thead>
     {% for delegation in delegations %}
         <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
-            <td>{{ delegation.user }}</td>
+            <td>{{ delegation.user.prenom }} {{ delegation.user.nom }}</td>
             <td>{{ delegation.debut | date('d/m/Y') }}</td>
             <td>{{ delegation.fin | date('d/m/Y') }}</td>
             {% if donnees is defined %}
