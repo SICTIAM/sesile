@@ -23,11 +23,12 @@ class AdminController extends Controller
      */
     public function PageAdminAction(Request $request)
     {
-
+        /*
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
+        */
 
         $Upload = $this->container->getParameter('upload');
         $DocPath = $Upload["msg_acc"];
@@ -46,12 +47,10 @@ class AdminController extends Controller
             // $data is a simply array with your form fields
             // like "query" and "category" as defined above.
             $msg = $request->request->get('msg');
-
-            $handle = fopen($DocPath, 'w+');
-            fwrite($handle, $msg);
-            fclose($handle);
-            //   var_dump($data);exit;
-
+            $em = $this->getDoctrine()->getManager();
+            $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
+            $coll->setMessage($msg);
+            $em->flush();
         }
 
         return $this->render('SesileMainBundle:Default:admin.html.twig', array('form' => $form->createView(),));
@@ -84,7 +83,7 @@ class AdminController extends Controller
         $DirPath = $upload['logo_coll'];
 
 
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
 
@@ -92,6 +91,7 @@ class AdminController extends Controller
         $entity = new Collectivite();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
+
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

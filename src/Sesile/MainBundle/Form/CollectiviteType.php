@@ -24,7 +24,10 @@ class CollectiviteType extends AbstractType
             ->add('file', 'file', array('label' => 'Logo de la collectivité',
                 'data_class' => null,
                 'required' => false
-            ));
+            ))
+            ->add('textmailnew', 'textarea', array('label' => "Texte du mail d'un nouveau classeur", 'required' => false))
+            ->add('textmailrefuse', 'textarea', array('label' => "Texte du mail d'un classeur refusé", 'required' => false))
+            ->add('textmailwalid', 'textarea', array('label' => "Texte du mail d'un classeur validé", 'required' => false, 'attr' => array('name' => 'textmailwalid')));
 
     }
 
