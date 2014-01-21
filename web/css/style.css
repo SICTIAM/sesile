@@ -42,9 +42,9 @@ html, body {
 }
 
 #img_collectivite {
-	width: 80px;
-	height: 80px;
-	margin: 15% auto;
+    width: 80px;
+    height: 80px;
+    margin: 15% auto;
 }
 
 /*HEADER FOOTER*/
@@ -85,25 +85,25 @@ html, body {
 
 /*MENU CONNEXION*/
 .menu_connexion {
-	text-align: right;
+    text-align: right;
 }
 
 .menu_connexion
 .glyphicon {
-	float: left;
+    float: left;
 }
 
 .menu_connexion li:hover
 .glyphicon {
-	color: rgba(50, 133, 171, 1);
+    color: rgba(50, 133, 171, 1);
 
 }
 
 .userpicture {
-	width: 2em;
-	height: 2em;
-	height: 2em;
-	background-color: #ebebeb;
+    width: 2em;
+    height: 2em;
+    height: 2em;
+    background-color: #ebebeb;
 }
 
 .legal,
@@ -324,6 +324,19 @@ html, body {
     color: #cccccc;
 }
 
+/*DELEGATIONS*/
+#deleg_debut {
+    margin: 1em 1em 1em 0em;
+}
+
+#deleg_fin {
+    margin: 1em 1em 1em 0em;
+}
+
+select [name=user] {
+
+}
+
 /*BOUTONS FORMULAIRE*/
 .form_action {
     display: inline-block;
@@ -357,6 +370,11 @@ html, body {
 .btn-retracter {
     background-color: rgb(240, 117, 0);
 }
+
+/*.add-on {*/
+/*background: none repeat scroll 0 0 #F5F5F5;*/
+/*border: 1px solid #CCCCCC;*/
+/*}*/
 
 /*BUTTON TABLEAU*/
 .active_inactive_user .glyphicon-ok {

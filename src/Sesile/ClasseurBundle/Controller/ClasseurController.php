@@ -237,20 +237,22 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+        $isSignable = $entity->isSignable($em);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
         $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
-        $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom()." ".$d->getNom(), "path" => $d->getPath());
+        $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
         $validant = $entity->getvalidant();
 
         return array(
             'deposant' => $deposant,
             'validant' => $validant,
             'classeur' => $entity,
-            'retractable' => $entity->isRetractable($this->getUser()->getId(), $em)
+            'retractable' => $entity->isRetractable($this->getUser()->getId(), $em),
+            'signable' => $isSignable
         );
     }
 
@@ -262,6 +264,8 @@ class ClasseurController extends Controller
      */
     public function updateAction(Request $request)
     {
+
+        var_dump($request->request->get('circuit'));
         $em = $this->getDoctrine()->getManager();
 
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->request->get('id'));
@@ -301,9 +305,6 @@ class ClasseurController extends Controller
         for ($i = 0; $i < count($users); $i++) {
             $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
             $cu = $classeurUserObj->findOneBy(array("user" => $userObj, "classeur" => $classeur));
-            if ($cu != null) {
-                continue;
-            }
 
             $classeurUser = new ClasseursUsers();
             $classeurUser->setClasseur($classeur);
@@ -545,7 +546,8 @@ class ClasseurController extends Controller
 
     /*                MAILS DE NOTIFICATION                      */
 
-    private function sendMail($sujet, $to, $body) {
+    private function sendMail($sujet, $to, $body)
+    {
         $message = \Swift_Message::newInstance()
             ->setSubject($sujet)
             ->setFrom('sesile@sictiam.fr')
@@ -554,7 +556,8 @@ class ClasseurController extends Controller
         $this->get('mailer')->send($message);
     }
 
-    private function sendValidationMail($classeur) {
+    private function sendValidationMail($classeur)
+    {
         $body = $this->renderView('SesileClasseurBundle:Mail:valide.html.twig',
             array(
                 'validant' => $this->getUser(),
@@ -567,12 +570,13 @@ class ClasseurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
-        if($validant_obj != null) {
+        if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
         }
     }
 
-    private function sendCreationMail($classeur) {
+    private function sendCreationMail($classeur)
+    {
         $body = $this->renderView('SesileClasseurBundle:Mail:nouveau.html.twig',
             array(
                 'deposant' => $classeur->getUser(),
@@ -585,12 +589,13 @@ class ClasseurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
-        if($validant_obj != null) {
+        if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
         }
     }
 
-    private function sendRefusMail($classeur) {
+    private function sendRefusMail($classeur)
+    {
         $body = $this->renderView('SesileClasseurBundle:Mail:refuse.html.twig',
             array(
                 'deposant' => $classeur->getUser(),
@@ -603,7 +608,7 @@ class ClasseurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
-        if($validant_obj != null) {
+        if ($validant_obj != null) {
             $this->sendMail("SESILE - Classeur refusé", $validant_obj->getEmail(), $body);
         }
     }

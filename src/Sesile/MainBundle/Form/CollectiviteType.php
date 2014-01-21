@@ -19,7 +19,8 @@ class CollectiviteType extends AbstractType
         $builder
             ->add('nom', 'text', array("label" => "Nom"))
             ->add('domain', 'text', array("label" => "Domaine"))
-            ->add('active', 'checkbox', array("label" => "Active",'required' => false))
+
+            ->add('active', 'checkbox', array("label" => "Active", 'required' => false))
             ->add('file', 'file', array('label' => 'Logo de la collectivité',
                 'data_class' => null,
                 'required' => false

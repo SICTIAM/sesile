@@ -12,6 +12,7 @@
                 Créer un classeur
             </button>
         </a>
+        {% include 'SesileClasseurBundle:Classeur:legende.html.twig' %}
     </div>
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
@@ -28,12 +29,13 @@
                     "sNext": "",
                     "sLast": "",
                     "sZeroRecords": "Vous n'avez attribu&eacute; aucune d&eacute;l&eacute;gation ",
-                    "sEmptyTable": "Vous n'avez attribu&eacute; aucune d&eacute;l&eacute;gation "
+                    "sEmptyTable": "Vous n'avez attribu&eacute; aucune d&eacute;l&eacute;gation ",
+                    "sLengthMenu": "Afficher _MENU_ records par page"
                 }
             },
             "iDisplayLength": 15,
             "aLengthMenu": [15, 30, 50, 100],
-            "sDom": 'lift<"footer_datatables"p>',
+            "sDom": 'lft<"footer_datatables"p>',
             "aoColumnDefs": [
                 { "bSortable": false, "aTargets": [ 4, 5 ] }
             ],

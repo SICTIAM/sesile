@@ -1,8 +1,125 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
+
     <div class="bloc_page">
-        {{ form(edit_form) }}
-        {{ form(delete_form) }}
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-folder-open"></span>
+            &nbsp;&nbsp;&nbsp;Editer un utilisateur
+        </div>
+        {{ form_start(edit_form) }}
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.username) }}
+            {{ form_widget(edit_form.username) }}
+        </div>
+
+        <br/>
+
+        {% for passwordField in edit_form.plainPassword %}
+            <div class="label_form label-form-input">
+                {% if loop.index  != 1 %}
+                    {{ form_label(passwordField, 'Confirmation') }}
+                {% else %}
+                    {{ form_label(passwordField, 'Mot de passe') }}
+                {% endif %}
+                {{ form_widget(passwordField) }}
+            </div>
+            <br/>
+        {% endfor %}
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.Nom) }}
+            {{ form_widget(edit_form.Nom) }}
+
+        </div>
+
+        <br/>
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.Prenom) }}
+            {{ form_widget(edit_form.Prenom) }}
+        </div>
+        <br/>
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.ville) }}
+            {{ form_widget(edit_form.ville) }}
+        </div>
+        <br/>
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.cp) }}
+            {{ form_widget(edit_form.cp) }}
+        </div>
+        <br/>
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.departement) }}
+            {{ form_widget(edit_form.departement) }}
+        </div>
+        <br/>
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.pays) }}
+            {{ form_widget(edit_form.pays) }}
+        </div>
+        <br/>
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.role) }}
+            {{ form_widget(edit_form.role) }}
+        </div>
+        <br/>
+
+        <div class="label_form parcou">
+            {{ form_label(edit_form.file) }}
+            {{ form_widget(edit_form.file) }}
+        </div>
+        <br/>
+
+        <div class="label_form pickuser">
+            {{ form_label(edit_form.roles) }}
+            {{ form_widget(edit_form.roles) }}
+        </div>
+        <br/>
+
+        <div class="acti">
+            <label for="{{ edit_form.enabled.vars.id }}" class="cb-enable selected">
+                <span>Activé</span>
+            </label>
+            <label for="{{ edit_form.enabled.vars.id }}" class="cb-disable">
+                <span>Désactivé</span>
+            </label>
+            {{ form_widget(edit_form.enabled, {'attr': {'class': 'checkbox', 'checked': 'checked' }}) }}
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+        {{ form_end(edit_form) }}
+        <br/>
+        {{ form_start(delete_form) }}
+        {{ form_widget(delete_form.submit, {'attr': {'class': 'btn btn-danger' }}) }}
+        {{ form_end(delete_form) }}
     </div>
+
+    <script type="text/javascript">
+        $(".label_form input").focus(function () {
+            $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
+            $(this).prev("label").addClass("glyphicon-search-blue");
+        });
+
+        $(".cb-enable").click(function () {
+            var parent = $(this).parents('.acti');
+            $('.cb-disable', parent).removeClass('selected');
+            $(this).addClass('selected');
+            $('.checkbox', parent).attr('checked', true);
+        });
+        $(".cb-disable").click(function () {
+            var parent = $(this).parents('.acti');
+            $('.cb-enable', parent).removeClass('selected');
+            $(this).addClass('selected');
+            $('.checkbox', parent).attr('checked', false);
+        });
+    </script>
 {% endblock %}

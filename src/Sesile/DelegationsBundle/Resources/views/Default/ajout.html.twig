@@ -5,8 +5,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
     <div class="bloc_page">
         <div class="titre_page">
-            <span class="glyphicon glyphicon-pencil"></span>
-            &nbsp;&nbsp;&nbsp;Ajouter une délégation
+            <span class="glyphicon glyphicon-export"></span>
+            &nbsp;&nbsp;&nbsp;Déléguer ses droits
         </div>
         <form action="{{ path("delegation_create") }}" method="post">
             <select name="user">
@@ -15,11 +15,14 @@
                 {% endfor %}
             </select>
             <br>
+            <span class="add-on">Début délégation : &nbsp;</span>
             <input class="datepicker" id="deleg_debut" name="debut" type="datetime"/>
             <br>
+            <span class="add-on">Fin délégation : &nbsp;</span>
             <input class="datepicker" id="deleg_fin" name="fin" type="datetime"/>
             <br>
             <button type="submit" class="btn btn-success">Enregistrer</button>
+            <a href="{{ path("delegations_list") }}" class="btn btn-danger">Annuler</a>
         </form>
     </div>
     <script type="text/javascript">

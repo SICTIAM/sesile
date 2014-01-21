@@ -36,13 +36,14 @@
     <a href="{{ app.request.getBaseURL() }}">
         <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
+
         </div>
     </a>
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
-        <div id="img_collectivite">
-            {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
-            <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg")}}" width="75px" height="75px"/>
-        </div>
+    <div id="img_collectivite">
+        {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
+        <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg") }}" width="75px" height="75px"/>
+    </div>
 </div>
 
 <div id="droite">
@@ -72,7 +73,16 @@
                             </a>
                         </li>
                     {% endif %}
-                    <li class="divider"></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="divider"></li>
+                        <li class="li2">
+                            <a href="{{ path("index_collectivite") }}">
+                                <span class="glyphicon glyphicon-cog"></span>
+                                Collectivité
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    {% endif %}
                     <li class="li2">
                         <a href="{{ path("logout") }}">
                             <span class="glyphicon glyphicon-off"></span>
@@ -104,8 +114,10 @@
                 {% endif %}
                 <div class="bloc_accueil">
                     {% if app.user %}
-                        <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
-                        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+                        <script type="application/javascript"
+                                src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+                        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}"
+                              rel="stylesheet"/>
 
                         <div id="delegations_recues">
                             <div class="titre_bloc_accueil">
@@ -126,7 +138,7 @@
                         <div id="liste_classeurs">
                             <div class="titre_bloc_accueil">
                                 <span class="glyphicon glyphicon-eye-open"></span>
-                                Classeurs visibles
+                                Liste des classeurs
                             </div>
                             {% render url("liste_classeurs") %}
                         </div>
@@ -141,6 +153,7 @@
                                         "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                                         "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                                         "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+                                        "sLengthMenu": "Afficher _MENU_ classeurs par page",
                                         "oPaginate": {
                                             "sFirst": "",
                                             "sPrevious": "",
@@ -150,7 +163,7 @@
                                     },
                                     "iDisplayLength": 15,
                                     "aLengthMenu": [15, 30, 50, 100],
-                                    "sDom": 'lift<"footer_datatables"p>',
+                                    "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
                                         { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
@@ -164,6 +177,7 @@
                                         "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                                         "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                                         "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+                                        "sLengthMenu": "Afficher _MENU_ classeurs par page",
                                         "oPaginate": {
                                             "sFirst": "",
                                             "sPrevious": "",
@@ -173,7 +187,7 @@
                                     },
                                     "iDisplayLength": 15,
                                     "aLengthMenu": [15, 30, 50, 100],
-                                    "sDom": 'lift<"footer_datatables"p>',
+                                    "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
                                         { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
@@ -277,6 +291,7 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
     }
 </script>
 </div>
-<object id="winFirefoxPlugin" type="application/x-sharepoint" style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
+<object id="winFirefoxPlugin" type="application/x-sharepoint"
+        style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
 </body>
 </html>

@@ -49,6 +49,7 @@ class User extends BaseUser
 
     /**
      * @Assert\Image(
+     *
      *      mimeTypesMessage = "Ce fichier n'est pas une image",
      *      maxSize = "5M",
      *      maxSizeMessage = "Too big."
@@ -233,6 +234,9 @@ class User extends BaseUser
         // proprement l'entité d'être persistée dans la base de données si
         // erreur il y a
         //   var_dump($this->getUploadDir());var_dump($this->file->getClientOriginalName());exit;
+        if (!file_exists($Dirpath)) {
+            mkdir($Dirpath);
+        }
         $this->file->move($Dirpath, $this->path);
 
 

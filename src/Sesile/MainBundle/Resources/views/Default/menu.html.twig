@@ -1,9 +1,37 @@
 {% block menu %}
     <div class="menu">
         <ul>
+            <li class="menu-elem menu-jaune">
+                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
+                    <a href="#">
+                        <div class="rectanglemenu" id="jauneclair"></div>
+                        D&eacute;l&eacute;gations<b class="caret carette"></b></a>
+                </div>
+                <ul class="dd-menu">
+                    <li>
+                        <a href="{{ path("delegation_new") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
+                            Ajout d’une délégation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("delegations_list") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
+                            Gérer les délégations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("delegations_recues") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
+                            Délégations reçues
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="menu-elem menu-bleu">
                 <div class="dd-toggle entete-menu {% if( 'classeur' in app.request.requestUri ) %}titremenu{% endif %}">
-                <a href="#">
+                    <a href="#">
                         <div class="rectanglemenu" id="bleuclair"></div>
                         Classeurs<b class="caret carette"></b></a>
                 </div>
@@ -15,15 +43,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ path("classeur_new") }}">
+                        <a href="{{ path("index_valider") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            Créer un classeur
+                            Classeur(s) reçu(s)
                         </a>
                     </li>
                     <li>
-                        <a href="{{ path("index_valider") }}">
+                        <a href="{{ path("classeur_new") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            A valider
+                            Ajout d'un classeur
                         </a>
                     </li>
                     <li>
@@ -34,31 +62,18 @@
                     </li>
                 </ul>
             </li>
+
             <li class="menu-elem menu-rouge">
-                <div class="entete-menu">
-                    <a href="{{ path("gestion_circuit") }}">
-                        <div class="rectanglemenu" id="rougeclair"></div>
-                        Gestion des circuits
-                    </a>
-                </div>
-            </li>
-            <li class="menu-elem menu-jaune">
                 <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
                     <a href="#">
-                        <div class="rectanglemenu" id="jauneclair"></div>
-                        D&eacute;l&eacute;gations<b class="caret carette"></b></a>
+                        <div class="rectanglemenu" id="rougeclair"></div>
+                        Préférences<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
                     <li>
-                        <a href="{{ path("delegations_list") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            Gérer les délégations
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("delegations_recues") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            délégations reçues
+                        <a href="{{ path("classeur") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
+                            Notifications
                         </a>
                     </li>
                 </ul>
@@ -71,9 +86,27 @@
                 </div>
                 <ul class="dd-menu">
                     <li>
+                        <a href="{{ path("gestion_circuit") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Gestion des circuits
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("gestion_circuit") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Types de classeurs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("gestion_circuit") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Message d'accueil
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ path("liste_users") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Liste des utilisateurs
+                            Gestion des utilisateurs
                         </a>
                     </li>
                 </ul>
