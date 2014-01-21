@@ -16,22 +16,25 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $session = new Session();
-        //$session->start();
-        $session->set('logo', 'f69fa0f49e660d38ccf33c6c5fa7a57a21ee3ca8.png');
-        $Upload = $this->container->getParameter('upload');
-        $DocPath = $Upload["msg_acc"];
-        $handle = fopen($DocPath, 'a+');
-        if (filesize($DocPath)) {
-            $msg_accueil = fread($handle, filesize($DocPath));
-            fclose($handle);
+        $em = $this->getDoctrine()->getManager();
+        if (isset($_SESSION["phpCAS"])) {
+            $session = new Session();
+            $tab = $_SESSION["phpCAS"];
+            $username = $tab["user"];
+            $UserEntity = $em->getRepository('SesileUserBundle:User')->findOneByUsername($username);
+            $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($UserEntity->getCollectivite());
+            $session->set('logo', $CollecEntity->getImage());
+            $session->set('idCollec', $CollecEntity->getId());
+        } else {
+            $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
+        }
 
+        if ($CollecEntity != null) {
+            $msg_accueil = $CollecEntity->getMessage();
         } else {
             $msg_accueil = "Bienvenue sur le parapheur sesile";
         }
-        $image = 'f69fa0f49e660d38ccf33c6c5fa7a57a21ee3ca8.png';
-        return array('msg_acc' => $msg_accueil,
-            'image' => $image);
+        return array('msg_acc' => $msg_accueil,);
     }
 
     /**
