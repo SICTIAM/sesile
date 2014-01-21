@@ -78,7 +78,9 @@
                     </li>
                 </ul>
             </li>
-            <li class="menu-elem menu-vert ">
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="menu-elem menu-vert ">
                 <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
                     <a href="#">
                         <div class="rectanglemenu" id="vertclair"></div>
@@ -109,14 +111,18 @@
                             Gestion des utilisateurs
                         </a>
                     </li>
-                    <li>
+
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <li>
                         <a href="{{ path("index_collectivite") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Collectivités
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
             </li>
+            {% endif %}
         </ul>
     </div>
     <script type="text/javascript">
