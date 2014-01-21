@@ -1,0 +1,41 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-list"></span>
+            &nbsp;&nbsp;&nbsp;Liste des classeurs
+        </div>
+
+        <table class="table tableau dtables">
+            <thead>
+            <tr>
+                <th>Type de classeur</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for type in types %}
+                <tr class="classeur-row" data-id="{{ type.id }}">
+                    <td>{{ type.nom }}</td>
+                    <td class="boutons_action">
+                        <a href="{{ path("classeur_edit", {'id' : type.id }) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        {% if classeur.isSupprimable(app.user.id) %}
+                            <a href="{{ path("classeur_supprimer") }}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('classeur_new') }}">
+            <button type="button" class="btn btn-default navbar-btn">
+                Créer un type de classeur
+            </button>
+        </a>
+    </div>
+{% endblock %}
