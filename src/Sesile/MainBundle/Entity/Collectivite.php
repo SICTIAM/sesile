@@ -75,7 +75,7 @@ class Collectivite
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -91,14 +91,14 @@ class Collectivite
     public function setNom($nom)
     {
         $this->nom = $nom;
-    
+
         return $this;
     }
 
     /**
      * Get nom
      *
-     * @return string 
+     * @return string
      */
     public function getNom()
     {
@@ -114,14 +114,14 @@ class Collectivite
     public function setDomain($domain)
     {
         $this->domain = $domain;
-    
+
         return $this;
     }
 
     /**
      * Get domain
      *
-     * @return string 
+     * @return string
      */
     public function getDomain()
     {
@@ -137,14 +137,14 @@ class Collectivite
     public function setImage($image)
     {
         $this->image = $image;
-    
+
         return $this;
     }
 
     /**
      * Get image
      *
-     * @return string 
+     * @return string
      */
     public function getImage()
     {
@@ -160,14 +160,14 @@ class Collectivite
     public function setMessage($message)
     {
         $this->message = $message;
-    
+
         return $this;
     }
 
     /**
      * Get message
      *
-     * @return string 
+     * @return string
      */
     public function getMessage()
     {
@@ -183,14 +183,14 @@ class Collectivite
     public function setActive($active)
     {
         $this->active = $active;
-    
+
         return $this;
     }
 
     /**
      * Get active
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getActive()
     {
@@ -257,6 +257,9 @@ class Collectivite
         // va automatiquement être lancée par la méthode move(). Cela va empêcher
         // proprement l'entité d'être persistée dans la base de données si
         // erreur il y a
+        if (!file_exists($this->getUploadRootDir())) {
+            mkdir($this->getUploadRootDir());
+        }
         $this->file->move($this->getUploadRootDir(), $this->image);
 
 

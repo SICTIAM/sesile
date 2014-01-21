@@ -34,16 +34,16 @@
 <div id="maman">
 <div id="gauche">
     <a href="{{ app.request.getBaseURL() }}">
-    <div id="logo">
+        <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
 
-    </div>
+        </div>
     </a>
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
-        <div id="img_collectivite">
-            {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
-            <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg")}}" width="75px" height="75px"/>
-        </div>
+    <div id="img_collectivite">
+        {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
+        <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg") }}" width="75px" height="75px"/>
+    </div>
 </div>
 
 <div id="droite">
@@ -114,8 +114,10 @@
                 {% endif %}
                 <div class="bloc_accueil">
                     {% if app.user %}
-                        <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
-                        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+                        <script type="application/javascript"
+                                src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+                        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}"
+                              rel="stylesheet"/>
 
                         <div id="delegations_recues">
                             <div class="titre_bloc_accueil">
@@ -289,6 +291,7 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
     }
 </script>
 </div>
-<object id="winFirefoxPlugin" type="application/x-sharepoint" style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
+<object id="winFirefoxPlugin" type="application/x-sharepoint"
+        style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
 </body>
 </html>

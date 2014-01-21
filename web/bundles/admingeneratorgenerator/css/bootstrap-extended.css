@@ -10,7 +10,7 @@
     visibility: visible;
 }
 
-.list_thead_column .sort-span > i.hover, 
+.list_thead_column .sort-span > i.hover,
 .list_thead_column .sort-span:hover > i.active {
     display: none;
 }
@@ -22,8 +22,8 @@
 
 /* List pagination styles */
 .pagination {
-   margin: 0px;
-   font-size: 14px;
+    margin: 0px;
+    font-size: 14px;
 }
 
 .pagination .perpage {
@@ -68,13 +68,13 @@ fieldset {
 }
 
 fieldset legend {
-    border: 0 none; 
+    border: 0 none;
     margin: 0 0 0 -8px;
     width: auto;
 }
 
 fieldset legend span {
-    background-color: #FFF; 
+    background-color: #FFF;
     padding: 0 8px;
 }
 
@@ -156,15 +156,15 @@ button::-moz-focus-inner, select::-moz-focus-inner {
 }
 
 /* Reset button styles on input element */
-.btn.btn-reset, 
+.btn.btn-reset,
 .btn.btn-reset:hover,
-input.btn.btn-reset, 
+input.btn.btn-reset,
 input.btn.btn-reset:hover {
     display: inline-block;
     padding: 4px 6px;
     height: 20px;
     line-height: 20px;
-    background: #FFFFFF; 
+    background: #FFFFFF;
     box-shadow: none;
     text-align: left;
     font-size: 14px;

@@ -405,8 +405,7 @@ class Classeur
         // le classeur est arrivé à la derniere étape, on le finalise
         if ($this->getValidant() == 0) {
             $this->setStatus(2);
-        }
-        else {
+        } else {
             $this->setStatus(1);
         }
     }
