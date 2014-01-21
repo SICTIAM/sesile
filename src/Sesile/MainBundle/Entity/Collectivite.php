@@ -269,34 +269,34 @@ class Collectivite
             $this->upload($this->getUploadRootDir());
         }
 
-//
-//        if($this->getTextmailnew()==null){
-//            $this->setTextmailnew("Un nouveau classeur vient d'être déposé par {{ deposant }}
-//                                    <br>
-//                                        {{ titre_classeur }}
-//                                        <br>
-//                                    Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..
-//
-//                            Lien vers le classeur {{ lien }})");
-//        }
-//
-//        if($this->getTextmailrefuse()==null){
-//            $this->setTextmailrefuse("Le classeur \"{{ titre_classeur }}\" vient d'être refusé par {{ validant }}
-//                <br>
-//                Il devra être corrigé et validé avant le {{ date_limite | date('d/m/Y') }}..<br>
-//
-//                Lien vers le classeur {{ lien }}");
-//        }
-//
-//        if($this->getTextmailwalid()==null){
-//            $this->setTextmailwalid("Un nouveau classeur vient d'être validé par {{ validant }}
-//                <br>
-//                {{ titre_classeur }}
-//                <br>
-//                Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..<br>
-//
-//                Lien vers le classeur {{ lien }}");
-//        }
+
+        if ($this->getTextmailnew() == null) {
+            $this->setTextmailnew("Un nouveau classeur vient d'être déposé par {{ deposant }}
+                                    <br>
+                                        {{ titre_classeur }}
+                                        <br>
+                                    Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..
+
+                            Lien vers le classeur {{ lien }})");
+        }
+
+        if ($this->getTextmailrefuse() == null) {
+            $this->setTextmailrefuse("Le classeur \"{{ titre_classeur }}\" vient d'être refusé par {{ validant }}
+                <br>
+                Il devra être corrigé et validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+
+                Lien vers le classeur {{ lien }}");
+        }
+
+        if ($this->getTextmailwalid() == null) {
+            $this->setTextmailwalid("Un nouveau classeur vient d'être validé par {{ validant }}
+                <br>
+                {{ titre_classeur }}
+                <br>
+                Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+
+                Lien vers le classeur {{ lien }}");
+        }
     }
 
     private function upload()
@@ -392,5 +392,40 @@ class Collectivite
     public function getTextmailwalid()
     {
         return $this->textmailwalid;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+
+        if ($this->getTextmailnew() == null) {
+            $this->setTextmailnew("Un nouveau classeur vient d'être déposé par {{ deposant }}
+                                    <br>
+                                        {{ titre_classeur }}
+                                        <br>
+                                    Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..
+
+                            Lien vers le classeur {{ lien }})");
+        }
+
+        if ($this->getTextmailrefuse() == null) {
+            $this->setTextmailrefuse("Le classeur \"{{ titre_classeur }}\" vient d'être refusé par {{ validant }}
+                <br>
+                Il devra être corrigé et validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+
+                Lien vers le classeur {{ lien }}");
+        }
+
+        if ($this->getTextmailwalid() == null) {
+            $this->setTextmailwalid("Un nouveau classeur vient d'être validé par {{ validant }}
+                <br>
+                {{ titre_classeur }}
+                <br>
+                Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+
+                Lien vers le classeur {{ lien }}");
+        }
     }
 }
