@@ -89,7 +89,9 @@
                                 <span class="glyphicon glyphicon-home"></span>
                                 Bienvenue
                             </div>
-                            {{ msg_acc }}
+                            {% filter raw %}
+                            {{ msg_acc|raw }}
+                            {% endfilter %}
                         </div>
                     </div>
                 {% endif %}
