@@ -1,7 +1,6 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
-
     <div class="bloc_page">
         <div class="titre_page">
             <span class="glyphicon glyphicon-folder-open"></span>
@@ -72,19 +71,25 @@
         <br/>
 
         <div class="label_form parcou">
-            <button type="button"  id="btn_avatar">
-                Choisir un fichier
-            </button>
-            {{ form_label(edit_form.file) }}
-            {{ form_widget(edit_form.file, { 'attr': {'class': 'parc_avatar'} }) }}
+
+            <label class="lbl_avatar">Avatar</label>
+                <button type="button" class="btn_avatar">
+                    Choisir un fichier
+                </button>
+                <span class="nom_avatar"></span>
+                {{ form_widget(edit_form.file, { 'attr': {'class': 'parc_avatar'} }) }}
         </div>
 
         <script type="text/javascript">
-            $("#btn_avatar").click(function(){
-                $(".parcou input[type='file']").trigger( "click" );
+            $(".btn_avatar").click(function () {
+                $(".parcou input[type='file']").trigger("click");
+            });
+
+            $(".parcou input[type='file']").change(function (e) {
+                var nom_fichier = e.target.files[0].name;
+                $('.nom_avatar').text(nom_fichier);
             });
         </script>
-
         <br/>
 
         <div class="label_form pickuser">

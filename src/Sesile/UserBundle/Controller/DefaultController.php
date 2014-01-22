@@ -144,7 +144,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Classeur entity.
+     * Displays a form to edit an existing user entity.
      *
      * @Route("/edit/{id}/", name="user_edit", options={"expose"=true})
      * @Method("GET")
