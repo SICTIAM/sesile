@@ -238,6 +238,14 @@ html, body {
 	padding-left: 0.214em;
 }
 
+/*INPUT AVATAR*/
+#btn_avatar{
+    background-color: pink;
+}
+
+.parc_avatar {
+    display:none !important;
+}
 
 /*BOUTON VISI CLASSEUR*/
 .visi_button_actif {
