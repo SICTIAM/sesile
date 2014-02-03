@@ -165,4 +165,23 @@ class DocumentController extends Controller
     }
 
 
+    /**
+     * @Route("/{id}/delete", name="delete_document",  options={"expose"=true})
+     * @Method("POST")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        $em->remove($doc);
+        $em->flush();
+
+
+        return new JsonResponse(array("error" => "ok"));
+
+    }
+
+
 }

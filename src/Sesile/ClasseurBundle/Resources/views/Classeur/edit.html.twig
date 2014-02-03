@@ -101,12 +101,16 @@
         <!-- /.modal -->
 
         <script type="application/javascript">
-            $(document).ready(function () {
-                $(".selects_circuit:nth-child(2)").hide();
 
+            function loadDocuments() {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
                     enableUploads();
                 });
+            }
+            $(document).ready(function () {
+                $(".selects_circuit:nth-child(2)").hide();
+
+                loadDocuments();
 
                 $(".top_selects_circuits, .suppr_perso").hide();
                 //$("#circuit").sortable("disable");

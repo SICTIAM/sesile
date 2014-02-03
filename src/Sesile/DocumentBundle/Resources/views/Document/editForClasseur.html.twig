@@ -86,7 +86,17 @@ function removedropzonefile(file) {
 }
 
 
-function removefile(file) {
+function removeFile(file) {
+
+    $.ajax(Routing.generate('delete_document', {id: file}), {
+        method: 'POST',
+        success: function (html) {
+            loadDocuments();
+
+
+        }
+
+    });
 
 }
 
