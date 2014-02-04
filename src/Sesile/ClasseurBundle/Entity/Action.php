@@ -105,6 +105,7 @@ class Action
     public function setUser($user)
     {
         $this->user = $user;
+        $this->username = $user->getPrenom() . ' ' . $user->getNom();
 
         return $this;
     }
