@@ -177,8 +177,16 @@ class ClasseurController extends Controller
                 $document->setSigned(false);
                 $document->setClasseur($classeur);
                 $em->persist($document);
+
+                $action = new Action();
+                $action->setClasseur($classeur);
+                $action->setUser($this->getUser());
+                $action->setAction("Ajout du document " . $document->getName());
+                $em->persist($action);
+
+
                 $em->flush();
-                $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur", null);
+                $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
 
 
             }
