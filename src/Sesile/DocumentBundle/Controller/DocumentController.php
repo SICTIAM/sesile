@@ -187,6 +187,18 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+        $classeur = $doc->getClasseur();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Suppression du document " . $doc->getName());
+        $em->persist($action);
+
+        $em->flush();
+
+
         $em->remove($doc);
         $em->flush();
 
