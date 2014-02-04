@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sesile\ClasseurBundle\Entity\Action;
+use Sesile\ClasseurBundle\Entity\Classeur;
 
 class DocumentController extends Controller
 {
@@ -129,6 +131,16 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $name));
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Modification du document", null);
+        $classeur = $doc->getClasseur();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Modification du document " . $doc->getName());
+        $em->persist($action);
+
+        $em->flush();
+
 
         return array('name' => $name);
     }
