@@ -54,6 +54,7 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Documents
             </div>
+            <div id="infofile" class="alert alert-success" style="display: none"></div>
             <div id="documentcontent"></div>
             <br>
 
@@ -107,6 +108,28 @@
                     enableUploads();
                 });
             }
+
+
+            function addDocToCurrentClasseur(data) {
+
+                $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
+
+                data['id'] = {{ classeur.id }};
+                $.ajax(Routing.generate('add_document_to_classeur'),
+                        {
+                            method: 'POST',
+                            data: data,
+                            success: function (html) {
+
+                                loadDocuments();
+                                //     $('#infofile').html('<strong>Bien joué !</strong> Fichier(s) ajouté(s) au classeur avec succès');
+                                //   $('#infofile').show('slow').delay(5000).hide('slow');
+
+                            }
+
+                        });
+            }
+
             $(document).ready(function () {
                 $(".selects_circuit:nth-child(2)").hide();
 

@@ -3,6 +3,7 @@
 namespace Sesile\ClasseurBundle\Controller;
 
 use Sesile\ClasseurBundle\Entity\ClasseursUsers;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -561,6 +562,61 @@ class ClasseurController extends Controller
         }
     }
 
+    /**
+     * Add a document to a classeur
+     *
+     * @Route("/addDocument/", name="add_document_to_classeur", options={"expose"=true})
+     * @Method("POST")
+     *
+     *
+     */
+    public function addDocumentToClasseur(Request $request)
+    {
+        if (empty($request->request->get('id'))) {
+            return new JsonResponse(array('error' => 'Parameters missing'));
+        }
+
+
+        //Récupérer le classeur
+
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+
+        //Sauvegarde des enregistrements
+        $manager = $this->container->get('oneup_uploader.orphanage_manager')->get('docs');
+        $files = $manager->uploadFiles();
+
+        foreach ($files as $file) {
+            //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
+            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
+                unlink($file->getPathname());
+            } else { // Pas d'erreur, on crée un document correspondant
+                $document = new Document();
+                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
+                $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
+                $document->setType($file->getMimeType());
+                $document->setSigned(false);
+                $document->setClasseur($classeur);
+                $em->persist($document);
+
+                $action = new Action();
+                $action->setClasseur($classeur);
+                $action->setUser($this->getUser());
+                $action->setAction("Ajout du document " . $document->getName());
+                $em->persist($action);
+
+
+                $em->flush();
+                $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
+
+
+            }
+        }
+
+        return new JsonResponse(array('error' => 'ok'));
+
+    }
+
     /*                MAILS DE NOTIFICATION                      */
 
     private function sendMail($sujet, $to, $body)
@@ -629,4 +685,6 @@ class ClasseurController extends Controller
             $this->sendMail("SESILE - Classeur refusé", $validant_obj->getEmail(), $body);
         }
     }
+
+
 }
