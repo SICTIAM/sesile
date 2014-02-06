@@ -12,52 +12,44 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 
+
 /**
- * Class AuthentificationController
+ * Class CircuitController
  * @package Sesile\ApiBundle\Controller
  *
- * @Route("/token/")
+ * @Route("/circuit")
  */
-class AuthentificationController extends FOSRestController
+class CircuitController extends FOSRestController implements TokenAuthenticatedController
 {
 
 
     /**
-     * This the documentation description of your method, it will appear
-     * on a specific pane. It will read all the text until the first
-     * annotation.
+     * Cette méthode permet de récupérer la liste des circuits de l'utilisateur
+     *
+     * Si l'utilisateur courant n'as pas accès au classeur associé au document, un 403 not allowed sera renvoyé
      *
      * @var Request $request
      * @return array
-     * @Route("validate/")
+     * @Route("/")
      * @Rest\View()
-     * @Method("post")
-     *
-     * @RequestParam(name="token", description="Votre token")
-     * @RequestParam(name="secret", description="Le secret associé")
-     *
-     * @param ParamFetcher $param
+     * @Method("get")
      *
      * @ApiDoc(
      *  resource=true,
-     *  description="Permet de savoir si un couple Token - Secret est valide"
+     *  description="Permet de récupérer la liste des circuits de l'utilisateur"
+     *
      * )
      */
-    public function validateAction(ParamFetcher $params)
+    public function indexAction($id)
     {
 
 
-        /* $view = View::create()
-             ->setStatusCode(200)
-             ->setData(array('moncul'=>'lacommode'))
-             ->setFormat('json');*/
-
-        return array('moncul' => 'lacommode', 'tata' => 'tonton');
+        return array();
 
     }
 

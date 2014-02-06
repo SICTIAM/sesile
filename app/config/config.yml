@@ -2,6 +2,8 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
 
+
+
 framework:
     #esi:             ~
     translator:      { fallback: %locale% }
@@ -33,6 +35,8 @@ twig:
     globals:
         upload_path: uploads/avatars/
         upload_path_logo: uploads/logo_coll/
+    exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
+
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -93,6 +97,7 @@ fos_user:
             type: sesile_user_profile
 
 
+
 parameters:
     cas_server: 172.17.100.78
     cas_port: 389
@@ -115,7 +120,7 @@ jms_di_extra:
     locations:
         all_bundles: true
 
-
+# La suite, c'est pour l'api
 fos_rest:
     param_fetcher_listener: true
     body_listener: true
@@ -124,23 +129,39 @@ fos_rest:
     format_listener:
         rules:
             # setting fallback_format to json means that instead of considering the next rule in case of a priority mismatch, json will be used
-            - { path: '^/',  priorities: ['json', 'xml'],  prefer_extension: false }
+            - { path: '^/api',  priorities: ['json', 'xml'],  prefer_extension: false }
+            - { path: '^/', priorities: [ 'html', '*/*'], fallback_format: html, prefer_extension: true }
     view:
         formats:
             rss: false
-            xml: true
+            xml: false
             json: true
             html: true
         failed_validation: HTTP_BAD_REQUEST
         default_engine: twig
         view_response_listener: 'force'
+    exception:
+        codes:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
+            'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException': 403
+        messages:
+            'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException': true
 
 
 
-nelmio_api_doc: ~
+nelmio_api_doc:
+    name: Sesile API
+    motd:
+            template: SesileApiBundle::homedoc.html.twig
 
 
 sensio_framework_extra:
     view:    { annotations: false }
     router:  { annotations: true }
     request: { converters: true }
+
+services:
+    sesile.tokens.action_listener:
+        class: Sesile\ApiBundle\EventListener\TokenListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
