@@ -105,10 +105,26 @@
             <label for="{{ edit_form.enabled.vars.id }}" class="cb-disable">
                 <span>Désactivé</span>
             </label>
-            {{ form_widget(edit_form.enabled, {'attr': {'class': 'checkbox', 'checked': 'checked' }}) }}
+            {{ form_widget(edit_form.enabled, {'attr': {'class': 'checkbox' }}) }}
         </div>
         <br/>
         <br/>
+        Accès aux API :
+
+
+        {{ form_widget(edit_form.apiactivated, {'attr': {'class': 'checkbox' }}) }}
+
+        <br/>
+        <br/>
+
+        <div class="label_form_token label-form-input">
+            {{ form_label(edit_form.apitoken) }}
+            {{ form_widget(edit_form.apitoken) }}
+        </div>
+        <div class="label_form_token label-form-input">
+            {{ form_label(edit_form.apisecret) }}
+            {{ form_widget(edit_form.apisecret) }}
+        </div>
         <br/>
         {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
         {{ form_end(edit_form) }}
@@ -136,5 +152,24 @@
             $(this).addClass('selected');
             $('.checkbox', parent).attr('checked', false);
         });
+
+        $('.acti').each(function () {
+            var checked = $('.checkbox', $(this)).is(':checked');
+
+            if (checked) {
+
+                $('.cb-disable', $(this)).removeClass('selected');
+                $('.cb-enable', $(this)).addClass('selected');
+
+                // $('.cb-enable', $(this)).click();
+            } else {
+                $('.cb-enable', $(this)).removeClass('selected');
+                $('.cb-disable', $(this)).addClass('selected');
+
+                //$('.cb-disable', $(this)).click();
+            }
+        });
+
+
     </script>
 {% endblock %}

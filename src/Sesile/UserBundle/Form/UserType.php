@@ -35,6 +35,9 @@ class UserType extends AbstractType
             ->add('pays', 'text', array('required' => false,))
             ->add('role', 'text', array('label' => 'Rôle', 'required' => false,))
             ->add('enabled', null, array('label' => 'Activé'))
+            ->add('apiactivated', 'checkbox', array('label' => 'API', 'required' => false,))
+            ->add('apitoken', 'text', array('attr' => array('disabled' => true)))
+            ->add('apisecret', 'text', array('attr' => array('disabled' => true)))
             ->add('file', 'file', array('label' => 'Avatar',
                 'data_class' => null,
                 'required' => false,

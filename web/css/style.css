@@ -487,6 +487,28 @@ select [name=user] {
 	padding-left: 32%;
 }
 
+.label_form_token {
+    border-bottom: 0px;
+    width: 60%;
+}
+
+.label_form_token label {
+    width: 8em;
+    line-height: 1.7em;
+    cursor: hand;
+    position: absolute;
+    color: #a9a9a9;
+    padding: 0em 0.5em;
+    border-right: 1px solid #cccccc;
+    text-align: center;
+}
+
+.label_form_token input {
+    width: 100%;
+    height: 1.8em;
+    padding-left: 32%;
+}
+
 .parcou label,
 .pickuser label {
 	border: 1px solid #cccccc;
