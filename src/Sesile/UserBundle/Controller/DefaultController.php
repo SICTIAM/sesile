@@ -152,6 +152,8 @@ class DefaultController extends Controller
      */
     public function editAction($id)
     {
+
+
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
@@ -185,6 +187,8 @@ class DefaultController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+
+
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
         $cas = $this->getCASParams();
@@ -341,6 +345,8 @@ class DefaultController extends Controller
      */
     private function createEditForm(User $entity)
     {
+
+
         $form = $this->createForm(new UserType(), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
