@@ -9,9 +9,14 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 class TokenListener
 {
 
+    private $em = null;
+    private $sc = null;
 
-    public function __construct()
+
+    public function __construct(\Doctrine\ORM\EntityManager $oEntityManager, \Symfony\Component\Security\Core\SecurityContext $oSecurityContext)
     {
+        $this->em = $oEntityManager;
+        $this->sc = $oSecurityContext;
 
     }
 
@@ -30,8 +35,20 @@ class TokenListener
 
         if ($controller[0] instanceof TokenAuthenticatedController) {
             $headers = $event->getRequest()->headers;
+            if ($headers->has("token") && $headers->has("secret")) {
 
-            throw new AccessDeniedHttpException('Cette action nécessite un couple token - secret valide!');
+
+                $entity = $this->em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $headers->get('token'), 'apisecret' => $headers->get('secret')));;
+
+                if (empty($entity)) {
+                    throw new AccessDeniedHttpException('Cette action nécessite un couple token - secret valide!');
+                }
+
+
+            } else {
+                throw new AccessDeniedHttpException('Cette action nécessite un couple token - secret valide!');
+            }
+
 
         }
     }

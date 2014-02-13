@@ -163,5 +163,6 @@ sensio_framework_extra:
 services:
     sesile.tokens.action_listener:
         class: Sesile\ApiBundle\EventListener\TokenListener
+        arguments: ["@doctrine.orm.entity_manager", "@security.context"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
