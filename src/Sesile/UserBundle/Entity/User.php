@@ -8,7 +8,8 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * User
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Sesile\UserBundle\Entity\UserRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @ExclusionPolicy("all")
  */
 class User extends BaseUser
 {
@@ -23,13 +25,18 @@ class User extends BaseUser
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Expose
      */
     protected $id;
+
 
     /**
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
+     *
+     *
      */
     protected $Nom;
 
@@ -37,12 +44,13 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
+     * @Expose
      */
     protected $Prenom;
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     protected $path;
@@ -60,28 +68,28 @@ class User extends BaseUser
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="ville", type="string", length=255, nullable=true)
      */
     protected $ville;
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="code_postal", type="string", length=6, nullable=true)
      */
     protected $cp;
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="pays", type="string", length=255, nullable=true)
      */
     protected $pays;
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="departement", type="string", length=255, nullable=true)
      */
     protected $departement;
@@ -89,7 +97,7 @@ class User extends BaseUser
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="role", type="string", length=255, nullable=true)
      */
     protected $role;
@@ -386,7 +394,6 @@ class User extends BaseUser
     public function setVille($ville)
     {
         $this->ville = $ville;
-
         return $this;
     }
 

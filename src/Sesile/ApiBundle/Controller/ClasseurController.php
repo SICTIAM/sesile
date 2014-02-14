@@ -40,18 +40,91 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * @Rest\View()
      * @Method("get")
      *
-     * @QueryParam(name="filtre", requirements="(a_valider|a_signer|termine|prive)", strict=false, nullable=true, description="Filtre optionnel ( exemple: ?filtre=a_valider )")
+     * @QueryParam(name="filtre", requirements="(a_valider|a_signer|finalise|termine|prive)", strict=false, nullable=true, description="Filtre optionnel ( exemple: ?filtre=a_valider )")
      *
      * @ApiDoc(
      *  resource=true,
      *  description="Permet de récupérer la liste des classeurs"
      * )
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
 
+        $em = $this->getDoctrine()->getManager();
 
-        return array();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+
+        $classeur = array();
+
+        if ($request->query->has('filtre')) {
+
+            switch ($request->query->get('filtre')) {
+
+                case 'a_valider':
+
+                    $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                        array(
+                            "validant" => $user ? $user->getId() : 0,
+                            "status" => 1
+                        ));
+
+                    break;
+
+                case 'a_signer':
+
+                    $classeurtosort = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                        array(
+                            "validant" => $user ? $user->getId() : 0,
+                            "status" => 1
+                        ));
+
+                    $classeur = array();
+
+                    foreach ($classeurtosort as $class) {
+                        if ($class->isSignable($em)) {
+                            $classeur[] = $class;
+                        }
+                    }
+
+                    break;
+
+                case 'finalise':
+
+                    $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                        array(
+
+                            "status" => 2
+                        ));
+
+                    break;
+
+                case 'retire':
+
+                    $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                        array(
+
+                            "status" => 3
+                        ));
+
+                    break;
+
+                case 'prive':
+
+                    break;
+                default:
+                    break;
+
+
+            }
+
+
+        } else {
+            $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($user->getId());
+        }
+
+
+        return $classeur;
+
 
     }
 
@@ -74,11 +147,19 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *  }
      * )
      */
-    public function getAction($id)
+    public function getAction(Request $request, $id)
     {
 
 
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($id, $user->getId());
+
+
+        return $classeur[0];
+
 
     }
 

@@ -29,9 +29,9 @@ class CircuitController extends FOSRestController implements TokenAuthenticatedC
 
 
     /**
-     * Cette méthode permet de récupérer la liste des circuits de l'utilisateur
+     * Cette méthode permet de récupérer la liste des circuits de l'utilisateur déterminé par le token et le secret passés en headers
      *
-     * Si l'utilisateur courant n'as pas accès au classeur associé au document, un 403 not allowed sera renvoyé
+     *
      *
      * @var Request $request
      * @return array

@@ -50,9 +50,20 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
     {
 
 
-        $headers = $request->headers;
+        $em = $this->getDoctrine()->getManager();
 
-        return array('message' => 'Couple token - secret invalide', 'headers' => $headers);
+
+        $entity = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));;
+        $array = array();
+        $array['id'] = $entity->getId();
+        $array['username'] = $entity->getUsername();
+        $array['email'] = $entity->getEmail();
+        $array['prenom'] = $entity->getPrenom();
+        $array['nom'] = $entity->getNom();
+
+
+        return $array;
+
 
     }
 
@@ -79,9 +90,19 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
     {
 
 
-        $headers = $request->headers;
+        $em = $this->getDoctrine()->getManager();
 
-        return array('message' => 'Couple token - secret invalide', 'headers' => $headers);
+
+        $entity = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));;
+        $array = array();
+        $array['id'] = $entity->getId();
+        $array['username'] = $entity->getUsername();
+        $array['email'] = $entity->getEmail();
+        $array['prenom'] = $entity->getPrenom();
+        $array['nom'] = $entity->getNom();
+
+
+        return $array;
 
     }
 
