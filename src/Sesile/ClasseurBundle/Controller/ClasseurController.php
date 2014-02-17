@@ -298,7 +298,7 @@ class ClasseurController extends Controller
         $circuit = $request->request->get('circuit');
         $classeur->setCircuit($circuit);
         $classeur->setUser($this->getUser()->getId());
-        $em->persist($classeur);
+
         $em->flush();
 
         $action = new Action();
@@ -318,13 +318,22 @@ class ClasseurController extends Controller
 
         for ($i = 0; $i < count($users); $i++) {
             $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
-            $cu = $classeurUserObj->findOneBy(array("user" => $userObj, "classeur" => $classeur));
+            $classeurUser = $classeurUserObj->findOneBy(array("user" => $userObj, "classeur" => $classeur));
 
-            $classeurUser = new ClasseursUsers();
-            $classeurUser->setClasseur($classeur);
-            $classeurUser->setUser($userObj);
+            $exist = true;
+
+            if (empty($classeurUser)) {
+                $exist = false;
+                $classeurUser = new ClasseursUsers();
+                $classeurUser->setClasseur($classeur);
+                $classeurUser->setUser($userObj);
+            }
+
             $classeurUser->setOrdre($i + 1);
-            $em->persist($classeurUser);
+            if (!$exist) {
+                $em->persist($classeurUser);
+            }
+
         }
 
         $em->flush();

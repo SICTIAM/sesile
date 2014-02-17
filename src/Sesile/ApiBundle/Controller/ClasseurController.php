@@ -16,6 +16,12 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Sesile\ClasseurBundle\Entity\Classeur;
+use Sesile\DocumentBundle\Entity\Document;
+use Sesile\ClasseurBundle\Form\ClasseurType;
+use Sesile\ClasseurBundle\Entity\Action;
+use Sesile\ClasseurBundle\Entity\ClasseursUsers;
 
 
 /**
@@ -92,7 +98,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
                     $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
                         array(
-
                             "status" => 2
                         ));
 
@@ -102,7 +107,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
                     $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
                         array(
-
                             "status" => 3
                         ));
 
@@ -158,6 +162,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($id, $user->getId());
 
 
+        if (empty($classeur[0])) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
+        }
         return $classeur[0];
 
 
@@ -168,6 +175,21 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * Cette méthode permet de récupérer un classeur
      *
      * Si l'utilisateur courant n'as pas accès au classeur, un 403 not allowed sera renvoyé
+     * @ApiDoc(
+     *  resource=false,
+     *  description="Permet de créer un nouveau classeur",
+     *  parameters={
+     *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
+     *          {"name"="desc", "dataType"="string", "required"=false, "description"="Description du classeur"},
+     *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
+     *          {"name"="type", "dataType"="string", "format"="Choix possibles : 'Classique' (Divers), 'Hélios', 'Acte' (Acte Budgétaire), 'Marchés', 'Convocation', 'Courrier AR', 'Document Urba'", "required"=true, "description"="Type du classeur"},
+     *          {"name"="circuit", "dataType"="string", "format"="userid,userid,userid...   Par exemple : 1,2,3", "required"=true, "description"="Circuit de validation du classeur"},
+     *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
+     *
+     *
+     *
+     *  }
+     * )
      *
      * @var Request $request
      * @return array
@@ -175,19 +197,70 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * @Rest\View()
      * @Method("post")
      *
-     * @ApiDoc(
-     *  resource=false,
-     *  description="Permet de créer un nouveau classeur",
-     *  requirements={
      *
-     *  }
-     * )
+     *
      */
-    public function newAction($id)
+    public function newAction(Request $request)
     {
 
+        $em = $this->getDoctrine()->getManager();
 
-        return array();
+
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+
+        if (empty($request->request->get('name')) || empty($request->request->get('validation')) || empty($request->request->get('type')) || empty($request->request->get('circuit'))) {
+            $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
+            return $this->handleView($view);
+        }
+
+
+        $classeur = new Classeur();
+        $classeur->setNom($request->request->get('name'));
+        $classeur->setDescription($request->request->get('desc'));
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        $valid = new \DateTime($m . "/" . $d . "/" . $a);
+        $classeur->setValidation($valid);
+        $classeur->setType($request->request->get('type'));
+        $circuit = $request->request->get('circuit');
+        $classeur->setCircuit($circuit);
+        $classeur->setUser($user->getId());
+
+        $classeur->setVisibilite($request->request->get('visibilite'));
+        $em->persist($classeur);
+
+
+        $em->flush();
+
+        // enregistrer les users du circuit
+        $users = explode(',', $circuit);
+
+        for ($i = 0; $i < count($users); $i++) {
+            $classeurUser = new ClasseursUsers();
+            $classeurUser->setClasseur($classeur);
+
+            $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
+            $classeurUser->setUser($userObj);
+            $classeurUser->setOrdre($i + 1);
+            $em->persist($classeurUser);
+        }
+        $em->flush();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Dépot du classeur");
+        $em->persist($action);
+        $em->flush();
+
+        // $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
+
+        // envoi d'un mail au premier validant
+        $this->sendCreationMail($classeur);
+
+        // TODO envoi du mail au déposant et aux autres personnes du circuit ?
+
+
+        return $em->getRepository("SesileClasseurBundle:Classeur")->findOneById($classeur->getId());;
 
     }
 
@@ -206,13 +279,96 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * @ApiDoc(
      *  resource=false,
      *  description="Permet d'editer un classeur",
-     *  requirements={
+     *  parameters={
+     *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
+     *          {"name"="desc", "dataType"="string", "required"=false, "description"="Description du classeur"},
+     *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
+     *          {"name"="circuit", "dataType"="string", "format"="userid,userid,userid...   Par exemple : 1,2,3", "required"=true, "description"="Circuit de validation du classeur"},
+     *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
+     *
+     *
      *
      *  }
      * )
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
+
+
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+
+        if (empty($request->request->get('name')) || empty($request->request->get('validation')) || empty($request->request->get('circuit'))) {
+            $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
+            return $this->handleView($view);
+        }
+
+
+        $classeurs = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($id, $user->getId());
+
+
+        if (empty($classeurs[0])) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
+        }
+
+
+        $classeur = $classeurs[0];
+
+
+        $classeur->setNom($request->request->get('name'));
+        $classeur->setDescription($request->request->get('desc'));
+
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        $valid = new \DateTime($m . "/" . $d . "/" . $a);
+        $classeur->setValidation($valid);
+        $circuit = $request->request->get('circuit');
+        $classeur->setCircuit($circuit);
+        $classeur->setUser($this->getUser()->getId());
+
+        $em->flush();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Modification du classeur");
+        $em->persist($action);
+        $em->flush();
+
+        /**
+         * TODO modifier le fonctionnement : on doit updater les users par la collection et non par suppression / rajout (un peu de propreté qd même!!!)
+         */
+        // gestion du circuit
+        $users = explode(',', $circuit);
+        $classeurUserObj = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
+        $classeurUserObj->deleteClasseurUser($classeur, $circuit);
+        $em->flush();
+
+        for ($i = 0; $i < count($users); $i++) {
+            $userObj = $em->getRepository("SesileUserBundle:User")->findOneById($users[$i]);
+            $classeurUser = $classeurUserObj->findOneBy(array("user" => $userObj, "classeur" => $classeur));
+
+            $exist = true;
+
+            if (empty($classeurUser)) {
+                $exist = false;
+                $classeurUser = new ClasseursUsers();
+                $classeurUser->setClasseur($classeur);
+                $classeurUser->setUser($userObj);
+            }
+
+            $classeurUser->setOrdre($i + 1);
+            if (!$exist) {
+                $em->persist($classeurUser);
+            }
+
+        }
+
+        $em->flush();
+
+
+        return $em->getRepository("SesileClasseurBundle:Classeur")->findOneById($id);;
 
 
         return array();
@@ -221,7 +377,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
     /**
-     * Cette méthode permet de supprimer un classeur
+     * Cette méthode permet de retirer un classeur
      *
      * Si l'utilisateur courant n'as pas accès au classeur, un 403 not allowed sera renvoyé
      *
@@ -233,17 +389,35 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet de supprimer un classeur",
+     *  description="Permet de retirer un classeur",
      *  requirements={
      *
      *  }
      * )
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
 
+        $em = $this->getDoctrine()->getManager();
 
-        return array();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($id, $user->getId());
+        if (empty($classeur[0])) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
+        }
+        $classeur[0]->supprimer();
+        $em->persist($classeur[0]);
+        $em->flush();
+
+        $action = new Action();
+        $action->setClasseur($classeur[0]);
+        $action->setUser($this->getUser());
+        $action->setAction("Classeur retiré");
+        $em->persist($action);
+        $em->flush();
+
+        return array('code' => '200', 'message' => 'Classeur retiré');
+
 
     }
 
@@ -273,6 +447,75 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         return array();
 
+    }
+
+    /*                MAILS DE NOTIFICATION                      */
+
+    private function sendMail($sujet, $to, $body)
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($sujet)
+            ->setFrom('sesile@sictiam.fr')
+            ->setTo($to)
+            ->setBody($body, "text/html");
+        $this->get('mailer')->send($message);
+    }
+
+    private function sendValidationMail($classeur)
+    {
+        $body = $this->renderView('SesileClasseurBundle:Mail:valide.html.twig',
+            array(
+                'validant' => $this->getUser(),
+                'titre_classeur' => $classeur->getNom(),
+                'date_limite' => $classeur->getValidation(),
+                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+            )
+        );
+
+        $em = $this->getDoctrine()->getManager();
+        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+
+        if ($validant_obj != null) {
+            $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
+        }
+    }
+
+    private function sendCreationMail($classeur)
+    {
+        $body = $this->renderView('SesileClasseurBundle:Mail:nouveau.html.twig',
+            array(
+                'deposant' => $classeur->getUser(),
+                'titre_classeur' => $classeur->getNom(),
+                'date_limite' => $classeur->getValidation(),
+                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+            )
+        );
+
+        $em = $this->getDoctrine()->getManager();
+        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+
+        if ($validant_obj != null) {
+            $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
+        }
+    }
+
+    private function sendRefusMail($classeur)
+    {
+        $body = $this->renderView('SesileClasseurBundle:Mail:refuse.html.twig',
+            array(
+                'deposant' => $classeur->getUser(),
+                'titre_classeur' => $classeur->getNom(),
+                'date_limite' => $classeur->getValidation(),
+                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+            )
+        );
+
+        $em = $this->getDoctrine()->getManager();
+        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+
+        if ($validant_obj != null) {
+            $this->sendMail("SESILE - Classeur refusé", $validant_obj->getEmail(), $body);
+        }
     }
 
 }
