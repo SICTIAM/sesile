@@ -45,11 +45,21 @@ class CircuitController extends FOSRestController implements TokenAuthenticatedC
      *
      * )
      */
-    public function indexAction($id)
+    public function indexAction(Request $request)
     {
 
+        $em = $this->getDoctrine()->getManager();
 
-        return array();
+
+        $circuits_du_user = $em->getRepository('SesileCircuitBundle:Circuit')->findAll();
+
+        $circuits = array();
+        foreach ($circuits_du_user as $circuit) {
+            $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre());
+        }
+
+
+        return $circuits;
 
     }
 
