@@ -436,14 +436,49 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * @ApiDoc(
      *  resource=false,
      *  description="Permet d'ajouter un document à un classeur",
-     *  requirements={
-     *
+     *  parameters={
+     *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du document"},
+     *          {"name"="signed", "dataType"="integer", "required"=false, "description"="1 si le document transmis est à été signé numériquement, 0 sinon"},
+     *          {"name"="file", "dataType"="file",  "required"=true, "description"="Fichier transmis à la manière d'un formulaire (en php récupéré par $_FILES['file'])"}
      *  }
      * )
      */
-    public function newDocumentAction($id)
+    public function newDocumentAction(Request $request, $id)
     {
 
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+
+
+        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($id, $user->getId());
+
+
+        if (empty($classeur[0])) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur " . $id);
+        }
+
+        // obtenir une instance de UploadedFile identifiée par file
+        $file = $request->files->get('file');
+
+
+        $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
+        $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
+        $document->setType($file->getMimeType());
+        $document->setSigned(false);
+        $document->setClasseur($classeur);
+
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Modification du document " . $document->getName());
+        $em->persist($action);
+
+
+        $em->flush();
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
 
         return array();
 

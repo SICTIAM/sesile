@@ -16,7 +16,12 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
-
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Sesile\ClasseurBundle\Entity\Classeur;
+use Sesile\DocumentBundle\Entity\Document;
+use Sesile\ClasseurBundle\Form\ClasseurType;
+use Sesile\ClasseurBundle\Entity\Action;
+use Sesile\ClasseurBundle\Entity\ClasseursUsers;
 
 /**
  * Class DocumentController
@@ -47,11 +52,27 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      *  }
      * )
      */
-    public function getAction($id)
+    public function getAction(Request $request, $id)
     {
 
 
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+        $document = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        if (empty($document)) {
+            throw new AccessDeniedHttpException("le document " . $id . " n'existe pas !");
+        }
+        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($document->getClasseur(), $user->getId());
+
+
+        if (empty($classeur[0])) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur auquel appartient le document " . $id);
+        }
+
+
+        return $document;
 
     }
 
@@ -70,12 +91,16 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      * @ApiDoc(
      *  resource=false,
      *  description="Permet d'editer un document",
-     *  requirements={
-     *
+     *   parameters={
+     *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
+     *          {"name"="desc", "dataType"="string", "required"=false, "description"="Description du classeur"},
+     *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
+     *          {"name"="circuit", "dataType"="string", "format"="userid,userid,userid...   Par exemple : 1,2,3", "required"=true, "description"="Circuit de validation du classeur"},
+     *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
      *  }
      * )
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
 
 
@@ -103,11 +128,38 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      *  }
      * )
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
 
 
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+        $document = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        if (empty($document)) {
+            throw new AccessDeniedHttpException("le document " . $id . " n'existe pas !");
+        }
+        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($document->getClasseur(), $user->getId());
+
+
+        if (empty($classeur[0])) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur auquel appartient le document " . $id);
+        }
+
+
+        $action = new Action();
+        $action->setClasseur($classeur[0]);
+        $action->setUser($user);
+        $action->setAction("Suppression du document " . $document->getName());
+        $em->persist($action);
+        $em->flush();
+        $em->remove($document);
+        $em->flush();
+
+
+        return array('code' => '200', 'message' => 'Document supprimé');;
+
 
     }
 
@@ -130,11 +182,41 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      *  }
      * )
      */
-    public function downloadAction($id)
+    public function downloadAction(Request $request, $id)
     {
 
 
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+        $document = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        if (empty($document)) {
+            throw new AccessDeniedHttpException("le document " . $id . " n'existe pas !");
+        }
+        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($document->getClasseur(), $user->getId());
+
+
+        if (empty($classeur[0])) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur auquel appartient le document " . $id);
+        }
+
+        $response = new Response();
+
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $document->getRepourl()));
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getName() . '"');
+        $response->headers->set('Content-Length', filesize('uploads/docs/' . $document->getRepourl()));
+
+
+        // $response->sendHeaders();
+
+
+        $response->setContent(file_get_contents('uploads/docs/' . $document->getRepourl()));
+
+
+        return $response;
+
 
     }
 

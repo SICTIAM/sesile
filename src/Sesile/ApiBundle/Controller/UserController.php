@@ -69,7 +69,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
 
 
     /**
-     * Cette méthode permet de récupérer la liste des utilisateurs de la collectivité de l'utilisateur courant
+     * ACTUELLEMENT INDISPONNIBLE - Cette méthode permet de récupérer la liste des utilisateurs de la collectivité de l'utilisateur courant
      *
      *
      * @var Request $request
@@ -83,7 +83,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet de récupérer la liste des utilisateurs de la collectivité de l'utilisateur courant"
+     *  description="ACTUELLEMENT INDISPONNIBLE - Permet de récupérer la liste des utilisateurs de la collectivité de l'utilisateur courant. "
      * )
      */
     public function indexAction(Request $request)
@@ -95,11 +95,6 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
 
         $entity = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));;
         $array = array();
-        $array['id'] = $entity->getId();
-        $array['username'] = $entity->getUsername();
-        $array['email'] = $entity->getEmail();
-        $array['prenom'] = $entity->getPrenom();
-        $array['nom'] = $entity->getNom();
 
 
         return $array;
