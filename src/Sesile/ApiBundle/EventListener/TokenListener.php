@@ -38,7 +38,7 @@ class TokenListener
             if ($headers->has("token") && $headers->has("secret")) {
 
 
-                $entity = $this->em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $headers->get('token'), 'apisecret' => $headers->get('secret')));;
+                $entity = $this->em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $headers->get('token'), 'apisecret' => $headers->get('secret'), 'apiactivated' => true));;
 
                 if (empty($entity)) {
                     throw new AccessDeniedHttpException('Cette action nécessite un couple token - secret valide!');
