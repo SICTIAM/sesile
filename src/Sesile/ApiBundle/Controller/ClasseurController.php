@@ -423,24 +423,24 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
     /**
-     * Cette méthode permet de créer un document un document et de l'associer à un classeur
+     * Cette méthode permet de créer un ou plusieurs document et de les associer à un classeur
      *
      * Si l'utilisateur courant n'as pas accès au classeur, un 403 not allowed sera renvoyé
      *
+     * Vous devez transmettre vos fichiers en attachment à la manière d'un formulaire web (accessible en php par $_FILES)
+     *
+     *
+     *
      * @var Request $request
      * @return array
-     * @Route("/{id}/newDocument")
+     * @Route("/{id}/newDocuments")
      * @Rest\View()
      * @Method("post")
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet d'ajouter un document à un classeur",
-     *  parameters={
-     *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du document"},
-     *          {"name"="signed", "dataType"="integer", "required"=false, "description"="1 si le document transmis est à été signé numériquement, 0 sinon"},
-     *          {"name"="file", "dataType"="file",  "required"=true, "description"="Fichier transmis à la manière d'un formulaire (en php récupéré par $_FILES['file'])"}
-     *  }
+     *  description="Permet d'ajouter des documents à un classeur"
+     *
      * )
      */
     public function newDocumentAction(Request $request, $id)
@@ -459,28 +459,41 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur " . $id);
         }
 
+        $added = array();
+
         // obtenir une instance de UploadedFile identifiée par file
-        $file = $request->files->get('file');
+
+        foreach ($request->files->all() as $file) {
+
+            $name = $file->getClientOriginalName();
+            $movedfile = $file->move($this->get('kernel')->getRootDir() . '/../web/uploads/docs/', uniqid() . '.' . $file->getExtension());
 
 
-        $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
-        $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
-        $document->setType($file->getMimeType());
-        $document->setSigned(false);
-        $document->setClasseur($classeur);
+            $document = new Document();
+            $document->setName($name);
+            $document->setRepourl($movedfile->getBasename()); //Temporairement associé au nom du fichier en attendant les repository git
+            $document->setType($movedfile->getMimeType());
+            $document->setSigned(false);
+            $document->setClasseur($classeur[0]);
+            $em->persist($document);
 
 
-        $action = new Action();
-        $action->setClasseur($classeur);
-        $action->setUser($this->getUser());
-        $action->setAction("Modification du document " . $document->getName());
-        $em->persist($action);
+            $action = new Action();
+            $action->setClasseur($classeur[0]);
+            $action->setUser($user);
+            $action->setAction("Modification du document " . $document->getName());
+            $em->persist($action);
 
 
-        $em->flush();
-        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
+            $em->flush();
+            $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur[0]->getNom(), null);
 
-        return array();
+            $added[] = $document;
+
+        }
+
+
+        return $added;
 
     }
 

@@ -92,11 +92,11 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      *  resource=false,
      *  description="Permet d'editer un document",
      *   parameters={
-     *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
-     *          {"name"="desc", "dataType"="string", "required"=false, "description"="Description du classeur"},
-     *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
-     *          {"name"="circuit", "dataType"="string", "format"="userid,userid,userid...   Par exemple : 1,2,3", "required"=true, "description"="Circuit de validation du classeur"},
-     *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
+     *
+     *
+     *          {"name"="signed", "dataType"="integer", "format"="1 si le fichier transmis à été signé numériquement, 0 sinon", "required"=false, "description"="Etat de signature du fichier"},
+     *
+     *          {"name"="attachment : file", "dataType"="file", "required"=false, "description"="Fichier associé, passé en attachment à la manière d'un formulaire web (récupérable en php par $_FILE['file'])"}
      *  }
      * )
      */
@@ -104,7 +104,53 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
     {
 
 
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+
+        $document = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        if (empty($document)) {
+            throw new AccessDeniedHttpException("le document " . $id . " n'existe pas !");
+        }
+        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($document->getClasseur()->getId(), $user->getId());
+
+
+        if (empty($classeur[0])) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur auquel appartient le document " . $id);
+        }
+
+
+        // obtenir une instance de UploadedFile identifiée par file
+
+        if ($request->files->has('file')) {
+            $file = $request->files->get('file');
+            $name = $file->getClientOriginalName();
+            $movedfile = $file->move($this->get('kernel')->getRootDir() . '/../web/uploads/docs/', uniqid() . '.' . $file->getExtension());
+            unlink($this->get('kernel')->getRootDir() . '/../web/uploads/docs/' . $document->getRepoUrl());
+            $document->setRepourl($movedfile->getBasename());
+            $document->setType($movedfile->getMimeType());
+            $document->setName($name);
+        }
+
+
+        if ($request->request->has('signed')) {
+            $document->setName(($request->request->get('signed') == 1) ? true : false);
+        }
+
+
+        $action = new Action();
+        $action->setClasseur($classeur[0]);
+        $action->setUser($user);
+        $action->setAction("Modification du document " . $document->getName());
+        $em->persist($action);
+
+
+        $em->flush();
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Modification du document", null);
+
+        return $document;
+
 
     }
 
