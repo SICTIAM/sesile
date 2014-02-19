@@ -208,7 +208,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
 
-        if (empty($request->request->get('name')) || empty($request->request->get('validation')) || empty($request->request->get('type')) || empty($request->request->get('circuit'))) {
+
+        if ($request->request->get('name') == 0 || $request->request->get('validation') == 0 || $request->request->get('type') == 0 || $request->request->get('circuit') == 0) {
             $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
             return $this->handleView($view);
         }
@@ -300,7 +301,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
 
-        if (empty($request->request->get('name')) || empty($request->request->get('validation')) || empty($request->request->get('circuit'))) {
+        if ($request->request->get('name') == 0 || $request->request->get('validation') == 0 || $request->request->get('circuit') == 0) {
             $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
             return $this->handleView($view);
         }
