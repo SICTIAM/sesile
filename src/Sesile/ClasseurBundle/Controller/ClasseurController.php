@@ -582,7 +582,7 @@ class ClasseurController extends Controller
     public function addDocumentToClasseur(Request $request)
     {
 
-        $reqid = $request->request->get('id')
+        $reqid = $request->request->get('id');
         if (empty($reqid)) {
             return new JsonResponse(array('error' => 'Parameters missing'));
         }
