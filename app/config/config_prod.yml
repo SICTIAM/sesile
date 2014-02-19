@@ -21,4 +21,34 @@ parameters:
     database_user: root
     database_password: ***REMOVED***
     secret: ***REMOVED***
+    cas_server: 172.17.100.43
+    cas_port: 389
+    cas_path: /
+    cas_protocol: '2.0'
+    ldap:
+        dn_admin: cn=admin,dc=sictiam,dc=fr
+        dn_user: cn=Users,dc=sictiam,dc=fr
+        password: oP1U88zz
+
+
+security:
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        secured_area:
+            pattern:    ^/
+            anonymous: true
+            provider: webservice
+            logout:
+                success_handler: security.logout.success_handler
+            cas:
+                cas_server: demosso.sictiam.fr
+                cas_port: 443
+                cas_path: /
+                ca_cert_path: ~
+                cas_protocol: '2.0'
+                cas_mapping_attribute:
+                check_path: /login_check
 
