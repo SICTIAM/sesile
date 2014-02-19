@@ -251,12 +251,14 @@ class User extends BaseUser
         }
 
         //Création des tokens d'api si absents
-        if (empty($this->getApitoken())) {
+        $tok = $this->getApitoken();
+        $sec = $this->getApisecret();
+        if (empty($tok)) {
             $this->setApitoken("token_" . md5(uniqid(rand(), true)));
         }
 
         //Création des tokens d'api si absents
-        if (empty($this->getApisecret())) {
+        if (empty($sec)) {
             $this->setApisoken("secret_" . md5(uniqid(rand(), true)));
         }
 
