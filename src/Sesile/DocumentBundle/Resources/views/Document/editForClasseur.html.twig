@@ -1,6 +1,7 @@
 <div id="doc">
     <div id="fichiers" class="dropzone"></div>
     <div id="filedescription" style="display:none"></div>
+
 </div>
 
 <script src="{{ asset('js/dropzone.js') }}"></script>
@@ -21,6 +22,10 @@ var filetocheck = null;
 
 
 var allowmodif = false;
+
+var uploadingfiles = 0;
+
+var uploadedfiles = {};
 
 
 function tim() {
@@ -59,7 +64,9 @@ var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('
             ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
             ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
 
-    maxFiles:{{ docs|length }},
+
+    createThumbnail: false,
+    maxFileSize: 1024,
     dictMaxFilesExceeded: "Vous n'êtes pas en mode modification, cliquez sur modifier puis réessayez !"
 
 
@@ -86,7 +93,20 @@ function removedropzonefile(file) {
 }
 
 
-function removefile(file) {
+function removeFile(file) {
+
+
+    $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
+
+    $.ajax(Routing.generate('delete_document', {id: file}), {
+        method: 'POST',
+        success: function (html) {
+            loadDocuments();
+
+
+        }
+
+    });
 
 }
 
@@ -109,14 +129,32 @@ function buttonModifRoutine() {
 dropzone.on('success', function (file, response) {
     $.each(response, function (serverfilename, originalname) {
         $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
+
+        uploadedfiles[serverfilename] = originalname;
+
+
     });
 
+});
+
+dropzone.on('complete', function (file) {
+    uploadingfiles--;
+    console.log('complete :' + uploadingfiles);
+    if (uploadingfiles == 0) {
+
+        addDocToCurrentClasseur(uploadedfiles);
+        uploadedfiles = {};
+
+    }
 });
 
 dropzone.on("addedfile", function (file) {
     // Access the preview element with file.previewElement and add event listeners, etc... to it.
     $(file.previewElement).find('img').map(function () {
 
+        uploadingfiles++;
+
+        console.log('add:' + uploadingfiles);
 
         $.each(docsjson, function (key, value) {
 
@@ -280,23 +318,28 @@ dropzone.on("addedfile", function (file) {
 
     });
 
+
 });
 
 
-$(document).ready(function () {
-
-
-    {% for file in docs %}
+{% for file in docs %}
 
 
     var mockFile = { name: "{{ file.name }}", size: {{ tailles[file.id] }} };
 
-    dropzone.addFile(mockFile);
 
-    {% endfor %}
+// Call the default addedfile event handler
+dropzone.emit("addedfile", mockFile);
 
 
-    $('html').click(function () {
+uploadingfiles--;
+
+console.log(uploadingfiles);
+
+{% endfor %}
+
+
+$('html').click(function () {
         $("#filedescription").slideUp();
         openeddesc = false;
         currentDocHtml = null;
@@ -309,6 +352,7 @@ $(document).ready(function () {
     });
 
 
-});
+enableUploads();
+
 
 </script>

@@ -22,7 +22,7 @@ html, body {
 	width: auto;
 }
 
-#img_accueil{
+#img_accueil {
 	width: 267px;
 	height: 200px;
 	margin: auto;
@@ -238,6 +238,35 @@ html, body {
 	padding-left: 0.214em;
 }
 
+/*BOUTON VISI CLASSEUR*/
+.visi_button_actif {
+	color: #ffffff !important;
+	background-color: #83b13a !important;
+}
+
+.visi_button div {
+	width: 5em;
+	padding: .3em 1em;
+	color: #a9a9a9;
+	background: #f5f5f5;
+	border: 1px solid #cccccc;
+	font-weight: bold;
+	display: inline;
+	cursor: pointer;
+}
+
+.visi_button input {
+	display: none;
+}
+
+#visi_publique {
+	border-radius: 3px 0 0 3px;
+}
+
+#visi_prive {
+	border-radius: 0 3px 3px 0;
+}
+
 #fichiers {
 	border: 5px dashed #cccccc;
 }
@@ -339,18 +368,19 @@ html, body {
 	border-bottom: 1px solid #cccccc;
 	margin: 1em 0em;
 }
-.deleg-to-someone{
-	color: #6D6E70;
+
+.deleg-to-someone {
+	color: #6d6e70;
 	height: 2em;
 	width: auto;
 	display: inline;
 	line-height: 18px;
 	padding: 4px 4px 4px 5px;
 	text-align: center;
-	text-shadow: 0 1px 0 #FFFFFF;
+	text-shadow: 0 1px 0 #ffffff;
 }
 
-select  [name=user] {
+select [name=user] {
 	width: 50px;
 }
 
@@ -362,15 +392,6 @@ select  [name=user] {
 .btn {
 	margin: 0 6px 0 0 !important;
 }
-
-/*.btn-valider,*/
-/*.btn-modifier,*/
-/*.btn-refuser,*/
-/*.btn-retracter,*/
-/*.btn-supprimer {*/
-	/*color: white;*/
-	/*padding: 3px 6px !important;*/
-/*}*/
 
 .btn-valider {
 	background-color: rgb(15, 148, 0);
@@ -391,11 +412,6 @@ select  [name=user] {
 .btn-retracter {
 	background-color: rgb(240, 117, 0);
 }
-
-/*.add-on {*/
-/*background: none repeat scroll 0 0 #F5F5F5;*/
-/*border: 1px solid #CCCCCC;*/
-/*}*/
 
 /*BOUTONS TABLEAU*/
 .active_inactive_user .glyphicon-ok {
@@ -471,8 +487,26 @@ select  [name=user] {
 	padding-left: 32%;
 }
 
-.parcou {
-	width: 45% !important;
+.label_form_token {
+    border-bottom: 0px;
+    width: 60%;
+}
+
+.label_form_token label {
+    width: 8em;
+    line-height: 1.7em;
+    cursor: hand;
+    position: absolute;
+    color: #a9a9a9;
+    padding: 0em 0.5em;
+    border-right: 1px solid #cccccc;
+    text-align: center;
+}
+
+.label_form_token input {
+    width: 100%;
+    height: 1.8em;
+    padding-left: 32%;
 }
 
 .parcou label,
@@ -480,7 +514,7 @@ select  [name=user] {
 	border: 1px solid #cccccc;
 }
 
-.label-form-input {
+.label-form-input, .btn_avatar {
 	border: 1px solid #cccccc;
 }
 
@@ -488,6 +522,28 @@ select  [name=user] {
 	color: rgb(50, 133, 171) !important;
 }
 
+/*INPUT AVATAR*/
+.parcou label {
+	position: relative;
+}
+
+.btn_avatar {
+	display: inline;
+	left: -0.4em;
+	position: relative;
+	height: 1.85em;
+	color: #A9A9A9;
+	padding: 0 2em 0 2em;
+}
+
+.nom_avatar {
+	color: #A9A9A9;
+	font-weight: bold;
+}
+
+.parc_avatar {
+	display: none !important;
+}
 /*CHECKBOX CREATION USER*/
 .cb-enable, .cb-disable, .cb-enable span, .cb-disable span {
 	background: url("/images/switch.gif") repeat-x;

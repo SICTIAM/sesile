@@ -8,7 +8,8 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * User
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Sesile\UserBundle\Entity\UserRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @ExclusionPolicy("all")
  */
 class User extends BaseUser
 {
@@ -23,13 +25,18 @@ class User extends BaseUser
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Expose
      */
     protected $id;
+
 
     /**
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
+     *
+     *
      */
     protected $Nom;
 
@@ -37,12 +44,13 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
+     * @Expose
      */
     protected $Prenom;
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     protected $path;
@@ -60,28 +68,28 @@ class User extends BaseUser
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="ville", type="string", length=255, nullable=true)
      */
     protected $ville;
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="code_postal", type="string", length=6, nullable=true)
      */
     protected $cp;
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="pays", type="string", length=255, nullable=true)
      */
     protected $pays;
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="departement", type="string", length=255, nullable=true)
      */
     protected $departement;
@@ -89,10 +97,34 @@ class User extends BaseUser
 
     /**
      * @var string
-     *
+     * @Expose
      * @ORM\Column(name="role", type="string", length=255, nullable=true)
      */
     protected $role;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="apitoken", type="string", length=40, nullable=true)
+     */
+    protected $apitoken;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="apisecret", type="string", length=40, nullable=true)
+     */
+    protected $apisecret;
+
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="apiactivated", type="boolean")
+     */
+    protected $apiactivated;
 
 
     /**
@@ -215,7 +247,20 @@ class User extends BaseUser
             // faites ce que vous voulez pour générer un nom unique
 
             $this->path = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
+
         }
+
+        //Création des tokens d'api si absents
+        if (empty($this->getApitoken())) {
+            $this->setApitoken("token_" . md5(uniqid(rand(), true)));
+        }
+
+        //Création des tokens d'api si absents
+        if (empty($this->getApisecret())) {
+            $this->setApisoken("secret_" . md5(uniqid(rand(), true)));
+        }
+
+
     }
 
     /**
@@ -349,7 +394,6 @@ class User extends BaseUser
     public function setVille($ville)
     {
         $this->ville = $ville;
-
         return $this;
     }
 
@@ -486,5 +530,84 @@ class User extends BaseUser
     public function getActionsClasseurs()
     {
         return $this->actions_classeurs;
+    }
+
+    /**
+     * Set apitoken
+     *
+     * @param string $apitoken
+     * @return User
+     */
+    public function setApitoken($apitoken)
+    {
+        $this->apitoken = $apitoken;
+
+        return $this;
+    }
+
+    /**
+     * Get apitoken
+     *
+     * @return string
+     */
+    public function getApitoken()
+    {
+
+        //Création des tokens d'api si absents
+        if (empty($this->apitoken)) {
+            $this->setApitoken("token_" . md5(uniqid(rand(), true)));
+        }
+        return $this->apitoken;
+    }
+
+    /**
+     * Set apisecret
+     *
+     * @param string $apisecret
+     * @return User
+     */
+    public function setApisecret($apisecret)
+    {
+        $this->apisecret = $apisecret;
+
+        return $this;
+    }
+
+    /**
+     * Get apisecret
+     *
+     * @return string
+     */
+    public function getApisecret()
+    {
+
+        //Création des tokens d'api si absents
+        if (empty($this->apisecret)) {
+            $this->setApisecret("secret_" . md5(uniqid(rand(), true)));
+        }
+        return $this->apisecret;
+    }
+
+    /**
+     * Set apiactivated
+     *
+     * @param boolean $apiactivated
+     * @return User
+     */
+    public function setApiactivated($apiactivated)
+    {
+        $this->apiactivated = $apiactivated;
+
+        return $this;
+    }
+
+    /**
+     * Get apiactivated
+     *
+     * @return boolean
+     */
+    public function getApiactivated()
+    {
+        return $this->apiactivated;
     }
 }

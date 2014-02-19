@@ -141,7 +141,8 @@
             {% if doc is null %}
             removedropzonefile("{{ name }}");
             {% else %}
-            removefile("{{ name }}");
+            removeFile("{{ doc.id }}");
+
             {% endif %}
         } else {
 
