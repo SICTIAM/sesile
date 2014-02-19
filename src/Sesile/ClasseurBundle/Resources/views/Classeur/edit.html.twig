@@ -1,7 +1,8 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}" xmlns="http://www.w3.org/1999/html"></script>
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"
+            xmlns="http://www.w3.org/1999/html"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
     <div class="bloc_page">
@@ -30,7 +31,8 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Titre
             </div>
-            <input class="form-control" id="name" name="name" disabled placeholder="Nom" value="{{ classeur.nom }}">
+            <input class="form-control" id="name" name="name" disabled placeholder="Nom" required="required"
+                   value="{{ classeur.nom }}">
             <br>
 
             <div class="titre_form_element">
@@ -52,6 +54,7 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Documents
             </div>
+            <div id="infofile" class="alert alert-success" style="display: none"></div>
             <div id="documentcontent"></div>
             <br>
 
@@ -69,11 +72,16 @@
                 {% render url("new_circuit") %}
             </div>
         </form>
+        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+            &nbsp;Historique
+        </button>
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         <br>
         <br>
         <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -94,10 +102,38 @@
         <!-- /.modal -->
 
         <script type="application/javascript">
-            $(document).ready(function () {
+
+            function loadDocuments() {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
                     enableUploads();
                 });
+            }
+
+
+            function addDocToCurrentClasseur(data) {
+
+                $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
+
+                data['id'] = {{ classeur.id }};
+                $.ajax(Routing.generate('add_document_to_classeur'),
+                        {
+                            method: 'POST',
+                            data: data,
+                            success: function (html) {
+
+                                loadDocuments();
+                                //     $('#infofile').html('<strong>Bien joué !</strong> Fichier(s) ajouté(s) au classeur avec succès');
+                                //   $('#infofile').show('slow').delay(5000).hide('slow');
+
+                            }
+
+                        });
+            }
+
+            $(document).ready(function () {
+                $(".selects_circuit:nth-child(2)").hide();
+
+                loadDocuments();
 
                 $(".top_selects_circuits, .suppr_perso").hide();
                 //$("#circuit").sortable("disable");
@@ -132,9 +168,11 @@
                 }
             });
 
-            $(".btn-modifs").click(function() {
-                $("#form_edit").submit();
+            $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer").click(function () {
+                $("#form_edit").attr("action", $(this).attr("data-action")).submit();
             });
         </script>
     </div>
+    <object id="winFirefoxPlugin" type="application/x-sharepoint"
+            style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
 {% endblock %}

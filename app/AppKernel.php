@@ -28,10 +28,14 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
             new Gorg\Bundle\CasBundle\GorgCasBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Sesile\ClasseurBundle\SesileClasseurBundle(),
             new Sesile\DocumentBundle\SesileDocumentBundle(),
             new Sesile\CircuitBundle\SesileCircuitBundle(),
             new Sesile\DelegationsBundle\SesileDelegationsBundle(),
+            new Sesile\ApiBundle\SesileApiBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

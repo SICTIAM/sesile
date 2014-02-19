@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sesile\ClasseurBundle\Entity\Action;
+use Sesile\ClasseurBundle\Entity\Classeur;
 
 class DocumentController extends Controller
 {
@@ -61,26 +63,26 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $uploadedfile = $request->files->get('signedFile');
         $id = $request->request->get('id');
-        if(empty($uploadedfile)){
-            return new JsonResponse(array("error"=>"nothinguploaded"));
+        if (empty($uploadedfile)) {
+            return new JsonResponse(array("error" => "nothinguploaded"));
         }
 
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
-        if(empty($doc)){
-            return new JsonResponse(array("error"=>"nodocumentwiththisname", "name"=>$uploadedfile->getClientOriginalName()));
+        if (empty($doc)) {
+            return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
         }
 
-        if(file_exists('uploads/docs/' . $doc->getRepourl())){
+        if (file_exists('uploads/docs/' . $doc->getRepourl())) {
             unlink('uploads/docs/' . $doc->getRepourl());
             $uploadedfile->move('uploads/docs/', $doc->getRepourl());
             $doc->setSigned(true);
             $em->flush();
-            return new JsonResponse(array("error"=>"ok", "url"=>'uploads/docs/'. $doc->getRepourl()));
+            return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
 
-        }else{
+        } else {
             unlink($uploadedfile->getRealPath());
 
-            return new JsonResponse(array("error"=>"nodocumentwiththisname"));
+            return new JsonResponse(array("error" => "nodocumentwiththisname"));
 
         }
 
@@ -129,6 +131,16 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $name));
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Modification du document", null);
+        $classeur = $doc->getClasseur();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Modification du document " . $doc->getName());
+        $em->persist($action);
+
+        $em->flush();
+
 
         return array('name' => $name);
     }
@@ -149,22 +161,51 @@ class DocumentController extends Controller
 
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getRepourl() . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getName() . '"');
+        $response->headers->set('Content-Length', filesize('uploads/docs/' . $doc->getRepourl()));
 
 
+        // $response->sendHeaders();
 
-        $response->sendHeaders();
 
-        $response->setContent(readfile('uploads/docs/' . $doc->getRepourl()));
+        $response->setContent(file_get_contents('uploads/docs/' . $doc->getRepourl()));
 
+
+        //  var_dump($response);
         return $response;
+
     }
 
 
+    /**
+     * @Route("/{id}/delete", name="delete_document",  options={"expose"=true})
+     * @Method("POST")
+     */
+    public function deleteAction(Request $request, $id)
+    {
 
 
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+        $classeur = $doc->getClasseur();
+
+        $action = new Action();
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action->setAction("Suppression du document " . $doc->getName());
+        $em->persist($action);
+
+        $em->flush();
 
 
+        $em->remove($doc);
+        $em->flush();
+
+
+        return new JsonResponse(array("error" => "ok"));
+
+    }
 
 
 }

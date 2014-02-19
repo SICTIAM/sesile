@@ -27,6 +27,9 @@ class ProfileFormType extends BaseType
             'second_options' => array('label' => 'Confirmation'),
             'invalid_message' => 'fos_user.password.mismatch',
         ));
+        $builder->add('apiactivated', 'checkbox', array('label' => 'API', 'required' => false,))
+            ->add('apitoken', 'text', array('read_only' => true))
+            ->add('apisecret', 'text', array('read_only' => true));
     }
 
     public function getName()
@@ -46,10 +49,12 @@ class ProfileFormType extends BaseType
             ->add('Prenom', null, array('label' => 'Prénom', 'attr' => array('class' => 'pouet')))
             ->add('Nom', null, array('label' => ' Nom', 'attr' => array('class' => 'pouet')))
             ->add('username', 'email', array('label' => 'Adresse E-mail', 'attr' => array('class' => 'pouet')))
+
             ->add('file', 'file', array('label' => 'Avatar',
                 'data_class' => null,
                 'required' => false,
             ));
+
     }
 
 }

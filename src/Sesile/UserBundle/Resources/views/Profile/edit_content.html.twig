@@ -39,6 +39,24 @@
     <br/>
 {% endfor %}
 <br/>
+
+<div style="display:none">
+    {{ form_widget(form.apiactivated, {'attr': {'class': 'checkbox' }}) }}
+</div>
+
+<div id="apitokensecret" style="display: none">
+    <div class="label_form_token label-form-input">
+        {{ form_label(form.apitoken) }}
+        {{ form_widget(form.apitoken) }}
+    </div>
+    <div class="label_form_token label-form-input">
+        {{ form_label(form.apisecret) }}
+        {{ form_widget(form.apisecret) }}
+    </div>
+    <br/>
+</div>
+<br/>
+
 <button class="btn btn-success" type="submit">{{ 'profile.edit.submit'|trans }}</button>
 {{ form_end(form) }}
 <script type="text/javascript">
@@ -59,4 +77,12 @@
         $(this).addClass('selected');
         $('.checkbox', parent).attr('checked', false);
     });
+
+    if ($("#fos_user_profile_form_apiactivated").is(':checked')) {
+        $('#apitokensecret').show('slow');
+    } else {
+        $('#apitokensecret').hide('slow');
+    }
+
+
 </script>

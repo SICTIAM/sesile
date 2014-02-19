@@ -73,9 +73,31 @@ class Collectivite
 
 
     /**
+     * @var text
+     *
+     * @ORM\Column(name="textmailnew", type="string", length=3000, nullable=true)
+     */
+    private $textmailnew;
+
+    /**
+     * @var text
+     *
+     * @ORM\Column(name="textmailrefuse", type="string", length=3000, nullable=true)
+     */
+    private $textmailrefuse;
+
+    /**
+     * @var text
+     *
+     * @ORM\Column(name="textmailwalid", type="string", length=3000, nullable=true)
+     */
+    private $textmailwalid;
+
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -91,14 +113,14 @@ class Collectivite
     public function setNom($nom)
     {
         $this->nom = $nom;
-    
+
         return $this;
     }
 
     /**
      * Get nom
      *
-     * @return string 
+     * @return string
      */
     public function getNom()
     {
@@ -114,14 +136,14 @@ class Collectivite
     public function setDomain($domain)
     {
         $this->domain = $domain;
-    
+
         return $this;
     }
 
     /**
      * Get domain
      *
-     * @return string 
+     * @return string
      */
     public function getDomain()
     {
@@ -137,14 +159,14 @@ class Collectivite
     public function setImage($image)
     {
         $this->image = $image;
-    
+
         return $this;
     }
 
     /**
      * Get image
      *
-     * @return string 
+     * @return string
      */
     public function getImage()
     {
@@ -160,14 +182,14 @@ class Collectivite
     public function setMessage($message)
     {
         $this->message = $message;
-    
+
         return $this;
     }
 
     /**
      * Get message
      *
-     * @return string 
+     * @return string
      */
     public function getMessage()
     {
@@ -183,14 +205,14 @@ class Collectivite
     public function setActive($active)
     {
         $this->active = $active;
-    
+
         return $this;
     }
 
     /**
      * Get active
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getActive()
     {
@@ -246,6 +268,35 @@ class Collectivite
             $this->image = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
             $this->upload($this->getUploadRootDir());
         }
+
+
+        if ($this->getTextmailnew() == null) {
+            $this->setTextmailnew("Un nouveau classeur vient d'être déposé par {{ deposant }}
+                                    <br>
+                                        {{ titre_classeur }}
+                                        <br>
+                                    Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..
+
+                            Lien vers le classeur {{ lien }})");
+        }
+
+        if ($this->getTextmailrefuse() == null) {
+            $this->setTextmailrefuse("Le classeur \"{{ titre_classeur }}\" vient d'être refusé par {{ validant }}
+                <br>
+                Il devra être corrigé et validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+
+                Lien vers le classeur {{ lien }}");
+        }
+
+        if ($this->getTextmailwalid() == null) {
+            $this->setTextmailwalid("Un nouveau classeur vient d'être validé par {{ validant }}
+                <br>
+                {{ titre_classeur }}
+                <br>
+                Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+
+                Lien vers le classeur {{ lien }}");
+        }
     }
 
     private function upload()
@@ -257,6 +308,9 @@ class Collectivite
         // va automatiquement être lancée par la méthode move(). Cela va empêcher
         // proprement l'entité d'être persistée dans la base de données si
         // erreur il y a
+        if (!file_exists($this->getUploadRootDir())) {
+            mkdir($this->getUploadRootDir());
+        }
         $this->file->move($this->getUploadRootDir(), $this->image);
 
 
@@ -268,6 +322,110 @@ class Collectivite
 
         if ($file = $this->getUploadRootDir() . $this->image) {
             unlink($file);
+        }
+    }
+
+    /**
+     * Set textmailnew
+     *
+     * @param string $textmailnew
+     * @return Collectivite
+     */
+    public function setTextmailnew($textmailnew)
+    {
+        $this->textmailnew = $textmailnew;
+
+        return $this;
+    }
+
+    /**
+     * Get textmailnew
+     *
+     * @return string
+     */
+    public function getTextmailnew()
+    {
+        return $this->textmailnew;
+    }
+
+    /**
+     * Set textmailrefuse
+     *
+     * @param string $textmailrefuse
+     * @return Collectivite
+     */
+    public function setTextmailrefuse($textmailrefuse)
+    {
+        $this->textmailrefuse = $textmailrefuse;
+
+        return $this;
+    }
+
+    /**
+     * Get textmailrefuse
+     *
+     * @return string
+     */
+    public function getTextmailrefuse()
+    {
+        return $this->textmailrefuse;
+    }
+
+    /**
+     * Set textmailwalid
+     *
+     * @param string $textmailwalid
+     * @return Collectivite
+     */
+    public function setTextmailwalid($textmailwalid)
+    {
+        $this->textmailwalid = $textmailwalid;
+
+        return $this;
+    }
+
+    /**
+     * Get textmailwalid
+     *
+     * @return string
+     */
+    public function getTextmailwalid()
+    {
+        return $this->textmailwalid;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+
+        if ($this->getTextmailnew() == null) {
+            $this->setTextmailnew("Un nouveau classeur vient d'être déposé par {{ deposant }}
+                                    <br>
+                                        {{ titre_classeur }}
+                                        <br>
+                                    Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..
+
+                            Lien vers le classeur {{ lien }})");
+        }
+
+        if ($this->getTextmailrefuse() == null) {
+            $this->setTextmailrefuse("Le classeur \"{{ titre_classeur }}\" vient d'être refusé par {{ validant }}
+                <br>
+                Il devra être corrigé et validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+
+                Lien vers le classeur {{ lien }}");
+        }
+
+        if ($this->getTextmailwalid() == null) {
+            $this->setTextmailwalid("Un nouveau classeur vient d'être validé par {{ validant }}
+                <br>
+                {{ titre_classeur }}
+                <br>
+                Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+
+                Lien vers le classeur {{ lien }}");
         }
     }
 }

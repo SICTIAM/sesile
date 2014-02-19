@@ -6,6 +6,7 @@ use Sesile\CircuitBundle\Controller\CircuitController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class DefaultController extends Controller
 {
@@ -15,19 +16,34 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $Upload = $this->container->getParameter('upload');
-        $DocPath = $Upload["msg_acc"];
-        $handle = fopen($DocPath, 'a+');
-        if (filesize($DocPath)) {
-            $msg_accueil = fread($handle, filesize($DocPath));
-            fclose($handle);
 
+        $image = "/images/Logo-Officiel-SICTIAM_taille250px.jpg";
+
+        $em = $this->getDoctrine()->getManager();
+        if (isset($_SESSION["phpCAS"])) {
+            $session = new Session();
+            $tab = $_SESSION["phpCAS"];
+            $username = $tab["user"];
+            $UserEntity = $em->getRepository('SesileUserBundle:User')->findOneByUsername($username);
+
+            $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
+
+            if ($CollecEntity != null) {
+                $image = $CollecEntity->getImage();
+            }
+
+            $session->set('logo', $image);
+            $session->set('idCollec', 1);
+        } else {
+            $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
+        }
+
+        if ($CollecEntity != null) {
+            $msg_accueil = $CollecEntity->getMessage();
         } else {
             $msg_accueil = "Bienvenue sur le parapheur sesile";
         }
-        $image = 'f69fa0f49e660d38ccf33c6c5fa7a57a21ee3ca8.png';
-        return array('msg_acc' => $msg_accueil,
-            'image' => $image);
+        return array('msg_acc' => $msg_accueil, "img_accueil" => $image);
     }
 
     /**

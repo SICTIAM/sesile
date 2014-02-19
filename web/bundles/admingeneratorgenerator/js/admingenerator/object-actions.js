@@ -1,4 +1,4 @@
- /*
+/*
  *  Project:        Symfony2Admingenerator
  *  Description:    jQuery plugin for List Object actions
  *  Author:         loostro <loostro@gmail.com>
@@ -7,13 +7,14 @@
 
 // the semi-colon before function invocation is a safety net against concatenated
 // scripts and/or other plugins which may not be closed properly.
-;(function ( $, window, undefined ) {
-    
+;
+(function ($, window, undefined) {
+
     // undefined is used here as the undefined global variable in ECMAScript 3 is
     // mutable (ie. it can be changed by someone else). undefined isn't really being
     // passed in so we can ensure the value of it is truly undefined. In ES5, undefined
     // can no longer be modified.
-    
+
     // window is passed through as local variable rather than global
     // as this (slightly) quickens the resolution process and can be more efficiently
     // minified (especially when both are regularly referenced in your plugin).
@@ -23,59 +24,59 @@
         document = window.document,
         defaults = {
             actionsSelector: '.object_actions a'
-    	};
+        };
 
     // The actual plugin constructor
-    function Plugin( element, options ) {
+    function Plugin(element, options) {
         this.element = element;
 
         // jQuery has an extend method which merges the contents of two or
         // more objects, storing the result in the first object. The first object
         // is generally empty as we don't want to alter the default options for
         // future instances of the plugin
-        this.options = $.extend( {}, defaults, options) ;
-        
+        this.options = $.extend({}, defaults, options);
+
         this._defaults = defaults;
         this._name = pluginName;
-        
+
         this._init();
     }
-    
+
     Plugin.prototype = {
 
-        _init: function() {
+        _init: function () {
             // Plugin-scope helper
             var that = this;
-            
+
             // Select container
-            var $actions  = $(that.element).find(this.options.actionsSelector);
-            
+            var $actions = $(that.element).find(this.options.actionsSelector);
+
             // bind onClick to form click event
-            $actions.on('click', function(e){
+            $actions.on('click', function (e) {
                 that._onClick(that, e, $(this));
             });
         },
-                
-        _onClick: function(that, e, $element) {
+
+        _onClick: function (that, e, $element) {
             // Confirm action
             if ($element.data('confirm') && !confirm($element.data('confirm'))) {
-            	e.preventDefault();
+                e.preventDefault();
                 return;
             }
-            
+
             if ($element.data('csrf-token')) {
                 e.preventDefault();
                 // Transform in POST request
                 var form = $('<form />').attr({
                     method: 'POST',
                     action: $element.attr('href'),
-                    style:  'visibility: hidden'
+                    style: 'visibility: hidden'
                 }).appendTo($('body'));
                 // Add csrf protection token
                 $('<input />').attr({
-                    type:   'hidden',
-                    name:   '_csrf_token',
-                    value:  $element.data('csrf-token')
+                    type: 'hidden',
+                    name: '_csrf_token',
+                    value: $element.data('csrf-token')
                 }).appendTo(form);
                 // Send action
                 form.submit();
@@ -89,7 +90,7 @@
     // public function (ie. a function whose name doesn't start
     // with an underscore) to be called via the jQuery plugin,
     // e.g. $(element).defaultPluginName('functionName', arg1, arg2)
-    $.fn[pluginName] = function ( options ) {
+    $.fn[pluginName] = function (options) {
         var args = arguments;
 
         // Is the first parameter an object (options), or was omitted,
@@ -105,13 +106,13 @@
                     // pass options to our plugin constructor,
                     // and store the plugin instance
                     // in the elements jQuery data object.
-                    $.data(this, 'plugin_' + pluginName, new Plugin( this, options ));
+                    $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
                 }
             });
 
-        // If the first parameter is a string and it doesn't start
-        // with an underscore or "contains" the `init`-function,
-        // treat this as a call to a public method.
+            // If the first parameter is a string and it doesn't start
+            // with an underscore or "contains" the `init`-function,
+            // treat this as a call to a public method.
         } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
 
             // Cache the method call
@@ -128,12 +129,12 @@
 
                     // Call the method of our plugin instance,
                     // and pass it the supplied arguments.
-                    returns = instance[options].apply( instance, Array.prototype.slice.call( args, 1 ) );
+                    returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
                 }
 
                 // Allow instances to be destroyed via the 'destroy' method
                 if (options === 'destroy') {
-                  $.data(this, 'plugin_' + pluginName, null);
+                    $.data(this, 'plugin_' + pluginName, null);
                 }
             });
 

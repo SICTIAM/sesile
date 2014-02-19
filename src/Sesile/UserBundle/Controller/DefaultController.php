@@ -119,10 +119,11 @@ class DefaultController extends Controller
                 ldap_close($ldapconn);
 
                 //envoi d'un mail à l'utilisateur nouvellement créé
+                $MailParam = $this->container->getParameter('swiftmailer');
                 $message = \Swift_Message::newInstance()
                     ->setContentType('text/html')
                     ->setSubject('Nouvel utilisateur')
-                    ->setFrom('j.mercier@sictiam.fr')
+                    ->setFrom($MailParam['username'])
                     ->setTo($entity->getUsername())
                     ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
                 $this->get('mailer')->send($message);
@@ -143,7 +144,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Classeur entity.
+     * Displays a form to edit an existing user entity.
      *
      * @Route("/edit/{id}/", name="user_edit", options={"expose"=true})
      * @Method("GET")
@@ -151,6 +152,8 @@ class DefaultController extends Controller
      */
     public function editAction($id)
     {
+
+
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
@@ -166,12 +169,14 @@ class DefaultController extends Controller
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
+
         return array(
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
+
 
     /**
      * Update an existing User entity.
@@ -182,6 +187,8 @@ class DefaultController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+
+
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
         $cas = $this->getCASParams();
@@ -338,6 +345,8 @@ class DefaultController extends Controller
      */
     private function createEditForm(User $entity)
     {
+
+
         $form = $this->createForm(new UserType(), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',

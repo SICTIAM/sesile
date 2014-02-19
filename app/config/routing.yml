@@ -1,3 +1,8 @@
+sesile_api:
+    resource: "@SesileApiBundle/Controller/"
+    type:     annotation
+    prefix:   /api/
+
 sesile_delegations:
     resource: "@SesileDelegationsBundle/Controller/"
     type:     annotation
@@ -59,3 +64,8 @@ login_check:
 
 logout:
     pattern:   /logout
+
+
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc

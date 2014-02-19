@@ -3,22 +3,24 @@
 
 /* Invert profile colors */
 .profile {
-    padding-left: 15px; 
-    padding-right: 15px; 
+    padding-left: 15px;
+    padding-right: 15px;
     background-color: #f5f5f5;
 }
 
 /* Fixes for small screens */
 @media (max-width: 979px) {
-  .profile li {
-      display: inline-block;
-  }
-  .nav-collapse.in .profile li.btn-group {
-      margin-top: 0px;
-  }
-  .nav-collapse .nav > li > a, .nav-collapse .dropdown-menu a {
-      color: #FFFFFF;
-  }
+    .profile li {
+        display: inline-block;
+    }
+
+    .nav-collapse.in .profile li.btn-group {
+        margin-top: 0px;
+    }
+
+    .nav-collapse .nav > li > a, .nav-collapse .dropdown-menu a {
+        color: #FFFFFF;
+    }
 }
 
 .profile .navbar-text {

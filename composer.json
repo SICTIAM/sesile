@@ -10,7 +10,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.3.*",
+        "symfony/symfony": "2.4.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "doctrine/doctrine-bundle": "1.2.*",
         "doctrine/doctrine-fixtures-bundle": "2.2.*@dev",
@@ -29,7 +29,10 @@
         "jms/security-extra-bundle": "dev-master",
         "gorg/cas-bundle": "master",
         "gorg/user-bundle": "master",
-        "sabre/dav": "1.8.*"
+        "sabre/dav": "1.8.*",
+        "friendsofsymfony/rest-bundle": "1.1.*",
+        "jms/serializer-bundle": "dev-master",
+        "nelmio/api-doc-bundle": "@stable"
 
     },
     "scripts": {

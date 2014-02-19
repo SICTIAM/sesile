@@ -14,18 +14,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Yaml\Yaml;
 
-class AdminController extends Controller {
+class AdminController extends Controller
+{
     /**
      * @Route("/admin", name="admin")
      *
      *
      */
-    public function PageAdminAction(Request $request) {
-
+    public function PageAdminAction(Request $request)
+    {
+        /*
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
+        */
 
         $Upload = $this->container->getParameter('upload');
         $DocPath = $Upload["msg_acc"];
@@ -44,12 +47,10 @@ class AdminController extends Controller {
             // $data is a simply array with your form fields
             // like "query" and "category" as defined above.
             $msg = $request->request->get('msg');
-
-            $handle = fopen($DocPath, 'w+');
-            fwrite($handle, $msg);
-            fclose($handle);
-            //   var_dump($data);exit;
-
+            $em = $this->getDoctrine()->getManager();
+            $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
+            $coll->setMessage($msg);
+            $em->flush();
         }
 
         return $this->render('SesileMainBundle:Default:admin.html.twig', array('form' => $form->createView(),));
@@ -63,7 +64,8 @@ class AdminController extends Controller {
      * @Method("GET")
      * @Template("SesileMainBundle:Collectivite:index.html.twig")
      */
-    public function indexCollectiviteAction() {
+    public function indexCollectiviteAction()
+    {
         $em = $this->getDoctrine()->getManager();
         $collectivites = $em->getRepository('SesileMainBundle:Collectivite')->findAll();
         return array("collectivites" => $collectivites);
@@ -75,12 +77,13 @@ class AdminController extends Controller {
      * @Route("/collectivite/new", name="new_collectivite")
      * @Template("SesileMainBundle:Collectivite:new.html.twig")
      */
-    public function ajoutCollectiviteAction(Request $request) {
+    public function ajoutCollectiviteAction(Request $request)
+    {
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['logo_coll'];
 
 
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
 
@@ -88,6 +91,7 @@ class AdminController extends Controller {
         $entity = new Collectivite();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
+
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -112,7 +116,8 @@ class AdminController extends Controller {
      * @Method("GET")
      * @Template("SesileMainBundle:Collectivite:edit.html.twig")
      */
-    public function editCollectiviteAction($id) {
+    public function editCollectiviteAction($id)
+    {
 
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
@@ -143,7 +148,8 @@ class AdminController extends Controller {
      * @Method("PUT")
      * @Template("SesileUserBundle:Default:edit.html.twig")
      */
-    public function updateCollectiviteAction(Request $request, $id) {
+    public function updateCollectiviteAction(Request $request, $id)
+    {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileMainBundle:Collectivite')->find($id);
 
@@ -208,7 +214,8 @@ class AdminController extends Controller {
     }
 
 
-    private function createCreateForm(Collectivite $entity) {
+    private function createCreateForm(Collectivite $entity)
+    {
         $form = $this->createForm(new CollectiviteType(), $entity, array(
             'action' => $this->generateUrl('new_collectivite'),
             'method' => 'POST',
@@ -223,7 +230,8 @@ class AdminController extends Controller {
      * @param Collectivite $entity The entity
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm(Collectivite $entity) {
+    private function createEditForm(Collectivite $entity)
+    {
         $form = $this->createForm(new CollectiviteType(), $entity, array(
             'action' => $this->generateUrl('update_collectivite', array('id' => $entity->getId())),
             'method' => 'PUT',
@@ -239,7 +247,8 @@ class AdminController extends Controller {
      * @param mixed $id The entity id
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id) {
+    private function createDeleteForm($id)
+    {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('delete_collectivite', array('id' => $id)))
             ->setMethod('DELETE')

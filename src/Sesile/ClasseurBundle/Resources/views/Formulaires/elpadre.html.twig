@@ -3,6 +3,32 @@
 
 <div class="titre_form_element">
     <span class="glyphicon glyphicon-play"></span>
+    &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+</div>
+
+
+<div class="visi_button">
+    <div id="visi_publique" rel="0"  class="visi_button_actif">
+        <input id="radio-publique" type="radio" value="0" name="visibilite" checked="true">
+        Publique
+    </div>
+    <div id="visi_prive" rel="-1">
+        <input id="radio-prive" type="radio" name="visibilite" value="-1">
+        Privée
+    </div>
+</div>
+<script type="text/javascript">
+    $('.visi_button div').click(function () {
+        $('.visi_button_actif').removeClass('visi_button_actif');
+        $(this).addClass('visi_button_actif');
+
+
+        $("input[name='visibilite']").val([$(this).attr("rel")])
+    });
+</script>
+
+<div class="titre_form_element">
+    <span class="glyphicon glyphicon-play"></span>
     &nbsp;&nbsp;&nbsp;Titre
 </div>
 <input class="form-control" id="name" name="name" placeholder="Nom">
@@ -19,7 +45,7 @@
     <span class="glyphicon glyphicon-play"></span>
     &nbsp;&nbsp;&nbsp;Date limite de validation
 </div>
-<input class="datepicker" id="validation" name="validation" type="datetime"/>
+<input class="datepicker" id="validation" name="validation" type="datetime" required="required"/>
 <br>
 
 <div class="titre_form_element">
@@ -50,7 +76,7 @@
         onRender: function (date) {
             return date.valueOf() < now.valueOf() ? 'disabled' : '';
         }
-    }).on('changeDate', function (ev) {
+    }).on('changeDate',function (ev) {
                 dadapicker.hide();
             }).data('datepicker');
 </script>

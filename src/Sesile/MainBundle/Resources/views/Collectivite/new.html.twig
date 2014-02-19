@@ -7,19 +7,30 @@
             &nbsp;&nbsp;&nbsp;Ajouter une nouvelle collectivité
         </div>
         {{ form_start(form) }}
-            {{ form_label(form.nom) }}
-            {{ form_widget(form.nom) }}
-            <br>
-            {{ form_label(form.domain) }}
-            {{ form_widget(form.domain) }}
-            <br>
-            {{ form_label(form.active) }}
-            {{ form_widget(form.active) }}
-            <br>
-            {{ form_label(form.file) }}
-            {{ form_widget(form.file) }}
-            <br>
-            {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success'}}) }}
+        {{ form_label(form.nom) }}
+        {{ form_widget(form.nom) }}
+        <br>
+        {{ form_label(form.domain) }}
+        {{ form_widget(form.domain) }}
+        <br>
+        {{ form_label(form.active) }}
+        {{ form_widget(form.active) }}
+        <br>
+        {{ form_label(form.file) }}
+        {{ form_widget(form.file) }}
+
+        <br>
+        {{ form_label(form.textmailnew) }}
+        {{ form_widget(form.textmailnew) }}
+        <br>
+        {{ form_label(form.textmailrefuse) }}
+        {{ form_widget(form.textmailrefuse) }}
+        <br>
+        {{ form_label(form.textmailwalid) }}
+        {{ form_widget(form.textmailwalid) }}
+
+        <br>
+        {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
         {{ form_end(form) }}
     </div>
 {% endblock %}

@@ -12,8 +12,10 @@
 
 <div class='pull-right' id="bouttons" style="display:none">
     <br/>
-    <button type="button"  class="btn btn-default" data-dismiss="modal">Annuler</button>
-    <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le classeur</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+    <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le
+        classeur
+    </button>
 </div>
 
 
@@ -55,7 +57,8 @@
 </script>
 
 <script type="text/javascript">
-    var docstosign = {{ docstosign|json_encode|raw }}
+    var docstosign =
+    {{ docstosign|json_encode|raw }}
 
 
     var attributes = {width: 1, height: 1, id: "javaapplet"};
@@ -116,8 +119,9 @@
     //function donnant le chemin du fichier
     function getFileLinkFromNumber(i) {
 
-        //alert('http://{{ servername }}/uploads/docs/'+docstosign[i].repourl);
-        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/'+docstosign[i].repourl , docstosign[i].repourl, docstosign[i].id);
+        //alert('http://
+
+        document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/' + docstosign[i].repourl, docstosign[i].repourl, docstosign[i].id);
 
 
     }
@@ -193,7 +197,8 @@
         var certif = document.getElementById('selectcertif');
         //alert('lancement signature '+method.value+'  '+certif.value);
 
-            nbfic = {{docstosign|length  }}
+        nbfic =
+        {{docstosign|length  }}
 
         if (nbfic > 0) {
             document.javaapplet.launchSigningWithCertificate(certif.value);

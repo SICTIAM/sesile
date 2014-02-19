@@ -33,18 +33,17 @@
 
 <div id="maman">
 <div id="gauche">
-    <a href="{{ app.request.getBaseURL() }}">
-        <div id="logo">
+    <a href="/">
+    <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
+
         </div>
     </a>
-    <div class="border_imposetonstyle">
-        <div id="img_imposetonstyle">
-            {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
-            <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg")}}" width="80px" height="80px"/>
-        </div>
-    </div>
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
+    <div id="img_collectivite">
+        {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
+        <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg") }}" width="100px" height="100px"/>
+    </div>
 </div>
 
 <div id="droite">
@@ -65,15 +64,6 @@
                             Compte
                         </a>
                     </li>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li class="divider"></li>
-                        <li class="li2">
-                            <a href="{{ path("admin") }}">
-                                <span class="glyphicon glyphicon-cog"></span>
-                                Administration
-                            </a>
-                        </li>
-                    {% endif %}
                     <li class="divider"></li>
                     <li class="li2">
                         <a href="{{ path("logout") }}">
@@ -88,7 +78,6 @@
         {% endif %}
     </div>
 
-
     {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
     <div id="lecontenu">
         {% block content %}
@@ -100,14 +89,18 @@
                                 <span class="glyphicon glyphicon-home"></span>
                                 Bienvenue
                             </div>
-                            {{ msg_acc }}
+                            {% filter raw %}
+                            {{ msg_acc|raw }}
+                            {% endfilter %}
                         </div>
                     </div>
                 {% endif %}
                 <div class="bloc_accueil">
                     {% if app.user %}
-                        <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
-                        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+                        <script type="application/javascript"
+                                src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+                        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}"
+                              rel="stylesheet"/>
 
                         <div id="delegations_recues">
                             <div class="titre_bloc_accueil">
@@ -128,7 +121,7 @@
                         <div id="liste_classeurs">
                             <div class="titre_bloc_accueil">
                                 <span class="glyphicon glyphicon-eye-open"></span>
-                                Classeurs visibles
+                                Liste des classeurs
                             </div>
                             {% render url("liste_classeurs") %}
                         </div>
@@ -143,6 +136,7 @@
                                         "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                                         "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                                         "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+                                        "sLengthMenu": "Afficher _MENU_ classeurs par page",
                                         "oPaginate": {
                                             "sFirst": "",
                                             "sPrevious": "",
@@ -152,7 +146,7 @@
                                     },
                                     "iDisplayLength": 15,
                                     "aLengthMenu": [15, 30, 50, 100],
-                                    "sDom": 'lift<"footer_datatables"p>',
+                                    "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
                                         { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
@@ -166,6 +160,7 @@
                                         "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                                         "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                                         "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+                                        "sLengthMenu": "Afficher _MENU_ classeurs par page",
                                         "oPaginate": {
                                             "sFirst": "",
                                             "sPrevious": "",
@@ -175,7 +170,7 @@
                                     },
                                     "iDisplayLength": 15,
                                     "aLengthMenu": [15, 30, 50, 100],
-                                    "sDom": 'lift<"footer_datatables"p>',
+                                    "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
                                         { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
@@ -189,7 +184,9 @@
                             <span class="glyphicon glyphicon-home"></span>
                             Informations
                         </div>
-                        <img src="http://www.purina.fr/images/articles/illustrations/chat/coaching/entretenir_poils_longs_chat.jpg">
+                        <div id="img_accueil">
+                            <img src="{{ asset("/images/paraph_img_accueil.jpg") }}"/>
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -279,6 +276,6 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
     }
 </script>
 </div>
-<object id="winFirefoxPlugin" type="application/x-sharepoint" style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
+
 </body>
 </html>

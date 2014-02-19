@@ -46,7 +46,7 @@ class Circuit
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -62,14 +62,14 @@ class Circuit
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -85,14 +85,14 @@ class Circuit
     public function setUserId($userId)
     {
         $this->userId = $userId;
-    
+
         return $this;
     }
 
     /**
      * Get userId
      *
-     * @return integer 
+     * @return integer
      */
     public function getUserId()
     {
@@ -108,14 +108,14 @@ class Circuit
     public function setOrdre($ordre)
     {
         $this->ordre = $ordre;
-    
+
         return $this;
     }
 
     /**
      * Get ordre
      *
-     * @return string 
+     * @return string
      */
     public function getOrdre()
     {
