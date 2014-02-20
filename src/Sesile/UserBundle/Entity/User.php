@@ -122,7 +122,7 @@ class User extends BaseUser
     /**
      * @var boolean
      *
-     * @ORM\Column(name="apiactivated", type="boolean")
+     * @ORM\Column(name="apiactivated", type="boolean", options={"default" = false})
      */
     protected $apiactivated;
 
