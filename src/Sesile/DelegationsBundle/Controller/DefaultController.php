@@ -119,10 +119,10 @@ class DefaultController extends Controller
      * @Route("/delete", name="delegation_delete")
      * @method("POST")
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($request->get("id"));
+        $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($request->request->get("id"));
         if (!$delegation) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
