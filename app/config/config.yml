@@ -99,7 +99,7 @@ fos_user:
 
 
 parameters:
-    cas_server: 172.17.100.43
+    cas_server: 172.17.100.78
     cas_port: 389
     cas_path: /
     cas_protocol: '2.0'
@@ -110,9 +110,9 @@ parameters:
         logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
         msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
     ldap:
-        dn_admin: cn=admin,dc=sictiam,dc=fr
-        dn_user: cn=Users,dc=sictiam,dc=fr
-        password: oP1U88zz
+        dn_admin: cn=admin,dc=sictiam,dc=local
+        dn_user: cn=Users,dc=sictiam,dc=local
+        password: WcJa37BI
 
 
 
