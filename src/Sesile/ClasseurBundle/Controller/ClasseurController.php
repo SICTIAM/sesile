@@ -75,11 +75,26 @@ class ClasseurController extends Controller
     public function aValiderAction()
     {
         $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+
+        $query = $repository->createQueryBuilder('p')
+            ->where('p.delegant = :delegant')
+            ->setParameter('delegant', $this->getUser())
+            ->andWhere('p.fin >= :fin')
+            ->setParameter('fin', new \DateTime())
+            ->orderBy('p.debut', 'ASC')
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
             array(
                 "validant" => $this->getUser() ? $this->getUser()->getId() : 0,
                 "status" => 1
             ));
+
 
         return array(
             'classeurs' => $entities
@@ -251,11 +266,12 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
-        $isSignable = $entity->isSignable($em);
 
+        var_dump($id);
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+        $isSignable = $entity->isSignable($em);
 
         $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
         $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
@@ -365,7 +381,7 @@ class ClasseurController extends Controller
         }
 
         $classeur->valider($em);
-        $em->persist($classeur);
+
         $em->flush();
 
         $action = new Action();
@@ -399,7 +415,7 @@ class ClasseurController extends Controller
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
         $classeur->refuser();
-        $em->persist($classeur);
+
         $em->flush();
 
         $action = new Action();
@@ -432,7 +448,7 @@ class ClasseurController extends Controller
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
         $classeur->valider($em);
-        $em->persist($classeur);
+
         $em->flush();
 
         $action = new Action();
@@ -500,7 +516,7 @@ class ClasseurController extends Controller
         }
 
         $classeur->retracter($this->getUser()->getId());
-        $em->persist($classeur);
+
         $em->flush();
 
         $action = new Action();
@@ -527,7 +543,7 @@ class ClasseurController extends Controller
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
         $classeur->supprimer();
-        $em->persist($classeur);
+
         $em->flush();
 
         $action = new Action();
