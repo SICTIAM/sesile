@@ -75,9 +75,9 @@ class DefaultController extends Controller
     {
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();
-        foreach ($users as &$user) {
+        foreach ($users as $index => $user) {
             if ($user->getId() == $this->getUser()->getId()) {
-
+                unset($users[$index]);
             }
         }
         return array("users" => $users);
@@ -100,6 +100,34 @@ class DefaultController extends Controller
         list($d, $m, $a) = explode("/", $request->request->get('fin'));
         $fin = new \DateTime($m . "/" . $d . "/" . $a);
         $delegation->setFin($fin);
+
+
+//        //Recherche de délégations existantes pour la période donnée.
+//        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+//
+//        $query = $repository->createQueryBuilder('p')
+//            ->where('p.delegant = :delegant')
+//            ->setParameter('delegant', $this->getUser())
+//            ->andWhere('p.fin <= :fin')
+//            ->setParameter('fin', $delegation->getFin())
+//            ->andWhere('p.debut >= :debut')
+//            ->setParameter('debut', $delegation->getDebut())
+//            ->orderBy('p.debut', 'ASC')
+//            ->getQuery();
+//
+//        $delegations = $query->getResult();
+//
+//        if(empty($delegations)){
+//
+//                $this->get('session')->getFlashBag()->add(
+//                    'danger',
+//                    'Vous avez déjà une délégation de programmée pour cette période !'
+//                );
+//
+//            return $this->redirect($this->generateUrl('delegations_list'));
+//
+//        }
+
 
         $em->persist($delegation);
         $em->flush();

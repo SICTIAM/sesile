@@ -101,6 +101,7 @@ class ClasseurController extends Controller
         );
     }
 
+
     /**
      * Page qui affiche la liste des classeurs retractables pour le user connecté.
      *
