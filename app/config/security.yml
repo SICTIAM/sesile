@@ -21,7 +21,7 @@ security:
             logout:
                 success_handler: security.logout.success_handler
             cas:
-                cas_server: demosso.sictiam.fr
+                cas_server: sso.dev.sictiam.fr
                 cas_port: 443
                 cas_path: /
                 ca_cert_path: ~

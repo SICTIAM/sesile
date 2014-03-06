@@ -1,0 +1,56 @@
+.node {
+    cursor: pointer;
+}
+
+.node circle {
+    stroke: black;
+    fill: #fff;
+}
+
+.lesvg {
+
+}
+
+.node text {
+    font: 1em sans-serif;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+}
+
+.templink {
+    fill: none;
+    stroke: blue;
+    stroke-width: 3px;
+}
+
+.ghostCircle.show {
+    display: block;
+}
+
+.ghostCircle, .activeDrag .ghostCircle {
+    display: none;
+}
+
+.selectedNode .ghostCircle {
+    display: block;
+    fill: red !important;
+    stroke: none !important;
+}
+
+
+
+
+/*********************************************** TOOLBAR *************************************************************/
+#edit_service {
+    display: inline-block;
+}
+
+#toolbar {
+    display: none;
+    position: absolute;
+    left: 50%;
+}

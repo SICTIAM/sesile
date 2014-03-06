@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 
 
@@ -24,5 +25,15 @@ class HierarchieController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();
         return array("users" => $users);
+    }
+
+    /**
+     * @Route("/hierarchy/new", name="new_hierarchy")
+     * @Method("POST")
+     */
+    public function newAction(Request $request)
+    {
+        var_dump(json_decode($request->request->get('tree')));
+        exit;
     }
 }
