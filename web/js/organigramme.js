@@ -157,7 +157,7 @@ d3.select("#btnSupprimer").on("click", function () {
 $('#picker').colpick({
     layout: 'hex',
     onSubmit: function (hsb, hex, rgb, el) {
-        $(el).css('background-color', '#' + hex);
+        $(el).find(".glyphicon , .textcolor").css('color', '#' + hex);
         changeColors(clickedNode, '#' + hex);
         update(root);
         $(el).colpickHide();

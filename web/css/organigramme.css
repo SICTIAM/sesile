@@ -53,7 +53,6 @@
 }
 
 #edit_service {
-	background: green;
 	display: inline-block;
 	width: 50%;
 	height: 35px;
@@ -61,7 +60,6 @@
 }
 
 #toolbar {
-	background: red;
 	display: inline-block;
 	float: right;
 	width: 50%;
@@ -70,8 +68,8 @@
 }
 
 .btn-envoyer {
-	height: 20px;
-	line-height: 20px;
+	height: 26px;
+	line-height: 26px;
 	padding: 0 15px;
 	text-align: center;
 	vertical-align: middle;
