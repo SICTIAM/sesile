@@ -17,28 +17,16 @@
     <div class="bloc_page">
         <div class="titre_page">
             <span class="glyphicon glyphicon-folder-open"></span>
-            &nbsp;&nbsp;&nbsp;Créer un groupe fonctionnel
+            &nbsp;&nbsp;&nbsp;Créer / éditer un groupe fonctionnel ou un service
         </div>
-
-	<form id="form_hierarchy" method="post" action="{{ path("create_hierarchy") }}">
+        <form id="form_hierarchy" method="post" action="{{ path("create_hierarchy") }}">
         <div id="edit_service">
-            Nom&nbsp;:&nbsp;  <input type="text" name="name" id="nom_groupe" value=""/>
-	    <select id="type_groupe" name="type_groupe">
+            Nom <input type="text" name="name" id="nom_groupe" value=""/>
+            <select id="type_groupe" name="type_groupe">
                 <option value="1">Groupe fonctionnel</option>
                 <option value="2">Service</option>
             </select>
-	    &nbsp;&nbsp;
-	    <button class="btn btn-success btn-envoyer">
-		<span class="glyphicon glyphicon-ok" style="color: #ffffff"></span>
-		Enregistrer
-	    </button>
-	    &nbsp;&nbsp;
-	    <button class="btn btn-danger btn-envoyer">
-		<span class=" glyphicon glyphicon-remove" style="color: #ffffff"></span>
-		Annuler
-	    </button>
         </div>
-
         <div id="toolbar">
             Utilisateurs
             <select id="listUsers">
@@ -46,29 +34,18 @@
                     <option value="{{ user.id }}">{{ user.prenom }} {{ user.nom }}</option>
                 {% endfor %}
             </select>
-
-            <button type="button" id="addUser" class="btn btn-default btn-envoyer">
-		<span class="glyphicon glyphicon-plus" style="color: #6D6E70"></span>
-		Ajouter
-	    </button>
-
-            <button  type="button" id="btnSupprimer" class="btn btn-danger btn-envoyer">
-		<span class="glyphicon glyphicon-minus" style="color: #ffffff"></span>
-		Supprimer
-	    </button>
-
-            <button type="button" id="picker" class="btn btn-default btn-envoyer">
-		<span class="glyphicon glyphicon-star-empty" style="color: #6D6E70;"></span>
-		Couleur
-		<span class="glyphicon glyphicon-star-empty" style="color: #6D6E70;"></span>
-	    </button>
+            <button type="button" id="addUser">OK</button>
+            <button  type="button" id="btnSupprimer">Supprimer</button>
+            <span id="picker">Couleur</span>
         </div>
+        <br>
 
-	    <br>
         <script src="{{ asset("/js/organigramme.js") }}"></script>
 
         <input type="hidden" name="tree" id="tree" />
         </form>
+
+        <button class="btn btn-success" id="btn-envoyer">Enregistrer</button>
     </div>
 
     <script type="text/javascript">
