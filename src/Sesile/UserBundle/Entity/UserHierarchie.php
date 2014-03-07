@@ -26,21 +26,28 @@ class UserHierarchie
      *
      * @ORM\Column(name="UserId", type="string", length=255)
      */
-    private $userId;
+    private $user;
+
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="ParentId", type="string", length=255)
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserHierarchie", mappedBy="parent")
      */
-    private $parentId;
+    private $children;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="GroupeId", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\UserHierarchie", inversedBy="children")
+     * @ORM\JoinColumn(name="parent", referencedColumnName="id")
      */
-    private $groupeId;
+    private $parent;
+
+    /**
+     * @var int
+     *
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\Groupe", inversedBy="hierarchie")
+     * @ORM\JoinColumn(name="groupe", referencedColumnName="id", onDelete="CASCADE")
+     *
+     */
+    private $groupe;
 
 
     /**
@@ -76,49 +83,91 @@ class UserHierarchie
         return $this->userId;
     }
 
+
+
     /**
-     * Set parentId
+     * Set groupe
      *
-     * @param string $parentId
+     * @param \Sesile\UserBundle\Entity\Groupe $groupe
      * @return UserHierarchie
      */
-    public function setParentId($parentId)
+    public function setGroupe(\Sesile\UserBundle\Entity\Groupe $groupe = null)
     {
-        $this->parentId = $parentId;
-
+        $this->groupe = $groupe;
+    
         return $this;
     }
 
     /**
-     * Get parentId
+     * Get groupe
      *
-     * @return string
+     * @return \Sesile\UserBundle\Entity\Groupe 
      */
-    public function getParentId()
+    public function getGroupe()
     {
-        return $this->parentId;
+        return $this->groupe;
     }
-
     /**
-     * Set groupeId
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add children
      *
-     * @param string $groupeId
+     * @param \Sesile\UserBundle\Entity\UserHierarchy $children
      * @return UserHierarchie
      */
-    public function setGroupeId($groupeId)
+    public function addChildren(\Sesile\UserBundle\Entity\UserHierarchy $children)
     {
-        $this->groupeId = $groupeId;
-
+        $this->children[] = $children;
+    
         return $this;
     }
 
     /**
-     * Get groupeId
+     * Remove children
      *
-     * @return string
+     * @param \Sesile\UserBundle\Entity\UserHierarchy $children
      */
-    public function getGroupeId()
+    public function removeChildren(\Sesile\UserBundle\Entity\UserHierarchy $children)
     {
-        return $this->groupeId;
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \Sesile\UserBundle\Entity\UserHierarchy $parent
+     * @return UserHierarchie
+     */
+    public function setParent(\Sesile\UserBundle\Entity\UserHierarchy $parent = null)
+    {
+        $this->parent = $parent;
+    
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \Sesile\UserBundle\Entity\UserHierarchy 
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

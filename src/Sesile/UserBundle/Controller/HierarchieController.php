@@ -2,6 +2,7 @@
 
 namespace Sesile\UserBundle\Controller;
 
+use Sesile\UserBundle\Entity\Groupe;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -13,6 +14,21 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 class HierarchieController extends Controller
 {
+
+    /**
+     * @Route("/groupes", name="groupes")
+     * @Method("GET")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('SesileUserBundle:Groupe');
+
+        return array(
+            'groupes' => $entities
+        );
+    }
 
     /**
      * @Route("/hierarchy/new", name="create_hierarchy")
@@ -33,8 +49,18 @@ class HierarchieController extends Controller
      */
     public function newAction(Request $request)
     {
+        $groupe_nom = $request->request->get('nom_groupe');
+        $group = new Groupe();
+        $group->setNom($groupe_nom);
+        $group->setCollectivite(1);
+        $group->setJson($request->request->get('tree'));
+        $group->setCouleur("white");
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($group);
+        $em->flush();
 
-        var_dump(json_decode($request->request->get('tree')));
-        exit;
+        return $this->redirect($this->generateUrl('groupes'));
     }
+
+
 }
