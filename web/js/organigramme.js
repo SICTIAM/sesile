@@ -515,6 +515,22 @@ function update(source) {
     });
 }
 
+
+function getDataFromNodes(node) {
+    var jzon = new Object();
+    jzon.name = node.name;
+    jzon.id = node.id;
+    jzon.color = node.color || "";
+    if(node.children) {
+        jzon.children = new Array();
+        node.children.forEach(function (d) {
+            child = getDataFromNodes(d);
+            jzon.children.push(child);
+        });
+    }
+    return jzon;
+}
+
 // Append a group which holds all nodes and which the zoom Listener can act upon.
 var svgGroup = baseSvg.append("g");
 

@@ -33,6 +33,7 @@ class HierarchieController extends Controller
      */
     public function newAction(Request $request)
     {
+
         var_dump(json_decode($request->request->get('tree')));
         exit;
     }
