@@ -111,7 +111,12 @@
                             Gestion des utilisateurs
                         </a>
                     </li>
-
+		    <li>
+			<a href="{{ path("groupes") }}">
+			    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+			    Gestion des groupes fonctionnels
+			</a>
+		    </li>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                         <li>
                         <a href="{{ path("index_collectivite") }}">
