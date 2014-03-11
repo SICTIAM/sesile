@@ -17,12 +17,13 @@
     <div class="bloc_page">
 	<div class="titre_page">
 	    <span class="glyphicon glyphicon-folder-open"></span>
-	    &nbsp;&nbsp;&nbsp;Créer un groupe fonctionnel
+	    &nbsp;&nbsp;&nbsp;Editer un groupe fonctionnel
 	</div>
 
-	<form id="form_hierarchy" method="post" action="{{ path("new_groupe") }}">
+	<form id="form_hierarchy" method="post" action="{{ path("update_groupe") }}">
 	    <div id="edit_service">
-		Nom&nbsp;:&nbsp;  <input type="text" name="nom" id="nom_groupe" value=""/>
+            <input type="hidden" name="id" id="id_groupe" value="{{ groupe.id }}"/>
+		Nom&nbsp;:&nbsp;  <input type="text" name="nom" id="nom_groupe" value="{{ groupe.Nom }}"/>
 		<select id="type_groupe" name="type_groupe">
 			<option value="1">Groupe fonctionnel</option>
 			<option value="2">Service</option>
@@ -52,7 +53,7 @@
 		    Ajouter
 		</button>
 
-		<button  type="button" id="btnSupprimer" class="btn btn-danger btn-envoyer">
+		<button type="button" id="btnSupprimer" class="btn btn-danger btn-envoyer">
 		    <span class="glyphicon glyphicon-minus" style="color: #ffffff"></span>
 		    Supprimer
 		</button>
@@ -65,6 +66,9 @@
 	    </div>
 
 	    <br>
+        <script type="text/javascript">
+            var treeData = {% if groupe.json %} {{ groupe.json | raw }} {% else %} "" {% endif %};
+        </script>
 	    <script src="{{ asset("/js/organigramme.js") }}"></script>
 
 	    <input type="hidden" name="tree" id="tree" />
@@ -75,10 +79,10 @@
 	/***********Envoi des données ***************************/
 	$(document).ready(function() {
 	    $("#btn-envoyer").click(function(e) {
-		e.preventDefault();
-		var nodes = tree.nodes(root);
-		$("#tree").val(JSON.stringify(getDataFromNodes(nodes[0])));
-		$("#form_hierarchy").submit();
+            e.preventDefault();
+            var nodes = tree.nodes(root);
+            $("#tree").val(JSON.stringify(getDataFromNodes(nodes[0])));
+            $("#form_hierarchy").submit();
 	    });
 	});
     </script>

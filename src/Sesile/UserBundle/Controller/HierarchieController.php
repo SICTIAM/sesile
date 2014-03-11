@@ -23,7 +23,7 @@ class HierarchieController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('SesileUserBundle:Groupe');
+        $entities = $em->getRepository('SesileUserBundle:Groupe')->findAll();
 
         return array(
             'groupes' => $entities
@@ -31,7 +31,7 @@ class HierarchieController extends Controller
     }
 
     /**
-     * @Route("/hierarchy/new", name="create_hierarchy")
+     * @Route("/groupe/new", name="create_groupe")
      * @Method("GET")
      * @Template()
      */
@@ -44,14 +44,13 @@ class HierarchieController extends Controller
     }
 
     /**
-     * @Route("/hierarchy/new", name="new_hierarchy")
+     * @Route("/groupe/new", name="new_groupe")
      * @Method("POST")
      */
     public function newAction(Request $request)
     {
-        $groupe_nom = $request->request->get('nom_groupe');
         $group = new Groupe();
-        $group->setNom($groupe_nom);
+        $group->setNom($request->request->get('nom'));
         $group->setCollectivite(1);
         $group->setJson($request->request->get('tree'));
         $group->setCouleur("white");
@@ -62,5 +61,46 @@ class HierarchieController extends Controller
         return $this->redirect($this->generateUrl('groupes'));
     }
 
+    /**
+     * @Route("/groupe/edit/{id}", name="groupe_edit", options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function editAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        $groupe = $em->getRepository('SesileUserBundle:Groupe')->find($id);
+        if($groupe) {
+            // recup la liste des users en base
+            $userManager = $this->container->get('fos_user.user_manager');
+            $users = $userManager->findUsers();
 
+            return array (
+                'users' => $users,
+                'groupe' => $groupe
+            );
+        }
+        else {
+            return $this->redirect($this->generateUrl('groupes'));
+        }
+    }
+
+    /**
+     * @Route("/groupe/update/", name="update_groupe")
+     * @Method("POST")
+     * @Template()
+     */
+    public function updateAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $groupe = $em->getRepository('SesileUserBundle:Groupe')->find($request->request->get('id'));
+        if($groupe) {
+            $groupe->setNom($request->request->get('nom'));
+            $groupe->setJson($request->request->get('tree'));
+            $em->flush();
+            return $this->redirect($this->generateUrl('groupes'));
+        }
+        else {
+            // TODO pétage d'erreur
+            //return $this->redirect($this->generateUrl('groupes'));
+        }
+    }
 }
