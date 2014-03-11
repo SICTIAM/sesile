@@ -33,7 +33,7 @@ class HierarchieController extends Controller
     /**
      * @Route("/groupe/new", name="create_groupe")
      * @Method("GET")
-     * @Template()
+     * @Template("SesileUserBundle:Hierarchie:edit.html.twig")
      */
     public function createAction()
     {
@@ -102,5 +102,18 @@ class HierarchieController extends Controller
             // TODO pétage d'erreur
             //return $this->redirect($this->generateUrl('groupes'));
         }
+    }
+
+
+    /**
+     * @Route("/organigramme", name="organigramme")
+     * @Method("GET")
+     * @Template("SesileUserBundle:Hierarchie:edit.html.twig")
+     */
+    public function organigrammeAction() {
+        // recup la liste des users en base
+        $userManager = $this->container->get('fos_user.user_manager');
+        $users = $userManager->findUsers();
+        return array("users" => $users, "organigramme" => 1);
     }
 }

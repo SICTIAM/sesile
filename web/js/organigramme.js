@@ -22,7 +22,6 @@ $(document).ready(function() {
     var posfoot = $("#footer").offset();
 
     var viewerHeight = posfoot.top - postool.top + $("#toolbar").height();
-    alert(viewerHeight);
 
     var tree = d3.layout.tree().size([viewerHeight, viewerWidth]);
 
