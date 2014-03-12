@@ -42,10 +42,75 @@ class DelegationsRepository extends EntityRepository
 
     public function getUsersWhoHasMeAsDelegateRecursively($user)
     {
+        return getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($user, $user, array());
+    }
+
+    public function getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($user, $baseuser, &$list){
+
         $users = getUsersWhoHasMeAsDelegate($user);
         foreach ($users as $u) {
 
+            if($u->id != $baseuser->id){ // pour ne pas ajouter l'utilisateur courant
+                if(!in_array($u, $list)){ // Evite les doublons
+                    $list[]=$u;
+                    getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($u, $baseuser, $list); // On recommence avec ce fils
+                }
+            }
         }
+
+        return $list;
+    }
+
+    public function addDelegationWithFusion($delegation){
+        $em = $this->getEntityManager();
+
+
+        //Récupération des délégations se chevauchant avec la délégation à ajouter.
+
+        $query = $this->createQueryBuilder('p')
+            ->where('p.delegant = :delegant')
+            ->setParameter('delegant', $delegation->getDelegant())
+            ->andWhere('p.user <= :user')
+            ->setParameter('user', $delegation->getUser())
+            ->andWhere('p.debut <= :fin')
+            ->setParameter('fin', $delegation->getFin())
+            ->andWhere('p.fin >= :debut')
+            ->setParameter('debut', $delegation->getDebut())
+            ->orderBy('p.debut', 'ASC')
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+       // var_dump($delegations);
+
+
+        //Création de la résultante des dates
+
+        $datemin = $delegation->getDebut();
+        $datemax = $delegation->getFin();
+
+        foreach($delegations as $d){
+            $datemin = ($datemin>$d->getDebut())?$d->getDebut():$datemin;
+            $datemax = ($datemax<$d->getFin())?$d->getFin():$datemax;
+        }
+
+
+
+        $delegation->setDebut($datemin);
+        $delegation->setFin($datemax);
+
+
+        //Suppression des délégations
+
+        foreach($delegations as $d){
+           $em->remove($d);
+        }
+
+        //Ajout de la nouvelle délégation
+        $em->persist($delegation);
+        $em->flush();
+
+
     }
 
 

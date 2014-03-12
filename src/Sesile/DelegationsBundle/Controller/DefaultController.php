@@ -89,7 +89,7 @@ class DefaultController extends Controller
      */
     public function createAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+
         $delegation = new Delegations();
         $delegation->setDelegant($this->getUser());
         $userManager = $this->container->get('fos_user.user_manager');
@@ -102,43 +102,17 @@ class DefaultController extends Controller
         $delegation->setFin($fin);
 
 
-//        //Recherche de délégations existantes pour la période donnée.
-//        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
-//
-//        $query = $repository->createQueryBuilder('p')
-//            ->where('p.delegant = :delegant')
-//            ->setParameter('delegant', $this->getUser())
-//            ->andWhere('p.fin <= :fin')
-//            ->setParameter('fin', $delegation->getFin())
-//            ->andWhere('p.debut >= :debut')
-//            ->setParameter('debut', $delegation->getDebut())
-//            ->orderBy('p.debut', 'ASC')
-//            ->getQuery();
-//
-//        $delegations = $query->getResult();
-//
-//        if(empty($delegations)){
-//
-//                $this->get('session')->getFlashBag()->add(
-//                    'danger',
-//                    'Vous avez déjà une délégation de programmée pour cette période !'
-//                );
-//
-//            return $this->redirect($this->generateUrl('delegations_list'));
-//
-//        }
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
 
 
-        $em->persist($delegation);
-        $em->flush();
+       $repository->addDelegationWithFusion($delegation);
 
-        $error = false;
-        if (!$error) {
-            $this->get('session')->getFlashBag()->add(
-                'success',
-                'Délégations ajoutée avec succès !'
-            );
-        }
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Délégations ajoutée avec succès !'
+        );
+
 
         return $this->redirect($this->generateUrl('delegations_list'));
     }
