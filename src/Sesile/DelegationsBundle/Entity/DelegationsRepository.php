@@ -61,6 +61,42 @@ class DelegationsRepository extends EntityRepository
         return $list;
     }
 
+    public function getDelegationReceivedRecursively($user){
+
+        $em = $this->getEntityManager();
+        //Récupération des utilisateur m'ayant délégué quelque chose
+
+        $users = getUsersWhoHasMeAsDelegateRecursively($user);
+
+
+        //Récupération des délégations courantes de ces utilisateurs
+
+
+
+
+        $query = $em->createQuery('SELECT d FROM SesileDelegationsBundle:Delegations d WHERE d.delegant IN (:users) AND d.fin >= :now AND p.debut <= :now');
+        $query->setParameter('users', $users);
+        $query->setParameter('now', new \DateTime());
+
+        $delegations = $query->getResult();
+
+
+
+
+    }
+
+
+    public function getDelegationsGivenFromNow($user){
+        $em = $this->getEntityManager();
+        //Récupération des utilisateur m'ayant délégué quelque chose
+        $query = $em->createQuery('SELECT d FROM SesileDelegationsBundle:Delegations d WHERE d.delegant = :user AND d.fin >= :now');
+        $query->setParameter('user', $user);
+        $query->setParameter('now', new \DateTime());
+
+        return $query->getResult();
+    }
+
+
     public function addDelegationWithFusion($delegation){
         $em = $this->getEntityManager();
 
@@ -108,6 +144,62 @@ class DelegationsRepository extends EntityRepository
 
         //Ajout de la nouvelle délégation
         $em->persist($delegation);
+        $em->flush();
+
+
+    }
+
+
+    public function modifyDelegationWithFusion($delegation){
+        $em = $this->getEntityManager();
+
+
+        //Récupération des délégations se chevauchant avec la délégation à ajouter.
+
+        $query = $this->createQueryBuilder('p')
+            ->where('p.delegant = :delegant')
+            ->setParameter('delegant', $delegation->getDelegant())
+            ->andWhere('p.user <= :user')
+            ->setParameter('user', $delegation->getUser())
+            ->andWhere('p.debut <= :fin')
+            ->setParameter('fin', $delegation->getFin())
+            ->andWhere('p.fin >= :debut')
+            ->setParameter('debut', $delegation->getDebut())
+            ->andWhere('p.id != :id')
+            ->setParameter('id', $delegation->getId())
+            ->orderBy('p.debut', 'ASC')
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+        // var_dump($delegations);
+
+
+        //Création de la résultante des dates
+
+        $datemin = $delegation->getDebut();
+        $datemax = $delegation->getFin();
+
+        foreach($delegations as $d){
+            $datemin = ($datemin>$d->getDebut())?$d->getDebut():$datemin;
+            $datemax = ($datemax<$d->getFin())?$d->getFin():$datemax;
+        }
+
+
+
+        //Modification de la délégation modifiée
+        $delegation->setDebut($datemin);
+        $delegation->setFin($datemax);
+
+
+        //Suppression des délégations qui chevauchent
+
+        foreach($delegations as $d){
+            $em->remove($d);
+        }
+
+
+
         $em->flush();
 
 

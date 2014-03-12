@@ -28,13 +28,27 @@
         </form>
     </div>
     <script type="text/javascript">
+        var delegs = {{ delegs|json_encode|raw }};
+
         var nowTemp = new Date();
         var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
         var checkin = $('#deleg_debut')
                 .datepicker({
                     onRender: function (date) {
-                        return date.valueOf() < now.valueOf() ? 'disabled' : '';
+
+                        var ok = true;
+                        delegs.forEach(function(d){
+
+                           // alert(date.valueOf()+"   -  "+d.debut+"000");
+
+
+                            if(date.valueOf()>= d.debut+"000" && date.valueOf()<= d.fin+"000"){
+
+                                ok=false;
+                            }
+                        });
+                        return (!ok || (date.valueOf() < now.valueOf())) ? 'disabled' : '';
                     }
                 })
                 .on('changeDate',function (ev) {
@@ -50,7 +64,19 @@
         var checkout = $('#deleg_fin')
                 .datepicker({
                     onRender: function (date) {
-                        return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+
+                        var ok = true;
+                        delegs.forEach(function(d){
+
+                            // alert(date.valueOf()+"   -  "+d.debut+"000");
+
+
+                            if(date.valueOf()>= d.debut+"000" && date.valueOf()<= d.fin+"000"){
+
+                                ok=false;
+                            }
+                        });
+                        return (!ok || (date.valueOf() <= checkin.date.valueOf() ))? 'disabled' : '';
                     }
                 })
                 .on('changeDate',function (ev) {

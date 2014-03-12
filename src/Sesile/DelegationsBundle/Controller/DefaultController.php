@@ -80,7 +80,22 @@ class DefaultController extends Controller
                 unset($users[$index]);
             }
         }
-        return array("users" => $users);
+
+
+        $delegsdonnees=$this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsGivenFromNow($this->getUser());
+
+        $delegs = array();
+
+
+        foreach($delegsdonnees as $d){
+
+            $delegs[]=array("debut"=>$d->getDebut()->getTimestamp(), "fin"=>$d->getFin()->getTimestamp());
+        }
+
+
+
+
+        return array("users" => $users, "delegs"=>$delegs);
     }
 
     /**
@@ -179,7 +194,20 @@ class DefaultController extends Controller
         list($d, $m, $a) = explode("/", $request->request->get('fin'));
         $fin = new \DateTime($m . "/" . $d . "/" . $a);
         $delegation->setFin($fin);
-        $em->flush();
+
+
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+
+
+        $repository->modifyDelegationWithFusion($delegation);
+
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Délégations modifiée avec succès !'
+        );
+
+
 
         return $this->redirect($this->generateUrl('delegations_list'));
     }
