@@ -50,18 +50,41 @@ class DefaultController extends Controller
     {
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
 
+
+        $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
+        return array(
+            'delegations' => $delegations
+        );
+    }
+
+
+    /**
+     * @Route("/liste_all", name="delegations_all_list")
+     * @Template("SesileDelegationsBundle:Default:liste_all.html.twig")
+     */
+    public function recuesAllAction()
+    {
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+
+
+        $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
+
+
+
+
         $query = $repository->createQueryBuilder('p')
-            ->where('p.user = :user')
-            ->setParameter('user', $this->getUser())
+            ->where('p.delegant = :delegant')
+            ->setParameter('delegant', $this->getUser())
             ->andWhere('p.fin >= :fin')
             ->setParameter('fin', new \DateTime())
             ->orderBy('p.debut', 'ASC')
             ->getQuery();
 
-        $delegations = $query->getResult();
+        $donnees = $query->getResult();
 
         return array(
-            'delegations' => $delegations
+            'delegations' => $delegations,
+            'donnees' => $donnees
         );
     }
 

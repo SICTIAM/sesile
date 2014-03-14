@@ -40,20 +40,62 @@ class DelegationsRepository extends EntityRepository
 
     }
 
+
+    public function getDelegationsWhoHasMeAsDelegation($delegation)
+    {
+
+        $query = $this->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $delegation->getDelegant())
+            ->andWhere('p.fin >= :fin')
+            ->setParameter('fin', $delegation->getDebut())
+            ->andWhere('p.debut <= :debut')
+            ->setParameter('debut', $delegation->getFin())
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+
+        return $delegations;
+
+    }
+
+
+    public function getDelegationsWhoHasMeAsDelegate($user)
+    {
+
+        $query = $this->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere('p.fin >= :fin')
+            ->setParameter('fin', new \DateTime())
+            ->andWhere('p.debut <= :debut')
+            ->setParameter('debut', new \DateTime())
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+
+        return $delegations;
+
+    }
+
     public function getUsersWhoHasMeAsDelegateRecursively($user)
     {
-        return getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($user, $user, array());
+
+        $list = array();
+        return $this->getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($user, $user, $list);
     }
 
     public function getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($user, $baseuser, &$list){
 
-        $users = getUsersWhoHasMeAsDelegate($user);
+        $users = $this->getUsersWhoHasMeAsDelegate($user);
         foreach ($users as $u) {
 
-            if($u->id != $baseuser->id){ // pour ne pas ajouter l'utilisateur courant
+            if($u!= $baseuser){ // pour ne pas ajouter l'utilisateur courant
                 if(!in_array($u, $list)){ // Evite les doublons
                     $list[]=$u;
-                    getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($u, $baseuser, $list); // On recommence avec ce fils
+                    $this->getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($u, $baseuser, $list); // On recommence avec ce fils
                 }
             }
         }
@@ -61,12 +103,65 @@ class DelegationsRepository extends EntityRepository
         return $list;
     }
 
+
+    public function getDelegationsWhoHasMeAsDelegateRecursively($user){
+        $list = array();
+        $directdelegationsfornow = $this->getDelegationsWhoHasMeAsDelegate($user);
+
+        //var_dump(count($directdelegationsfornow));
+        foreach($directdelegationsfornow as $d){
+            $list[]=$d;
+            $this-> getDelegationsWhoHasMeAsDelegationRecursively($d, $user, $list);
+        }
+
+        return $list;
+    }
+
+
+    public function getDelegationsWhoHasMeAsDelegationRecursively($delegation,$baseuser, &$list){
+
+        $delegations = $this->getDelegationsWhoHasMeAsDelegation($delegation);
+
+        //var_dump(count($delegations));
+        foreach($delegations as $d){
+            if($d->getDelegant()!=$baseuser){
+                if(!in_array($d, $list)){
+                    $dcopy = clone $d;
+                    if($dcopy->getDebut()<$delegation->getDebut()){
+                        $dcopy->setDebut($delegation->getDebut());
+                    }
+
+                    if($dcopy->getFin()>$delegation->getFin()){
+                        $dcopy->setFin($delegation->getFin());
+                    }
+
+
+
+                    $list[]=$dcopy;
+                    $this-> getDelegationsWhoHasMeAsDelegationRecursively($d, $baseuser, $list);
+                }
+            }
+        }
+
+    }
+
+
+
     public function getDelegationReceivedRecursively($user){
 
         $em = $this->getEntityManager();
         //Récupération des utilisateur m'ayant délégué quelque chose
 
-        $users = getUsersWhoHasMeAsDelegateRecursively($user);
+        $users = $this->getUsersWhoHasMeAsDelegateRecursively($user);
+
+
+
+        $userid =array();
+
+        foreach($users as $u){
+            $userid[]=$u->getId();
+        }
+     //   var_dump($userid);
 
 
         //Récupération des délégations courantes de ces utilisateurs
@@ -74,11 +169,13 @@ class DelegationsRepository extends EntityRepository
 
 
 
-        $query = $em->createQuery('SELECT d FROM SesileDelegationsBundle:Delegations d WHERE d.delegant IN (:users) AND d.fin >= :now AND p.debut <= :now');
+        $query = $em->createQuery('SELECT d FROM SesileDelegationsBundle:Delegations d WHERE d.delegant IN (:users) AND d.fin >= :now AND d.debut <= :now');
         $query->setParameter('users', $users);
         $query->setParameter('now', new \DateTime());
 
         $delegations = $query->getResult();
+
+        return  $delegations;
 
 
 
