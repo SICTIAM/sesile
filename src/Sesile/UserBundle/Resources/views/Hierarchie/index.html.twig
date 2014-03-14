@@ -3,7 +3,7 @@
 {% block content %}
     <div class="bloc_page">
         <div class="titre_page">
-            <span class="glyphicon glyphicon-user"></span>
+            <span class="glyphicon glyphicon-floppy-saved"></span>
             &nbsp;&nbsp;&nbsp;Liste des groupes fonctionnels
         </div>
         <table class="table tableau dtables">
@@ -65,6 +65,12 @@
             $(".user-row").click(function () {
                 document.location.href = Routing.generate('groupe_edit', { id: $(this).data("id") });
             });
+
+	    {% block affichemenu %}
+	    $(".menu-vert .entete-menu").each(function(){
+		affiche(this);
+	    });
+	    {% endblock %}
         </script>
     </div>
 {% endblock %}

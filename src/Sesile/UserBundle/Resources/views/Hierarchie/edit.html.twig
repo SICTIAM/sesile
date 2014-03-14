@@ -16,14 +16,14 @@
 
     <div class="bloc_page">
 	<div class="titre_page">
-	    {% if organigramme is defined  %}
-		<span class="glyphicon glyphicon-folder-open"></span>
+	    {% if organigramme is defined %}
+		<span class="glyphicon glyphicon-sort-by-alphabet"></span>
 		&nbsp;&nbsp;&nbsp;Organigramme
 	    {% elseif groupe is defined %}
-		<span class="glyphicon glyphicon-folder-open"></span>
-	        &nbsp;&nbsp;&nbsp;Éditer un groupe fonctionnel
+		<span class="glyphicon glyphicon-floppy-open"></span>
+		&nbsp;&nbsp;&nbsp;Éditer un groupe fonctionnel
 	    {% else %}
-		<span class="glyphicon glyphicon-folder-open"></span>
+		<span class="glyphicon glyphicon-floppy-disk"></span>
 		&nbsp;&nbsp;&nbsp;Créer un groupe fonctionnel
 	    {% endif %}
 	</div>
@@ -33,7 +33,8 @@
 		{% if groupe is defined %}
 		    <input type="hidden" name="id" id="id_groupe" value="{{ groupe.id }}"/>
 		{% endif %}
-		Nom&nbsp;:&nbsp;  <input type="text" name="nom" id="nom_groupe"{% if groupe is defined %} value="{{ groupe.Nom }}" {% endif %}/>
+		Nom&nbsp;:&nbsp;
+		<input type="text" name="nom" id="nom_groupe"{% if groupe is defined %} value="{{ groupe.Nom }}" {% endif %}/>
 		&nbsp;&nbsp;
 		<button id="btn-envoyer" type="button" class="btn btn-success btn-envoyer sesiletooltip" data-original-title="blabla">
 		    <span class="glyphicon glyphicon-ok" style="color: #ffffff"></span>
@@ -51,20 +52,19 @@
 		    {% endfor %}
 		</select>
 
-
 		<button type="button" id="addUser" class="btn btn-default btn-envoyer sesiletooltip" data-original-title="blabla">
 		    <span class="glyphicon glyphicon-plus" style="color: #6D6E70"></span>
 		</button>
 
-		<button  type="button" id="btnSupprimer" class="btn btn-danger btn-envoyer">
+		<button type="button" id="btnSupprimer" class="btn btn-danger btn-envoyer">
 		    <span class="glyphicon glyphicon-minus" style="color: #ffffff"></span>
 		</button>
 		{% if organigramme is defined %}
-		<button type="button" id="picker" class="btn btn-default btn-envoyer">
-		    <span class="glyphicon glyphicon-star" style="color: #6D6E70;"></span>
-		    <span class="textcolor">Couleur</span>
-		    <span class="glyphicon glyphicon-star" style="color: #6D6E70;"></span>
-		</button>
+		    <button type="button" id="picker" class="btn btn-default btn-envoyer">
+			<span class="glyphicon glyphicon-star" style="color: #6D6E70;"></span>
+			<span class="textcolor">Couleur</span>
+			<span class="glyphicon glyphicon-star" style="color: #6D6E70;"></span>
+		    </button>
 		{% endif %}
 	    </div>
 
@@ -76,19 +76,25 @@
 	    {% endif %}
 	    <script src="{{ asset("/js/organigramme.js") }}"></script>
 
-	    <input type="hidden" name="tree" id="tree" />
+	    <input type="hidden" name="tree" id="tree"/>
 	</form>
     </div>
 
     <script type="text/javascript">
 	/***********Envoi des données ***************************/
-	$(document).ready(function() {
-	    $("#btn-envoyer").click(function(e) {
+	$(document).ready(function () {
+	    $("#btn-envoyer").click(function (e) {
 		e.preventDefault();
 		var nodes = tree.nodes(root);
 		$("#tree").val(JSON.stringify(getDataFromNodes(nodes[0])));
 		$("#form_hierarchy").submit();
 	    });
 	});
+
+	{% block affichemenu %}
+	$(".menu-vert .entete-menu").each(function(){
+	    affiche(this);
+	});
+	{% endblock %}
     </script>
 {% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+	<div class="titre_page">
+	    <span class="glyphicon glyphicon-export"></span>
+	    &nbsp;&nbsp;&nbsp;Mes Notifications
+	</div>
+    </div>
+{% endblock %}
+
+{% block affichemenu %}
+    $(".menu-rouge .entete-menu").each(function () {
+    affiche(this);
+
+    });
+{% endblock %}

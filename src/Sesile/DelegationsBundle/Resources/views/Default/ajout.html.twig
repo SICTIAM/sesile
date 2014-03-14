@@ -4,57 +4,68 @@
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
     <div class="bloc_page">
-        <div class="titre_page">
-            <span class="glyphicon glyphicon-export"></span>
-            &nbsp;&nbsp;&nbsp;Déléguer ses droits
-        </div>
-        <form action="{{ path("delegation_create") }}" method="post">
-            <span class="deleg-to-someone">Déléguer à : &nbsp;</span>
-            <select name="user">
-                {% for user in users %}
-                    <option value="{{ user.id }}">{{ user.Prenom }} {{ user.Nom }}</option>
-                {% endfor %}
-            </select>
-            <br>
-            <br>
-            <span class="deleg-to-someone">Début délégation : &nbsp;</span>
-            <input class="datepicker deleg_debut_fin" id="deleg_debut" name="debut" type="datetime"/>
-            <br>
-            <span class="deleg-to-someone">Fin délégation : &nbsp;</span>
-            <input class="datepicker deleg_debut_fin" id="deleg_fin" name="fin" type="datetime"/>
-            <br>
-            <button type="submit" class="btn btn-success">Enregistrer</button>
-            <a href="{{ path("delegations_list") }}" class="btn btn-danger">Annuler</a>
-        </form>
+	<div class="titre_page">
+	    <span class="glyphicon glyphicon-export"></span>
+	    &nbsp;&nbsp;&nbsp;Déléguer ses droits
+	</div>
+	<form action="{{ path("delegation_create") }}" method="post">
+	    <span class="deleg-to-someone">Déléguer à : &nbsp;</span>
+	    <select name="user">
+		{% for user in users %}
+		    <option value="{{ user.id }}">{{ user.Prenom }} {{ user.Nom }}</option>
+		{% endfor %}
+	    </select>
+	    <br>
+	    <br>
+	    <span class="deleg-to-someone">Début délégation : &nbsp;</span>
+	    <input class="datepicker deleg_debut_fin" id="deleg_debut" name="debut" type="datetime"/>
+	    <br>
+	    <span class="deleg-to-someone">Fin délégation : &nbsp;</span>
+	    <input class="datepicker deleg_debut_fin" id="deleg_fin" name="fin" type="datetime"/>
+	    <br>
+	    <button type="submit" class="btn btn-success">Enregistrer</button>
+	    <a href="{{ path("delegations_list") }}" class="btn btn-danger">Annuler</a>
+	</form>
     </div>
     <script type="text/javascript">
-        var nowTemp = new Date();
-        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+	var nowTemp = new Date();
+	var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
-        var checkin = $('#deleg_debut')
-                .datepicker({
-                    onRender: function (date) {
-                        return date.valueOf() < now.valueOf() ? 'disabled' : '';
-                    }
-                })
-                .on('changeDate',function (ev) {
-                    if (ev.date.valueOf() > checkout.date.valueOf()) {
-                        var newDate = new Date(ev.date)
-                        newDate.setDate(newDate.getDate() + 1);
-                        checkout.setValue(newDate);
-                    }
-                    checkin.hide();
-                    $('#deleg_fin')[0].focus();
-                }).data('datepicker');
+	var checkin = $('#deleg_debut')
+		.datepicker({
+		    onRender: function (date) {
+			return date.valueOf() < now.valueOf() ? 'disabled' : '';
+		    }
+		})
+		.on('changeDate',function (ev) {
+		    if (ev.date.valueOf() > checkout.date.valueOf()) {
+			var newDate = new Date(ev.date)
+			newDate.setDate(newDate.getDate() + 1);
+			checkout.setValue(newDate);
+		    }
+		    checkin.hide();
+		    $('#deleg_fin')[0].focus();
+		}).data('datepicker');
 
-        var checkout = $('#deleg_fin')
-                .datepicker({
-                    onRender: function (date) {
-                        return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
-                    }
-                })
-                .on('changeDate',function (ev) {
-                    checkout.hide();
-                }).data('datepicker');
+	var checkout = $('#deleg_fin')
+		.datepicker({
+		    onRender: function (date) {
+			return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+		    }
+		})
+		.on('changeDate',function (ev) {
+		    checkout.hide();
+		}).data('datepicker');
+
+
+
     </script>
+{% endblock %}
+
+
+{% block affichemenu %}
+    $(".menu-jaune .entete-menu").each(function () {
+    affiche(this);
+
+    });
 {% endblock %}

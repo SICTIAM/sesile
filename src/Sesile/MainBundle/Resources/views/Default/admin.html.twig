@@ -24,5 +24,11 @@
             "image": false,
              locale: "fr-FR"
         });
+
+	{% block affichemenu %}
+	$(".menu-vert .entete-menu").each(function(){
+	    affiche(this);
+	});
+	{% endblock %}
     </script>
 {% endblock %}
