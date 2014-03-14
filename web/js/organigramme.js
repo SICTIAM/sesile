@@ -5,7 +5,7 @@
  *
  ******************************************************************************************************/
 
-$(document).ready(function() {
+//$(document).ready(function() {
     var treeData = treeData || {};
 
     // nombre de noeud et taille max du texte
@@ -21,7 +21,7 @@ $(document).ready(function() {
     var postool = $("#toolbar").offset();
     var posfoot = $("#footer").offset();
 
-    var viewerHeight = posfoot.top - postool.top + $("#toolbar").height();
+    var viewerHeight = 600//posfoot.top - postool.top + $("#toolbar").height();
 
     var tree = d3.layout.tree().size([viewerHeight, viewerWidth]);
 
@@ -551,4 +551,4 @@ $(document).ready(function() {
     else {
         $("#toolbar").slideDown();
     }
-});
+//});
