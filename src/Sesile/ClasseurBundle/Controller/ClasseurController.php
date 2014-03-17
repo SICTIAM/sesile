@@ -13,6 +13,7 @@ use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\DocumentBundle\Entity\Document;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Entity\Action;
+use Sesile\DelegationsBundle\Entity\Delegations;
 
 /**
  * Classeur controller.
@@ -76,22 +77,21 @@ class ClasseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+
+
+
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
 
-        $query = $repository->createQueryBuilder('p')
-            ->where('p.delegant = :delegant')
-            ->setParameter('delegant', $this->getUser())
-            ->andWhere('p.fin >= :fin')
-            ->setParameter('fin', new \DateTime())
-            ->orderBy('p.debut', 'ASC')
-            ->getQuery();
 
-        $delegations = $query->getResult();
+
+
+        $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
+
 
 
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
             array(
-                "validant" => $this->getUser() ? $this->getUser()->getId() : 0,
+                "validant" => $usersdelegated,
                 "status" => 1
             ));
 
@@ -269,6 +269,13 @@ class ClasseurController extends Controller
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
 
 
+        $repositorydelegates = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
+
+        $usersdelegated = $repositorydelegates->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
+        $usersdelegated[]=$this->getUser();
+
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
@@ -277,13 +284,18 @@ class ClasseurController extends Controller
         $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
         $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
         $validant = $entity->getvalidant();
+        $uservalidant = $repositoryusers->find($validant);
+
+
 
         return array(
             'deposant' => $deposant,
             'validant' => $validant,
             'classeur' => $entity,
-            'retractable' => $entity->isRetractable($this->getUser()->getId(), $em),
-            'signable' => $isSignable
+            'retractable' => $entity->isRetractableByDelegates($usersdelegated, $em),
+            'signable' => $isSignable,
+            'usersdelegated'=> $usersdelegated,
+            'uservalidant'=>$uservalidant
         );
     }
 
