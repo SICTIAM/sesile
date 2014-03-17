@@ -50,18 +50,41 @@ class DefaultController extends Controller
     {
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
 
+
+        $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
+        return array(
+            'delegations' => $delegations
+        );
+    }
+
+
+    /**
+     * @Route("/liste_all", name="delegations_all_list")
+     * @Template("SesileDelegationsBundle:Default:liste_all.html.twig")
+     */
+    public function recuesAllAction()
+    {
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+
+
+        $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
+
+
+
+
         $query = $repository->createQueryBuilder('p')
-            ->where('p.user = :user')
-            ->setParameter('user', $this->getUser())
+            ->where('p.delegant = :delegant')
+            ->setParameter('delegant', $this->getUser())
             ->andWhere('p.fin >= :fin')
             ->setParameter('fin', new \DateTime())
             ->orderBy('p.debut', 'ASC')
             ->getQuery();
 
-        $delegations = $query->getResult();
+        $donnees = $query->getResult();
 
         return array(
-            'delegations' => $delegations
+            'delegations' => $delegations,
+            'donnees' => $donnees
         );
     }
 
@@ -80,7 +103,22 @@ class DefaultController extends Controller
                 unset($users[$index]);
             }
         }
-        return array("users" => $users);
+
+
+        $delegsdonnees=$this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsGivenFromNow($this->getUser());
+
+        $delegs = array();
+
+
+        foreach($delegsdonnees as $d){
+
+            $delegs[]=array("debut"=>$d->getDebut()->getTimestamp(), "fin"=>$d->getFin()->getTimestamp());
+        }
+
+
+
+
+        return array("users" => $users, "delegs"=>$delegs);
     }
 
     /**
@@ -89,7 +127,7 @@ class DefaultController extends Controller
      */
     public function createAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+
         $delegation = new Delegations();
         $delegation->setDelegant($this->getUser());
         $userManager = $this->container->get('fos_user.user_manager');
@@ -102,43 +140,17 @@ class DefaultController extends Controller
         $delegation->setFin($fin);
 
 
-//        //Recherche de délégations existantes pour la période donnée.
-//        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
-//
-//        $query = $repository->createQueryBuilder('p')
-//            ->where('p.delegant = :delegant')
-//            ->setParameter('delegant', $this->getUser())
-//            ->andWhere('p.fin <= :fin')
-//            ->setParameter('fin', $delegation->getFin())
-//            ->andWhere('p.debut >= :debut')
-//            ->setParameter('debut', $delegation->getDebut())
-//            ->orderBy('p.debut', 'ASC')
-//            ->getQuery();
-//
-//        $delegations = $query->getResult();
-//
-//        if(empty($delegations)){
-//
-//                $this->get('session')->getFlashBag()->add(
-//                    'danger',
-//                    'Vous avez déjà une délégation de programmée pour cette période !'
-//                );
-//
-//            return $this->redirect($this->generateUrl('delegations_list'));
-//
-//        }
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
 
 
-        $em->persist($delegation);
-        $em->flush();
+       $repository->addDelegationWithFusion($delegation);
 
-        $error = false;
-        if (!$error) {
-            $this->get('session')->getFlashBag()->add(
-                'success',
-                'Délégations ajoutée avec succès !'
-            );
-        }
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Délégations ajoutée avec succès !'
+        );
+
 
         return $this->redirect($this->generateUrl('delegations_list'));
     }
@@ -205,7 +217,20 @@ class DefaultController extends Controller
         list($d, $m, $a) = explode("/", $request->request->get('fin'));
         $fin = new \DateTime($m . "/" . $d . "/" . $a);
         $delegation->setFin($fin);
-        $em->flush();
+
+
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+
+
+        $repository->modifyDelegationWithFusion($delegation);
+
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Délégations modifiée avec succès !'
+        );
+
+
 
         return $this->redirect($this->generateUrl('delegations_list'));
     }
