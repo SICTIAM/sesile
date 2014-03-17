@@ -393,6 +393,13 @@ class ClasseurController extends Controller
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
+        $isvalidator = $classeur->isDelegatedToMe($this->getUser()->getId());
+
+        $currentvalidant = $classeur->getValidant();
+        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
+        $delegator=$repositoryusers->find($currentvalidant);
+
+
         $classeur->valider($em);
 
         $em->flush();
@@ -401,6 +408,8 @@ class ClasseurController extends Controller
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
         $action_libelle = ($classeur->getValidant() == 0) ? "Classeur finalisé" : "Validation";
+
+        if($isvalidator) $action_libelle.=" (Délégation recue de ".$delegator->getPrenom()." ".$delegator->getNom().")";
         $action->setAction($action_libelle);
         $em->persist($action);
         $em->flush();
@@ -427,6 +436,12 @@ class ClasseurController extends Controller
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+
+        $isvalidator = $classeur->isDelegatedToMe($this->getUser()->getId());
+        $currentvalidant = $classeur->getValidant();
+        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
+        $delegator=$repositoryusers->find($currentvalidant);
+
         $classeur->refuser();
 
         $em->flush();
@@ -434,7 +449,10 @@ class ClasseurController extends Controller
         $action = new Action();
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
-        $action->setAction("Refus");
+        $action_libelle = "Refus";
+
+        if($isvalidator) $action_libelle.=" (Délégation recue de ".$delegator->getPrenom()." ".$delegator->getNom().")";
+        $action->setAction($action_libelle);
         $em->persist($action);
         $em->flush();
 
@@ -460,6 +478,12 @@ class ClasseurController extends Controller
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+
+        $isvalidator = $classeur->isDelegatedToMe($this->getUser()->getId());
+        $currentvalidant = $classeur->getValidant();
+        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
+        $delegator=$repositoryusers->find($currentvalidant);
+
         $classeur->valider($em);
 
         $em->flush();
@@ -467,7 +491,9 @@ class ClasseurController extends Controller
         $action = new Action();
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
-        $action->setAction("Signature");
+        $action_libelle = "Signature";
+        if($isvalidator) $action_libelle.=" (Délégation recue de ".$delegator->getPrenom()." ".$delegator->getNom().")";
+        $action->setAction($action_libelle);
         $em->persist($action);
         $em->flush();
 
@@ -555,6 +581,13 @@ class ClasseurController extends Controller
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+
+
+        $isvalidator = $classeur->isDelegatedToMe($this->getUser()->getId());
+        $currentvalidant = $classeur->getValidant();
+        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
+        $delegator=$repositoryusers->find($currentvalidant);
+
         $classeur->supprimer();
 
         $em->flush();
@@ -562,7 +595,9 @@ class ClasseurController extends Controller
         $action = new Action();
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
-        $action->setAction("Classeur retiré");
+        $action_libelle = "Classeur retiré";
+        if($isvalidator) $action_libelle.=" (Délégation recue de ".$delegator->getPrenom()." ".$delegator->getNom().")";
+        $action->setAction($action_libelle);
         $em->persist($action);
         $em->flush();
 

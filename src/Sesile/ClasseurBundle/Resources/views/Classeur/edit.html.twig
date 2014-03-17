@@ -29,7 +29,7 @@
             <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
 
             <span class="glyphicon statut_0"></span>
-        <span class="texte_legende tl3">&nbsp;Ce classeur vous as été délégué par </span>&nbsp;&nbsp;<img class="userpicture"
+        <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img class="userpicture"
                                                                                               src="{{ asset(upload_path ~ uservalidant.path) }}"/>{{  uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
 
 
@@ -155,7 +155,7 @@
                 $(".perso_circuit").css("cursor", "Default");
 
 
-                {% if classeur.isModifiable(app.user.id) %}
+                {% if classeur.isModifiableByDelegates(usersdelegated) %}
                 $("#name, #desc, #validation").removeAttr("disabled");
                 $("#enregistrer_modif").show();
                 $(".top_selects_circuits, .suppr_perso").show();
