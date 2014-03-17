@@ -259,7 +259,7 @@ class ClasseurController extends Controller
     /**
      * Displays a form to edit an existing Classeur entity.
      *
-     * @Route("/{id}", name="classeur_edit", options={"expose"=true})
+     * @Route("/{id}", name="classeur_edit", options={"expose"=true}, requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */

@@ -23,7 +23,7 @@ class HierarchieController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('SesileUserBundle:Groupe')->findAll();
+        $entities = $em->getRepository('SesileUserBundle:Groupe')->findByType(0);
 
         return array(
             'groupes' => $entities
@@ -54,6 +54,7 @@ class HierarchieController extends Controller
         $group->setCollectivite(1);
         $group->setJson($request->request->get('tree'));
         $group->setCouleur("white");
+        //$group->setType(0);
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
         $em->flush();
@@ -114,6 +115,9 @@ class HierarchieController extends Controller
         // recup la liste des users en base
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();
-        return array("users" => $users, "organigramme" => 1);
+
+        $em = $this->getDoctrine()->getManager();
+        $groupe = $em->getRepository('SesileUserBundle:Groupe')->findOneByType(1);
+        return array("users" => $users, "organigramme" => 1, "groupe" => $groupe);
     }
 }

@@ -49,6 +49,11 @@ class Groupe
      */
     private $couleur;
 
+    /**
+     * @var int
+     * @ORM\Column(name="type", type="integer")
+     */
+    private $type;
 
     /**
      * @var string
@@ -196,5 +201,27 @@ class Groupe
     public function getJson()
     {
         return $this->json;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \int $type
+     * @return Groupe
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \int 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
