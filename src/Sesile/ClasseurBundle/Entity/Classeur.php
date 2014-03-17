@@ -448,7 +448,7 @@ class Classeur
     }
 
     public function isDelegatedToMe($userid){
-        return !($this->getValidant() == $userid);
+        return !($this->getValidant() == $userid || $this->getValidant() == 0) ;
     }
 
 
