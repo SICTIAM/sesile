@@ -71,7 +71,7 @@ class DefaultController extends Controller
 
 
 
-
+/*
         $query = $repository->createQueryBuilder('p')
             ->where('p.delegant = :delegant')
             ->setParameter('delegant', $this->getUser())
@@ -80,7 +80,9 @@ class DefaultController extends Controller
             ->orderBy('p.debut', 'ASC')
             ->getQuery();
 
-        $donnees = $query->getResult();
+        $donnees = $query->getResult();*/
+
+        $donnees=$this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsGivenFromNow($this->getUser());
 
         return array(
             'delegations' => $delegations,
@@ -106,6 +108,8 @@ class DefaultController extends Controller
 
 
         $delegsdonnees=$this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsGivenFromNow($this->getUser());
+        $delegsrecues = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
+
 
         $delegs = array();
 
@@ -115,10 +119,16 @@ class DefaultController extends Controller
             $delegs[]=array("debut"=>$d->getDebut()->getTimestamp(), "fin"=>$d->getFin()->getTimestamp());
         }
 
+        $delegsgiven = array();
+
+        foreach($delegsrecues as $d){
+            $delegsgiven[]=array("userid"=>$d->getDelegant()->getId(), "debut"=>$d->getDebut()->getTimestamp(), "fin"=>$d->getFin()->getTimestamp());
+        }
 
 
 
-        return array("users" => $users, "delegs"=>$delegs);
+
+        return array("users" => $users, "delegs"=>$delegs,"recues"=>$delegsgiven );
     }
 
     /**

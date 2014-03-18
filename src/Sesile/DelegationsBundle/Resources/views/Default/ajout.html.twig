@@ -10,7 +10,7 @@
         </div>
         <form action="{{ path("delegation_create") }}" method="post">
             <span class="deleg-to-someone">Déléguer à : &nbsp;</span>
-            <select name="user">
+            <select name="user" id="selectuser">
                 {% for user in users %}
                     <option value="{{ user.id }}">{{ user.Prenom }} {{ user.Nom }}</option>
                 {% endfor %}
@@ -29,26 +29,49 @@
     </div>
     <script type="text/javascript">
         var delegs = {{ delegs|json_encode|raw }};
+        var recues = {{ recues|json_encode|raw }};
 
         var nowTemp = new Date();
         var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+        var iduserselected = -1;
+        alert(JSON.stringify(recues));
+
+        var id=-1;
+
+
+        function onRenderCheckin(date){
+            var ok = true;
+            delegs.forEach(function(d){
+
+                // alert(date.valueOf()+"   -  "+d.debut+"000");
+
+
+                if(date.valueOf()>= d.debut+"000" && date.valueOf()<= d.fin+"000"){
+
+                    ok=false;
+                }
+            });
+
+            recues.forEach(function(d){
+                console.log(d.userid+" , "+id);
+                if(d.userid==id){
+                    if(date.valueOf()>= d.debut+"000" && date.valueOf()<= d.fin+"000"){
+
+                        ok=false;
+                    }
+                }
+
+            });
+
+            return (!ok || (date.valueOf() < now.valueOf())) ? 'disabled' : '';
+        }
+
 
         var checkin = $('#deleg_debut')
                 .datepicker({
                     onRender: function (date) {
 
-                        var ok = true;
-                        delegs.forEach(function(d){
-
-                           // alert(date.valueOf()+"   -  "+d.debut+"000");
-
-
-                            if(date.valueOf()>= d.debut+"000" && date.valueOf()<= d.fin+"000"){
-
-                                ok=false;
-                            }
-                        });
-                        return (!ok || (date.valueOf() < now.valueOf())) ? 'disabled' : '';
+                        return onRenderCheckin(date);
                     }
                 })
                 .on('changeDate',function (ev) {
@@ -56,8 +79,13 @@
                         var newDate = new Date(ev.date)
                         newDate.setDate(newDate.getDate() + 1);
                         checkout.setValue(newDate);
+
                     }
                     checkin.hide();
+                    checkout.onRender(function(date){
+                        return onRenderCheckout(date);
+                    });
+                    $('#deleg_fin').datepicker('update');
                     $('#deleg_fin')[0].focus();
                 }).data('datepicker');
 
@@ -65,22 +93,77 @@
                 .datepicker({
                     onRender: function (date) {
 
-                        var ok = true;
-                        delegs.forEach(function(d){
-
-                            // alert(date.valueOf()+"   -  "+d.debut+"000");
-
-
-                            if(date.valueOf()>= d.debut+"000" && date.valueOf()<= d.fin+"000"){
-
-                                ok=false;
-                            }
-                        });
-                        return (!ok || (date.valueOf() <= checkin.date.valueOf() ))? 'disabled' : '';
+                        return onRenderCheckout(date);
                     }
                 })
                 .on('changeDate',function (ev) {
                     checkout.hide();
                 }).data('datepicker');
+
+
+        function onRenderCheckout(date){
+            var ok = true;
+            delegs.forEach(function(d){
+
+                // alert(date.valueOf()+"   -  "+d.debut+"000");
+
+
+                if(date.valueOf()>= d.debut+"000" && date.valueOf()<= d.fin+"000"){
+
+                    ok=false;
+                }
+            });
+
+            recues.forEach(function(d){
+                console.log(d.userid+" , "+id);
+                if(d.userid==id){
+                    if(date.valueOf()>= d.debut+"000" && date.valueOf()<= d.fin+"000"){
+
+                        ok=false;
+                    }
+                }
+
+            });
+            return (!ok || (date.valueOf() <= checkin.date.valueOf() ))? 'disabled' : '';
+        }
+
+
+        function onUserChange(){
+            id=$('#selectuser').val();
+
+
+
+
+
+
+
+            checkin.onRender(function(date){
+                return onRenderCheckin(date);
+            });
+
+            $('#deleg_debut').datepicker('update');
+
+
+
+            checkout.onRender(function(date){
+                return onRenderCheckout(date);
+            });
+
+
+
+            $('#deleg_fin').datepicker('update');
+
+        }
+
+        $("#selectuser").change(function (e){
+            onUserChange();
+        });
+
+
+        onUserChange();
+
+
+
+
     </script>
 {% endblock %}
