@@ -89,11 +89,22 @@ class ClasseurController extends Controller
 
 
 
-        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+
+
+       if(!empty($usersdelegated)){
+           $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
             array(
                 "validant" => $usersdelegated,
                 "status" => 1
             ));
+       }
+        else{
+            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                array(
+
+                    "status" => 1
+                ));
+        }
 
 
         return array(
