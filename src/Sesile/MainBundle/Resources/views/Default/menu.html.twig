@@ -62,7 +62,7 @@
                     </li>
                 </ul>
             </li>
-
+            {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
             <li class="menu-elem menu-rouge">
                 <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
                     <a href="#">
@@ -71,14 +71,20 @@
                 </div>
                 <ul class="dd-menu">
                     <li>
-                        <a href="{{ path("classeur") }}">
+                        <a href="{{ path("notifications") }}">
                             <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
                             Notifications
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ path("message_accueil") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
+                            Message d'accueil
+                        </a>
+                    </li>
                 </ul>
             </li>
-
+            {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="menu-elem menu-vert ">
                 <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
@@ -93,18 +99,14 @@
                             Gestion des circuits
                         </a>
                     </li>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
                     <li>
                         <a href="{{ path("liste_type_classeur") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Types de classeurs
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ path("admin") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Message d'accueil
-                        </a>
-                    </li>
+                    {% endif %}
                     <li>
                         <a href="{{ path("liste_users") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
@@ -123,14 +125,14 @@
 			    Organigramme
 			</a>
 		    </li>
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                        <li>
-                        <a href="{{ path("index_collectivite") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Collectivités
-                        </a>
-                    </li>
-                    {% endif %}
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                <a href="{{ path("index_collectivite") }}">
+                    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                    Collectivités
+                </a>
+            </li>
+            {% endif %}
                 </ul>
             </li>
             {% endif %}

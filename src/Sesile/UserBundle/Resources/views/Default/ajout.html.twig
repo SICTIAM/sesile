@@ -83,6 +83,11 @@
         </div>
         <br/>
 
+        <div class="label_form pickuser">
+            {{ form_label(form.collectivite) }}
+            {{ form_widget(form.collectivite) }}
+        </div>
+
         <div class="acti">
             <label for="{{ form.enabled.vars.id }}" class="cb-enable selected">
                 <span>Activé</span>

@@ -36,13 +36,11 @@
     <a href="/">
     <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
-
         </div>
     </a>
     {% include 'SesileMainBundle:Default:menu.html.twig' %}
     <div id="img_collectivite">
-        {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
-        <img src="{{ asset("/images/Logo-Officiel-SICTIAM_taille250px.jpg") }}" width="100px" height="100px"/>
+        <img src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" width="100px" height="100px"/>
     </div>
 </div>
 

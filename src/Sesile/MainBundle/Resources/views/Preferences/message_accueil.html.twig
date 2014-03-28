@@ -6,11 +6,11 @@
             <span class="glyphicon glyphicon-comment"></span>
             &nbsp;&nbsp;&nbsp;Édition du message d'accueil
         </div>
-        <form action="{{ path('admin') }}" {{ form_enctype(form) }} method="POST">
-            {{ form_widget(form.msg) }}
+        <form action="{{ path('message_accueil') }}" method="POST">
+            <textarea rows="10" cols="80" name="message">{{ message }}</textarea>
             <br>
             <br>
-            {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+            <button type="submit" class="btn btn-success">Enregistrer</button>
         </form>
     </div>
 

@@ -126,6 +126,15 @@ class User extends BaseUser
      */
     protected $apiactivated;
 
+    /**
+     * @var int
+     *
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="$users")
+     * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
+     *
+     */
+    protected $collectivite;
+
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="user")
@@ -611,5 +620,28 @@ class User extends BaseUser
     public function getApiactivated()
     {
         return $this->apiactivated;
+    }
+
+    /**
+     * Set collectivite
+     *
+     * @param \Sesile\MainBundle\Entity\Collectivite $collectivite
+     * @return User
+     */
+    public function setCollectivite(\Sesile\MainBundle\Entity\Collectivite $collectivite = null)
+    {
+        $this->collectivite = $collectivite;
+    
+        return $this;
+    }
+
+    /**
+     * Get collectivite
+     *
+     * @return \Sesile\MainBundle\Entity\Collectivite 
+     */
+    public function getCollectivite()
+    {
+        return $this->collectivite;
     }
 }

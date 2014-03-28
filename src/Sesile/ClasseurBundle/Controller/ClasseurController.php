@@ -659,7 +659,11 @@ class ClasseurController extends Controller
 
     private function sendValidationMail($classeur)
     {
-        $body = $this->renderView('SesileClasseurBundle:Mail:valide.html.twig',
+        $em = $this->getDoctrine()->getManager();
+        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+
+        $env = new \Twig_Environment(new \Twig_Loader_String());
+        $body = $env->render($coll->getTextMailwalid(),
             array(
                 'validant' => $this->getUser(),
                 'titre_classeur' => $classeur->getNom(),
@@ -668,7 +672,6 @@ class ClasseurController extends Controller
             )
         );
 
-        $em = $this->getDoctrine()->getManager();
         $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
         if ($validant_obj != null) {
@@ -676,9 +679,12 @@ class ClasseurController extends Controller
         }
     }
 
-    private function sendCreationMail($classeur)
-    {
-        $body = $this->renderView('SesileClasseurBundle:Mail:nouveau.html.twig',
+    private function sendCreationMail($classeur) {
+        $em = $this->getDoctrine()->getManager();
+        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+
+        $env = new \Twig_Environment(new \Twig_Loader_String());
+        $body = $env->render($coll->getTextmailnew(),
             array(
                 'deposant' => $classeur->getUser(),
                 'titre_classeur' => $classeur->getNom(),
@@ -687,7 +693,6 @@ class ClasseurController extends Controller
             )
         );
 
-        $em = $this->getDoctrine()->getManager();
         $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
         if ($validant_obj != null) {
@@ -695,9 +700,11 @@ class ClasseurController extends Controller
         }
     }
 
-    private function sendRefusMail($classeur)
-    {
-        $body = $this->renderView('SesileClasseurBundle:Mail:refuse.html.twig',
+    private function sendRefusMail($classeur) {
+        $em = $this->getDoctrine()->getManager();
+        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+        $env = new \Twig_Environment(new \Twig_Loader_String());
+        $body = $env->render($coll->getTextmailrefuse(),
             array(
                 'deposant' => $classeur->getUser(),
                 'titre_classeur' => $classeur->getNom(),
@@ -706,13 +713,10 @@ class ClasseurController extends Controller
             )
         );
 
-        $em = $this->getDoctrine()->getManager();
         $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Classeur refusé", $validant_obj->getEmail(), $body);
         }
     }
-
-
 }

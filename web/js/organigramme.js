@@ -374,10 +374,19 @@
         // Update the nodes…
         node = svgGroup.selectAll("g.node")
             .data(nodes, function (d) {
-                return d.id;
+                var existingOption = $("#listUsers option[value='"+d.id+"']");
+                //alert(existingOption.length);
+
+                if(existingOption.length == 1) {
+                    existingOption.remove();
+                    return d.id;
+                }
+                else {
+                    d.remove();
+                }
             });
 
-        // Enter any new nodes at the parent's previous position.
+        // Enter any new nodes at the parent's previous position
         var nodeEnter = node.enter().append("g")
             .call(dragListener)
             .attr("class", "node")
