@@ -41,7 +41,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * Sinon renvoie une partie de cette liste en fonction du filtre
      *
      *
-     * Status des classeurs : En cours = 1 finalisé = 2, refusé = 0, retiré = 3, retracté = 4
+     * Status des classeurs : En cours = 1 finalisé = 2, refusé = 0, retiré = 3
      *
      * @var Request $request
      * @return array
@@ -141,7 +141,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * Si l'utilisateur courant n'as pas accès au classeur, un 403 not allowed sera renvoyé
      *
      *
-     * Status des classeurs : En cours = 1 finalisé = 2, refusé = 0, retiré = 3, retracté = 4
+     * Status des classeurs : En cours = 1 finalisé = 2, refusé = 0, retiré = 3
      *
      * @var Request $request
      * @return array
