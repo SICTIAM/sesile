@@ -4,22 +4,30 @@
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
     <div class="bloc_page">
-        <form action="{{ path("delegation_update") }}" method="post">
+
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-export"></span>
+            &nbsp;&nbsp;&nbsp;Délégation
+        </div>
+
+        <span class="deleg-to-someone">Vous déléguez à &nbsp;</span><img class="userpicture"
+                                                                            src="{{ asset(upload_path ~ delegation.user.path) }}"/>{{ delegation.user.Prenom }} {{ delegation.user.Nom }}
+
+
+
+
+        <span class="deleg-to-someone">Du &nbsp;</span>{{ delegation.debut|date("d/m/Y") }} <span class="deleg-to-someone">Au  &nbsp;</span> {{ delegation.fin|date("d/m/Y") }}
+        <span class="deleg-to-someone">Inclus</span>
+
+
+
+
+
+        <form action="{{ path("delegation_delete") }}" method="post"  onsubmit="return confirm('Voulez vous vraiment supprimer cette délégation ?');">
             <input type="hidden" value="{{ delegation.id }}" name="id"/>
-            <select name="user">
-                {% for user in users %}
-                    <option {% if user.id == delegation.user.id %}selected{% endif %}
-                            value="{{ user.id }}">{{ user.Prenom }} {{ user.Nom }}</option>
-                {% endfor %}
-            </select>
-            <br>
-            <input class="datepicker" id="deleg_debut" name="debut" type="datetime"
-                   value="{{ delegation.debut |date("d/m/Y") }}"/>
-            <br>
-            <input class="datepicker" id="deleg_fin" name="fin" type="datetime"
-                   value="{{ delegation.fin |date("d/m/Y") }}"/>
-            <br>
-            <button type="submit" class="btn btn-success">Enregistrer</button>
+            <br/><br/>
+
+            <button type="submit" class="btn btn-danger">Supprimer</button>
         </form>
     </div>
 
