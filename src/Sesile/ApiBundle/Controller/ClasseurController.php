@@ -210,7 +210,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         if ($request->request->get('name') == 0 || $request->request->get('validation') == 0 || $request->request->get('type') == 0 || $request->request->get('circuit') == 0) {
-            $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
+            $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants', "parametres_recus"=> $request->request ), 400);
             return $this->handleView($view);
         }
 
