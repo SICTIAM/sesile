@@ -208,17 +208,24 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
 
+
+var_dump(1);
         $name = $request->request->get('name');
+        var_dump(2);
         $validation = $request->request->get('validation');
+        var_dump(3);
         $type= $request->request->get('type');
+        var_dump(4);
         $circuit=$request->request->get('circuit');
         
+        var_dump(5);
 
 
         if (empty($name)|| empty($validation)||empty($type)||empty($circuit)) {
             $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants', "parametres_recus"=> $request->request ), 400);
             return $this->handleView($view);
         }
+        var_dump(6);
 
 
         $classeur = new Classeur();
