@@ -263,8 +263,7 @@ class ClasseurController extends Controller
      * @Template()
      */
     public function newAction() {
-        $moncul = "la commode";
-        return array("moncul" => $moncul);
+        return array();
     }
 
     /**
@@ -623,24 +622,31 @@ class ClasseurController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    public function formulaireFactory(Request $request)
-    {
+    public function formulaireFactory(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('SesileUserBundle:Groupe')->findBy(array(
+            "type" => 0,
+            "collectivite" => $this->get("session")->get("collectivite")
+        ));
+
         $type = $request->request->get('type', 'elclassico');
+
+
 
         switch ($type) {
             case "Classique":
                 return $this->render(
-                    'SesileClasseurBundle:Formulaires:elclassico.html.twig'
+                    'SesileClasseurBundle:Formulaires:elclassico.html.twig', array("groupes" => $entities)
                 );
                 break;
             case "Helios":
                 return $this->render(
-                    'SesileClasseurBundle:Formulaires:elpez.html.twig'
+                    'SesileClasseurBundle:Formulaires:elpez.html.twig', array("groupes" => $entities)
                 );
                 break;
             default:
                 return $this->render(
-                    'SesileClasseurBundle:Formulaires:elclassico.html.twig'
+                    'SesileClasseurBundle:Formulaires:elclassico.html.twig', array("groupes" => $entities)
                 );
                 break;
         }

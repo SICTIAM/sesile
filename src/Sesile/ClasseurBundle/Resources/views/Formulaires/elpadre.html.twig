@@ -8,6 +8,11 @@
 
 
 <div class="visi_button">
+    <select>
+    {% for groupe in groupes %}
+        <option  value="{{ groupe.id }}">{{ groupe.nom }}</option>
+    {% endfor %}
+    </select>
     <div id="visi_publique" rel="0"  class="visi_button_actif">
         <input id="radio-publique" type="radio" value="0" name="visibilite" checked="true">
         Publique
