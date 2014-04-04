@@ -12,8 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 
 
-class HierarchieController extends Controller
-{
+class HierarchieController extends Controller {
 
     /**
      * @Route("/groupes", name="groupes")
@@ -22,8 +21,9 @@ class HierarchieController extends Controller
      */
     public function indexAction() {
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite")
+        $users = $em->getRepository('SesileUserBundle:Groupe')->findBy(array(
+            "collectivite" => $this->get("session")->get("collectivite"),
+            "type" => 0
         ));
 
         return array(
@@ -49,11 +49,10 @@ class HierarchieController extends Controller
      * @Route("/groupe/new", name="new_groupe")
      * @Method("POST")
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $group = new Groupe();
         $group->setNom($request->request->get('nom'));
-        $group->setCollectivite(1);
+        $group->setCollectivite($this->get("session")->get("collectivite"));
         $group->setJson($request->request->get('tree'));
         $group->setCouleur("white");
         //$group->setType(0);

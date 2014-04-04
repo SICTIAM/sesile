@@ -33,6 +33,7 @@
     // Fonction récursive pour parcourir les noeuds et leur appliquer des params (ou fonctions) :)
     function visit(parent, visitFn, childrenFn) {
         if (!parent) return;
+
         visitFn(parent);
         var children = childrenFn(parent);
         if (children) {
@@ -49,6 +50,14 @@
             maxLabelLength = Math.max(d.name.length, maxLabelLength);
 
         }, function (d) {
+            var existingOption = $("#listUsers option[value='"+d.id+"']");
+
+            if(existingOption.length == 1) {
+                existingOption.remove();
+            }
+            else {
+                alert(d.id +"pas dans la liste");
+            }
             return d.children && d.children.length > 0 ? d.children : null;
         });
     }
@@ -102,7 +111,7 @@
         .attr("class", "lesvg");
 
 
-    /*********************************  TOOLBAR ****************************************************************************/
+    /********************************* TOOLBAR ****************************************************************************/
     d3.select("#addUser").on("click", function () {
         // construction d'un mini json pour l'élément choisi
         if (clickedNode) {
@@ -374,16 +383,7 @@
         // Update the nodes…
         node = svgGroup.selectAll("g.node")
             .data(nodes, function (d) {
-                var existingOption = $("#listUsers option[value='"+d.id+"']");
-                //alert(existingOption.length);
-
-                if(existingOption.length == 1) {
-                    existingOption.remove();
-                    return d.id;
-                }
-                else {
-                    d.remove();
-                }
+                return d.id;
             });
 
         // Enter any new nodes at the parent's previous position

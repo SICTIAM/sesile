@@ -61,13 +61,15 @@ class Groupe
      */
     private $json;
 
+    private $users;
+
+
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -77,10 +79,8 @@ class Groupe
      * @param string $nom
      * @return Groupe
      */
-    public function setNom($nom)
-    {
+    public function setNom($nom) {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -89,8 +89,7 @@ class Groupe
      *
      * @return string
      */
-    public function getNom()
-    {
+    public function getNom() {
         return $this->nom;
     }
 
@@ -100,10 +99,8 @@ class Groupe
      * @param string $collectivite
      * @return Groupe
      */
-    public function setCollectivite($collectivite)
-    {
+    public function setCollectivite($collectivite) {
         $this->collectivite = $collectivite;
-
         return $this;
     }
 
@@ -112,15 +109,14 @@ class Groupe
      *
      * @return string
      */
-    public function getCollectivite()
-    {
+    public function getCollectivite() {
         return $this->collectivite;
     }
+
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->hierarchie = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
@@ -130,8 +126,7 @@ class Groupe
      * @param \Sesile\UserBundle\Entity\DocumentHistory $hierarchie
      * @return Groupe
      */
-    public function addHierarchie(\Sesile\UserBundle\Entity\DocumentHistory $hierarchie)
-    {
+    public function addHierarchie(\Sesile\UserBundle\Entity\DocumentHistory $hierarchie) {
         $this->hierarchie[] = $hierarchie;
     
         return $this;

@@ -8,16 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20140327105115 extends AbstractMigration
+class Version20140402114550 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "Migration can only be executed safely on 'mysql'.");
         
-        $this->addSql("ALTER TABLE User ADD collectivite INT DEFAULT NULL");
-        $this->addSql("ALTER TABLE User ADD CONSTRAINT FK_2DA17977CFA408A1 FOREIGN KEY (collectivite) REFERENCES Collectivite (id)");
-        $this->addSql("CREATE INDEX IDX_2DA17977CFA408A1 ON User (collectivite)");
+        $this->addSql("CREATE TABLE users_groups (user_id INT NOT NULL, group_id INT NOT NULL, INDEX IDX_FF8AB7E0A76ED395 (user_id), INDEX IDX_FF8AB7E0FE54D947 (group_id), PRIMARY KEY(user_id, group_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("ALTER TABLE users_groups ADD CONSTRAINT FK_FF8AB7E0A76ED395 FOREIGN KEY (user_id) REFERENCES User (id)");
+        $this->addSql("ALTER TABLE users_groups ADD CONSTRAINT FK_FF8AB7E0FE54D947 FOREIGN KEY (group_id) REFERENCES Groupe (id)");
     }
 
     public function down(Schema $schema)
@@ -25,8 +25,6 @@ class Version20140327105115 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "Migration can only be executed safely on 'mysql'.");
         
-        $this->addSql("ALTER TABLE User DROP FOREIGN KEY FK_2DA17977CFA408A1");
-        $this->addSql("DROP INDEX IDX_2DA17977CFA408A1 ON User");
-        $this->addSql("ALTER TABLE User DROP collectivite");
+        $this->addSql("DROP TABLE users_groups");
     }
 }

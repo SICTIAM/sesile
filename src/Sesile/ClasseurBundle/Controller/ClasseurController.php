@@ -262,9 +262,9 @@ class ClasseurController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
-    {
-        return array();
+    public function newAction() {
+        $moncul = "la commode";
+        return array("moncul" => $moncul);
     }
 
     /**

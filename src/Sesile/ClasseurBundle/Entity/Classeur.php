@@ -14,8 +14,7 @@ use JMS\DiExtraBundle\Annotation\Service;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="Sesile\ClasseurBundle\Entity\ClasseursUsersRepository")
  */
-class Classeur
-{
+class Classeur {
     /**
      * @var integer
      *
@@ -93,7 +92,7 @@ class Classeur
 
     /**
      * @var int
-     * -1 = privé, 0 = public, id user = à partir de
+     * 0 = privé, id groupe = public pour le groupeid
      * @ORM\Column(name="visibilite", type="integer")
      *
      */
@@ -339,10 +338,8 @@ class Classeur
      * @param integer $visibilite
      * @return Classeur
      */
-    public function setVisibilite($visibilite)
-    {
+    public function setVisibilite($visibilite) {
         $this->visibilite = $visibilite;
-
         return $this;
     }
 
@@ -351,8 +348,7 @@ class Classeur
      *
      * @return integer
      */
-    public function getVisibilite()
-    {
+    public function getVisibilite() {
         return $this->visibilite;
     }
 
