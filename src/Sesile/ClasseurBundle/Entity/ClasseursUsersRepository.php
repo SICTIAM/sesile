@@ -69,16 +69,14 @@ class ClasseursUsersRepository extends EntityRepository
         return self::$classeursRetractables;
     }
 
-    public function deleteClasseurUser($classeur, $circuit)
-    {
+    public function deleteClasseurUser($classeur, $circuit) {
         $em = $this->getEntityManager();
         $query = $em->createQuery('DELETE FROM SesileClasseurBundle:ClasseursUsers cu WHERE cu.user not in (' . $circuit . ') AND cu.classeur = ' . $classeur->getId());
         $query->execute();
     }
 
 
-    public function getClasseurByUser($classeurid, $userid)
-    {
+    public function getClasseurByUser($classeurid, $userid) {
         if (self::$classeursVisibles === null) {
             $em = $this->getEntityManager();
             $rsm = new ResultSetMappingBuilder($em);

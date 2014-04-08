@@ -10,8 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Sesile\UserBundle\Entity\GroupeRepository")
  */
-class Groupe
-{
+class Groupe {
     /**
      * @var integer
      *
@@ -35,13 +34,11 @@ class Groupe
      */
     private $collectivite;
 
-
     /**
      * @var
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserHierarchie", mappedBy="groupe")
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="groupe")
      */
     private $hierarchie;
-
 
     /**
      * @var string
@@ -61,7 +58,6 @@ class Groupe
      */
     private $json;
 
-    private $users;
 
 
     /**
