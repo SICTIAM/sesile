@@ -65,10 +65,7 @@ class DefaultController extends Controller
     public function recuesAllAction()
     {
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
-
-
         $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
-
 
 
 /*
