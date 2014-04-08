@@ -31,7 +31,7 @@
 	<form id="form_hierarchy" method="post" action="{% if groupe is defined %}{{ path("update_groupe") }} {% else %}{{ path("new_groupe") }} {% endif %}">
 	    <div id="edit_service">
 		{% if groupe is defined %}
-		    <input type="hidden" name="id" id="id_groupe" value="{{ groupe.id }}"/>
+		    <input type="hidden" name="id" id="id_groupe" value="{% if groupe is defined %}{{ groupe.id }}{% endif %}"/>
 		{% endif %}
 		{% include 'SesileUserBundle:Hierarchie:tools.html.twig' %}
 	    <br>
@@ -57,11 +57,5 @@
 		$("#form_hierarchy").submit();
 	    });
 	});
-
-	{% block affichemenu %}
-	$(".menu-vert .entete-menu").each(function(){
-	    affiche(this);
-	});
-	{% endblock %}
     </script>
 {% endblock %}

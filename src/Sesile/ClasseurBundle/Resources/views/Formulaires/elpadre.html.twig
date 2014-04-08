@@ -9,8 +9,7 @@
     &nbsp;&nbsp;&nbsp;Visibilit&eacute;
 </div>
 
-
-<select id="visibilite" name="visibilite">
+<select class="fuckingvisibility" id="visibilite" name="visibilite">
     <option value="0">Privé</option>
     <optgroup label="Pour le groupe">
     {% for groupe in groupes %}
@@ -18,6 +17,7 @@
     {% endfor %}
     </optgroup>
 </select>
+
 <script type="text/javascript">
     $("#visibilite").select2();
 </script>

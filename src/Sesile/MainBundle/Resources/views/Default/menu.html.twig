@@ -2,22 +2,16 @@
     <div class="menu">
         <ul>
             <li class="menu-elem menu-jaune">
-                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
+                <div class="dd-toggle entete-menu">
                     <a href="#">
                         <div class="rectanglemenu" id="jauneclair"></div>
                         D&eacute;l&eacute;gations<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
                     <li>
-                        <a href="{{ path("delegation_new") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            Ajout d’une délégation
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ path("delegations_list") }}">
                             <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            Gérer les délégations
+                           Délégations données
                         </a>
                     </li>
                     <li>
@@ -30,7 +24,7 @@
             </li>
 
             <li class="menu-elem menu-bleu">
-                <div class="dd-toggle entete-menu {% if( 'classeur' in app.request.requestUri ) %}titremenu{% endif %}">
+                <div class="dd-toggle entete-menu">
                     <a href="#">
                         <div class="rectanglemenu" id="bleuclair"></div>
                         Classeurs<b class="caret carette"></b></a>
@@ -64,7 +58,7 @@
             </li>
             {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
             <li class="menu-elem menu-rouge">
-                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
+                <div class="dd-toggle entete-menu">
                     <a href="#">
                         <div class="rectanglemenu" id="rougeclair"></div>
                         Préférences<b class="caret carette"></b></a>
@@ -87,7 +81,7 @@
             {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="menu-elem menu-vert ">
-                <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
+                <div class="dd-toggle entete-menu">
                     <a href="#">
                         <div class="rectanglemenu" id="vertclair"></div>
                         Administration<b class="caret carette"></b></a>
@@ -116,7 +110,7 @@
 		    <li>
 			<a href="{{ path("groupes") }}">
 			    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-			    Gestion des groupes fonctionnels
+			    Gestion des groupes
 			</a>
 		    </li>
 		    <li>
@@ -154,6 +148,10 @@
         });
 
         $(".titremenu").next(".dd-menu").slideDown();
-
+	$("a").click( function(e) {
+	    e.preventDefault();
+	    //position du titremenu a mettre dans le get
+	    window.location.href = $(this).attr("href");
+	});
     </script>
 {% endblock %}

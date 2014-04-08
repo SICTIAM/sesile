@@ -65,12 +65,6 @@
             $(".user-row").click(function () {
                 document.location.href = Routing.generate('groupe_edit', { id: $(this).data("id") });
             });
-
-	    {% block affichemenu %}
-	    $(".menu-vert .entete-menu").each(function(){
-		affiche(this);
-	    });
-	    {% endblock %}
         </script>
     </div>
 {% endblock %}

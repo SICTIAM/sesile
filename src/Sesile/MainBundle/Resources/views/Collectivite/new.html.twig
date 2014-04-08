@@ -2,48 +2,82 @@
 
 {% block content %}
     <div class="bloc_page">
-        <div class="titre_page">
-            <span class="glyphicon glyphicon-cog"></span>
-            &nbsp;&nbsp;&nbsp;Ajouter une nouvelle collectivité
-        </div>
-        {{ form_start(form) }}
-        {{ form_label(form.nom) }}
-        {{ form_widget(form.nom) }}
-        <br>
-        {{ form_label(form.domain) }}
-        {{ form_widget(form.domain) }}
-        <br>
-        {{ form_label(form.active) }}
-        {{ form_widget(form.active) }}
-        <br>
-        {{ form_label(form.file) }}
-        {{ form_widget(form.file) }}
+	<div class="titre_page">
+	    <span class="glyphicon glyphicon-cog"></span>
+	    &nbsp;&nbsp;&nbsp;Ajouter une nouvelle collectivité
+	</div>
+	<div class="row">
+	    <div class="col-md-3">{{ form_label(form.nom) }}</div>
+	    <div class="col-md-9">{{ form_widget(form.nom) }}</div>
+	</div>
+	<div class="row">
+	    <div class="col-md-3">{{ form_label(form.domain) }}</div>
+	    <div class="col-md-9">{{ form_widget(form.domain) }}</div>
+	</div>
+	<div class="row">
+	    <div class="col-md-3">{{ form_label(form.active) }}</div>
+	    <div class="col-md-9">{{ form_widget(form.active) }}</div>
+	</div>
+	<div class="row">
+	    <div class="col-md-3">{{ form_label(form.file) }}</div>
+	    <div class="col-md-9">{{ form_widget(form.file) }}</div>
+	</div>
+	<br>
 
-        <br>
-        {{ form_label(form.textmailnew) }}
-        {{ form_widget(form.textmailnew) }}
-        <br>
-        {{ form_label(form.textmailrefuse) }}
-        {{ form_widget(form.textmailrefuse) }}
-        <br>
-        {{ form_label(form.textmailwalid) }}
-        {{ form_widget(form.textmailwalid) }}
-        <br>
-        {{ form_label(form.message) }}
-        {{ form_widget(form.message) }}
-        <br>
-        {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
-        {{ form_end(form) }}
+	<div class="row">
+	    <div class="col-md-2"></div>
+	    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+	    <div class="col-md-2"></div>
+	</div>
+	<div class="titredeslabels">{{ form_label(form.textmailnew) }}</div>
+	{{ form_widget(form.textmailnew) }}
+	<br>
+	<br>
+	<br>
+
+	<div class="row">
+	    <div class="col-md-2"></div>
+	    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+	    <div class="col-md-2"></div>
+	</div>
+	{{ form_label(form.textmailrefuse) }}
+	{{ form_widget(form.textmailrefuse) }}
+	<br>
+	<br>
+	<br>
+
+	<div class="row">
+	    <div class="col-md-2"></div>
+	    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+	    <div class="col-md-2"></div>
+	</div>
+	{{ form_label(form.textmailwalid) }}
+	{{ form_widget(form.textmailwalid) }}
+	<br>
+	<br>
+	<br>
+
+	<div class="row">
+	    <div class="col-md-2"></div>
+	    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+	    <div class="col-md-2"></div>
+	</div>
+	{{ form_label(form.message) }}
+	{{ form_widget(form.message) }}
+	<br>
+	<br>
+	{{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+	{{ form_end(form) }}
     </div>
 
-    <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}"/>
     <script src="{{ asset("/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js") }}" type="text/javascript"></script>
     <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
     <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
     <script type="text/javascript">
-        $('textarea').wysihtml5({
-            "image": false,
-            locale: "fr-FR"
-        });
+	$('textarea').wysihtml5({
+	    "image": false,
+	    locale: "fr-FR"
+	});
     </script>
 {% endblock %}

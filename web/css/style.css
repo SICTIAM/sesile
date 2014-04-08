@@ -218,6 +218,18 @@ html, body {
 	cursor: pointer;
 }
 
+.fuckingvisibility{
+	min-width: 21em !important;
+}
+
+label{
+	color:#6D6D6D;
+}
+
+.titredeslabels{
+	text-transform: uppercase;
+}
+
 .titre_page {
 	font-size: 1.5em;
 	margin-bottom: 1em;
@@ -372,21 +384,16 @@ html, body {
 .deleg-to-someone {
 	color: #6d6e70;
 	height: 2em;
-	width: auto;
-	display: inline;
+	min-width:5em;
 	line-height: 18px;
 	padding: 4px 4px 4px 5px;
-	text-align: center;
 	text-shadow: 0 1px 0 #ffffff;
 }
-
 .delegdo{
-	color:
-
+	color: #3285AB;
 }
-
 .delegre{
-
+	color: #DBA209;
 }
 
 select [name=user] {

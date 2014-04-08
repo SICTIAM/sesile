@@ -136,8 +136,14 @@ class HierarchieController extends Controller {
             "collectivite" => $this->get("session")->get("collectivite")
         ));
 
+        $ret = array("users" => $users, "organigramme" => 1);
+
         $groupe = $em->getRepository('SesileUserBundle:Groupe')->findOneByType(1);
-        return array("users" => $users, "organigramme" => 1, "groupe" => $groupe);
+        if(is_object($groupe)) {
+            $ret["groupe"] = $groupe;
+        }
+
+        return $ret;
     }
 
 
