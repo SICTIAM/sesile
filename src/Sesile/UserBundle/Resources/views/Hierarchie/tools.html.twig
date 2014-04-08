@@ -1,0 +1,34 @@
+Nom&nbsp;:&nbsp;
+<input type="text" name="nom" id="nom_groupe"{% if groupe is defined %} value="{{ groupe.Nom }}" {% endif %}/>
+&nbsp;&nbsp;
+<button id="btn-envoyer" type="button" class="btn btn-success btn-envoyer sesiletooltip" data-original-title="Enregistrer">
+    <span class="glyphicon glyphicon-ok" style="color: #ffffff"></span>
+</button>
+<button id="btn-annuler" type="button" class="btn btn-danger btn-envoyer sesiletooltip" data-original-title="Annuler">
+    <span class=" glyphicon glyphicon-remove" style="color: #ffffff"></span>
+</button>
+</div>
+
+<div id="toolbar">
+    Utilisateurs&nbsp;:&nbsp;
+    <select id="listUsers">
+	{% for user in users %}
+	    <option value="{{ user.id }}">{{ user.prenom }} {{ user.nom }}</option>
+	{% endfor %}
+    </select>
+
+    <button type="button" id="addUser" class="btn btn-default btn-envoyer sesiletooltip" data-original-title="Ajouter">
+	<span class="glyphicon glyphicon-plus" style="color: #6D6E70"></span>
+    </button>
+
+    <button type="button" id="btnSupprimer" class="btn btn-danger btn-envoyer sesiletooltip" data-original-title="Retirer">
+	<span class="glyphicon glyphicon-minus" style="color: #ffffff"></span>
+    </button>
+    {% if organigramme is defined %}
+	<button type="button" id="picker" class="btn btn-default btn-envoyer sesiletooltip" data-original-title="Attribuer une couleur">
+	    <span class="glyphicon glyphicon-star" style="color: #6D6E70;"></span>
+	    <span class="textcolor">Couleur</span>
+	    <span class="glyphicon glyphicon-star" style="color: #6D6E70;"></span>
+	</button>
+    {% endif %}
+</div>

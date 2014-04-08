@@ -24,3 +24,11 @@
         </tr>
     {% endfor %}
 </table>
+
+<script type="text/javascript">
+    {% block affichemenu %}
+    $(".menu-jaune .entete-menu").each(function(){
+	affiche(this);
+    });
+    {% endblock %}
+</script>

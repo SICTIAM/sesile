@@ -35,4 +35,12 @@
     $(".classeur-row").click(function (e) {
         document.location.href = Routing.generate('classeur_edit', { id: $(this).data("id") });
     });
+
+    {% block affichemenu %}
+    $(".menu-bleu .entete-menu").each(function(){
+	affiche(this);
+    });
+    {% endblock %}
 </script>
+
+

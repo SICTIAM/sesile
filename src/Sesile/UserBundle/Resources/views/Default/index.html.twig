@@ -56,7 +56,6 @@
                         "sFirst": "",
                         "sPrevious": "",
                         "sNext": "",
-                        "sLast": "",
                         "sZeroRecords": "Aucun utilisateur &agrave; afficher",
                         "sEmptyTable": "Aucun utilisateur &agrave; afficher"
                     }
@@ -73,6 +72,12 @@
             $(".user-row").click(function () {
                 document.location.href = Routing.generate('user_edit', { id: $(this).data("id") });
             });
+
+	    {% block affichemenu %}
+	    $(".menu-vert .entete-menu").each(function(){
+		affiche(this);
+	    });
+	    {% endblock %}
         </script>
     </div>
 {% endblock %}

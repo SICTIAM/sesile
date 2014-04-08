@@ -33,7 +33,7 @@
 
 <div id="maman">
 <div id="gauche">
-    <a href="/">
+    <a href="/app_dev.php/ ">
     <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
         </div>
@@ -272,6 +272,9 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
 
         $("#footer").width(w_contenu).css({ right: posr_contenu, bottom: 0 });
     }
+
+    {% block affichemenu %}
+    {% endblock %}
 </script>
 </div>
 
