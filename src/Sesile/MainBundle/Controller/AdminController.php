@@ -17,45 +17,57 @@ use Symfony\Component\Yaml\Yaml;
 class AdminController extends Controller
 {
     /**
-     * @Route("/admin", name="admin")
-     *
+     * @Route("/preferences/message", name="message_accueil")
+     * @Template("SesileMainBundle:Preferences:message_accueil.html.twig")
      *
      */
-    public function PageAdminAction(Request $request)
-    {
-        /*
+    public function messageAccueilAction(Request $request) {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
-        */
-
-        $Upload = $this->container->getParameter('upload');
-        $DocPath = $Upload["msg_acc"];
-
-        $defaultData = array('msg' => 'Type your message here');
-        $form = $this->createFormBuilder($defaultData)
-            ->add('msg', 'textarea', array('label' => 'Message d\'accueil',))
-
-            ->add('submit', 'submit', array('label' => 'Mettre à jour', 'attr' => array('class' => 'btn btn-success'),))
-            ->getForm();
+        $em = $this->getDoctrine()->getManager();
+        $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $msg_accueil = $coll->getMessage();
 
         if ($request->isMethod('POST')) {
-            $form->bind($request);
-
-
-            // $data is a simply array with your form fields
-            // like "query" and "category" as defined above.
-            $msg = $request->request->get('msg');
-            $em = $this->getDoctrine()->getManager();
-            $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
-            $coll->setMessage($msg);
+            $msg_accueil = $request->request->get('message');
+            $coll->setMessage($msg_accueil);
             $em->flush();
         }
 
-        return $this->render('SesileMainBundle:Default:admin.html.twig', array('form' => $form->createView(),));
-
+        return array('message' => $msg_accueil);
     }
+
+    /**
+     * @Route("/preferences/notifications", name="notifications")
+     * @Template("SesileMainBundle:Preferences:notifications.html.twig")
+     */
+    public function notificationsAction(Request $request) {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            // Sinon on déclenche une exception « Accès interdit »
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $txtrefuse = $coll->getTextmailrefuse();
+        $txtwalid = $coll->getTextmailwalid();
+        $txtnew = $coll->getTextmailnew();
+
+        if ($request->isMethod('POST')) {
+            $txtrefuse = $request->request->get('textmailrefuse');
+            $txtwalid = $request->request->get('textmailwalid');
+            $txtnew = $request->request->get('textmailnew');
+            $coll->setTextmailrefuse($txtrefuse);
+            $coll->setTextmailwalid($txtwalid);
+            $coll->setTextmailnew($txtnew);
+            $em->flush();
+        }
+
+        return array('textmailrefuse' => $txtrefuse, 'textmailwalid' => $txtwalid, 'textmailnew' => $txtnew,);
+    }
+
+
 
     /**
      * Liste des collectivités
@@ -118,7 +130,6 @@ class AdminController extends Controller
      */
     public function editCollectiviteAction($id)
     {
-
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
@@ -166,9 +177,13 @@ class AdminController extends Controller
             $entity->setNom($editForm->get('nom')->getData());
             $entity->setDomain($editForm->get('domain')->getData());
             $entity->setActive($editForm->get('active')->getData());
+            $entity->setTextmailrefuse($editForm->get('textmailrefuse')->getData());
+            $entity->setTextmailwalid($editForm->get('active')->getData());
+            $entity->setTextmailnew($editForm->get('textmailnew')->getData());
+            $entity->setMessage($editForm->get('message')->getData());
 
             if ($editForm->get('file')->getData()) {
-                if ($entity->getPath()) {
+                if ($entity->getFile()) {
                     $entity->removeUpload();
                 }
                 $entity->preUpload();
@@ -230,15 +245,13 @@ class AdminController extends Controller
      * @param Collectivite $entity The entity
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm(Collectivite $entity)
-    {
+    private function createEditForm(Collectivite $entity) {
         $form = $this->createForm(new CollectiviteType(), $entity, array(
             'action' => $this->generateUrl('update_collectivite', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
-
         return $form;
     }
 
@@ -247,8 +260,7 @@ class AdminController extends Controller
      * @param mixed $id The entity id
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
-    {
+    private function createDeleteForm($id) {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('delete_collectivite', array('id' => $id)))
             ->setMethod('DELETE')

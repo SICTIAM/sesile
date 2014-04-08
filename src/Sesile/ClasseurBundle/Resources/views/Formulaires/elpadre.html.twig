@@ -8,14 +8,19 @@
 
 
 <div class="visi_button">
-    <div id="visi_publique" rel="0"  class="visi_button_actif">
-        <input id="radio-publique" type="radio" value="0" name="visibilite" checked="true">
-        Publique
-    </div>
-    <div id="visi_prive" rel="-1">
-        <input id="radio-prive" type="radio" name="visibilite" value="-1">
+    <div id="visi_prive" rel="0">
+        <input id="radio-prive" type="radio" name="visibilite" value="0">
         Privée
     </div>
+    <div id="visi_publique" rel="0"  class="visi_button_actif">
+        <input id="radio-publique" type="radio" value="0" name="visibilite" checked="true">
+        Pour le groupe
+    </div>
+    <select>
+        {% for groupe in groupes %}
+            <option value="{{ groupe.id }}">{{ groupe.nom }}</option>
+        {% endfor %}
+    </select>
 </div>
 <script type="text/javascript">
     $('.visi_button div').click(function () {

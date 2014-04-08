@@ -8,19 +8,19 @@
                         D&eacute;l&eacute;gations<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
-                    <li  id="ajoutdunedelegation">
+                    <li>
                         <a href="{{ path("delegation_new") }}">
                             <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
                             Ajout d’une délégation
                         </a>
                     </li>
-                    <li  id="gererlesdelegations">
+                    <li>
                         <a href="{{ path("delegations_list") }}">
                             <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
                             Gérer les délégations
                         </a>
                     </li>
-                    <li  id="delegationsrecues">
+                    <li>
                         <a href="{{ path("delegations_recues") }}">
                             <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
                             Délégations reçues
@@ -36,25 +36,25 @@
                         Classeurs<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
-                    <li  id="listedesclasseurs">
+                    <li>
                         <a href="{{ path("classeur") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
                             Liste des classeurs
                         </a>
                     </li>
-                    <li  id="classeursrecus">
+                    <li>
                         <a href="{{ path("index_valider") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
                             Classeur(s) reçu(s)
                         </a>
                     </li>
-                    <li id="ajoutdunclasseur">
+                    <li>
                         <a href="{{ path("classeur_new") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
                             Ajout d'un classeur
                         </a>
                     </li>
-                    <li  id="droitderetractation">
+                    <li>
                         <a href="{{ path("index_retractables") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
                             Droit de retractation
@@ -62,7 +62,7 @@
                     </li>
                 </ul>
             </li>
-
+            {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
             <li class="menu-elem menu-rouge">
                 <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
                     <a href="#">
@@ -70,16 +70,21 @@
                         Préférences<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
-                    <li  id="notifications">
-			{#TODO : path : notifications in Controller #}
-                        <a href="">
+                    <li>
+                        <a href="{{ path("notifications") }}">
                             <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
                             Notifications
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ path("message_accueil") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
+                            Message d'accueil
+                        </a>
+                    </li>
                 </ul>
             </li>
-
+            {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="menu-elem menu-vert ">
                 <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
@@ -88,69 +93,57 @@
                         Administration<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
-                    <li  id="gestiondescircuits">
+                    <li>
                         <a href="{{ path("gestion_circuit") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Gestion des circuits
                         </a>
                     </li>
-                    <li  id="typesdeclasseurs">
-                        <a href="{{ path("gestion_circuit") }}">
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li>
+                        <a href="{{ path("liste_type_classeur") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Types de classeurs
                         </a>
                     </li>
-                    <li  id="messagedaccueil">
-                        <a href="{{ path("admin") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Message d'accueil
-                        </a>
-                    </li>
-                    <li  id="gestiondesutilisateurs">
+                    {% endif %}
+                    <li>
                         <a href="{{ path("liste_users") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Gestion des utilisateurs
                         </a>
                     </li>
-		    <li  id="gestiondesgroupes">
+		    <li>
 			<a href="{{ path("groupes") }}">
 			    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-			    Gestion des groupes
+			    Gestion des groupes fonctionnels
 			</a>
 		    </li>
-		    <li  id="organigramme">
+		    <li>
 			<a href="{{ path("organigramme") }}">
 			    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
 			    Organigramme
 			</a>
 		    </li>
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                        <li  id="collectivites">
-                        <a href="{{ path("index_collectivite") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Collectivités
-                        </a>
-                    </li>
-                    {% endif %}
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                <a href="{{ path("index_collectivite") }}">
+                    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                    Collectivités
+                </a>
+            </li>
+            {% endif %}
                 </ul>
             </li>
             {% endif %}
         </ul>
     </div>
     <script type="text/javascript">
-
-	function affiche(e){
-	    $(".titremenu").removeClass("titremenu");
-	    $(e).addClass("titremenu");
-	    $(".dd-menu:visible").hide();
-	    $(e).next(".dd-menu").show();
-	}
-
-	$(".entete-menu").click(function () {
-	    $(".titremenu").removeClass("titremenu");
-	    $(this).addClass("titremenu");
-	    $(".dd-menu:visible").slideUp();
-	    $(this).next(".dd-menu").slideDown();
+        $(".entete-menu").click(function () {
+            $(".titremenu").removeClass("titremenu");
+            $(this).addClass("titremenu");
+            $(".dd-menu:visible").slideUp();
+            $(this).next(".dd-menu").slideDown();
         });
 
         $(".dd-menu li").click(function () {

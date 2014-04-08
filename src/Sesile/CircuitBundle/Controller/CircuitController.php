@@ -20,13 +20,11 @@ class CircuitController extends Controller
     public function newAction()
     {
         // recup la liste des users en base
-        $userManager = $this->container->get('fos_user.user_manager');
-        $users = $userManager->findUsers();
-        foreach ($users as &$user) {
-            if ($user->getId() == $this->getUser()->getId()) {
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
+            "collectivite" => $this->get("session")->get("collectivite")
+        ));
 
-            }
-        }
         // recup la list des circuits
         // TODO recup uniquement pour le user connecté
         $em = $this->getDoctrine()->getManager();

@@ -18,21 +18,32 @@
         <br>
         {{ form_label(form.file) }}
         {{ form_widget(form.file) }}
+
         <br>
         {{ form_label(form.textmailnew) }}
         {{ form_widget(form.textmailnew) }}
         <br>
-	<br>
         {{ form_label(form.textmailrefuse) }}
         {{ form_widget(form.textmailrefuse) }}
         <br>
-	<br>
         {{ form_label(form.textmailwalid) }}
         {{ form_widget(form.textmailwalid) }}
-	<br>
+        <br>
+        {{ form_label(form.message) }}
+        {{ form_widget(form.message) }}
         <br>
         {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
         {{ form_end(form) }}
     </div>
 
+    <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}" />
+    <script src="{{ asset("/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
+    <script type="text/javascript">
+        $('textarea').wysihtml5({
+            "image": false,
+            locale: "fr-FR"
+        });
+    </script>
 {% endblock %}

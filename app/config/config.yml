@@ -71,9 +71,9 @@ doctrine:
 # Swiftmailer Configuration
 swiftmailer:
     transport: smtp
-    host:      servermail2.sictiam.fr
+    host:      servermail4.sictiam.fr
     username:  r.lasry@sictiam.fr
-    password:  S|cti@m06
+    password:  7Gdxqwc4
     spool:
             type: file
             path: "%kernel.root_dir%/spool"
@@ -166,4 +166,8 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@security.context"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
+    kernel.listener.route_listener:
+        class: Sesile\MainBundle\EventListener\RouteListener
+        arguments: ["@doctrine.orm.entity_manager", "@security.context"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }

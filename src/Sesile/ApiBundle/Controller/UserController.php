@@ -93,11 +93,21 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         $em = $this->getDoctrine()->getManager();
 
 
-        $entity = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));;
-        $array = array();
+        $entity = $em->getRepository('SesileUserBundle:User')->findAll();;
+        $users = array();
+        foreach($entity as $e){
+            $array = array();
+            $array['id'] = $entity->getId();
+            $array['username'] = $entity->getUsername();
+            $array['email'] = $entity->getEmail();
+            $array['prenom'] = $entity->getPrenom();
+            $array['nom'] = $entity->getNom();
+            $users[]=$array;
+
+        }
 
 
-        return $array;
+        return $users;
 
     }
 

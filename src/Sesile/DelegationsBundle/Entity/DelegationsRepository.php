@@ -40,12 +40,266 @@ class DelegationsRepository extends EntityRepository
 
     }
 
+
+    public function getDelegationsWhoHasMeAsDelegation($delegation)
+    {
+
+        $query = $this->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $delegation->getDelegant())
+            ->andWhere('p.fin >= :fin')
+            ->setParameter('fin', $delegation->getDebut())
+            ->andWhere('p.debut <= :debut')
+            ->setParameter('debut', $delegation->getFin())
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+
+        return $delegations;
+
+    }
+
+
+    public function getDelegationsWhoHasMeAsDelegate($user)
+    {
+
+        $query = $this->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere('p.fin >= :fin')
+            ->setParameter('fin', new \DateTime())
+            ->andWhere('p.debut <= :debut')
+            ->setParameter('debut', new \DateTime())
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+
+        return $delegations;
+
+    }
+
     public function getUsersWhoHasMeAsDelegateRecursively($user)
     {
-        $users = getUsersWhoHasMeAsDelegate($user);
+
+        $list = array();
+        return $this->getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($user, $user, $list);
+    }
+
+    public function getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($user, $baseuser, &$list){
+
+        $users = $this->getUsersWhoHasMeAsDelegate($user);
         foreach ($users as $u) {
 
+            if($u!= $baseuser){ // pour ne pas ajouter l'utilisateur courant
+                if(!in_array($u, $list)){ // Evite les doublons
+                    $list[]=$u;
+                    $this->getUserswhoHasMeAsDelegateRecursivelyWithBaseUser($u, $baseuser, $list); // On recommence avec ce fils
+                }
+            }
         }
+
+        return $list;
+    }
+
+
+    public function getDelegationsWhoHasMeAsDelegateRecursively($user){
+        $list = array();
+        $directdelegationsfornow = $this->getDelegationsWhoHasMeAsDelegate($user);
+
+        //var_dump(count($directdelegationsfornow));
+        foreach($directdelegationsfornow as $d){
+            $list[]=$d;
+            $this-> getDelegationsWhoHasMeAsDelegationRecursively($d, $user, $list);
+        }
+
+        return $list;
+    }
+
+
+    public function getDelegationsWhoHasMeAsDelegationRecursively($delegation,$baseuser, &$list){
+
+        $delegations = $this->getDelegationsWhoHasMeAsDelegation($delegation);
+
+        //var_dump(count($delegations));
+        foreach($delegations as $d){
+            if($d->getDelegant()!=$baseuser){
+                if(!in_array($d, $list)){
+                    $dcopy = clone $d;
+                    if($dcopy->getDebut()<$delegation->getDebut()){
+                        $dcopy->setDebut($delegation->getDebut());
+                    }
+
+                    if($dcopy->getFin()>$delegation->getFin()){
+                        $dcopy->setFin($delegation->getFin());
+                    }
+
+
+
+                    $list[]=$dcopy;
+                    $this-> getDelegationsWhoHasMeAsDelegationRecursively($d, $baseuser, $list);
+                }
+            }
+        }
+
+    }
+
+
+
+    public function getDelegationReceivedRecursively($user){
+
+        $em = $this->getEntityManager();
+        //Récupération des utilisateur m'ayant délégué quelque chose
+
+        $users = $this->getUsersWhoHasMeAsDelegateRecursively($user);
+
+
+
+        $userid =array();
+
+        foreach($users as $u){
+            $userid[]=$u->getId();
+        }
+     //   var_dump($userid);
+
+
+        //Récupération des délégations courantes de ces utilisateurs
+
+
+
+
+        $query = $em->createQuery('SELECT d FROM SesileDelegationsBundle:Delegations d WHERE d.delegant IN (:users) AND d.fin >= :now AND d.debut <= :now');
+        $query->setParameter('users', $users);
+        $query->setParameter('now', new \DateTime());
+
+        $delegations = $query->getResult();
+
+        return  $delegations;
+
+
+
+
+    }
+
+
+    public function getDelegationsGivenFromNow($user){
+        $em = $this->getEntityManager();
+        //Récupération des utilisateur m'ayant délégué quelque chose
+        $query = $em->createQuery('SELECT d FROM SesileDelegationsBundle:Delegations d WHERE d.delegant = :user AND d.fin >= :now');
+        $query->setParameter('user', $user);
+        $query->setParameter('now', new \DateTime());
+
+        return $query->getResult();
+    }
+
+
+    public function addDelegationWithFusion($delegation){
+        $em = $this->getEntityManager();
+
+
+        //Récupération des délégations se chevauchant avec la délégation à ajouter.
+
+        $query = $this->createQueryBuilder('p')
+            ->where('p.delegant = :delegant')
+            ->setParameter('delegant', $delegation->getDelegant())
+            ->andWhere('p.user <= :user')
+            ->setParameter('user', $delegation->getUser())
+            ->andWhere('p.debut <= :fin')
+            ->setParameter('fin', $delegation->getFin())
+            ->andWhere('p.fin >= :debut')
+            ->setParameter('debut', $delegation->getDebut())
+            ->orderBy('p.debut', 'ASC')
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+       // var_dump($delegations);
+
+
+        //Création de la résultante des dates
+
+        $datemin = $delegation->getDebut();
+        $datemax = $delegation->getFin();
+
+        foreach($delegations as $d){
+            $datemin = ($datemin>$d->getDebut())?$d->getDebut():$datemin;
+            $datemax = ($datemax<$d->getFin())?$d->getFin():$datemax;
+        }
+
+
+
+        $delegation->setDebut($datemin);
+        $delegation->setFin($datemax);
+
+
+        //Suppression des délégations
+
+        foreach($delegations as $d){
+           $em->remove($d);
+        }
+
+        //Ajout de la nouvelle délégation
+        $em->persist($delegation);
+        $em->flush();
+
+
+    }
+
+
+    public function modifyDelegationWithFusion($delegation){
+        $em = $this->getEntityManager();
+
+
+        //Récupération des délégations se chevauchant avec la délégation à ajouter.
+
+        $query = $this->createQueryBuilder('p')
+            ->where('p.delegant = :delegant')
+            ->setParameter('delegant', $delegation->getDelegant())
+            ->andWhere('p.user <= :user')
+            ->setParameter('user', $delegation->getUser())
+            ->andWhere('p.debut <= :fin')
+            ->setParameter('fin', $delegation->getFin())
+            ->andWhere('p.fin >= :debut')
+            ->setParameter('debut', $delegation->getDebut())
+            ->andWhere('p.id != :id')
+            ->setParameter('id', $delegation->getId())
+            ->orderBy('p.debut', 'ASC')
+            ->getQuery();
+
+        $delegations = $query->getResult();
+
+        // var_dump($delegations);
+
+
+        //Création de la résultante des dates
+
+        $datemin = $delegation->getDebut();
+        $datemax = $delegation->getFin();
+
+        foreach($delegations as $d){
+            $datemin = ($datemin>$d->getDebut())?$d->getDebut():$datemin;
+            $datemax = ($datemax<$d->getFin())?$d->getFin():$datemax;
+        }
+
+
+
+        //Modification de la délégation modifiée
+        $delegation->setDebut($datemin);
+        $delegation->setFin($datemax);
+
+
+        //Suppression des délégations qui chevauchent
+
+        foreach($delegations as $d){
+            $em->remove($d);
+        }
+
+
+
+        $em->flush();
+
+
     }
 
 

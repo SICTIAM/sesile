@@ -5,7 +5,7 @@
  *
  ******************************************************************************************************/
 
-$(document).ready(function() {
+//$(document).ready(function() {
     var treeData = treeData || {};
 
     // nombre de noeud et taille max du texte
@@ -21,7 +21,7 @@ $(document).ready(function() {
     var postool = $("#toolbar").offset();
     var posfoot = $("#footer").offset();
 
-    var viewerHeight = posfoot.top - postool.top + $("#toolbar").height();
+    var viewerHeight = 600//posfoot.top - postool.top + $("#toolbar").height();
 
     var tree = d3.layout.tree().size([viewerHeight, viewerWidth]);
 
@@ -33,6 +33,7 @@ $(document).ready(function() {
     // Fonction récursive pour parcourir les noeuds et leur appliquer des params (ou fonctions) :)
     function visit(parent, visitFn, childrenFn) {
         if (!parent) return;
+
         visitFn(parent);
         var children = childrenFn(parent);
         if (children) {
@@ -49,6 +50,14 @@ $(document).ready(function() {
             maxLabelLength = Math.max(d.name.length, maxLabelLength);
 
         }, function (d) {
+            var existingOption = $("#listUsers option[value='"+d.id+"']");
+
+            if(existingOption.length == 1) {
+                existingOption.remove();
+            }
+            else {
+                alert(d.id +"pas dans la liste");
+            }
             return d.children && d.children.length > 0 ? d.children : null;
         });
     }
@@ -102,7 +111,7 @@ $(document).ready(function() {
         .attr("class", "lesvg");
 
 
-    /*********************************  TOOLBAR ****************************************************************************/
+    /********************************* TOOLBAR ****************************************************************************/
     d3.select("#addUser").on("click", function () {
         // construction d'un mini json pour l'élément choisi
         if (clickedNode) {
@@ -377,7 +386,7 @@ $(document).ready(function() {
                 return d.id;
             });
 
-        // Enter any new nodes at the parent's previous position.
+        // Enter any new nodes at the parent's previous position
         var nodeEnter = node.enter().append("g")
             .call(dragListener)
             .attr("class", "node")
@@ -551,4 +560,4 @@ $(document).ready(function() {
     else {
         $("#toolbar").slideDown();
     }
-});
+//});

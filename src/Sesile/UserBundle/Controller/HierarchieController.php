@@ -12,21 +12,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 
 
-class HierarchieController extends Controller
-{
+class HierarchieController extends Controller {
 
     /**
      * @Route("/groupes", name="groupes")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('SesileUserBundle:Groupe')->findAll();
+        $users = $em->getRepository('SesileUserBundle:Groupe')->findBy(array(
+            "collectivite" => $this->get("session")->get("collectivite"),
+            "type" => 0
+        ));
 
         return array(
-            'groupes' => $entities
+            'groupes' => $users
         );
     }
 
@@ -35,11 +36,12 @@ class HierarchieController extends Controller
      * @Method("GET")
      * @Template("SesileUserBundle:Hierarchie:edit.html.twig")
      */
-    public function createAction()
-    {
+    public function createAction() {
         // recup la liste des users en base
-        $userManager = $this->container->get('fos_user.user_manager');
-        $users = $userManager->findUsers();
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
+            "collectivite" => $this->get("session")->get("collectivite")
+        ));
         return array("users" => $users);
     }
 
@@ -47,13 +49,13 @@ class HierarchieController extends Controller
      * @Route("/groupe/new", name="new_groupe")
      * @Method("POST")
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $group = new Groupe();
         $group->setNom($request->request->get('nom'));
-        $group->setCollectivite(1);
+        $group->setCollectivite($this->get("session")->get("collectivite"));
         $group->setJson($request->request->get('tree'));
         $group->setCouleur("white");
+        //$group->setType(0);
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
         $em->flush();
@@ -71,8 +73,9 @@ class HierarchieController extends Controller
         $groupe = $em->getRepository('SesileUserBundle:Groupe')->find($id);
         if($groupe) {
             // recup la liste des users en base
-            $userManager = $this->container->get('fos_user.user_manager');
-            $users = $userManager->findUsers();
+            $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
+                "collectivite" => $this->get("session")->get("collectivite")
+            ));
 
             return array (
                 'users' => $users,
@@ -112,8 +115,12 @@ class HierarchieController extends Controller
      */
     public function organigrammeAction() {
         // recup la liste des users en base
-        $userManager = $this->container->get('fos_user.user_manager');
-        $users = $userManager->findUsers();
-        return array("users" => $users, "organigramme" => 1);
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
+            "collectivite" => $this->get("session")->get("collectivite")
+        ));
+
+        $groupe = $em->getRepository('SesileUserBundle:Groupe')->findOneByType(1);
+        return array("users" => $users, "organigramme" => 1, "groupe" => $groupe);
     }
 }
