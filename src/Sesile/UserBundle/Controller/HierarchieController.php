@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Controller;
 
 use Sesile\UserBundle\Entity\Groupe;
+use Sesile\UserBundle\Entity\UserGroupe;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -54,12 +55,28 @@ class HierarchieController extends Controller {
         $group->setNom($request->request->get('nom'));
         $group->setCollectivite($this->get("session")->get("collectivite"));
         $group->setJson($request->request->get('tree'));
+        $group->setType(0);
         $group->setCouleur("white");
         //$group->setType(0);
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
-        $em->flush();
 
+        $users = array(); // globale pour la récursive (c'est une porcherie mais ça marche qd meme)
+        $users_du_groupe = $this->getUsersFromJson($group->getJson());
+
+
+        foreach($users_du_groupe as $user) {
+            $user_obj = $em->getRepository('SesileUserBundle:User')->find($user["id"]);
+            if(is_object($user_obj)) {
+                $usergroup = new UserGroupe();
+                $usergroup->setUser($user_obj);
+                $usergroup->setGroupe($group);
+                $usergroup->setParent($user["parent"]);
+                $em->persist($usergroup);
+            }
+        }
+
+        $em->flush();
         return $this->redirect($this->generateUrl('groupes'));
     }
 
@@ -122,5 +139,34 @@ class HierarchieController extends Controller {
 
         $groupe = $em->getRepository('SesileUserBundle:Groupe')->findOneByType(1);
         return array("users" => $users, "organigramme" => 1, "groupe" => $groupe);
+    }
+
+
+    /**
+     * @param string objet json qui contient une hiérarchie comme renvoyée par les forms
+     * @var array
+     * @return array un tableau qui contient une liste des users (tableau id => parentid) contenus dans le json
+     */
+    private function getUsersFromJson($json) {
+        global $prec;
+        global $users;
+        $tree = json_decode($json);
+        if(is_object($tree) && $tree->name) {
+            $users[] = array("id" => $tree->id, "parent" => is_object($prec)?$prec->id:0);
+            $prec = $tree;
+            $this->getUsersFromJson(json_encode($tree->children));
+        }
+        else {
+            foreach($tree as $_user) {
+                $users[] = array("id" => $_user->id, "parent" => is_object($prec)?$prec->id:0);
+                $p_prec = $prec;
+                if(property_exists($_user, "children")) {
+                    $prec = $_user;
+                    $this->getUsersFromJson(json_encode($_user->children));
+                }
+                $prec = $p_prec;
+            }
+        }
+        return $users;
     }
 }

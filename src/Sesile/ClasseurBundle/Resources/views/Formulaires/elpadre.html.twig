@@ -1,5 +1,8 @@
 <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
+<script src="{{ asset("/js/select2.min.js") }}"></script>
+<link type="text/css" rel="stylesheet" href="{{ asset("/css/select2.css") }}"/>
+
 
 <div class="titre_form_element">
     <span class="glyphicon glyphicon-play"></span>
@@ -7,29 +10,16 @@
 </div>
 
 
-<div class="visi_button">
-    <div id="visi_prive" rel="0">
-        <input id="radio-prive" type="radio" name="visibilite" value="0">
-        Privée
-    </div>
-    <div id="visi_publique" rel="0"  class="visi_button_actif">
-        <input id="radio-publique" type="radio" value="0" name="visibilite" checked="true">
-        Pour le groupe
-    </div>
-    <select>
-        {% for groupe in groupes %}
-            <option value="{{ groupe.id }}">{{ groupe.nom }}</option>
-        {% endfor %}
-    </select>
-</div>
+<select id="visibilite" name="visibilite">
+    <option value="0">Privé</option>
+    <optgroup label="Pour le groupe">
+    {% for groupe in groupes %}
+        <option value="{{ groupe.id }}">{{ groupe.nom }}</option>
+    {% endfor %}
+    </optgroup>
+</select>
 <script type="text/javascript">
-    $('.visi_button div').click(function () {
-        $('.visi_button_actif').removeClass('visi_button_actif');
-        $(this).addClass('visi_button_actif');
-
-
-        $("input[name='visibilite']").val([$(this).attr("rel")])
-    });
+    $("#visibilite").select2();
 </script>
 
 <div class="titre_form_element">

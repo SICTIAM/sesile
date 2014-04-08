@@ -133,14 +133,6 @@ class User extends BaseUser {
     protected $collectivite;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Groupe")
-     * @ORM\JoinTable(name="UsersGroups",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-     *      )
-     */
-    protected $groupes;
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="user")
@@ -293,7 +285,7 @@ class User extends BaseUser {
      */
     public function __construct() {
         parent::__construct();
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
