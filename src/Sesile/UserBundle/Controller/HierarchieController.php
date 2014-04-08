@@ -57,7 +57,6 @@ class HierarchieController extends Controller {
         $group->setJson($request->request->get('tree'));
         $group->setType(0);
         $group->setCouleur("white");
-        //$group->setType(0);
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
 

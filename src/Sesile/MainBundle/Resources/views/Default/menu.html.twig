@@ -140,15 +140,20 @@
     </div>
     <script type="text/javascript">
         $(".entete-menu").click(function () {
-            $(".titremenu").removeClass("titremenu");
-            $(this).addClass("titremenu");
-            $(".dd-menu:visible").slideUp();
-            $(this).next(".dd-menu").slideDown();
+            if(!$(this).hasClass("titremenu")) {
+                $(".titremenu").removeClass("titremenu");
+                $(this).addClass("titremenu");
+                $(".dd-menu:visible").slideUp();
+                $(this).next(".dd-menu").slideDown();
+            }
         });
 
         $(".dd-menu li").click(function () {
             $(".dd-menu .titremenu").removeClass("titremenu");
             $(this).addClass("titremenu");
         });
+
+        $(".titremenu").next(".dd-menu").slideDown();
+
     </script>
 {% endblock %}
