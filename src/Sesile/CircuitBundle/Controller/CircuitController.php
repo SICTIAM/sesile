@@ -3,6 +3,7 @@
 namespace Sesile\CircuitBundle\Controller;
 
 use Sesile\CircuitBundle\Entity\Circuit;
+use Sesile\UserBundle\Entity\Groupe;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -103,5 +104,13 @@ class CircuitController extends Controller
         }
 
         return new Response("OK");
+    }
+
+    /**
+     * Retourne le circuit associé à un groupe
+     * @param Groupe $group
+     */
+    private function getCircuitfromgroup(Groupe $group) {
+
     }
 }

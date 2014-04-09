@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use Sesile\UserBundle\Entity\User;
 
 /**
  * Classeur
@@ -425,7 +426,7 @@ class Classeur {
     }
 
     public function isValidable($userid) {
-        return (($this->getValidant() == $userid) || (is_validable));
+        return ($this->getValidant() == $userid);
     }
 
     public function isValidableByDelegates($delegates) {
@@ -438,8 +439,8 @@ class Classeur {
         return (in_array($this->getValidant(), $arrayid));
     }
 
-    public function isDelegatedToMe($userid) {
-        return !($this->getValidant() == $userid || $this->getValidant() == 0);
+    public function isDelegatedToMe(User $user) {
+        return $this->isValidableByDelegates(array($user));
     }
 
     public function isModifiable($userid)
@@ -448,13 +449,10 @@ class Classeur {
     }
 
     public function isModifiableByDelegates($delegates){
-
         $arrayid = array();
-
         foreach($delegates as $d){
             $arrayid[] = $d->getId();
         }
-
 
         return (( (in_array($this->getValidant(), $arrayid) ) || (in_array($this->getUser(), $arrayid))) && $this->getStatus() != 3);
 
