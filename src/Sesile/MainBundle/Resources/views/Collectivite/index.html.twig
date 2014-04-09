@@ -17,7 +17,7 @@
 	    </thead>
 	    <tbody>
 		{% for coll in collectivites %}
-		    <tr class="coll-row">
+		    <tr class="coll-row" data-id="{{ coll.id }}">
 			<td>{{ coll.nom }}</td>
 			<td>{{ coll.domain }}</td>
 			<td>{{ coll.active }}</td>
@@ -41,4 +41,9 @@
 	    </button>
 	</a>
     </div>
+    <script type="text/javascript">
+	$(".coll-row").click(function () {
+	    document.location.href = Routing.generate('edit_collectivite', { id: $(this).data("id") });
+	});
+    </script>
 {% endblock %}

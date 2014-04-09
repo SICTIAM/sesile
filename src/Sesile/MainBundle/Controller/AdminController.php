@@ -124,7 +124,7 @@ class AdminController extends Controller
     /**
      * Displays a form to edit an existing Collectivite entity.
      *
-     * @Route("/collectivite/edit/{id}/", name="edit_collectivite")
+     * @Route("/collectivite/edit/{id}/", name="edit_collectivite", options={"expose"=true})
      * @Method("GET")
      * @Template("SesileMainBundle:Collectivite:edit.html.twig")
      */
