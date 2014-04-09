@@ -73,23 +73,10 @@ class ClasseurController extends Controller
      * @Method("GET")
      * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
      */
-    public function aValiderAction()
-    {
+    public function aValiderAction() {
         $em = $this->getDoctrine()->getManager();
-
-
-
-
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
-
-
-
-
         $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
-
-
-
-
 
        if(!empty($usersdelegated)){
            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
@@ -105,7 +92,6 @@ class ClasseurController extends Controller
                     "status" => 1
                 ));
         }
-
 
         return array(
             'classeurs' => $entities
@@ -273,8 +259,7 @@ class ClasseurController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
 

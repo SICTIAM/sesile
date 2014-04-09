@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use Sesile\UserBundle\Entity\User;
 
 /**
  * Classeur
@@ -327,8 +328,7 @@ class Classeur {
      *
      * @return integer
      */
-    public function getValidant()
-    {
+    public function getValidant() {
         return $this->validant;
     }
 
@@ -396,7 +396,6 @@ class Classeur {
         return ($this->getNextValidant($em)==0);
     }
 
-
     public function valider(\Doctrine\ORM\EntityManager $em)
     {
         $this->setValidant($this->getNextValidant($em));
@@ -426,13 +425,11 @@ class Classeur {
         $this->setStatus(3);
     }
 
-
-    public function isValidable($userid)
-    {
+    public function isValidable($userid) {
         return ($this->getValidant() == $userid);
     }
 
-    public function isValidableByDelegates($delegates){
+    public function isValidableByDelegates($delegates) {
         $arrayid = array();
 
         foreach($delegates as $d){
@@ -440,15 +437,11 @@ class Classeur {
         }
 
         return (in_array($this->getValidant(), $arrayid));
-
     }
 
-    public function isDelegatedToMe($userid){
-        return !($this->getValidant() == $userid || $this->getValidant() == 0) ;
+    public function isDelegatedToMe(User $user) {
+        return $this->isValidableByDelegates(array($user));
     }
-
-
-
 
     public function isModifiable($userid)
     {
@@ -456,13 +449,10 @@ class Classeur {
     }
 
     public function isModifiableByDelegates($delegates){
-
         $arrayid = array();
-
         foreach($delegates as $d){
             $arrayid[] = $d->getId();
         }
-
 
         return (( (in_array($this->getValidant(), $arrayid) ) || (in_array($this->getUser(), $arrayid))) && $this->getStatus() != 3);
 
@@ -512,7 +502,6 @@ class Classeur {
     {
         return ($this->getUser() == $userid && $this->getStatus() != 3);
     }
-
 
     public function  isSupprimableByDelegates($delegates){
         $arrayid = array();
