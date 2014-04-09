@@ -33,13 +33,11 @@
 
 <div id="maman">
 <div id="gauche">
-    <a href="/app_dev.php/ ">
+    <a href="{{ app.request.getBaseURL() }}">
     <div id="logo">
             <img src="{{ asset("/images/badlogo.png") }}"/>
         </div>
     </a>
-
-
     <div class="border_imposetonstyle">
 	    {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
 	    <img  id="img_imposetonstyle"  src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" />
@@ -132,6 +130,30 @@
 
                         <script type="application/javascript">
                             $(document).ready(function () {
+				$("#delegations_recues .dtables").dataTable({
+				    "oLanguage": {
+					"sSearch": "Rechercher&nbsp;:",
+					"sInfo": "Délégation  _START_ &agrave; _END_ sur _TOTAL_",
+					"sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+					"sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+					"sZeroRecords": "Aucun enregistrement &agrave; afficher",
+					"sLengthMenu": "Afficher _MENU_ délégations par page",
+					"oPaginate": {
+					    "sFirst": "",
+					    "sPrevious": "",
+					    "sNext": "",
+					    "sLast": ""
+					}
+				    },
+				    "iDisplayLength": 15,
+				    "aLengthMenu": [15, 30, 50, 100],
+				    "sDom": 'lft<"footer_datatables"p>',
+				    "aoColumnDefs": [
+					{ "bSortable": false, "aTargets": [ 0, 4 ] }
+				    ],
+				    "sPaginationType": "full_numbers"
+				});
+
                                 $("#classeurs_a_valider .dtables").dataTable({
                                     "oLanguage": {
                                         "sSearch": "Rechercher&nbsp;:",
@@ -151,7 +173,7 @@
                                     "aLengthMenu": [15, 30, 50, 100],
                                     "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
-                                        { "bSortable": false, "aTargets": [ 4, 5 ] }
+                                        { "bSortable": false, "aTargets": [ 5, 6 ] }
                                     ],
                                     "sPaginationType": "full_numbers"
                                 });
@@ -175,7 +197,7 @@
                                     "aLengthMenu": [15, 30, 50, 100],
                                     "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
-                                        { "bSortable": false, "aTargets": [ 4, 5 ] }
+                                        { "bSortable": false, "aTargets": [ 5, 6 ] }
                                     ],
                                     "sPaginationType": "full_numbers"
                                 });
