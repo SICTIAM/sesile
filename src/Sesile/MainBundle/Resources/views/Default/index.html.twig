@@ -38,10 +38,15 @@
             <img src="{{ asset("/images/badlogo.png") }}"/>
         </div>
     </a>
-    {% include 'SesileMainBundle:Default:menu.html.twig' %}
-    <div id="img_collectivite">
-        <img src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" width="100px" height="100px"/>
+
+
+    <div class="border_imposetonstyle">
+	    {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
+	    <img  id="img_imposetonstyle"  src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" />
     </div>
+    {% if is_granted('ROLE_USER') %}
+	{% include 'SesileMainBundle:Default:menu.html.twig' %}
+    {% endif %}
 </div>
 
 <div id="droite">
