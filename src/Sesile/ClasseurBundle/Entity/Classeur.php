@@ -327,8 +327,7 @@ class Classeur {
      *
      * @return integer
      */
-    public function getValidant()
-    {
+    public function getValidant() {
         return $this->validant;
     }
 
@@ -396,7 +395,6 @@ class Classeur {
         return ($this->getNextValidant($em)==0);
     }
 
-
     public function valider(\Doctrine\ORM\EntityManager $em)
     {
         $this->setValidant($this->getNextValidant($em));
@@ -426,13 +424,11 @@ class Classeur {
         $this->setStatus(3);
     }
 
-
-    public function isValidable($userid)
-    {
-        return ($this->getValidant() == $userid);
+    public function isValidable($userid) {
+        return (($this->getValidant() == $userid) || (is_validable));
     }
 
-    public function isValidableByDelegates($delegates){
+    public function isValidableByDelegates($delegates) {
         $arrayid = array();
 
         foreach($delegates as $d){
@@ -440,15 +436,11 @@ class Classeur {
         }
 
         return (in_array($this->getValidant(), $arrayid));
-
     }
 
-    public function isDelegatedToMe($userid){
-        return !($this->getValidant() == $userid || $this->getValidant() == 0) ;
+    public function isDelegatedToMe($userid) {
+        return !($this->getValidant() == $userid || $this->getValidant() == 0);
     }
-
-
-
 
     public function isModifiable($userid)
     {
@@ -512,7 +504,6 @@ class Classeur {
     {
         return ($this->getUser() == $userid && $this->getStatus() != 3);
     }
-
 
     public function  isSupprimableByDelegates($delegates){
         $arrayid = array();
