@@ -7,7 +7,7 @@
             &nbsp;&nbsp;&nbsp;Gérer les Délégations
         </div>
         {% set donnees = true %}
-        {% include 'SesileDelegationsBundle:Default:liste.html.twig' %}
+        {% include 'SesileDelegationsBundle:Default:listemesdelegs.html.twig' %}
         <a href="{{ path('delegation_new') }}">
             <button type="button" class="btn btn-default navbar-btn">
                 Déléguer ses droits
@@ -41,6 +41,8 @@
             ],
             "sPaginationType": "full_numbers"
         });
+
+
     </script>
 {% endblock %}
 

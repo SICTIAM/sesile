@@ -29,9 +29,8 @@ class ClasseursUsersRepository extends EntityRepository
 
             $sql = 'SELECT c.* FROM ClasseursUsers cu
                 inner join Classeur c on cu.classeur_id = c.id
-                WHERE c.visibilite = 0
-                or (c.visibilite = -1 and cu.user_id = :userid)
-                or (c.visibilite > 0 and cu.ordre >= (select ordre from `ClasseursUsers` d where d.classeur_id = cu.classeur_id and d.user_id = c.visibilite) and cu.user_id = :userid)
+                WHERE (c.visibilite = 0 and cu.user_id = :userid)
+                or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid))
                 group by cu.classeur_id';
 
             $query = $em->createNativeQuery($sql, $rsm)->setParameter('userid', $userid);
@@ -45,8 +44,7 @@ class ClasseursUsersRepository extends EntityRepository
         return self::$classeursVisibles;
     }
 
-    public function getClasseursRetractables($userid)
-    {
+    public function getClasseursRetractables($userid) {
         if (self::$classeursRetractables === null) {
             $em = $this->getEntityManager();
             $rsm = new ResultSetMappingBuilder($em);
@@ -69,16 +67,14 @@ class ClasseursUsersRepository extends EntityRepository
         return self::$classeursRetractables;
     }
 
-    public function deleteClasseurUser($classeur, $circuit)
-    {
+    public function deleteClasseurUser($classeur, $circuit) {
         $em = $this->getEntityManager();
         $query = $em->createQuery('DELETE FROM SesileClasseurBundle:ClasseursUsers cu WHERE cu.user not in (' . $circuit . ') AND cu.classeur = ' . $classeur->getId());
         $query->execute();
     }
 
 
-    public function getClasseurByUser($classeurid, $userid)
-    {
+    public function getClasseurByUser($classeurid, $userid) {
         if (self::$classeursVisibles === null) {
             $em = $this->getEntityManager();
             $rsm = new ResultSetMappingBuilder($em);
@@ -86,9 +82,8 @@ class ClasseursUsersRepository extends EntityRepository
 
             $sql = 'SELECT c.* FROM ClasseursUsers cu
                 inner join Classeur c on cu.classeur_id = c.id
-                WHERE (c.visibilite = 0  and cu.classeur_id = :classeurid)
-                or (c.visibilite = -1 and cu.user_id = :userid  and cu.classeur_id = :classeurid )
-                or (c.visibilite > 0 and cu.ordre >= (select ordre from `ClasseursUsers` d where d.classeur_id = cu.classeur_id and d.user_id = c.visibilite) and cu.user_id = :userid and cu.classeur_id = :classeurid )
+                WHERE (c.visibilite = 0 and cu.user_id = :userid  and cu.classeur_id = :classeurid )
+                or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid) and cu.classeur_id = :classeurid )
                 group by cu.classeur_id';
 
             $query = $em->createNativeQuery($sql, $rsm)->setParameter('userid', $userid)->setParameter('classeurid', $classeurid);
@@ -100,5 +95,4 @@ class ClasseursUsersRepository extends EntityRepository
             }
         }
     }
-
 }

@@ -24,6 +24,7 @@ class TokenListener
     {
         $controller = $event->getController();
 
+
         /*
          * $controller peut être une classe ou une closure. Ce n'est pas
          * courant dans Symfony2 mais ça peut arriver.
@@ -36,8 +37,6 @@ class TokenListener
         if ($controller[0] instanceof TokenAuthenticatedController) {
             $headers = $event->getRequest()->headers;
             if ($headers->has("token") && $headers->has("secret")) {
-
-
                 $entity = $this->em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $headers->get('token'), 'apisecret' => $headers->get('secret'), 'apiactivated' => true));;
 
                 if (empty($entity)) {

@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
     <div class="bloc_page">
-        {% if classeur.isModifiable(app.user.id) %}
+        {% if classeur.isModifiableByDelegates(usersdelegated) %}
             <div class="titre_page">
                 <span class="glyphicon glyphicon-pencil"></span>
                 &nbsp;&nbsp;&nbsp;Édition du classeur
@@ -22,7 +22,22 @@
             &nbsp;Historique
         </button>
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+
+        {% if classeur.isDelegatedToMe(app.user.id) %}
         <br>
+        <div class="legende">
+            <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
+
+            <span class="glyphicon statut_0"></span>
+        <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img class="userpicture"
+                                                                                              src="{{ asset(upload_path ~ uservalidant.path) }}"/>{{  uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
+
+
+        </div>
+        {% endif %}
+
+        <br/>
+
 
         <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
@@ -140,7 +155,7 @@
                 $(".perso_circuit").css("cursor", "Default");
 
 
-                {% if classeur.isModifiable(app.user.id) %}
+                {% if classeur.isModifiableByDelegates(usersdelegated) %}
                 $("#name, #desc, #validation").removeAttr("disabled");
                 $("#enregistrer_modif").show();
                 $(".top_selects_circuits, .suppr_perso").show();

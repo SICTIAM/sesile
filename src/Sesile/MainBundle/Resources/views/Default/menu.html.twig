@@ -2,22 +2,16 @@
     <div class="menu">
         <ul>
             <li class="menu-elem menu-jaune">
-                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
+                <div class="dd-toggle entete-menu">
                     <a href="#">
                         <div class="rectanglemenu" id="jauneclair"></div>
                         D&eacute;l&eacute;gations<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
                     <li>
-                        <a href="{{ path("delegation_new") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            Ajout d’une délégation
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ path("delegations_list") }}">
                             <img class="arrows" src="{{ asset("/images/arrowyellow.png") }}"/>
-                            Gérer les délégations
+                           Délégations données
                         </a>
                     </li>
                     <li>
@@ -30,7 +24,7 @@
             </li>
 
             <li class="menu-elem menu-bleu">
-                <div class="dd-toggle entete-menu {% if( 'classeur' in app.request.requestUri ) %}titremenu{% endif %}">
+                <div class="dd-toggle entete-menu">
                     <a href="#">
                         <div class="rectanglemenu" id="bleuclair"></div>
                         Classeurs<b class="caret carette"></b></a>
@@ -42,16 +36,16 @@
                             Liste des classeurs
                         </a>
                     </li>
+		    <li>
+			<a href="{{ path("classeur_new") }}">
+			    <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+			    Ajout d'un classeur
+			</a>
+		    </li>
                     <li>
                         <a href="{{ path("index_valider") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            Classeur(s) reçu(s)
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("classeur_new") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            Ajout d'un classeur
+                            Classeur(s) à valider
                         </a>
                     </li>
                     <li>
@@ -62,26 +56,32 @@
                     </li>
                 </ul>
             </li>
-
+            {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
             <li class="menu-elem menu-rouge">
-                <div class="dd-toggle entete-menu {% if( '/delegation/' in app.request.requestUri ) %}titremenu{% endif %}">
+                <div class="dd-toggle entete-menu">
                     <a href="#">
                         <div class="rectanglemenu" id="rougeclair"></div>
                         Préférences<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
                     <li>
-                        <a href="{{ path("classeur") }}">
+                        <a href="{{ path("notifications") }}">
                             <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
                             Notifications
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ path("message_accueil") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
+                            Message d'accueil
+                        </a>
+                    </li>
                 </ul>
             </li>
-
+            {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="menu-elem menu-vert ">
-                <div class="dd-toggle entete-menu {% if( '/user/' in app.request.requestUri ) %}titremenu{% endif %}">
+                <div class="dd-toggle entete-menu">
                     <a href="#">
                         <div class="rectanglemenu" id="vertclair"></div>
                         Administration<b class="caret carette"></b></a>
@@ -93,33 +93,40 @@
                             Gestion des circuits
                         </a>
                     </li>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
                     <li>
-                        <a href="{{ path("gestion_circuit") }}">
+                        <a href="{{ path("liste_type_classeur") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Types de classeurs
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ path("admin") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Message d'accueil
-                        </a>
-                    </li>
+                    {% endif %}
                     <li>
                         <a href="{{ path("liste_users") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Gestion des utilisateurs
                         </a>
                     </li>
-
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                        <li>
-                        <a href="{{ path("index_collectivite") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                            Collectivités
-                        </a>
-                    </li>
-                    {% endif %}
+		    <li>
+			<a href="{{ path("groupes") }}">
+			    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+			    Gestion des groupes
+			</a>
+		    </li>
+		    {#<li>#}
+			{#<a href="{{ path("organigramme") }}">#}
+			    {#<img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>#}
+			    {#Organigramme#}
+			{#</a>#}
+		    {#</li>#}
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                <a href="{{ path("index_collectivite") }}">
+                    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                    Collectivités
+                </a>
+            </li>
+            {% endif %}
                 </ul>
             </li>
             {% endif %}
@@ -127,15 +134,24 @@
     </div>
     <script type="text/javascript">
         $(".entete-menu").click(function () {
-            $(".titremenu").removeClass("titremenu");
-            $(this).addClass("titremenu");
-            $(".dd-menu:visible").slideUp();
-            $(this).next(".dd-menu").slideDown();
+            if(!$(this).hasClass("titremenu")) {
+                $(".titremenu").removeClass("titremenu");
+                $(this).addClass("titremenu");
+                $(".dd-menu:visible").slideUp();
+                $(this).next(".dd-menu").slideDown();
+            }
         });
 
         $(".dd-menu li").click(function () {
             $(".dd-menu .titremenu").removeClass("titremenu");
             $(this).addClass("titremenu");
         });
+
+        $(".titremenu").next(".dd-menu").slideDown();
+	$("a").click( function(e) {
+	    e.preventDefault();
+	    //position du titremenu a mettre dans le get
+	    window.location.href = $(this).attr("href");
+	});
     </script>
 {% endblock %}

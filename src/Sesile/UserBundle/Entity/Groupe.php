@@ -10,8 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Sesile\UserBundle\Entity\GroupeRepository")
  */
-class Groupe
-{
+class Groupe {
     /**
      * @var integer
      *
@@ -24,16 +23,41 @@ class Groupe
     /**
      * @var string
      *
-     * @ORM\Column(name="Nom", type="string", length=255)
+     * @ORM\Column(name="nom", type="string", length=255)
      */
     private $nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Collectivite", type="string", length=255)
+     * @ORM\Column(name="collectivite", type="string", length=255)
      */
     private $collectivite;
+
+    /**
+     * @var
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="groupe")
+     */
+    private $hierarchie;
+
+    /**
+     * @var string
+     * @ORM\Column(name="couleur", type="string", length=255)
+     */
+    private $couleur;
+
+    /**
+     * @var int
+     * @ORM\Column(name="type", type="integer")
+     */
+    private $type;
+
+    /**
+     * @var string
+     * @ORM\Column(name="json", type="text")
+     */
+    private $json;
+
 
 
     /**
@@ -41,8 +65,7 @@ class Groupe
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -52,10 +75,8 @@ class Groupe
      * @param string $nom
      * @return Groupe
      */
-    public function setNom($nom)
-    {
+    public function setNom($nom) {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -64,8 +85,7 @@ class Groupe
      *
      * @return string
      */
-    public function getNom()
-    {
+    public function getNom() {
         return $this->nom;
     }
 
@@ -75,10 +95,8 @@ class Groupe
      * @param string $collectivite
      * @return Groupe
      */
-    public function setCollectivite($collectivite)
-    {
+    public function setCollectivite($collectivite) {
         $this->collectivite = $collectivite;
-
         return $this;
     }
 
@@ -87,55 +105,117 @@ class Groupe
      *
      * @return string
      */
-    public function getCollectivite()
-    {
+    public function getCollectivite() {
         return $this->collectivite;
     }
 
     /**
-     * @ORM\PrePersist()
-     *
+     * Constructor
      */
-    public function preUpload()
+    public function __construct() {
+        $this->hierarchie = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+
+
+    /**
+     * Set couleur
+     *
+     * @param string $couleur
+     * @return Groupe
+     */
+    public function setCouleur($couleur)
     {
-
-        if (null !== $this->file) {
-            // faites ce que vous voulez pour générer un nom unique
-
-            $this->path = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
-        }
+        $this->couleur = $couleur;
+    
+        return $this;
     }
 
     /**
+     * Get couleur
      *
-     *
+     * @return string
      */
-    public function upload($Dirpath)
+    public function getCouleur()
     {
-        if (null === $this->file) {
-            return;
-        }
-
-
-        // s'il y a une erreur lors du déplacement du fichier, une exception
-        // va automatiquement être lancée par la méthode move(). Cela va empêcher
-        // proprement l'entité d'être persistée dans la base de données si
-        // erreur il y a
-        //   var_dump($this->getUploadDir());var_dump($this->file->getClientOriginalName());exit;
-        $this->file->move($Dirpath, $this->path);
-
-
-        unset($this->file);
+        return $this->couleur;
     }
 
     /**
+     * Set json
      *
+     * @param string $json
+     * @return Groupe
      */
-    public function removeUpload($Dirpath)
+    public function setJson($json)
     {
+        $this->json = $json;
+    
+        return $this;
+    }
 
-        if ($file = $Dirpath . $this->path) {
-            unlink($file);
-        }
+    /**
+     * Get json
+     *
+     * @return string 
+     */
+    public function getJson()
+    {
+        return $this->json;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \int $type
+     * @return Groupe
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \int 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Add hierarchie
+     *
+     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
+     * @return Groupe
+     */
+    public function addHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
+    {
+        $this->hierarchie[] = $hierarchie;
+    
+        return $this;
+    }
+
+    /**
+     * Remove hierarchie
+     *
+     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
+     */
+    public function removeHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
+    {
+        $this->hierarchie->removeElement($hierarchie);
+    }
+
+    /**
+     * Get hierarchie
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHierarchie()
+    {
+        return $this->hierarchie;
     }
 }

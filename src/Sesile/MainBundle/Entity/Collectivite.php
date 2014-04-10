@@ -93,6 +93,11 @@ class Collectivite
      */
     private $textmailwalid;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\User", mappedBy="collectivite")
+     */
+    private $users;
+
 
     /**
      * Get id
@@ -319,9 +324,10 @@ class Collectivite
 
     public function removeUpload()
     {
-
         if ($file = $this->getUploadRootDir() . $this->image) {
-            unlink($file);
+            if(file_exists($file) && !is_dir($file)) {
+                unlink($file);
+            }
         }
     }
 
@@ -427,5 +433,38 @@ class Collectivite
 
                 Lien vers le classeur {{ lien }}");
         }
+    }
+
+    /**
+     * Add users
+     *
+     * @param \Sesile\UserBundle\Entity\User $users
+     * @return Collectivite
+     */
+    public function addUser(\Sesile\UserBundle\Entity\User $users)
+    {
+        $this->users[] = $users;
+    
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \Sesile\UserBundle\Entity\User $users
+     */
+    public function removeUser(\Sesile\UserBundle\Entity\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }

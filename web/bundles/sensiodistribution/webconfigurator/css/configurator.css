@@ -5,12 +5,10 @@
     margin-bottom: 30px;
     font-size: 26px;
 }
-
 .step p {
     line-height: 20px;
     padding-bottom: 20px;
 }
-
 .step .symfony-block-steps span {
     display: inline-block;
     padding: 2px 3px;
@@ -20,35 +18,28 @@
     font-weight: bold;
     text-transform: uppercase;
 }
-
 .step .symfony-block-steps span.selected {
     background-color: #aacd4e;
     color: #FFFFFF;
 }
-
 .step .symfony-form-row {
     padding-bottom: 40px;
 }
-
 .step .symfony-form-column {
     width: 430px;
     float: left;
 }
-
 .step .symfony-form-footer {
     padding-top: 20px;
     clear: both;
 }
-
 .step .symfony-form-field {
     height: 20px;
 }
-
 .step .symfony-form-row label {
     display: block;
     padding-bottom: 8px;
 }
-
 .step .symfony-form-field input[type=text],
 .step .symfony-form-field input[type=password],
 .step .symfony-form-field textarea,
@@ -57,7 +48,6 @@
     color: #565656;
     width: 200px;
 }
-
 .step .symfony-form-field input[type=text],
 .step .symfony-form-field input[type=password],
 .step .symfony-form-field textarea {
@@ -66,11 +56,9 @@
     width: 194px;
     padding: 5px 6px;
 }
-
 .step .symfony-form-errors ul {
     padding: 0;
 }
-
 .step .symfony-form-errors li {
     background: url(../images/notification.gif) no-repeat left 6px;
     font-size: 11px;
@@ -78,7 +66,6 @@
     color: #759e1a;
     padding: 10px 25px;
 }
-
 .step .symfony-configuration {
     margin: 10px 0;
     width: 100%;
