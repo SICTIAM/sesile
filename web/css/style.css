@@ -393,6 +393,15 @@ label{
 	margin: 3em 0em 1em 0em;
 }
 
+.legendeitem,
+.pipe{
+	float: left;
+}
+
+.clear {
+	clear: both;
+}
+
 .txt_legende {
 	display: block;
 	margin-bottom: 0.5em;
@@ -424,10 +433,10 @@ label{
 	text-shadow: 0 1px 0 #ffffff;
 }
 .delegdo{
-	color: #3285AB;
+	color: #83B13A;
 }
 .delegre{
-	color: #DBA209;
+	color: #CA4C4D;
 }
 
 select [name=user] {
