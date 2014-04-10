@@ -109,8 +109,17 @@ class CircuitController extends Controller
     /**
      * Retourne le circuit associé à un groupe
      * @param Groupe $group
+     * @return string les id user du circuit dans l'ordre
      */
     private function getCircuitfromgroup(Groupe $group) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('SesileCircuitBundle:UserGroupe');
 
+        $query = $repo->createQueryBuilder('p')
+            ->where('p.groupe > :groupe')
+            ->setParameter('groupe', $group)
+            ->getQuery();
+
+        $products = $query->getResult();
     }
 }
