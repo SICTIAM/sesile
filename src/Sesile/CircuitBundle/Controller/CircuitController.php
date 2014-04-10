@@ -132,37 +132,31 @@ class CircuitController extends Controller
      * @return string les id user du circuit dans l'ordre
      */
     private function getCircuitFromgroupForUser(User $user, Groupe $group) {
-        ini_set("memory_limit", 1024);
-
         $em = $this->getDoctrine()->getManager();
-        $hierarchie = $em->getRepository('SesileUserBundle:UserGroupe')->findBy(array("groupe", $group), array("user", "DESC"));
+        $hierarchie = $em->getRepository('SesileUserBundle:UserGroupe')->findBy(array("groupe" => $group), array("parent" => "DESC"));
 
-        $parent = false;
-        $ordre = array();
+        $this->ordre = "";
 
-        $parent = $hierarchie->getParent();
-        $user_id = $hierarchie->getUser()->getId();
+        return $this->recursivesortHierarchie($hierarchie, $user->getId());
+    }
 
-        $ordre = $user_id.",";
-/*
-        while($parent !== 0) {
-            $userobj = $em->getRepository('SesileUserBundle:User')->findById($user_id);
-            $query = $repo->createQueryBuilder('p')
-                ->where('p.groupe = :groupe')
-                ->andWhere('p.user = :user')
-                ->setParameter('groupe', $group)
-                ->setParameter('user', $userobj)
-                ->getQuery();
+    private $ordre;
 
-            $hierarchie = $query->getResult();
-            $hierarchie = $hierarchie[0];
-            $parent = $hierarchie->getParent();
-            $user_id = $hierarchie->getUser()->getId();
-            $ordre = $user_id.",";
+    private function recursivesortHierarchie($hierarchie, $curr) {
+        static $recurs = 0;
+        foreach($hierarchie as $k => $groupeUser) {
+            if($groupeUser->getUser()->getId() == $curr ) {
+                if($recurs > 0) {
+                    $this->ordre .= $groupeUser->getUser()->getId().",";
+                }
+
+                if($curr != 0 ) {
+                    $recurs++;
+                    $this->recursivesortHierarchie($hierarchie, $groupeUser->getParent());
+                }
+            }
         }
-*/
-        var_dump($ordre);exit;
-
-        return $ordre;
+        $this->ordre = rtrim($this->ordre, ",");
+        return $this->ordre;
     }
 }
