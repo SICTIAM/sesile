@@ -411,8 +411,17 @@ label{
 	font-weight: bold;
 }
 
+/*.indicationslegende{*/
+	/*display: none;*/
+/*}*/
+
 .pipe {
 	color: #cccccc;
+}
+
+.plus  {
+	float: right;
+	cursor: pointer;
 }
 
 /*DELEGATIONS*/
