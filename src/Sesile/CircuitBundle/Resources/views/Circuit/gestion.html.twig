@@ -25,7 +25,7 @@
         </div>
         <div id="circuits_list">
             {% for circuit in circuits %}
-                <p data-id="{{ circuit.id }}" data-ordre="{{ circuit.ordre }}">{{ circuit.name }}</p>
+                <p data-id="{{ circuit["id"] }}" data-ordre="{{ circuit["ordre"] }}">{{ circuit["name"] }}</p>
             {% endfor %}
         </div>
         <span id="circuitadd_btn" class="glyphicon glyphicon-chevron-down"></span>
