@@ -393,6 +393,15 @@ label{
 	margin: 3em 0em 1em 0em;
 }
 
+.legendeitem,
+.pipe{
+	float: left;
+}
+
+.clear {
+	clear: both;
+}
+
 .txt_legende {
 	display: block;
 	margin-bottom: 0.5em;
