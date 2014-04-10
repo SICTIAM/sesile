@@ -68,6 +68,14 @@
 	<br>
 	{{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
 	{{ form_end(form) }}
+
+	<div class="retourbtn">
+	<a href="{{ path('collectivité') }}">
+	    <button type="button" class="btn btn-default navbar-btn">
+		Retour à la liste des collectivités
+	    </button>
+	</a>
+	</div>
     </div>
 
     <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}"/>

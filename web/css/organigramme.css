@@ -64,7 +64,7 @@
 
 #edit_service {
 	display: inline-block;
-	width: 45%;
+	width: 35%;
 	height: 35px;
 	padding: 5px 10px;
 }
@@ -72,7 +72,7 @@
 #toolbar {
 	display: inline-block;
 	float: right;
-	width: 55%;
+	width: 65%;
 	height: 35px;
 	padding: 5px 10px;
 }
@@ -83,4 +83,8 @@
 	padding: 0 9px;
 	text-align: center;
 	vertical-align: middle;
+}
+
+.select2-choice{
+	width:15em;
 }

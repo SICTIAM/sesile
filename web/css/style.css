@@ -411,8 +411,17 @@ label{
 	font-weight: bold;
 }
 
+/*.indicationslegende{*/
+	/*display: none;*/
+/*}*/
+
 .pipe {
 	color: #cccccc;
+}
+
+.plus  {
+	float: right;
+	cursor: pointer;
 }
 
 /*DELEGATIONS*/
@@ -446,6 +455,10 @@ select [name=user] {
 /*BOUTONS FORMULAIRE*/
 .form_action {
 	display: inline-block;
+}
+
+.retourbtn{
+	display: inline;
 }
 
 .btn {
