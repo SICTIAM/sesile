@@ -342,7 +342,7 @@ class User extends BaseUser {
         return $this;
     }
 
-    /**
+    /**$user
      * Remove delegationsDonnees
      *
      * @param \Sesile\DelegationsBundle\Entity\Delegations $delegationsDonnees

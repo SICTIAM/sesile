@@ -114,6 +114,28 @@ class HierarchieController extends Controller {
         if($groupe) {
             $groupe->setNom($request->request->get('nom'));
             $groupe->setJson($request->request->get('tree'));
+
+
+            // suppression des liaisons pour ce groupe
+            $hierarchy = $em->getRepository('SesileUserBundle:UserGroupe')->findByGroupe($groupe);
+            foreach($hierarchy as $h) {
+                $em->remove($h);
+            }
+
+            $users = array(); // globale pour la récursive (c'est une porcherie mais ça marche qd meme)
+            $users_du_groupe = $this->getUsersFromJson($groupe->getJson());
+
+            foreach($users_du_groupe as $user) {
+                $user_obj = $em->getRepository('SesileUserBundle:User')->find($user["id"]);
+                if(is_object($user_obj)) {
+                    $usergroup = new UserGroupe();
+                    $usergroup->setUser($user_obj);
+                    $usergroup->setGroupe($groupe);
+                    $usergroup->setParent($user["parent"]);
+                    $em->persist($usergroup);
+                }
+            }
+
             $em->flush();
             return $this->redirect($this->generateUrl('groupes'));
         }

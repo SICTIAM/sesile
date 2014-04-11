@@ -4,6 +4,7 @@ namespace Sesile\CircuitBundle\Controller;
 
 use Sesile\CircuitBundle\Entity\Circuit;
 use Sesile\UserBundle\Entity\Groupe;
+use Sesile\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,7 +19,7 @@ class CircuitController extends Controller
      * @Route("/new/", name="new_circuit", options={"expose"=true})
      * @Template()
      */
-    public function newAction()
+    public function newAction($forClasseur = true)
     {
         // recup la liste des users en base
         $em = $this->getDoctrine()->getManager();
@@ -28,8 +29,27 @@ class CircuitController extends Controller
 
         // recup la list des circuits
         // TODO recup uniquement pour le user connecté
+        $circuits = array();
         $em = $this->getDoctrine()->getManager();
-        $circuits = $em->getRepository('SesileCircuitBundle:Circuit')->findAll();
+        $circuits_du_user = $em->getRepository('SesileCircuitBundle:Circuit')->findByUser_id($this->getUser()->getId());
+
+        foreach ($circuits_du_user as $circuit) {
+            $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre(), "groupe" => false);
+        }
+
+        if($forClasseur) {
+            $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
+            foreach($groupes_du_user as $group) {
+                $circuits[] = array(
+                    "id" => $group->getGroupe()->getId(),
+                    "name" => $group->getGroupe()->getNom(),
+                    "ordre" => $this->getCircuitFromgroupForUser($this->getUser(), $group->getgroupe()),
+                    "groupe" => true
+                );
+            }
+        }
+
+
         return array('users' => $users, "circuits" => $circuits);
     }
 
@@ -39,15 +59,14 @@ class CircuitController extends Controller
      */
     public function indexAction()
     {
-        return $this->newAction();
+        return $this->newAction(false);
     }
 
     /**
      * @Route("/", name="create_circuit")
      * @Method("POST")
      */
-    public function createAction(Request $request)
-    {
+    public function createAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $circuit = new Circuit();
         $circuit->setName($request->request->get('circuit_name'));
@@ -71,8 +90,7 @@ class CircuitController extends Controller
     /**
      * @Route("/liste", name="circuits_favoris", options={"expose"=true})
      */
-    public function listAction()
-    {
+    public function listAction() {
         $em = $this->getDoctrine()->getManager();
         $circuits_du_user = $em->getRepository('SesileCircuitBundle:Circuit')->findAll();
 
@@ -80,6 +98,7 @@ class CircuitController extends Controller
         foreach ($circuits_du_user as $circuit) {
             $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre());
         }
+
 
         $response = new Response(json_encode($circuits));
         $response->headers->set('Content-Type', 'application/json');
@@ -107,10 +126,37 @@ class CircuitController extends Controller
     }
 
     /**
-     * Retourne le circuit associé à un groupe
+     * Retourne le circuit associé à un groupe pour un user donné
      * @param Groupe $group
+     * @param User $user
+     * @return string les id user du circuit dans l'ordre
      */
-    private function getCircuitfromgroup(Groupe $group) {
+    private function getCircuitFromgroupForUser(User $user, Groupe $group) {
+        $em = $this->getDoctrine()->getManager();
+        $hierarchie = $em->getRepository('SesileUserBundle:UserGroupe')->findBy(array("groupe" => $group), array("parent" => "DESC"));
 
+        $this->ordre = "";
+
+        return $this->recursivesortHierarchie($hierarchie, $user->getId());
+    }
+
+    private $ordre;
+
+    private function recursivesortHierarchie($hierarchie, $curr) {
+        static $recurs = 0;
+        foreach($hierarchie as $k => $groupeUser) {
+            if($groupeUser->getUser()->getId() == $curr ) {
+                if($recurs > 0) {
+                    $this->ordre .= $groupeUser->getUser()->getId().",";
+                }
+
+                if($curr != 0 ) {
+                    $recurs++;
+                    $this->recursivesortHierarchie($hierarchie, $groupeUser->getParent());
+                }
+            }
+        }
+        $this->ordre = rtrim($this->ordre, ",");
+        return $this->ordre;
     }
 }

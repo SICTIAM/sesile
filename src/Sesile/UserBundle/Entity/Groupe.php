@@ -116,37 +116,7 @@ class Groupe {
         $this->hierarchie = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
-    /**
-     * Add hierarchie
-     *
-     * @param \Sesile\UserBundle\Entity\DocumentHistory $hierarchie
-     * @return Groupe
-     */
-    public function addHierarchie(\Sesile\UserBundle\Entity\DocumentHistory $hierarchie) {
-        $this->hierarchie[] = $hierarchie;
-    
-        return $this;
-    }
 
-    /**
-     * Remove hierarchie
-     *
-     * @param \Sesile\UserBundle\Entity\DocumentHistory $hierarchie
-     */
-    public function removeHierarchie(\Sesile\UserBundle\Entity\DocumentHistory $hierarchie)
-    {
-        $this->hierarchie->removeElement($hierarchie);
-    }
-
-    /**
-     * Get hierarchie
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getHierarchie()
-    {
-        return $this->hierarchie;
-    }
 
     /**
      * Set couleur
@@ -214,5 +184,38 @@ class Groupe {
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Add hierarchie
+     *
+     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
+     * @return Groupe
+     */
+    public function addHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
+    {
+        $this->hierarchie[] = $hierarchie;
+    
+        return $this;
+    }
+
+    /**
+     * Remove hierarchie
+     *
+     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
+     */
+    public function removeHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
+    {
+        $this->hierarchie->removeElement($hierarchie);
+    }
+
+    /**
+     * Get hierarchie
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHierarchie()
+    {
+        return $this->hierarchie;
     }
 }
