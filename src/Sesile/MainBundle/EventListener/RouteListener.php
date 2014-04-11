@@ -26,7 +26,7 @@ class RouteListener {
         $request = $event->getRequest();
 
         $sousdom = explode(".", $request->getHost());
-        $sousdom = $sousdom[0] != "sesile"?$sousdom[0]:"sictiam";
+        $sousdom = $sousdom[0] != "sditec" ? $sousdom[0] : "sditec";
 
         $collectivite = $this->em->getRepository('SesileMainBundle:Collectivite')->findOneBy(array("domain" => $sousdom, "active" => 1));
         if($collectivite instanceof Collectivite) {
