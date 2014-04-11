@@ -212,8 +212,6 @@ class DefaultController extends Controller
             if ($ldapconn) {
                 //binding au serveur LDAP
 
-                var_dump($cas["cas_server"], $LdapInfo["dn_admin"], $LdapInfo["password"]);exit;
-
                 if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     $entry["cn"] = $entity->getUsername();
                     $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
@@ -393,7 +391,7 @@ class DefaultController extends Controller
 
     private function getCASParams()
     {
-        $file = sprintf("%s/config/config.yml", $this->container->getParameter('kernel.root_dir'));
+        $file = sprintf("%s/config/config_sditec.yml", $this->container->getParameter('kernel.root_dir'));
         $parsed = Yaml::parse(file_get_contents($file));
 
         $cas = $parsed['parameters'];
