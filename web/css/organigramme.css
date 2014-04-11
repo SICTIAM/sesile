@@ -23,7 +23,7 @@
 
 .templink {
     fill: none;
-    stroke: blue;
+    stroke: green;
     stroke-width: 3px;
 }
 
@@ -41,16 +41,50 @@
     stroke: none !important;
 }
 
+#type_groupe,
+#nom_groupe,
+#picker{
+	width: 25%;
+}
 
-
+.glyphicon-star{
+	font-size: 0.2em;
+}
 
 /*********************************************** TOOLBAR *************************************************************/
+#form_hierarchy{
+	background: url("/images/vichy.png") repeat scroll 0 0 #FFFFFF;
+	height: 50px;
+	border: 1px solid #ebebeb;
+	vertical-align: middle;
+	padding: 0.5% 0 0 0;
+	font-family: 'Droid Sans';
+	text-transform: uppercase;
+}
+
 #edit_service {
-    display: inline-block;
+	display: inline-block;
+	width: 35%;
+	height: 35px;
+	padding: 5px 10px;
 }
 
 #toolbar {
-    display: none;
-    position: absolute;
-    left: 50%;
+	display: inline-block;
+	float: right;
+	width: 65%;
+	height: 35px;
+	padding: 5px 10px;
+}
+
+.btn-envoyer {
+	height: 26px;
+	line-height: 26px;
+	padding: 0 9px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.select2-choice{
+	width:15em;
 }

@@ -1,0 +1,70 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-floppy-saved"></span>
+            &nbsp;&nbsp;&nbsp;Liste des groupes fonctionnels
+        </div>
+        <table class="table tableau dtables">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for groupe in groupes %}
+                <tr class="user-row" data-id="{{ groupe.id }}">
+                    <td>{{ groupe.Nom }}</td>
+                    <td class="boutons_action">
+                        <a href="{{ path("groupe_edit", {'id' : groupe.id }) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a class="" href="#"{{ path("groupe_edit", {'id' : groupe.id }) }}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path("create_groupe") }}">
+            <button type="button" class="btn btn-default navbar-btn">
+                Ajouter un groupe fonctionnel
+            </button>
+        </a>
+        <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+        <script type="text/javascript">
+            $(".dtables").dataTable({
+                "oLanguage": {
+                    "sSearch": "Rechercher&nbsp;:",
+                    "sInfo": "Groupe  _START_ &agrave; _END_ sur _TOTAL_",
+                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    "sLengthMenu": "Afficher _MENU_ groupes par page",
+                    "oPaginate": {
+                        "sFirst": "",
+                        "sPrevious": "",
+                        "sNext": "",
+                        "sLast": "",
+                        "sZeroRecords": "Aucun groupe &agrave; afficher",
+                        "sEmptyTable": "Aucun groupe &agrave; afficher"
+                    }
+                },
+                "iDisplayLength": 15,
+                "aLengthMenu": [15, 30, 50, 100],
+                "sDom": 'lft<"footer_datatables"p>',
+                "aoColumnDefs": [
+                    { "bSortable": false, "aTargets": [ 1 ] }
+                ],
+                "sPaginationType": "full_numbers"
+            });
+
+            $(".user-row").click(function () {
+                document.location.href = Routing.generate('groupe_edit', { id: $(this).data("id") });
+            });
+        </script>
+    </div>
+{% endblock %}

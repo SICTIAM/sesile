@@ -7,8 +7,8 @@
             &nbsp;&nbsp;&nbsp;Editer une collectivité
         </div>
         <br>
-
         {{ form_start(edit_form) }}
+
         {{ form_label(edit_form.nom) }}
         {{ form_widget(edit_form.nom) }}
         <br>
@@ -21,10 +21,32 @@
         {{ form_label(edit_form.file) }}
         {{ form_widget(edit_form.file) }}
         <br>
-        {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+        {{ form_label(edit_form.textmailnew) }}
+        {{ form_widget(edit_form.textmailnew) }}
         <br>
+        {{ form_label(edit_form.textmailrefuse) }}
+        {{ form_widget(edit_form.textmailrefuse) }}
+        <br>
+        {{ form_label(edit_form.textmailwalid) }}
+        {{ form_widget(edit_form.textmailwalid) }}
+        <br>
+        {{ form_label(edit_form.message) }}
+        {{ form_widget(edit_form.message) }}
+
+        {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+
         {{ form_end(edit_form) }}
-        {{ form_start(delete_form) }}
-        {{ form_end(delete_form) }}
+        {{ form_start(delete_form) }}{{ form_end(delete_form) }}
     </div>
+
+    <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}" />
+    <script src="{{ asset("/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
+    <script type="text/javascript">
+        $('textarea').wysihtml5({
+            "image": false,
+            locale: "fr-FR"
+        });
+    </script>
 {% endblock %}

@@ -26,12 +26,20 @@ class DefaultController extends Controller
      * @Template("SesileUserBundle:Default:index.html.twig")
      *
      */
-    public function listAction()
-    {
+    public function listAction() {
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            $userManager = $this->get('fos_user.user_manager');
+            $users = $userManager->findUsers();
+        }
+        else if($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getManager();
+            $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->getRequest()->getSession()->get("collectivite"));
+            $users = $collectivite->getUsers();
+        }
+        else {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
 
-
-        $userManager = $this->get('fos_user.user_manager');
-        $users = $userManager->findUsers();
         return array(
             "users" => $users
         );
@@ -41,15 +49,12 @@ class DefaultController extends Controller
      * @Route("/creation/", name="ajout_user")
      * @Template("SesileUserBundle:Default:ajout.html.twig")
      */
-    public function ajoutAction(Request $request)
-    {
-
+    public function ajoutAction(Request $request) {
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
 
         $LdapInfo = $this->container->getParameter('ldap');
 
-        //  var_dump($this->container->get('twig.extension.assets')->getAssetUrl(''));exit;
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
@@ -60,18 +65,13 @@ class DefaultController extends Controller
 
         //connexion au serveur LDAP
         $cas = $this->getCASParams();
-        $ldapconn = ldap_connect($cas['cas_server'])
-        or die("Could not connect to LDAP server."); //security
+        $ldapconn = ldap_connect($cas['cas_server']) or die("Could not connect to LDAP server."); // security
         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
         if ($ldapconn) {
 
             //binding au serveur LDAP
-            if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
-
-            } else {
-
-            }
+            @ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
 
 
             if ($form->isValid()) {
@@ -139,8 +139,6 @@ class DefaultController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
         );
-
-
     }
 
     /**
@@ -152,8 +150,6 @@ class DefaultController extends Controller
      */
     public function editAction($id)
     {
-
-
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
@@ -330,6 +326,13 @@ class DefaultController extends Controller
             'multiple' => true
         ));
 
+        // liste des collectivités
+        $form->add('collectivite', 'entity', array(
+            'class' => "SesileMainBundle:Collectivite",
+            'query_builder' => function($repository) { return $repository->createQueryBuilder('p'); },
+            'property' => 'Nom',
+        ));
+
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 
 
@@ -360,6 +363,14 @@ class DefaultController extends Controller
             ),
             'multiple' => true
         ));
+
+        // liste des collectivités
+        $form->add('collectivite', 'entity', array(
+            'class' => "SesileMainBundle:Collectivite",
+            'query_builder' => function($repository) { return $repository->createQueryBuilder('p'); },
+            'property' => 'Nom',
+        ));
+
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 
         return $form;

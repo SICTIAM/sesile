@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Delegations
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Sesile\DelegationsBundle\Entity\DelegationsRepository")
  */
 class Delegations
 {

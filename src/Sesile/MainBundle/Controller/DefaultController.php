@@ -14,45 +14,10 @@ class DefaultController extends Controller
      * @Route("/",name="index")
      * @Template()
      */
-    public function indexAction()
-    {
-
-        $image = "/images/Logo-Officiel-SICTIAM_taille250px.jpg";
-
+    public function indexAction() {
         $em = $this->getDoctrine()->getManager();
-        if (isset($_SESSION["phpCAS"])) {
-            $session = new Session();
-            $tab = $_SESSION["phpCAS"];
-            $username = $tab["user"];
-            $UserEntity = $em->getRepository('SesileUserBundle:User')->findOneByUsername($username);
-
-            $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
-
-            if ($CollecEntity != null) {
-                $image = $CollecEntity->getImage();
-            }
-
-            $session->set('logo', $image);
-            $session->set('idCollec', 1);
-        } else {
-            $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
-        }
-
-        if ($CollecEntity != null) {
-            $msg_accueil = $CollecEntity->getMessage();
-        } else {
-            $msg_accueil = "Bienvenue sur le parapheur sesile";
-        }
-        return array('msg_acc' => $msg_accueil, "img_accueil" => $image);
-    }
-
-    /**
-     * @Route("/accueil", name="accueil")
-     * @Template()
-     */
-    public function accueilAction()
-    {
-        $bienvenue = "a";
-        return array("bienvenue" => $bienvenue);
+        $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $msg_accueil = $CollecEntity->getMessage();
+        return array('msg_acc' => $msg_accueil);
     }
 }

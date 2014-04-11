@@ -2,38 +2,75 @@
 
 {% block content %}
     <div class="bloc_page">
-        <div class="titre_page">
-            <span class="glyphicon glyphicon-cog"></span>
-            &nbsp;&nbsp;&nbsp;Gestion des collectivités
-        </div>
-        <table class="table tableau">
-            <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Adresse</th>
-                <th>Active</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for coll in collectivites %}
-                <tr class="coll-row">
-                    <td>{{ coll.nom }}</td>
-                    <td>{{ coll.domain }}</td>
-                    <td>{{ coll.active }}</td>
-                    <td class="boutons_action">
-                        <a href="{{ path("edit_collectivite", {'id' : coll.id }) }}">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                        <a href="{{ path("edit_collectivite", {'id' : coll.id }) }}">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <br>
-        <a href="{{ path('new_collectivite') }}">Créer une collectivité</a>
+	<div class="titre_page">
+	    <span class="glyphicon glyphicon-cog"></span>
+	    &nbsp;&nbsp;&nbsp;Gestion des collectivités
+	</div>
+	<table class="table tableau">
+	    <thead>
+		<tr>
+		    <th>Nom</th>
+		    <th>Adresse</th>
+		    <th>Active</th>
+		    <th>Actions</th>
+		</tr>
+	    </thead>
+	    <tbody>
+		{% for coll in collectivites %}
+		    <tr class="coll-row" data-id="{{ coll.id }}">
+			<td>{{ coll.nom }}</td>
+			<td>{{ coll.domain }}</td>
+			<td>{{ coll.active }}</td>
+			<td class="boutons_action">
+			    <a href="{{ path("edit_collectivite", {'id' : coll.id }) }}">
+				<span class="glyphicon glyphicon-pencil"></span>
+			    </a>
+			</td>
+		    </tr>
+		{% endfor %}
+	    </tbody>
+	</table>
+	<br>
+
+	<a href="{{ path('new_collectivite') }}">
+	    <button type="button" class="btn btn-default navbar-btn">
+		Créer une collectivité
+	    </button>
+	</a>
     </div>
+
+    <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+    <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+    <script type="application/javascript">
+	$(document).ready(function () {
+	    $(".table").dataTable({
+		"oLanguage": {
+		    "sSearch": "Rechercher&nbsp;:",
+		    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+		    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+		    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+		    "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+		    "sLengthMenu": "Afficher _MENU_ collectivités par page",
+		    "oPaginate": {
+			"sFirst": "",
+			"sPrevious": "",
+			"sNext": "",
+			"sLast": ""
+		    }
+		},
+		"iDisplayLength": 15,
+		"aLengthMenu": [15, 30, 50, 100],
+		"sDom": 'lft<"footer_datatables"p>',
+		"aoColumnDefs": [
+		    { "bSortable": false, "aTargets": [ 3 ] }
+		],
+		"sPaginationType": "full_numbers"
+	    });
+	});
+    </script>
+    <script type="text/javascript">
+	$(".coll-row").click(function () {
+	    document.location.href = Routing.generate('edit_collectivite', { id: $(this).data("id") });
+	});
+    </script>
 {% endblock %}

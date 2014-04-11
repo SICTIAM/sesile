@@ -1,4 +1,4 @@
-{% if classeur.isValidable(app.user.id) %}
+{% if classeur.isValidableByDelegates(usersdelegated) %}
 
     {% if signable %}
         <button type="submit" class="btn btn-success btn-valider-signer"
@@ -28,7 +28,7 @@
     </form>
 {% endif %}
 
-{% if classeur.isSupprimable(app.user.id) %}
+{% if classeur.isSupprimableByDelegates(usersdelegated) %}
     <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
         <button type="submit" class="btn btn-danger">
             <span class="glyphicon glyphicon-trash"></span>
@@ -39,7 +39,7 @@
 {% endif %}
 
 
-{% if classeur.isModifiable(app.user.id) %}
+{% if classeur.isModifiableByDelegates(usersdelegated) %}
     <button class="btn btn-success pull-right" class="btn-modifs" data-action="{{ path("classeur_update") }}">
         <span class="glyphicon glyphicon-saved"></span>
         &nbsp;Enregistrer les modifications
