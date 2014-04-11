@@ -201,7 +201,6 @@ class DefaultController extends Controller
             "Prenom" => $entity->getPrenom()
         );
 
-
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -220,11 +219,14 @@ class DefaultController extends Controller
                     $entry["cn"] = $entity->getUsername();
                     $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
                     $pwd = trim($editForm->get('plainPassword')->getData());
-                    if ($pwd) {
+                    var_dump($pwd);exit;
 
+                    if ($pwd) {
                         $entity->setPlainPassword($pwd);
                         $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($pwd)));
                     }
+
+
                     $entity->setEmail($editForm->get('username')->getData());
                     $entry["givenName"] = $entity->getUsername();
                     $entry["displayName"] = $entity->getNom() . ' ' . $entity->getPrenom();
@@ -260,9 +262,6 @@ class DefaultController extends Controller
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
             }
-        }
-        else {
-            exit("mcul");
         }
         return array(
             'entity' => $entity,
