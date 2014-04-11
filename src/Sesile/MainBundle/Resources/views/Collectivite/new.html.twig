@@ -6,7 +6,6 @@
 	    <span class="glyphicon glyphicon-cog"></span>
 	    &nbsp;&nbsp;&nbsp;Ajouter une nouvelle collectivité
 	</div>
-        {{ form_start(form) }}
 	<div class="row">
 	    <div class="col-md-3">{{ form_label(form.nom) }}</div>
 	    <div class="col-md-9">{{ form_widget(form.nom) }}</div>
@@ -71,7 +70,7 @@
 	{{ form_end(form) }}
 
 	<div class="retourbtn">
-	<a href="{{ path('index_collectivite') }}">
+	<a href="{{ path('collectivité') }}">
 	    <button type="button" class="btn btn-default navbar-btn">
 		Retour à la liste des collectivités
 	    </button>
