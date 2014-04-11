@@ -213,7 +213,7 @@ class DefaultController extends Controller
 
                 if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     $entry["cn"] = $entity->getUsername();
-                    $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
+                   // $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
                     $pwd = trim($editForm->get('plainPassword')->getData());
 
                     if ($pwd) {
