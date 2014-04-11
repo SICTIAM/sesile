@@ -216,7 +216,6 @@ class DefaultController extends Controller
                     $entry["cn"] = $entity->getUsername();
                     $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
                     $pwd = trim($editForm->get('plainPassword')->getData());
-                    var_dump($pwd);exit;
 
                     if ($pwd) {
                         $entity->setPlainPassword($pwd);
