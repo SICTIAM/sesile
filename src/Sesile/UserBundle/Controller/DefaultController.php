@@ -206,13 +206,11 @@ class DefaultController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-exit("yep");
-            $ldapconn = ldap_connect($cas["cas_server"])
-            or die("Could not connect to LDAP server."); //security
+            $ldapconn = ldap_connect($cas["cas_server"]) or die("Could not connect to LDAP server."); //security
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
             if ($ldapconn) {
-
+                exit("yep");
                 //binding au serveur LDAP
                 if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     $entry["cn"] = $entity->getUsername();
@@ -260,6 +258,9 @@ exit("yep");
                 //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
+            }
+            else {
+                exit("nop");
             }
         }
         return array(
