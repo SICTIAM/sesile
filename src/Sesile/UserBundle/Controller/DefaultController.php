@@ -183,8 +183,6 @@ class DefaultController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-
-
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
         $cas = $this->getCASParams();
@@ -262,6 +260,9 @@ class DefaultController extends Controller
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
             }
+        }
+        else {
+            exit("mcul");
         }
         return array(
             'entity' => $entity,
