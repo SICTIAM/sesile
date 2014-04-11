@@ -6,6 +6,7 @@
 	    <span class="glyphicon glyphicon-cog"></span>
 	    &nbsp;&nbsp;&nbsp;Ajouter une nouvelle collectivité
 	</div>
+        {{ form_start(form) }}
 	<div class="row">
 	    <div class="col-md-3">{{ form_label(form.nom) }}</div>
 	    <div class="col-md-9">{{ form_widget(form.nom) }}</div>
