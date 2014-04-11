@@ -94,7 +94,7 @@ class DefaultController extends Controller
                 $entry["objectClass"][2] = "person";
                 $entry["objectClass"][3] = "shadowAccount";
                 $entry["cn"] = $res["email"];
-                $entry["sn"] = $res["prenom"] . ' ' . $res["nom"];
+                $entry["sn"] = $res["email"];
                 $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($res["plainpassword"])));
                 $entry["givenName"] = $res["email"];
                 $entry["shadowInactive"] = -1;
@@ -119,15 +119,14 @@ class DefaultController extends Controller
                 ldap_close($ldapconn);
 
                 //envoi d'un mail à l'utilisateur nouvellement créé
-                $MailParam = $this->container->getParameter('swiftmailer');
+                /*$MailParam = $this->container->getParameter('swiftmailer');
                 $message = \Swift_Message::newInstance()
                     ->setContentType('text/html')
                     ->setSubject('Nouvel utilisateur')
                     ->setFrom($MailParam['username'])
                     ->setTo($entity->getUsername())
                     ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
-                $this->get('mailer')->send($message);
-
+                $this->get('mailer')->send($message);*/
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
 
