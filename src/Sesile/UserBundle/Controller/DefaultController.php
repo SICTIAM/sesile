@@ -181,9 +181,7 @@ class DefaultController extends Controller
      * @Method("PUT")
      * @Template("SesileUserBundle:Default:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
-    {
-        exit("nononononon");
+    public function updateAction(Request $request, $id) {
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
         $cas = $this->getCASParams();
@@ -208,7 +206,7 @@ class DefaultController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-
+exit("yep");
             $ldapconn = ldap_connect($cas["cas_server"])
             or die("Could not connect to LDAP server."); //security
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
