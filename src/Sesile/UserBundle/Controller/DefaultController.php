@@ -183,6 +183,7 @@ class DefaultController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+        exit("nononononon");
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
         $cas = $this->getCASParams();
