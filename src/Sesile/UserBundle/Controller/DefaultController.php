@@ -211,6 +211,9 @@ class DefaultController extends Controller
 
             if ($ldapconn) {
                 //binding au serveur LDAP
+
+                var_dump($cas["cas_server"], $LdapInfo["dn_admin"], $LdapInfo["password"]);exit;
+
                 if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     $entry["cn"] = $entity->getUsername();
                     $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
@@ -249,7 +252,7 @@ class DefaultController extends Controller
                         echo "pb rename ldap";
                         exit;
                     }
-                    exit("pass");
+
                     return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
                     echo "LDAP bind failed...";exit;
