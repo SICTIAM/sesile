@@ -149,6 +149,7 @@ html, body {
 	height: 2em;
 	height: 2em;
 	background-color: #ebebeb;
+	margin: 0em 0.5em 0em 0em;
 }
 
 .legal,
@@ -483,6 +484,17 @@ select [name=user] {
 
 .btn-retracter {
 	background-color: rgb(240, 117, 0);
+}
+
+.btndemerde{
+	position: relative;
+	bottom: 2.4em;
+	left: 6.2em;
+}
+
+.form-horizontal .control-label{
+	text-align: left !important;
+	padding-top: 0em !important;
 }
 
 /*BOUTONS TABLEAU*/
