@@ -311,7 +311,13 @@ class Classeur {
      */
     public function setValidantValue()
     {
-        $this->validant = $this->circuit[0];
+        if(strpos($this->circuit, ",") === false) {
+            $this->validant = $this->circuit;
+        }
+        else {
+            $circuit = explode(",", $this->circuit);
+            $this->validant = $circuit[0];
+        }
     }
 
     /**
@@ -380,7 +386,7 @@ class Classeur {
      *
      * @return int l'id du prochain validant dans le circuit. 0 si le circuit est terminé
      */
-    private function getNextValidant(\Doctrine\ORM\EntityManager $em)
+    public function getNextValidant(\Doctrine\ORM\EntityManager $em)
     {
         //$d = $em->getRepository("SesileDelegationsBundle:Delegations");
         //$delegation = $d->getClasseursRetractables($userid);
