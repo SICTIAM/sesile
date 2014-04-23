@@ -330,7 +330,6 @@ class Classeur {
 
     /**
      * Get validant
-     *
      * @return integer
      */
     public function getValidant() {

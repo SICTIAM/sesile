@@ -4,6 +4,7 @@ namespace Sesile\MainBundle\EventListener;
 
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\UserBundle\Entity\User;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -12,10 +13,12 @@ use Symfony\Component\Security\Core\SecurityContext;
 class RouteListener {
     private $em = null;
     private $context = null;
+    private $container = null;
 
-    public function __construct(\Doctrine\ORM\EntityManager $em, SecurityContext $context) {
+    public function __construct(\Doctrine\ORM\EntityManager $em, SecurityContext $context, ContainerInterface $container) {
         $this->em = $em;
         $this->context = $context;
+        $this->container = $container;
     }
 
     public function onDomainParse(Event $event) {
@@ -26,9 +29,13 @@ class RouteListener {
         $request = $event->getRequest();
 
         $sousdom = explode(".", $request->getHost());
-        $sousdom = $sousdom[0] != "sditec" ? $sousdom[0] : "sditec";
+        $conf = $this->container->getParameter("domain_parse");
+        $sousdom = $sousdom[0] != $conf["default"] ? $sousdom[0] : $conf["dbname"];
 
-        $collectivite = $this->em->getRepository('SesileMainBundle:Collectivite')->findOneBy(array("domain" => $sousdom, "active" => 1));
+        $collectivite = $this->em->getRepository('SesileMainBundle:Collectivite')->findOneBy(
+            array("domain" => $sousdom, "active" => 1)
+        );
+
         if($collectivite instanceof Collectivite) {
             $session = $request->getSession();
             $session->set('collectivite', $collectivite->getId());
@@ -44,7 +51,6 @@ class RouteListener {
                     }
                 }
             }
-
         } else {
             throw new NotFoundHttpException("La collectivité sélectionnée n'existe pas");
         }
