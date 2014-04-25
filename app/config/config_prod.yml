@@ -29,6 +29,9 @@ parameters:
         dn_admin: cn=admin,dc=sictiam,dc=fr
         dn_user: cn=Users,dc=sictiam,dc=fr
         password: oP1U88zz
+    domain_parse:
+        default: sesile
+        dbname: sictiam
 
 
 security:
