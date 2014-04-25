@@ -389,10 +389,11 @@ class DefaultController extends Controller
 
     private function getCASParams()
     {
-        $file = sprintf("%s/config/config_sditec.yml", $this->container->getParameter('kernel.root_dir'));
+        $file = sprintf("%s/config/config_" . $this->get('kernel')->getEnvironment() . ".yml", $this->container->getParameter('kernel.root_dir'));
         $parsed = Yaml::parse(file_get_contents($file));
 
         $cas = $parsed['parameters'];
+
         return $cas;
     }
 
