@@ -113,6 +113,9 @@ parameters:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local
         password: WcJa37BI
+    domain_parse:
+        default: sesile
+        dbname: sictiam
 
 
 
@@ -168,6 +171,7 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
     kernel.listener.route_listener:
         class: Sesile\MainBundle\EventListener\RouteListener
-        arguments: ["@doctrine.orm.entity_manager", "@security.context"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }
+

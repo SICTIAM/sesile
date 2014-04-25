@@ -149,6 +149,8 @@ class ClasseurController extends Controller
         $classeur->setUser($this->getUser()->getId());
 
         $classeur->setVisibilite($request->request->get('visibilite'));
+
+
         $em->persist($classeur);
 
 
@@ -209,7 +211,7 @@ class ClasseurController extends Controller
         // $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
 
         // envoi d'un mail au premier validant
-        $this->sendCreationMail($classeur);
+        //$this->sendCreationMail($classeur);
 
         // TODO envoi du mail au déposant et aux autres personnes du circuit ?
 
@@ -410,7 +412,7 @@ class ClasseurController extends Controller
         $em->flush();
 
         // envoi d'un mail validant suivant
-        $this->sendValidationMail($classeur);
+        //$this->sendValidationMail($classeur);
 
         //$this->updateAction($request);
 
@@ -452,7 +454,7 @@ class ClasseurController extends Controller
         $em->flush();
 
         // envoi d'un mail validant suivant
-        $this->sendRefusMail($classeur);
+        //$this->sendRefusMail($classeur);
 
         //$this->updateAction($request);
 
