@@ -21,7 +21,7 @@ parameters:
     database_user: root
     database_password: ***REMOVED***
     secret: ***REMOVED***
-    cas_server: 172.17.100.61
+    cas_server: sso.sictiam.fr
     cas_port: 389
     cas_path: /
     cas_protocol: '2.0'
