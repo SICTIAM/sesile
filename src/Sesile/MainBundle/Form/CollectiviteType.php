@@ -27,7 +27,8 @@ class CollectiviteType extends AbstractType
             ))
             ->add('textmailnew', 'textarea', array('label' => "Texte du mail d'un nouveau classeur", 'required' => false))
             ->add('textmailrefuse', 'textarea', array('label' => "Texte du mail d'un classeur refusé", 'required' => false))
-            ->add('textmailwalid', 'textarea', array('label' => "Texte du mail d'un classeur validé", 'required' => false, 'attr' => array('name' => 'textmailwalid')));
+            ->add('textmailwalid', 'textarea', array('label' => "Texte du mail d'un classeur validé", 'required' => false, 'attr' => array('name' => 'textmailwalid')))
+            ->add('message', 'textarea', array('label' => "Message d'accueil", 'required' => false, 'attr' => array('name' => 'message')));
 
     }
 

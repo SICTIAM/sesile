@@ -82,8 +82,8 @@ class LoginHandlerController extends Controller
                     $info = ldap_get_entries($ldapconn, $sr);
                     //    var_dump($info);exit;
                     //echo "mail = ".$info[0]["mail"][0]." cn = ".$info[0]["cn"][0]." pwd = ".$info[0]["userpassword"][0];exit;
-                    if (stripos($info[0]["cn"][0], ' ') === false) {
-                        $nom = $info[0]["cn"][0];
+                    if (stripos($info[0]["displayName"][0], ' ') === false) {
+                        $nom = $info[0]["displayName"][0];
                         $prenom = ' ';
                     } else {
                         list($prenom, $nom) = explode(' ', $info[0]["cn"][0]);

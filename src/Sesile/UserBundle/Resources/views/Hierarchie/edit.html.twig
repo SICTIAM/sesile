@@ -1,0 +1,61 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="{{ asset("/js/colorpicker.js") }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ asset("/css/colorpicker.css") }}"/>
+
+    <script src="{{ asset("/js/select2.min.js") }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ asset("/css/select2.css") }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ asset("/css/colorpicker.css") }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ asset("/css/organigramme.css") }}"/>
+
+
+
+
+    <div class="bloc_page">
+	<div class="titre_page">
+	    {% if organigramme is defined %}
+		<span class="glyphicon glyphicon-sort-by-alphabet"></span>
+		&nbsp;&nbsp;&nbsp;Organigramme
+	    {% elseif groupe is defined %}
+		<span class="glyphicon glyphicon-floppy-open"></span>
+		&nbsp;&nbsp;&nbsp;Éditer un groupe fonctionnel
+	    {% else %}
+		<span class="glyphicon glyphicon-floppy-disk"></span>
+		&nbsp;&nbsp;&nbsp;Créer un groupe fonctionnel
+	    {% endif %}
+	</div>
+	{% include 'SesileUserBundle:Hierarchie:legende.organigramme.html.twig' %}
+	<form id="form_hierarchy" method="post" action="{% if groupe is defined %}{{ path("update_groupe") }} {% else %}{{ path("new_groupe") }} {% endif %}">
+	    <div id="edit_service">
+		{% if groupe is defined %}
+		    <input type="hidden" name="id" id="id_groupe" value="{% if groupe is defined %}{{ groupe.id }}{% endif %}"/>
+		{% endif %}
+		{% include 'SesileUserBundle:Hierarchie:tools.html.twig' %}
+	    <br>
+	    {% if groupe is defined %}
+		<script type="text/javascript">
+		    var treeData = {% if groupe.json %} {{ groupe.json | raw }} {% else %} "" {% endif %};
+		</script>
+	    {% endif %}
+	    <script src="{{ asset("/js/organigramme.js") }}"></script>
+
+	    <input type="hidden" name="tree" id="tree"/>
+	</form>
+
+    </div>
+
+    <script type="text/javascript">
+	/***********Envoi des données ***************************/
+	$(document).ready(function () {
+	    $("#btn-envoyer").click(function (e) {
+		e.preventDefault();
+		var nodes = tree.nodes(root);
+		$("#tree").val(JSON.stringify(getDataFromNodes(nodes[0])));
+		$("#form_hierarchy").submit();
+	    });
+	});
+    </script>
+{% endblock %}

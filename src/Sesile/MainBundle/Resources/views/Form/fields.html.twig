@@ -1,3 +1,3 @@
 {% block textarea_widget %}
-    <textarea rows="10" cols="80" name="{{ name }}">{{ value }}</textarea>
+    <textarea rows="10" cols="80" {{ block('widget_attributes') }}>{{ value }}</textarea>
 {% endblock textarea_widget %}

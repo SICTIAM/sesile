@@ -30,17 +30,20 @@
                 </div>
             </div>
             <div id="contenttypedform"></div>
+	    <div class="btndemerde">
+	    <a href="{{ path('classeur') }}">
+		<button type="button" class="btn btn-default navbar-btn">
+		    Retour à la liste des classeur
+		</button>
+	    </a>
+	    </div>
         </form>
-        <br/>
-
-        <a href="{{ path('classeur') }}">
-            <button type="button" class="btn btn-default navbar-btn">
-                Retour à la liste des classeur
-            </button>
-        </a>
     </div>
 {% endblock %}
 
 {% block losjavascriptos %}
-    <script type="text/javascript" src="{{ asset("/bundles/sesileclasseur/js/newclasseur.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("/bundles/sesileclasseur/js/newclasseur.js") }}">
+
+
+    </script>
 {% endblock %}

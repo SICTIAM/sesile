@@ -1,0 +1,34 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-list"></span>
+            &nbsp;&nbsp;&nbsp;Créer un type de classeur
+        </div>
+        <form method="post" action="{{ path("create_type_classeur") }}">
+            <div>Nom<input type="text" name="nom" /></div>
+            <div>Groupes :
+            <select name="groupes" multiple>
+            {% for groupe in groupes %}
+                <option value="{{ groupe.id }}">{{ groupe.nom }}</option>
+            {% endfor %}
+            </select>
+            </div>
+            <div>Template :
+            <select name="template" >
+                {% for template in templates %}
+                    <option value="{{ template.id }}">{{ template.nom }}</option>
+                {% endfor %}
+            </select>
+            </div>
+            <button class="btn btn-success">Enregistrer</button>
+        </form>
+
+        <a href="{{ path('liste_type_classeur') }}">
+            <button type="button" class="btn btn-default navbar-btn">
+                Retour à la page précédente
+            </button>
+        </a>
+    </div>
+{% endblock %}

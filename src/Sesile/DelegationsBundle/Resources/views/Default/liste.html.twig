@@ -10,7 +10,7 @@
     </thead>
     {% for delegation in delegations %}
         <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
-            <td>{{ delegation.user.prenom }} {{ delegation.user.nom }}</td>
+            <td>{{ delegation.delegant.prenom }} {{ delegation.delegant.nom }}</td>
             <td>{{ delegation.debut | date('d/m/Y') }}</td>
             <td>{{ delegation.fin | date('d/m/Y') }}</td>
             {% if donnees is defined %}
@@ -18,11 +18,42 @@
                     <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-                    <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
+
                 </td>
             {% endif %}
         </tr>
     {% endfor %}
 </table>
+
+<script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+<link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+<script type="text/javascript">
+    $(".dtables").dataTable({
+	"oLanguage": {
+	    "sSearch": "Rechercher&nbsp;:",
+	    "sInfo": "Groupe  _START_ &agrave; _END_ sur _TOTAL_",
+	    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+	    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+	    "sLengthMenu": "Afficher _MENU_ délégations reçues par page",
+	    "oPaginate": {
+		"sFirst": "",
+		"sPrevious": "",
+		"sNext": "",
+		"sLast": "",
+	    },
+	    "sZeroRecords": "Aucune délégation reçue &agrave; afficher",
+	    "sEmptyTable": "Aucune délégation reçue &agrave; afficher"
+	},
+	"iDisplayLength": 15,
+	"aLengthMenu": [15, 30, 50, 100],
+	"sDom": 'lft<"footer_datatables"p>',
+	"aoColumnDefs": [
+	    { "bSortable": false, "aTargets": [  ] }
+	],
+	"sPaginationType": "full_numbers"
+    });
+
+    $(".user-row").click(function () {
+	document.location.href = Routing.generate('groupe_edit', { id: $(this).data("id") });
+    });
+</script>

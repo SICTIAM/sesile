@@ -19,8 +19,7 @@ use JMS\Serializer\Annotation\Expose;
  * @ORM\HasLifecycleCallbacks()
  * @ExclusionPolicy("all")
  */
-class User extends BaseUser
-{
+class User extends BaseUser {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -29,7 +28,6 @@ class User extends BaseUser
      * @Expose
      */
     protected $id;
-
 
     /**
      * @var string
@@ -94,7 +92,6 @@ class User extends BaseUser
      */
     protected $departement;
 
-
     /**
      * @var string
      * @Expose
@@ -126,6 +123,16 @@ class User extends BaseUser
      */
     protected $apiactivated;
 
+    /**
+     * @var int
+     *
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="$users")
+     * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
+     *
+     */
+    protected $collectivite;
+
+
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="user")
@@ -133,46 +140,37 @@ class User extends BaseUser
     protected $actions_classeurs;
 
 
-    public function setPath($path)
-    {
+    public function setPath($path) {
         return $this->path = $path;
     }
 
-    public function setFile($file)
-    {
+    public function setFile($file) {
         $this->file = $file;
-
         return $this;
     }
 
-    public function getPath()
-    {
+    public function getPath() {
         return $this->path;
     }
 
-    public function getFile()
-    {
+    public function getFile() {
         return $this->file;
     }
 
-    public function getAbsolutePath()
-    {
+    public function getAbsolutePath() {
         return null === $this->path ? null : $this->getUploadRootDir() . $this->path;
     }
 
-    public function getWebPath()
-    {
+    public function getWebPath() {
         return null === $this->path ? null : $this->getUploadDir() . $this->path;
     }
 
-    protected function getUploadRootDir()
-    {
+    protected function getUploadRootDir() {
         // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
         return __DIR__ . '/../../../../web/' . $this->getUploadDir();
     }
 
-    protected function getUploadDir()
-    {
+    protected function getUploadDir() {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
         // le document/image dans la vue.
         $controller = new Controller();
@@ -190,38 +188,30 @@ class User extends BaseUser
      */
     protected $delegationsDonnees;
 
-    public function setPrenom($Prenom)
-    {
+    public function setPrenom($Prenom) {
         $this->Prenom = $Prenom;
-
         return $this;
     }
 
-    public function setNom($Nom)
-    {
+    public function setNom($Nom) {
         $this->Nom = $Nom;
-
         return $this;
     }
 
     /**
-     * renvoie le nom
-     *
+     * Renvoie le nom
      * @return string
      */
-    public function getNom()
-    {
+    public function getNom() {
         return $this->Nom;
     }
 
 
     /**
-     * renvoie le prenom
-     *
+     * Renvoie le prenom
      * @return string
      */
-    public function getPrenom()
-    {
+    public function getPrenom() {
         return $this->Prenom;
     }
 
@@ -238,11 +228,8 @@ class User extends BaseUser
 
     /**
      * @ORM\PrePersist()
-     *
      */
-    public function preUpload()
-    {
-
+    public function preUpload() {
         if (null !== $this->file) {
             // faites ce que vous voulez pour générer un nom unique
 
@@ -261,40 +248,32 @@ class User extends BaseUser
         if (empty($sec)) {
             $this->setApisoken("secret_" . md5(uniqid(rand(), true)));
         }
-
-
     }
 
     /**
      *
      *
      */
-    public function upload($Dirpath)
-    {
+    public function upload($Dirpath) {
         if (null === $this->file) {
             return;
         }
-
 
         // s'il y a une erreur lors du déplacement du fichier, une exception
         // va automatiquement être lancée par la méthode move(). Cela va empêcher
         // proprement l'entité d'être persistée dans la base de données si
         // erreur il y a
-        //   var_dump($this->getUploadDir());var_dump($this->file->getClientOriginalName());exit;
         if (!file_exists($Dirpath)) {
             mkdir($Dirpath);
         }
         $this->file->move($Dirpath, $this->path);
-
-
         unset($this->file);
     }
 
     /**
      *
      */
-    public function removeUpload($Dirpath)
-    {
+    public function removeUpload($Dirpath) {
 
         if ($file = $Dirpath . $this->path) {
             unlink($file);
@@ -304,11 +283,9 @@ class User extends BaseUser
     /**
      * Constructor
      */
-    public function __construct()
-    {
-
+    public function __construct() {
         parent::__construct();
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -316,8 +293,7 @@ class User extends BaseUser
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -327,8 +303,7 @@ class User extends BaseUser
      * @param \Sesile\DelegationsBundle\Entity\Delegations $delegationsRecues
      * @return User
      */
-    public function addDelegationsRecue(\Sesile\DelegationsBundle\Entity\Delegations $delegationsRecues)
-    {
+    public function addDelegationsRecue(\Sesile\DelegationsBundle\Entity\Delegations $delegationsRecues) {
         $this->delegationsRecues[] = $delegationsRecues;
 
         return $this;
@@ -367,7 +342,7 @@ class User extends BaseUser
         return $this;
     }
 
-    /**
+    /**$user
      * Remove delegationsDonnees
      *
      * @param \Sesile\DelegationsBundle\Entity\Delegations $delegationsDonnees
@@ -611,5 +586,61 @@ class User extends BaseUser
     public function getApiactivated()
     {
         return $this->apiactivated;
+    }
+
+    /**
+     * Set collectivite
+     *
+     * @param \Sesile\MainBundle\Entity\Collectivite $collectivite
+     * @return User
+     */
+    public function setCollectivite(\Sesile\MainBundle\Entity\Collectivite $collectivite = null)
+    {
+        $this->collectivite = $collectivite;
+    
+        return $this;
+    }
+
+    /**
+     * Get collectivite
+     *
+     * @return \Sesile\MainBundle\Entity\Collectivite 
+     */
+    public function getCollectivite()
+    {
+        return $this->collectivite;
+    }
+
+    /**
+     * Add groupes
+     *
+     * @param \Sesile\UserBundle\Entity\Groupe $groupes
+     * @return User
+     */
+    public function addGroupe(\Sesile\UserBundle\Entity\Groupe $groupes)
+    {
+        $this->groupes[] = $groupes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove groupes
+     *
+     * @param \Sesile\UserBundle\Entity\Groupe $groupes
+     */
+    public function removeGroupe(\Sesile\UserBundle\Entity\Groupe $groupes)
+    {
+        $this->groupes->removeElement($groupes);
+    }
+
+    /**
+     * Get groupes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGroupes()
+    {
+        return $this->groupes;
     }
 }

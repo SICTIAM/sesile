@@ -26,12 +26,20 @@ class DefaultController extends Controller
      * @Template("SesileUserBundle:Default:index.html.twig")
      *
      */
-    public function listAction()
-    {
+    public function listAction() {
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            $userManager = $this->get('fos_user.user_manager');
+            $users = $userManager->findUsers();
+        }
+        else if($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getManager();
+            $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->getRequest()->getSession()->get("collectivite"));
+            $users = $collectivite->getUsers();
+        }
+        else {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
 
-
-        $userManager = $this->get('fos_user.user_manager');
-        $users = $userManager->findUsers();
         return array(
             "users" => $users
         );
@@ -41,15 +49,12 @@ class DefaultController extends Controller
      * @Route("/creation/", name="ajout_user")
      * @Template("SesileUserBundle:Default:ajout.html.twig")
      */
-    public function ajoutAction(Request $request)
-    {
-
+    public function ajoutAction(Request $request) {
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
 
         $LdapInfo = $this->container->getParameter('ldap');
 
-        //  var_dump($this->container->get('twig.extension.assets')->getAssetUrl(''));exit;
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
@@ -60,18 +65,13 @@ class DefaultController extends Controller
 
         //connexion au serveur LDAP
         $cas = $this->getCASParams();
-        $ldapconn = ldap_connect($cas['cas_server'])
-        or die("Could not connect to LDAP server."); //security
+        $ldapconn = ldap_connect($cas['cas_server']) or die("Could not connect to LDAP server."); // security
         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
         if ($ldapconn) {
 
             //binding au serveur LDAP
-            if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
-
-            } else {
-
-            }
+            @ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
 
 
             if ($form->isValid()) {
@@ -94,7 +94,7 @@ class DefaultController extends Controller
                 $entry["objectClass"][2] = "person";
                 $entry["objectClass"][3] = "shadowAccount";
                 $entry["cn"] = $res["email"];
-                $entry["sn"] = $res["prenom"] . ' ' . $res["nom"];
+                $entry["sn"] = $res["email"];
                 $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($res["plainpassword"])));
                 $entry["givenName"] = $res["email"];
                 $entry["shadowInactive"] = -1;
@@ -119,15 +119,14 @@ class DefaultController extends Controller
                 ldap_close($ldapconn);
 
                 //envoi d'un mail à l'utilisateur nouvellement créé
-                $MailParam = $this->container->getParameter('swiftmailer');
+                /*$MailParam = $this->container->getParameter('swiftmailer');
                 $message = \Swift_Message::newInstance()
                     ->setContentType('text/html')
                     ->setSubject('Nouvel utilisateur')
                     ->setFrom($MailParam['username'])
                     ->setTo($entity->getUsername())
                     ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
-                $this->get('mailer')->send($message);
-
+                $this->get('mailer')->send($message);*/
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
 
@@ -139,8 +138,6 @@ class DefaultController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
         );
-
-
     }
 
     /**
@@ -152,8 +149,6 @@ class DefaultController extends Controller
      */
     public function editAction($id)
     {
-
-
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
@@ -185,10 +180,7 @@ class DefaultController extends Controller
      * @Method("PUT")
      * @Template("SesileUserBundle:Default:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
-    {
-
-
+    public function updateAction(Request $request, $id) {
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
         $cas = $this->getCASParams();
@@ -207,30 +199,29 @@ class DefaultController extends Controller
             "Prenom" => $entity->getPrenom()
         );
 
-
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-
-            $ldapconn = ldap_connect($cas["cas_server"])
-            or die("Could not connect to LDAP server."); //security
+            $ldapconn = ldap_connect($cas["cas_server"]) or die("Could not connect to LDAP server."); //security
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
             if ($ldapconn) {
-
                 //binding au serveur LDAP
+
                 if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     $entry["cn"] = $entity->getUsername();
-                    $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
+                   // $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
                     $pwd = trim($editForm->get('plainPassword')->getData());
-                    if ($pwd) {
 
+                    if ($pwd) {
                         $entity->setPlainPassword($pwd);
                         $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($pwd)));
                     }
+
+
                     $entity->setEmail($editForm->get('username')->getData());
                     $entry["givenName"] = $entity->getUsername();
                     $entry["displayName"] = $entity->getNom() . ' ' . $entity->getPrenom();
@@ -260,7 +251,7 @@ class DefaultController extends Controller
 
                     return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
-                    echo "LDAP bind failed...";
+                    echo "LDAP bind failed...";exit;
                 }
                 //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
@@ -330,6 +321,13 @@ class DefaultController extends Controller
             'multiple' => true
         ));
 
+        // liste des collectivités
+        $form->add('collectivite', 'entity', array(
+            'class' => "SesileMainBundle:Collectivite",
+            'query_builder' => function($repository) { return $repository->createQueryBuilder('p'); },
+            'property' => 'Nom',
+        ));
+
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 
 
@@ -360,6 +358,14 @@ class DefaultController extends Controller
             ),
             'multiple' => true
         ));
+
+        // liste des collectivités
+        $form->add('collectivite', 'entity', array(
+            'class' => "SesileMainBundle:Collectivite",
+            'query_builder' => function($repository) { return $repository->createQueryBuilder('p'); },
+            'property' => 'Nom',
+        ));
+
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 
         return $form;
@@ -383,10 +389,11 @@ class DefaultController extends Controller
 
     private function getCASParams()
     {
-        $file = sprintf("%s/config/config.yml", $this->container->getParameter('kernel.root_dir'));
+        $file = sprintf("%s/config/config_" . $this->get('kernel')->getEnvironment() . ".yml", $this->container->getParameter('kernel.root_dir'));
         $parsed = Yaml::parse(file_get_contents($file));
 
         $cas = $parsed['parameters'];
+
         return $cas;
     }
 

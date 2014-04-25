@@ -14,8 +14,7 @@ use JMS\DiExtraBundle\Annotation\Service;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="Sesile\ClasseurBundle\Entity\ClasseursUsersRepository")
  */
-class Classeur
-{
+class Classeur {
     /**
      * @var integer
      *
@@ -93,7 +92,7 @@ class Classeur
 
     /**
      * @var int
-     * -1 = privé, 0 = public, id user = à partir de
+     * 0 = privé, id groupe = public pour le groupeid
      * @ORM\Column(name="visibilite", type="integer")
      *
      */
@@ -312,7 +311,13 @@ class Classeur
      */
     public function setValidantValue()
     {
-        $this->validant = $this->circuit[0];
+        if(strpos($this->circuit, ",") === false) {
+            $this->validant = $this->circuit;
+        }
+        else {
+            $circuit = explode(",", $this->circuit);
+            $this->validant = $circuit[0];
+        }
     }
 
     /**
@@ -325,11 +330,9 @@ class Classeur
 
     /**
      * Get validant
-     *
      * @return integer
      */
-    public function getValidant()
-    {
+    public function getValidant() {
         return $this->validant;
     }
 
@@ -339,10 +342,8 @@ class Classeur
      * @param integer $visibilite
      * @return Classeur
      */
-    public function setVisibilite($visibilite)
-    {
+    public function setVisibilite($visibilite) {
         $this->visibilite = $visibilite;
-
         return $this;
     }
 
@@ -351,8 +352,7 @@ class Classeur
      *
      * @return integer
      */
-    public function getVisibilite()
-    {
+    public function getVisibilite() {
         return $this->visibilite;
     }
 
@@ -385,7 +385,7 @@ class Classeur
      *
      * @return int l'id du prochain validant dans le circuit. 0 si le circuit est terminé
      */
-    private function getNextValidant(\Doctrine\ORM\EntityManager $em)
+    public function getNextValidant(\Doctrine\ORM\EntityManager $em)
     {
         //$d = $em->getRepository("SesileDelegationsBundle:Delegations");
         //$delegation = $d->getClasseursRetractables($userid);
@@ -399,7 +399,6 @@ class Classeur
     public function isAtLastValidant(\Doctrine\ORM\EntityManager $em){
         return ($this->getNextValidant($em)==0);
     }
-
 
     public function valider(\Doctrine\ORM\EntityManager $em)
     {
@@ -430,15 +429,40 @@ class Classeur
         $this->setStatus(3);
     }
 
-
-    public function isValidable($userid)
-    {
+    public function isValidable($userid) {
         return ($this->getValidant() == $userid);
+    }
+
+    public function isValidableByDelegates($delegates) {
+        $arrayid = array();
+
+        foreach($delegates as $d){
+            $arrayid[] = $d->getId();
+        }
+
+        return (in_array($this->getValidant(), $arrayid));
+    }
+
+    public function isDelegatedToMe($userid) {
+        return !($this->getValidant() == $userid || $this->getValidant() == 0);
+
+        // return $this->isValidableByDelegates(array($user));
     }
 
     public function isModifiable($userid)
     {
         return ((($this->getValidant() == $userid) || ($this->getUser() == $userid)) && $this->getStatus() != 3);
+    }
+
+    public function isModifiableByDelegates($delegates){
+
+        $arrayid = array();
+        foreach($delegates as $d){
+            $arrayid[] = $d->getId();
+        }
+
+        return (( (in_array($this->getValidant(), $arrayid) ) || (in_array($this->getUser(), $arrayid))) && $this->getStatus() != 3);
+
     }
 
     /**
@@ -457,9 +481,44 @@ class Classeur
         return false;
     }
 
+    public function isRetractableByDelegates($delegates, \Doctrine\Orm\EntityManager $em) {
+
+
+        $arrayid = array();
+
+        foreach($delegates as $d){
+            $arrayid[] = $d->getId();
+        }
+
+        $c = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
+        $classeurs = array();
+        foreach($arrayid as $id){
+            $classeurs = array_merge($classeurs,$c->getClasseursRetractables($id) );
+        }
+
+
+        foreach ($classeurs as $classeur) {
+            if ($classeur->getId() == $this->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function isSupprimable($userid)
     {
         return ($this->getUser() == $userid && $this->getStatus() != 3);
+    }
+
+    public function  isSupprimableByDelegates($delegates){
+        $arrayid = array();
+
+        foreach($delegates as $d){
+            $arrayid[] = $d->getId();
+        }
+
+        return (in_array($this->getUser(), $arrayid) && $this->getStatus() != 3);
+
     }
 
     public function isSignable(\Doctrine\ORM\EntityManager $em)

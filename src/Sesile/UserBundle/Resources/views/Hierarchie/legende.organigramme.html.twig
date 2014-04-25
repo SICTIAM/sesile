@@ -1,0 +1,22 @@
+<div class="legende" style="margin: 0em 0em 1em 0em !important;">
+    <span class="txt_legende"><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;Informations<span class="plus glyphicon glyphicon-plus-sign"></span></span>
+<span class="indicationslegende">
+Pour ajouter un utilisateur, selectionnez-le dans la liste déroulante, puis insérez-le en cliquant sur le "<div class="glyphicon glyphicon-plus" style="color: #5CB85C"></div>"<br>
+Pour retirer un utilisateur, selectionnez-le dans l'organigramme, puis cliquez sur le "<div class="glyphicon glyphicon-plus glyphicon glyphicon-minus" style="color: #D9534F"></div>"<br><br>
+
+Il s'agit d'une hiérarchie dont le sens de lecture se fait de gauche à droite, il y a nécessairement un seul utilisateur en tête de groupe.<br>
+Pour ajouter un utilisateur au groupe, il vous faut séléctionner une personne référente dans le schéma.<br><br>
+
+Si la disposition de vos utilisateurs ne vous satisfait pas, vous pouvez le réorganiser par un "glisser-déposer". <br>
+Une ramification se créera lors de l'approche de l'élément souhaité.<br><br>
+
+Votre organigramme terminé, vous devez le nommer puis l'enregistrer "<div class="glyphicon glyphicon-ok" style="color: #5CB85C"></div>" &nbsp;vous pourrez le renommer par la suite en l'éditant.<br>
+L'icône "<div class="glyphicon glyphicon-remove" style="color: #D9534F"></div>" supprime votre groupe.
+    </span>
+</div>
+
+<script type="text/javascript">
+    $(".txt_legende .plus").click(function () {
+	$(".indicationslegende").toggle();
+    });
+</script>

@@ -63,13 +63,19 @@
 
 
             {% if doc is not null %}
-                <a id='modifbutton' style="display: none"
-                   onclick="javascript:fireDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');return false;"
-                   href="#"
-                   class="btn btn-primary" role="button">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                    Editer
-                </a>
+
+                {% if (doc.type  == "application/vnd.ms-excel" ) or
+                (doc.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") or
+                (doc.type == "application/msword") or
+                (doc.type  == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") %}
+                    <a id='modifbutton' style="display: none"
+                       onclick="javascript:fireDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');return false;"
+                       href="#"
+                       class="btn btn-primary" role="button">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        Editer
+                    </a>
+                {% endif %}
                 &nbsp;
                 <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}"
                    class="btn btn-default" role="button">

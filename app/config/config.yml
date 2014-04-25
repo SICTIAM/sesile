@@ -71,9 +71,9 @@ doctrine:
 # Swiftmailer Configuration
 swiftmailer:
     transport: smtp
-    host:      servermail2.sictiam.fr
+    host:      servermail4.sictiam.fr
     username:  r.lasry@sictiam.fr
-    password:  S|cti@m06
+    password:  7Gdxqwc4
     spool:
             type: file
             path: "%kernel.root_dir%/spool"
@@ -99,7 +99,7 @@ fos_user:
 
 
 parameters:
-    cas_server: 172.17.100.43
+    cas_server: 172.17.100.78
     cas_port: 389
     cas_path: /
     cas_protocol: '2.0'
@@ -110,9 +110,12 @@ parameters:
         logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
         msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
     ldap:
-        dn_admin: cn=admin,dc=sictiam,dc=fr
-        dn_user: cn=Users,dc=sictiam,dc=fr
-        password: oP1U88zz
+        dn_admin: cn=admin,dc=sictiam,dc=local
+        dn_user: cn=Users,dc=sictiam,dc=local
+        password: WcJa37BI
+    domain_parse:
+        default: sesile
+        dbname: sictiam
 
 
 
@@ -166,4 +169,9 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@security.context"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+    kernel.listener.route_listener:
+        class: Sesile\MainBundle\EventListener\RouteListener
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }
 

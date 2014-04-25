@@ -50,18 +50,40 @@ class DefaultController extends Controller
     {
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
 
+
+        $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
+        return array(
+            'delegations' => $delegations
+        );
+    }
+
+
+    /**
+     * @Route("/liste_all", name="delegations_all_list")
+     * @Template("SesileDelegationsBundle:Default:liste_all.html.twig")
+     */
+    public function recuesAllAction()
+    {
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+        $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
+
+
+/*
         $query = $repository->createQueryBuilder('p')
-            ->where('p.user = :user')
-            ->setParameter('user', $this->getUser())
+            ->where('p.delegant = :delegant')
+            ->setParameter('delegant', $this->getUser())
             ->andWhere('p.fin >= :fin')
             ->setParameter('fin', new \DateTime())
             ->orderBy('p.debut', 'ASC')
             ->getQuery();
 
-        $delegations = $query->getResult();
+        $donnees = $query->getResult();*/
+
+        $donnees=$this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsGivenFromNow($this->getUser());
 
         return array(
-            'delegations' => $delegations
+            'delegations' => $delegations,
+            'donnees' => $donnees
         );
     }
 
@@ -75,12 +97,35 @@ class DefaultController extends Controller
     {
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();
-        foreach ($users as &$user) {
+        foreach ($users as $index => $user) {
             if ($user->getId() == $this->getUser()->getId()) {
-
+                unset($users[$index]);
             }
         }
-        return array("users" => $users);
+
+
+        $delegsdonnees=$this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsGivenFromNow($this->getUser());
+        $delegsrecues = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
+
+
+        $delegs = array();
+
+
+        foreach($delegsdonnees as $d){
+
+            $delegs[]=array("debut"=>$d->getDebut()->getTimestamp(), "fin"=>$d->getFin()->getTimestamp());
+        }
+
+        $delegsgiven = array();
+
+        foreach($delegsrecues as $d){
+            $delegsgiven[]=array("userid"=>$d->getDelegant()->getId(), "debut"=>$d->getDebut()->getTimestamp(), "fin"=>$d->getFin()->getTimestamp());
+        }
+
+
+
+
+        return array("users" => $users, "delegs"=>$delegs,"recues"=>$delegsgiven );
     }
 
     /**
@@ -89,7 +134,7 @@ class DefaultController extends Controller
      */
     public function createAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+
         $delegation = new Delegations();
         $delegation->setDelegant($this->getUser());
         $userManager = $this->container->get('fos_user.user_manager');
@@ -101,16 +146,18 @@ class DefaultController extends Controller
         $fin = new \DateTime($m . "/" . $d . "/" . $a);
         $delegation->setFin($fin);
 
-        $em->persist($delegation);
-        $em->flush();
 
-        $error = false;
-        if (!$error) {
-            $this->get('session')->getFlashBag()->add(
-                'success',
-                'Délégations ajoutée avec succès !'
-            );
-        }
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+
+
+       $repository->addDelegationWithFusion($delegation);
+
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Délégations ajoutée avec succès !'
+        );
+
 
         return $this->redirect($this->generateUrl('delegations_list'));
     }
@@ -119,10 +166,10 @@ class DefaultController extends Controller
      * @Route("/delete", name="delegation_delete")
      * @method("POST")
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($request->get("id"));
+        $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($request->request->get("id"));
         if (!$delegation) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
@@ -177,7 +224,20 @@ class DefaultController extends Controller
         list($d, $m, $a) = explode("/", $request->request->get('fin'));
         $fin = new \DateTime($m . "/" . $d . "/" . $a);
         $delegation->setFin($fin);
-        $em->flush();
+
+
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+
+
+        $repository->modifyDelegationWithFusion($delegation);
+
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Délégations modifiée avec succès !'
+        );
+
+
 
         return $this->redirect($this->generateUrl('delegations_list'));
     }

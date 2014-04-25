@@ -25,11 +25,7 @@
                 <a href="{{ path("classeur_edit", {'id' : classeur.id }) }}">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
-                {% if classeur.isSupprimable(app.user.id) %}
-                    <a href="{{ path("classeur_supprimer") }}">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                {% endif %}
+
             </td>
         </tr>
     {% endfor %}
@@ -40,3 +36,7 @@
         document.location.href = Routing.generate('classeur_edit', { id: $(this).data("id") });
     });
 </script>
+<script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+<link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+
+
