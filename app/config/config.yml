@@ -116,6 +116,8 @@ parameters:
     domain_parse:
         default: sesile
         dbname: sictiam
+    build:
+        majorversion: 1
 
 
 
@@ -176,5 +178,4 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }
 
 
-build:
-    majorversion: 1
+
