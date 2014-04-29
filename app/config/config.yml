@@ -175,3 +175,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }
 
+
+build:
+    majorversion: 1
