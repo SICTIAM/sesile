@@ -32,7 +32,11 @@
 	    </div>
 	    <br>
 	    <button type="submit" class="btn btn-success">Enregistrer</button>
-	    <a href="{{ path("delegations_list") }}" class="btn btn-danger">Annuler</a>
+	    <a href="{{ path('delegations_list') }}">
+		<button type="button" class="btn btn-default navbar-btn">
+		    Retour à la liste des délégations
+		</button>
+	    </a>
 	</form>
     </div>
     <script type="text/javascript">
