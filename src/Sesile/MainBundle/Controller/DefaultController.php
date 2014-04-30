@@ -20,4 +20,16 @@ class DefaultController extends Controller
         $msg_accueil = $CollecEntity->getMessage();
         return array('msg_acc' => $msg_accueil);
     }
+
+    /**
+     * @Route("/apropos",name="apropos")
+     * @Template()
+     */
+    public function aproposAction()
+    {
+        $tabversion = $this->container->getParameter('build');
+        $major = $this->container->getParameter('majorversion');
+
+        return array('majorversion' => $major, 'commit' => $tabversion['commit'], 'buildnumber' => $tabversion['buildnumber']);
+    }
 }
