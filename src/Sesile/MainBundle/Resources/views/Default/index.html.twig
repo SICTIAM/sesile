@@ -103,13 +103,7 @@
                         <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}"
                               rel="stylesheet"/>
 
-                        <div id="delegations_recues">
-                            <div class="titre_bloc_accueil">
-                                <span class="glyphicon glyphicon-share"></span>
-                                Délégations
-                            </div>
-                            {% render url("delegations_all_list") %}
-                        </div>
+                        {% render url("delegations_all_list") %}
                         <object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0"
                                 style="display: none;"></object>
                         <div id="classeurs_a_valider">
