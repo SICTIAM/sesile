@@ -2,8 +2,6 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
 
-
-
 framework:
     #esi:             ~
     translator:      { fallback: %locale% }
@@ -97,7 +95,6 @@ fos_user:
             type: sesile_user_profile
 
 
-
 parameters:
     cas_server: 172.17.100.78
     cas_port: 389
@@ -119,6 +116,7 @@ parameters:
 jms_di_extra:
     locations:
         all_bundles: true
+
 
 # La suite, c'est pour l'api
 fos_rest:
@@ -147,13 +145,10 @@ fos_rest:
         messages:
             'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException': true
 
-
-
 nelmio_api_doc:
     name: Sesile API
     motd:
             template: SesileApiBundle::homedoc.html.twig
-
 
 sensio_framework_extra:
     view:    { annotations: false }

@@ -41,7 +41,8 @@ class DefaultController extends Controller
         }
 
         return array(
-            "users" => $users
+            "users" => $users,
+            "menu_color" => "vert"
         );
     }
 
@@ -138,6 +139,7 @@ class DefaultController extends Controller
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
+            "menu_color" => "vert"
         );
     }
 
@@ -170,6 +172,7 @@ class DefaultController extends Controller
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            "menu_color" => "vert"
         );
     }
 
@@ -267,6 +270,7 @@ class DefaultController extends Controller
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            "menu_color" => "vert"
         );
     }
 

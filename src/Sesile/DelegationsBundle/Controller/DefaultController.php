@@ -29,7 +29,8 @@ class DefaultController extends Controller
         $delegations = $query->getResult();
 
         return array(
-            'delegations' => $delegations
+            'delegations' => $delegations,
+            "menu_color" => "jaune"
         );
     }
 
@@ -53,7 +54,8 @@ class DefaultController extends Controller
 
         $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
         return array(
-            'delegations' => $delegations
+            'delegations' => $delegations,
+            "menu_color" => "jaune"
         );
     }
 
@@ -83,7 +85,8 @@ class DefaultController extends Controller
 
         return array(
             'delegations' => $delegations,
-            'donnees' => $donnees
+            'donnees' => $donnees,
+            "menu_color" => "jaune"
         );
     }
 
@@ -125,7 +128,7 @@ class DefaultController extends Controller
 
 
 
-        return array("users" => $users, "delegs"=>$delegs,"recues"=>$delegsgiven );
+        return array("users" => $users, "delegs"=>$delegs,"recues"=>$delegsgiven, "menu_color" => "jaune" );
     }
 
     /**
@@ -202,7 +205,7 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('Unable to find délégation entity.');
         }
 
-        return array("delegation" => $delegation, "users" => $users);
+        return array("delegation" => $delegation, "users" => $users, "menu_color" => "jaune");
     }
 
     /**
