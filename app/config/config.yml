@@ -99,7 +99,7 @@ fos_user:
 
 
 parameters:
-    cas_server: 172.17.100.78
+    cas_server: sso.sictiam.fr
     cas_port: 389
     cas_path: /
     cas_protocol: '2.0'
@@ -113,6 +113,11 @@ parameters:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local
         password: WcJa37BI
+    domain_parse:
+        default: sesile
+        dbname: sictiam
+    build:
+        majorversion: 1
 
 
 
@@ -168,6 +173,9 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
     kernel.listener.route_listener:
         class: Sesile\MainBundle\EventListener\RouteListener
-        arguments: ["@doctrine.orm.entity_manager", "@security.context"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }
+
+
+
