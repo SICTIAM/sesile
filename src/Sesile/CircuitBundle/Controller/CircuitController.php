@@ -19,7 +19,8 @@ class CircuitController extends Controller
      * @Route("/new/", name="new_circuit", options={"expose"=true})
      * @Template()
      */
-    public function newAction($forClasseur = true) {
+    public function newAction($forClasseur = true)
+    {
         // recup la liste des users en base
         $em = $this->getDoctrine()->getManager();
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
@@ -47,7 +48,9 @@ class CircuitController extends Controller
                 );
             }
         }
-        return array('users' => $users, "circuits" => $circuits);
+
+
+        return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
     }
 
     /**

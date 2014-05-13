@@ -28,7 +28,8 @@ class HierarchieController extends Controller {
         ));
 
         return array(
-            'groupes' => $users
+            'groupes' => $users,
+            "menu_color" => "vert"
         );
     }
 
@@ -43,7 +44,7 @@ class HierarchieController extends Controller {
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
             "collectivite" => $this->get("session")->get("collectivite")
         ));
-        return array("users" => $users);
+        return array("users" => $users, "menu_color" => "vert");
     }
 
     /**

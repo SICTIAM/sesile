@@ -28,6 +28,7 @@ class TypeClasseurController extends Controller
         $entities = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
         return array(
             'types' => $entities,
+            "menu_color" => "vert"
         );
     }
 
@@ -48,6 +49,7 @@ class TypeClasseurController extends Controller
         return array(
             'groupes' => $groupes,
             'templates' => $templates,
+            "menu_color" => "vert"
         );
     }
 
