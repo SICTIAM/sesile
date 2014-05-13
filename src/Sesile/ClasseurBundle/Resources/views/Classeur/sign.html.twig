@@ -70,7 +70,7 @@
     function appletReady() {
 
         //document.javaapplet.setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
-        document.javaapplet.setUploadUrl('http://sesile.sictiam.fr/doc/uploadfile') // Prod
+        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod
 
         var divmethod = document.getElementById('listemethod');
         /*
