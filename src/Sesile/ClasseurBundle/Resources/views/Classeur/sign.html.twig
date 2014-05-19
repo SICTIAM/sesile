@@ -62,7 +62,7 @@
 
 
     var attributes = {width: 1, height: 1, id: "javaapplet"};
-    var parameters = {jnlp_href: '/sesilesign/launch.jnlp'};
+    var parameters = {jnlp_href: 'http://signature.sesile.fr/launch.jnlp'};
     var version = '1.7';
     deployJava.runApplet(attributes, parameters, version);
 
@@ -70,7 +70,7 @@
     function appletReady() {
 
         //document.javaapplet.setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
-        document.javaapplet.setUploadUrl('http://sesile.sictiam.fr/doc/uploadfile') // Prod
+        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod
 
         var divmethod = document.getElementById('listemethod');
         /*

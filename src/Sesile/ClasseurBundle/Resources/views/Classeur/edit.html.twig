@@ -162,6 +162,10 @@
                 $("#circuit").sortable("enable");
                 $(".perso_circuit").css("cursor", "-moz-grab");
                 {% endif %}
+
+                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer").click(function () {
+                    $("#form_edit").attr("action", $(this).attr("data-action")).submit();
+                });
             });
 
             var nowTemp = new Date();
@@ -181,10 +185,6 @@
                     e.preventDefault();
                     return false;
                 }
-            });
-
-            $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer").click(function () {
-                $("#form_edit").attr("action", $(this).attr("data-action")).submit();
             });
         </script>
     </div>

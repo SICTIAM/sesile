@@ -51,6 +51,7 @@ class ClasseurController extends Controller
 
         return array(
             'classeurs' => $entities,
+            "menu_color" => "bleu"
         );
     }
 
@@ -94,7 +95,8 @@ class ClasseurController extends Controller
         }
 
         return array(
-            'classeurs' => $entities
+            'classeurs' => $entities,
+            "menu_color" => "bleu"
         );
     }
 
@@ -124,6 +126,7 @@ class ClasseurController extends Controller
         $entities = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursRetractables($this->getUser()->getId());
         return array(
             'classeurs' => $entities,
+            "menu_color" => "bleu"
         );
     }
 
@@ -251,7 +254,7 @@ class ClasseurController extends Controller
      * @Template()
      */
     public function newAction() {
-        return array();
+        return array("menu_color" => "bleu");
     }
 
     /**
@@ -292,7 +295,8 @@ class ClasseurController extends Controller
             'retractable' => $entity->isRetractableByDelegates($usersdelegated, $em),
             'signable' => $isSignable,
             'usersdelegated'=> $usersdelegated,
-            'uservalidant'=>$uservalidant
+            'uservalidant'=>$uservalidant,
+            "menu_color" => "bleu"
         );
     }
 

@@ -215,10 +215,22 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
 
 
-        if ($request->request->get('name') == 0 || $request->request->get('validation') == 0 || $request->request->get('type') == 0 || $request->request->get('circuit') == 0) {
-            $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
+        $name = $request->request->get('name');
+     
+        $validation = $request->request->get('validation');
+ 
+        $type= $request->request->get('type');
+
+        $circuit=$request->request->get('circuit');
+        
+
+
+
+        if (empty($name)|| empty($validation)||empty($type)||empty($circuit)) {
+            $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants', "parametres_recus"=> $request->request ), 400);
             return $this->handleView($view);
         }
+
 
 
         $classeur = new Classeur();
@@ -254,7 +266,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $action = new Action();
         $action->setClasseur($classeur);
-        $action->setUser($this->getUser());
+        $action->setUser($user);
         $action->setAction("Dépot du classeur");
         $em->persist($action);
         $em->flush();
@@ -332,13 +344,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $classeur->setValidation($valid);
         $circuit = $request->request->get('circuit');
         $classeur->setCircuit($circuit);
-        $classeur->setUser($this->getUser()->getId());
+        $classeur->setUser($user->getId());
 
         $em->flush();
 
         $action = new Action();
         $action->setClasseur($classeur);
-        $action->setUser($this->getUser());
+        $action->setUser($user);
         $action->setAction("Modification du classeur");
         $em->persist($action);
         $em->flush();
@@ -418,7 +430,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $action = new Action();
         $action->setClasseur($classeur[0]);
-        $action->setUser($this->getUser());
+        $action->setUser($user);
         $action->setAction("Classeur retiré");
         $em->persist($action);
         $em->flush();
