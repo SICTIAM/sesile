@@ -1,46 +1,52 @@
+{% if not((delegations is empty) and (donnees is empty)) %}
 
-<table class="table tableau dtables">
-    <thead>
-    <tr>
-        <th width="10%">Entrant/Sortant</th>
-        <th>Utilisateur</th>
-        <th>Début</th>
-        <th>Fin</th>
+    <div id="delegations_recues">
+        <div class="titre_bloc_accueil">
+            <span class="glyphicon glyphicon-share"></span>
+            Délégations
+        </div>
+        <table class="table tableau dtables">
+            <thead>
+            <tr>
+                <th width="10%">Entrant/Sortant</th>
+                <th>Utilisateur</th>
+                <th>Début</th>
+                <th>Fin</th>
 
-        {% if donnees is defined %}
-            <th>Action</th>{% endif %}
-    </tr>
-    </thead>
-    {% for delegation in delegations %}
-        <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
-            <td><span class="glyphicon glyphicon-import delegre"></span></td>
-            <td>{{ delegation.delegant.prenom }} {{ delegation.delegant.nom }}</td>
-            <td>{{ delegation.debut | date('d/m/Y') }}</td>
-            <td>{{ delegation.fin | date('d/m/Y') }}</td>
+                {% if donnees is defined %}
+                    <th>Action</th>{% endif %}
+            </tr>
+            </thead>
+            {% for delegation in delegations %}
+                <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
+                    <td><span class="glyphicon glyphicon-import delegre"></span></td>
+                    <td>{{ delegation.delegant.prenom }} {{ delegation.delegant.nom }}</td>
+                    <td>{{ delegation.debut | date('d/m/Y') }}</td>
+                    <td>{{ delegation.fin | date('d/m/Y') }}</td>
 
-            <td class="boutons_action">
+                    <td class="boutons_action">
 
-            </td>
+                    </td>
 
-        </tr>
-    {% endfor %}
-
-
-    {% for delegation in donnees %}
-        <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
-            <td><span class="glyphicon glyphicon-export delegdo"></span></td>
-            <td>{{ delegation.user.prenom }} {{ delegation.user.nom }}</td>
-            <td>{{ delegation.debut | date('d/m/Y') }}</td>
-            <td>{{ delegation.fin | date('d/m/Y') }}</td>
-
-                <td class="boutons_action">
-                    <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                </td>
-
-        </tr>
-    {% endfor %}
-</table>
+                </tr>
+            {% endfor %}
 
 
+            {% for delegation in donnees %}
+                <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
+                    <td><span class="glyphicon glyphicon-export delegdo"></span></td>
+                    <td>{{ delegation.user.prenom }} {{ delegation.user.nom }}</td>
+                    <td>{{ delegation.debut | date('d/m/Y') }}</td>
+                    <td>{{ delegation.fin | date('d/m/Y') }}</td>
+
+                    <td class="boutons_action">
+                        <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}

@@ -50,7 +50,7 @@ class CircuitController extends Controller
         }
 
 
-        return array('users' => $users, "circuits" => $circuits);
+        return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
     }
 
     /**

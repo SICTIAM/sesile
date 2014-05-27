@@ -2,8 +2,6 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
 
-
-
 framework:
     #esi:             ~
     translator:      { fallback: %locale% }
@@ -97,7 +95,6 @@ fos_user:
             type: sesile_user_profile
 
 
-
 parameters:
     cas_server: 172.17.100.78
     cas_port: 389
@@ -113,12 +110,21 @@ parameters:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local
         password: WcJa37BI
-
+    domain_parse:
+        default: sesile
+        dbname: sictiam
+    build:
+        repository: "git@gitlab.sictiam.fr:sesile/sesile.git"
+        branch: master
+        commit: 994e6f7902355e6bf62dde14804e0bd9863d5662
+        buildnumber: 90
+    majorversion: 1
 
 
 jms_di_extra:
     locations:
         all_bundles: true
+
 
 # La suite, c'est pour l'api
 fos_rest:
@@ -147,13 +153,10 @@ fos_rest:
         messages:
             'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException': true
 
-
-
 nelmio_api_doc:
     name: Sesile API
     motd:
             template: SesileApiBundle::homedoc.html.twig
-
 
 sensio_framework_extra:
     view:    { annotations: false }
@@ -168,6 +171,9 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
     kernel.listener.route_listener:
         class: Sesile\MainBundle\EventListener\RouteListener
-        arguments: ["@doctrine.orm.entity_manager", "@security.context"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }
+
+
+
