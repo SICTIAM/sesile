@@ -129,7 +129,7 @@ class LoginHandlerController extends Controller
 
     private function getCASParams()
     {
-        $file = sprintf("%s/config/config.yml_" . $this->container->getParameter('kernel.environment') . ".yml", $this->container->getParameter('kernel.root_dir'));
+        $file = sprintf("%s/config/config_" . $this->container->getParameter('kernel.environment') . ".yml", $this->container->getParameter('kernel.root_dir'));
 
         $parsed = Yaml::parse(file_get_contents($file));
 
