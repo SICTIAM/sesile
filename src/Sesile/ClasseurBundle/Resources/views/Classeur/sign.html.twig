@@ -62,7 +62,7 @@
 
 
     var attributes = {width: 1, height: 1, id: "javaapplet"};
-    var parameters = {jnlp_href: '/sesilesign/launch.jnlp'};
+    var parameters = {jnlp_href: 'http://signature.sesile.fr/launch.jnlp'};
     var version = '1.7';
     deployJava.runApplet(attributes, parameters, version);
 
@@ -70,7 +70,7 @@
     function appletReady() {
 
         //document.javaapplet.setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
-        document.javaapplet.setUploadUrl('http://sesile.sictiam.fr/doc/uploadfile') // Prod
+        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod
 
         var divmethod = document.getElementById('listemethod');
         /*
@@ -82,6 +82,7 @@
          element.setAttribute('value',0);
          element.text = 'Xemelios';
          selectmethod.appendChild(element);
+         set
 
          divmethod.appendChild(selectmethod);*/
         var divcertif = document.getElementById('listecertif');
@@ -120,7 +121,7 @@
     function getFileLinkFromNumber(i) {
 
         //alert('http://
-
+        console.log()
         document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/' + docstosign[i].repourl, docstosign[i].repourl, docstosign[i].id);
 
 
