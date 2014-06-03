@@ -6,6 +6,7 @@
 	    <span class="glyphicon glyphicon-cog"></span>
 	    &nbsp;&nbsp;&nbsp;Ajouter une nouvelle collectivité
 	</div>
+    {{ form_start(form) }}
 	<div class="row">
 	    <div class="col-md-3">{{ form_label(form.nom) }}</div>
 	    <div class="col-md-9">{{ form_widget(form.nom) }}</div>
@@ -67,8 +68,6 @@
 	<br>
 	<br>
 	{{ form_widget(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
-	{{ form_end(form) }}
-
 	<div class="retourbtn">
 	<a href="{{ path('index_collectivite') }}">
 	    <button type="button" class="btn btn-default navbar-btn">
@@ -76,6 +75,7 @@
 	    </button>
 	</a>
 	</div>
+    {{ form_end(form) }}
     </div>
 
     <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}"/>
