@@ -189,6 +189,7 @@ class DefaultController extends Controller
         $cas = $this->getCASParams();
 
         $LdapInfo = $this->container->getParameter('ldap');
+        $cas_server = $this->container->getParameter('cas_server');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -208,7 +209,7 @@ class DefaultController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $ldapconn = ldap_connect($cas["cas_server"]) or die("Could not connect to LDAP server."); //security
+            $ldapconn = ldap_connect($cas_server) or die("Connexion impossible au serveur LDAP [".$cas_server."]"); //security
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
             if ($ldapconn) {
@@ -254,9 +255,9 @@ class DefaultController extends Controller
 
                     return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
-                    echo "LDAP bind failed...";exit;
+                    ldap_close($ldapconn);
+                    exit("Authentification au serveur LDAP impossible");
                 }
-                //   $entry["userPassword"] = "{MD5}".base64_encode(pack('H*',md5($plainpwd)));
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
             }
