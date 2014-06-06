@@ -80,9 +80,6 @@ class LoginHandlerController extends Controller
                     echo "LDAP bind successful...";
                     $sr = ldap_search($ldapconn, $dn, $filter, $justthese);
                     $info = ldap_get_entries($ldapconn, $sr);
-                    //    var_dump($info);exit;
-                    //echo "mail = ".$info[0]["mail"][0]." cn = ".$info[0]["cn"][0]." pwd = ".$info[0]["userpassword"][0];exit;
-                    var_dump($info[0]);
 
                     $nom = $prenom = '';
                     if (array_key_exists('displayName', $info[0]) && stripos($info[0]["displayName"][0], ' ') === false) {
@@ -90,7 +87,6 @@ class LoginHandlerController extends Controller
                         $prenom = ' ';
                     }
 
-                    //  echo "nom = ".$nom." prenom = ".$prenom;exit;
                     $entity = new User();
                     $entity->setNom($nom);
                     $entity->setPrenom($prenom);

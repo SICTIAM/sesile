@@ -443,10 +443,9 @@ class Classeur {
         return (in_array($this->getValidant(), $arrayid));
     }
 
-    public function isDelegatedToMe($userid) {
-        return !($this->getValidant() == $userid || $this->getValidant() == 0);
-
-        // return $this->isValidableByDelegates(array($user));
+    public function isDelegatedToMe($user) {
+        //return !($this->getValidant() == $userid || $this->getValidant() == 0);
+        return $this->isValidableByDelegates(array($user));
     }
 
     public function isModifiable($userid)
