@@ -68,8 +68,8 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: smtp
-    host:      servermail4.sictiam.fr
+    transport: mail
+    host:      localhost
     username:  r.lasry@sictiam.fr
     password:  7Gdxqwc4
     spool:
