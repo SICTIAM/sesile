@@ -591,7 +591,6 @@ class ClasseurController extends Controller {
         $delegator=$repositoryusers->find($currentvalidant);
 
         $classeur->supprimer();
-
         $em->flush();
 
         $action = new Action();
@@ -701,6 +700,8 @@ class ClasseurController extends Controller {
 
     }
 
+
+
     /*                MAILS DE NOTIFICATION                      */
 
     private function sendMail($sujet, $to, $body)
@@ -733,9 +734,6 @@ class ClasseurController extends Controller {
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
         }
-        else {
-            exit("nop");
-        }
     }
 
     private function sendCreationMail($classeur) {
@@ -756,9 +754,6 @@ class ClasseurController extends Controller {
 
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
-        }
-        else {
-            exit("nop");
         }
     }
 
