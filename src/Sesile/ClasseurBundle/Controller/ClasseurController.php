@@ -710,7 +710,6 @@ class ClasseurController extends Controller {
             ->setFrom('sesile@sictiam.fr')
             ->setTo($to)
             ->setBody($body, "text/html");
-        exit("mail!!!!");
         $this->get('mailer')->send($message);
     }
 
