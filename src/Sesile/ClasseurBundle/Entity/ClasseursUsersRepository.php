@@ -20,8 +20,7 @@ class ClasseursUsersRepository extends EntityRepository
     private static $classeursRetractables = null;
 
 
-    public function getClasseursVisibles($userid)
-    {
+    public function getClasseursVisibles($userid) {
         if (self::$classeursVisibles === null) {
             $em = $this->getEntityManager();
             $rsm = new ResultSetMappingBuilder($em);
@@ -75,24 +74,48 @@ class ClasseursUsersRepository extends EntityRepository
 
 
     public function getClasseurByUser($classeurid, $userid) {
-        if (self::$classeursVisibles === null) {
-            $em = $this->getEntityManager();
-            $rsm = new ResultSetMappingBuilder($em);
-            $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
+        $em = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
 
-            $sql = 'SELECT c.* FROM ClasseursUsers cu
+        $sql = 'SELECT c.* FROM ClasseursUsers cu
+            inner join Classeur c on cu.classeur_id = c.id
+            WHERE (c.visibilite = 0 and cu.user_id = :userid  and cu.classeur_id = :classeurid )
+            or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid) and cu.classeur_id = :classeurid )
+            group by cu.classeur_id';
+
+        $query = $em->createNativeQuery($sql, $rsm)->setParameter('userid', $userid)->setParameter('classeurid', $classeurid);
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    public function isDelegatedToUser($classeur, $user) {
+        $em = $this->getEntityManager();
+        $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
+        $liste_delegants = $repositorydelegates->getUsersWhoHasMeAsDelegateRecursively($user);
+
+        $sql = 'SELECT c.* FROM ClasseursUsers cu
                 inner join Classeur c on cu.classeur_id = c.id
-                WHERE (c.visibilite = 0 and cu.user_id = :userid  and cu.classeur_id = :classeurid )
-                or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid) and cu.classeur_id = :classeurid )
+                WHERE ((c.visibilite = 0 and cu.user_id = :userid) or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid)))
+                and c.id = :classeurid
                 group by cu.classeur_id';
 
-            $query = $em->createNativeQuery($sql, $rsm)->setParameter('userid', $userid)->setParameter('classeurid', $classeurid);
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
+        $query = $em->createNativeQuery($sql, $rsm);
 
-            try {
-                return $query->getResult();
-            } catch (\Doctrine\ORM\NoResultException $e) {
-                return null;
+        foreach($liste_delegants as $delegant) {
+            $query->setParameter('userid', $user->getId());
+            $query->setParameter("classeurid", $classeur->getId());
+            if(count($query->getResult()) > 0) {
+                return true;
             }
         }
+
+        return false;
     }
 }
