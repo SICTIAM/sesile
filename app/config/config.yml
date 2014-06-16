@@ -75,6 +75,7 @@ swiftmailer:
     spool:
             type: file
             path: "%kernel.root_dir%/spool"
+    logging:  "%kernel.debug%"
 
 oneup_uploader:
     mappings:
