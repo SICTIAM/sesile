@@ -72,10 +72,6 @@ swiftmailer:
     host:      servermail4.sictiam.fr
     username:  sesile@sictiam.fr
     password:  3Pu#8kV
-    spool:
-            type: file
-            path: "%kernel.root_dir%/spool"
-    logging:  "%kernel.debug%"
 
 oneup_uploader:
     mappings:
