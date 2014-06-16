@@ -70,8 +70,6 @@ doctrine:
 swiftmailer:
     transport: mail
     host:      localhost
-    username:  r.lasry@sictiam.fr
-    password:  7Gdxqwc4
     spool:
         type: file
         path: %kernel.root_dir%/spool

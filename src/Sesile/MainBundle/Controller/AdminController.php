@@ -180,7 +180,7 @@ class AdminController extends Controller
             $entity->setDomain($editForm->get('domain')->getData());
             $entity->setActive($editForm->get('active')->getData());
             $entity->setTextmailrefuse($editForm->get('textmailrefuse')->getData());
-            $entity->setTextmailwalid($editForm->get('active')->getData());
+            $entity->setTextmailwalid($editForm->get('textmailwalid')->getData());
             $entity->setTextmailnew($editForm->get('textmailnew')->getData());
             $entity->setMessage($editForm->get('message')->getData());
 
