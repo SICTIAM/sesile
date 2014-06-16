@@ -394,7 +394,7 @@ class ClasseurController extends Controller {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
-        $isvalidator = $classeur->isDelegatedToMe($this->getUser()->getId());
+        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
 
         $currentvalidant = $classeur->getValidant();
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
@@ -438,7 +438,8 @@ class ClasseurController extends Controller {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
-        $isvalidator = $classeur->isDelegatedToMe($this->getUser()->getId());
+
+        $isvalidator = $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
         $currentvalidant = $classeur->getValidant();
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
         $delegator=$repositoryusers->find($currentvalidant);
@@ -480,7 +481,7 @@ class ClasseurController extends Controller {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
-        $isvalidator = $classeur->isDelegatedToMe($this->getUser()->getId());
+        $isvalidator = $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
         $currentvalidant = $classeur->getValidant();
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
         $delegator=$repositoryusers->find($currentvalidant);
@@ -584,7 +585,7 @@ class ClasseurController extends Controller {
         }
 
 
-        $isvalidator = $classeur->isDelegatedToMe($this->getUser()->getId());
+        $isvalidator = $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
         $currentvalidant = $classeur->getValidant();
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
         $delegator=$repositoryusers->find($currentvalidant);
