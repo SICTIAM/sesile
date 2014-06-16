@@ -70,8 +70,8 @@ doctrine:
 swiftmailer:
     transport: smtp
     host:      servermail4.sictiam.fr
-    username:  sesile@sictiam.fr
-    password:  3Pu#8kV
+    username:  r.lasry@sictiam.fr
+    password:  Gdxqwc4
 
 oneup_uploader:
     mappings:
