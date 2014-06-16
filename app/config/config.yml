@@ -72,6 +72,9 @@ swiftmailer:
     host:      servermail4.sictiam.fr
     username:  r.lasry@sictiam.fr
     password:  7Gdxqwc4
+    spool:
+        type: file
+        path: %kernel.root_dir%/spool
 
 oneup_uploader:
     mappings:
