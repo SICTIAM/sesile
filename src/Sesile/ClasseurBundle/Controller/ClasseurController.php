@@ -19,8 +19,7 @@ use Sesile\DelegationsBundle\Entity\Delegations;
  * Classeur controller.
  *
  */
-class ClasseurController extends Controller
-{
+class ClasseurController extends Controller {
     /**
      * Page qui affiche la liste des classeurs visibles pour le user connecté.
      *
@@ -40,8 +39,7 @@ class ClasseurController extends Controller
      * @Method("GET")
      * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
      */
-    public function listeAction()
-    {
+    public function listeAction() {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($this->getUser()->getId());
         foreach ($entities as $key => $value) {
@@ -79,17 +77,17 @@ class ClasseurController extends Controller
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
 
-       if(!empty($usersdelegated)){
-           $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+       if(!empty($usersdelegated)) {
+           $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy (
             array(
                 "validant" => $usersdelegated,
                 "status" => 1
             ));
        }
         else{
-            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy (
                 array(
-
+                    "validant" => $this->getUser(),
                     "status" => 1
                 ));
         }
@@ -99,7 +97,6 @@ class ClasseurController extends Controller
             "menu_color" => "bleu"
         );
     }
-
 
     /**
      * Page qui affiche la liste des classeurs retractables pour le user connecté.
@@ -214,7 +211,7 @@ class ClasseurController extends Controller
         // $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
 
         // envoi d'un mail au premier validant
-        //$this->sendCreationMail($classeur);
+        $this->sendCreationMail($classeur);
 
         // TODO envoi du mail au déposant et aux autres personnes du circuit ?
 
@@ -272,6 +269,7 @@ class ClasseurController extends Controller
         $repositorydelegates = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
 
+
         $usersdelegated = $repositorydelegates->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
         $usersdelegated[]=$this->getUser();
 
@@ -286,6 +284,7 @@ class ClasseurController extends Controller
         $validant = $entity->getvalidant();
         $uservalidant = $repositoryusers->find($validant);
 
+        $isDelegatedToMe = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($entity, $this->getUser());
 
 
         return array(
@@ -295,6 +294,7 @@ class ClasseurController extends Controller
             'retractable' => $entity->isRetractableByDelegates($usersdelegated, $em),
             'signable' => $isSignable,
             'usersdelegated'=> $usersdelegated,
+            'isDelegatedToMe' => $isDelegatedToMe,
             'uservalidant'=>$uservalidant,
             "menu_color" => "bleu"
         );
@@ -416,7 +416,7 @@ class ClasseurController extends Controller
         $em->flush();
 
         // envoi d'un mail validant suivant
-        //$this->sendValidationMail($classeur);
+        $this->sendValidationMail($classeur);
 
         //$this->updateAction($request);
 
@@ -458,7 +458,7 @@ class ClasseurController extends Controller
         $em->flush();
 
         // envoi d'un mail validant suivant
-        //$this->sendRefusMail($classeur);
+        $this->sendRefusMail($classeur);
 
         //$this->updateAction($request);
 

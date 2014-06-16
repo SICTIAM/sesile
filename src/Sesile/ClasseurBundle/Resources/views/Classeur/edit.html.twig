@@ -23,7 +23,7 @@
         </button>
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
 
-        {% if classeur.isDelegatedToMe(app.user) %}
+        {% if isDelegatedToMe %}
         <br>
         <div class="legende">
             <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
