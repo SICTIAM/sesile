@@ -710,6 +710,7 @@ class ClasseurController extends Controller {
             ->setFrom('sesile@sictiam.fr')
             ->setTo($to)
             ->setBody($body, "text/html");
+        exit("mail!!!!");
         $this->get('mailer')->send($message);
     }
 
@@ -733,6 +734,9 @@ class ClasseurController extends Controller {
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
         }
+        else {
+            exit("nop");
+        }
     }
 
     private function sendCreationMail($classeur) {
@@ -753,6 +757,9 @@ class ClasseurController extends Controller {
 
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
+        }
+        else {
+            exit("nop");
         }
     }
 
