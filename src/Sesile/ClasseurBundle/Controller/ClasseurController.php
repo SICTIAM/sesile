@@ -375,6 +375,11 @@ class ClasseurController extends Controller {
             );
         }
 
+        $session = $request->getSession();
+        $session->getFlashBag()->add(
+            'success',
+            "Le classeur a été modifié"
+        );
         return $this->redirect($this->generateUrl('classeur'));
     }
 
@@ -420,7 +425,13 @@ class ClasseurController extends Controller {
 
         //$this->updateAction($request);
 
-        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+        $session = $request->getSession();
+        $session->getFlashBag()->add(
+            'success',
+            "Le classeur a été validé"
+        );
+        return $this->redirect($this->generateUrl('index_valider'));
+        //return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
     /**
@@ -463,7 +474,13 @@ class ClasseurController extends Controller {
 
         //$this->updateAction($request);
 
-        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+        $session = $request->getSession();
+        $session->getFlashBag()->add(
+            'success',
+            "Le classeur a été refusé"
+        );
+        return $this->redirect($this->generateUrl('index_valider'));
+        //return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
     /**
@@ -499,8 +516,13 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
+        $session = $request->getSession();
+        $session->getFlashBag()->add(
+            'success',
+            "Le classeur a été signé"
+        );
         //$this->updateAction($request);
-        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+        return $this->redirect($this->generateUrl('index_valider'));
     }
 
     /**
@@ -567,7 +589,12 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+        $session = $request->getSession();
+        $session->getFlashBag()->add(
+            'success',
+            "Le classeur a été rétracté"
+        );
+        return $this->redirect($this->generateUrl('index_valider'));
     }
 
     /**
@@ -602,7 +629,12 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
+        $session = $request->getSession();
+        $session->getFlashBag()->add(
+            'success',
+            "Le classeur a été retiré"
+        );
+        return $this->redirect($this->generateUrl('index_valider'));
     }
 
     /**
