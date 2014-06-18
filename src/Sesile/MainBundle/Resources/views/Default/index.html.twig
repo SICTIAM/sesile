@@ -43,7 +43,7 @@
 	    {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
 	    <img  id="img_imposetonstyle"  src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" />
     </div>
-    {% if is_granted('ROLE_USER') %}
+    {% if is_granted('ROLE_USER') and app.user.collectivite is not null %}
 	{% include 'SesileMainBundle:Default:menu.html.twig' %}
     {% endif %}
 </div>
