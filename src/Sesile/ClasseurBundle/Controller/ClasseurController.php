@@ -29,7 +29,6 @@ class ClasseurController extends Controller {
      */
     public function indexAction()
     {
-        exit($this->container->get('router')->getContext()->getBaseUrl());
         return $this->listeAction();
     }
 
@@ -741,11 +740,9 @@ class ClasseurController extends Controller {
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-
-        $env = new \Twig_Environment(new \Twig_Loader_String());
-
         $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
 
+        $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextmailnew(),
             array(
                 'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
