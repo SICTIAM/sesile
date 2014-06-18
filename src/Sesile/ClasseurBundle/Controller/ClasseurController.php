@@ -719,11 +719,12 @@ class ClasseurController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
 
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextMailwalid(),
             array(
-                'validant' => $this->getUser()->getPrenom()." ".$this->getUser()->getNom(),
+                'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
@@ -742,9 +743,12 @@ class ClasseurController extends Controller {
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
 
         $env = new \Twig_Environment(new \Twig_Loader_String());
+
+        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
+
         $body = $env->render($coll->getTextmailnew(),
             array(
-                'deposant' => $classeur->getUser()->getPrenom()." ".$classeur->getUser()->getNom(),
+                'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
@@ -761,10 +765,12 @@ class ClasseurController extends Controller {
     private function sendRefusMail($classeur) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
+
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextmailrefuse(),
             array(
-                'validant' => $this->getUser()->getPrenom()." ".$this->getUser()->getNom(),
+                'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
