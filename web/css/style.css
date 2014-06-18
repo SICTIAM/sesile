@@ -574,6 +574,14 @@ select [name=user] {
 	padding-left: 32%;
 }
 
+.ui-autocomplete {
+    cursor: default;
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+
+
 .label_form_token {
     border-bottom: 0px;
     width: 60%;
@@ -680,4 +688,63 @@ select [name=user] {
 
 .acti input {
 	display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.ui-front {
+    z-index: 100;
+}
+.ui-autocomplete {
+    cursor: default;
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+.ui-menu {
+    display: block;
+    list-style: none outside none;
+    margin: 0;
+    outline: medium none;
+    padding: 2px;
+}
+.ui-menu .ui-menu-item {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.ui-menu .ui-menu-item a {
+    display: block;
+    font-weight: normal;
+    line-height: 1.5;
+    min-height: 0;
+    padding: 2px 0.4em;
+    text-decoration: none;
+}
+.ui-widget .ui-widget {
+    font-size: 1em;
+}
+.ui-widget-content {
+    background: #FFFFFF;
+    border: 1px solid #AAAAAA;
+    color: #222222;
+}
+.ui-widget-content a {
+    color: #222222;
 }

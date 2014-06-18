@@ -413,7 +413,7 @@ class Classeur {
 
     public function refuser()
     {
-        $this->$this->setValidant($this->getPrevValidant());
+        $this->setValidant($this->getPrevValidant());
         $this->setStatus(0);
     }
 
