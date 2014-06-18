@@ -725,7 +725,7 @@ class ClasseurController extends Controller {
                 'validant' => $this->getUser()->getPrenom()." ".$this->getUser()->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => $this->container->get('router')->getContext()->getBaseUrl().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
             )
         );
 
@@ -746,7 +746,7 @@ class ClasseurController extends Controller {
                 'deposant' => $classeur->getUser()->getPrenom()." ".$classeur->getUser()->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => $this->container->get('router')->getContext()->getBaseUrl().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
             )
         );
 
@@ -766,7 +766,7 @@ class ClasseurController extends Controller {
                 'deposant' => $classeur->getUser()->getPrenom()." ".$classeur->getUser()->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => $this->container->get('router')->getContext()->getBaseUrl().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
             )
         );
 
