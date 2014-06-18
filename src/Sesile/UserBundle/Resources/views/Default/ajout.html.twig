@@ -1,7 +1,8 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
-
+    <script src="{{ asset("/js/jquery-ui.min.js") }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ asset("/css/select2.css") }}"/>
     <div class="bloc_page">
         <div class="titre_page">
             <span class="glyphicon glyphicon-folder-open"></span>
@@ -106,7 +107,7 @@
     </div>
 
     <script type="text/javascript">
-        $(".label_form input").focus(function () {
+        $(".label_form input, .ui-autocomplete-input").focus(function () {
             $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
             $(this).prev("label").addClass("glyphicon-search-blue");
         });
@@ -125,5 +126,38 @@
         });
 
         $('.checkbox', $(".acti")).attr('checked', true);
+
+
+        var cache = {};
+        var cur_resp = {};
+        $("#{{ form.username.vars.id }}").autocomplete({
+            source: function( request, response ) {
+                var mail = request.term;
+                if (mail in cache) {
+                    response(cache[mail]);
+                    return;
+                }
+                $.post( "{{ path("user_list_cas") }}", { mail: mail }, function(resp) {
+                    cur_resp = resp;
+                    cache[mail] = resp;
+                    response(resp);
+                }, 'json');
+            },
+            messages: {
+                noResults: '',
+                results: function() {}
+            },
+            select: function (event, ui) {
+                $("#{{ form.plainPassword.vars.id }}" + "_first, #{{ form.plainPassword.vars.id }}" + "_second").val("  ").attr("readonly", true);
+            },
+            change: function (event, ui) {
+                if($.inArray($("#{{ form.username.vars.id }}").val(), cur_resp) > -1 || $("#{{ form.username.vars.id }}").val() == cur_resp ) {
+                    $("#{{ form.plainPassword.vars.id }}" + "_first, #{{ form.plainPassword.vars.id }}" + "_second").val("  ").attr("readonly", true);
+                }
+                else {
+                    $("#{{ form.plainPassword.vars.id }}" + "_first, #{{ form.plainPassword.vars.id }}" + "_second").val("").attr("readonly", false);
+                }
+            }
+        });
     </script>
 {% endblock %}

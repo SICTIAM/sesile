@@ -413,7 +413,7 @@ class Classeur {
 
     public function refuser()
     {
-        $this->$this->setValidant($this->getPrevValidant());
+        $this->setValidant($this->getPrevValidant());
         $this->setStatus(0);
     }
 
@@ -441,12 +441,6 @@ class Classeur {
         }
 
         return (in_array($this->getValidant(), $arrayid));
-    }
-
-    public function isDelegatedToMe($userid) {
-        return !($this->getValidant() == $userid || $this->getValidant() == 0);
-
-        // return $this->isValidableByDelegates(array($user));
     }
 
     public function isModifiable($userid)

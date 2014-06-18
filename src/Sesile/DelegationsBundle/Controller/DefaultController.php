@@ -157,8 +157,7 @@ class DefaultController extends Controller
      * @method("GET")
      * @template("SesileDelegationsBundle:Default:edit.html.twig")
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
         $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($id);
 
@@ -181,8 +180,7 @@ class DefaultController extends Controller
      * @Route("/update", name="delegation_update")
      * @method("POST")
      */
-    public function updateAction(Request $request)
-    {
+    public function updateAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($request->request->get("id"));
         if (!$delegation) {
