@@ -764,7 +764,7 @@ class ClasseurController extends Controller {
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextmailrefuse(),
             array(
-                'deposant' => $classeur->getUser()->getPrenom()." ".$classeur->getUser()->getNom(),
+                'validant' => $this->getUser()->getPrenom()." ".$this->getUser()->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
