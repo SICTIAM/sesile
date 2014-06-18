@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Sesile\UserBundle\Form\UserType;
@@ -109,33 +110,31 @@ class DefaultController extends Controller
 
                 $info = ldap_get_entries($ldapconn, $sr);
 
-                if ($info["count"]) {
-                    ldap_close($ldapconn);
-                    return $this->redirect($this->generateUrl('error'));
-                } else {
-                    //  var_dump($dn);exit;
+                if (!$info["count"]) {
                     ldap_add($ldapconn, "mail=" . $res["email"] . "," . $LdapInfo["dn_user"], $entry);
                     $em->flush();
                 }
+                else {
+                    // TODO éditer l'user dans cas
+                }
+
                 ldap_close($ldapconn);
 
                 //envoi d'un mail à l'utilisateur nouvellement créé
-                /*$MailParam = $this->container->getParameter('swiftmailer');
+                $MailParam = $this->container->getParameter('swiftmailer');
                 $message = \Swift_Message::newInstance()
                     ->setContentType('text/html')
                     ->setSubject('Nouvel utilisateur')
-                    ->setFrom($MailParam['username'])
+                    ->setFrom("sesile@sictiam.fr")
                     ->setTo($entity->getUsername())
                     ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
-                $this->get('mailer')->send($message);*/
+                $this->get('mailer')->send($message);
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
-
             }
-
         }
 
-        return array(
+        return array (
             'entity' => $entity,
             'form' => $form->createView(),
             "menu_color" => "vert"
@@ -217,7 +216,6 @@ class DefaultController extends Controller
 
                 if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     $entry["cn"] = $entity->getUsername();
-                   // $entry["sn"] = $entity->getNom() . ' ' . $entity->getPrenom();
                     $pwd = trim($editForm->get('plainPassword')->getData());
 
                     if ($pwd) {
@@ -414,5 +412,68 @@ class DefaultController extends Controller
         return array();
     }
 
-}
+    /**
+     * @Route("/cas/list", name="user_list_cas")
+     * @Method("POST")
+     *
+     */
+    public function getUserListFromCasAction(Request $request) {
+        $mail = $request->request->get("mail");
+        $LdapInfo = $this->container->getParameter('ldap');
+        $cas_server = $this->container->getParameter('cas_server');
+        $ldapconn = ldap_connect($cas_server) or die("Connexion impossible au serveur LDAP [$cas_server]"); //security
 
+        ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+        if ($ldapconn) {
+            if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
+                $justthese = array("displayName", "mail");
+
+                $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], "(mail=".$mail."*)");
+                $data = ldap_get_entries($ldapconn, $sr);
+                $ret = array();
+                for ($i=0; $i<$data["count"]; $i++) {
+                    $ret[] = $data[$i]["mail"][0];
+                }
+                return new JsonResponse($ret);
+
+            } else {
+                ldap_close($ldapconn);
+                exit("Authentification au serveur LDAP impossible");
+            }
+        }
+    }
+
+    /**
+     * @Route("/cas/infos", name="user_infos_cas")
+     * @Method("POST")
+     *
+     */
+    public function getUserInfosFromCasAction(Request $request) {
+        $mail = $request->request->get("mail");
+        $LdapInfo = $this->container->getParameter('ldap');
+        $cas_server = $this->container->getParameter('cas_server');
+        $ldapconn = ldap_connect($cas_server) or die("Connexion impossible au serveur LDAP [$cas_server]"); //security
+
+        ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+        if ($ldapconn) {
+            if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
+                $justthese = array("displayName", "mail");
+
+
+                // TODO
+                $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], "(mail=".$mail.")", $justthese);
+                $data = ldap_get_entries($ldapconn, $sr);
+                $ret = array();
+                if($data["count"] > 0) {
+                    $ret[] = $data[0]["mail"][0];
+                }
+                return new JsonResponse($ret);
+            } else {
+                ldap_close($ldapconn);
+                exit("Authentification au serveur LDAP impossible");
+            }
+        }
+    }
+}
