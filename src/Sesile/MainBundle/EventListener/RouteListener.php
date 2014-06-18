@@ -36,8 +36,8 @@ class RouteListener {
             array("domain" => $sousdom, "active" => 1)
         );
 
+        $session = $request->getSession();
         if($collectivite instanceof Collectivite) {
-            $session = $request->getSession();
             $session->set('collectivite', $collectivite->getId());
             $session->set('logo', $collectivite->getImage());
 
@@ -47,12 +47,23 @@ class RouteListener {
                 if (!$this->context->isGranted('ROLE_SUPER_ADMIN')) {
                     $user = $this->context->getToken()->getUser();
                     if($user->getCollectivite() != $collectivite) {
-                        throw new NotFoundHttpException("Vous n'appartenez pas à la collectivité sélectionnée");
+                        $session->set('nocoll', true);
+                        $session->getFlashBag()->add(
+                            'success',
+                            "Merci pour votre connexion. Votre compte sera opérationnel après activation par l'administrateur de SESILE"
+                        );
                     }
+                }
+                else {
+                    $session->set('nocoll', false);
                 }
             }
         } else {
-            throw new NotFoundHttpException("La collectivité sélectionnée n'existe pas");
+            $session->set('nocoll', false);
+            $session->getFlashBag()->add(
+                'error',
+                "Aucune collectivité ne correspond à votre requête"
+            );
         }
     }
 }
