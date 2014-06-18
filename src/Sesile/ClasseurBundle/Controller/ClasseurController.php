@@ -29,6 +29,7 @@ class ClasseurController extends Controller {
      */
     public function indexAction()
     {
+        exit($this->container->get('router')->getContext()->getBaseUrl());
         return $this->listeAction();
     }
 
@@ -725,7 +726,7 @@ class ClasseurController extends Controller {
                 'validant' => $this->getUser()->getPrenom()." ".$this->getUser()->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => $this->container->get('router')->getContext()->getBaseUrl().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
             )
         );
 
@@ -746,7 +747,7 @@ class ClasseurController extends Controller {
                 'deposant' => $classeur->getUser()->getPrenom()." ".$classeur->getUser()->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => $this->container->get('router')->getContext()->getBaseUrl().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
             )
         );
 
@@ -766,7 +767,7 @@ class ClasseurController extends Controller {
                 'deposant' => $classeur->getUser()->getPrenom()." ".$classeur->getUser()->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => $this->container->get('router')->getContext()->getBaseUrl().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
             )
         );
 
