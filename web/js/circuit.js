@@ -146,10 +146,24 @@ if (form_parent.length > 0) {
         $("#circuit .perso_circuit:not(.deposant)").each(function (k, v) {
             ordre_circuit.push($(this).data("id"));
         });
+
+        if(ordre_circuit.length == 0) {
+            alert("Le circuit ne peut pas être vide");
+            return false;
+        }
+
         $('<input />')
             .attr({ 'type': 'hidden', 'name': "circuit" })
             .val(ordre_circuit)
             .appendTo(form_parent);
+
+        if(typeof(dropzone) != 'undefined') {
+            if(dropzone.getAcceptedFiles().length == 0) {
+                alert("Vous devez au moins déposer un document dans le classeur");
+                return false;
+            }
+        }
+
         this.submit();
         return false;
     });

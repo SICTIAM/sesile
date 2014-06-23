@@ -121,7 +121,6 @@ class DefaultController extends Controller
                 ldap_close($ldapconn);
 
                 //envoi d'un mail à l'utilisateur nouvellement créé
-                $MailParam = $this->container->getParameter('swiftmailer');
                 $message = \Swift_Message::newInstance()
                     ->setContentType('text/html')
                     ->setSubject('Nouvel utilisateur')

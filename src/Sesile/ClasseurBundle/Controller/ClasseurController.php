@@ -14,6 +14,7 @@ use Sesile\DocumentBundle\Entity\Document;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\DelegationsBundle\Entity\Delegations;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Classeur controller.
@@ -54,7 +55,49 @@ class ClasseurController extends Controller {
     }
 
     /**
-     * Page qui affiche la liste des classeurs à valider pour le user connecté.
+     * @Route("/ajax/list", name="ajax_classeurs_list")
+     * @Template()
+     */
+    public function listAjaxAction(Request $request) {
+        $get = $request->query->all();
+        $columns = array( 'Nom', 'Creation', 'Validation', 'Type', 'Status', 'Id');
+        $get['colonnes'] = &$columns;
+
+        $em = $this->getDoctrine()->getManager();
+        $rResult = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisiblesForDTables($this->getUser()->getId(), $get);
+
+        // $em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId())
+        $output = array(
+            "draw" => $get["draw"],
+            "recordsTotal" => $em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId()),
+            "recordsFiltered" => $rResult["count"],
+            "data" => array()
+        );
+
+        foreach($rResult["data"] as $aRow) {
+            $row = array();
+            for ($i = 0 ; $i < count($columns) ; $i++) {
+                if ($columns[$i] == "Creation") {
+                    $row[] = $aRow->{"get".$columns[$i]}()->format('d/m/Y H:i');
+                } elseif ($columns[$i] == "Validation") {
+                    $row[] = $aRow->{"get".$columns[$i]}()->format('d/m/Y');
+                }
+                elseif ($columns[$i] != ' ') {
+                    $row[] = $aRow->{"get".$columns[$i]}();
+                }
+            }
+            $output['data'][] = $row;
+        }
+
+        unset($rResult);
+
+        return new Response(
+            json_encode($output)
+        );
+    }
+
+    /**
+     * Page qui affiche la liste des classeurs à valider pour le user connecté
      *
      * @Route("/liste-a-valider", name="index_valider")
      * @Method("GET")
@@ -95,6 +138,107 @@ class ClasseurController extends Controller {
         return array(
             'classeurs' => $entities,
             "menu_color" => "bleu"
+        );
+    }
+
+    /**
+     * Liste des classeurs à valider pour datatables
+     *
+     * @Route("/ajax/a_valider", name="ajax_a_valider")
+     * @Method("GET")
+     * @Template()
+     */
+    public function aValiderAjaxAction(Request $request) {
+        $get = $request->query->all();
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+        $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
+
+
+
+
+        $columns = array( 'nom', 'creation', 'validation', 'type', 'status', 'id');
+        $aColumns = array();
+        foreach($columns as $value) $aColumns[] = 'c.'.$value;
+        $aColumnStr = str_replace(" , ", " ", implode(", ", $aColumns));
+        $validant = (!empty($usersdelegated))?$usersdelegated:$this->getUser();
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1";
+        $query = $em->createQuery($sql);
+        $rResult = $query->getResult();
+
+        $output = array(
+            "draw" => $get["draw"],
+            "recordsTotal" => count($rResult),
+            "data" => array()
+        );
+
+        // Il est temps de faire le barbu ...
+        // TODO attention les mm requêtes sont passées plusieurs fois (il faut faire le count une fois puis le CALC ROW)
+        $order = "";
+        if(isset($get['order'])) {
+            $order = " ORDER BY ".$aColumns[$get["order"][0]["column"]]." ".$get['order'][0]["dir"]." ";
+        }
+
+        $where = '';
+        if (isset($get['search']) && $get['search']['value'] != '') {
+            $globalSearch = array();
+            $str = $get['search']['value'];
+
+            for ($i=0; $i < count($get['columns']) ; $i++) {
+                if ($get['columns'][$i]['searchable'] == 'true') {
+                    $requestColumn = strtolower($aColumns[$i]);
+                    $binding = "'%".$str."%'";
+                    $globalSearch[] = $requestColumn." LIKE ".$binding;
+                }
+            }
+            if (count($globalSearch)) {
+                $where = '('.implode(' OR ', $globalSearch).')';
+                $where = 'AND '.$where;
+            }
+        }
+
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1 $where $order";
+        $query = $em->createQuery($sql);
+
+        if ( isset( $get['start'] ) && $get['length'] != '-1' ) {
+            $query->setFirstResult((int)$get['start'])->setMaxResults((int)$get['length']);
+        }
+
+        $rResult = $query->getResult();
+
+        foreach($rResult as $aRow) {
+            $row = array();
+            for ($i = 0 ; $i < count($columns) ; $i++) {
+                if ($columns[$i] == "creation") {
+                    $row[] = $aRow[$columns[$i]]->format('d/m/Y H:i');
+                } elseif ($columns[$i] == "validation") {
+                    $row[] = $aRow[$columns[$i]]->format('d/m/Y');
+                }
+                elseif ($columns[$i] != ' ') {
+                    $row[] = $aRow[$columns[$i]];
+                }
+            }
+            $output['data'][] = $row;
+        }
+
+        unset($rResult);
+
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1 $order";
+        $query = $em->createQuery($sql);
+        $rResult = $query->getResult();
+        $output["recordsFiltered"] = count($rResult);
+        unset($rResult);
+
+        return new Response(
+            json_encode($output)
+        );
+
+
+        unset($rResult);
+
+        return new Response(
+            json_encode($output)
         );
     }
 
@@ -147,13 +291,9 @@ class ClasseurController extends Controller {
         $circuit = $request->request->get('circuit');
         $classeur->setCircuit($circuit);
         $classeur->setUser($this->getUser()->getId());
-
         $classeur->setVisibilite($request->request->get('visibilite'));
 
-
         $em->persist($classeur);
-
-
         $em->flush();
 
         // enregistrer les users du circuit
