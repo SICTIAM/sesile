@@ -205,10 +205,6 @@
 
     /**************************************************** FIN FONCTIONS TOOLBAR ***************************************/
 
-
-
-
-
         // Define the drag listeners for drag/drop behaviour of nodes.
     dragListener = d3.behavior.drag()
         .on("dragstart", function (d) {
@@ -383,6 +379,7 @@
         // Update the nodes…
         node = svgGroup.selectAll("g.node")
             .data(nodes, function (d) {
+                $("#listUsers option[value=" + d.id + "]").remove();
                 return d.id;
             });
 

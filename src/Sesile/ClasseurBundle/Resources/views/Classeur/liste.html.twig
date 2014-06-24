@@ -5,7 +5,6 @@
         <th>Date de création</th>
         <th>Date limite de validation</th>
         <th>Type de classeur</th>
-        <th>Intervention</th>
         <th>Statut actuel</th>
         <th>Action</th>
     </tr>
@@ -17,7 +16,6 @@
             <td>{% if classeur.creation %}{{ classeur.creation | date('d/m/Y') }}{% endif %}</td>
             <td>{% if classeur.validation %}{{ classeur.validation | date('d/m/Y') }}{% endif %}</td>
             <td>{{ classeur.type }}</td>
-            <td>{{ classeur.validantName }}</td>
             <td class="statut">
                 <span class="glyphicon statut_{{ classeur.status }}"></span>
             </td>
@@ -36,5 +34,7 @@
         document.location.href = Routing.generate('classeur_edit', { id: $(this).data("id") });
     });
 </script>
+<script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+<link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
 
 

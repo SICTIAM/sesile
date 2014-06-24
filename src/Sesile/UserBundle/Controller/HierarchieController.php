@@ -28,7 +28,8 @@ class HierarchieController extends Controller {
         ));
 
         return array(
-            'groupes' => $users
+            'groupes' => $users,
+            "menu_color" => "vert"
         );
     }
 
@@ -43,7 +44,7 @@ class HierarchieController extends Controller {
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
             "collectivite" => $this->get("session")->get("collectivite")
         ));
-        return array("users" => $users);
+        return array("users" => $users, "menu_color" => "vert");
     }
 
     /**
@@ -157,14 +158,11 @@ class HierarchieController extends Controller {
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
             "collectivite" => $this->get("session")->get("collectivite")
         ));
-
         $ret = array("users" => $users, "organigramme" => 1);
-
         $groupe = $em->getRepository('SesileUserBundle:Groupe')->findOneByType(1);
         if(is_object($groupe)) {
             $ret["groupe"] = $groupe;
         }
-
         return $ret;
     }
 
@@ -181,7 +179,9 @@ class HierarchieController extends Controller {
         if(is_object($tree) && $tree->name) {
             $users[] = array("id" => $tree->id, "parent" => is_object($prec)?$prec->id:0);
             $prec = $tree;
-            $this->getUsersFromJson(json_encode($tree->children));
+            if(isset($tree->children)) {
+                $this->getUsersFromJson(json_encode($tree->children));
+            }
         }
         else {
             foreach($tree as $_user) {

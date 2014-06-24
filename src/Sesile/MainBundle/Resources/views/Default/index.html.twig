@@ -33,16 +33,17 @@
 
 <div id="maman">
 <div id="gauche">
-    <a href="{{ app.request.getBaseURL() }}">
+    <a href="{{ app.request.schemeAndHttpHost }}">
     <div id="logo">
-            <img src="{{ asset("/images/badlogo.png") }}"/>
+            <img src="{{ asset("/images/2.4.6.logosesile.png") }}"/>
         </div>
     </a>
+	<img id="separateur_logo" src="{{ asset("/images/gradient-sesile.png") }}"/>
     <div class="border_imposetonstyle">
 	    {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
 	    <img  id="img_imposetonstyle"  src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" />
     </div>
-    {% if is_granted('ROLE_USER') %}
+    {% if is_granted('ROLE_USER') and app.user.collectivite is not null %}
 	{% include 'SesileMainBundle:Default:menu.html.twig' %}
     {% endif %}
 </div>
@@ -103,13 +104,7 @@
                         <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}"
                               rel="stylesheet"/>
 
-                        <div id="delegations_recues">
-                            <div class="titre_bloc_accueil">
-                                <span class="glyphicon glyphicon-share"></span>
-                                Délégations
-                            </div>
-                            {% render url("delegations_all_list") %}
-                        </div>
+                        {% render url("delegations_all_list") %}
                         <object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0"
                                 style="display: none;"></object>
                         <div id="classeurs_a_valider">
@@ -173,7 +168,7 @@
                                     "aLengthMenu": [15, 30, 50, 100],
                                     "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
-                                        { "bSortable": false, "aTargets": [ 5, 6 ] }
+                                        { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
                                     "sPaginationType": "full_numbers"
                                 });
@@ -197,7 +192,7 @@
                                     "aLengthMenu": [15, 30, 50, 100],
                                     "sDom": 'lft<"footer_datatables"p>',
                                     "aoColumnDefs": [
-                                        { "bSortable": false, "aTargets": [ 5, 6 ] }
+                                        { "bSortable": false, "aTargets": [ 4, 5 ] }
                                     ],
                                     "sPaginationType": "full_numbers"
                                 });
@@ -231,10 +226,16 @@ title="Parapheur Sesile - 2013" -->
 
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank"> <!--data-toggle="tooltip"
+<a class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/"> <!--data-toggle="tooltip"
 title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France"-->
     <span class="lettersmove">CREATIVE COMMONS</span>
 </a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a class="sesiletooltip creativecommons" href="{{ path("apropos") }}" target="_blank"> <!--data-toggle="tooltip"
+title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France"-->
+    <span class="lettersmove">À PROPOS</span>
+</a>
+
 </span>
             <br/>
 <span class="signature">

@@ -22,24 +22,13 @@
                 {% endfor %}
             </select>
             </div>
+	    <br>
             <button class="btn btn-success">Enregistrer</button>
+	    <a href="{{ path('liste_type_classeur') }}">
+		<button type="button" class="btn btn-default navbar-btn">
+		    Retour à la page précédente
+		</button>
+	    </a>
         </form>
-
-        <a href="{{ path('liste_type_classeur') }}">
-            <button type="button" class="btn btn-default navbar-btn">
-                Retour à la page précédente
-            </button>
-        </a>
-
-        <a href="{{ path('liste_types') }}">
-            <button type="button" class="btn btn-default navbar-btn">
-                Retour à la page précédente
-            </button>
-        </a>
-        <a href="{{ path('liste_type_classeur') }}">
-            <button type="button" class="btn btn-default navbar-btn">
-                Retour à la page précédente
-            </button>
-        </a>
     </div>
 {% endblock %}

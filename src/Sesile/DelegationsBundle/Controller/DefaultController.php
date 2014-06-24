@@ -29,7 +29,8 @@ class DefaultController extends Controller
         $delegations = $query->getResult();
 
         return array(
-            'delegations' => $delegations
+            'delegations' => $delegations,
+            "menu_color" => "jaune"
         );
     }
 
@@ -46,14 +47,12 @@ class DefaultController extends Controller
      * @Route("/liste_recues", name="delegations_recues_list")
      * @Template("SesileDelegationsBundle:Default:liste.html.twig")
      */
-    public function recuesAction()
-    {
+    public function recuesAction() {
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
-
-
         $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
         return array(
-            'delegations' => $delegations
+            'delegations' => $delegations,
+            "menu_color" => "jaune"
         );
     }
 
@@ -62,28 +61,15 @@ class DefaultController extends Controller
      * @Route("/liste_all", name="delegations_all_list")
      * @Template("SesileDelegationsBundle:Default:liste_all.html.twig")
      */
-    public function recuesAllAction()
-    {
+    public function recuesAllAction() {
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $delegations = $repository->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
-
-
-/*
-        $query = $repository->createQueryBuilder('p')
-            ->where('p.delegant = :delegant')
-            ->setParameter('delegant', $this->getUser())
-            ->andWhere('p.fin >= :fin')
-            ->setParameter('fin', new \DateTime())
-            ->orderBy('p.debut', 'ASC')
-            ->getQuery();
-
-        $donnees = $query->getResult();*/
-
         $donnees=$this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsGivenFromNow($this->getUser());
 
         return array(
             'delegations' => $delegations,
-            'donnees' => $donnees
+            'donnees' => $donnees,
+            "menu_color" => "jaune"
         );
     }
 
@@ -93,8 +79,7 @@ class DefaultController extends Controller
      * @Template()
      * @method("GET")
      */
-    public function ajoutAction()
-    {
+    public function ajoutAction() {
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();
         foreach ($users as $index => $user) {
@@ -103,38 +88,27 @@ class DefaultController extends Controller
             }
         }
 
-
         $delegsdonnees=$this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsGivenFromNow($this->getUser());
         $delegsrecues = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations')->getDelegationsWhoHasMeAsDelegateRecursively($this->getUser());
-
-
         $delegs = array();
 
-
         foreach($delegsdonnees as $d){
-
             $delegs[]=array("debut"=>$d->getDebut()->getTimestamp(), "fin"=>$d->getFin()->getTimestamp());
         }
-
         $delegsgiven = array();
 
-        foreach($delegsrecues as $d){
+        foreach($delegsrecues as $d) {
             $delegsgiven[]=array("userid"=>$d->getDelegant()->getId(), "debut"=>$d->getDebut()->getTimestamp(), "fin"=>$d->getFin()->getTimestamp());
         }
 
-
-
-
-        return array("users" => $users, "delegs"=>$delegs,"recues"=>$delegsgiven );
+        return array("users" => $users, "delegs"=>$delegs,"recues"=>$delegsgiven, "menu_color" => "jaune" );
     }
 
     /**
      * @Route("/create", name="delegation_create")
      * @method("POST")
      */
-    public function createAction(Request $request)
-    {
-
+    public function createAction(Request $request) {
         $delegation = new Delegations();
         $delegation->setDelegant($this->getUser());
         $userManager = $this->container->get('fos_user.user_manager');
@@ -148,9 +122,7 @@ class DefaultController extends Controller
 
 
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
-
-
-       $repository->addDelegationWithFusion($delegation);
+        $repository->addDelegationWithFusion($delegation);
 
 
         $this->get('session')->getFlashBag()->add(
@@ -185,8 +157,7 @@ class DefaultController extends Controller
      * @method("GET")
      * @template("SesileDelegationsBundle:Default:edit.html.twig")
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
         $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($id);
 
@@ -202,15 +173,14 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('Unable to find délégation entity.');
         }
 
-        return array("delegation" => $delegation, "users" => $users);
+        return array("delegation" => $delegation, "users" => $users, "menu_color" => "jaune");
     }
 
     /**
      * @Route("/update", name="delegation_update")
      * @method("POST")
      */
-    public function updateAction(Request $request)
-    {
+    public function updateAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $delegation = $em->getRepository('SesileDelegationsBundle:Delegations')->find($request->request->get("id"));
         if (!$delegation) {

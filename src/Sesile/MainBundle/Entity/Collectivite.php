@@ -304,8 +304,7 @@ class Collectivite
         }
     }
 
-    private function upload()
-    {
+    private function upload() {
         if (null === $this->file) {
             return;
         }
@@ -317,8 +316,6 @@ class Collectivite
             mkdir($this->getUploadRootDir());
         }
         $this->file->move($this->getUploadRootDir(), $this->image);
-
-
         unset($this->file);
     }
 

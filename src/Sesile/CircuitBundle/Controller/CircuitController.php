@@ -50,7 +50,7 @@ class CircuitController extends Controller
         }
 
 
-        return array('users' => $users, "circuits" => $circuits);
+        return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
     }
 
     /**
@@ -99,7 +99,6 @@ class CircuitController extends Controller
             $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre());
         }
 
-
         $response = new Response(json_encode($circuits));
         $response->headers->set('Content-Type', 'application/json');
 
@@ -110,8 +109,7 @@ class CircuitController extends Controller
      * @Route("/delete", name="del_circuits_favoris", options={"expose"=true})
      * @Method("POST")
      */
-    public function deleteAction(Request $request)
-    {
+    public function deleteAction(Request $request) {
         $id_circuit = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         try {
@@ -141,7 +139,6 @@ class CircuitController extends Controller
     }
 
     private $ordre;
-
     private function recursivesortHierarchie($hierarchie, $curr) {
         static $recurs = 0;
         foreach($hierarchie as $k => $groupeUser) {

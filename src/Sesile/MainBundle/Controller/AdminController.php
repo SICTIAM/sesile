@@ -36,7 +36,7 @@ class AdminController extends Controller
             $em->flush();
         }
 
-        return array('message' => $msg_accueil);
+        return array('message' => $msg_accueil, "menu_color" => "vert");
     }
 
     /**
@@ -64,7 +64,7 @@ class AdminController extends Controller
             $em->flush();
         }
 
-        return array('textmailrefuse' => $txtrefuse, 'textmailwalid' => $txtwalid, 'textmailnew' => $txtnew,);
+        return array('textmailrefuse' => $txtrefuse, 'textmailwalid' => $txtwalid, 'textmailnew' => $txtnew, "menu_color" => "vert");
     }
 
 
@@ -80,7 +80,7 @@ class AdminController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $collectivites = $em->getRepository('SesileMainBundle:Collectivite')->findAll();
-        return array("collectivites" => $collectivites);
+        return array("collectivites" => $collectivites, "menu_color" => "vert");
     }
 
     /**
@@ -115,7 +115,8 @@ class AdminController extends Controller
 
         return array(
             'entity' => $entity,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            "menu_color" => "vert"
         );
 
 
@@ -149,6 +150,7 @@ class AdminController extends Controller
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            "menu_color" => "vert"
         );
     }
 
@@ -178,7 +180,7 @@ class AdminController extends Controller
             $entity->setDomain($editForm->get('domain')->getData());
             $entity->setActive($editForm->get('active')->getData());
             $entity->setTextmailrefuse($editForm->get('textmailrefuse')->getData());
-            $entity->setTextmailwalid($editForm->get('active')->getData());
+            $entity->setTextmailwalid($editForm->get('textmailwalid')->getData());
             $entity->setTextmailnew($editForm->get('textmailnew')->getData());
             $entity->setMessage($editForm->get('message')->getData());
 
@@ -196,6 +198,7 @@ class AdminController extends Controller
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            "menu_color" => "vert"
         );
     }
 
