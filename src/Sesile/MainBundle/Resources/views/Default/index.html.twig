@@ -54,7 +54,7 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <img class="userpicture"
-                         src="{{ asset(upload_path ~ app.user.path) }}"/>
+                         src="{% if app.user.path %}{{ asset(upload_path ~ app.user.path) }}{% else %}{{ asset("/images/imghomme.png") }}{% endif %}"/>
                     &nbsp;
                     {{ app.user.prenom }}&nbsp;{{ app.user.nom }}&nbsp;&nbsp;&nbsp;
                     <span class="caret"></span>

@@ -29,7 +29,7 @@ if (typeof circuit_users != 'undefined') {
 
 if (typeof deposant != 'undefined') {
     var new_perso = $('<div/>').addClass('deposant no_sort perso_circuit').insertBefore("#debut_circuit");
-    perso_src = path + deposant.path || perso_src;
+    perso_src = deposant.path?path+deposant.path:perso_src;
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
@@ -65,7 +65,7 @@ function ajoutUser(id, sort) {
         });
     }
 
-    perso_src = path + sel_user.data("img") || perso_src;
+    perso_src = deposant.path?path+deposant.path:perso_src;
 
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);
@@ -157,8 +157,9 @@ if (form_parent.length > 0) {
             .val(ordre_circuit)
             .appendTo(form_parent);
 
+
         if(typeof(dropzone) != 'undefined') {
-            if(dropzone.getAcceptedFiles().length == 0) {
+            if( ( typeof(mockFile) != 'object' && dropzone.getAcceptedFiles().length == 0) || ( typeof(mockFile) == 'object' && mockFile == {} ) ) {
                 alert("Vous devez au moins déposer un document dans le classeur");
                 return false;
             }
