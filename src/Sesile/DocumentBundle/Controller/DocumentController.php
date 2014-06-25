@@ -18,12 +18,8 @@ class DocumentController extends Controller
      * @Route("/new", name="new_document",  options={"expose"=true})
      * @Template()
      */
-    public function newAction()
-    {
-
-
+    public function newAction() {
         return array();
-
     }
 
 
@@ -31,8 +27,7 @@ class DocumentController extends Controller
      * @Route("/editforclasseur/{id}", name="edit_document_for_classeur",  options={"expose"=true})
      * @Template()
      */
-    public function editForClasseurAction(Request $request, $id)
-    {
+    public function editForClasseurAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
@@ -56,8 +51,7 @@ class DocumentController extends Controller
      * @Route("/uploadfile", name="upload_doc",  options={"expose"=true})
      *
      */
-    public function uploadAction(Request $request)
-    {
+    public function uploadAction(Request $request) {
 
 
         $em = $this->getDoctrine()->getManager();

@@ -33,6 +33,7 @@ class HierarchieController extends Controller {
         );
     }
 
+
     /**
      * @Route("/groupe/new", name="create_groupe")
      * @Method("GET")
@@ -46,6 +47,7 @@ class HierarchieController extends Controller {
         ));
         return array("users" => $users, "menu_color" => "vert");
     }
+
 
     /**
      * @Route("/groupe/new", name="new_groupe")
@@ -80,6 +82,7 @@ class HierarchieController extends Controller {
         return $this->redirect($this->generateUrl('groupes'));
     }
 
+
     /**
      * @Route("/groupe/edit/{id}", name="groupe_edit", options={"expose"=true})
      * @Method("GET")
@@ -103,6 +106,7 @@ class HierarchieController extends Controller {
             return $this->redirect($this->generateUrl('groupes'));
         }
     }
+
 
     /**
      * @Route("/groupe/update/", name="update_groupe")
@@ -146,6 +150,29 @@ class HierarchieController extends Controller {
         }
     }
 
+
+    /**
+     * Deletes a Group entity.
+     * @Route("/groupe/delete/{id}", name="group_delete")
+     * @Method("POST")
+     */
+    public function deleteAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SesileUserBundle:Groupe')->findOneById($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Groupe introuvable');
+        }
+        $em->remove($entity);
+        $em->flush();
+
+
+        $this->get('session')->getFlashBag()->add(
+            "success",
+            "Le groupe vient d'être supprimé"
+        );
+        return $this->redirect($this->generateUrl('groupes'));
+    }
 
     /**
      * @Route("/organigramme", name="organigramme")

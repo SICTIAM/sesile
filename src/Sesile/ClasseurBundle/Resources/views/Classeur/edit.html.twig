@@ -30,13 +30,9 @@
             <span class="glyphicon statut_0"></span>
         <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img class="userpicture"
                                                                                               src="{{ asset(upload_path ~ uservalidant.path) }}"/>{{  uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
-
-
         </div>
         {% endif %}
-
         <br/>
-
 
         <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
@@ -164,6 +160,10 @@
                 {% endif %}
 
                 $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer").click(function () {
+                    if($(this).hasClass("btn-modifs") || $(this).hasClass("btn-valider-signer") || $(this).hasClass("btn-valider")) {
+                        // ?? est ce nécessaire
+                    }
+
                     $("#form_edit").attr("action", $(this).attr("data-action")).submit();
                 });
             });

@@ -344,7 +344,10 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $classeur->setValidation($valid);
         $circuit = $request->request->get('circuit');
         $classeur->setCircuit($circuit);
+<<<<<<< HEAD
         $classeur->setUser($user->getId());
+=======
+>>>>>>> dev
 
         $em->flush();
 
@@ -385,11 +388,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         }
 
         $em->flush();
-
-
         return $em->getRepository("SesileClasseurBundle:Classeur")->findOneById($id);;
-
-
         return array();
 
     }
