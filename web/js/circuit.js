@@ -65,7 +65,7 @@ function ajoutUser(id, sort) {
         });
     }
 
-    perso_src = deposant.path?path+deposant.path:perso_src;
+    perso_src = sel_user.data("img") ? path + sel_user.data("img") : perso_src;
 
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);

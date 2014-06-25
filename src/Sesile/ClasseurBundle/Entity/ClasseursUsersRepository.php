@@ -82,16 +82,10 @@ class ClasseursUsersRepository extends EntityRepository
             }
         }
 
-
-
-
-
         $sql = 'SELECT '.$aColumns.' FROM ClasseursUsers cu
             INNER JOIN Classeur c ON cu.classeur_id = c.id
-            WHERE ((c.visibilite = 0 AND cu.user_id = :userid)
-            OR (c.visibilite > 0 AND c.visibilite IN (SELECT groupe FROM UserGroupe WHERE user = :userid))) '.$where.' GROUP BY cu.classeur_id';
-
-
+            WHERE ((c.visibilite = 0 AND (cu.user_id = :userid OR c.user = :userid) )
+            OR (c.visibilite > 0 AND (c.visibilite IN (SELECT groupe FROM UserGroupe WHERE user = :userid) OR (cu.user_id = :userid OR c.user = :userid)) )) '.$where.' GROUP BY cu.classeur_id';
 
         $query = $em->createNativeQuery($sql.$order.$limit, $rsm)->setParameter('userid', $userid);
 
