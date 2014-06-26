@@ -112,14 +112,11 @@ class DefaultController extends Controller
 
                 if (!$info["count"]) {
                     ldap_add($ldapconn, "mail=" . $res["email"] . "," . $LdapInfo["dn_user"], $entry);
-                    $em->flush();
                 }
-                else {
-                    // TODO éditer l'user dans cas
-                }
-
                 ldap_close($ldapconn);
 
+
+                $em->flush();
                 //envoi d'un mail à l'utilisateur nouvellement créé
                 $message = \Swift_Message::newInstance()
                     ->setContentType('text/html')
