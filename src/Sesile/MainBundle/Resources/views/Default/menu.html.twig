@@ -1,4 +1,20 @@
 {% block menu %}
+    <button id="browser">Infos navigateur</button>
+    <script type="text/javascript">
+        function msieversion() {
+            var ua = window.navigator.userAgent
+            var msie = ua.indexOf ( "MSIE " )
+            if ( msie > 0 ) return parseInt (ua.substring (msie+5, ua.indexOf (".", msie )))
+            else return 0
+
+        }
+
+        /*$("#browser").click(function() {
+            if(msieversion() > 0) {
+                alert(msieversion());
+            }
+        });*/
+    </script>
     <div class="menu">
         <ul>
             <li class="menu-elem menu-jaune">
