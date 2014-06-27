@@ -35,12 +35,14 @@
     <a href="{{ app.request.baseUrl }}">
         <div id="logo">
             <img src="{{ asset("/images/logos.svg") }}"/>
-        </div>
+    </div>
     </a>
 	<img id="separateur_logo" src="{{ asset("/images/gradient-sesile.png") }}"/>
+    <div id="logo">
     <div class="border_imposetonstyle">
 	    {#TODO : <img src="{{ asset(upload_path_logo ~ image) }}" width="60px" height="60px"/> #}
 	    <img  id="img_imposetonstyle"  src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" />
+    </div>
     </div>
     {% if is_granted('ROLE_USER') and app.user.collectivite is not null %}
 	{% include 'SesileMainBundle:Default:menu.html.twig' %}
