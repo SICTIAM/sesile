@@ -1,8 +1,8 @@
-<table class="table tableau">
+<table class="table tableau" id="historiquebug">
     <thead>
     <tr>
         <th>Utilisateur</th>
-        <th>Date</th>
+        <th>Date&nbsp;|&nbsp;Heure</th>
         <th>Action</th>
     </tr>
     </thead>
@@ -10,7 +10,7 @@
     {% for action in  actions %}
         <tr>
             <td>{{ action.username }}</td>
-            <td>{{ action.date | date("d/m/Y H:i:s") }}</td>
+            <td>{{ action.date | date("d/m/Y") }}&nbsp;|&nbsp;{{ action.date | date("H:i:s") }}</td>
             <td>{{ action.action }}</td>
         </tr>
     {% endfor %}
