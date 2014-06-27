@@ -550,10 +550,19 @@ class ClasseurController extends Controller {
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
         $delegator=$repositoryusers->find($currentvalidant);
 
-
         $classeur->valider($em);
-
         $em->flush();
+
+
+        if($request->get("moncul") == 1) {
+            $action = new Action();
+            $action->setClasseur($classeur);
+            $action->setUser($this->getUser());
+            $action_libelle = "Classeur signé";
+            $action->setAction($action_libelle);
+            $em->persist($action);
+            $em->flush();
+        }
 
         $action = new Action();
         $action->setClasseur($classeur);
@@ -565,7 +574,6 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-        // envoi d'un mail validant suivant
         $this->sendValidationMail($classeur);
 
         //$this->updateAction($request);
@@ -907,7 +915,7 @@ class ClasseurController extends Controller {
             )
         );
 
-        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+        $validant_obj = ($classeur->getValidant() == 0)?$em->getRepository('SesileUserBundle:User')->find($classeur->getUser()):$em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
