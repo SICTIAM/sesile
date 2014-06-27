@@ -1,14 +1,14 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {{ form_start(form) }}
 <div class="label_form label-form-input">
-    {{ form_label(form.Prenom) }}
+    {{ form_label(form.Prenom, 'Prénom') }}
     {{ form_widget(form.Prenom) }}
 </div>
 
 <br/>
 
 <div class="label_form label-form-input">
-    {{ form_label(form.Nom) }}
+    {{ form_label(form.Nom, 'Nom') }}
     {{ form_widget(form.Nom) }}
 </div>
 

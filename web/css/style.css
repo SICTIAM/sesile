@@ -39,8 +39,12 @@ html, body {
 	box-shadow: 0.143em 0 0.8em #3a3a3a;
 }
 
+#logo {
+	text-align: center;
+}
+
 #logo img {
-	max-width : 190px;
+	width: 70%;
 	margin: auto;
 	margin-bottom: 5%;
 	margin-top: 5%;
@@ -49,12 +53,12 @@ html, body {
 #img_imposetonstyle {
 	margin: 8% auto 12% auto;
 	position: relative;
-	margin-left:50%;
+	margin-left: 40%;
 	left: -50px;
 	margin-top: 12% ;
 	margin-bottom: 12%;
-	width:100px;
-	height:100px;
+	width: 70%;
+
 }
 
 #separateur_logo {
