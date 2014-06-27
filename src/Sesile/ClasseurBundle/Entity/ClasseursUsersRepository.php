@@ -43,6 +43,85 @@ class ClasseursUsersRepository extends EntityRepository
         return self::$classeursVisibles;
     }
 
+    public function getClasseursVisiblesForDTables($userid, array $get) {
+        $em = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
+
+        $aColumns = array();
+        foreach($get['colonnes'] as $value) $aColumns[] = 'c.'.strtolower($value);
+
+        $aColumns = str_replace(" , ", " ", implode(", ", $aColumns));
+        $limit = "";
+        if ( isset( $get['start'] ) && $get['length'] != '-1' ) {
+            $start = (int)$get['start'];
+            $length = (int)$get['length'];
+            $limit = ' LIMIT '.$start.', '.$length;
+        }
+
+        $order = "";
+        if(isset($get['order'])) {
+            $order = " ORDER BY ".$get["colonnes"][$get["order"][0]["column"]]." ".$get['order'][0]["dir"]." ";
+        }
+
+        $where = '';
+        if (isset($get['search']) && $get['search']['value'] != '') {
+            $globalSearch = array();
+            $str = $get['search']['value'];
+
+            for ($i=0; $i < count($get['columns']) ; $i++) {
+                if ($get['columns'][$i]['searchable'] == 'true') {
+                $requestColumn = strtolower($get['colonnes'][$i]);
+                    $binding = "'%".$str."%'";
+                    $globalSearch[] = "c.".$requestColumn." LIKE ".$binding;
+                }
+            }
+            if (count($globalSearch)) {
+                $where = '('.implode(' OR ', $globalSearch).')';
+                $where = 'AND '.$where;
+            }
+        }
+
+        $sql = 'SELECT '.$aColumns.' FROM ClasseursUsers cu
+            INNER JOIN Classeur c ON cu.classeur_id = c.id
+            WHERE ((c.visibilite = 0 AND (cu.user_id = :userid OR c.user = :userid) )
+            OR (c.visibilite > 0 AND (c.visibilite IN (SELECT groupe FROM UserGroupe WHERE user = :userid) OR (cu.user_id = :userid OR c.user = :userid)) )) '.$where.' GROUP BY cu.classeur_id';
+
+        $query = $em->createNativeQuery($sql.$order.$limit, $rsm)->setParameter('userid', $userid);
+
+        $ret = array();
+        try {
+            $ret["data"] = $query->getResult();
+
+            // TODO on repasse la mm requête une 2eme fois sans le limit pour connaitre le nombre de résultats filtrés mais il faudrait passer par un FOUND_ROWS()
+            // Voir pour faire marcher ça correctement avec doctrine
+            $query = $em->createNativeQuery($sql, $rsm)->setParameter('userid', $userid);
+            $ret["count"] = count($query->getResult());
+
+            return $ret;
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    public function countClasseursVisiblesForDTables($userid) {
+        $em = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
+
+        $sql = 'SELECT c.* FROM ClasseursUsers cu
+            inner join Classeur c on cu.classeur_id = c.id
+            WHERE (c.visibilite = 0 and cu.user_id = :userid)
+            or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid))';
+
+        $query = $em->createNativeQuery($sql, $rsm)->setParameter('userid', $userid);
+        try {
+            return count($query->getResult());
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return 0;
+        }
+    }
+
     public function getClasseursRetractables($userid) {
         if (self::$classeursRetractables === null) {
             $em = $this->getEntityManager();

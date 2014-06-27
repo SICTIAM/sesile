@@ -25,7 +25,6 @@ class DefaultController extends Controller
     /**
      * @Route("/", name="liste_users")
      * @Template("SesileUserBundle:Default:index.html.twig")
-     *
      */
     public function listAction() {
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
@@ -71,64 +70,59 @@ class DefaultController extends Controller
         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
         if ($ldapconn) {
-
             //binding au serveur LDAP
             @ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
 
-
             if ($form->isValid()) {
-
-                $entity->setEmail($form->get('username')->getData());
                 $em = $this->getDoctrine()->getManager();
+                $userObj = $em->getRepository('SesileUserBundle:User')->findByUsername($form->get('username'));
 
-                $em->persist($entity);
-                $entity->upload($DirPath);
+                if($userObj) {
+                    $entity->setEmail($form->get('username')->getData());
+                    $em->persist($entity);
+                    $entity->upload($DirPath);
 
 
-                $res = array("nom" => $form->get('Nom')->getData(),
-                    "prenom" => $form->get('Prenom')->getData(),
-                    "email" => $form->get('username')->getData(),
-                    "plainpassword" => $form->get('plainPassword')->getData());
+                    $res = array("nom" => $form->get('Nom')->getData(),
+                        "prenom" => $form->get('Prenom')->getData(),
+                        "email" => $form->get('username')->getData(),
+                        "plainpassword" => $form->get('plainPassword')->getData());
 
-//création du tableau d'attributs
-                $entry["objectClass"][0] = "inetOrgPerson";
-                $entry["objectClass"][1] = "organizationalPerson";
-                $entry["objectClass"][2] = "person";
-                $entry["objectClass"][3] = "shadowAccount";
-                $entry["cn"] = $res["email"];
-                $entry["sn"] = $res["email"];
-                $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($res["plainpassword"])));
-                $entry["givenName"] = $res["email"];
-                $entry["shadowInactive"] = -1;
-                $entry["uid"] = "100";
-                $entry["displayName"] = $res["nom"] . " " . $res["prenom"];
+                    //création du tableau d'attributs
+                    $entry["objectClass"][0] = "inetOrgPerson";
+                    $entry["objectClass"][1] = "organizationalPerson";
+                    $entry["objectClass"][2] = "person";
+                    $entry["objectClass"][3] = "shadowAccount";
+                    $entry["cn"] = $res["email"];
+                    $entry["sn"] = $res["email"];
+                    $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($res["plainpassword"])));
+                    $entry["givenName"] = $res["email"];
+                    $entry["shadowInactive"] = -1;
+                    $entry["uid"] = "100";
+                    $entry["displayName"] = $res["nom"] . " " . $res["prenom"];
 
-                //création du Distinguished Name
-                $dn = "mail=" . $res["email"] . "," . $LdapInfo["dn_user"];
-                $justthese = array("sn", "givenname", "mail");
-                $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], "(|(mail=" . $res["email"] . "*))");
+                    //création du Distinguished Name
+                    $dn = "mail=" . $res["email"] . "," . $LdapInfo["dn_user"];
+                    $justthese = array("sn", "givenname", "mail");
+                    $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], "(|(mail=" . $res["email"] . "*))");
 
-                $info = ldap_get_entries($ldapconn, $sr);
+                    $info = ldap_get_entries($ldapconn, $sr);
 
-                if (!$info["count"]) {
-                    ldap_add($ldapconn, "mail=" . $res["email"] . "," . $LdapInfo["dn_user"], $entry);
+                    if (!$info["count"]) {
+                        ldap_add($ldapconn, "mail=" . $res["email"] . "," . $LdapInfo["dn_user"], $entry);
+                    }
+                    ldap_close($ldapconn);
+
                     $em->flush();
+                    //envoi d'un mail à l'utilisateur nouvellement créé
+                    $message = \Swift_Message::newInstance()
+                        ->setContentType('text/html')
+                        ->setSubject('Nouvel utilisateur')
+                        ->setFrom("sesile@sictiam.fr")
+                        ->setTo($entity->getUsername())
+                        ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
+                    $this->get('mailer')->send($message);
                 }
-                else {
-                    // TODO éditer l'user dans cas
-                }
-
-                ldap_close($ldapconn);
-
-                //envoi d'un mail à l'utilisateur nouvellement créé
-                $MailParam = $this->container->getParameter('swiftmailer');
-                $message = \Swift_Message::newInstance()
-                    ->setContentType('text/html')
-                    ->setSubject('Nouvel utilisateur')
-                    ->setFrom("sesile@sictiam.fr")
-                    ->setTo($entity->getUsername())
-                    ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
-                $this->get('mailer')->send($message);
 
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
             }
@@ -143,7 +137,6 @@ class DefaultController extends Controller
 
     /**
      * Displays a form to edit an existing user entity.
-     *
      * @Route("/edit/{id}/", name="user_edit", options={"expose"=true})
      * @Method("GET")
      * @Template()
@@ -177,7 +170,6 @@ class DefaultController extends Controller
 
     /**
      * Update an existing User entity.
-     *
      * @Route("/{id}", name="user_update")
      * @Method("PUT")
      * @Template("SesileUserBundle:Default:edit.html.twig")
@@ -376,9 +368,7 @@ class DefaultController extends Controller
 
     /**
      * Creates a form to delete a User entity by id.
-     *
      * @param mixed $id The entity id
-     *
      * @return \Symfony\Component\Form\Form The form
      */
     private function createDeleteForm($id)
@@ -415,7 +405,6 @@ class DefaultController extends Controller
     /**
      * @Route("/cas/list", name="user_list_cas")
      * @Method("POST")
-     *
      */
     public function getUserListFromCasAction(Request $request) {
         $mail = $request->request->get("mail");
@@ -447,7 +436,6 @@ class DefaultController extends Controller
     /**
      * @Route("/cas/infos", name="user_infos_cas")
      * @Method("POST")
-     *
      */
     public function getUserInfosFromCasAction(Request $request) {
         $mail = $request->request->get("mail");

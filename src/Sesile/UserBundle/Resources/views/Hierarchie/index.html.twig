@@ -21,9 +21,11 @@
                         <a href="{{ path("groupe_edit", {'id' : groupe.id }) }}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        <a class="" href="#"{{ path("groupe_edit", {'id' : groupe.id }) }}">
+
+                        <a href="#" class="delete_button">
                         <span class="glyphicon glyphicon-trash"></span>
                         </a>
+                        <form class="delete_form" method="POST" action="{{ path("group_delete", {'id' : groupe.id }) }}"></form>
                     </td>
                 </tr>
             {% endfor %}
@@ -62,8 +64,10 @@
                 "sPaginationType": "full_numbers"
             });
 
-            $(".user-row").click(function () {
-                document.location.href = Routing.generate('groupe_edit', { id: $(this).data("id") });
+            $(".delete_button").click(function () {
+                if(confirm("Confirmer la suppression de ce groupe?")) {
+                    $(this).next(".delete_form").trigger("submit");
+                }
             });
         </script>
     </div>

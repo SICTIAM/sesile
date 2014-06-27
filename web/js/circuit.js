@@ -29,7 +29,7 @@ if (typeof circuit_users != 'undefined') {
 
 if (typeof deposant != 'undefined') {
     var new_perso = $('<div/>').addClass('deposant no_sort perso_circuit').insertBefore("#debut_circuit");
-    perso_src = path + deposant.path || perso_src;
+    perso_src = deposant.path?path+deposant.path:perso_src;
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
@@ -65,7 +65,7 @@ function ajoutUser(id, sort) {
         });
     }
 
-    perso_src = path + sel_user.data("img") || perso_src;
+    perso_src = sel_user.data("img") ? path + sel_user.data("img") : perso_src;
 
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);
@@ -146,10 +146,25 @@ if (form_parent.length > 0) {
         $("#circuit .perso_circuit:not(.deposant)").each(function (k, v) {
             ordre_circuit.push($(this).data("id"));
         });
+
+        if(ordre_circuit.length == 0) {
+            alert("Le circuit ne peut pas être vide");
+            return false;
+        }
+
         $('<input />')
             .attr({ 'type': 'hidden', 'name': "circuit" })
             .val(ordre_circuit)
             .appendTo(form_parent);
+
+
+        if(typeof(dropzone) != 'undefined') {
+            if( ( typeof(mockFile) != 'object' && dropzone.getAcceptedFiles().length == 0) || ( typeof(mockFile) == 'object' && mockFile == {} ) ) {
+                alert("Vous devez au moins déposer un document dans le classeur");
+                return false;
+            }
+        }
+
         this.submit();
         return false;
     });
