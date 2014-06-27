@@ -155,14 +155,16 @@ class ClasseurController extends Controller {
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
 
-
-
-
         $columns = array( 'nom', 'creation', 'validation', 'type', 'status', 'id');
         $aColumns = array();
         foreach($columns as $value) $aColumns[] = 'c.'.$value;
         $aColumnStr = str_replace(" , ", " ", implode(", ", $aColumns));
-        $validant = (!empty($usersdelegated))?$usersdelegated:$this->getUser();
+
+        $validant = "";
+        foreach($usersdelegated as $ud) {
+            $validant .= $ud->getId().",";
+        }
+        $validant = (!empty($validant))?substr($validant, 0, -1):$this->getUser()->getId();
         $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1";
         $query = $em->createQuery($sql);
         $rResult = $query->getResult();
@@ -198,7 +200,8 @@ class ClasseurController extends Controller {
             }
         }
 
-        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1 $where $order";
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN($validant) AND c.status = 1 $where $order";
+
         $query = $em->createQuery($sql);
 
         if ( isset( $get['start'] ) && $get['length'] != '-1' ) {
@@ -951,7 +954,7 @@ class ClasseurController extends Controller {
         $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
         if ($validant_obj != null) {
-            $this->sendMail("SESILE - Classeur refusé", $validant_obj->getEmail(), $body);
+            $this->sendMail("SESILE - Classeur refusé", $c_user->getEmail(), $body);
         }
     }
 }
