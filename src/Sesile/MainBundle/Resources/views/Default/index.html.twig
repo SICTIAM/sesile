@@ -32,8 +32,7 @@
 
 <div id="maman">
 <div id="gauche">
-    {#<a href="{{ app.request.schemeAndHttpHost }}">#}
-    <a href="http://sesile.dev.sictiam.fr/app_dev.php">
+    <a href="{{ app.request.getBaseURL() }}">
     <div id="logo">
             <img src="{{ asset("/images/logos.svg") }}"/>
         </div>
