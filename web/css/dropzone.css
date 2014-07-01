@@ -1,3 +1,16 @@
+img.dropzonefileicon {
+	width: 3em !important;
+	height: 3em !important;
+}
+
+span.dropzonereducedfilename{
+	font-size : 1em;
+}
+
+div.dz-size{
+	font-size:  0.8em;
+}
+
 /* The MIT License */
 .dropzone,
 .dropzone *,
@@ -41,10 +54,9 @@
     background: rgba(255, 255, 255, 0.8);
     position: relative;
     display: inline-block;
-    margin: 17px;
+    margin: 7px 2px 1px 2px;
     vertical-align: top;
-    border: 1px solid #acacac;
-    padding: 6px 6px 6px 6px;
+    padding: 2px;
     text-align: center;
 }
 
