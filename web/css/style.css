@@ -7,6 +7,7 @@ html, body {
 	font-family: 'Droid Sans', sans-serif;
 	background-color: #eaeaea;
 	height: 100%;
+	overflow-x: hidden;
 }
 
 #maman {
@@ -41,24 +42,26 @@ html, body {
 
 #logo {
 	text-align: center;
+	width: 100%;
 }
 
 #logo img {
-	width: 70%;
+	width: 60%;
 	margin: auto;
 	margin-bottom: 5%;
 	margin-top: 5%;
 }
 
-#img_imposetonstyle {
-	margin: 8% auto 12% auto;
-	position: relative;
-	margin-left: 40%;
-	left: -50px;
-	margin-top: 12% ;
-	margin-bottom: 12%;
-	width: 70%;
+#img_imposetonstyle{
+	width: 40% !important;
+	margin: auto !important;
+	margin-bottom: 7% !important;
+	margin-top: 7% !important;
+}
 
+#historiquebug {
+	font-size: 8px;
+	padding: 3px !important;
 }
 
 #separateur_logo {
@@ -351,9 +354,16 @@ label{
 	border: 1px solid rgb(204, 204, 204);
 	text-align: center;
 	color: rgb(109, 110, 112);
-	font-size: .9em;
+	font-size: 0.9em;
 	vertical-align: middle;
+}
 
+.historiquebug tr th{
+	border: 1px solid rgb(204, 204, 204);
+	text-align: center;
+	color: rgb(109, 110, 112);
+	font-size: 1.4em;
+	vertical-align: middle;
 }
 
 .tableau tr.odd {
@@ -365,7 +375,11 @@ label{
 }
 
 .tableau tr td {
-	font-size: .9em;
+	font-size: 0.9em;
+}
+
+.historiquebug tr td{
+	font-size: 1.4em;
 }
 
 /*STATUT*/
