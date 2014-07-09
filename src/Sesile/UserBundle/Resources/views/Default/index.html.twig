@@ -9,8 +9,9 @@
         <table class="table tableau dtables">
             <thead>
             <tr>
-                <th>Mail</th>
+                <th>Collectivité</th>
                 <th>Nom</th>
+                <th>Mail</th>
                 <th>Actif</th>
                 <th>Action</th>
             </tr>
@@ -18,8 +19,9 @@
             <tbody>
             {% for user in users %}
                 <tr class="user-row" data-id="{{ user.id }}">
-                    <td>{{ user.username }}</td>
+                    <td>{% if user.collectivite %}{{ user.collectivite.nom }}{% else %}NA{% endif %}</td>
                     <td>{{ user.Nom }} {{ user.Prenom }}</td>
+                    <td>{{ user.username }}</td>
                     <td>
                         <div class="active_inactive_user">{% if user.enabled %}
                                 <span class="glyphicon glyphicon-ok"></span>{% else %}
@@ -60,6 +62,7 @@
                         "sEmptyTable": "Aucun utilisateur &agrave; afficher"
                     }
                 },
+                order: [[ 0, "asc" ], [ 2, "asc" ]],
                 "iDisplayLength": 15,
                 "aLengthMenu": [15, 30, 50, 100],
                 "sDom": 'lft<"footer_datatables"p>',
