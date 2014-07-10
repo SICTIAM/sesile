@@ -37,20 +37,27 @@
             order: [[ 1, "desc" ]],
             aoColumnDefs: [
                 {
-                    "aTargets": [4],
+                    "aTargets": [5],
                     "mRender": function ( data, type, full ) {
                         return '<span class="glyphicon statut_' + data + '"></span>';
                     }
                 },
                 {
-                    aTargets: [5],
+                    aTargets: [6],
                     bSortable: false,
                     "mRender": function ( data, type, full ) {
                         return '<a href="' + Routing.generate('classeur_edit', { id: data }) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
                     }
                 }
             ],
-            sPaginationType: "full_numbers"
+            sPaginationType: "full_numbers",
+            fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                $(nRow).addClass("classeur-row");
+                $(nRow).dblclick(function (e) {
+                    document.location.href = Routing.generate('classeur_edit', { id: aData[6] });
+                });
+                return nRow;
+            }
         });
     </script>
 {% endblock %}

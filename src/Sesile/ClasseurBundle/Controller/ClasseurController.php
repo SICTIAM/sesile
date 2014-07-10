@@ -60,7 +60,7 @@ class ClasseurController extends Controller {
      */
     public function listAjaxAction(Request $request) {
         $get = $request->query->all();
-        $columns = array( 'Nom', 'Creation', 'Validation', 'Type', 'Status', 'Id');
+        $columns = array( 'Nom', 'Creation', 'Validation', 'Validant', 'Type', 'Status', 'Id' );
         $get['colonnes'] = &$columns;
 
         $em = $this->getDoctrine()->getManager();
@@ -81,8 +81,10 @@ class ClasseurController extends Controller {
                     $row[] = $aRow->{"get".$columns[$i]}()->format('d/m/Y H:i');
                 } elseif ($columns[$i] == "Validation") {
                     $row[] = $aRow->{"get".$columns[$i]}()->format('d/m/Y');
-                }
-                elseif ($columns[$i] != ' ') {
+                } elseif ($columns[$i] == "Validant") {
+                    $intervenant = $aRow->{"get".$columns[$i]}();
+                    $row[] = ($intervenant == 0)?"":$em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
+                } elseif ($columns[$i] != ' ') {
                     $row[] = $aRow->{"get".$columns[$i]}();
                 }
             }
@@ -155,7 +157,7 @@ class ClasseurController extends Controller {
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
 
-        $columns = array( 'nom', 'creation', 'validation', 'type', 'status', 'id');
+        $columns = array( 'nom', 'creation', 'validation', 'validant', 'type', 'status', 'id');
         $aColumns = array();
         foreach($columns as $value) $aColumns[] = 'c.'.$value;
         $aColumnStr = str_replace(" , ", " ", implode(", ", $aColumns));
@@ -217,8 +219,10 @@ class ClasseurController extends Controller {
                     $row[] = $aRow[$columns[$i]]->format('d/m/Y H:i');
                 } elseif ($columns[$i] == "validation") {
                     $row[] = $aRow[$columns[$i]]->format('d/m/Y');
-                }
-                elseif ($columns[$i] != ' ') {
+                } elseif ($columns[$i] == "validant") {
+                    $intervenant = $aRow[$columns[$i]];
+                    $row[] = ($intervenant == 0)?"":$em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
+                } elseif ($columns[$i] != ' ') {
                     $row[] = $aRow[$columns[$i]];
                 }
             }
