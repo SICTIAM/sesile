@@ -37,13 +37,13 @@
             sDom: 'lft<"footer_datatables"ip>',
             aoColumnDefs: [
                 {
-                    "aTargets": [4],
+                    "aTargets": [5],
                     "mRender": function ( data, type, full ) {
                         return '<span class="glyphicon statut_' + data + '"></span>';
                     }
                 },
                 {
-                    aTargets: [5],
+                    aTargets: [6],
                     bSortable: false,
                     "mRender": function ( data, type, full ) {
                         return '<a href="' + Routing.generate('classeur_edit', { id: data }) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
