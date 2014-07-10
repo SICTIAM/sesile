@@ -8,6 +8,7 @@ table.dataTable {
 
 table.dataTable td {
     padding: 3px 10px;
+    text-align: left;
 }
 
 table.dataTable td.center,
