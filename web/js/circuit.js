@@ -14,7 +14,7 @@ if (typeof circuit_users != 'undefined') {
     if (user_a_charger.length > 0) {
         var sort = false;
         $.each(user_a_charger, function (k, v) {
-            if (typeof validant != 'undefined' && validant > 0) {
+            if (typeof validant != 'undefined') { // && validant > 0 ????
                 if (v == validant) {
                     ajoutUser(v, sort);
                     sort = true;
@@ -44,7 +44,7 @@ function ajoutUser(id, sort) {
     }
     var new_perso = $('<div/>').data('id', id).addClass('perso_circuit').appendTo("#circuit");
 
-    if (typeof validant != 'undefined' && validant > 0 && validant == id) {
+    if (typeof validant != 'undefined' && validant == id) { // pourquoi j'avais mis validant > 0 ????? ça merde plus mais à vérifier si y'avait pas une raison
         new_perso.addClass("curr_user");
         $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);
     }
@@ -52,7 +52,7 @@ function ajoutUser(id, sort) {
 
     if (!sort) {
         new_perso.addClass("no_sort");
-        if (typeof validant != 'undefined' && validant > 0 && validant != id) {
+        if (typeof validant != 'undefined' && validant != id) {
             $("<span/>").addClass("ok_perso glyphicon glyphicon-ok").appendTo(new_perso);
         }
     }

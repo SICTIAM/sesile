@@ -4,6 +4,7 @@
         <th>Titre du classeur</th>
         <th>Date de création</th>
         <th>Date limite de validation</th>
+        <th>Intervenant</th>
         <th>Type de classeur</th>
         <th>Statut actuel</th>
         <th>Action</th>
@@ -13,10 +14,5 @@
 
     </tbody>
 </table>
-<script type="text/javascript">
-    $(".classeur-row").click(function (e) {
-        document.location.href = Routing.generate('classeur_edit', { id: $(this).data("id") });
-    });
-</script>
 <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
 <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>

@@ -54,6 +54,18 @@
 
             <div class="titre_form_element">
                 <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Commentaire
+            </div>
+            <textarea class="form-control" rows="3" name="comment" disabled id="comment"></textarea>
+            <br>
+            <script>
+                $("#comment").prev(".titre_form_element").click(function() {
+                    $("#comment").toggle();
+                });
+            </script>
+
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Date limite de validation
             </div>
             <input class="datepicker" id="validation" name="validation" type="datetime" disabled

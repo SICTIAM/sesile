@@ -37,13 +37,23 @@
             sDom: 'lft<"footer_datatables"ip>',
             aoColumnDefs: [
                 {
-                    "aTargets": [4],
+                    aTargets: [1],
+                    sClass: "center"
+                },
+                {
+                    aTargets: [2],
+                    sClass: "center"
+                },
+                {
+                    aTargets: [5],
+                    sClass: "center",
                     "mRender": function ( data, type, full ) {
                         return '<span class="glyphicon statut_' + data + '"></span>';
                     }
                 },
                 {
-                    aTargets: [5],
+                    aTargets: [6],
+                    sClass: "center",
                     bSortable: false,
                     "mRender": function ( data, type, full ) {
                         return '<a href="' + Routing.generate('classeur_edit', { id: data }) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
