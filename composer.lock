@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9157b6fd1a3a35d04307187ef8b279a0",
+    "hash": "74daed2aa551cb8beaf7ff2eb9ce5b61",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2868,16 +2868,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.5.2",
+            "version": "v2.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "e66ee967571b89234c90946fe0d50dad195ad29c"
+                "reference": "3da923989cce41c149c6f20b7723c052ac251b16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/e66ee967571b89234c90946fe0d50dad195ad29c",
-                "reference": "e66ee967571b89234c90946fe0d50dad195ad29c",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/3da923989cce41c149c6f20b7723c052ac251b16",
+                "reference": "3da923989cce41c149c6f20b7723c052ac251b16",
                 "shasum": ""
             },
             "require": {
@@ -2935,7 +2935,6 @@
                 "doctrine/data-fixtures": "1.0.*",
                 "doctrine/dbal": "~2.2",
                 "doctrine/orm": "~2.2,>=2.2.3",
-                "egulias/email-validator": "1.1.0",
                 "ircmaxell/password-compat": "1.0.*",
                 "monolog/monolog": "~1.3",
                 "ocramius/proxy-manager": ">=0.3.1,<0.6-dev",
@@ -2944,7 +2943,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2980,7 +2979,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-07-15 15:39:46"
+            "time": "2014-07-15 14:52:02"
         },
         {
             "name": "twig/extensions",
@@ -3193,8 +3192,6 @@
         "friendsofsymfony/user-bundle": 20,
         "oneup/uploader-bundle": 20,
         "jms/security-extra-bundle": 20,
-        "gorg/cas-bundle": 20,
-        "gorg/user-bundle": 20,
         "jms/serializer-bundle": 20,
         "nelmio/api-doc-bundle": 0
     },

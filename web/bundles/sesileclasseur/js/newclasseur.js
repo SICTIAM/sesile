@@ -21,7 +21,6 @@ function loadcorrectform() {
 
 
 $(document).ready(function () {
-
     $("#type").change(loadcorrectform);
     loadcorrectform();
 
