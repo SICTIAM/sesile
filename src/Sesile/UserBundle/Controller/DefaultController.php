@@ -65,8 +65,10 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         //connexion au serveur LDAP
-        $cas = $this->getCASParams();
-        $ldapconn = ldap_connect($cas['cas_server']) or die("Could not connect to LDAP server."); // security
+
+        $cas_server = $this->container->getParameter('cas_server');
+
+        $ldapconn = ldap_connect($cas_server) or die("Could not connect to LDAP server."); // security
         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
         if ($ldapconn) {
@@ -74,10 +76,13 @@ class DefaultController extends Controller
             @ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
 
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $userObj = $em->getRepository('SesileUserBundle:User')->findByUsername($form->get('username'));
 
-                if($userObj) {
+                $em = $this->getDoctrine()->getManager();
+
+                $userObj = $em->getRepository('SesileUserBundle:User')->findOneByUsername($form->get('username')->getData());
+
+                if (empty($userObj)) {
+
                     $entity->setEmail($form->get('username')->getData());
                     $em->persist($entity);
                     $entity->upload($DirPath);
@@ -122,8 +127,10 @@ class DefaultController extends Controller
                         ->setTo($entity->getUsername())
                         ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
                     $this->get('mailer')->send($message);
+                } else {
+                    echo 'coucs';
+                    exit;
                 }
-
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
             }
         }
