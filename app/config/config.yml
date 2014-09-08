@@ -70,9 +70,6 @@ doctrine:
 swiftmailer:
     transport: mail
     host:      localhost
-    spool:
-            type: file
-            path: "%kernel.root_dir%/spool"
 
 oneup_uploader:
     mappings:
