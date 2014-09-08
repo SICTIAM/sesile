@@ -93,6 +93,7 @@ class DefaultController extends Controller
                         "email" => $form->get('username')->getData(),
                         "plainpassword" => $form->get('plainPassword')->getData());
 
+
                     //création du tableau d'attributs
                     $entry["objectClass"][0] = "inetOrgPerson";
                     $entry["objectClass"][1] = "organizationalPerson";
