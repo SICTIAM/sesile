@@ -91,12 +91,16 @@
         selectcertif.setAttribute('name', 'selectcertif');
         selectcertif.setAttribute('id', 'selectcertif');
         var nbcertif = document.javaapplet.getNumberSigningCertificates();
-        for (i = 0; i < nbcertif; i++) {
+        var i = 0;
+        while (i < nbcertif) {
             var nomcertif = document.javaapplet.getSigningCertificateName(i);
             var element = document.createElement('option');
             element.setAttribute('value', i);
             element.text = nomcertif;
             selectcertif.appendChild(element);
+            i = i + 1;
+            /*  var options = selectcertif.options;
+             options[options.length] = new Option(document.javaapplet.getSigningCertificateName(i), i);*/
         }
         divcertif.appendChild(selectcertif);
         $('#bouttons').show('slow');
@@ -224,8 +228,3 @@
 
 
 {% endblock %}
-
-
-
-
-
