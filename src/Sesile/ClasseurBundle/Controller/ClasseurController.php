@@ -33,6 +33,10 @@ class ClasseurController extends Controller {
         return $this->listeAction();
     }
 
+
+
+
+
     /**
      * Liste des classeurs en cours
      *
@@ -83,6 +87,7 @@ class ClasseurController extends Controller {
                     $row[] = $aRow->{"get".$columns[$i]}()->format('d/m/Y');
                 } elseif ($columns[$i] == "Validant") {
                     $intervenant = $aRow->{"get".$columns[$i]}();
+
                     $row[] = ($intervenant == 0)?"":$em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
                 } elseif ($columns[$i] != ' ') {
                     $row[] = $aRow->{"get".$columns[$i]}();
@@ -98,6 +103,8 @@ class ClasseurController extends Controller {
         );
     }
 
+
+
     /**
      * Page qui affiche la liste des classeurs à valider pour le user connecté
      *
@@ -109,6 +116,9 @@ class ClasseurController extends Controller {
     {
         return $this->aValiderAction();
     }
+
+
+
 
     /**
      * Liste des classeurs à valider
@@ -278,6 +288,9 @@ class ClasseurController extends Controller {
         );
     }
 
+
+
+
     /**
      * Creates a new Classeur entity.
      *
@@ -323,6 +336,10 @@ class ClasseurController extends Controller {
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
         $action->setAction("Dépot du classeur");
+
+
+
+
         $em->persist($action);
         $em->flush();
 
@@ -331,6 +348,8 @@ class ClasseurController extends Controller {
         $files = $manager->uploadFiles();
 
         foreach ($files as $file) {
+
+
             //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
             if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
                 unlink($file->getPathname());
@@ -346,6 +365,8 @@ class ClasseurController extends Controller {
                 $action = new Action();
                 $action->setClasseur($classeur);
                 $action->setUser($this->getUser());
+
+
                 $action->setAction("Ajout du document " . $document->getName());
                 $em->persist($action);
 
@@ -403,11 +424,20 @@ class ClasseurController extends Controller {
         return array("menu_color" => "bleu");
     }
 
+
+
+
+
+
+
+
+
+
     /**
      * Displays a form to edit an existing Classeur entity.
      *
      * @Route("/{id}", name="classeur_edit", options={"expose"=true}, requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @Template()
      */
     public function editAction($id) {
@@ -423,14 +453,22 @@ class ClasseurController extends Controller {
         $usersdelegated[]=$this->getUser();
 
 
+
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
         $isSignable = $entity->isSignable($em);
 
+
+
+
         $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
         $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
         $validant = $entity->getvalidant();
+
+
+
         $uservalidant = $repositoryusers->find($validant);
 
         $isDelegatedToMe = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($entity, $this->getUser());
@@ -447,7 +485,12 @@ class ClasseurController extends Controller {
             'uservalidant'=>$uservalidant,
             "menu_color" => "bleu"
         );
+
+
     }
+
+
+
 
     /**
      * Edits an existing Classeur entity.
@@ -471,7 +514,10 @@ class ClasseurController extends Controller {
         $classeur->setNom($request->request->get('name'));
         $classeur->setDescription($request->request->get('desc'));
 
-        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        list($d, $m, $a) = explode("/",
+
+            $request->request->get('validation'));
+
         $valid = new \DateTime($m . "/" . $d . "/" . $a);
         $classeur->setValidation($valid);
         $circuit = $request->request->get('circuit');
@@ -482,10 +528,25 @@ class ClasseurController extends Controller {
 
         $action = new Action();
         $action->setClasseur($classeur);
+
         $action->setUser($this->getUser());
         $action->setAction("Modification du classeur");
+
+
+
+        $message = $request->query->get('text-message');
+        $action->setObservation($message);
+
+
+
         $em->persist($action);
         $em->flush();
+
+
+
+
+
+
 
         /**
          * TODO modifier le fonctionnement : on doit updater les users par la collection et non par suppression / rajout (un peu de propreté qd même!!!)
@@ -591,6 +652,11 @@ class ClasseurController extends Controller {
         //return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
 
+
+
+
+
+
     /**
      * refuser  an existing Classeur entity.
      *
@@ -598,10 +664,13 @@ class ClasseurController extends Controller {
      * @Method("POST")
      *
      */
+
     public function refuserAction(Request $request)
     {
+
+
         $em = $this->getDoctrine()->getManager();
-        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->request->get("id2"));
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
@@ -612,12 +681,20 @@ class ClasseurController extends Controller {
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
         $delegator=$repositoryusers->find($currentvalidant);
 
-        $classeur->refuser();
+       $classeur->refuser();
 
         $em->flush();
 
+
         $action = new Action();
-        $action->setClasseur($classeur);
+
+        $message = $request->request->get('text-message');
+        $action->setObservation($message);
+        var_dump($message);
+
+
+    $action->setClasseur($classeur);
+
         $action->setUser($this->getUser());
         $action_libelle = "Refus";
 
@@ -629,6 +706,8 @@ class ClasseurController extends Controller {
         // envoi d'un mail validant suivant
         $this->sendRefusMail($classeur);
 
+
+
         //$this->updateAction($request);
 
         $session = $request->getSession();
@@ -639,6 +718,14 @@ class ClasseurController extends Controller {
         return $this->redirect($this->generateUrl('index_valider'));
         //return $this->redirect($this->generateUrl('classeur_edit', array('id' => $classeur->getId())));
     }
+
+
+
+
+
+
+
+
 
     /**
      * Valider_et_signer an existing Classeur entity.
@@ -663,6 +750,7 @@ class ClasseurController extends Controller {
         $classeur->valider($em);
 
         $em->flush();
+
 
         $action = new Action();
         $action->setClasseur($classeur);
@@ -753,6 +841,13 @@ class ClasseurController extends Controller {
         );
         return $this->redirect($this->generateUrl('index_valider'));
     }
+
+
+
+
+
+
+
 
     /**
      * Deletes a Classeur entity.
@@ -886,7 +981,6 @@ class ClasseurController extends Controller {
         }
 
         return new JsonResponse(array('error' => 'ok'));
-
     }
 
 

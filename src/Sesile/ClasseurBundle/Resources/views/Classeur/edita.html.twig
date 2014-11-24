@@ -1,0 +1,291 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
+
+
+    <div class="bloc_page">
+    {% if classeur.isModifiableByDelegates(usersdelegated) %}
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-pencil"></span>
+            &nbsp;&nbsp;&nbsp;Édition du classeur
+        </div>
+    {% else %}
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-eye"></span>
+            &nbsp;&nbsp;&nbsp;Visualisation du classeur
+        </div>
+    {% endif %}
+
+
+
+
+
+    <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+        <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+        &nbsp;Historique
+    </button>
+
+
+
+
+    {% if classeur.isSupprimableByDelegates(usersdelegated) %}
+        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+    {% else %}
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+
+
+
+
+
+
+    {% if isDelegatedToMe %}
+        <br>
+        <div class="legende">
+            <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
+
+            <span class="glyphicon statut_0"></span>
+            <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
+            {{  uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
+        </div>
+    {% endif %}
+    <br/>
+
+    <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
+        <input type="hidden" name="id" value="{{ classeur.id }}"/>
+
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Titre
+        </div>
+        <input class="form-control"  name="name"  placeholder="Nom" required="required"
+               value="{{ classeur.nom }}" disabled id="comment" >
+        <br>
+
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Description
+        </div>
+        <textarea class="form-control" rows="3" name="desc" disabled id="comment">{{ classeur.description }}</textarea>
+        <br>
+
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Commentaire
+        </div>
+        <textarea class="form-control" rows="3" name="comment"  disabled id="comment"></textarea>
+        <br>
+        <script>
+            $("#comment").prev(".titre_form_element").click(function() {
+                $("#comment").toggle();
+            });
+        </script>
+
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Date limite de validation
+        </div>
+        <input class="datepicker"  name="validation" type="datetime" disabled id="comment"
+               value="{{ classeur.validation  | date('d/m/Y') }}"/>
+
+        <script type="text/javascript">
+            var nowTemp = new Date();
+            var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+            var dadapicker = $('#validation').datepicker({
+                onRender: function (date) {
+                    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate',function (ev) {
+                dadapicker.hide();
+            }).data('datepicker');
+        </script>
+
+        <br>
+
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Documents
+        </div>
+
+
+
+        <div id="infofile"  class="alert alert-success" style="display: none"></div>
+        <div id="documentcontent"></div>
+
+
+        okkkkkkkkkkkkkkkkkkkkkkkkkkk
+
+        <br>
+
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Circuit
+        </div>
+        <div id="circuitcontent">
+            <script type="application/javascript">
+                var circuit_users = "{{ classeur.circuit }}";
+                var validant = {{ validant }};
+                var deposant = {{ deposant|json_encode|raw }};
+                var path = "{{ asset(upload_path) }}";
+            </script>
+
+
+            <!-- Nouvelle vue ajouté "validation.html.twig" -->
+
+            {% render url("new_validate") %}
+
+        </div>
+    </form>
+    <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+        <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+        &nbsp;Historique
+    </button>
+
+    {% if classeur.isSupprimableByDelegates(usersdelegated) %}
+        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+
+    {% else %}
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+
+
+    {% endif %}
+    <br>
+    <br>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Historique du classeur</h4>
+                </div>
+                <div class="modal-body">
+                    {% include "SesileClasseurBundle:Actions:Historique.html.twig" with {'actions': classeur.actions} %}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+
+    <!-- modal pour l'observation  -->
+    <div class="modal fade" id="fenetreModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">Motif de refus</h4>
+                </div>
+                <div class="modal-body">
+
+
+                    <form role="form" method="post" action="{{ path("classeur_refuser") }}">
+                        <label for="message-text" class="control-label"></label>
+
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Message:</label>
+                            <textarea  name="text-message" class="form-control"></textarea>
+                            <input type="hidden" name="id2" value="{{ classeur.id }}"/>
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-danger btn-refuser" id="refus">Confirmer</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <style>
+
+        #documentcontent {
+            opacity: .5;
+            pointer-events: none;
+
+        }
+
+        #circuitcontent{
+
+            opacity: .5;
+            pointer-events: none;
+        }
+
+    </style>
+
+
+    <script type="application/javascript">
+
+        function loadDocuments() {
+            $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
+                //enableUploads();
+            });
+        }
+
+        function addDocToCurrentClasseur(data) {
+            $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
+            data['id'] = {{ classeur.id }};
+            $.ajax(Routing.generate('add_document_to_classeur'), {
+                method: 'POST',
+                data: data,
+                success: function (html) {
+                    loadDocuments();
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $(".selects_circuit:nth-child(2)").hide();
+            loadDocuments();
+
+            $(".top_selects_circuits, .suppr_perso").hide();
+            $(".perso_circuit").css("cursor", "Default");
+
+
+            {% if classeur.isModifiableByDelegates(usersdelegated) %}
+            $("#name, #desc, #validation").removeAttr("disabled");
+            $("#enregistrer_modif").show();
+            $(".top_selects_circuits, .suppr_perso").show();
+            $("#circuit").sortable("enable");
+            $(".perso_circuit").css("cursor", "-moz-grab");
+            {% endif %}
+
+            $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer").click(function () {
+                if($(this).hasClass("btn-modifs") || $(this).hasClass("btn-valider-signer") || $(this).hasClass("btn-valider")) {
+                    // ?? est ce nécessaire
+                }
+
+                $("#form_edit").attr("action", $(this).attr("data-action")).submit();
+            });
+        });
+
+        $("#suprclasseur").submit(function (e) {
+            if (confirm('Confirmez-vous le retrait du classeur ?')) {
+
+            } else {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+    </div>
+    <object id="winFirefoxPlugin" type="application/x-sharepoint"
+            style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
+{% endblock %}

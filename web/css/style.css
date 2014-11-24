@@ -496,7 +496,7 @@ select [name=user] {
 }
 
 .btn-refuser {
-	background-color: rgb(213, 0, 25);
+	background-color: rgb(126, 239, 104, 0.8));
 }
 
 .btn-supprimer {
