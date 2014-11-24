@@ -6,7 +6,28 @@
             <span class="glyphicon glyphicon-folder-open"></span>
             &nbsp;&nbsp;&nbsp;Editer un utilisateur
         </div>
+
         {{ form_start(edit_form) }}
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.Prenom) }}
+            {{ form_widget(edit_form.Prenom) }}
+        </div>
+        <br/>
+
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.Nom) }}
+            {{ form_widget(edit_form.Nom) }}
+
+        </div>
+
+        <br/>
+
+
+
+
+
         <div class="label_form label-form-input">
             {{ form_label(edit_form.username) }}
             {{ form_widget(edit_form.username) }}
@@ -26,19 +47,7 @@
             <br/>
         {% endfor %}
 
-        <div class="label_form label-form-input">
-            {{ form_label(edit_form.Nom) }}
-            {{ form_widget(edit_form.Nom) }}
 
-        </div>
-
-        <br/>
-
-        <div class="label_form label-form-input">
-            {{ form_label(edit_form.Prenom) }}
-            {{ form_widget(edit_form.Prenom) }}
-        </div>
-        <br/>
 
         <div class="label_form label-form-input">
             {{ form_label(edit_form.ville) }}

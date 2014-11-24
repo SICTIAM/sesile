@@ -250,6 +250,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $em->flush();
 
+
+        //Verfiier cette fonction pour le bug 0002222//
         // enregistrer les users du circuit
         $users = explode(',', $circuit);
 
@@ -299,7 +301,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *  resource=false,
      *  description="Permet d'editer un classeur",
      *  parameters={
-     *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
+     *  {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
      *          {"name"="desc", "dataType"="string", "required"=false, "description"="Description du classeur"},
      *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
      *          {"name"="circuit", "dataType"="string", "format"="userid,userid,userid...   Par exemple : 1,2,3", "required"=true, "description"="Circuit de validation du classeur"},
@@ -309,7 +311,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *
      *  }
      * )
-     */
+     **/
     public function updateAction(Request $request, $id)
     {
 
@@ -351,6 +353,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $action = new Action();
         $action->setClasseur($classeur);
         $action->setUser($user);
+
         $action->setAction("Modification du classeur");
         $em->persist($action);
         $em->flush();
@@ -358,6 +361,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         /**
          * TODO modifier le fonctionnement : on doit updater les users par la collection et non par suppression / rajout (un peu de propreté qd même!!!)
          */
+
+
+
         // gestion du circuit
         $users = explode(',', $circuit);
         $classeurUserObj = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
@@ -385,7 +391,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         }
 
         $em->flush();
-        return $em->getRepository("SesileClasseurBundle:Classeur")->findOneById($id);;
+        return $em->getRepository("SesileClasseurBundle:Classeur")->findOneById($id);
         return array();
 
     }
@@ -561,6 +567,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
         }
     }
+
+
+
+
+
+
+
 
     private function sendRefusMail($classeur)
     {

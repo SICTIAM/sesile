@@ -51,6 +51,22 @@ class Action
      */
     private $user;
 
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="observation", type="text", nullable=true)
+     * @Expose
+     *
+     */
+    private $observation;
+
+
+
+
+
+
     /**
      * @var integer
      *
@@ -77,6 +93,25 @@ class Action
      *
      */
     private $action;
+
+
+
+    /**
+     * @return string
+     */
+    public function getObservation()
+    {
+        return $this->observation;
+    }
+
+    /**
+     * @param string $observation
+     */
+    public function setObservation($observation)
+    {
+        $this->observation = $observation;
+    }
+
 
 
     /**

@@ -53,6 +53,51 @@ class CircuitController extends Controller
         return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
     }
 
+
+
+
+
+
+    /**
+     * @Route("/validation/", name="new_validate", options={"expose"=true})
+     * @Template()
+     */
+    public function validationAction($forClasseur = true)
+    {
+        // recup la liste des users en base
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
+            "collectivite" => $this->get("session")->get("collectivite")
+        ));
+
+        // recup la list des circuits
+        // TODO recup uniquement pour le user connecté
+        $circuits = array();
+        $em = $this->getDoctrine()->getManager();
+        $circuits_du_user = $em->getRepository('SesileCircuitBundle:Circuit')->findByUser_id($this->getUser()->getId());
+
+        foreach ($circuits_du_user as $circuit) {
+            $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre(), "groupe" => false);
+        }
+
+        if($forClasseur) {
+            $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
+            foreach($groupes_du_user as $group) {
+                $circuits[] = array(
+                    "id" => $group->getGroupe()->getId(),
+                    "name" => $group->getGroupe()->getNom(),
+                    "ordre" => $this->getCircuitFromgroupForUser($this->getUser(), $group->getgroupe()),
+                    "groupe" => true
+                );
+            }
+        }
+
+
+        return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
+    }
+
+
+
     /**
      * @Route("/gerer/", name="gestion_circuit")
      * @Template()
@@ -122,6 +167,10 @@ class CircuitController extends Controller
 
         return new Response("OK");
     }
+
+
+
+
 
     /**
      * Retourne le circuit associé à un groupe pour un user donné
