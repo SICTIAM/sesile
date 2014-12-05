@@ -37,4 +37,5 @@ class ClasseurType extends AbstractType
     {
         return 'sesile_classeurbundle_classeur';
     }
+
 }

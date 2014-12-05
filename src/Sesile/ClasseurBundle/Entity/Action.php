@@ -96,6 +96,38 @@ class Action
 
 
 
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="commentaire", type="text", nullable=true)
+     * @Expose
+     *
+     */
+    private $commentaire;
+
+
+
+    /**
+     * @return string
+     */
+    public function getCommentaire()
+    {
+        return $this->commentaire;
+    }
+
+    /**
+     * @param string $commentaire
+     */
+    public function setCommentaire($commentaire)
+    {
+        $this->commentaire = $commentaire;
+    }
+
+
+
+
     /**
      * @return string
      */

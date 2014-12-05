@@ -8,6 +8,7 @@ del_favoris_url = "";
 
 $('#users_list p:first, #circuits_list p:first').addClass("list_selected_element");
 
+$('#users_list p:selected').addClass("list_selected_element");
 
 if (typeof circuit_users != 'undefined') {
     user_a_charger = circuit_users.split(",");
@@ -60,10 +61,13 @@ function ajoutUser(id, sort) {
         $("<span/>").addClass("suppr_perso glyphicon glyphicon-remove").appendTo(new_perso).click(function () {
             $("<p/>").attr("data-id", id).text(sel_user.text()).appendTo("#users_list");
             new_perso.remove();
-            $('#users_list p:first').addClass("list_selected_element");
-            creerFleches();
-        });
-    }
+            $('#users_list p').click(function () {
+                $(this).addClass("list_selected_element");
+                var sel_user = $('#users_list .list_selected_element');
+                ajoutUser(sel_user.attr("data-id"), true);
+                creerFleches();
+            }); });
+        }
 
     perso_src = sel_user.data("img") ? path + sel_user.data("img") : perso_src;
 
@@ -135,6 +139,23 @@ $("#circuitadd_btn").click(function () {
     $("#circuit_name").val(sel_circuit.text());
     $("#circuit_modifier, #btn-group-supp").css("display", "inline-block");
 });
+
+
+
+
+$("#users_list p").click(function () {
+    var sel_user = $('#users_list .list_selected_element');
+    if (sel_user.length > 0) {
+        ajoutUser(sel_user.attr("data-id"), true);
+    }
+    $('#users_list p:selected').addClass("list_selected_element");
+
+});
+
+
+
+
+
 
 // si on est dans un form on lui passe le circuit qd on walid
 var form_parent = $("#circuit").parents("form");

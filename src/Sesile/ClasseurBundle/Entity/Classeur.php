@@ -183,6 +183,7 @@ class Classeur {
         return $this;
     }
 
+
     /**
      * Get creation
      *
@@ -373,13 +374,29 @@ class Classeur {
      *
      * @return int l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
      */
+
+
+    /*    private function getPrevValidant()
+    {
+
+
+        $circuit = explode(",", $this->getCircuit());
+        $curr_validant = array_search($this->validant, $circuit);
+        $prev_validant = ($curr_validant - $curr_validant);
+        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
+
+    }
+*/
+
     private function getPrevValidant()
     {
         $circuit = explode(",", $this->getCircuit());
         $curr_validant = array_search($this->validant, $circuit);
-        $prev_validant = $curr_validant - 1;
+
+        $prev_validant = ($curr_validant - $curr_validant)-1;
         return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
     }
+
 
     /**
      *
@@ -396,6 +413,8 @@ class Classeur {
         return ($next_validant < count($circuit)) ? $circuit[$next_validant] : 0;
     }
 
+
+
     public function isAtLastValidant(\Doctrine\ORM\EntityManager $em){
         return ($this->getNextValidant($em)==0);
     }
@@ -411,19 +430,32 @@ class Classeur {
         }
     }
 
+
+
+    public function  soumettre()
+
+    {
+        $circuit = explode(",", $this->getCircuit());
+        return $circuit[0];
+    }
+
+
     public function refuser()
+
     {
         $this->setValidant($this->getPrevValidant());
-        $this->setStatus(0);
+        $this->setStatus(1);
     }
 
     public function retracter($userid)
+
     {
         $this->setValidant($userid);
         $this->setStatus(4);
     }
 
     public function supprimer()
+
     {
         $this->setValidant(0);
         $this->setStatus(3);

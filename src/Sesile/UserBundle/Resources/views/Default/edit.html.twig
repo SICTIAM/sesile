@@ -155,10 +155,12 @@
     </div>
 
     <script type="text/javascript">
-        $(".label_form input").focus(function () {
+      /*  $(".label_form input").focus(function () {
             $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
             $(this).prev("label").addClass("glyphicon-search-blue");
         });
+
+
 
         $(".cb-enable").click(function () {
             var parent = $(this).parents('.acti');
@@ -173,7 +175,8 @@
             $('.checkbox', parent).attr('checked', false);
         });
 
-        $('.acti').each(function () {
+        */
+      /*  $('.acti').each(function () {
             var checked = $('.checkbox', $(this)).is(':checked');
 
             if (checked) {
@@ -189,7 +192,7 @@
                 //$('.cb-disable', $(this)).click();
             }
         });
-
+*/
         $("#sesile_userbundle_user_apiactivated").change(function (e) {
             if ($(this).is(':checked')) {
                 $('#apitokensecret').show('slow');
