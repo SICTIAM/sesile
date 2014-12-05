@@ -321,6 +321,7 @@ class ClasseurController extends Controller {
         // enregistrer les users du circuit
         $users = explode(',', $circuit);
 
+
         for ($i = 0; $i < count($users); $i++) {
             $classeurUser = new ClasseursUsers();
             $classeurUser->setClasseur($classeur);
@@ -430,9 +431,6 @@ class ClasseurController extends Controller {
 
 
 
-
-
-
     /**
      * Displays a form to edit an existing Classeur entity.
      *
@@ -459,8 +457,6 @@ class ClasseurController extends Controller {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
         $isSignable = $entity->isSignable($em);
-
-
 
 
         $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
@@ -542,12 +538,6 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-
-
-
-
-
-
         /**
          * TODO modifier le fonctionnement : on doit updater les users par la collection et non par suppression / rajout (un peu de propreté qd même!!!)
          */
@@ -593,14 +583,22 @@ class ClasseurController extends Controller {
         return $this->redirect($this->generateUrl('classeur'));
     }
 
+
+
+
+
+
+
+
     /**
      * Edits an existing Classeur entity.
      *
-     * @Route("/valider", name="classeur_valider")
+     * @Route("/soumettre", name="classeur_soumis")
      * @Method("POST")
      *
      */
-    public function validerAction(Request $request)
+
+    public function soumettreAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
@@ -615,8 +613,10 @@ class ClasseurController extends Controller {
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
         $delegator=$repositoryusers->find($currentvalidant);
 
-        $classeur->valider($em);
-        $em->flush();
+         $classeur->soumettre();
+         $classeur->setValidant($classeur->soumettre());
+
+         $em->flush();
 
 
         if($request->get("moncul") == 1) {
@@ -630,6 +630,89 @@ class ClasseurController extends Controller {
         }
 
         $action = new Action();
+
+
+        $commentaire = $request->request->get('comment');
+        $action->setCommentaire($commentaire);
+
+        $action->setClasseur($classeur);
+        $action->setUser($this->getUser());
+        $action_libelle = ($classeur->getValidant() == 0) ? "Classeur finalisé" : "Validation";
+
+        if($isvalidator) $action_libelle.=" (Délégation recue de ".$delegator->getPrenom()." ".$delegator->getNom().")";
+        $action->setAction($action_libelle);
+        $em->persist($action);
+        $em->flush();
+
+        $this->sendValidationMail($classeur);
+
+        //$this->updateAction($request);
+
+        $session = $request->getSession();
+        $session->getFlashBag()->add(
+            'success',
+            "Le classeur a été validé"
+        );
+        return $this->redirect($this->generateUrl('index_valider'));
+
+    }
+
+
+
+    /**
+     * Edits an existing Classeur entity.
+     *
+     * @Route("/valider", name="classeur_valider")
+     * @Method("POST")
+     *
+     */
+    public function validerAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+
+
+
+
+
+       /* ->getRepository('SesileClasseurBundle:Classeur')->find($request->get("commentaire")*/
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+
+        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
+
+        $currentvalidant = $classeur->getValidant();
+        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
+        $delegator=$repositoryusers->find($currentvalidant);
+
+
+
+        $classeur->valider($em);
+        $em->flush();
+
+
+
+        if($request->get("moncul") == 1) {
+            $action = new Action();
+            $action->setClasseur($classeur);
+            $action->setUser($this->getUser());
+            $action_libelle = "Classeur signé";
+            $action->setAction($action_libelle);
+            $em->persist($action);
+            $em->flush();
+        }
+
+        $action = new Action();
+
+
+                /*Ajout du commentaire*/
+
+        $commentaire = $request->request->get('comment');
+        $action->setCommentaire($commentaire);
+
+
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
         $action_libelle = ($classeur->getValidant() == 0) ? "Classeur finalisé" : "Validation";
@@ -655,8 +738,6 @@ class ClasseurController extends Controller {
 
 
 
-
-
     /**
      * refuser  an existing Classeur entity.
      *
@@ -668,32 +749,37 @@ class ClasseurController extends Controller {
     public function refuserAction(Request $request)
     {
 
-
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->request->get("id2"));
+
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
 
-        $isvalidator = $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
+       $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
         $currentvalidant = $classeur->getValidant();
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
         $delegator=$repositoryusers->find($currentvalidant);
 
-       $classeur->refuser();
+
+        $classeur->refuser();
 
         $em->flush();
 
 
         $action = new Action();
 
-        $message = $request->request->get('text-message');
+
+        $commentaire = $request->request->get('comment');
+        $action->setCommentaire($commentaire);
+
+
+        $message = "motif du refus : ".$request->request->get('text-message');
         $action->setObservation($message);
-        var_dump($message);
 
 
-    $action->setClasseur($classeur);
+        $action->setClasseur($classeur);
 
         $action->setUser($this->getUser());
         $action_libelle = "Refus";
@@ -738,6 +824,8 @@ class ClasseurController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+
+
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
@@ -753,6 +841,10 @@ class ClasseurController extends Controller {
 
 
         $action = new Action();
+
+        $commentaire = $request->request->get('comment');
+        $action->setCommentaire($commentaire);
+
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
         $action_libelle = "Signature";

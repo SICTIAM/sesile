@@ -8,7 +8,6 @@
 <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
-
     <div class="bloc_page">
         {% if classeur.isModifiableByDelegates(usersdelegated) %}
             <div class="titre_page">
@@ -21,9 +20,6 @@
                 &nbsp;&nbsp;&nbsp;Visualisation du classeur
             </div>
         {% endif %}
-
-
-
 
 
         <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
@@ -42,7 +38,8 @@
 
 
 
-        {% if isDelegatedToMe %}
+
+    {% if isDelegatedToMe %}
         <br>
         <div class="legende">
             <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
@@ -79,16 +76,20 @@
             <textarea class="form-control" rows="3" name="comment"   ></textarea>
             <br>
 
-
-
-
-
             <div class="titre_form_element">
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Date limite de validation
             </div>
             <input class="datepicker"  name="validation" type="datetime"
                    value="{{ classeur.validation  | date('d/m/Y') }}"/>
+
+
+
+
+
+    <!--Ici jusqu' au endif-->
+
+
 
 
 
@@ -130,7 +131,6 @@
             {% endif %}
 
 
-
             {% if isDelegatedToMe %}
                 <br>
                 <div class="legende">
@@ -161,15 +161,15 @@
                 <textarea class="form-control" rows="3" name="desc" disabled >{{ classeur.description }}</textarea>
                 <br>
 
-                <div class="titre_form_element">
-                    <span class="glyphicon glyphicon-play"></span>
-                    &nbsp;&nbsp;&nbsp;Commentaire
-                </div>
-                <textarea class="form-control" rows="3" name="comment"  disabled ></textarea>
-                <br>
 
 
+    <div class="titre_form_element">
+        <span class="glyphicon glyphicon-play"></span>
+        &nbsp;&nbsp;&nbsp;Commentaire
+    </div>
 
+    <textarea class="form-control" rows="3" id="commentaire"  name="comment" disabled ></textarea>
+    <input type="hidden" name="commentaire" value="{{ classeur.id }}"/>
 
 
                 <div class="titre_form_element">
@@ -179,7 +179,42 @@
                 <input class="datepicker"  name="validation" type="datetime" disabled
                        value="{{ classeur.validation  | date('d/m/Y') }}"/>
 
-    {% endif %}
+
+
+
+
+
+
+    <style>
+
+        #documentcontent {
+            opacity: .5;
+            pointer-events: none;
+
+        }
+
+
+        #circuit {
+
+            opacity: .5;
+            pointer-events: none;
+        }
+
+        #circuitvalidation {
+
+            opacity: .5;
+            pointer-events: none;
+        }
+
+
+
+    </style>
+
+
+
+
+
+{% endif %}
 
 
             <script type="text/javascript">
@@ -193,6 +228,8 @@
                     dadapicker.hide();
                 }).data('datepicker');
             </script>
+
+
 
             <br>
 
@@ -212,26 +249,39 @@
                 &nbsp;&nbsp;&nbsp;Circuit
             </div>
             <div id="circuitcontent">
+
+
                 <script type="application/javascript">
                     var circuit_users = "{{ classeur.circuit }}";
                     var validant = {{ validant }};
+                     /*voir cette ligne*/
                     var deposant = {{ deposant|json_encode|raw }};
+
                     var path = "{{ asset(upload_path) }}";
                 </script>
 
 
             <!-- Nouvelle vue ajouté "validation.html.twig" -->
 
-                {% render url("new_validate") %}
+           {% render url("new_validate") %}
 
             </div>
         </form>
-        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+</br>
+    </br>        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
             &nbsp;Historique
         </button>
 
-        <br/>
+
+    {% if classeur.isSupprimableByDelegates(usersdelegated) %}
+        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+    {% else %}
+        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+    {% endif %}
+
+
+    <br/>
         <br/>
         <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -257,9 +307,8 @@
         <!-- /.modal -->
 
 
-
         <!-- modal pour l'observation  -->
-        <div class="modal fade" id="fenetreModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal fade"  class="validation" id="fenetreModal" tabindex="-1" role="dialog"  aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -273,18 +322,19 @@
                             <label for="message-text" class="control-label"></label>
 
                             <div class="form-group">
-                                <label for="message-text" class="control-label">Message:</label>
-                                <textarea  name="text-message" class="form-control"></textarea>
+                                <label for="message-text" class="control-label"></label>
+                                <textarea  name="text-message" class="form-control">  </textarea>
                                 <input type="hidden" name="id2" value="{{ classeur.id }}"/>
-                            </div>
 
+                            </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                                <button type="submit" class="btn btn-primary" id="refus">Confirmer</button>
+                                <button type="submit" class="btn btn-primary" href="{{ path('classeur_create') }}"  id="refus" >Confirmer</button>
                             </div>
                         </form>
                     </div>
+
 
                 </div>
             </div>
@@ -292,24 +342,32 @@
 
 
 
-        <style>
 
-            #documentcontent {
-                opacity: .5;
-                pointer-events: none;
+<style>
 
-            }
+    .modal-dialog {
 
-            #circuitcontent{
+    width: 90%;
+    height: 50px;
 
-                opacity: .5;
-                pointer-events: none;
-            }
+    }
 
-        </style>
+
+
+
+
+</style>
+
+
 
 
         <script type="application/javascript">
+
+
+
+
+
+
 
             function loadDocuments() {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {

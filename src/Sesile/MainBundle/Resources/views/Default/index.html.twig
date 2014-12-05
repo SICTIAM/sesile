@@ -321,6 +321,45 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
 {% block losjavascriptos %}
 {% endblock %}
 <script type="text/javascript">
+
+
+    $(".cb-enable").click(function () {
+        var parent = $(this).parents('.acti');
+        $('.cb-disable', parent).removeClass('selected');
+        $('.cb-enable', parent).addClass('selected');
+        $('.checkbox', parent).attr('checked', false);
+    });
+
+    $(".cb-disable").click(function () {
+        var parent = $(this).parents('.acti');
+        $('.cb-enable', parent).removeClass('selected');
+        $('.cb-disable', parent).addClass('selected');
+        $(this).addClass('selected');
+        $('.checkbox', parent).attr('checked', true);
+    });
+
+
+      $('.acti').each(function () {
+     var checked = $('.checkbox', $(this)).is(':checked');
+
+     if (checked) {
+
+     $('.cb-disable', $(this)).removeClass('selected');
+     $('.cb-enable', $(this)).addClass('selected');
+
+     // $('.cb-enable', $(this)).click();
+     } else {
+     $('.cb-enable', $(this)).removeClass('selected');
+     $('.cb-disable', $(this)).addClass('selected');
+
+     //$('.cb-disable', $(this)).click();
+     }
+     });
+
+
+
+
+
     $('.sesiletooltip').tooltip({
         placement: 'top',
         html: true

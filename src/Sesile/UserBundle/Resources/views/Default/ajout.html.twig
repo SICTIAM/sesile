@@ -106,6 +106,17 @@
         <br/>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
     <script type="text/javascript">
         $(".label_form input, .ui-autocomplete-input").focus(function () {
             $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
@@ -115,17 +126,21 @@
         $(".cb-enable").click(function () {
             var parent = $(this).parents('.acti');
             $('.cb-disable', parent).removeClass('selected');
-            $(this).addClass('selected');
-            $('.checkbox', parent).attr('checked', true);
-        });
-        $(".cb-disable").click(function () {
-            var parent = $(this).parents('.acti');
-            $('.cb-enable', parent).removeClass('selected');
-            $(this).addClass('selected');
+            $('.cb-enable', parent).addClass('selected');
             $('.checkbox', parent).attr('checked', false);
         });
 
+        $(".cb-disable").click(function () {
+            var parent = $(this).parents('.acti');
+            $('.cb-enable', parent).removeClass('selected');
+            $('.cb-disable', parent).addClass('selected');
+            $(this).addClass('selected');
+            $('.checkbox', parent).attr('checked', true);
+        });
+
+
         $('.checkbox', $(".acti")).attr('checked', true);
+
 
 
         var cache = {};

@@ -6,10 +6,26 @@
             <span class="glyphicon glyphicon-ok"></span>
             &nbsp;Valider et Signer
         </button>
+
+        <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
+                data-whatever="@mdo" class=".bs-example-modal-lg" >
+            <span class="glyphicon glyphicon-remove"></span>
+            &nbsp;Refuser
+
+        </button>
+
+
     {% else %}
-        <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_valider") }}">
+        <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_soumis") }}">
             <span class="glyphicon glyphicon-ok"></span>
-            &nbsp;Valider le classeur
+            &nbsp;Soumettre
+        </button>
+
+        <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
+                data-whatever="@mdo">
+            <span class="glyphicon glyphicon-remove"></span>
+            &nbsp;Refuser
+
         </button>
 
 

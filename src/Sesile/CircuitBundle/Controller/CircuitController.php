@@ -80,6 +80,8 @@ class CircuitController extends Controller
             $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre(), "groupe" => false);
         }
 
+
+
         if($forClasseur) {
             $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
             foreach($groupes_du_user as $group) {
@@ -89,6 +91,7 @@ class CircuitController extends Controller
                     "ordre" => $this->getCircuitFromgroupForUser($this->getUser(), $group->getgroupe()),
                     "groupe" => true
                 );
+
             }
         }
 
@@ -188,6 +191,7 @@ class CircuitController extends Controller
     }
 
     private $ordre;
+
     private function recursivesortHierarchie($hierarchie, $curr) {
         static $recurs = 0;
         foreach($hierarchie as $k => $groupeUser) {
@@ -200,6 +204,7 @@ class CircuitController extends Controller
                     $recurs++;
                     $this->recursivesortHierarchie($hierarchie, $groupeUser->getParent());
                 }
+
             }
         }
         $this->ordre = rtrim($this->ordre, ",");
