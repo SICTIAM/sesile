@@ -38,6 +38,7 @@
     }
 
     dropzone.on('success', function (file, response) {
+
         $.each(response, function (serverfilename, originalname) {
             $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
         });
@@ -45,6 +46,7 @@
     });
 
     dropzone.on("addedfile", function (file) {
+
         // Access the preview element with file.previewElement and add event listeners, etc... to it.
         $(file.previewElement).find('img').map(function () {
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");

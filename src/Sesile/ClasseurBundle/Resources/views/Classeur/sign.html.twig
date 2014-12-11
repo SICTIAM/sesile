@@ -86,21 +86,51 @@
          set
 
          divmethod.appendChild(selectmethod);*/
-        var divcertif = document.getElementById('listecertif');
+        /*  var divcertif = document.getElementById('listecertif');
         var selectcertif = document.createElement('select');
         selectcertif.setAttribute('name', 'selectcertif');
         selectcertif.setAttribute('id', 'selectcertif');
         var nbcertif = document.javaapplet.getNumberSigningCertificates();
-        var i = 0;
-        while (i < nbcertif) {
+         var certicats = document.javaapplet.getCertificates();
+         console.clear();
+         console.log('YOYOYOYOYOYOYOYOYOYOYOYOYOYOYOYOYOYOYO');
+         console.log(certicats);
+         var i = nbcertif-1;
+         var j = 0;
+         while (i >= 0) {
             var nomcertif = document.javaapplet.getSigningCertificateName(i);
             var element = document.createElement('option');
-            element.setAttribute('value', i);
+         element.value = j;
             element.text = nomcertif;
             selectcertif.appendChild(element);
-            i = i + 1;
-            /*  var options = selectcertif.options;
-             options[options.length] = new Option(document.javaapplet.getSigningCertificateName(i), i);*/
+         i = i-1;
+         j = j+1;
+         }*/
+
+        var divcertif = document.getElementById('listecertif');
+        var selectcertif = document.createElement('select');
+        selectcertif.setAttribute('name', 'selectcertif');
+        selectcertif.setAttribute('id', 'selectcertif');
+
+
+        var nbcertif = document.javaapplet.getNumberSigningCertificates();
+
+        /* var nbcertif = document.javaapplet.getCertificatAlias();*/
+        alert(nbcertif)
+
+        var a = 0;
+
+        while (a < nbcertif - 1) {
+
+            var certAlias = document.javaapplet.getCertificatAlias(a);
+            var element = document.createElement('option');
+            element.setAttribute('value', a);
+            element.text = certAlias;
+            selectcertif.appendChild(element);
+
+
+            a++;
+
         }
         divcertif.appendChild(selectcertif);
         $('#bouttons').show('slow');
@@ -208,7 +238,8 @@
         {{docstosign|length  }}
 
         if (nbfic > 0) {
-            document.javaapplet.launchSigningWithCertificate(certif.value);
+            alert(certif.options[certif.selectedIndex].text);
+            document.javaapplet.launchSigningWithCertificate(certif.options[certif.selectedIndex].value);
         }
         else {
             $('#lacommode').submit();
