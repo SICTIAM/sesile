@@ -426,7 +426,13 @@ class ClasseurController extends Controller {
     public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
-
+        $tabAction = $entity->getActions();
+        $lastAction = $tabAction[count($tabAction) - 1];
+        if ($lastAction->getAction() === "Classeur finalisé") {
+            $walidated = true;
+        } else {
+            $walidated = false;
+        }
 
         $repositorydelegates = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
@@ -461,7 +467,9 @@ class ClasseurController extends Controller {
             'usersdelegated'=> $usersdelegated,
             'isDelegatedToMe' => $isDelegatedToMe,
             'uservalidant'=>$uservalidant,
-            "menu_color" => "bleu"
+            "menu_color" => "bleu",
+            "walidated" => $walidated
+            
         );
 
 

@@ -58,7 +58,8 @@
 </script>
 
 <script type="text/javascript">
-    var docstosign = {{ docstosign|json_encode|raw }}
+    var docstosign =
+    {{ docstosign|json_encode|raw }}
 
 
     var attributes = {width: 1, height: 1, id: "javaapplet"};
@@ -203,7 +204,8 @@
         var certif = document.getElementById('selectcertif');
         //alert('lancement signature '+method.value+'  '+certif.value);
 
-        nbfic = {{docstosign|length  }}
+        nbfic =
+        {{docstosign|length  }}
 
         if (nbfic > 0) {
             document.javaapplet.launchSigningWithCertificate(certif.value);
