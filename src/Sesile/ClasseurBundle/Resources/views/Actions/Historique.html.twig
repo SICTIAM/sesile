@@ -3,16 +3,28 @@
     <tr>
         <th>Utilisateur</th>
         <th>Date&nbsp;|&nbsp;Heure</th>
-        <th>Action</th>
+        <th>Action&nbsp;|&nbsp;</th>
+        <th>Observation&nbsp;|&nbsp;Commentaire</th>
     </tr>
     </thead>
     <tbody>
     {% for action in  actions %}
         <tr>
             <td>{{ action.username }}</td>
-            <td>{{ action.date | date("d/m/Y") }}&nbsp;|&nbsp;{{ action.date | date("H:i:s") }}</td>
+            <td>{{ action.date | date("d/m/Y") }}<br>
+                {{ action.date | date("H:i:s") }}</td>
             <td>{{ action.action }}</td>
+
+            <td><strong>{{ action.observation }}</strong>
+
+                {{action.commentaire }}</td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+
+
+
+
+
+

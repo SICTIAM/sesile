@@ -1,25 +1,7 @@
+
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
-<div class="top_selects_circuits">
 
-    <div class="selects_circuit">
-        <div class="titre_select">
-            <label class="nametitle" id="users_complete">
-                <span class="glyphicon glyphicon-search"></span>
-                &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-            <input class="nameinput" type="text">
-        </div>
-        <div id="users_list">
-            {% for user in users %}
-                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
-            {% endfor %}
-        </div>
-        <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
-    </div>
-
-
-
-
-    <div class="selects_circuit">
+   <!-- <div class="selects_circuit">
         <div class="titre_select">
             <label class="nametitle">
                 <span class="glyphicon glyphicon-search"></span>
@@ -32,14 +14,7 @@
             {% endfor %}
         </div>
         <span id="circuitadd_btn" class="glyphicon glyphicon-chevron-down"></span>
-    </div>
-</div>
-
-
-
-
-
-
+    </div>-->
 
 <div id="circuit_editor">
     <div class="titre_select">
@@ -48,6 +23,24 @@
         <img id="debut_circuit" src="{{ asset("/images/buttonlist.png") }}"/>
     </div>
 </div>
+
+
+<div class="top_selects_circuits" id="circuitvalidation">
+    <span id="useradd_btn" class="glyphicon glyphicon-chevron-up"></span>
+    <div class="titre_select">
+            <label class="nametitle" id="users_complete">
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
+            <input class="nameinput" type="text">
+        </div>
+
+        <div id="users_list">
+            {% for user in users %}
+                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
+            {% endfor %}
+        </div>
+</div>
+
 
 
 <script type="text/javascript">
@@ -67,9 +60,7 @@
 <script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
 <script type="text/javascript">
-    var users_list = new Array();
-    $("#users_list p").each(function () {
-        users_list.push($(this).text());
-    });
+
+
     // $("#users_complete").autocomplete({ lookup: users_list });
 </script>

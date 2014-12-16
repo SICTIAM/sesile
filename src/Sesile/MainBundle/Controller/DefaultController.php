@@ -19,6 +19,7 @@ class DefaultController extends Controller
         $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $msg_accueil = $CollecEntity->getMessage();
         return array('msg_acc' => $msg_accueil);
+        //test
     }
 
     /**

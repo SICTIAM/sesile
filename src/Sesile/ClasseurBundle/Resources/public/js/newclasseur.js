@@ -9,8 +9,11 @@ function loadcorrectform() {
         data: datatosend,
         success: function (html) {
 
+
+            /* Module de création de nouveau circuit */
             $('#contenttypedform').html(html);
             $('#circuitcontent').load(Routing.generate('new_circuit'));
+            $('#circuitvalidation').load(Routing.generate('new_validate'));
             $('#documentcontent').load(Routing.generate('new_document'));
             $('#loadinggif').hide();
 

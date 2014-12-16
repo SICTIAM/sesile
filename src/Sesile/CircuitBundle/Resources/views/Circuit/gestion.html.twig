@@ -8,16 +8,23 @@
                 &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
             <input class="nameinput" type="text">
         </div>
+
         <div id="users_list">
             {% for user in users %}
-                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.username }}</p>
+                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
             {% endfor %}
         </div>
+
+
+
+
         <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
 
     <div class="selects_circuit">
         <div class="titre_select">
+
+
             <label class="nametitle">
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;&nbsp;Circuits&nbsp;&nbsp;</label>
@@ -75,6 +82,7 @@
 <script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
 <script type="text/javascript">
+
     var users_list = new Array();
     $("#users_list p").each(function () {
         users_list.push($(this).text());

@@ -58,8 +58,7 @@
 </script>
 
 <script type="text/javascript">
-    var docstosign =
-    {{ docstosign|json_encode|raw }}
+    var docstosign = {{ docstosign|json_encode|raw }}
 
 
     var attributes = {width: 1, height: 1, id: "javaapplet"};
@@ -70,74 +69,52 @@
 
     function appletReady() {
 
+
+
+
         //document.javaapplet.setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
         document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod
 
         var divmethod = document.getElementById('listemethod');
-        /*
-         var selectmethod = document.createElement('select');
-         selectmethod.setAttribute('name','selectmethod');
-         selectmethod.setAttribute('id','selectmethod');
-
-         var element = document.createElement('option');
-         element.setAttribute('value',0);
-         element.text = 'Xemelios';
-         selectmethod.appendChild(element);
-         set
-
-         divmethod.appendChild(selectmethod);*/
-        /*  var divcertif = document.getElementById('listecertif');
-        var selectcertif = document.createElement('select');
-        selectcertif.setAttribute('name', 'selectcertif');
-        selectcertif.setAttribute('id', 'selectcertif');
-        var nbcertif = document.javaapplet.getNumberSigningCertificates();
-         var certicats = document.javaapplet.getCertificates();
-         console.clear();
-         console.log('YOYOYOYOYOYOYOYOYOYOYOYOYOYOYOYOYOYOYO');
-         console.log(certicats);
-         var i = nbcertif-1;
-         var j = 0;
-         while (i >= 0) {
-            var nomcertif = document.javaapplet.getSigningCertificateName(i);
-            var element = document.createElement('option');
-         element.value = j;
-            element.text = nomcertif;
-            selectcertif.appendChild(element);
-         i = i-1;
-         j = j+1;
-         }*/
 
         var divcertif = document.getElementById('listecertif');
         var selectcertif = document.createElement('select');
         selectcertif.setAttribute('name', 'selectcertif');
         selectcertif.setAttribute('id', 'selectcertif');
-
-
         var nbcertif = document.javaapplet.getNumberSigningCertificates();
 
-        /* var nbcertif = document.javaapplet.getCertificatAlias();*/
-        alert(nbcertif)
-
         var a = 0;
+        if(nbcertif > 1) {
+   while (a < nbcertif - 1) {
 
-        while (a < nbcertif - 1) {
+                var certAlias = document.javaapplet.getCertificatAlias(a);
+                alert(certAlias)
+                var element = document.createElement('option');
+                element.setAttribute('value', a);
+                element.text = certAlias;
+                selectcertif.appendChild(element);
 
-            var certAlias = document.javaapplet.getCertificatAlias(a);
+                alert(element.text)
+                a++;
+
+            }
+            divcertif.appendChild(selectcertif);
+            $('#bouttons').show('slow');
+            setStatusText('Pret à signer');
+        }
+        else {
+            var nomcertif = document.javaapplet.getSigningCertificateName(0);
             var element = document.createElement('option');
-            element.setAttribute('value', a);
-            element.text = certAlias;
+            element.setAttribute('value', 0);
+            element.text = nomcertif;
             selectcertif.appendChild(element);
 
-
-            a++;
-
-        }
-        divcertif.appendChild(selectcertif);
-        $('#bouttons').show('slow');
-        setStatusText('Pret à signer');
-
-
+            divcertif.appendChild(selectcertif);
+            $('#bouttons').show('slow');
+            setStatusText('Pret à signer');
+            }
     }
+
 
     //function pour faire apparaître le bouton signer
     function test() {
@@ -234,12 +211,10 @@
         var certif = document.getElementById('selectcertif');
         //alert('lancement signature '+method.value+'  '+certif.value);
 
-        nbfic =
-        {{docstosign|length  }}
+        nbfic = {{docstosign|length  }}
 
         if (nbfic > 0) {
-            alert(certif.options[certif.selectedIndex].text);
-            document.javaapplet.launchSigningWithCertificate(certif.options[certif.selectedIndex].value);
+            document.javaapplet.launchSigningWithCertificate(certif.value);
         }
         else {
             $('#lacommode').submit();
@@ -248,11 +223,6 @@
     }
 
 </script>
-
-
-
-
-
 
 
 

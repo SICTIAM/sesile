@@ -51,6 +51,22 @@ class Action
      */
     private $user;
 
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="observation", type="text", nullable=true)
+     * @Expose
+     *
+     */
+    private $observation;
+
+
+
+
+
+
     /**
      * @var integer
      *
@@ -77,6 +93,57 @@ class Action
      *
      */
     private $action;
+
+
+
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="commentaire", type="text", nullable=true)
+     * @Expose
+     *
+     */
+    private $commentaire;
+
+
+
+    /**
+     * @return string
+     */
+    public function getCommentaire()
+    {
+        return $this->commentaire;
+    }
+
+    /**
+     * @param string $commentaire
+     */
+    public function setCommentaire($commentaire)
+    {
+        $this->commentaire = $commentaire;
+    }
+
+
+
+
+    /**
+     * @return string
+     */
+    public function getObservation()
+    {
+        return $this->observation;
+    }
+
+    /**
+     * @param string $observation
+     */
+    public function setObservation($observation)
+    {
+        $this->observation = $observation;
+    }
+
 
 
     /**
