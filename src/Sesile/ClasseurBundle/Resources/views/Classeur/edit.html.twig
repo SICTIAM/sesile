@@ -182,18 +182,20 @@
                value="{{ classeur.validation  | date('d/m/Y') }}"/>
 
 
+        {% if not walidated %}
 
+            <style>
+                #documentcontent {
+                    opacity: .5;
+                    pointer-events: none;
 
-
-
+                }
+            </style>
+        {% endif %}
 
         <style>
 
-            #documentcontent {
-                opacity: .5;
-                pointer-events: none;
 
-            }
 
             #circuit {
 
