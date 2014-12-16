@@ -52,7 +52,6 @@ class Action
     private $user;
 
 
-
     /**
      * @var string
      *
@@ -61,10 +60,6 @@ class Action
      *
      */
     private $observation;
-
-
-
-
 
 
     /**
@@ -95,9 +90,6 @@ class Action
     private $action;
 
 
-
-
-
     /**
      * @var string
      *
@@ -106,7 +98,6 @@ class Action
      *
      */
     private $commentaire;
-
 
 
     /**
@@ -124,8 +115,6 @@ class Action
     {
         $this->commentaire = $commentaire;
     }
-
-
 
 
     /**

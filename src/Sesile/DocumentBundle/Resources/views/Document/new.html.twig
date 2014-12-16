@@ -38,36 +38,33 @@
     }
 
 
-
-
-
-
     /* Bouton grisé lors de l'ajout de fichier  */
 
-    dropzone.on("addedfile", function(file) {
-        $('#Mybutton').attr('disabled',true);
+    dropzone.on("addedfile", function (file) {
+        $('#Mybutton').attr('disabled', true);
 
-        file.previewElement.addEventListener("click", function() { myDropzone.removeFile(file); });
+        file.previewElement.addEventListener("click", function () {
+            myDropzone.removeFile(file);
+        });
     });
 
 
+    /* Bouton dégrisé quand le chargement est terminée  */
 
- /* Bouton dégrisé quand le chargement est terminée  */
-
-    dropzone.on("success", function(file) {
-        $('#Mybutton').attr('disabled',false);
-        file.previewElement.addEventListener("click", function() { myDropzone.removeFile(file); });
+    dropzone.on("success", function (file) {
+        $('#Mybutton').attr('disabled', false);
+        file.previewElement.addEventListener("click", function () {
+            myDropzone.removeFile(file);
+        });
     });
-
-
 
 
     /*Fonction pour ajouter fichier dans le dropzone "classeur à valider"*/
 
     dropzone.on('success', function (file, response) {
+
         $.each(response, function (serverfilename, originalname) {
             $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
-
 
 
         });
@@ -75,10 +72,10 @@
     });
 
 
-
     /* Ajout de fichier selon Format : zip; pdf, png */
 
     dropzone.on("addedfile", function (file) {
+
         // Access the preview element with file.previewElement and add event listeners, etc... to it.
         $(file.previewElement).find('img').map(function () {
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
@@ -135,7 +132,6 @@
             if (file.type == "text/plain") {
                 $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
             }
-
 
 
             $(this).attr("onmouseover", "");

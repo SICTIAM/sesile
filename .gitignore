@@ -6,3 +6,4 @@ app/sessions
 /web/.htaccess
 /vendor
 .idea
+web/dbv-1.1

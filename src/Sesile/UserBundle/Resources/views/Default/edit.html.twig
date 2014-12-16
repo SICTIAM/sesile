@@ -25,9 +25,6 @@
         <br/>
 
 
-
-
-
         <div class="label_form label-form-input">
             {{ form_label(edit_form.username) }}
             {{ form_widget(edit_form.username) }}
@@ -155,14 +152,14 @@
     </div>
 
     <script type="text/javascript">
-      /*  $(".label_form input").focus(function () {
+        /*  $(".label_form input").focus(function () {
             $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
             $(this).prev("label").addClass("glyphicon-search-blue");
         });
 
 
 
-        $(".cb-enable").click(function () {
+         $(".cb-enable").click(function () {
             var parent = $(this).parents('.acti');
             $('.cb-disable', parent).removeClass('selected');
             $(this).addClass('selected');
@@ -175,8 +172,8 @@
             $('.checkbox', parent).attr('checked', false);
         });
 
-        */
-      /*  $('.acti').each(function () {
+         */
+        /*  $('.acti').each(function () {
             var checked = $('.checkbox', $(this)).is(':checked');
 
             if (checked) {
@@ -192,7 +189,7 @@
                 //$('.cb-disable', $(this)).click();
             }
         });
-*/
+         */
         $("#sesile_userbundle_user_apiactivated").change(function (e) {
             if ($(this).is(':checked')) {
                 $('#apitokensecret').show('slow');
