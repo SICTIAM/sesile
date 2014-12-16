@@ -363,7 +363,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
          */
 
 
-
         // gestion du circuit
         $users = explode(',', $circuit);
         $classeurUserObj = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
@@ -567,12 +566,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
         }
     }
-
-
-
-
-
-
 
 
     private function sendRefusMail($classeur)

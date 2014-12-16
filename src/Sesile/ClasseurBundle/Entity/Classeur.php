@@ -393,7 +393,7 @@ class Classeur {
         $circuit = explode(",", $this->getCircuit());
         $curr_validant = array_search($this->validant, $circuit);
 
-        $prev_validant = ($curr_validant - $curr_validant)-1;
+        $prev_validant = ($curr_validant - $curr_validant) - 1;
         return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
     }
 
@@ -414,7 +414,6 @@ class Classeur {
     }
 
 
-
     public function isAtLastValidant(\Doctrine\ORM\EntityManager $em){
         return ($this->getNextValidant($em)==0);
     }
@@ -429,7 +428,6 @@ class Classeur {
             $this->setStatus(1);
         }
     }
-
 
 
     public function  soumettre()

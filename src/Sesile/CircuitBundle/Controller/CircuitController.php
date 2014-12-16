@@ -54,10 +54,6 @@ class CircuitController extends Controller
     }
 
 
-
-
-
-
     /**
      * @Route("/validation/", name="new_validate", options={"expose"=true})
      * @Template()
@@ -81,10 +77,9 @@ class CircuitController extends Controller
         }
 
 
-
-        if($forClasseur) {
+        if ($forClasseur) {
             $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
-            foreach($groupes_du_user as $group) {
+            foreach ($groupes_du_user as $group) {
                 $circuits[] = array(
                     "id" => $group->getGroupe()->getId(),
                     "name" => $group->getGroupe()->getNom(),
@@ -96,9 +91,8 @@ class CircuitController extends Controller
         }
 
 
-        return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
+        return array('users' => $users, "circuits" => $circuits, "menu_color" => "vert");
     }
-
 
 
     /**
@@ -170,9 +164,6 @@ class CircuitController extends Controller
 
         return new Response("OK");
     }
-
-
-
 
 
     /**

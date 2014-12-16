@@ -8,9 +8,11 @@
             &nbsp;&nbsp;&nbsp;Créer un nouveau classeur
         </div>
         <br>
-        <form id="new_classeur" class="form-horizontal" role="form" action="{{ path('classeur_create') }}" method="POST">
 
-        <!-- <div>Nom<input type="text" name="nom" /></div> -->
+        <form id="new_classeur" class="form-horizontal" role="form" action="{{ path('classeur_create') }}"
+              method="POST">
+
+            <!-- <div>Nom<input type="text" name="nom" /></div> -->
             <!--<div>Groupes :
                 <select name="groupes" multiple>
                     {% for groupe in groupes %}
@@ -18,7 +20,7 @@
                     {% endfor %}
                 </select>
             </div>-->
-            <div>Template :<select name="template" >
+            <div>Template :<select name="template">
                     {% for template in templates %}
                         <option value="{{ template.id }}">{{ template.nom }}</option>
                     {% endfor %}

@@ -339,22 +339,22 @@ title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br 
     });
 
 
-      $('.acti').each(function () {
-     var checked = $('.checkbox', $(this)).is(':checked');
+    $('.acti').each(function () {
+        var checked = $('.checkbox', $(this)).is(':checked');
 
-     if (checked) {
+        if (checked) {
 
-     $('.cb-disable', $(this)).removeClass('selected');
-     $('.cb-enable', $(this)).addClass('selected');
+            $('.cb-disable', $(this)).removeClass('selected');
+            $('.cb-enable', $(this)).addClass('selected');
 
-     // $('.cb-enable', $(this)).click();
-     } else {
-     $('.cb-enable', $(this)).removeClass('selected');
-     $('.cb-disable', $(this)).addClass('selected');
+            // $('.cb-enable', $(this)).click();
+        } else {
+            $('.cb-enable', $(this)).removeClass('selected');
+            $('.cb-disable', $(this)).addClass('selected');
 
-     //$('.cb-disable', $(this)).click();
-     }
-     });
+            //$('.cb-disable', $(this)).click();
+        }
+    });
 
 
 
