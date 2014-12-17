@@ -32,12 +32,11 @@ if (typeof deposant != 'undefined') {
     var new_perso = $('<div/>').addClass('deposant no_sort perso_circuit').insertBefore("#debut_circuit");
     perso_src = deposant.path?path+deposant.path:perso_src;
     $('<img />').attr("src", perso_src).appendTo(new_perso);
-    $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
+   /* $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);*/
 }
 
-/*
- Ajoute un utilisateur dans le cadre "circuits"
- */
+/* Ajoute un utilisateur dans le cadre "circuits" */
+
 function ajoutUser(id, sort) {
     var sel_user = $('#users_list p[data-id="' + id + '"]');
     if (sel_user.length == 0) {
@@ -59,8 +58,12 @@ function ajoutUser(id, sort) {
     }
     else {
         $("<span/>").addClass("suppr_perso glyphicon glyphicon-remove").appendTo(new_perso).click(function () {
+
             $("<p/>").attr("data-id", id).text(sel_user.text()).appendTo("#users_list");
+
             new_perso.remove();
+            creerFleches();
+
             $('#users_list p').click(function () {
                 $(this).addClass("list_selected_element");
                 var sel_user = $('#users_list .list_selected_element');
@@ -86,6 +89,8 @@ function creerFleches() {
     $("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(:last, .deposant)");
 }
 
+
+
 $("#useradd_btn").click(function () {
     var sel_user = $('#users_list .list_selected_element');
     if (sel_user.length > 0) {
@@ -93,6 +98,7 @@ $("#useradd_btn").click(function () {
     }
     $('#users_list p:first').addClass("list_selected_element");
 });
+
 
 $("#circuit").sortable({
     items: ".perso_circuit:not(.fleche_circuit, .no_sort)",
@@ -119,6 +125,12 @@ $("#circuit").sortable({
         }
     }
 }).disableSelection();
+
+
+
+
+
+/* Fonction qui permet de cliquer et d'afficher les user */
 
 $("#circuitadd_btn").click(function () {
     var sel_circuit = $('#circuits_list .list_selected_element');
@@ -151,8 +163,6 @@ $("#users_list p").click(function () {
     $('#users_list p:selected').addClass("list_selected_element");
 
 });
-
-
 
 
 
