@@ -114,13 +114,18 @@
 
 
 
-
-
             <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
                 <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
                 &nbsp;Historique
             </button>
 
+    <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+        <button type="submit" class="btn btn-danger">
+            <span class="glyphicon glyphicon-trash"></span>
+            &nbsp;Retirer
+        </button>
+        <input type="hidden" value="{{ classeur.id }}" name="id"/>
+    </form>
 
 
 
@@ -272,6 +277,14 @@
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
             &nbsp;Historique
         </button>
+
+    <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+        <button type="submit" class="btn btn-danger">
+            <span class="glyphicon glyphicon-trash"></span>
+            &nbsp;Retirer
+        </button>
+        <input type="hidden" value="{{ classeur.id }}" name="id"/>
+    </form>
 
 
     {% if classeur.isSupprimableByDelegates(usersdelegated) %}

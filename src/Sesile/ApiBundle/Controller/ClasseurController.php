@@ -518,7 +518,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
     }
 
-    /*                MAILS DE NOTIFICATION                      */
+
+
+       /*                MAILS DE NOTIFICATION                      */
 
     private function sendMail($sujet, $to, $body)
     {
@@ -539,6 +541,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
                 'date_limite' => $classeur->getValidation(),
                 "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
             )
+
+
+
         );
 
         $em = $this->getDoctrine()->getManager();
@@ -567,12 +572,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
         }
     }
-
-
-
-
-
-
 
 
     private function sendRefusMail($classeur)

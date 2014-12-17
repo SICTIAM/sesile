@@ -4,4 +4,6 @@ Un nouveau classeur vient d'être validé par {{ validant }}
 <br>
 Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..<br>
 
-Lien vers le classeur {{ lien }}
+Lien vers le classeur <a href =" ">{{ lien }}</a>
+
+<a href="{{ url('classeur_edit', {'id': id})}}">cliquer ici</a>
