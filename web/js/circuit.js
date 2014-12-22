@@ -69,8 +69,9 @@ function ajoutUser(id, sort) {
                 var sel_user = $('#users_list .list_selected_element');
                 ajoutUser(sel_user.attr("data-id"), true);
                 creerFleches();
-            }); });
-        }
+            });
+        });
+    }
 
     perso_src = sel_user.data("img") ? path + sel_user.data("img") : perso_src;
 
@@ -151,8 +152,6 @@ $("#circuitadd_btn").click(function () {
     $("#circuit_name").val(sel_circuit.text());
     $("#circuit_modifier, #btn-group-supp").css("display", "inline-block");
 });
-
-
 
 
 $("#users_list p").click(function () {

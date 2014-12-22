@@ -18,26 +18,26 @@
 
     {% endif %}
 
-<!--
+    <!--
     <button type="submit" class="btn btn-danger btn-refuser" id="refus" data-action="{{ path("classeur_refuser") }}">
         <span class="glyphicon glyphicon-remove"></span>
         &nbsp;Refuser
     </button>
 
 -->
-             <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
+    <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
             data-whatever="@mdo">
         <span class="glyphicon glyphicon-remove"></span>
         &nbsp;Refuser
 
-        </button>
+    </button>
 
 
 {% endif %}
 
 {% if retractable %}
     <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
-        <button type="submit" class="btn btn-warning"id="retracte">
+        <button type="submit" class="btn btn-warning" id="retracte">
             <span class="glyphicon glyphicon-thumbs-down"></span>
             &nbsp;Se r&eacute;tracter
         </button>

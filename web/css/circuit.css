@@ -20,9 +20,6 @@
     margin: auto;
 }
 
-
-
-
 #users_list p, #circuits_list p {
     margin: 0 0 .3em !important;
 }
@@ -177,8 +174,6 @@
     background-color: #ebebeb;
     border: 1px solid #adadad;
 }
-
-
 
 .nomcircuit {
     line-height: 2.2em;

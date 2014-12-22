@@ -1,7 +1,6 @@
-
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 
-   <!-- <div class="selects_circuit">
+<!-- <div class="selects_circuit">
         <div class="titre_select">
             <label class="nametitle">
                 <span class="glyphicon glyphicon-search"></span>
@@ -27,20 +26,20 @@
 
 <div class="top_selects_circuits" id="circuitvalidation">
     <span id="useradd_btn" class="glyphicon glyphicon-chevron-up"></span>
+
     <div class="titre_select">
-            <label class="nametitle" id="users_complete">
-                <span class="glyphicon glyphicon-search"></span>
-                &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-            <input class="nameinput" type="text">
-        </div>
+        <label class="nametitle" id="users_complete">
+            <span class="glyphicon glyphicon-search"></span>
+            &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
+        <input class="nameinput" type="text">
+    </div>
 
-        <div id="users_list">
-            {% for user in users %}
-                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
-            {% endfor %}
-        </div>
+    <div id="users_list">
+        {% for user in users %}
+            <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
+        {% endfor %}
+    </div>
 </div>
-
 
 
 <script type="text/javascript">

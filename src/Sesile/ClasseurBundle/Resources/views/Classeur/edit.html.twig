@@ -2,10 +2,10 @@
 
 {% block content %}
 
-{% if classeur.isValidableByDelegates(usersdelegated) %}
+    {% if classeur.isValidableByDelegates(usersdelegated) %}
 
 
-<script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+        <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
     <div class="bloc_page">
@@ -31,22 +31,23 @@
 
 
         {% if classeur.isSupprimableByDelegates(usersdelegated) %}
-        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+            {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
         {% else %}
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
-  {% endif %}
+        {% endif %}
 
 
 
 
-    {% if isDelegatedToMe %}
+        {% if isDelegatedToMe %}
         <br>
         <div class="legende">
             <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
 
             <span class="glyphicon statut_0"></span>
-        <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
-            {{  uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
+            <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img
+                    class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
+            {{ uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
         </div>
         {% endif %}
         <br/>
@@ -58,66 +59,66 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Titre
             </div>
-            <input class="form-control"  name="name"  placeholder="Nom" required="required"
-                   value="{{ classeur.nom }}"  >
+        <input class="form-control" name="name" placeholder="Nom" required="required"
+               value="{{ classeur.nom }}">
             <br>
 
             <div class="titre_form_element">
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Description
             </div>
-            <textarea class="form-control" rows="3" name="desc"  >{{ classeur.description }}</textarea>
+        <textarea class="form-control" rows="3" name="desc">{{ classeur.description }}</textarea>
             <br>
 
             <div class="titre_form_element">
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Commentaire
             </div>
-            <textarea class="form-control" rows="3" name="comment"   ></textarea>
+        <textarea class="form-control" rows="3" name="comment"></textarea>
             <br>
 
             <div class="titre_form_element">
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Date limite de validation
             </div>
-            <input class="datepicker"  name="validation" type="datetime"
+        <input class="datepicker" name="validation" type="datetime"
                    value="{{ classeur.validation  | date('d/m/Y') }}"/>
 
 
 
 
 
-    <!--Ici jusqu' au endif-->
+        <!--Ici jusqu' au endif-->
 
 
 
 
 
-{% else %}
+    {% else %}
 
-                <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
-            <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
-
-
-            <div class="bloc_page">
-            {% if classeur.isModifiableByDelegates(usersdelegated) %}
-                <div class="titre_page">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                    &nbsp;&nbsp;&nbsp;Édition du classeur
-                </div>
-            {% else %}
-                <div class="titre_page">
-                    <span class="glyphicon glyphicon-eye"></span>
-                    &nbsp;&nbsp;&nbsp;Visualisation du classeur
-                </div>
-            {% endif %}
+        <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
 
+        <div class="bloc_page">
+        {% if classeur.isModifiableByDelegates(usersdelegated) %}
+            <div class="titre_page">
+                <span class="glyphicon glyphicon-pencil"></span>
+                &nbsp;&nbsp;&nbsp;Édition du classeur
+            </div>
+        {% else %}
+            <div class="titre_page">
+                <span class="glyphicon glyphicon-eye"></span>
+                &nbsp;&nbsp;&nbsp;Visualisation du classeur
+            </div>
+        {% endif %}
 
-            <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
-                <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-                &nbsp;Historique
-            </button>
+
+
+        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+            &nbsp;Historique
+        </button>
 
     <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
         <button type="submit" class="btn btn-danger">
@@ -129,97 +130,98 @@
 
 
 
-            {% if classeur.isSupprimableByDelegates(usersdelegated) %}
-                {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
-            {% else %}
-                {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
-            {% endif %}
+        {% if classeur.isSupprimableByDelegates(usersdelegated) %}
+            {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+        {% else %}
+            {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+        {% endif %}
 
 
-            {% if isDelegatedToMe %}
-                <br>
-                <div class="legende">
-                    <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
+        {% if isDelegatedToMe %}
+            <br>
+            <div class="legende">
+                <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
 
-                    <span class="glyphicon statut_0"></span>
-                    <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
-                    {{  uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
-                </div>
-            {% endif %}
-            <br/>
+                <span class="glyphicon statut_0"></span>
+                <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img
+                        class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
+                {{ uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
+            </div>
+        {% endif %}
+        <br/>
 
-            <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
-                <input type="hidden" name="id" value="{{ classeur.id }}"/>
+        <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
+        <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
-                <div class="titre_form_element" disabled>
-                    <span class="glyphicon glyphicon-play" ></span>
-                    &nbsp;&nbsp;&nbsp;Titre
-                </div>
-                <input class="form-control"  name="name"  placeholder="Nom" required="required" disabled
-                       value="{{ classeur.nom }}"  >
-                <br>
+        <div class="titre_form_element" disabled>
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Titre
+        </div>
+        <input class="form-control" name="name" placeholder="Nom" required="required" disabled
+               value="{{ classeur.nom }}">
+        <br>
 
-                <div class="titre_form_element">
-                    <span class="glyphicon glyphicon-play"></span>
-                    &nbsp;&nbsp;&nbsp;Description
-                </div>
-                <textarea class="form-control" rows="3" name="desc" disabled >{{ classeur.description }}</textarea>
-                <br>
-
-
-
-    <div class="titre_form_element">
-        <span class="glyphicon glyphicon-play"></span>
-        &nbsp;&nbsp;&nbsp;Commentaire
-    </div>
-
-    <textarea class="form-control" rows="3" id="commentaire"  name="comment" disabled ></textarea>
-    <input type="hidden" name="commentaire" value="{{ classeur.id }}"/>
-
-
-                <div class="titre_form_element">
-                    <span class="glyphicon glyphicon-play"></span>
-                    &nbsp;&nbsp;&nbsp;Date limite de validation
-                </div>
-                <input class="datepicker"  name="validation" type="datetime" disabled
-                       value="{{ classeur.validation  | date('d/m/Y') }}"/>
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Description
+        </div>
+        <textarea class="form-control" rows="3" name="desc" disabled>{{ classeur.description }}</textarea>
+        <br>
 
 
 
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Commentaire
+        </div>
+
+        <textarea class="form-control" rows="3" id="commentaire" name="comment" disabled></textarea>
+        <input type="hidden" name="commentaire" value="{{ classeur.id }}"/>
+
+
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Date limite de validation
+        </div>
+        <input class="datepicker" name="validation" type="datetime" disabled
+               value="{{ classeur.validation  | date('d/m/Y') }}"/>
+
+
+        {% if not walidated %}
+
+            <style>
+                #documentcontent {
+                    opacity: .5;
+                    pointer-events: none;
+
+                }
+            </style>
+        {% endif %}
+
+        <style>
+
+
+
+            #circuit {
+
+                opacity: .5;
+                pointer-events: none;
+            }
+
+            #circuitvalidation {
+
+                opacity: .5;
+                pointer-events: none;
+            }
+
+
+        </style>
 
 
 
 
-    <style>
 
-        #documentcontent {
-            opacity: .5;
-            pointer-events: none;
-
-        }
-
-
-        #circuit {
-
-            opacity: .5;
-            pointer-events: none;
-        }
-
-        #circuitvalidation {
-
-            opacity: .5;
-            pointer-events: none;
-        }
-
-
-
-    </style>
-
-
-
-
-
-{% endif %}
+    {% endif %}
 
 
             <script type="text/javascript">
@@ -236,7 +238,7 @@
 
 
 
-            <br>
+    <br>
 
             <div class="titre_form_element">
                 <span class="glyphicon glyphicon-play"></span>
@@ -244,7 +246,7 @@
             </div>
 
 
-            <div id="infofile"  class="alert alert-success" style="display: none"></div>
+    <div id="infofile" class="alert alert-success" style="display: none"></div>
             <div id="documentcontent"></div>
 
             <br>
@@ -259,21 +261,22 @@
                 <script type="application/javascript">
                     var circuit_users = "{{ classeur.circuit }}";
                     var validant = {{ validant }};
-                     /*voir cette ligne*/
+                    /*voir cette ligne*/
                     var deposant = {{ deposant|json_encode|raw }};
 
                     var path = "{{ asset(upload_path) }}";
                 </script>
 
 
-            <!-- Nouvelle vue ajouté "validation.html.twig" -->
+                <!-- Nouvelle vue ajouté "validation.html.twig" -->
 
-           {% render url("new_validate") %}
+                {% render url("new_validate") %}
 
             </div>
         </form>
-</br>
-    </br>        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+    </br>
+    </br>
+    <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
             &nbsp;Historique
         </button>
@@ -295,7 +298,7 @@
 
 
     <br/>
-        <br/>
+    <br/>
         <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
@@ -320,69 +323,64 @@
         <!-- /.modal -->
 
 
-        <!-- modal pour l'observation  -->
-        <div class="modal fade"  class="validation" id="fenetreModal" tabindex="-1" role="dialog"  aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="exampleModalLabel">Motif de refus</h4>
-                    </div>
-                    <div class="modal-body">
-
-
-                        <form role="form" method="post" action="{{ path("classeur_refuser") }}">
-                            <label for="message-text" class="control-label"></label>
-
-                            <div class="form-group">
-                                <label for="message-text" class="control-label"></label>
-                                <textarea  name="text-message" class="form-control">  </textarea>
-                                <input type="hidden" name="id2" value="{{ classeur.id }}"/>
-
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                                <button type="submit" class="btn btn-primary" href="{{ path('classeur_create') }}"  id="refus" >Confirmer</button>
-                            </div>
-                        </form>
-                    </div>
-
-
+    <!-- modal pour l'observation  -->
+    <div class="modal fade" class="validation" id="fenetreModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">Motif de refus</h4>
                 </div>
+                <div class="modal-body">
+
+
+                    <form role="form" method="post" action="{{ path("classeur_refuser") }}">
+                        <label for="message-text" class="control-label"></label>
+
+                        <div class="form-group">
+                            <label for="message-text" class="control-label"></label>
+                            <textarea name="text-message" class="form-control"> </textarea>
+                            <input type="hidden" name="id2" value="{{ classeur.id }}"/>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" href="{{ path('classeur_create') }}"
+                                    id="refus">Confirmer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
             </div>
         </div>
+    </div>
 
 
 
 
-<style>
+    <style>
 
-    .modal-dialog {
+        .modal-dialog {
 
-    width: 90%;
-    height: 50px;
+            width: 90%;
+            height: 50px;
 
-    }
-
-
+        }
 
 
-
-</style>
+    </style>
 
 
 
 
-        <script type="application/javascript">
+    <script type="application/javascript">
 
 
-
-
-
-
-
-            function loadDocuments() {
+        function loadDocuments() {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
                     //enableUploads();
                 });

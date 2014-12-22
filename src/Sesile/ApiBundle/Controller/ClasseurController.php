@@ -363,7 +363,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
          */
 
 
-
         // gestion du circuit
         $users = explode(',', $circuit);
         $classeurUserObj = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
