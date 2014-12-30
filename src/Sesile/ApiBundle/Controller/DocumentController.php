@@ -99,7 +99,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      *          {"name"="attachment : file", "dataType"="file", "required"=false, "description"="Fichier associé, passé en attachment à la manière d'un formulaire web (récupérable en php par $_FILE['file'])"}
      *  }
      * )
-     */
+     **/
     public function updateAction(Request $request, $id)
     {
 
