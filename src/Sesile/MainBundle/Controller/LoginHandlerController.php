@@ -45,8 +45,7 @@ class LoginHandlerController extends Controller
      */
     public function loginAction(Request $request)
     {
-        var_dump('dsdsdf');
-        exit;
+
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
 

@@ -56,6 +56,124 @@ class ClasseurController extends Controller {
     }
 
     /**
+     * Liste des classeurs en cours
+     *
+     * @Route("/liste/retire", name="liste_classeurs_retired")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:retired.html.twig")
+     */
+    public function retiredAction()
+    {
+
+        return array();
+    }
+
+    /**
+     * @Route("/ajax/listRetired", name="ajax_classeurs_list_retired")
+     * @Template()
+     */
+    public function listAjaxRetiredAction(Request $request)
+    {
+        $get = $request->query->all();
+        $columns = array('Nom', 'Creation', 'Validation', 'Validant', 'Type', 'Status', 'Id');
+        $get['colonnes'] = &$columns;
+
+        $em = $this->getDoctrine()->getManager();
+        $rResult = $em->getRepository('SesileClasseurBundle:Classeur')->findByStatus(3);
+
+        // $em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId())
+        $output = array(
+            "draw" => $get["draw"],
+            "recordsTotal" => 0,//$em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId()),
+            "recordsFiltered" => count($rResult),
+            "data" => array()
+        );
+
+        foreach ($rResult as $aRow) {
+            $row = array();
+            for ($i = 0; $i < count($columns); $i++) {
+                if ($columns[$i] == "Creation") {
+                    $row[] = $aRow->{"get" . $columns[$i]}()->format('d/m/Y H:i');
+                } elseif ($columns[$i] == "Validation") {
+                    $row[] = $aRow->{"get" . $columns[$i]}()->format('d/m/Y');
+                } elseif ($columns[$i] == "Validant") {
+                    $intervenant = $aRow->{"get" . $columns[$i]}();
+
+                    $row[] = ($intervenant == 0) ? "" : $em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
+                } elseif ($columns[$i] != ' ') {
+                    $row[] = $aRow->{"get" . $columns[$i]}();
+                }
+            }
+            $output['data'][] = $row;
+        }
+
+        unset($rResult);
+
+        return new Response(
+            json_encode($output)
+        );
+    }
+
+    // SUPPRIMER UN CLASSEUR
+
+    /**
+     * Edits an existing Classeur entity.
+     *
+     * @Route("/delete/{id}", name="delete_classeur")
+     * @Method("get")
+     */
+    public function deleteAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+        $CUtodel = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->findByClasseur($classeur);
+        foreach ($CUtodel as $Cluser) {
+            $em->remove($Cluser);
+        }
+
+        $Actionstodel = $em->getRepository('SesileClasseurBundle:Action')->findByClasseur($classeur);
+
+        foreach ($Actionstodel as $action) {
+            $em->remove($action);
+        }
+
+        $em->remove($classeur);
+        $em->flush();
+        return $this->redirect($this->generateUrl('index'));
+    }
+
+    /**
+     * Edits an existing Classeur entity.
+     *
+     * @Route("/multiple_delete", name="multiple_delete_classeur")
+     * @Method("POST")
+     */
+    public function multipleDeleteAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $data = json_decode($request->request->get('data'));
+
+        foreach ($data as $id) {
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+            $CUtodel = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->findByClasseur($classeur);
+            foreach ($CUtodel as $Cluser) {
+                $em->remove($Cluser);
+            }
+
+            $Actionstodel = $em->getRepository('SesileClasseurBundle:Action')->findByClasseur($classeur);
+
+            foreach ($Actionstodel as $action) {
+                $em->remove($action);
+            }
+
+            $em->remove($classeur);
+        }
+
+        $em->flush();
+        return new JsonResponse(array('ret' => true));
+    }
+
+    /**
      * @Route("/ajax/list", name="ajax_classeurs_list")
      * @Template()
      */
@@ -99,6 +217,7 @@ class ClasseurController extends Controller {
             json_encode($output)
         );
     }
+
 
 
     /**
@@ -426,13 +545,7 @@ class ClasseurController extends Controller {
     public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
-        $tabAction = $entity->getActions();
-        $lastAction = $tabAction[count($tabAction) - 1];
-        if ($lastAction->getAction() === "Classeur finalisé") {
-            $walidated = true;
-        } else {
-            $walidated = false;
-        }
+
 
         $repositorydelegates = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
@@ -453,6 +566,7 @@ class ClasseurController extends Controller {
         $validant = $entity->getvalidant();
 
 
+
         $uservalidant = $repositoryusers->find($validant);
 
         $isDelegatedToMe = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($entity, $this->getUser());
@@ -467,13 +581,13 @@ class ClasseurController extends Controller {
             'usersdelegated'=> $usersdelegated,
             'isDelegatedToMe' => $isDelegatedToMe,
             'uservalidant'=>$uservalidant,
-            "menu_color" => "bleu",
-            "walidated" => $walidated
-            
+            "menu_color" => "bleu"
         );
 
 
     }
+
+
 
 
     /**
@@ -515,6 +629,7 @@ class ClasseurController extends Controller {
 
         $action->setUser($this->getUser());
         $action->setAction("Modification du classeur");
+
 
 
         $message = $request->query->get('text-message');
@@ -639,6 +754,7 @@ class ClasseurController extends Controller {
     }
 
 
+
     /**
      * Edits an existing Classeur entity.
      *
@@ -663,6 +779,7 @@ class ClasseurController extends Controller {
         $currentvalidant = $classeur->getValidant();
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
         $delegator=$repositoryusers->find($currentvalidant);
+
 
 
         $classeur->valider($em);
@@ -767,6 +884,7 @@ class ClasseurController extends Controller {
         $this->sendRefusMail($classeur);
 
 
+
         //$this->updateAction($request);
 
         $session = $request->getSession();
@@ -861,8 +979,9 @@ class ClasseurController extends Controller {
         }
 
         $servername = $_SERVER['HTTP_HOST'];
+        $url_applet = $this->container->getParameter('url_applet');
 
-        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername' => $servername);
+        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername' => $servername, "url_applet" => $url_applet);
 
     }
 

@@ -32,7 +32,7 @@ parameters:
     domain_parse:
         default: sesile
         dbname: sictiam
-
+    url_applet: signature.sesile.fr
 
 security:
 
@@ -55,3 +55,6 @@ security:
                 cas_mapping_attribute:
                 check_path: /login_check
 
+twig:
+    globals:
+    url_applet: signature.sesile.fr

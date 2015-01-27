@@ -319,7 +319,8 @@ class DefaultController extends Controller
             'choices' => array(
                 'ROLE_USER' => 'Utilisateurs',
                 'ROLE_ADMIN' => 'Admin',
-                'ROLE_SUPER_ADMIN' => 'Super admin'
+                'ROLE_SUPER_ADMIN' => 'Super admin',
+                'ROLE_AGENT_SICTIAM' => 'Agent Sictiam'
             ),
             'multiple' => true
         ));
@@ -357,7 +358,8 @@ class DefaultController extends Controller
             'choices' => array(
                 'ROLE_USER' => 'Utilisateurs',
                 'ROLE_ADMIN' => 'Admin',
-                'ROLE_SUPER_ADMIN' => 'Super admin'
+                'ROLE_SUPER_ADMIN' => 'Super admin',
+                'ROLE_AGENT_SICTIAM' => 'Agent Sictiam'
             ),
             'multiple' => true
         ));

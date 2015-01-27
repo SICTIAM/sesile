@@ -39,7 +39,7 @@
             // try {
             var hownowPlugin = document.getElementById("winFirefoxPlugin");
             hownowPlugin.ViewDocument(strDocument, null);
-            // } catch (e) { alert(L_EditDocumentError_Text); }
+
         }
 
     }
@@ -63,13 +63,28 @@
                 (doc.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") or
                 (doc.type == "application/msword") or
                 (doc.type  == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") %}
-                    <a id='modifbutton' style="display: none"
+
+                    <!--Bouton Editer Visualiseur PES -->
+
+                    <!--  <a id='modifbutton' style="display: none" class="btn btn-primary" role="button" data-toggle="modal" data-target="#modifbutton"
+                       data-whatever="@mdo" class=".bs-example-modal-lg"
                        onclick="javascript:fireDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');return false;"
                        href="#"
                        class="btn btn-primary" role="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                         Editer
+                    </a>-->
+
+
+                    <a type="submit" class="btn btn-primary" role="button" data-toggle="modal" id='modifbutton'
+                       data-whatever="@mdo" class=".bs-example-modal-lg">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        &nbsp;Editer
                     </a>
+
+
+
+
                 {% endif %}
                 &nbsp;
                 <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}"

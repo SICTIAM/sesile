@@ -6,7 +6,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Routing\RouterInterface;
-
 /**
  * Description of ExerciceHandler
  *
