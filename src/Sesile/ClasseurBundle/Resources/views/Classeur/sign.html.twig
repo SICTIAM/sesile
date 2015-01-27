@@ -53,7 +53,7 @@
 
 
 </form>
-
+{{ url_applet }}
 <script type="text/javascript" src="http://www.java.com/js/deployJava.js">
 </script>
 
@@ -61,7 +61,7 @@
     var docstosign =
     {{ docstosign|json_encode|raw }}
     var attributes = {width: 1, height: 1, id: "javaapplet"};
-    var parameters = {jnlp_href: 'http://signature.dev.sesile.fr/launch.jnlp'}; // url : signature DEMO
+    var parameters = {jnlp_href: 'http://{{ url_applet }}/launch.jnlp'}; // url : signature DEMO
 
     var version = '1.7';
     deployJava.runApplet(attributes, parameters, version);
