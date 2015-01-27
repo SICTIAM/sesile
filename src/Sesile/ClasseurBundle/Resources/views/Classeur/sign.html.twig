@@ -60,32 +60,19 @@
 <script type="text/javascript">
     var docstosign =
     {{ docstosign|json_encode|raw }}
-
-
     var attributes = {width: 1, height: 1, id: "javaapplet"};
-    var parameters = {jnlp_href: 'http://signature.sesile.fr/launch.jnlp'};
+    var parameters = {jnlp_href: 'http://signature.dev.sesile.fr/launch.jnlp'}; // url : signature DEMO
+
     var version = '1.7';
     deployJava.runApplet(attributes, parameters, version);
 
 
     function appletReady() {
 
-        //document.javaapplet.setUploadUrl('http://sesile.dev.cd/app_dev.php/doc/uploadfile') // Dev
-        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod
+        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod*/
 
         var divmethod = document.getElementById('listemethod');
-        /*
-         var selectmethod = document.createElement('select');
-         selectmethod.setAttribute('name','selectmethod');
-         selectmethod.setAttribute('id','selectmethod');
 
-         var element = document.createElement('option');
-         element.setAttribute('value',0);
-         element.text = 'Xemelios';
-         selectmethod.appendChild(element);
-         set
-
-         divmethod.appendChild(selectmethod);*/
         var divcertif = document.getElementById('listecertif');
         var selectcertif = document.createElement('select');
         selectcertif.setAttribute('name', 'selectcertif');
@@ -99,8 +86,7 @@
             element.text = nomcertif;
             selectcertif.appendChild(element);
             i = i + 1;
-            /*  var options = selectcertif.options;
-             options[options.length] = new Option(document.javaapplet.getSigningCertificateName(i), i);*/
+
         }
         divcertif.appendChild(selectcertif);
         $('#bouttons').show('slow');
@@ -108,6 +94,7 @@
 
 
     }
+
 
     //function pour faire apparaître le bouton signer
     function test() {
@@ -130,7 +117,6 @@
         console.log()
         document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/' + docstosign[i].repourl, docstosign[i].repourl, docstosign[i].id);
 
-
     }
 
 
@@ -146,13 +132,12 @@
         }
     }
 
+
     //function permettant de signifier la fin de la signature d'un classeur
     function signingProcessEnded(i, errormessage) {
         $('#lacommode').submit();
 
     }
-
-
     //Fonction qui va envoyer le rol
     function envoiChaineRole() {
         document.javaapplet.recevoirChaineRole("{{ user.role }}");
@@ -195,7 +180,6 @@
         $('#progressbar').removeClass('progress-bar-success progress-bar-info progress-bar-warning progress-bar-danger').addClass('progress-bar-' + col);
     }
 
-
     //function permettant de signifier la fin du téléchargement d'un fichier
     function signature() {
 
@@ -217,14 +201,6 @@
     }
 
 </script>
-
-
-
-
-
-
-
-
 
 
 {% endblock %}

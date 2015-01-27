@@ -28,15 +28,11 @@
         </button>
 
 
-
-
         {% if classeur.isSupprimableByDelegates(usersdelegated) %}
             {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
         {% else %}
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         {% endif %}
-
-
 
 
         {% if isDelegatedToMe %}
@@ -85,13 +81,7 @@
                    value="{{ classeur.validation  | date('d/m/Y') }}"/>
 
 
-
-
-
         <!--Ici jusqu' au endif-->
-
-
-
 
 
     {% else %}
@@ -289,13 +279,11 @@
         <input type="hidden" value="{{ classeur.id }}" name="id"/>
     </form>
 
-
     {% if classeur.isSupprimableByDelegates(usersdelegated) %}
         {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
     {% else %}
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
     {% endif %}
-
 
     <br/>
     <br/>
@@ -353,8 +341,6 @@
                         </div>
                     </form>
                 </div>
-
-
             </div>
         </div>
     </div>
