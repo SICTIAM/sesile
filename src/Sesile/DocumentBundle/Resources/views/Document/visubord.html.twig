@@ -1,0 +1,173 @@
+<div class="titre_form_element">
+    <span class="glyphicon glyphicon-play"></span>
+    Informations du bordereau
+</div>
+<div id="bordinfo">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-4"><label>Numéro du bordereau</label></div>
+                <div class="col-lg-4"> {{ Bord.id }} </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><label>Type de bordereau</label></div>
+                <div class="col-lg-4">{{ Bord.type }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><label>Date d'émission du bordereau</label></div>
+                <div class="col-lg-4"> {{ Bord.dateEm }} </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><label>Nombre de pièces</label></div>
+                <div class="col-lg-4">{{ Bord.nbPiece }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><label>Montant Bordereau</label></div>
+                <div class="col-lg-4">{{ Bord.mtBordHT }}</div>
+            </div>
+
+        </div>
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-4"><label>Exercice</label></div>
+                <div class="col-lg-4">{{ Bord.exercice }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><label>Cumul annuel</label></div>
+                <div class="col-lg-4">{{ Bord.mtCumulAnnuel }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br>
+<div class="titre_form_element">
+    <span class="glyphicon glyphicon-play"></span>
+    Liste des pièces
+</div>
+
+<div id="pliste">
+    <table id="ptable" class="table tableau">
+        <thead>
+        <tr>
+            <th>N°Piece</th>
+            <th>Créancier Référence bancaire</th>
+            <th>Nature de la dépense</th>
+            <th>Montant HT</th>
+            <th>Montant TVA</th>
+            <th>Montant TTC</th>
+            <th>Pièces jointes</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in Bord.listPieces %}
+            <tr>
+                <td>{{ p.id }}</td>
+                <td>{{ p.civilite }}&nbsp;{{ p.nom }}&nbsp;{{ p.prenom }}</td>
+                <td>{{ p.objet }}</td>
+                <td style="text-align: right">{{ p.mtHT }}</td>
+                <td style="text-align: right">{{ p.mtTVA }}</td>
+                <td style="text-align: right">{{ p.mtTTC }}</td>
+                <td style="text-align: center">
+                    {% if p.listePJs|length > 0 %}
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle btn-xs" type="button" id="dropdownMenu1"
+                                    data-toggle="dropdown" aria-expanded="true">
+                                Liste des PJ
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuDivider"
+                                data-pieceselected="{{ loop.index-1 }}">
+                                {% for pj in p.listePJs %}
+                                    <li role="presentation"><a role="menuitem" class="pj"
+                                                               data-pjselected="{{ loop.index-1 }}" tabindex="-1"
+                                                               href="#">{{ pj.nom }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        Aucune
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="col-lg-12">
+        <div class="modal fade col-lg-12" id="mymodal">
+            <div class="modal-dialog " style="width: 100%;min-height:800px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="mtitre"></h4>
+                    </div>
+                    <div class="modal-body" id="mbody">
+                        <div class="text-center">Pièce jointe en cours de chargement</div>
+                        <br>
+
+                        <div class="progress active progress-striped">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 100%"><span class="sr-only">45% Complete</span></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span>&nbsp;Télécharger
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+    <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+    <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+    <script>
+        $(document).ready(function () {
+            oTable = $('#ptable').dataTable({
+                "oLanguage": {
+                    "sSearch": "Rechercher&nbsp;:",
+                    "sInfo": "  _START_ &agrave; _END_ sur _TOTAL_",
+                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+                    "sLengthMenu": "Afficher _MENU_ pièces par page",
+                    "oPaginate": {
+                        "sFirst": "Premiere",
+                        "sPrevious": "Pr&eacute;c&eacute;dente&nbsp;",
+                        "sNext": "&nbsp;Suivante",
+                        "sLast": "derni&egrave;re"
+                    }
+                },
+                "iDisplayLength": 100,
+                "aLengthMenu": [5, 10, 20, 30, 50],
+                "sDom": 'lft<"footer_datatables"ip>'
+            });
+
+
+            //  $('#ptable').iDisplayLength(10)
+            $('.pj').click(function () {
+                var idDoc = '{{ idDoc }}';
+                $('#mtitre').empty();
+                $('#mtitre').text($(this).text());
+                $('#mymodal').modal('show');
+                $.ajax({
+                    url: Routing.generate('getpj', {
+                        'id': idDoc,
+                        'bord': $('#bordx').val(),
+                        'piece': $(this).parent().parent().attr('data-pieceselected'),
+                        'peji': $(this).attr('data-pjselected')
+                    }),
+                    method: "GET",
+                    success: function (retour) {
+                        $('#mbody').empty();
+                        $('#mbody').append('<iframe src="data:application/pdf;base64,' + retour + '" width="100%" height="800px"></iframe>');
+
+                    }
+                });
+            });
+        });
+    </script>

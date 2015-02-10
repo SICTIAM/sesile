@@ -41,6 +41,7 @@ parameters:
         path: %kernel.root_dir%/../web/uploads/avatars/
         logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
         msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
+        fics: %kernel.root_dir%/../web/uploads/docs/
     ldap:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local
