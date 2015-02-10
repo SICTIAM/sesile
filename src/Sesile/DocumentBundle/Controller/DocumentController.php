@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\Classeur;
+use Sesile\DocumentBundle\Classe\PES;
+use Sesile\DocumentBundle\Classe\Piece;
+use Sesile\DocumentBundle\Classe\Bordereau;
+use Sesile\DocumentBundle\Classe\PJ;
+use Sesile\DocumentBundle\Entity\Document;
 
 class DocumentController extends Controller
 {
@@ -196,10 +201,243 @@ class DocumentController extends Controller
         $em->remove($doc);
         $em->flush();
 
-
         return new JsonResponse(array("error" => "ok"));
 
     }
 
+    /**
+     * @Route("/visu/{id}", name="visu",  options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function visuAction($id)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+
+        $param = $this->container->getParameter('upload');
+        $dir = $param['fics'];
+        $path = $dir . $doc->getRepourl();
+//var_dump($path);exit;
+        $xml = simplexml_load_file($path);
+        $arrayPJ = array();
+        if (isset($xml->PES_PJ)) {
+            foreach ($xml->PES_PJ->PJ as $pj) {
+                $arrayPJ[] = $pj;
+            }
+        }
+
+
+        if (isset($xml->PES_DepenseAller)) {
+            $typePES = 'Depense';
+            $arrayBord = array();
+            foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
+                $arrayBord[] = $Bord;
+            }
+        } else {
+            $arrayBord = array();
+            foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
+                $arrayBord[] = $Bord;
+            }
+            $typePES = 'Recette';
+        }
+
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+        $tabIdBord = array();
+        foreach ($PES->listBord as $bordereau) {
+            $tabIdBord[] = $bordereau->id;
+        }
+
+        return array('budget' => $PES->budget, 'bords' => $tabIdBord, 'idDoc' => $doc->getId());
+    }
+
+    /**
+     * @Route("/visubord/{id}/{bord}", name="visubord",  options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function visubordAction($id, $bord)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+
+        $param = $this->container->getParameter('upload');
+        $dir = $param['fics'];
+        $path = $dir . $doc->getRepourl();
+
+        $xml = simplexml_load_file($path);
+
+        $arrayPJ = array();
+        if (isset($xml->PES_PJ)) {
+            foreach ($xml->PES_PJ->PJ as $pj) {
+                $arrayPJ[] = $pj;
+            }
+        }
+
+        $arrayBord = array();
+
+        if (isset($xml->PES_DepenseAller)) {
+            $typePES = 'Depense';
+            $arrayBord = array();
+            foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
+                $arrayBord[] = $Bord;
+            }
+        } else {
+            $arrayBord = array();
+            foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
+                $arrayBord[] = $Bord;
+            }
+            $typePES = 'Recette';
+        }
+
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+        return array('Bord' => $PES->listBord[$bord], 'idDoc' => $doc->getId());
+    }
+
+    /**
+     * @Route("/getpj/{id}/{bord}/{piece}/{peji}", name="getpj",  options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function getPJAction($id, $bord, $piece, $peji)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+
+        $param = $this->container->getParameter('upload');
+        $dir = $param['fics'];
+        $path = $dir . $doc->getRepourl();
+        $xml = simplexml_load_file($path);
+
+        $arrayPJ = array();
+        if (isset($xml->PES_PJ)) {
+            foreach ($xml->PES_PJ->PJ as $pj) {
+                $arrayPJ[] = $pj;
+            }
+        }
+
+        if (isset($xml->PES_DepenseAller)) {
+            $typePES = 'Depense';
+            $arrayBord = array();
+            foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
+                $arrayBord[] = $Bord;
+            }
+        } else {
+            $arrayBord = array();
+            foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
+                $arrayBord[] = $Bord;
+            }
+            $typePES = 'Recette';
+        }
+
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+        $PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
+        return new JsonResponse($PJ);
+    }
+
+    /**
+     * @Route("/visual/{id}", name="visualiseur",  options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function visualiseurAction($id)
+    {
+        $xml = simplexml_load_file('/home/sesile/web/testpj.xml');
+        $arrayPJ = array();
+        if (isset($xml->PES_PJ)) {
+            foreach ($xml->PES_PJ->PJ as $pj) {
+                $arrayPJ[] = $pj;
+            }
+        }
+
+
+        $arrayBord = array();
+        foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
+            $arrayBord[] = $Bord;
+        }
+
+        if (isset($xml->PES_DepenseAller)) {
+            $typePES = 'Depense';
+        } else {
+            $typePES = 'Recette';
+        }
+
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+        $tabIdBord = array();
+        foreach ($PES->listBord as $bordereau) {
+            $tabIdBord[] = $bordereau->id;
+        }
+        // var_dump($PES->listBord[0]->listPieces[0]);exit;
+        return array('budget' => $PES->budget, 'bords' => $tabIdBord);
+    }
+
+    /**
+     * @Route("/visualbord/", name="visualbord",  options={"expose"=true})
+     * @Method("GET")
+     * @Template("SesileDocumentBundle:Document:visubordereau.html.twig")
+     */
+    public function visubordereauAction()
+    {
+
+        $xml = simplexml_load_file('/home/sesile/web/testpj.xml');
+        $arrayPJ = array();
+        if (isset($xml->PES_PJ)) {
+            foreach ($xml->PES_PJ->PJ as $pj) {
+                $arrayPJ[] = $pj;
+            }
+        }
+
+
+        $arrayBord = array();
+        foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
+            $arrayBord[] = $Bord;
+        }
+
+        if (isset($xml->PES_DepenseAller)) {
+            $typePES = 'Depense';
+        } else {
+            $typePES = 'Recette';
+        }
+
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+
+        return array('Bord' => $PES->listBord[0]);
+    }
+
+    /**
+     * @Route("/getvisualpj/", name="getvisualpj",  options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function getvisualPJAction()
+    {
+
+        $xml = simplexml_load_file('/home/sesile/web/testpj.xml');
+        $arrayPJ = array();
+        foreach ($xml->PES_PJ->PJ as $pj) {
+            $arrayPJ[] = $pj;
+        }
+
+        $arrayBord = array();
+        foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
+            $arrayBord[] = $Bord;
+        }
+
+        if (isset($xml->PES_DepenseAller)) {
+            $typePES = 'Depense';
+        } else {
+            $typePES = 'Recette';
+        }
+
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+        $PJ = base64_encode(gzdecode(base64_decode($PES->listBord[0]->listPieces[0]->listePJs[0]->content)));
+        return new JsonResponse($PJ);
+    }
 
 }

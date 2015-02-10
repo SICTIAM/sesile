@@ -1,0 +1,73 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;Visualiseur de fichier PES
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label for="bordx" class="col-lg-2 ">Choix du bordereau</label>
+
+                <div class="col-lg-4">
+                    <select id="bordx" class="col-lg-4">
+                        <option value="empty" selected></option>
+                        {% for b in bords %}
+                            <option value="{{ loop.index-1 }}"
+                                    {% if loop.index == 1 %}selected{% endif %}>{{ b }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <br><br>
+
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label class="col-lg-2">Budget</label>
+
+                <div class="col-lg-8">
+                    {{ budget }}
+                </div>
+            </div>
+        </div>
+        <br><br>
+
+        <div id="bordcontent" class="col-lg-12">
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var idDoc = '{{ idDoc }}';
+            $.ajax({
+                url: Routing.generate('visubord', {'id': idDoc, 'bord': 0}),
+                method: "GET",
+                success: function (retourbak) {
+                    $('#bordcontent').empty();
+                    $('#bordcontent').append(retourbak);
+                }
+            });
+
+            $('#bordx').change(function () {
+                if ($('#bordx').val() != 'empty') {
+                    $.ajax({
+                        url: Routing.generate('visubord', {'id': idDoc, 'bord': $('#bordx').val()}),
+                        method: "GET",
+                        success: function (retourbak) {
+                            $('#bordcontent').empty();
+                            $('#bordcontent').append(retourbak);
+                        }
+                    });
+                }
+
+            });
+
+        });
+
+    </script>
+{% endblock %}
+
+
+
