@@ -56,15 +56,19 @@
                     sClass: "center",
                     bSortable: false,
                     "mRender": function ( data, type, full ) {
-                        return '<a href="' + Routing.generate('classeur_edit', { id: data }) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
+                        var retour = '<a class="col-sm-6" href="' + Routing.generate('classeur_edit', {id: data.id}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
+                        if (data.idDoc) {
+                            retour += '<a class="col-sm-6" href="' + Routing.generate('visu', {id: data.idDoc}) + '"><span class="glyphicon glyphicon-eye-open"></span></a>';
+                        }
+                        return retour;
                     }
                 }
             ],
             sPaginationType: "full_numbers",
             fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                 $(nRow).addClass("classeur-row");
-                $(nRow).dblclick(function (e) {
-                    document.location.href = Routing.generate('classeur_edit', { id: aData[6] });
+                $(nRow).click(function (e) {
+                    document.location.href = Routing.generate('classeur_edit', {id: aData[6].id});
                 });
                 return nRow;
             }

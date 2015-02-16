@@ -41,16 +41,6 @@ class Action
      */
     private $classeur;
 
-    /**
-     * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="actions_classeurs")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
-     *
-     *
-     */
-    private $user;
-
 
 
     /**
@@ -192,7 +182,7 @@ class Action
      */
     public function getUser()
     {
-        return $this->user;
+        return $this->username;
     }
 
     /**
@@ -279,4 +269,5 @@ class Action
     {
         return $this->username;
     }
+
 }
