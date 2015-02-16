@@ -220,8 +220,9 @@ class DocumentController extends Controller
         $param = $this->container->getParameter('upload');
         $dir = $param['fics'];
         $path = $dir . $doc->getRepourl();
+        $str = str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path)));
+        $xml = simplexml_load_string($str);
 
-        $xml = simplexml_load_file($path);
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {
             foreach ($xml->PES_PJ->PJ as $pj) {
@@ -231,69 +232,39 @@ class DocumentController extends Controller
 
 
         if (isset($xml->PES_DepenseAller)) {
-
-            // on enleve tout les putains de préfixes de mes 2
-            $str = str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path)));
-            $xml = simplexml_load_string($str);
-            if (isset($xml->PES_DepenseAller->Bordereau->{'Signature'})) {
-                //si on a une signature  on récupère le certificat
-                $sign = $xml->PES_DepenseAller->Bordereau->{'Signature'}->{'KeyInfo'}->{'X509Data'}->{'X509Certificate'};
-                $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
-                //on récupère un tableau contenant les infos du certificat
-                $tab = openssl_x509_parse($x509);
-                $subject = $tab['subject'];
-                $Signataire = $subject['CN'];
-
-                //on récupère la date de signature (il y a surement plus simple)
-
-                $dateMoche = $xml->PES_DepenseAller->Bordereau->{'Signature'}->{'Object'}->{'QualifyingProperties'}->{'SignedProperties'}->{'SignedSignatureProperties'}->{'SigningTime'};
-                list($jourMoche, $heureMoche) = explode('T', $dateMoche);
-                list($annee, $jour, $mois) = explode('-', $jourMoche);
-                list($heure, $minute, $reste) = explode(':', $heureMoche);
-                $date = $jour . '/' . $mois . '/' . $annee . ' ' . $heure . ':' . $minute;
-
-            } else {
-                $Signataire = '';
-                $date = '';
-            }
-
             $typePES = 'Depense';
-            $arrayBord = array();
-            foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
-                $arrayBord[] = $Bord;
-            }
         } else {
-
-            // on enleve tout les putains de préfixes de mes 2
-            $str = str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path)));
-            $xml = simplexml_load_string($str);
-            if (isset($xml->PES_RecetteAller->Bordereau->{'Signature'})) {
-                //si on a une signature  on récupère le certificat
-                $sign = $xml->PES_RecetteAller->Bordereau->{'Signature'}->{'KeyInfo'}->{'X509Data'}->{'X509Certificate'};
-                $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
-                //on récupère un tableau contenant les infos du certificat
-                $tab = openssl_x509_parse($x509);
-                $subject = $tab['subject'];
-                $Signataire = $subject['CN'];
-
-                //on récupère la date de signature (il y a surement plus simple)
-
-                $dateMoche = $xml->PES_RecetteAller->Bordereau->{'Signature'}->{'Object'}->{'QualifyingProperties'}->{'SignedProperties'}->{'SignedSignatureProperties'}->{'SigningTime'};
-                list($jourMoche, $heureMoche) = explode('T', $dateMoche);
-                list($annee, $jour, $mois) = explode('-', $jourMoche);
-                list($heure, $minute, $reste) = explode(':', $heureMoche);
-                $date = $jour . '/' . $mois . '/' . $annee . ' ' . $heure . ':' . $minute;
-
-            } else {
-                $Signataire = '';
-                $date = '';
-            }
-
-            $arrayBord = array();
-            foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
-                $arrayBord[] = $Bord;
-            }
             $typePES = 'Recette';
+        }
+
+
+        $arrayBord = array();
+        foreach ($xml->{'PES_' . $typePES . 'Aller'}->Bordereau as $Bord) {
+            $arrayBord[] = $Bord;
+        }
+
+        // on enleve tout les putains de préfixes de mes 2
+
+        if (isset($xml->{'PES_' . $typePES . 'Aller'}->Bordereau->Signature)) {
+            //si on a une signature  on récupère le certificat
+            $sign = $xml->{'PES_' . $typePES . 'Aller'}->Bordereau->Signature->KeyInfo->X509Data->X509Certificate;
+            $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
+            //on récupère un tableau contenant les infos du certificat
+            $tab = openssl_x509_parse($x509);
+            $subject = $tab['subject'];
+            $Signataire = $subject['CN'];
+
+            //on récupère la date de signature (il y a surement plus simple)
+
+            $dateMoche = $xml->{'PES_' . $typePES . 'Aller'}->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
+            list($jourMoche, $heureMoche) = explode('T', $dateMoche);
+            list($annee, $jour, $mois) = explode('-', $jourMoche);
+            list($heure, $minute, $reste) = explode(':', $heureMoche);
+            $date = $jour . '/' . $mois . '/' . $annee . ' ' . $heure . ':' . $minute;
+
+        } else {
+            $Signataire = '';
+            $date = '';
         }
 
         $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $Signataire, $date, $arrayBord, $typePES, $arrayPJ);
@@ -330,21 +301,18 @@ class DocumentController extends Controller
             }
         }
 
-        $arrayBord = array();
-
         if (isset($xml->PES_DepenseAller)) {
             $typePES = 'Depense';
-            $arrayBord = array();
-            foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
-                $arrayBord[] = $Bord;
-            }
         } else {
-            $arrayBord = array();
-            foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
-                $arrayBord[] = $Bord;
-            }
             $typePES = 'Recette';
         }
+
+
+        $arrayBord = array();
+        foreach ($xml->{'PES_' . $typePES . 'Aller'}->Bordereau as $Bord) {
+            $arrayBord[] = $Bord;
+        }
+
 
         $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], '', '', $arrayBord, $typePES, $arrayPJ);
         return array('Bord' => $PES->listBord[$bord], 'idDoc' => $doc->getId());
@@ -376,17 +344,16 @@ class DocumentController extends Controller
 
         if (isset($xml->PES_DepenseAller)) {
             $typePES = 'Depense';
-            $arrayBord = array();
-            foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
-                $arrayBord[] = $Bord;
-            }
         } else {
-            $arrayBord = array();
-            foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
-                $arrayBord[] = $Bord;
-            }
             $typePES = 'Recette';
         }
+
+
+        $arrayBord = array();
+        foreach ($xml->{'PES_' . $typePES . 'Aller'}->Bordereau as $Bord) {
+            $arrayBord[] = $Bord;
+        }
+
 
         $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], '', '', $arrayBord, $typePES, $arrayPJ);
         $PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
