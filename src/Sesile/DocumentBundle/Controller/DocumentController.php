@@ -220,7 +220,7 @@ class DocumentController extends Controller
         $param = $this->container->getParameter('upload');
         $dir = $param['fics'];
         $path = $dir . $doc->getRepourl();
-//var_dump($path);exit;
+
         $xml = simplexml_load_file($path);
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {
@@ -228,39 +228,67 @@ class DocumentController extends Controller
                 $arrayPJ[] = $pj;
             }
         }
-        // on enleve tout les putains de préfixes de mes 2
-        $str = str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path)));
-        $xml = simplexml_load_string($str);
-        if (isset($xml->PES_RecetteAller->Bordereau->{'Signature'})) {
-            //si on a une signature  on récupère le certificat
-            $sign = $xml->PES_RecetteAller->Bordereau->{'Signature'}->{'KeyInfo'}->{'X509Data'}->{'X509Certificate'};
-            $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
-            //on récupère un tableau contenant les infos du certificat
-            $tab = openssl_x509_parse($x509);
-            $subject = $tab['subject'];
-            $Signataire = $subject['CN'];
-
-            //on récupère la date de signature (il y a surement plus simple)
-
-            $dateMoche = $xml->PES_RecetteAller->Bordereau->{'Signature'}->{'Object'}->{'QualifyingProperties'}->{'SignedProperties'}->{'SignedSignatureProperties'}->{'SigningTime'};
-            list($jourMoche, $heureMoche) = explode('T', $dateMoche);
-            list($annee, $jour, $mois) = explode('-', $jourMoche);
-            list($heure, $minute, $reste) = explode(':', $heureMoche);
-            $date = $jour . '/' . $mois . '/' . $annee . ' ' . $heure . ':' . $minute;
-
-        } else {
-            $Signataire = '';
-            $date = '';
-        }
 
 
         if (isset($xml->PES_DepenseAller)) {
+
+            // on enleve tout les putains de préfixes de mes 2
+            $str = str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path)));
+            $xml = simplexml_load_string($str);
+            if (isset($xml->PES_DepenseAller->Bordereau->{'Signature'})) {
+                //si on a une signature  on récupère le certificat
+                $sign = $xml->PES_DepenseAller->Bordereau->{'Signature'}->{'KeyInfo'}->{'X509Data'}->{'X509Certificate'};
+                $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
+                //on récupère un tableau contenant les infos du certificat
+                $tab = openssl_x509_parse($x509);
+                $subject = $tab['subject'];
+                $Signataire = $subject['CN'];
+
+                //on récupère la date de signature (il y a surement plus simple)
+
+                $dateMoche = $xml->PES_DepenseAller->Bordereau->{'Signature'}->{'Object'}->{'QualifyingProperties'}->{'SignedProperties'}->{'SignedSignatureProperties'}->{'SigningTime'};
+                list($jourMoche, $heureMoche) = explode('T', $dateMoche);
+                list($annee, $jour, $mois) = explode('-', $jourMoche);
+                list($heure, $minute, $reste) = explode(':', $heureMoche);
+                $date = $jour . '/' . $mois . '/' . $annee . ' ' . $heure . ':' . $minute;
+
+            } else {
+                $Signataire = '';
+                $date = '';
+            }
+
             $typePES = 'Depense';
             $arrayBord = array();
             foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
                 $arrayBord[] = $Bord;
             }
         } else {
+
+            // on enleve tout les putains de préfixes de mes 2
+            $str = str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path)));
+            $xml = simplexml_load_string($str);
+            if (isset($xml->PES_RecetteAller->Bordereau->{'Signature'})) {
+                //si on a une signature  on récupère le certificat
+                $sign = $xml->PES_RecetteAller->Bordereau->{'Signature'}->{'KeyInfo'}->{'X509Data'}->{'X509Certificate'};
+                $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
+                //on récupère un tableau contenant les infos du certificat
+                $tab = openssl_x509_parse($x509);
+                $subject = $tab['subject'];
+                $Signataire = $subject['CN'];
+
+                //on récupère la date de signature (il y a surement plus simple)
+
+                $dateMoche = $xml->PES_RecetteAller->Bordereau->{'Signature'}->{'Object'}->{'QualifyingProperties'}->{'SignedProperties'}->{'SignedSignatureProperties'}->{'SigningTime'};
+                list($jourMoche, $heureMoche) = explode('T', $dateMoche);
+                list($annee, $jour, $mois) = explode('-', $jourMoche);
+                list($heure, $minute, $reste) = explode(':', $heureMoche);
+                $date = $jour . '/' . $mois . '/' . $annee . ' ' . $heure . ':' . $minute;
+
+            } else {
+                $Signataire = '';
+                $date = '';
+            }
+
             $arrayBord = array();
             foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
                 $arrayBord[] = $Bord;

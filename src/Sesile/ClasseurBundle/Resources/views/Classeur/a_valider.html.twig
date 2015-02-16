@@ -56,11 +56,22 @@
                     sClass: "center",
                     bSortable: false,
                     "mRender": function ( data, type, full ) {
-                        return '<a href="' + Routing.generate('classeur_edit', { id: data }) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
+                        var retour = '<a href="' + Routing.generate('classeur_edit', {id: data.id}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
+                        if (data.idDoc) {
+                            retour += '&nbsp;&nbsp;<a href="' + Routing.generate('visu', {id: data.idDoc}) + '"><span class="glyphicon glyphicon-eye-open"></span></a>';
+                        }
+                        return retour;
                     }
                 }
             ],
-            sPaginationType: "full_numbers"
+            sPaginationType: "full_numbers",
+            fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).addClass("classeur-row");
+                $(nRow).click(function (e) {
+                    document.location.href = Routing.generate('classeur_edit', {id: aData[6].id});
+                });
+                return nRow;
+            }
         });
 	});
     </script>

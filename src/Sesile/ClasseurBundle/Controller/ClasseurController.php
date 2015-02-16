@@ -204,6 +204,15 @@ class ClasseurController extends Controller {
                     $intervenant = $aRow->{"get".$columns[$i]}();
 
                     $row[] = ($intervenant == 0)?"":$em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
+                } elseif ($columns[$i] == "Id") {
+                    if ($aRow->getType() == 'Helios') {
+                        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($aRow->{"get" . $columns[$i]}());
+                        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($classeur->getDocuments()[0]);
+                        $row[] = array('id' => $aRow->{"get" . $columns[$i]}(), 'idDoc' => $doc->getId());
+                    } else {
+                        $row[] = array('id' => $aRow->{"get" . $columns[$i]}(), 'idDoc' => 0);
+                    }
+
                 } elseif ($columns[$i] != ' ') {
                     $row[] = $aRow->{"get".$columns[$i]}();
                 }
@@ -345,6 +354,14 @@ class ClasseurController extends Controller {
                 } elseif ($columns[$i] == "validant") {
                     $intervenant = $aRow[$columns[$i]];
                     $row[] = ($intervenant == 0)?"":$em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
+                } elseif ($columns[$i] == "id") {
+                    if ($aRow['type'] == 'Helios') {
+                        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($aRow[$columns[$i]]);
+                        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($classeur->getDocuments()[0]);
+                        $row[] = array('id' => $aRow[$columns[$i]], 'idDoc' => $doc->getId());
+                    } else {
+                        $row[] = array('id' => $aRow[$columns[$i]], 'idDoc' => 0);
+                    }
                 } elseif ($columns[$i] != ' ') {
                     $row[] = $aRow[$columns[$i]];
                 }
