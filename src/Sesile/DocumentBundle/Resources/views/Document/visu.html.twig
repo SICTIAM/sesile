@@ -33,7 +33,29 @@
             </div>
         </div>
         <br><br>
+        {% if signataire is not empty %}
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label class="col-lg-2">Informations de signature</label>
 
+                    <div class="col-lg-8 text-danger">
+                        signé par {{ signataire }} le {{ dateSign|date("d/m/Y H:i") }}
+                    </div>
+                </div>
+            </div>
+            <br><br>
+        {% else %}
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label class="col-lg-2">Informations de signature</label>
+
+                    <div class="col-lg-8">
+                        Le flux n'est pas encore signé
+                    </div>
+                </div>
+            </div>
+            <br><br>
+        {% endif %}
         <div id="bordcontent" class="col-lg-12">
 
         </div>

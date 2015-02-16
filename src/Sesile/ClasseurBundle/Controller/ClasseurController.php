@@ -543,6 +543,7 @@ class ClasseurController extends Controller {
      * @Template()
      */
     public function editAction($id) {
+
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
 
@@ -783,9 +784,14 @@ class ClasseurController extends Controller {
 
 
         $classeur->valider($em);
+
+        $doc = $classeur->getDocuments()[0];
+        $ancienNom = $doc->getName();
+        $path_parts = pathinfo($ancienNom);
+        $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
+        $doc->setName($nouveauNom);
+
         $em->flush();
-
-
 
         if($request->get("moncul") == 1) {
             $action = new Action();
@@ -900,6 +906,35 @@ class ClasseurController extends Controller {
     /**
      * Valider_et_signer an existing Classeur entity.
      *
+     * @Route("/rename", name="testrename")
+     * @Method("get")
+     *
+     */
+    public function testrenameAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find(40);
+
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+
+        $doc = $classeur->getDocuments()[0];
+        $ancienNom = $doc->getName();
+        $path_parts = pathinfo($ancienNom);
+        $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
+        $doc->setName($nouveauNom);
+
+        $em->flush();
+        var_dump($doc->getName());
+        exit;
+    }
+
+
+    /**
+     * Valider_et_signer an existing Classeur entity.
+     *
      * @Route("/valider_et_signer", name="classeur_valider_et_signer")
      * @Method("POST")
      *
@@ -913,6 +948,12 @@ class ClasseurController extends Controller {
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+
+        $doc = $classeur->getDocuments()[0];
+        $ancienNom = $doc->getName();
+        $path_parts = pathinfo($ancienNom);
+        $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
+        $doc->setName($nouveauNom);
 
         $isvalidator = $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
         $currentvalidant = $classeur->getValidant();

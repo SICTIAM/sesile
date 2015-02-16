@@ -228,6 +228,30 @@ class DocumentController extends Controller
                 $arrayPJ[] = $pj;
             }
         }
+        // on enleve tout les putains de préfixes de mes 2
+        $str = str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path)));
+        $xml = simplexml_load_string($str);
+        if (isset($xml->PES_RecetteAller->Bordereau->{'Signature'})) {
+            //si on a une signature  on récupère le certificat
+            $sign = $xml->PES_RecetteAller->Bordereau->{'Signature'}->{'KeyInfo'}->{'X509Data'}->{'X509Certificate'};
+            $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
+            //on récupère un tableau contenant les infos du certificat
+            $tab = openssl_x509_parse($x509);
+            $subject = $tab['subject'];
+            $Signataire = $subject['CN'];
+
+            //on récupère la date de signature (il y a surement plus simple)
+
+            $dateMoche = $xml->PES_RecetteAller->Bordereau->{'Signature'}->{'Object'}->{'QualifyingProperties'}->{'SignedProperties'}->{'SignedSignatureProperties'}->{'SigningTime'};
+            list($jourMoche, $heureMoche) = explode('T', $dateMoche);
+            list($annee, $jour, $mois) = explode('-', $jourMoche);
+            list($heure, $minute, $reste) = explode(':', $heureMoche);
+            $date = $jour . '/' . $mois . '/' . $annee . ' ' . $heure . ':' . $minute;
+
+        } else {
+            $Signataire = '';
+            $date = '';
+        }
 
 
         if (isset($xml->PES_DepenseAller)) {
@@ -244,13 +268,13 @@ class DocumentController extends Controller
             $typePES = 'Recette';
         }
 
-        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $Signataire, $date, $arrayBord, $typePES, $arrayPJ);
         $tabIdBord = array();
         foreach ($PES->listBord as $bordereau) {
             $tabIdBord[] = $bordereau->id;
         }
 
-        return array('budget' => $PES->budget, 'bords' => $tabIdBord, 'idDoc' => $doc->getId());
+        return array('budget' => $PES->budget, 'signataire' => $PES->signataire, 'dateSign' => $PES->dateSign, 'bords' => $tabIdBord, 'idDoc' => $doc->getId());
     }
 
     /**
@@ -294,7 +318,7 @@ class DocumentController extends Controller
             $typePES = 'Recette';
         }
 
-        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], '', '', $arrayBord, $typePES, $arrayPJ);
         return array('Bord' => $PES->listBord[$bord], 'idDoc' => $doc->getId());
     }
 
@@ -336,108 +360,8 @@ class DocumentController extends Controller
             $typePES = 'Recette';
         }
 
-        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], '', '', $arrayBord, $typePES, $arrayPJ);
         $PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
         return new JsonResponse($PJ);
     }
-
-    /**
-     * @Route("/visual/{id}", name="visualiseur",  options={"expose"=true})
-     * @Method("GET")
-     * @Template()
-     */
-    public function visualiseurAction($id)
-    {
-        $xml = simplexml_load_file('/home/sesile/web/testpj.xml');
-        $arrayPJ = array();
-        if (isset($xml->PES_PJ)) {
-            foreach ($xml->PES_PJ->PJ as $pj) {
-                $arrayPJ[] = $pj;
-            }
-        }
-
-
-        $arrayBord = array();
-        foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
-            $arrayBord[] = $Bord;
-        }
-
-        if (isset($xml->PES_DepenseAller)) {
-            $typePES = 'Depense';
-        } else {
-            $typePES = 'Recette';
-        }
-
-        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
-        $tabIdBord = array();
-        foreach ($PES->listBord as $bordereau) {
-            $tabIdBord[] = $bordereau->id;
-        }
-        // var_dump($PES->listBord[0]->listPieces[0]);exit;
-        return array('budget' => $PES->budget, 'bords' => $tabIdBord);
-    }
-
-    /**
-     * @Route("/visualbord/", name="visualbord",  options={"expose"=true})
-     * @Method("GET")
-     * @Template("SesileDocumentBundle:Document:visubordereau.html.twig")
-     */
-    public function visubordereauAction()
-    {
-
-        $xml = simplexml_load_file('/home/sesile/web/testpj.xml');
-        $arrayPJ = array();
-        if (isset($xml->PES_PJ)) {
-            foreach ($xml->PES_PJ->PJ as $pj) {
-                $arrayPJ[] = $pj;
-            }
-        }
-
-
-        $arrayBord = array();
-        foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
-            $arrayBord[] = $Bord;
-        }
-
-        if (isset($xml->PES_DepenseAller)) {
-            $typePES = 'Depense';
-        } else {
-            $typePES = 'Recette';
-        }
-
-        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
-
-        return array('Bord' => $PES->listBord[0]);
-    }
-
-    /**
-     * @Route("/getvisualpj/", name="getvisualpj",  options={"expose"=true})
-     * @Method("GET")
-     * @Template()
-     */
-    public function getvisualPJAction()
-    {
-
-        $xml = simplexml_load_file('/home/sesile/web/testpj.xml');
-        $arrayPJ = array();
-        foreach ($xml->PES_PJ->PJ as $pj) {
-            $arrayPJ[] = $pj;
-        }
-
-        $arrayBord = array();
-        foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
-            $arrayBord[] = $Bord;
-        }
-
-        if (isset($xml->PES_DepenseAller)) {
-            $typePES = 'Depense';
-        } else {
-            $typePES = 'Recette';
-        }
-
-        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $arrayBord, $typePES, $arrayPJ);
-        $PJ = base64_encode(gzdecode(base64_decode($PES->listBord[0]->listPieces[0]->listePJs[0]->content)));
-        return new JsonResponse($PJ);
-    }
-
 }

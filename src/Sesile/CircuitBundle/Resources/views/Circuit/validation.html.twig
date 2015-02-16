@@ -26,15 +26,17 @@
 
 
 <div class="top_selects_circuits" id="circuitvalidation">
-    <span id="useradd_btn" class="glyphicon glyphicon-chevron-up"></span>
-    <div class="titre_select">
+    <span id="useradd_btn"
+          class="glyphicon glyphicon-chevron-up" {% if edit is defined %} style="display: none" {% endif %}></span>
+
+    <div class="titre_select" {% if edit is defined %} style="display: none" {% endif %}>
         <label class="nametitle" id="users_complete">
             <span class="glyphicon glyphicon-search"></span>
             &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
         <input class="nameinput" type="text">
     </div>
 
-    <div id="users_list">
+    <div id="users_list" {% if edit is defined %} style="display: none" {% endif %}>
         {% for user in users %}
             <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
         {% endfor %}

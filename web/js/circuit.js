@@ -38,6 +38,7 @@ if (typeof deposant != 'undefined') {
 /* Ajoute un utilisateur dans le cadre "circuits" */
 
 function ajoutUser(id, sort) {
+
     var sel_user = $('#users_list p[data-id="' + id + '"]');
     if (sel_user.length == 0) {
         return false;
@@ -155,11 +156,12 @@ $("#circuitadd_btn").click(function () {
 
 
 $("#users_list p").click(function () {
+    $('#users_list p:selected').addClass("list_selected_element");
     var sel_user = $('#users_list .list_selected_element');
     if (sel_user.length > 0) {
         ajoutUser(sel_user.attr("data-id"), true);
     }
-    $('#users_list p:selected').addClass("list_selected_element");
+
 
 });
 
