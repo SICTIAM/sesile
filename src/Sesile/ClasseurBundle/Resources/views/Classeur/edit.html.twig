@@ -177,16 +177,7 @@
                value="{{ classeur.validation  | date('d/m/Y') }}"/>
 
 
-        {% if not walidated %}
 
-            <style>
-                #documentcontent {
-                    opacity: .5;
-                    pointer-events: none;
-
-                }
-            </style>
-        {% endif %}
 
         <style>
 
@@ -260,7 +251,7 @@
 
                 <!-- Nouvelle vue ajouté "validation.html.twig" -->
 
-                {% render url("new_validate") %}
+                {% render url("new_validate_edit_classeur") %}
 
             </div>
         </form>

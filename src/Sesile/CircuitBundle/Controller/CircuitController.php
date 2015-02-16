@@ -25,7 +25,7 @@ class CircuitController extends Controller
         $em = $this->getDoctrine()->getManager();
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
             "collectivite" => $this->get("session")->get("collectivite")
-        ));
+        ), array("Nom" => "ASC"));
 
         // recup la list des circuits
         // TODO recup uniquement pour le user connecté
@@ -53,6 +53,44 @@ class CircuitController extends Controller
         return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
     }
 
+
+    /**
+     * @Route("/validation/", name="new_validate_edit_classeur", options={"expose"=true})
+     * @Template("SesileCircuitBundle:Circuit:validation.html.twig")
+     */
+    public function validationeditclasseurAction()
+    {
+        // recup la liste des users en base
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
+            "collectivite" => $this->get("session")->get("collectivite")
+        ));
+
+        // recup la list des circuits
+        // TODO recup uniquement pour le user connecté
+        $circuits = array();
+        $em = $this->getDoctrine()->getManager();
+        $circuits_du_user = $em->getRepository('SesileCircuitBundle:Circuit')->findByUser_id($this->getUser()->getId());
+
+        foreach ($circuits_du_user as $circuit) {
+            $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre(), "groupe" => false);
+        }
+
+
+        $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
+        foreach ($groupes_du_user as $group) {
+            $circuits[] = array(
+                "id" => $group->getGroupe()->getId(),
+                "name" => $group->getGroupe()->getNom(),
+                "ordre" => $this->getCircuitFromgroupForUser($this->getUser(), $group->getgroupe()),
+                "groupe" => true
+            );
+
+        }
+
+
+        return array('users' => $users, "circuits" => $circuits, "menu_color" => "vert", "edit" => true);
+    }
 
     /**
      * @Route("/validation/", name="new_validate", options={"expose"=true})
@@ -149,21 +187,29 @@ class CircuitController extends Controller
     }
 
     /**
-     * @Route("/delete", name="del_circuits_favoris", options={"expose"=true})
-     * @Method("POST")
+     * @Route("/delete/{id}", name="del_circuits_favoris", options={"expose"=true})
+     * @Method("get")
      */
-    public function deleteAction(Request $request) {
-        $id_circuit = $request->request->get('id');
+    public function deleteAction($id)
+    {
+
         $em = $this->getDoctrine()->getManager();
         try {
-            $circuit = $em->getRepository('SesileCircuitBundle:Circuit')->find($id_circuit);
+            $circuit = $em->getRepository('SesileCircuitBundle:Circuit')->find($id);
             $em->remove($circuit);
             $em->flush();
         } catch (Exception $e) {
-            return new Response("NOK");
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Echec de la suppression du circuit'
+            );
+            return $this->redirect($this->generateUrl('gestion_circuit'));
         }
-
-        return new Response("OK");
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Circuit supprimé avec succès !'
+        );
+        return $this->redirect($this->generateUrl('gestion_circuit'));
     }
 
 

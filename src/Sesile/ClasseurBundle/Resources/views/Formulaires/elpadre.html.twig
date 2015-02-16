@@ -68,6 +68,15 @@
     <button type="submit" name="Mybutton" id="Mybutton" class="btn btn-success">Envoyer</button>
 </div>
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('#Mybutton').click(function () {
+            $(this).attr('disabled', true);
+            setTimeout(function () {
+                $('#Mybutton').attr('disabled', false);
+            }, 2000)
+        });
+    });
+
     var nowTemp = new Date();
     var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
     var dadapicker = $('#validation').datepicker({

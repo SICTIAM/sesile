@@ -15,11 +15,14 @@ class PES
 
     public $budget;
     public $listBord = array();
+    public $signataire;
+    public $dateSign;
 
-    function __construct($budget, $tabBord, $typePES, $listPJ)
+    function __construct($budget, $signataire, $dateSign, $tabBord, $typePES, $listPJ)
     {
         $this->budget = $budget;
-
+        $this->signataire = $signataire;
+        $this->dateSign = $dateSign;
         foreach ($tabBord as $bordereau) {
 
             $id = $bordereau->BlocBordereau->IdBord->attributes()[0];

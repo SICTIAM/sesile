@@ -76,9 +76,7 @@
 <script type="text/javascript">
     var path = "{{ asset(upload_path) }}";
 </script>
-<script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
+
 <script type="text/javascript">
 
     var users_list = new Array();
@@ -97,6 +95,11 @@
     });
 
     $("#deleteconfirm").click(function() {
+        window.location.href = Routing.generate('del_circuits_favoris', {id: $('#circuits_list .list_selected_element').attr('data-id')});
 
     });
 </script>
+
+<script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
