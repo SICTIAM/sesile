@@ -58,7 +58,7 @@
                     "mRender": function ( data, type, full ) {
                         var retour = '<a class="col-sm-6" href="' + Routing.generate('classeur_edit', {id: data.id}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
                         if (data.idDoc) {
-                            retour += '&nbsp;&nbsp;<a class="col-sm-6"href="' + Routing.generate('visu', {id: data.idDoc}) + '"><span class="glyphicon glyphicon-eye-open"></span></a>';
+                            retour += '<a class="col-sm-6"href="' + Routing.generate('visu', {id: data.idDoc}) + '"><span class="glyphicon glyphicon-eye-open"></span></a>';
                         }
                         return retour;
                     }
