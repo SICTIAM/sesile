@@ -8,7 +8,7 @@
         </div>
         <div class="col-lg-12">
             <div class="form-group">
-                <label for="bordx" class="col-lg-2 ">Choix du bordereau</label>
+                <label for="bordx" class="col-lg-2 ">Choix</label>
 
                 <div class="col-lg-4">
                     <select id="bordx" class="col-lg-4">
@@ -36,7 +36,7 @@
         {% if signataire is not empty %}
             <div class="col-lg-12">
                 <div class="form-group">
-                    <label class="col-lg-2">Informations de signature</label>
+                    <label class="col-lg-2">Signature</label>
 
                     <div class="col-lg-8 text-danger">
                         signé par {{ signataire }} le {{ dateSign|date("d/m/Y H:i") }}
@@ -47,7 +47,7 @@
         {% else %}
             <div class="col-lg-12">
                 <div class="form-group">
-                    <label class="col-lg-2">Informations de signature</label>
+                    <label class="col-lg-2">Signature</label>
 
                     <div class="col-lg-8">
                         Le flux n'est pas encore signé
