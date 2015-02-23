@@ -70,9 +70,10 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#Mybutton').click(function () {
-            $(this).attr('disabled', true);
+            $(this).addClass('disabled')
+            //$('#new_classeur').submit();
             setTimeout(function () {
-                $('#Mybutton').attr('disabled', false);
+                $('#Mybutton').removeClass('disabled');
             }, 2000)
         });
     });
