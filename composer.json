@@ -31,7 +31,6 @@
         "gorg/user-bundle": "master",
         "sabre/dav": "1.8.*",
         "friendsofsymfony/rest-bundle": "1.1.*",
-        "jms/serializer-bundle": "dev-master",
         "nelmio/api-doc-bundle": "@stable"
     },
     "scripts": {
