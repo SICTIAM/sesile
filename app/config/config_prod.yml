@@ -54,7 +54,3 @@ security:
                 cas_protocol: '2.0'
                 cas_mapping_attribute:
                 check_path: /login_check
-
-twig:
-    globals:
-    url_applet: signature.sesile.fr
