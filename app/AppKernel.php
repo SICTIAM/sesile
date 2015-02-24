@@ -20,7 +20,6 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new \JMS\AopBundle\JMSAopBundle(),
-            new \JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new \JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new Sesile\MainBundle\SesileMainBundle(),
             new Sesile\UserBundle\SesileUserBundle(),
