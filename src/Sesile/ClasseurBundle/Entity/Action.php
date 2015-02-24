@@ -3,11 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
+
 
 
 /**
@@ -16,7 +12,7 @@ use JMS\Serializer\Annotation\Expose;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Sesile\ClasseurBundle\Entity\ActionRepository")
  * @ORM\HasLifecycleCallbacks()
- * @ExclusionPolicy("all")
+ * 
  */
 class Action
 {
@@ -27,7 +23,7 @@ class Action
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Expose
+     *  
      */
     private $id;
 
@@ -37,7 +33,7 @@ class Action
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="actions")
      * @ORM\JoinColumn(name="classeur_id", referencedColumnName="id")
      *
-     * @Expose
+     *  
      */
     private $classeur;
 
@@ -47,7 +43,7 @@ class Action
      * @var string
      *
      * @ORM\Column(name="observation", type="text", nullable=true)
-     * @Expose
+     *  
      *
      */
     private $observation;
@@ -58,7 +54,7 @@ class Action
      *
      * @ORM\Column(name="username", type="string", length=255)
      *
-     * @Expose
+     *  
      */
     private $username;
 
@@ -69,7 +65,7 @@ class Action
      *
      * @ORM\Column(name="date", type="datetime")
      *
-     * @Expose
+     *  
      */
     private $date;
 
@@ -77,7 +73,7 @@ class Action
      * @var string
      *
      * @ORM\Column(name="action", type="text")
-     * @Expose
+     *  
      *
      */
     private $action;
@@ -87,7 +83,7 @@ class Action
      * @var string
      *
      * @ORM\Column(name="commentaire", type="text", nullable=true)
-     * @Expose
+     *  
      *
      */
     private $commentaire;

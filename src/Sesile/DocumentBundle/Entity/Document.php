@@ -4,8 +4,7 @@ namespace Sesile\DocumentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Sesile\ClasseurBundle\Entity\Classeur;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
+
 
 /**
  * Document
@@ -13,7 +12,7 @@ use JMS\Serializer\Annotation\Expose;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Sesile\DocumentBundle\Entity\DocumentRepository")
  *
- * @ExclusionPolicy("all")
+ * 
  */
 class Document
 {
@@ -23,7 +22,7 @@ class Document
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Expose
+     *  
      */
     private $id;
 
@@ -31,7 +30,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @Expose
+     *  
      */
     private $name;
 
@@ -46,7 +45,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
-     * @Expose
+     *  
      */
     private $type;
 
@@ -54,13 +53,13 @@ class Document
      * @var boolean
      *
      * @ORM\Column(name="signed", type="boolean")
-     * @Expose
+     *  
      */
     private $signed;
 
     /**
      * @ORM\OneToMany(targetEntity="DocumentHistory", mappedBy="document")
-     * @Expose
+     *  
      */
     protected $histories;
 
