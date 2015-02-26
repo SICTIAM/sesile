@@ -29,6 +29,7 @@ use Sesile\UserBundle\Entity\User;
 use Symfony\Component\Yaml\Yaml;
 
 
+
 /**
  * Controller managing the user profile
  *
@@ -83,6 +84,8 @@ class ProfileController extends ContainerAware
         $formFactory = $this->container->get('fos_user.profile.form.factory');
 
         $form = $formFactory->createForm();
+        $user->setPassword('');
+
         $form->setData($user);
         //ancien
         $ExValues = array("mail" => $user->getUsername(),
@@ -111,6 +114,8 @@ class ProfileController extends ContainerAware
                     $user->upload($DirPath);
 
                 }
+
+
                 $userManager->updateUser($user);
                 //new
                 $cas = $this->getCASParams();
@@ -122,16 +127,42 @@ class ProfileController extends ContainerAware
 
                     //binding au serveur LDAP
                     if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
+
+                        $oldPass = "{MD5}" . base64_encode(pack('H*', md5(trim($form->get('password')->getData()))));
+
+                        // Generation
+                        // Requete sur le LDAP pour le user
+                        $justthese = array("userpassword");
+                        $filter = "(|(mail=" . $user->getUsername() . "*))";
+                        $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], $filter, $justthese);
+                        $info = ldap_get_entries($ldapconn, $sr);
+
+                        $passwordLDAP = $info[0]['userpassword'][0];
+                        // FIN test
+
+                        // $person est un nom ou une partie de nom (par exemple, "Jean")
+
                         $entry["cn"] = $user->getUsername();
                         $entry["sn"] = $user->getNom() . ' ' . $user->getPrenom();
                         $entry["givenName"] = $user->getUsername();
                         $entry["displayName"] = $user->getNom() . ' ' . $user->getPrenom();
+
                         $pwd = trim($form->get('plainPassword')->getData());
-                        if ($pwd) {
+
+
+                        if (($passwordLDAP == $oldPass) && $pwd) {
 
                             $user->setPlainPassword($pwd);
                             $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($pwd)));
+                            $this->container->get('session')->getFlashBag()->add('notice', 'Votre mot de passe a été modifié.');
+
+                        } elseif (($passwordLDAP != $oldPass) && $pwd) {
+
+                            $this->container->get('session')->getFlashBag()->add('notice', 'Le mot de passe actuel ne correspond pas.');
+                            return $response = new redirectResponse($this->container->get('router')->generate('sesile_profile_edit'));
+
                         }
+
                         //création du Distinguished Name
                         $parent = $LdapInfo["dn_user"];
                         $dn = "mail=" . $ExValues["mail"] . "," . $parent;

@@ -27,6 +27,12 @@
 </div>
 <br/>
 
+<div class="label_form label-form-input">
+    {{ form_label(form.password) }}
+    {{ form_widget(form.password) }}
+</div>
+<br/>
+
 {% for passwordField in form.plainPassword %}
     <div class="label_form label-form-input">
         {% if loop.index  != 1 %}

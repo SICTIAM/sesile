@@ -551,15 +551,18 @@ select [name=user] {
 	width: 50%;
 	left: 25%;
 }
+.alert-info {
+    margin-top: 53px;
+}
 
 /*FORM UTILISATEURS*/
 .label_form {
 	border-bottom: 0px;
-	width: 40%;
+	width: 55%;
 }
 
 .label_form label {
-	width: 8em;
+	width: 13em;
 	line-height: 1.7em;
 	cursor: hand;
 	position: absolute;
@@ -589,7 +592,7 @@ select [name=user] {
 .label_form input {
 	width: 100%;
 	height: 1.8em;
-	padding-left: 32%;
+	padding-left: 15em;
 }
 
 .ui-autocomplete {
