@@ -117,19 +117,26 @@ class ProfileController extends ContainerAware
 
 
                 $userManager->updateUser($user);
+
+                // ancienne methode de connexion, ne fonctionne pas sur le serveur de demo
+                // $cas = $this->getCASParams();
+                // $ldapconn = ldap_connect($cas["cas_server"])
+                // or die("Could not connect to LDAP server."); //security
+                // FIN ancienne methode de connexion
+
                 //new
-                $cas = $this->getCASParams();
-                $ldapconn = ldap_connect($cas["cas_server"])
-                or die("Could not connect to LDAP server."); //security
+                $cas_server = $this->container->getParameter('cas_server');
+                $ldapconn = ldap_connect($cas_server) or die("Could not connect to LDAP server."); // security
+
                 ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
                 if ($ldapconn) {
 
                     //binding au serveur LDAP
-                    //if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
-                    @ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
+                    if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
+                    //@ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
 
-                        $oldPass = "{MD5}" . base64_encode(pack('H*', md5(trim($form->get('password')->getData()))));
+                        $oldPass = base64_encode(pack('H*', md5(trim($form->get('password')->getData()))));
 
                         // Generation
                         // Requete sur le LDAP pour le user
@@ -138,7 +145,7 @@ class ProfileController extends ContainerAware
                         $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], $filter, $justthese);
                         $info = ldap_get_entries($ldapconn, $sr);
 
-                        $passwordLDAP = $info[0]['userpassword'][0];
+                        $passwordLDAP = substr($info[0]['userpassword'][0], 5);
                         // FIN test
 
                         // $person est un nom ou une partie de nom (par exemple, "Jean")
@@ -149,6 +156,8 @@ class ProfileController extends ContainerAware
                         $entry["displayName"] = $user->getNom() . ' ' . $user->getPrenom();
 
                         $pwd = trim($form->get('plainPassword')->getData());
+
+                        //var_dump($passwordLDAP, $oldPass); die();
 
 
                         if (($passwordLDAP == $oldPass) && $pwd) {
@@ -177,12 +186,11 @@ class ProfileController extends ContainerAware
                             echo "pb rename ldap";
                             exit;
                         }
-                    /* Test sur LDAP
+                    /* FIN Test sur LDAP */
                     } else {
                         echo "LDAP bind failed...";
                         exit;
                     }
-                    */
                     // var_dump($user);exit;
                     if (null === $response = $event->getResponse()) {
                         $url = $this->container->get('router')->generate('sesile_profile_show');
