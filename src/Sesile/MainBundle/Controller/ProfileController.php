@@ -126,7 +126,8 @@ class ProfileController extends ContainerAware
                 if ($ldapconn) {
 
                     //binding au serveur LDAP
-                    if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
+                    //if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
+                    @ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
 
                         $oldPass = "{MD5}" . base64_encode(pack('H*', md5(trim($form->get('password')->getData()))));
 
@@ -176,11 +177,12 @@ class ProfileController extends ContainerAware
                             echo "pb rename ldap";
                             exit;
                         }
-
+                    /* Test sur LDAP
                     } else {
                         echo "LDAP bind failed...";
                         exit;
                     }
+                    */
                     // var_dump($user);exit;
                     if (null === $response = $event->getResponse()) {
                         $url = $this->container->get('router')->generate('sesile_profile_show');
