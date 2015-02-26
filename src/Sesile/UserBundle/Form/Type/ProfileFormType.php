@@ -30,6 +30,8 @@ class ProfileFormType extends BaseType
         $builder->add('apiactivated', 'checkbox', array('label' => 'API', 'required' => false,))
             ->add('apitoken', 'text', array('read_only' => true))
             ->add('apisecret', 'text', array('read_only' => true));
+
+        $builder->add('password', 'text', array('label' => 'Mot de passe actuel', 'required' => false));
     }
 
     public function getName()

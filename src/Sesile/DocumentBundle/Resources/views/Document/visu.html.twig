@@ -19,6 +19,11 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div class="col-lg-6">
+                    <a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary pull-right"><span
+                                class="glyphicon glyphicon-share-alt"></span>&nbsp;&nbsp; Retour à la page
+                        précédente</a>
+                </div>
             </div>
         </div>
         <br><br>
