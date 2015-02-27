@@ -267,6 +267,10 @@ html, body {
 	cursor: pointer;
 }
 
+.row-padding {
+    padding-bottom: 15px;
+}
+
 .fuckingvisibility{
 	min-width: 21em !important;
 }
@@ -553,6 +557,13 @@ select [name=user] {
 }
 .alert-info {
     margin-top: 53px;
+}
+
+.alert-email {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
 }
 
 /*FORM UTILISATEURS*/

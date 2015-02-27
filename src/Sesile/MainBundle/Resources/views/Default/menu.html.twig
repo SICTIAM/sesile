@@ -146,6 +146,14 @@
                     </a>
                 </li>
             {% endif %}
+            {% if is_granted('ROLE_AGENT_SICTIAM') %}
+                <li>
+                    <a href="{{ path("index_emailing") }}">
+                        <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                        Emailing
+                    </a>
+                </li>
+            {% endif %}
                 </ul>
             </li>
             {% endif %}
