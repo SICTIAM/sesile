@@ -1,11 +1,8 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-
     {% if classeur.isValidableByDelegates(usersdelegated) %}
-
-
-        <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
     <div class="bloc_page">
@@ -31,8 +28,9 @@
         {% if classeur.isSupprimableByDelegates(usersdelegated) %}
             {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
         {% else %}
-        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+            {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         {% endif %}
+
 
 
         {% if isDelegatedToMe %}
@@ -41,15 +39,39 @@
             <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
 
             <span class="glyphicon statut_0"></span>
-            <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img
-                    class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
-            {{ uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
+            <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par
+                </span>&nbsp;&nbsp;
+                {% if uservalidant.path is defined and uservalidant.path is not null %}
+                    <img class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
+                {% else %}
+                    <img class="userpicture" src="{{ asset('/images/imghomme.png') }}"/>
+                {% endif %}
+                {{ uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
         </div>
         {% endif %}
         <br/>
 
         <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
+
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3">
+
+
+                <select class="fuckingvisibility form-control" id="visibilite" name="visibilite">
+                    <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
+                    <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
+                    <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
+                    {#<option value="3" {% if classeur.visibilite == 3 %} selected="selected" {% endif %}>Pour le groupe fonctionnel</option>#}
+                </select>
+                </div>
+            </div>
+
 
             <div class="titre_form_element">
                 <span class="glyphicon glyphicon-play"></span>
@@ -77,7 +99,7 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Date limite de validation
             </div>
-        <input class="datepicker" name="validation" type="datetime"
+        <input class="datepicker" id="validation" name="validation" type="datetime"
                    value="{{ classeur.validation  | date('d/m/Y') }}"/>
 
 
@@ -110,13 +132,13 @@
             &nbsp;Historique
         </button>
 
-    <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-        <button type="submit" class="btn btn-danger">
-            <span class="glyphicon glyphicon-trash"></span>
-            &nbsp;Retirer
-        </button>
-        <input type="hidden" value="{{ classeur.id }}" name="id"/>
-    </form>
+        <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+            <button type="submit" class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash"></span>
+                &nbsp;Retirer
+            </button>
+            <input type="hidden" value="{{ classeur.id }}" name="id"/>
+        </form>
 
 
 
@@ -126,6 +148,10 @@
             {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
         {% endif %}
 
+        {% if retractable %}
+            {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
+        {% endif %}
+
 
         {% if isDelegatedToMe %}
             <br>
@@ -133,8 +159,12 @@
                 <span class="txt_legende"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;Délégation</span>
 
                 <span class="glyphicon statut_0"></span>
-                <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;<img
-                        class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
+                <span class="texte_legende tl3">&nbsp;Ce classeur vous a été délégué par </span>&nbsp;&nbsp;
+                {% if uservalidant.path is defined and uservalidant.path is not null %}
+                    <img class="userpicture" src="{{ asset(upload_path ~ uservalidant.path) }}"/>
+                {% else %}
+                    <img class="userpicture" src="{{ asset('/images/imghomme.png') }}"/>
+                {% endif %}
                 {{ uservalidant.getPrenom() }} {{ uservalidant.getNom() }}
             </div>
         {% endif %}
@@ -195,6 +225,11 @@
                 pointer-events: none;
             }
 
+             .top_selects_circuits {
+                 display: none !important;
+             }
+
+
 
         </style>
 
@@ -236,11 +271,39 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Circuit
             </div>
+            <!-- Intégration de la liste des utilisateurs -->
+
+            <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
+            <div class="top_selects_circuits">
+
+
+                <div class="selects_circuit">
+                    <div class="titre_select">
+                        <label class="nametitle" id="users_complete">
+                            <span class="glyphicon glyphicon-search"></span>
+                            &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
+                        <input class="nameinput" type="text" id="circuit-search">
+                    </div>
+                    <div id="users_list">
+                        {% for user in users %}
+                            <p class="users-search" data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.nom }} {{ user.prenom }}</p>
+                        {% endfor %}
+                    </div>
+                    <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
+                </div>
+
+            </div>
+
+
             <div id="circuitcontent">
 
 
                 <script type="application/javascript">
+
+
                     var circuit_users = "{{ classeur.circuit }}";
+                    {#var ordre_circuit = {{ classeur.ordreCircuit }} - 1;#}
+                    var ordre_circuit = {{ classeur.ordreCircuit }};
                     var validant = {{ validant }};
                     /*voir cette ligne*/
                     var deposant = {{ deposant|json_encode|raw }};
@@ -255,8 +318,8 @@
 
             </div>
         </form>
-    </br>
-    </br>
+    <br>
+    <br>
     <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
             <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
             &nbsp;Historique
@@ -274,6 +337,9 @@
         {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
     {% else %}
         {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+    {% endif %}
+    {% if retractable %}
+        {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
     {% endif %}
 
     <br/>
@@ -350,7 +416,6 @@
 
 
     </style>
-
 
 
 

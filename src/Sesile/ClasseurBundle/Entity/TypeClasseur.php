@@ -31,25 +31,21 @@ class TypeClasseur
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\Groupe")
-     * @ORM\JoinTable(name="classeur_groupe",
-     *      joinColumns={@ORM\JoinColumn(name="type_classeur_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="groupe_id", referencedColumnName="id")}
-     *      )
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\Groupe", mappedBy="types", cascade={"persist"})
      */
     private $groupes;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="template", type="string", length=255)
+     * @ORM\Column(name="template", type="string", length=255, nullable=true)
      */
     private $template;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="test", type="string", length=255)
+     * @ORM\Column(name="test", type="string", length=255, nullable=true)
      */
     private $test;
 
@@ -94,38 +90,6 @@ class TypeClasseur
     public function __construct()
     {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Add groupes
-     *
-     * @param \Sesile\ClasseurBundle\Entity\SesileUserBundle:Groupe $groupes
-     * @return TypeClasseur
-     */
-    public function addGroupe(Groupe $groupes) {
-        $this->groupes[] = $groupes;
-    
-        return $this;
-    }
-
-    /**
-     * Remove groupes
-     *
-     * @param \Sesile\ClasseurBundle\Entity\SesileUserBundle:Groupe $groupes
-     */
-    public function removeGroupe(Groupe $groupes)
-    {
-        $this->groupes->removeElement($groupes);
-    }
-
-    /**
-     * Get groupes
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getGroupes()
-    {
-        return $this->groupes;
     }
 
     /**
@@ -172,5 +136,39 @@ class TypeClasseur
     public function getTest()
     {
         return $this->test;
+    }
+
+
+    /**
+     * Add groupes
+     *
+     * @param \Sesile\UserBundle\Entity\Groupe $groupes
+     * @return TypeClasseur
+     */
+    public function addGroupe(\Sesile\UserBundle\Entity\Groupe $groupes)
+    {
+        $this->groupes[] = $groupes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove groupes
+     *
+     * @param \Sesile\UserBundle\Entity\Groupe $groupes
+     */
+    public function removeGroupe(\Sesile\UserBundle\Entity\Groupe $groupes)
+    {
+        $this->groupes->removeElement($groupes);
+    }
+
+    /**
+     * Get groupes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGroupes()
+    {
+        return $this->groupes;
     }
 }

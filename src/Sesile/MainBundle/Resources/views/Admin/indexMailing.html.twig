@@ -25,11 +25,11 @@
         </div>
         <div class="row row-padding">
             <div class="col-md-3">{{ form_label(form.mailMessage) }}</div>
-            <div class="col-md-9">{{ form_widget(form.mailMessage, {'attr': {'class': 'form-control'}} ) }}</div>
+            <div class="col-md-9">{{ form_widget(form.mailMessage, {'attr': {'class': 'form-control textarea'}} ) }}</div>
         </div>
         <div class="row row-padding">
             <div class="col-md-3">&nbsp;</div>
-            <div class="col-md-9">{{ form_widget(form.submit, {'attr': {'class': 'btn btn-success'}}) }}</div>
+            <div class="col-md-9">{{ form_widget(form.submit, {'attr': {'class': 'btn btn-success disabled'}}) }}</div>
         </div>
         {{ form_end(form) }}
     </div>
@@ -43,5 +43,39 @@
             "image": false,
             locale: "fr-FR"
         });
+
+        //var textarea = $(".textarea").data("wysihtml5").el;
+
+        $("input").keyup(function() {
+            that = $("button[type=submit]");
+            $(this).val() ? that.removeClass("disabled") : that.addClass("disabled");
+        });
+
+
+        //$('.textarea').keyup(console.log('testdfsf'));
+
+        /*
+        $('.textarea').change(function() {
+            console.log($('.textarea').val());
+        });
+
+        $('.textarea').keyup(function() {
+            console.log($('.textarea').val());
+        });
+        */
+
+        /*$('.someLink').live('click', function () {
+            $('.textarea').wysihtml5();
+            var wysihtml5Editor = $(".textarea").data("wysihtml5").editor;
+            console.log('wysihtml5Editor: '+wysihtml5Editor);
+            // The following is important since wysihtml5 is initialized asynchronously
+            wysihtml5Editor.observe("load", function() {
+            wysihtml5Editor.composer.commands.exec("bold");
+            });
+        });*/
+
+
+
+
     </script>
 {% endblock %}

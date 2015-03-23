@@ -131,6 +131,10 @@ class User extends BaseUser {
      */
     protected $collectivite;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="visible", cascade={"persist"})
+     */
+    private $classeurs;
 
 
     public function setPath($path) {
@@ -602,5 +606,38 @@ class User extends BaseUser {
     public function getGroupes()
     {
         return $this->groupes;
+    }
+
+    /**
+     * Add classeurs
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurs
+     * @return User
+     */
+    public function addClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeurs)
+    {
+        $this->classeurs[] = $classeurs;
+    
+        return $this;
+    }
+
+    /**
+     * Remove classeurs
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurs
+     */
+    public function removeClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeurs)
+    {
+        $this->classeurs->removeElement($classeurs);
+    }
+
+    /**
+     * Get classeurs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getClasseurs()
+    {
+        return $this->classeurs;
     }
 }

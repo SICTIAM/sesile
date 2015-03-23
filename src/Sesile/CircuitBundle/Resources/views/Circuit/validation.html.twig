@@ -1,20 +1,6 @@
 
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 
-<!-- <div class="selects_circuit">
-        <div class="titre_select">
-            <label class="nametitle">
-                <span class="glyphicon glyphicon-search"></span>
-                &nbsp;&nbsp;Circuits&nbsp;&nbsp;</label>
-            <input class="nameinput" type="text">
-        </div>
-        <div id="circuits_list">
-            {% for circuit in circuits %}
-                <p data-id="{{ circuit.id }}" data-ordre="{{ circuit.ordre }}">{% if circuit.groupe == 1 %}<span class="glyphicon glyphicon-th-large"></span>{% endif %} {{ circuit.name }}</p>
-            {% endfor %}
-        </div>
-        <span id="circuitadd_btn" class="glyphicon glyphicon-chevron-down"></span>
-    </div>-->
 
 <div id="circuit_editor">
     <div class="titre_select">
@@ -38,7 +24,10 @@
 
     <div id="users_list" {% if edit is defined %} style="display: none" {% endif %}>
         {% for user in users %}
-            <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
+            <p data-id="{{ user.id }}" data-img="{{ user.path }}">
+                {# Avec la mise a jour l affichage du prenom et du nom se fait en JS #}
+                {#{{ user.prenom }} {{ user.nom }}#}
+            </p>
         {% endfor %}
     </div>
 </div>

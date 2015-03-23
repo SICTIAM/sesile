@@ -1,0 +1,38 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-folder-open"></span>
+            &nbsp;&nbsp;&nbsp;Créer un nouveau type de classeur
+        </div>
+        <br>
+
+        <div class="row">
+            &nbsp;
+        </div>
+
+    {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+
+        <div class="row">
+            <div class="col-md-1 form-group">
+                {{ form_label(form.nom, 'Nom :') }}
+            </div>
+            <div class="col-md-3">
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="col-md-3">
+                {{ form_widget(form.Enregister, {'attr': {'class': 'btn btn-success'}}) }}
+            </div>
+        </div>
+
+
+
+        {{ form_rest(form) }}
+
+    {{ form_end(form) }}
+
+    </div>
+
+{% endblock %}

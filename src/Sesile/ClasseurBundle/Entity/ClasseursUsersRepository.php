@@ -130,7 +130,7 @@ class ClasseursUsersRepository extends EntityRepository
 
             $sql = 'SELECT * FROM Classeur c
                 inner join ClasseursUsers cu on c.id = cu.classeur_id
-                WHERE ordre = ((select d.ordre - 1 from ClasseursUsers d where d.user_id = c.validant and c.id = d.classeur_id))
+                WHERE ordre = ((select d.ordre - 1 from ClasseursUsers d where d.user_id = c.validant and c.id = d.classeur_id LIMIT 0,1))
                 and cu.user_id  = :userid
                 and c.status = 1';
 

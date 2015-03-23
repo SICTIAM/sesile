@@ -6,13 +6,13 @@
             <span class="glyphicon glyphicon-thumbs-down"></span>
             &nbsp;&nbsp;&nbsp;Liste des classeurs retractables
         </div>
-        {% include 'SesileClasseurBundle:Classeur:liste.html.twig' %}
+        {% include 'SesileClasseurBundle:Classeur:liste_retracter.html.twig' %}
     </div>
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="application/javascript">
 	$(document).ready(function () {
-	    $(".dtables").dataTable({
+        $(".dtables").dataTable({
 		"oLanguage": {
 		    "sSearch": "Rechercher&nbsp;:",
 		    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
@@ -27,6 +27,7 @@
 			"sLast": ""
 		    }
 		},
+        "order": [[ 1, "desc" ]],
 		"iDisplayLength": 15,
 		"aLengthMenu": [15, 30, 50, 100],
 		"sDom": 'lft<"footer_datatables"p>',
@@ -36,8 +37,9 @@
 		    { "bSortable": false, "aTargets": [ 5 ], sClass: "center" },
             { "bSortable": false, "aTargets": [ 6 ], sClass: "center" }
 		],
-		"sPaginationType": "full_numbers"
+		"sPaginationType": "full_numbers",
+
 	    });
-	});
+    });
     </script>
 {% endblock %}

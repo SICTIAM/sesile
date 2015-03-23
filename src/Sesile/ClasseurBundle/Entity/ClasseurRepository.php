@@ -4,6 +4,7 @@ namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * ClasseurRepository
@@ -12,5 +13,98 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  * repository methods below.
  */
 class ClasseurRepository extends EntityRepository {
+
+    /*
+     * Return number of classeurs visible for user
+     *
+     * @param integer user id
+     * @return integer
+     */
+    public function countClasseursVisiblesForDTablesV3($userid) {
+        return $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userid)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /*
+     * Get current classeurs visible for Data Tables
+     *
+     * @param integer user id
+     * @param array get values of Data Tables
+     */
+    public function getClasseursVisiblesForDTablesV3($userid, array $get) {
+
+        $qb = $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userid)
+            ->join('c.type', 't')
+            ->addSelect('t')
+        ;
+
+        // Pour changer l ordre du tableau
+        if(isset($get['order'])) {
+            $order = 'c.'.strtolower($get["colonnes"][$get["order"][0]["column"]]);
+            $order == 'c.type' ? $order = 't.nom' : $order;
+            $qb->orderBy($order, $get['order'][0]["dir"]);
+        }
+
+        // Pour la recherche dans le tableau
+        if (isset($get['search']) && $get['search']['value'] != '') {
+            $str = $get['search']['value'];
+
+            $qb
+                ->where('c.nom LIKE :str')
+                ->orWhere('t.nom LIKE :str')
+                ->setParameter('str', '%'.$str.'%')
+            ;
+        }
+        // Pour l affichage parcellaire
+        if (isset($get['start']) && $get['length'] != '-1') {
+            $start = (int)$get['start'];
+            $length = (int)$get['length'];
+            $qb
+                ->setFirstResult($start)
+                ->setMaxResults($length)
+            ;
+        }
+
+        // on retourne la requete
+        return $qb
+            ->getQuery()
+            ->getResult()
+        ;
+
+    }
+
+    public function isDelegatedToUserV2($classeur, $user) {
+        $em = $this->getEntityManager();
+        $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
+        $liste_delegants = $repositorydelegates->getUsersWhoHasMeAsDelegateRecursively($user);
+
+        $sql = 'SELECT c.* FROM ClasseursUsers cu
+                inner join Classeur c on cu.classeur_id = c.id
+                WHERE ((c.visibilite = 0 and cu.user_id = :userid) or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid)))
+                and c.id = :classeurid
+                group by cu.classeur_id';
+
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
+        $query = $em->createNativeQuery($sql, $rsm);
+
+        foreach($liste_delegants as $delegant) {
+            $query->setParameter('userid', $user->getId());
+            $query->setParameter("classeurid", $classeur->getId());
+            if(count($query->getResult()) > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }

@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="Sesile\ClasseurBundle\Entity\ClasseursUsersRepository")
+ * @ORM\Entity(repositoryClass="Sesile\ClasseurBundle\Entity\ClasseurRepository")
  */
 class Classeur {
     /**
@@ -51,9 +52,10 @@ class Classeur {
     private $validation;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="type", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur")
+     * @ORM\JoinColumn(name="type", referencedColumnName="id")
      */
     private $type;
 
@@ -86,6 +88,13 @@ class Classeur {
      */
     private $validant;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ordreCircuit", type="integer"))
+     */
+    private $ordreCircuit = 0;
+
     public $validantName;
 
     /**
@@ -112,6 +121,12 @@ class Classeur {
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Action", mappedBy="classeur")
      */
     protected $actions;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs", cascade={"persist"})
+     * @ORM\JoinTable(name="Classeur_visible")
+     */
+    private $visible;
 
     /**
      * Get id
@@ -223,28 +238,6 @@ class Classeur {
         return $this->circuit;
     }
 
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return Classeur
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
 
     /**
      * Set user
@@ -386,13 +379,18 @@ class Classeur {
     }
 */
 
-    private function getPrevValidant()
+    public function getPrevValidant()
     {
         $circuit = explode(",", $this->getCircuit());
-        $curr_validant = array_search($this->validant, $circuit);
+//        $curr_validant = array_search($this->validant, $circuit);
 
-        $prev_validant = ($curr_validant - $curr_validant) - 1;
-        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
+//        $prev_validant = ($curr_validant - $curr_validant) - 1;
+//        $this->setOrdreMoins();
+        $ordre =  $this->setOrdreMoins();
+//        var_dump($this->setOrdreMoins());
+//        $prev_validant = $circuit[$this->getOrdreCircuit()];
+        return ($this->getOrdreCircuit() > 0) ? $circuit[$ordre] : $this->getUser();
+//        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
     }
 
 
@@ -402,18 +400,39 @@ class Classeur {
      */
     public function getNextValidant(\Doctrine\ORM\EntityManager $em)
     {
+        $circuit = explode(",", $this->getCircuit());
+        $this->setOrdrePlus();
+        return ($this->getOrdreCircuit() < count($circuit)) ? $circuit[$this->getOrdreCircuit()] : 0;
+    }
+
+    /**
+     *
+     * @return int l'id du validant courant dans le circuit.
+     */
+    public function getCurrentValidant(\Doctrine\ORM\EntityManager $em)
+    {
         //$d = $em->getRepository("SesileDelegationsBundle:Delegations");
         //$delegation = $d->getClasseursRetractables($userid);
 
         $circuit = explode(",", $this->getCircuit());
-        $curr_validant = array_search($this->validant, $circuit);
-        $next_validant = $curr_validant + 1;
-        return ($next_validant < count($circuit)) ? $circuit[$next_validant] : 0;
+//        $curr_validant = array_search($this->validant, $circuit);
+        $curr_validant = $circuit[$this->getOrdreCircuit()];
+        return $curr_validant;
     }
 
 
-    public function isAtLastValidant(\Doctrine\ORM\EntityManager $em){
-        return ($this->getNextValidant($em)==0);
+//    public function isAtLastValidant(\Doctrine\ORM\EntityManager $em){
+//        return ($this->getNextValidant($em)==0);
+//    }
+    public function isAtLastValidant(){
+        $ordreCircuit = $this->getOrdreCircuit() + 1;
+        if ($ordreCircuit == count(explode(",", $this->getCircuit()))) {
+            return true;
+        } else {
+            return false;
+        }
+
+
     }
 
     public function valider(\Doctrine\ORM\EntityManager $em)
@@ -428,30 +447,30 @@ class Classeur {
     }
 
 
-    public function  soumettre()
-
+    public function soumettre()
     {
         $circuit = explode(",", $this->getCircuit());
+        $this->setOrdreZero();
         return $circuit[0];
     }
 
 
     public function refuser()
-
     {
-        $this->setValidant($this->getPrevValidant());
-        $this->setStatus(1);
+        $this->setOrdreZero();
+//        $this->setValidant($this->getPrevValidant());
+        $this->setValidant($this->getUser());
+        $this->setStatus(0);
     }
 
     public function retracter($userid)
-
     {
-        $this->setValidant($userid);
+        $this->setValidant($this->getPrevValidant());
+        $this->setOrdreCircuit($this->setOrdreMoins());
         $this->setStatus(4);
     }
 
     public function supprimer()
-
     {
         $this->setValidant(0);
         $this->setStatus(3);
@@ -488,43 +507,18 @@ class Classeur {
     }
 
     /**
-     * FIXME : désolé j'ai pas trouvé rapidement de méthode moins crade que passer l'entitymanager donc tant pis... :(
+     * Return true or false
+     * @param array
+     *
+     * La fonction renvoie true or false pour les boutons retractable et l affichage des dossiers retractable
      */
-    public function isRetractable($userid, \Doctrine\ORM\EntityManager $em)
-    {
-        $c = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
-        $classeurs = $c->getClasseursRetractables($userid);
+    public function isRetractableByDelegates($userid) {
 
-        foreach ($classeurs as $classeur) {
-            if ($classeur->getId() == $this->getId()) {
-                return true;
-            }
+        if (in_array($this->getPrevValidant(), $userid)  && $this->getValidant() != $userid && $this->getStatus() == 1 && $this->getOrdreCircuit() != 0) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
-    }
-
-    public function isRetractableByDelegates($delegates, \Doctrine\Orm\EntityManager $em) {
-
-
-        $arrayid = array();
-
-        foreach($delegates as $d){
-            $arrayid[] = $d->getId();
-        }
-
-        $c = $em->getRepository("SesileClasseurBundle:ClasseursUsers");
-        $classeurs = array();
-        foreach($arrayid as $id){
-            $classeurs = array_merge($classeurs,$c->getClasseursRetractables($id) );
-        }
-
-
-        foreach ($classeurs as $classeur) {
-            if ($classeur->getId() == $this->getId()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public function isSupprimable($userid)
@@ -532,7 +526,7 @@ class Classeur {
         return ($this->getUser() == $userid && $this->getStatus() != 3);
     }
 
-    public function  isSupprimableByDelegates($delegates){
+    public function isSupprimableByDelegates($delegates){
         $arrayid = array();
 
         foreach($delegates as $d){
@@ -543,10 +537,11 @@ class Classeur {
 
     }
 
-    public function isSignable(\Doctrine\ORM\EntityManager $em)
+//    public function isSignable(\Doctrine\ORM\EntityManager $em)
+    public function isSignable()
     {
 
-        if($this->getType()=='elpez' || $this->isAtLastValidant($em)){
+        if($this->getType()->getNom() == 'Helios' && $this->isAtLastValidant()){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
                 if($doc->getType()=='application/xml'){
@@ -568,6 +563,47 @@ class Classeur {
             }
         }
         return $xmldocuments;
+    }
+
+    /**
+     * Set ordreCircuit plus un
+     */
+    public function setOrdrePlus()
+    {
+        $this->ordreCircuit++;
+
+        return $this;
+    }
+
+    /**
+     * Set ordreCircuit moins un
+     */
+    public function setOrdreMoins()
+    {
+        $oCircuit = $this->getOrdreCircuit();
+
+        $oCircuit = $oCircuit - 1;
+        $oCircuit <= 0 ? $oCircuit = 0 : $oCircuit;
+
+        return $oCircuit;
+    }
+
+    /**
+     * Set ordreCircuit a zero
+     */
+    public function setOrdreZero()
+    {
+        $this->ordreCircuit = 0;
+
+        return $this;
+    }
+
+    /**
+     * Get private visibility after me
+     */
+    public function getPrivateAfterMeVisible() {
+        $circuit = explode(",", $this->circuit);
+        return array_slice($circuit, $this->getOrdreCircuit());
     }
 
     /**
@@ -658,4 +694,84 @@ class Classeur {
     {
         return $this->actions;
     }
+
+    /**
+     * Set type
+     *
+     * @param \Sesile\ClasseurBundle\Entity\TypeClasseur $type
+     * @return Classeur
+     */
+    public function setType(\Sesile\ClasseurBundle\Entity\TypeClasseur $type = null)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \Sesile\ClasseurBundle\Entity\TypeClasseur 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Add visible
+     *
+     * @param \Sesile\UserBundle\Entity\User $visible
+     * @return Classeur
+     */
+    public function addVisible(\Sesile\UserBundle\Entity\User $visible)
+    {
+        $this->visible[] = $visible;
+
+        return $this;
+    }
+
+    /**
+     * Remove visible
+     *
+     * @param \Sesile\UserBundle\Entity\User $visible
+     */
+    public function removeVisible(\Sesile\UserBundle\Entity\User $visible)
+    {
+        $this->visible->removeElement($visible);
+    }
+
+    /**
+     * Get visible
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    /**
+     * Set ordre
+     *
+     * @param integer $ordre
+     * @return Classeur
+     */
+    public function setOrdreCircuit($ordre)
+    {
+        $this->ordreCircuit = $ordre;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordre
+     *
+     * @return integer 
+     */
+    public function getOrdreCircuit()
+    {
+        return $this->ordreCircuit;
+    }
+
 }

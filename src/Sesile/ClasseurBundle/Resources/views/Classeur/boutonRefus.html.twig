@@ -16,13 +16,22 @@
 
 
     {% else %}
-        <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_soumis") }}">
-            <span class="glyphicon glyphicon-ok"></span>
-            &nbsp;Soumettre
-        </button>
 
-        <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
-                data-whatever="@mdo">
+        {% if classeur.status == 0 %}
+            <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_soumis") }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Soumettre
+            </button>
+
+        {% else %}
+            <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_valider") }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Valider
+            </button>
+
+        {% endif %}
+
+        <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal" data-whatever="@mdo">
             <span class="glyphicon glyphicon-remove"></span>
             &nbsp;Refuser
         </button>
