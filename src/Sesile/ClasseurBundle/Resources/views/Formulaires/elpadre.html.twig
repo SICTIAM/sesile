@@ -12,6 +12,18 @@
     &nbsp;&nbsp;&nbsp;Visibilit&eacute;
 </div>
 
+<div class="row">
+    <div class="col-lg-3">
+        <select class="fuckingvisibility form-control" id="visibilite" name="visibilite">
+            <option value="0">Privé</option>
+            <option value="1">Public</option>
+            {#<option value="2">Privé à partir de moi</option>#}
+            <option value="3">Pour le groupe fonctionnel</option>
+        </select>
+    </div>
+</div>
+
+{#
 <select class="fuckingvisibility" id="visibilite" name="visibilite">
     <option value="0">Privé</option>
     <optgroup label="Pour le groupe">
@@ -22,8 +34,10 @@
 </select>
 
 <script type="text/javascript">
-    $("#visibilite").select2();
+$("#visibilite").select2();
 </script>
+#}
+
 
 <div class="titre_form_element">
     <span class="glyphicon glyphicon-play"></span>

@@ -59,6 +59,7 @@
 }
 
 .perso_circuit {
+    display: block;
     text-align: center;
     margin: auto;
     max-width: 100px;

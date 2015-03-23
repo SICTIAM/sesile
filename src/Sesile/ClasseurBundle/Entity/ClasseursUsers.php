@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ClasseursUsers
 {
+
     /**
      * @var integer
      * @ORM\Id
@@ -28,10 +29,21 @@ class ClasseursUsers
 
     /**
      * @var integer
-     *
+     * @ORM\Id
      * @ORM\Column(name="ordre", type="integer")
      */
     private $ordre;
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set ordre

@@ -269,4 +269,57 @@ class AdminController extends Controller
             ->add('submit', 'submit', array('label' => 'Supprimer'))
             ->getForm();
     }
+
+
+    /**
+     * Liste des collectivités
+     *
+     * @Route("/mailing", name="index_emailing")
+     * @Template("")
+     */
+    public function indexMailingAction(Request $request) {
+
+        if (!$this->get('security.context')->isGranted('ROLE_AGENT_SICTIAM')) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
+        // Creation du formulaire pour la saisie des informations
+        $defaultData = array('message' => 'Taper votre message');
+        $form = $this->createFormBuilder($defaultData)
+            ->add('sujet', 'text')
+            ->add('mailMessage', 'textarea', array('label' => 'Corps du message'))
+            ->add('submit', 'submit', array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            // Les données sont un tableau avec les clés "sujet", et "mailMessage"
+            $em = $this->getDoctrine()->getManager();
+            // On recupere tous les utilisateurs
+            $users = $em->getRepository('SesileUserBundle:User')->findAll();
+            // On recupère les données du formulaire
+            $data = $form->getData();
+
+            // Création du mail
+            $message = \Swift_Message::newInstance()
+                ->setSubject($data['sujet'])
+                ->setFrom('sesile@sictiam.fr')
+                ->setBody($data['mailMessage'], "text/html");
+
+            // Envoie du mail pour chaque utilisateur
+            foreach ($users as $key => $user) {
+                $message->setTo($user->getEmail());
+                //$this->get('mailer')->send($message);
+            }
+
+            // Message de confirmation pour l'utilisateur
+            $request->getSession()->getFlashBag()->add('notice', 'Emailing envoyé !');
+
+        }
+
+        return array('form' => $form, "menu_color" => "vert");
+
+
+    }
 }

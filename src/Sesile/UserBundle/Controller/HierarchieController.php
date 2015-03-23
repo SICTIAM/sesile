@@ -2,8 +2,10 @@
 
 namespace Sesile\UserBundle\Controller;
 
+use Sesile\ClasseurBundle\Entity\TypeClasseur;
 use Sesile\UserBundle\Entity\Groupe;
 use Sesile\UserBundle\Entity\UserGroupe;
+use Sesile\UserBundle\Form\GroupeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -23,8 +25,7 @@ class HierarchieController extends Controller {
     public function indexAction() {
         $em = $this->getDoctrine()->getManager();
         $users = $em->getRepository('SesileUserBundle:Groupe')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"),
-            "type" => 0
+            "collectivite" => $this->get("session")->get("collectivite")
         ));
 
         return array(
@@ -45,7 +46,14 @@ class HierarchieController extends Controller {
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
             "collectivite" => $this->get("session")->get("collectivite")
         ));
-        return array("users" => $users, "menu_color" => "vert");
+        // Ajout du formulaire pour les types
+        $form = $this->createForm(new GroupeType());
+
+        return array(
+            "users" => $users,
+            "form"  => $form,
+            "menu_color" => "vert"
+        );
     }
 
 
@@ -58,7 +66,7 @@ class HierarchieController extends Controller {
         $group->setNom($request->request->get('nom'));
         $group->setCollectivite($this->get("session")->get("collectivite"));
         $group->setJson($request->request->get('tree'));
-        $group->setType(0);
+//        $group->setType(0);
         $group->setCouleur("white");
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
@@ -66,6 +74,17 @@ class HierarchieController extends Controller {
         $users = array(); // globale pour la récursive (c'est une porcherie mais ça marche qd meme)
         $users_du_groupe = $this->getUsersFromJson($group->getJson());
 
+        // Enregistrement des données ManyToMany Groupe <=> TypeClasseur
+        $typeGroupe = $request->request->get('sesile_userbundle_groupe');
+        if (null !== $typeGroupe){
+            foreach ($typeGroupe["types"] as $tg){
+                $typeClasseur = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($tg);
+                $group->addType($typeClasseur);
+                $typeClasseur->addGroupe($group);
+            }
+            $em->persist($group);
+            $em->persist($typeClasseur);
+        }
 
         foreach($users_du_groupe as $user) {
             $user_obj = $em->getRepository('SesileUserBundle:User')->find($user["id"]);
@@ -94,12 +113,16 @@ class HierarchieController extends Controller {
         if($groupe) {
             // recup la liste des users en base
             $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-                "collectivite" => $this->get("session")->get("collectivite")
+                "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
             ));
+
+            $form = $this->createForm(new GroupeType(), $groupe);
 
             return array (
                 'users' => $users,
-                'groupe' => $groupe
+                'groupe' => $groupe,
+                'form'  => $form,
+                'menu_color' => 'vert'
             );
         }
         else {
@@ -120,6 +143,25 @@ class HierarchieController extends Controller {
             $groupe->setNom($request->request->get('nom'));
             $groupe->setJson($request->request->get('tree'));
 
+            // Enregistrement des données ManyToMany Groupe <=> TypeClasseur
+            $typeGroupe = $request->request->get('sesile_userbundle_groupe');
+            if (null !== $typeGroupe){
+
+                // A lire reference http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-associations.html#removing-associations
+                // On supprime les types deja enregistrés
+                $groupe->getTypes()->clear();
+
+                // On ajoute les nouveaux types en BDD
+                foreach ($typeGroupe["types"] as $tg){
+                    $typeClasseur = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($tg);
+
+                    $groupe->addType($typeClasseur);
+                    $typeClasseur->addGroupe($groupe);
+                }
+
+                $em->persist($typeClasseur);
+                $em->persist($groupe);
+            }
 
             // suppression des liaisons pour ce groupe
             $hierarchy = $em->getRepository('SesileUserBundle:UserGroupe')->findByGroupe($groupe);

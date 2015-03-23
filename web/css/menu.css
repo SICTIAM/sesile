@@ -60,6 +60,10 @@
     background-color: rgba(50, 133, 171, 0.6);
 }
 
+.menu-bleu .dd-menu li:hover{
+    background-color: rgba(50, 133, 171, 0.3);
+}
+
 .menu-rouge .dd-menu {
     background-color: rgba(222, 96, 97, 0.6);
 }
@@ -76,6 +80,10 @@
     background-color: rgba(219, 162, 9, 0.6);
 }
 
+.menu-jaune .dd-menu li:hover {
+    background-color: rgba(219, 162, 9, 0.3);
+}
+
 #jauneclair {
     background-color: rgba(239, 186, 29, 1);
 }
@@ -85,6 +93,7 @@
     text-transform: uppercase;
     text-decoration: none;
     font-size: 0.8em;
+    display: block;
 }
 
 .menu-vert .entete-menu {
@@ -93,6 +102,9 @@
 
 .menu-vert .dd-menu {
     background-color: rgba(131, 177, 58, 0.7);
+}
+.menu-vert .dd-menu li:hover {
+    background-color: rgba(131, 177, 58, 0.3);
 }
 
 #vertclair {

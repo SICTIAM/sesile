@@ -7,29 +7,37 @@
             &nbsp;&nbsp;&nbsp;Types de classeurs
         </div>
 
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+
         <table class="table tableau dtables">
             <thead>
             <tr>
-
                 <th>Type de classeur</th>
                 <th>Date de création</th>
-                <th>Tyde de classeur</th>
+                <th>Template</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
             {% for type in types %}
                 <tr class="classeur-row" data-id="{{ type.id }}">
-                    <td>{{ type.nom }}</td>
+                    <td><a href="{{ path("update_type_classeur", {'id' : type.id }) }}" class="link-datatable">{{ type.nom }}</a></td>
+                    <td></td>
+                    <td></td>
                     <td class="boutons_action">
-                        <a href="{{ path("classeur_edit", {'id' : type.id }) }}">
+                        <a href="{{ path("update_type_classeur", {'id' : type.id }) }}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        {% if classeur.isSupprimable(app.user.id) %}
-                            <a href="{{ path("classeur_supprimer") }}">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </a>
-                        {% endif %}
+
+                        <a href="{{ path("delete_classeur_type", {'id' : type.id }) }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+
                     </td>
                 </tr>
             {% endfor %}
@@ -43,67 +51,35 @@
 
         {% include 'SesileClasseurBundle:Classeur:legendeAdmin.html.twig' %}
 
-
     </div>
-
 
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="text/javascript">
         $(".dtables").dataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ path("ajax_classeurs_list") }}",
-            oLanguage: {
-                sSearch: "Rechercher&nbsp;:",
-                sInfo: "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
-                sInfoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-                sInfoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                oPaginate: {sFirst: "", sPrevious: "", sNext: "", sLast: ""},
-                sZeroRecords: "Aucun classeur &agrave; afficher",
-                sEmptyTable: "Aucun classeur &agrave; afficher",
-                sLengthMenu: "Afficher _MENU_ classeurs par page"
-            },
-            iDisplayLength: 15,
-            aLengthMenu: [15, 30, 50, 100],
-            sDom: 'lft<"footer_datatables"p>',
-            order: [[1, "desc"]],
-            aoColumnDefs: [
-                {
-                    aTargets: [1],
-                    sClass: "center"
-                },
-                {
-                    aTargets: [2],
-                    sClass: "center"
-                },
-                {
-                    "aTargets": [5],
-                    sClass: "center",
-                    "mRender": function (data, type, full) {
-                        return '<span class="glyphicon statut_' + data + '"></span>';
-                    }
-                },
-                {
-                    aTargets: [6],
-                    sClass: "center",
-                    bSortable: false,
-                    "mRender": function (data, type, full) {
-                        return '<a href="' + Routing.generate('classeur_edita', {id: data}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
-                    }
+            "oLanguage": {
+                "sSearch": "Rechercher&nbsp;:",
+                "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "sLengthMenu": "Afficher _MENU_ types de classeur par page",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sPrevious": "",
+                    "sNext": "",
+                    "sZeroRecords": "Aucun type &agrave; afficher",
+                    "sEmptyTable": "Aucun type &agrave; afficher"
                 }
+            },
+            order: [[ 0, "asc" ]],
+            "iDisplayLength": 15,
+            "aLengthMenu": [15, 30, 50, 100],
+            "sDom": 'lft<"footer_datatables"p>',
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [ -1 ] }
             ],
-            sPaginationType: "full_numbers",
-            fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).addClass("classeur-row");
-                $(nRow).dblclick(function (e) {
-                    document.location.href = Routing.generate('classeur_e', {id: aData[6]});
-                });
-                return nRow;
-            }
+            "sPaginationType": "full_numbers"
         });
     </script>
-
-
 
 {% endblock %}

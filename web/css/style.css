@@ -267,6 +267,10 @@ html, body {
 	cursor: pointer;
 }
 
+.row-padding {
+    padding-bottom: 15px;
+}
+
 .fuckingvisibility{
 	min-width: 21em !important;
 }
@@ -515,7 +519,7 @@ select [name=user] {
 
 .form-horizontal .control-label{
 	text-align: left !important;
-	padding-top: 0em !important;
+	/*padding-top: 0em !important;*/
 }
 
 /*BOUTONS TABLEAU*/
@@ -550,9 +554,17 @@ select [name=user] {
 	position: absolute;
 	width: 50%;
 	left: 25%;
+    z-index: 1000;
 }
 .alert-info {
     margin-top: 53px;
+}
+
+.alert-email {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
 }
 
 /*FORM UTILISATEURS*/
@@ -768,4 +780,10 @@ select [name=user] {
 }
 .ui-widget-content a {
     color: #222222;
+}
+
+.link-datatable, .link-datatable:hover, .link-datatable:active {
+    text-decoration: none;
+    display: block;
+    color: rgba(109, 110, 112, 1);
 }

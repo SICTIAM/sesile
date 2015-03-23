@@ -47,10 +47,10 @@ class Groupe {
     private $couleur;
 
     /**
-     * @var int
-     * @ORM\Column(name="type", type="integer")
+     * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", inversedBy="groupes", cascade={"persist"})
+     * @ORM\JoinTable(name="classeur_groupe")
      */
-    private $type;
+    private $types;
 
     /**
      * @var string
@@ -165,28 +165,6 @@ class Groupe {
     }
 
     /**
-     * Set type
-     *
-     * @param \int $type
-     * @return Groupe
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return \int 
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * Add hierarchie
      *
      * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
@@ -217,5 +195,38 @@ class Groupe {
     public function getHierarchie()
     {
         return $this->hierarchie;
+    }
+
+    /**
+     * Add types
+     *
+     * @param \Sesile\ClasseurBundle\Entity\TypeClasseur $types
+     * @return Groupe
+     */
+    public function addType(\Sesile\ClasseurBundle\Entity\TypeClasseur $types)
+    {
+        $this->types[] = $types;
+    
+        return $this;
+    }
+
+    /**
+     * Remove types
+     *
+     * @param \Sesile\ClasseurBundle\Entity\TypeClasseur $types
+     */
+    public function removeType(\Sesile\ClasseurBundle\Entity\TypeClasseur $types)
+    {
+        $this->types->removeElement($types);
+    }
+
+    /**
+     * Get types
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTypes()
+    {
+        return $this->types;
     }
 }

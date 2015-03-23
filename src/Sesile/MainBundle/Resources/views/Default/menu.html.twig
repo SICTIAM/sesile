@@ -112,12 +112,12 @@
                         Administration<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
-                    <li>
+                    {#<li>
                         <a href="{{ path("gestion_circuit") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                             Gestion des circuits
                         </a>
-                    </li>
+                    </li>#}
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                     <li>
                         <a href="{{ path("liste_type_classeur") }}">
@@ -143,6 +143,14 @@
                     <a href="{{ path("index_collectivite") }}">
                         <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
                         Collectivités
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_AGENT_SICTIAM') %}
+                <li>
+                    <a href="{{ path("index_emailing") }}">
+                        <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                        Emailing
                     </a>
                 </li>
             {% endif %}

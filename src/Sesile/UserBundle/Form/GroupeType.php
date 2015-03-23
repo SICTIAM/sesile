@@ -1,33 +1,41 @@
 <?php
 
-namespace Sesile\ClasseurBundle\Form;
+namespace Sesile\UserBundle\Form;
 
+use Sesile\ClasseurBundle\Entity\TypeClasseur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class TypeClasseurType extends AbstractType
+class GroupeType extends AbstractType
 {
-    /**
+        /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom', 'text')
-            ->add('Enregister', 'submit')
-            //->add('template', null)
+//            ->add('nom')
+//            ->add('collectivite')
+//            ->add('couleur')
+//            ->add('json')
+            ->add('types', 'entity', array(
+                'class' => 'SesileClasseurBundle:TypeClasseur',
+                'property' => 'nom',
+                'multiple' => true,
+                'expanded' => true
+                ))
         ;
     }
-
+    
     /**
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Sesile\ClasseurBundle\Entity\TypeClasseur'
+            'data_class' => 'Sesile\UserBundle\Entity\Groupe'
         ));
     }
 
@@ -36,6 +44,6 @@ class TypeClasseurType extends AbstractType
      */
     public function getName()
     {
-        return 'sesile_classeurbundle_typeClasseur';
+        return 'sesile_userbundle_groupe';
     }
 }

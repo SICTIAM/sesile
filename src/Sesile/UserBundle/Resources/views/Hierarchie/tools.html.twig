@@ -1,15 +1,13 @@
-Nom&nbsp;:&nbsp;
-<input type="text" name="nom" id="nom_groupe"{% if groupe is defined %} value="{{ groupe.Nom }}" {% endif %}/>
-&nbsp;&nbsp;
-<button id="btn-envoyer" type="button" class="btn btn-success btn-envoyer sesiletooltip" data-original-title="Enregistrer">
-    <span class="glyphicon glyphicon-ok" style="color: #ffffff"></span>
-</button>
-</div>
-<div id="toolbar">
+
+{#<div id="toolbar">#}
+<div class="row">
+    <div class="col-lg-4" id="toolbar">
+
+
     Utilisateurs&nbsp;:&nbsp;
     <select id="listUsers">
 	{% for user in users %}
-	    <option value="{{ user.id }}">{{ user.prenom }} {{ user.nom }}</option>
+	    <option value="{{ user.id }}">{{ user.nom }} {{ user.prenom }}</option>
 	{% endfor %}
     </select>
 
@@ -27,4 +25,6 @@ Nom&nbsp;:&nbsp;
 	    <span class="glyphicon glyphicon-star" style="color: #6D6E70;"></span>
 	</button>
     {% endif %}
+    </div>
 </div>
+{#</div>#}

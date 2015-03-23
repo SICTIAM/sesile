@@ -80,8 +80,12 @@ class DefaultController extends Controller
      * @method("GET")
      */
     public function ajoutAction() {
-        $userManager = $this->container->get('fos_user.user_manager');
-        $users = $userManager->findUsers();
+//        $userManager = $this->container->get('fos_user.user_manager');
+//        $users = $userManager->findUsers();
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array('collectivite' => $this->get("session")->get("collectivite"), 'enabled' => 1)
+        );
         foreach ($users as $index => $user) {
             if ($user->getId() == $this->getUser()->getId()) {
                 unset($users[$index]);

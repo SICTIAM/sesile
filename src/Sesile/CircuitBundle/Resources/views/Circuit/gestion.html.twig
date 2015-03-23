@@ -11,7 +11,7 @@
 
         <div id="users_list">
             {% for user in users %}
-                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
+                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.nom }} {{ user.prenom }}</p>
             {% endfor %}
         </div>
 

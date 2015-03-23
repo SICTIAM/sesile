@@ -28,13 +28,13 @@
 
 {% endif %}
 
-{% if retractable %}
-    <form class="form_action" action="{{ path("classeur_retracter") }}" method="post">
-        <button type="submit" class="btn btn-warning" id="retracte">
-            <span class="glyphicon glyphicon-thumbs-down"></span>
-            &nbsp;Se r&eacute;tracter
-        </button>
-        <input type="hidden" value="{{ classeur.id }}" name="id"/>
-    </form>
-{% endif %}
+{#{% if retractable %}#}
+    {#<form class="form_action" action="{{ path("classeur_retracter") }}" method="post">#}
+        {#<button type="submit" class="btn btn-warning" id="retracte">#}
+            {#<span class="glyphicon glyphicon-thumbs-down"></span>#}
+            {#&nbsp;Se r&eacute;tracter#}
+        {#</button>#}
+        {#<input type="hidden" value="{{ classeur.id }}" name="id"/>#}
+    {#</form>#}
+{#{% endif %}#}
 

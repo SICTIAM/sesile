@@ -6,17 +6,18 @@
             <label class="nametitle" id="users_complete">
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-            <input class="nameinput" type="text">
+            <input class="nameinput" type="text" id="circuit-search">
         </div>
         <div id="users_list">
             {% for user in users %}
-                <p data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.prenom }} {{ user.nom }}</p>
+                <p class="users-search" data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.nom }} {{ user.prenom }}</p>
             {% endfor %}
         </div>
         <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
 
 
+    <!--
     <div class="selects_circuit">
         <div class="titre_select">
             <label class="nametitle">
@@ -31,6 +32,7 @@
         </div>
         <span id="circuitadd_btn" class="glyphicon glyphicon-chevron-down"></span>
     </div>
+    -->
 </div>
 
 

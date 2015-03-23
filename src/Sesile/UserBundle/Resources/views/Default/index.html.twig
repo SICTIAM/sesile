@@ -23,15 +23,19 @@
                     <td>{{ user.Nom }} {{ user.Prenom }}</td>
                     <td>{{ user.username }}</td>
                     <td>
-                        <div class="active_inactive_user">{% if user.enabled %}
-                                <span class="glyphicon glyphicon-ok"></span>{% else %}
-                                <span class="glyphicon glyphicon-remove"></span>{% endif %}</div>
+                        <div class="active_inactive_user">
+                            {% if user.enabled %}
+                                <span class="glyphicon glyphicon-ok"></span>
+                            {% else %}
+                                <span class="glyphicon glyphicon-remove"></span>
+                            {% endif %}
+                        </div>
                     </td>
                     <td class="boutons_action">
                         <a href="{{ path("user_edit", {'id' : user.id }) }}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        <a class="" href="#"{{ path("user_edit", {'id' : user.id }) }}">
+                        <a class="" href="{{ path("user_edit", {'id' : user.id }) }}">
                         <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>

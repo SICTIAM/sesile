@@ -16,7 +16,7 @@
             <tbody>
             {% for groupe in groupes %}
                 <tr class="user-row" data-id="{{ groupe.id }}">
-                    <td>{{ groupe.Nom }}</td>
+                    <td><a href="{{ path("groupe_edit", {'id' : groupe.id }) }}" class="link-datatable">{{ groupe.Nom }}</a></td>
                     <td class="boutons_action">
                         <a href="{{ path("groupe_edit", {'id' : groupe.id }) }}">
                             <span class="glyphicon glyphicon-pencil"></span>

@@ -1,0 +1,81 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-cog"></span>
+            &nbsp;&nbsp;&nbsp;Envoie d'un Emailing
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-9">
+                <div class="alert-email alert-danger">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    Ce formulaire envoie un email à <strong>tous</strong> les utilisateurs de l'instance
+                </div>
+            </div>
+        </div>
+        {{ form_start(form) }}
+        <div class="row row-padding">
+            <div class="col-md-3">{{ form_label(form.sujet)}}</div>
+            <div class="col-md-9">{{ form_widget(form.sujet, {'attr': {'class': 'form-control'}} ) }}</div>
+        </div>
+        <div class="row row-padding">
+            <div class="col-md-3">{{ form_label(form.mailMessage) }}</div>
+            <div class="col-md-9">{{ form_widget(form.mailMessage, {'attr': {'class': 'form-control textarea'}} ) }}</div>
+        </div>
+        <div class="row row-padding">
+            <div class="col-md-3">&nbsp;</div>
+            <div class="col-md-9">{{ form_widget(form.submit, {'attr': {'class': 'btn btn-success disabled'}}) }}</div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+    <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}"/>
+    <script src="{{ asset("/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
+    <script type="text/javascript">
+        $('textarea').wysihtml5({
+            "image": false,
+            locale: "fr-FR"
+        });
+
+        //var textarea = $(".textarea").data("wysihtml5").el;
+
+        $("input").keyup(function() {
+            that = $("button[type=submit]");
+            $(this).val() ? that.removeClass("disabled") : that.addClass("disabled");
+        });
+
+
+        //$('.textarea').keyup(console.log('testdfsf'));
+
+        /*
+        $('.textarea').change(function() {
+            console.log($('.textarea').val());
+        });
+
+        $('.textarea').keyup(function() {
+            console.log($('.textarea').val());
+        });
+        */
+
+        /*$('.someLink').live('click', function () {
+            $('.textarea').wysihtml5();
+            var wysihtml5Editor = $(".textarea").data("wysihtml5").editor;
+            console.log('wysihtml5Editor: '+wysihtml5Editor);
+            // The following is important since wysihtml5 is initialized asynchronously
+            wysihtml5Editor.observe("load", function() {
+            wysihtml5Editor.composer.commands.exec("bold");
+            });
+        });*/
+
+
+
+
+    </script>
+{% endblock %}
