@@ -15,6 +15,7 @@ function loadtype() {
     });
 }
 
+
 // Fonction permettant de charger le formulaire en fonction du type de classeur sélectionné
 function loadcorrectform() {
     $('#loadinggif').show();
