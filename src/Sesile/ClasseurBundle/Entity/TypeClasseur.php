@@ -36,19 +36,16 @@ class TypeClasseur
     private $groupes;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="template", type="string", length=255, nullable=true)
+     * @ORM\Column(name="creation", type="datetime", nullable=true)
      */
-    private $template;
+    private $creation;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="test", type="string", length=255, nullable=true)
+     * @ORM\Column(name="supprimable", type="boolean")
      */
-    private $test;
-
+    private $supprimable = true;
 
     /**
      * Get id
@@ -90,54 +87,8 @@ class TypeClasseur
     public function __construct()
     {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->creation = new \DateTime('now');
     }
-
-    /**
-     * Set template
-     *
-     * @param string $template
-     * @return TypeClasseur
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-    
-        return $this;
-    }
-
-    /**
-     * Get template
-     *
-     * @return string 
-     */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
-    /**
-     * Set test
-     *
-     * @param string $test
-     * @return TypeClasseur
-     */
-    public function setTest($test)
-    {
-        $this->test = $test;
-    
-        return $this;
-    }
-
-    /**
-     * Get test
-     *
-     * @return string 
-     */
-    public function getTest()
-    {
-        return $this->test;
-    }
-
 
     /**
      * Add groupes
@@ -170,5 +121,51 @@ class TypeClasseur
     public function getGroupes()
     {
         return $this->groupes;
+    }
+
+    /**
+     * Set creation
+     *
+     * @param \DateTime $creation
+     * @return TypeClasseur
+     */
+    public function setCreation($creation)
+    {
+        $this->creation = $creation;
+    
+        return $this;
+    }
+
+    /**
+     * Get creation
+     *
+     * @return \DateTime 
+     */
+    public function getCreation()
+    {
+        return $this->creation;
+    }
+
+    /**
+     * Set supprimable
+     *
+     * @param boolean $supprimable
+     * @return TypeClasseur
+     */
+    public function setSupprimable($supprimable)
+    {
+        $this->supprimable = $supprimable;
+    
+        return $this;
+    }
+
+    /**
+     * Get supprimable
+     *
+     * @return boolean 
+     */
+    public function getSupprimable()
+    {
+        return $this->supprimable;
     }
 }

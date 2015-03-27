@@ -27,7 +27,7 @@
                         <label for="type" class="col-lg-2 control-label">Groupe fonctionnel</label>
 
                         <div class="col-lg-3">
-                            <select id="userGroupe" name="userGroupe" class="form-control">
+                            <select id="userGroupe" name="userGroupe" class="form-control" required="required">
                                 {% for userGroupe in userGroupes %}
                                     <option value="{{ userGroupe.id }}" data-id="{{ userGroupe.id }}" data-ordre="{{ userGroupe.ordre }}">{{ userGroupe.name }}</option>
                                 {% endfor %}
@@ -37,7 +37,7 @@
                         <label for="type" class="col-lg-2 control-label">Type de classeur</label>
 
                         <div class="col-lg-3" id="testgroupe">
-                            <select id="type" name="type" class="form-control">
+                            <select id="type" name="type" class="form-control" required="required">
                             </select>
                         </div>
 

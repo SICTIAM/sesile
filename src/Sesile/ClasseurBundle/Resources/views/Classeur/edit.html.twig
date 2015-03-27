@@ -64,9 +64,9 @@
 
 
                 <select class="fuckingvisibility form-control" id="visibilite" name="visibilite">
+                    <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
                     <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
                     <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
-                    <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
                     {#<option value="3" {% if classeur.visibilite == 3 %} selected="selected" {% endif %}>Pour le groupe fonctionnel</option>#}
                 </select>
                 </div>
@@ -282,7 +282,7 @@
                         <label class="nametitle" id="users_complete">
                             <span class="glyphicon glyphicon-search"></span>
                             &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-                        <input class="nameinput" type="text" id="circuit-search">
+                        <input class="nameinput" type="text" id="circuit-search" autocomplete="off">
                     </div>
                     <div id="users_list">
                         {% for user in users %}

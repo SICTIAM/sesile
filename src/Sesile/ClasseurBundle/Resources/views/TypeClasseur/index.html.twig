@@ -19,7 +19,7 @@
             <tr>
                 <th>Type de classeur</th>
                 <th>Date de création</th>
-                <th>Template</th>
+                {#<th>Template</th>#}
                 <th>Action</th>
             </tr>
             </thead>
@@ -27,16 +27,21 @@
             {% for type in types %}
                 <tr class="classeur-row" data-id="{{ type.id }}">
                     <td><a href="{{ path("update_type_classeur", {'id' : type.id }) }}" class="link-datatable">{{ type.nom }}</a></td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        {% if type.creation %}
+                            <a href="{{ path("update_type_classeur", {'id' : type.id }) }}" class="link-datatable">{{ type.creation|date("d/m/Y") }}</a>
+                        {% endif %}
+                    </td>
+                    {#<td></td>#}
                     <td class="boutons_action">
                         <a href="{{ path("update_type_classeur", {'id' : type.id }) }}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-
+                        {% if type.supprimable %}
                         <a href="{{ path("delete_classeur_type", {'id' : type.id }) }}">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
+                        {% endif %}
 
                     </td>
                 </tr>
@@ -76,6 +81,8 @@
             "aLengthMenu": [15, 30, 50, 100],
             "sDom": 'lft<"footer_datatables"p>',
             "aoColumnDefs": [
+                { "aTargets": [ 1 ], sClass: "center" },
+                { "aTargets": [ 2 ], sClass: "center" },
                 { "bSortable": false, "aTargets": [ -1 ] }
             ],
             "sPaginationType": "full_numbers"

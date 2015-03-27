@@ -36,6 +36,8 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+        $isvalidable = $classeur->isValidable($this->getUser()->getId());
+
         $docs = $classeur->getDocuments();
         $tailles = array();
         $types = array();
@@ -48,7 +50,7 @@ class DocumentController extends Controller
         }
 
 
-        return array('docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types, 'ids' => $ids);
+        return array('docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types, 'ids' => $ids, 'isvalidable' => $isvalidable);
 
     }
 
@@ -107,15 +109,20 @@ class DocumentController extends Controller
             $name = $doc->getName();
             $historyinverse = $em->getRepository('SesileDocumentBundle:DocumentHistory')->getHistory($doc);
 
+            // Test pour les droits de modifications des documents
+            $id_classeur = $doc->getClasseur()->getId();
+            $isValidant = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id_classeur)->isValidable($this->getUser()->getId());
+
         } else {
             $doc = null;
             $historyinverse = null;
             $name = $id;
+            $isValidant = null;
 
         }
 
 
-        return array('doc' => $doc, 'name' => $name, 'servername' => $servername, 'historyinverse' => $historyinverse);
+        return array('doc' => $doc, 'name' => $name, 'servername' => $servername, 'historyinverse' => $historyinverse, 'isvalidant' => $isValidant);
 
     }
 
