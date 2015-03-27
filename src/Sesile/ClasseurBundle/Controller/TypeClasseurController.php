@@ -21,7 +21,7 @@ class TypeClasseurController extends Controller
     /**
      * Liste des types
      *
-     * @Route("/test", name="liste_type_classeur")
+     * @Route("/list", name="liste_type_classeur")
      * @Method("GET")
      * @Template("SesileClasseurBundle:TypeClasseur:index.html.twig")
      */

@@ -80,7 +80,9 @@ var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('
 
 
 });
-
+{% if isvalidable == false %}
+    dropzone.disable();
+{% endif %}
 function removedropzonefile(file) {
 
     $("#filedescription").slideUp();

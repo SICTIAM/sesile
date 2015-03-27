@@ -44,7 +44,7 @@ class HierarchieController extends Controller {
         // recup la liste des users en base
         $em = $this->getDoctrine()->getManager();
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite")
+            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
         ));
         // Ajout du formulaire pour les types
         $form = $this->createForm(new GroupeType());
