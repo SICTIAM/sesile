@@ -29,9 +29,12 @@ class classeurMigrateV2Command extends ContainerAwareCommand
             $visibles = $em->getRepository("SesileClasseurBundle:Classeur")->findAll();
             foreach($visibles as $visible) {
                 $users = explode(",", $visible->getCircuit());
+                $users = array_unique($users);
                 foreach($users as $user) {
                     $user_id = $em->getRepository('SesileUserBundle:User')->findOneById($user);
-                    $visible->addVisible($user_id);
+                    if($user_id) {
+                        $visible->addVisible($user_id);
+                    }
                 }
                 $em->persist($visible);
             }

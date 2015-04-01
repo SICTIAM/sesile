@@ -1565,17 +1565,18 @@ class ClasseurController extends Controller {
      */
     private $ordre;
 
-    private function recursivesortHierarchie($hierarchie, $curr) {
-        static $recurs = 0;
+    private function recursivesortHierarchie($hierarchie, $curr, $recurs = 0) {
+//        static $recurs = 0;
         foreach($hierarchie as $k => $groupeUser) {
             if($groupeUser->getUser()->getId() == $curr ) {
+//                var_dump($recurs, $curr);
                 if($recurs > 0) {
                     $this->ordre .= $groupeUser->getUser()->getId().",";
                 }
 
                 if($curr != 0 ) {
                     $recurs++;
-                    $this->recursivesortHierarchie($hierarchie, $groupeUser->getParent());
+                    $this->recursivesortHierarchie($hierarchie, $groupeUser->getParent(), $recurs);
                 }
 
             }
