@@ -1484,7 +1484,8 @@ class ClasseurController extends Controller {
             ->setSubject($sujet)
             ->setFrom('sesile@sictiam.fr')
             ->setTo($to)
-            ->setBody($body, "text/html");
+            ->setBody($body)
+            ->setContentType('text/html');
         $this->get('mailer')->send($message);
     }
 
@@ -1500,7 +1501,7 @@ class ClasseurController extends Controller {
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => 'http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
             )
         );
 
@@ -1522,7 +1523,7 @@ class ClasseurController extends Controller {
                 'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => 'http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
             )
         );
 
@@ -1546,7 +1547,7 @@ class ClasseurController extends Controller {
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => 'http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
+                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
             )
         );
 
