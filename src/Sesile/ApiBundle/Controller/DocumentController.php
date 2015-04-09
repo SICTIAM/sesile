@@ -72,7 +72,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
         }
 
 
-        return $document;
+        return $this->docToArray($document);
 
     }
 
@@ -266,5 +266,26 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
 
     }
 
+    private function docToArray($doc)
+    {
+        $tabHisto = $doc->getHistories();
+        $cleanTabHisto = array();
+        foreach ($tabHisto as $histo) {
+            $cleanTabHisto[] = $this->histoToArray($histo);
+        }
+        return array('id' => $doc->getId(),
+            'name' => $doc->getName(),
+            'repourl' => $doc->getrepourl(),
+            'type' => $doc->getType(),
+            'signed' => false,
+            'histories' => $cleanTabHisto);
+    }
+
+    private function histoToArray($histo)
+    {
+        return array('id' => $histo->getId(),
+            'date' => $histo->getDate(),
+            'comment' => $histo->getComment());
+    }
 
 }
