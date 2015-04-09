@@ -171,7 +171,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         if (empty($classeur[0])) {
             throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
         }
-        return $classeur[0];
+
+        return $this->classeurToArray($classeur[0]);
 
 
     }
@@ -188,8 +189,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
      *          {"name"="desc", "dataType"="string", "required"=false, "description"="Description du classeur"},
      *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
-     *          {"name"="type", "dataType"="string", "format"="Choix possibles : 'Classique' (Divers), 'Hélios', 'Acte' (Acte Budgétaire), 'Marchés', 'Convocation', 'Courrier AR', 'Document Urba'", "required"=true, "description"="Type du classeur"},
-     *          {"name"="circuit", "dataType"="string", "format"="userid,userid,userid...   Par exemple : 1,2,3", "required"=true, "description"="Circuit de validation du classeur"},
+     *          {"name"="type", "dataType"="integer", "format"="", "required"=true, "description"="id du type du classeur"},
+     *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
      *
      *
@@ -214,6 +215,29 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
 
+        $group = $em->getRepository('SesileUserBundle:Groupe')->findOneById($request->request->get('groupe'));
+
+        $groupes_user = $em->getRepository('SesileUserBundle:UserGroupe')->findBy(array('user' => $user, 'groupe' => $group));
+
+        if (count($groupes_user) == 0) {
+            $view = $this->view(array('code' => '400', 'message' => 'Utilisateur introuvable pour ce groupe', "parametres_recus" => $request->request), 400);
+            return $this->handleView($view);
+        }
+
+
+        $tip = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($request->request->get('type'));
+        $tabgroups_types = $tip->getGroupes();
+        $tabidG = array();
+        foreach ($tabgroups_types as $objGroupe) {
+            $tabidG[] = $objGroupe->getId();
+        }
+
+        if (!in_array($request->request->get('groupe'), $tabidG)) {
+            $view = $this->view(array('code' => '400', 'message' => 'Ce groupe n\'a pas accès au type de classeur renseigné ', "parametres_recus" => $request->request), 400);
+            return $this->handleView($view);
+        }
+
+
 
         $name = $request->request->get('name');
      
@@ -221,8 +245,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
  
         $type= $request->request->get('type');
 
-        $circuit=$request->request->get('circuit');
-        
+        $circuit = $request->request->get('groupe');
+
 
 
 
@@ -231,7 +255,16 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             return $this->handleView($view);
         }
 
-
+        //    $group = $em->getRepository('SesileUserBundle:Groupe')->findOneById($request->request->get('groupe'));
+        $hierarchie = $em->getRepository('SesileUserBundle:UserGroupe')->findBy(array("groupe" => $group), array("parent" => "DESC"));
+        //  $this->ordre = "";
+        $circuits = array(
+            "id" => $group->getId(),
+            "name" => $group->getNom(),
+            "ordre" => $this->recursivesortHierarchie($hierarchie, $user->getId()),
+            "groupe" => true
+        );
+        //return $circuits['ordre'];
 
         $classeur = new Classeur();
         $classeur->setNom($request->request->get('name'));
@@ -239,21 +272,30 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         list($d, $m, $a) = explode("/", $request->request->get('validation'));
         $valid = new \DateTime($m . "/" . $d . "/" . $a);
         $classeur->setValidation($valid);
-        $classeur->setType($request->request->get('type'));
-        $circuit = $request->request->get('circuit');
-        $classeur->setCircuit($circuit);
+        $classeur->setType($tip);
+        // $circuit = $request->request->get('circuit');
+        $classeur->setCircuit($circuits['ordre']);
         $classeur->setUser($user->getId());
 
         $classeur->setVisibilite($request->request->get('visibilite'));
         $em->persist($classeur);
 
 
+        $users = explode(',', $circuits['ordre']);
+        $users[] = $user->getId();
+
+        $usersCV = $this->classeur_visible($request->request->get('visibilite'), $users, $request->request->get('userGroupe'));
+        foreach ($usersCV as $userCV) {
+            $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
+            $classeur->addVisible($userVisible);
+        }
+
         $em->flush();
 
 
         //Verfiier cette fonction pour le bug 0002222//
         // enregistrer les users du circuit
-        $users = explode(',', $circuit);
+        $users = explode(',', $circuits['ordre']);
 
         for ($i = 0; $i < count($users); $i++) {
             $classeurUser = new ClasseursUsers();
@@ -264,6 +306,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $classeurUser->setOrdre($i + 1);
             $em->persist($classeurUser);
         }
+
+
         $em->flush();
 
         $action = new Action();
@@ -277,11 +321,11 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         // envoi d'un mail au premier validant
         $this->sendCreationMail($classeur);
-
+        //  return $circuits['ordre'];
         // TODO envoi du mail au déposant et aux autres personnes du circuit ?
 
 
-        return $em->getRepository("SesileClasseurBundle:Classeur")->findOneById($classeur->getId());;
+        return $this->classeurToArray($classeur); //$em->getRepository("SesileClasseurBundle:Classeur")->findOneById($classeur->getId());
 
     }
 
@@ -517,7 +561,33 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
     }
 
-
+    /**
+     * Cette méthode permet de récupérer la liste des types de documents
+     *
+     *
+     *
+     * @var Request $request
+     * @return array
+     * @Route("/types/")
+     * @Rest\View()
+     * @Method("get")
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Permet de récupérer la liste des types de classeurs"
+     *
+     * )
+     */
+    public function getTypesAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
+        $arrayTypes = array();
+        foreach ($types as $type) {
+            $arrayTypes[] = array('id' => $type->getId(), 'nom' => $type->getNom());
+        }
+        return $arrayTypes;
+    }
 
        /*                MAILS DE NOTIFICATION                      */
 
@@ -592,4 +662,129 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         }
     }
 
+    private function recursivesortHierarchie($hierarchie, $curr)
+    {
+        static $recurs = 0;
+        foreach ($hierarchie as $k => $groupeUser) {
+            if ($groupeUser->getUser()->getId() == $curr) {
+                if ($recurs > 0) {
+                    $this->ordre .= $groupeUser->getUser()->getId() . ",";
+                }
+
+                if ($curr != 0) {
+                    $recurs++;
+                    $this->recursivesortHierarchie($hierarchie, $groupeUser->getParent());
+                }
+
+            }
+        }
+        $this->ordre = rtrim($this->ordre, ",");
+        return $this->ordre;
+    }
+
+
+    private function classeurToArray($classeur)
+    {
+        /* return array('id' => $classeur->getId(),
+             'nom' => $classeur->getNom(),
+             'description' => $classeur->getDescription(),
+             'creation' => $classeur->getCreation(),
+             'validation' => $classeur->getValidation(),
+             'type' => $classeur->getType()->getId(),
+             'status' => $classeur->getStatus(),
+             'user' => $classeur->getUser(),
+             'validant' => $classeur->getValidant(),
+             'visibilite' => $classeur->getVisibilite(),
+             'circuit' => $classeur->getCircuit(),
+             'documents' => $classeur->getDocuments(),
+             'actions' => $classeur->getActions());
+ */
+        $tabActions = $classeur->getActions();
+        $cleanTabAction = array();
+        foreach ($tabActions as $action) {
+            $cleanTabAction[] = $this->actionToArray($action);
+        }
+
+        $tabDocs = $classeur->getDocuments();
+        $cleanTabDocs = array();
+        foreach ($tabDocs as $doc) {
+            $cleanTabDocs[] = $this->docToArray($doc);
+        }
+
+        return array('id' => $classeur->getId(),
+            'nom' => $classeur->getNom(), 'description' => $classeur->getDescription(),
+            'creation' => $classeur->getCreation(),
+            'validation' => $classeur->getValidation(), 'type' => $classeur->getType()->getId(),
+            'validant' => $classeur->getValidant(),
+            'visibilite' => $classeur->getVisibilite(),
+            'circuit' => $classeur->getCircuit(),
+            'documents' => $cleanTabDocs,
+            'actions' => $cleanTabAction);
+    }
+
+    private function actionToArray($action)
+    {
+        return array('id' => $action->getId(),
+            'username' => $action->getUsername(),
+            'date' => $action->getDate(),
+            'action' => $action->getAction());
+    }
+
+    private function docToArray($doc)
+    {
+        $tabHisto = $doc->getHistories();
+        $cleanTabHisto = array();
+        foreach ($tabHisto as $histo) {
+            $cleanTabHisto[] = $this->histoToArray($histo);
+        }
+        return array('id' => $doc->getId(),
+            'name' => $doc->getName(),
+            'repourl' => $doc->getrepourl(),
+            'type' => $doc->getType(),
+            'signed' => false,
+            'histories' => $cleanTabHisto);
+    }
+
+    private function histoToArray($histo)
+    {
+        return array('id' => $histo->getId(),
+            'date' => $histo->getDate(),
+            'comment' => $histo->getComment());
+    }
+
+    private function classeur_visible($visibilite, $users, $requestUserGroupe = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        switch ($visibilite) {
+            // Privé soit le circuit
+            case 0:
+                return $em->getRepository('SesileUserBundle:User')->findById(array_unique($users));
+                break;
+            // Public
+            case 1:
+                return $em->getRepository('SesileUserBundle:User')->findByCollectivite($this->get("session")->get("collectivite"));
+                break;
+            // Privé à partir de moi
+            case 2:
+                return '2';
+                break;
+            // Pour le groupe fonctionnel (et le circuit)
+            case 3:
+                if ($requestUserGroupe) {
+                    $usersGF = $em->getRepository('SesileUserBundle:UserGroupe')->findByGroupe($requestUserGroupe);
+                    foreach ($usersGF as $k => $userGF) {
+                        $userGroupe[] = $usersGF[$k]->getUser()->getId();
+                    }
+                    $usersAll = array_unique(array_merge($userGroupe, $users));
+                    return $em->getRepository('SesileUserBundle:User')->findById($usersAll);
+                } else {
+                    return $this->redirect($this->generateUrl('classeur_create'));
+                }
+                break;
+            // Par défaut on fait quoi ?
+            default:
+                return array();
+                break;
+        }
+    }
 }

@@ -93,7 +93,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         $em = $this->getDoctrine()->getManager();
 
 
-        $entity = $em->getRepository('SesileUserBundle:User')->findAll();;
+        $entity = $em->getRepository('SesileUserBundle:User')->findAll();
         $users = array();
         foreach($entity as $e){
             $array = array();
@@ -110,6 +110,42 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         return $users;
 
     }
+
+    /**
+     * Cette méthode permet de récupérer un les détails de l'utilisateur courant en fonction des headers
+     *
+     *
+     * @var Request $request
+     * @return array
+     * @Route("/groupes/")
+     * @Rest\View()
+     * @Method("get")
+     *
+     *
+     * @param ParamFetcher $param
+     *
+     * @ApiDoc(
+     *  resource=false,
+     *  description="Permet de ma liste des groupes fonctionnels ayant accès à un type de classeur",
+     *   parameters={{"name"="type", "dataType"="integer", "required"=true, "description"="Id du type"}}
+     * )
+     */
+    public function getGroupesFonctionnelsAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+
+        $type = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($request->query->get('type'));
+
+        $classeurs = $type->getGroupes();
+        $tabClasseurs = array();
+        foreach ($classeurs as $classeur) {
+            $tabClasseurs[] = array('id' => $classeur->getId(), 'nom' => $classeur->getNom());
+        }
+
+        return $tabClasseurs;
+    }
+
 
 
 }
