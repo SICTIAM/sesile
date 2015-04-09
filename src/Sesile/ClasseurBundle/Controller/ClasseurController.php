@@ -15,6 +15,7 @@ use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\DelegationsBundle\Entity\Delegations;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Classeur controller.
@@ -415,7 +416,8 @@ class ClasseurController extends Controller {
         $validant = (!empty($validant)) ? $validant.$this->getUser()->getId() : $this->getUser()->getId();
 //        var_dump($validant);
 //        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1";
-        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status = 1";
+//        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status = 1";
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (1,4)";
 
         $query = $em->createQuery($sql);
         $rResult = $query->getResult();
@@ -456,7 +458,7 @@ class ClasseurController extends Controller {
         }
 
 //        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN($validant) AND c.status = 1 $where $order";
-        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status = 1 $where $order";
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (1,4) $where $order";
 
 
 //        var_dump($sql);
@@ -511,7 +513,7 @@ class ClasseurController extends Controller {
         unset($rResult);
 
 //        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1 $order";
-        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status = 1 $order";
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (1,4) $order";
         $query = $em->createQuery($sql);
         $rResult = $query->getResult();
         $output["recordsFiltered"] = count($rResult);
@@ -584,6 +586,13 @@ class ClasseurController extends Controller {
      */
     public function createAction(Request $request)
     {
+        // Mise en place d une securite avec le csrf v1...
+        $csrf_token = $request->request->get('_csrf_token');
+        $csrf = $this->get('form.csrf_provider');
+        if(!$csrf->isCsrfTokenValid('authenticate', $csrf_token)) {
+            throw $this->createNotFoundException('Unable to submit the form.');
+        }
+
         $em = $this->getDoctrine()->getManager();
         $classeur = new Classeur();
         $classeur->setNom($request->request->get('name'));
@@ -738,11 +747,15 @@ class ClasseurController extends Controller {
         }
         // FIN du Nouveau code pour afficher l ordre des groupes
 
+        // CSRF
+        $csrf_token = $this->get('form.csrf_provider')->generateCsrfToken('authenticate');
+
         return array(
 //            "userGroupes" => $groupes,
             "typeClasseurs" => $types,
             "menu_color" => "bleu",
-            "userGroupes" => $circuits
+            "userGroupes" => $circuits,
+            "csrf_token" => $csrf_token
         );
     }
 
@@ -1023,16 +1036,22 @@ class ClasseurController extends Controller {
 
         // mise a jour des données soumises
 //        if(!$isvalidator && $this->getUser()->getId() == $classeur->getValidant()) {
-//        }
-        $visibilite = $request->get("visibilite");
-        $classeur->setVisibilite($visibilite);
-        $classeur->setNom($request->get("name"));
-        $classeur->setDescription($request->get("desc"));
-        list($d, $m, $a) = explode("/", $request->request->get('validation'));
-        $valid = new \DateTime($m . "/" . $d . "/" . $a);
-        $classeur->setValidation($valid);
-        $circuit = $request->request->get('circuit');
-        $classeur->setCircuit($circuit);
+
+        if(!$classeur->isSignable()) {
+
+            $visibilite = $request->get("visibilite");
+            $classeur->setVisibilite($visibilite);
+            $classeur->setNom($request->get("name"));
+            $classeur->setDescription($request->get("desc"));
+            list($d, $m, $a) = explode("/", $request->request->get('validation'));
+            $valid = new \DateTime($m . "/" . $d . "/" . $a);
+            $classeur->setValidation($valid);
+            $circuit = $request->request->get('circuit');
+            $classeur->setCircuit($circuit);
+        } else {
+            $circuit = $classeur->getCircuit();
+            $visibilite = $classeur->getVisibilite();
+        }
 
         $currentvalidant = $classeur->getValidant();
         $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');

@@ -13,7 +13,7 @@
 		<span class="deleg-to-someone">Déléguer à : &nbsp;</span>
 		<select name="user" id="selectuser">
 		    {% for user in users %}
-			<option value="{{ user.id }}">{{ user.Prenom }} {{ user.Nom }}</option>
+			<option value="{{ user.id }}">{{ user.Nom }} {{ user.Prenom }}</option>
 		    {% endfor %}
 		</select>
 	    </div>

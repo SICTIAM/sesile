@@ -95,6 +95,11 @@
     font-size: 0.8em;
     display: block;
 }
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .menu ul li.menu-elem > div > a:first-child {
+        display: inline;
+    }
+}
 
 .menu-vert .entete-menu {
     background-color: rgba(131, 177, 58, 1);

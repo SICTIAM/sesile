@@ -69,7 +69,7 @@ function ajoutUser(id, k) {
         $("<span/>").addClass("ok_perso glyphicon glyphicon-ok").appendTo(new_perso);
     }
     // Ajout du glyphicon mofication
-    else if (typeof validant != 'undefined' && k == ordre_circuit) {
+    else if (typeof validant != 'undefined' && k == ordre_circuit && status != 0) {
         new_perso.addClass("curr_user");
         new_perso.addClass("no_sort");
         $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);

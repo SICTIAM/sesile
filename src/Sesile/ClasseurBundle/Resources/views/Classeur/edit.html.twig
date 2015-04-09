@@ -132,13 +132,15 @@
             &nbsp;Historique
         </button>
 
-        <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-            <button type="submit" class="btn btn-danger">
-                <span class="glyphicon glyphicon-trash"></span>
-                &nbsp;Retirer
-            </button>
-            <input type="hidden" value="{{ classeur.id }}" name="id"/>
-        </form>
+        {% if classeur.status != 3 and classeur.status != 2 %}
+            <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+                <button type="submit" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    &nbsp;Retirer
+                </button>
+                <input type="hidden" value="{{ classeur.id }}" name="id"/>
+            </form>
+        {% endif %}
 
 
 
@@ -305,6 +307,7 @@
                     {#var ordre_circuit = {{ classeur.ordreCircuit }} - 1;#}
                     var ordre_circuit = {{ classeur.ordreCircuit }};
                     var validant = {{ validant }};
+                    var status = {{ classeur.status }};
                     /*voir cette ligne*/
                     var deposant = {{ deposant|json_encode|raw }};
 
@@ -325,6 +328,7 @@
             &nbsp;Historique
         </button>
 
+    {% if classeur.status != 3 and classeur.status != 2 %}
     <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
         <button type="submit" class="btn btn-danger">
             <span class="glyphicon glyphicon-trash"></span>
@@ -332,6 +336,7 @@
         </button>
         <input type="hidden" value="{{ classeur.id }}" name="id"/>
     </form>
+    {% endif %}
 
     {% if classeur.isSupprimableByDelegates(usersdelegated) %}
         {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
