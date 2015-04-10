@@ -611,6 +611,7 @@ class ClasseurController extends Controller {
 
         // enregistrer les users du circuit
         $users = explode(',', $circuit);
+        $users[] = $this->getUser()->getId();
         // Fonction pour enregistrer dans la table Classeur_visible
         $usersCV = $this->classeur_visible($request->request->get('visibilite'), $users, $request->request->get('userGroupe'));
         foreach ($usersCV as $userCV) {
