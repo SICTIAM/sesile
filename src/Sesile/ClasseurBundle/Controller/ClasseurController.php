@@ -1611,7 +1611,7 @@ class ClasseurController extends Controller {
         switch ($visibilite) {
             // Privé soit le circuit
             case 0:
-                return $em->getRepository('SesileUserBundle:User')->findById($users);
+                return $em->getRepository('SesileUserBundle:User')->findById(array_unique($users));
                 break;
             // Public
             case 1:

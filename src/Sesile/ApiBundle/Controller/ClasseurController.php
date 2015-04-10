@@ -191,7 +191,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
      *          {"name"="type", "dataType"="integer", "format"="", "required"=true, "description"="id du type du classeur"},
      *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
-     *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
+     *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"}
      *
      *
      *
@@ -562,7 +562,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
     }
 
     /**
-     * Cette méthode permet de récupérer la liste des types de documents
+     * Cette méthode permet de récupérer la liste des types de classeurs
      *
      *
      *

@@ -112,7 +112,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
     }
 
     /**
-     * Cette méthode permet de récupérer un les détails de l'utilisateur courant en fonction des headers
+     * Cette méthode permet de récupérer ules groupes ayant accès au type de classeur spécifié
      *
      *
      * @var Request $request
