@@ -284,7 +284,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $users = explode(',', $circuits['ordre']);
         $users[] = $user->getId();
 
-        $usersCV = $this->classeur_visible($request->request->get('visibilite'), $users, $request->request->get('userGroupe'));
+        $usersCV = $this->classeur_visible($request->request->get('visibilite'), $users, $request->request->get('visibilite'));
         foreach ($usersCV as $userCV) {
             $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
             $classeur->addVisible($userVisible);
@@ -520,7 +520,15 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         if (empty($classeur[0])) {
-            throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur " . $id);
+            $classuse = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+            if ($classuse->getUser() == $user->getId()) {
+                $elclasseur = $classuse;
+            } else {
+                throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur " . $id);
+            }
+
+        } else {
+            $elclasseur = $classeur[0];
         }
 
         $added = array();
@@ -538,26 +546,33 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $document->setRepourl($movedfile->getBasename()); //Temporairement associé au nom du fichier en attendant les repository git
             $document->setType($movedfile->getMimeType());
             $document->setSigned(false);
-            $document->setClasseur($classeur[0]);
+            $document->setClasseur($elclasseur);
             $em->persist($document);
 
 
             $action = new Action();
-            $action->setClasseur($classeur[0]);
+            $action->setClasseur($elclasseur);
             $action->setUser($user);
             $action->setAction("Modification du document " . $document->getName());
             $em->persist($action);
 
 
             $em->flush();
-            $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur[0]->getNom(), null);
+            $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $elclasseur->getNom(), null);
 
             $added[] = $document;
 
         }
 
 
-        return $added;
+        $res = array();
+
+        foreach ($added as $doc) {
+            $res = $this->docToArray($doc);
+        }
+        return $res;
+
+
 
     }
 
