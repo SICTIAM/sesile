@@ -19,10 +19,10 @@
 		&nbsp;&nbsp;&nbsp;Organigramme
 	    {% elseif groupe is defined %}
 		<span class="glyphicon glyphicon-floppy-open"></span>
-		&nbsp;&nbsp;&nbsp;Éditer un groupe fonctionnel
+		&nbsp;&nbsp;&nbsp;Éditer un service organisationnel
 	    {% else %}
 		<span class="glyphicon glyphicon-floppy-disk"></span>
-		&nbsp;&nbsp;&nbsp;Créer un groupe fonctionnel
+		&nbsp;&nbsp;&nbsp;Créer un service organisationnel
 	    {% endif %}
 	</div>
 	{% include 'SesileUserBundle:Hierarchie:legende.organigramme.html.twig' %}
@@ -30,7 +30,7 @@
 	<form id="form_hierarchy" method="post" action="{% if groupe is defined %}{{ path("update_groupe") }} {% else %}{{ path("new_groupe") }} {% endif %}">
         <div class="row">
             <div class="col-lg-12 col-lg-push-1">
-                <h4>Choisir les types de classeur du groupe</h4>
+                <h4>Choisir les types de classeur du service</h4>
             </div>
         </div>
         <div class="row">
@@ -49,7 +49,7 @@
                 {% if groupe is defined %}
                     <input type="hidden" name="id" id="id_groupe" value="{% if groupe is defined %}{{ groupe.id }}{% endif %}"/>
                 {% endif %}
-                Nom du groupe&nbsp;:&nbsp;
+                Nom du service&nbsp;:&nbsp;
                 <input type="text" name="nom" class="form-control" id="nom_groupe"{% if groupe is defined %} value="{{ groupe.Nom }}" {% endif %}/>
                 &nbsp;&nbsp;
 

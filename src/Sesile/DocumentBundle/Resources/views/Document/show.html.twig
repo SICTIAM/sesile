@@ -126,7 +126,11 @@
     var L_EditDocumentError_Text = "Editing not supported.";
     var L_EditDocumentRuntimeError_Text = "Sorry, couldn't open the document.";
     var hownowPlugin = document.getElementById("winFirefoxPlugin");
-    var version = hownowPlugin.GetOfficeVersion();
+    try {
+       var version = hownowPlugin.GetOfficeVersion();
+    } catch (err) {
+        var version = 15;
+    }
 
     function editDocument(strDocument) {
         if (fNewDoc) {

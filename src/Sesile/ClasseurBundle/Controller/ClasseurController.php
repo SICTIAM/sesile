@@ -733,7 +733,7 @@ class ClasseurController extends Controller {
         $id_user = $this->get('security.context')->getToken()->getUser()->getId();
         $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
         if(!$groupes_du_user) {
-            $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun groupe fonctionnel.');
+            $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun service organisationnel.');
             return $this->redirect($this->generateUrl('classeur'));
         }
         foreach($groupes_du_user as $group) {
@@ -1083,7 +1083,6 @@ class ClasseurController extends Controller {
                 $classeur->addVisible($userVisible);
             }
         }
-
 
         // FIN Pour la visibilite
         $classeur->valider($em);
@@ -1622,7 +1621,7 @@ class ClasseurController extends Controller {
             case 2:
                 return '2';
                 break;
-            // Pour le groupe fonctionnel (et le circuit)
+            // Pour le service organisationnel (et le circuit)
             case 3:
                 if ($requestUserGroupe) {
                     $usersGF = $em->getRepository('SesileUserBundle:UserGroupe')->findByGroupe($requestUserGroupe);

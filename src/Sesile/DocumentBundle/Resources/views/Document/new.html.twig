@@ -1,6 +1,8 @@
-<div id="fichiers" class="dropzone"></div>
 
-<div id="filedescription" style="display:none"></div>
+    <div id="fichiers" class="dropzone"></div>
+    <div id="filedescription" style="display:none">test</div>
+
+
 
 <script src="{{ asset('js/dropzone.js') }}"></script>
 
@@ -17,7 +19,9 @@
         previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
                 '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
                 ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
-                ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>'
+                '<a class="dz-remove">Supprimer le fichier</a>' +
+                ' <div class="dz-error-message"><span data-dz-errormessage></span></div>' +
+                '</div>'
 
 
     });
@@ -37,15 +41,24 @@
 
 
     }
+    $('#Mybutton').attr('disabled', true);
 
 
     /* Bouton grisé lors de l'ajout de fichier  */
 
-    dropzone.on("addedfile", function (file) {
+    dropzone.on("addedfile", function (file, serverfilename) {
         $('#Mybutton').attr('disabled', true);
 
         file.previewElement.addEventListener("click", function () {
-            myDropzone.removeFile(file);
+//            myDropzone.removeFile(file);
+            dropzone.removeFile(file);
+            $("#documentcontent").children("#" + file.idfilename).remove();
+            console.log("#" + file.idfilename);
+
+            if(dropzone.getAcceptedFiles().length == 0) {
+                $('#Mybutton').attr('disabled', true);
+            }
+
         });
     });
 
@@ -54,9 +67,10 @@
 
     dropzone.on("success", function (file) {
         $('#Mybutton').attr('disabled', false);
-        file.previewElement.addEventListener("click", function () {
-            myDropzone.removeFile(file);
-        });
+//        file.previewElement.addEventListener("click", function () {
+////            myDropzone.removeFile(file);
+//            dropzone.removeFile(file);
+//        });
     });
 
 
@@ -64,9 +78,9 @@
 
     dropzone.on('success', function (file, response) {
         $.each(response, function (serverfilename, originalname) {
-            $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
-
-
+            file.idfilename = serverfilename.split('.')[0];
+            console.log(file);
+            $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' id='" + file.idfilename + "' value='" + originalname + "'> ");
         });
 
     });
@@ -162,40 +176,39 @@
 
         //Ajout de la popover
 
-        $(file.previewElement).click(function (e) {
-
-            selectedFile = file;
-
-            if (selected != null) {
-                selected.removeClass('selectedfile');
-            }
-
-            selected = $(this);
-
-            selected.addClass('selectedfile');
-
-            // $('[rel=popover]').not(button).popover('hide');
-
-
-            $.ajax(Routing.generate('show_document', {id: file.name}), {
-                method: 'POST',
-                success: function (html) {
-
-                    if (openeddesc) {
-                        $("#filedescription").html(html);
-                    } else {
-                        $("#filedescription").html(html).slideDown();
-
-                    }
-                    openeddesc = true;
-
-
-                }
-
-            });
-
-
-        });
+//        $(file.previewElement).click(function (e) {
+//
+//            selectedFile = file;
+//
+//            if (selected != null) {
+//                selected.removeClass('selectedfile');
+//            }
+//
+//            selected = $(this);
+//
+//            selected.addClass('selectedfile');
+//
+//            // $('[rel=popover]').not(button).popover('hide');
+//
+//            $.ajax(Routing.generate('show_document', {id: file.name}), {
+//                method: 'POST',
+//                success: function (html) {
+//
+//                    if (openeddesc) {
+//                        $("#filedescription").html(html);
+//                    } else {
+//                        $("#filedescription").html(html).slideDown();
+//                    }
+//
+//            openeddesc = true;
+//
+//
+//                }
+//
+//            });
+//
+//
+//        });
 
     });
 
