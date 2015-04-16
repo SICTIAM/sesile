@@ -611,6 +611,7 @@ class ClasseurController extends Controller {
 
         // enregistrer les users du circuit
         $users = explode(',', $circuit);
+        $users[] = $this->getUser()->getId();
         // Fonction pour enregistrer dans la table Classeur_visible
         $usersCV = $this->classeur_visible($request->request->get('visibilite'), $users, $request->request->get('userGroupe'));
         foreach ($usersCV as $userCV) {
@@ -726,13 +727,14 @@ class ClasseurController extends Controller {
         // On recupere tous les types de classeur et les groupes
         $em = $this->getDoctrine()->getManager();
 //        $groupes = $em->getRepository('SesileUserBundle:Groupe')->findByCollectivite($this->get("session")->get("collectivite"));
-        $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
+//        $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
+        $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findBy(array(), array('nom' => 'ASC'));
 
         // Nouveau code pour afficher l ordre des groupes
         $id_user = $this->get('security.context')->getToken()->getUser()->getId();
         $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
         if(!$groupes_du_user) {
-            $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun groupe fonctionnel.');
+            $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun service organisationnel.');
             return $this->redirect($this->generateUrl('classeur'));
         }
         foreach($groupes_du_user as $group) {
@@ -1082,7 +1084,6 @@ class ClasseurController extends Controller {
                 $classeur->addVisible($userVisible);
             }
         }
-
 
         // FIN Pour la visibilite
         $classeur->valider($em);
@@ -1611,7 +1612,7 @@ class ClasseurController extends Controller {
         switch ($visibilite) {
             // Privé soit le circuit
             case 0:
-                return $em->getRepository('SesileUserBundle:User')->findById($users);
+                return $em->getRepository('SesileUserBundle:User')->findById(array_unique($users));
                 break;
             // Public
             case 1:
@@ -1621,7 +1622,7 @@ class ClasseurController extends Controller {
             case 2:
                 return '2';
                 break;
-            // Pour le groupe fonctionnel (et le circuit)
+            // Pour le service organisationnel (et le circuit)
             case 3:
                 if ($requestUserGroupe) {
                     $usersGF = $em->getRepository('SesileUserBundle:UserGroupe')->findByGroupe($requestUserGroupe);

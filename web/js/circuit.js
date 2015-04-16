@@ -241,7 +241,6 @@ if (form_parent.length > 0) {
             .val(ordre_circuit)
             .appendTo(form_parent);
 
-
         if(typeof(dropzone) != 'undefined') {
             if( ( typeof(mockFile) != 'object' && dropzone.getAcceptedFiles().length == 0) || ( typeof(mockFile) == 'object' && mockFile == {} ) ) {
                 alert("Vous devez au moins déposer un document dans le classeur");

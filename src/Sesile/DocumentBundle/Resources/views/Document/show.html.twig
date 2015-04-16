@@ -126,7 +126,11 @@
     var L_EditDocumentError_Text = "Editing not supported.";
     var L_EditDocumentRuntimeError_Text = "Sorry, couldn't open the document.";
     var hownowPlugin = document.getElementById("winFirefoxPlugin");
-    var version = hownowPlugin.GetOfficeVersion();
+    try {
+       var version = hownowPlugin.GetOfficeVersion();
+    } catch (err) {
+        var version = 15;
+    }
 
     function editDocument(strDocument) {
         if (fNewDoc) {
@@ -142,6 +146,18 @@
     $('#visubutton').click(function(e) {
         e.preventDefault();
         editDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');
+
+        idDoc = {{ doc.id}};
+        $.ajax({
+            url: Routing.generate('edit_history_document', {id:idDoc}),
+            type: "post"
+//            success: function () {
+//                console.log('historique ok')
+//            },
+//            error: function () {
+//                console.log('historique pas ok !!')
+//            }
+        });
     });
 
     // On supprime le bouton pour le plugin MS Ofice 2013

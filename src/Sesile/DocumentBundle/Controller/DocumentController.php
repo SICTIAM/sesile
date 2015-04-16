@@ -161,6 +161,10 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        // Ecriture de l'hitorique du document
+        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
         $response = new Response();
 
@@ -170,16 +174,12 @@ class DocumentController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getName() . '"');
         $response->headers->set('Content-Length', filesize('uploads/docs/' . $doc->getRepourl()));
 
-
         // $response->sendHeaders();
-
 
         $response->setContent(file_get_contents('uploads/docs/' . $doc->getRepourl()));
 
-
         //  var_dump($response);
         return $response;
-
     }
 
 
@@ -213,6 +213,22 @@ class DocumentController extends Controller
     }
 
     /**
+     * @Route("/edit-history/{id}/document", name="edit_history_document",  options={"expose"=true})
+     * @Method("POST")
+     */
+    public function editHistoryFactory($id) {
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        // Ecriture de l'hitorique du document
+        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Edition du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+
+        return new Response();
+    }
+
+
+    /**
      * @Route("/visu/{id}", name="visu",  options={"expose"=true})
      * @Method("GET")
      * @Template()
@@ -222,6 +238,10 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        // Ecriture de l'hitorique du document
+        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Visualisation du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
 
         $param = $this->container->getParameter('upload');

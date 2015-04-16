@@ -1,6 +1,8 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
+    <script src="{{ asset("/js/select2.min.js") }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ asset("/css/select2.css") }}"/>
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
     <div class="bloc_page">
@@ -40,6 +42,9 @@
 	</form>
     </div>
     <script type="text/javascript">
+    // Pour la recherche sur le select
+    $('#selectuser').select2();
+
 	var delegs = {{ delegs|json_encode|raw }};
 	var recues = {{ recues|json_encode|raw }};
 
