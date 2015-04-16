@@ -19,19 +19,25 @@
         {% endif %}
 
 
-        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
-            <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-            &nbsp;Historique
-        </button>
+        <div class="row">
 
+            <div class="col-lg-4">
 
-        {% if classeur.isSupprimableByDelegates(usersdelegated) %}
-            {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
-        {% else %}
-            {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
-        {% endif %}
+                <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+                    <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                    &nbsp;Historique
+                </button>
 
+                {% if classeur.isSupprimableByDelegates(usersdelegated) %}
+                    {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+                {% else %}
+                    {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+                {% endif %}
 
+            </div>
+
+            {#<p class="label label-success col-lg-3">TEst</p>#}
+        </div>
 
         {% if isDelegatedToMe %}
         <br>
@@ -67,7 +73,9 @@
                     <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
                     <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
                     <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
-                    {#<option value="3" {% if classeur.visibilite == 3 %} selected="selected" {% endif %}>Pour le groupe fonctionnel</option>#}
+                    {% if classeur.visibilite == 3 %}
+                        <option value="3" selected="selected">Pour le service organisationnel</option>
+                    {% endif %}
                 </select>
                 </div>
             </div>
