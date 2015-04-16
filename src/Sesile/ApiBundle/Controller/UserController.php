@@ -117,7 +117,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @var Request $request
      * @return array
-     * @Route("/groupes/types/")
+     * @Route("/groupes/types/{type}")
      * @Rest\View()
      * @Method("get")
      *
@@ -126,16 +126,15 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet de récupérer la liste des groupes fonctionnels ayant accès à un type de classeur",
-     *   parameters={{"name"="type", "dataType"="integer", "required"=true, "description"="Id du type"}}
+     *  description="Permet de récupérer la liste des groupes fonctionnels ayant accès à un type de classeur"
      * )
      */
-    public function getGroupesFonctionnelsAction(Request $request)
+    public function getGroupesFonctionnelsAction(Request $request, $type)
     {
         $em = $this->getDoctrine()->getManager();
 
 
-        $type = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($request->query->get('type'));
+        $type = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($type);
 
         $groupes = $type->getGroupes();
         $tabGroupes = array();
@@ -152,7 +151,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @var Request $request
      * @return array
-     * @Route("/groupes/")
+     * @Route("/groupes/{email}")
      * @Rest\View()
      * @Method("get")
      *
@@ -161,23 +160,21 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet de récupérer ma liste des groupes fonctionnels ayant accès à un type de classeur",
-     *   parameters={{"name"="email", "dataType"="string", "required"=true, "description"="Email de l'utilisateur"}}
+     *  description="Permet de récupérer ma liste des groupes fonctionnels ayant accès à un type de classeur"
      * )
      */
-    public function getGroupesFonctionnelsForUserAction(Request $request)
+    public function getGroupesFonctionnelsForUserAction(Request $request, $email)
     {
         $em = $this->getDoctrine()->getManager();
 
 
         $tabGroupes = array();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($request->query->get('email'));
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($email);
         $usergroups = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($user);
         foreach ($usergroups as $ugroup) {
             $groupe = $ugroup->getGroupe();
             $tabGroupes[] = array('id' => $groupe->getId(), 'nom' => $groupe->getNom());
         }
-
         return $tabGroupes;
     }
 
