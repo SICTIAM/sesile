@@ -20,23 +20,32 @@
 
 
         <div class="row">
-
-            <div class="col-lg-4">
-
+            <div class="col-lg-8">
                 <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
                     <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
                     &nbsp;Historique
                 </button>
-
                 {% if classeur.isSupprimableByDelegates(usersdelegated) %}
                     {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
                 {% else %}
                     {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
                 {% endif %}
-
             </div>
-
-            {#<p class="label label-success col-lg-3">TEst</p>#}
+            <div class="col-lg-2">
+                {# Affichage du statut du classeur #}
+                {% if classeur.status == 0 %}
+                    <p class="status_classeur statut_refuse"><span class="glyphicon statut_0"> </span> Classeur refusé</p>
+                {% elseif classeur.status == 1 %}
+                    <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
+                {% elseif classeur.status == 2 %}
+                    <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
+                {% elseif classeur.status == 3 %}
+                    <p class="status_classeur statut_retire"><span class="glyphicon statut_3"> </span> Classeur retiré</p>
+                {% elseif classeur.status == 4 %}
+                    <p class="status_classeur statut_retracte"><span class="glyphicon statut_4"> </span> Classeur rétracté</p>
+                {% endif %}
+                {# FIN Affichage du statut du classeur #}
+            </div>
         </div>
 
         {% if isDelegatedToMe %}
@@ -134,33 +143,49 @@
         {% endif %}
 
 
+            <div class="row">
+                <div class="col-lg-8">
+                    <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+                        <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                        &nbsp;Historique
+                    </button>
+                    {% if classeur.isSupprimableByDelegates(usersdelegated) %}
+                        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+                    {% else %}
+                        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+                    {% endif %}
 
-        <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
-            <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-            &nbsp;Historique
-        </button>
-
-        {% if classeur.status != 3 and classeur.status != 2 %}
-            <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-                <button type="submit" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-trash"></span>
-                    &nbsp;Retirer
-                </button>
-                <input type="hidden" value="{{ classeur.id }}" name="id"/>
-            </form>
-        {% endif %}
-
-
-
-        {% if classeur.isSupprimableByDelegates(usersdelegated) %}
-            {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
-        {% else %}
-            {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
-        {% endif %}
-
-        {% if retractable %}
-            {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
-        {% endif %}
+                    {% if retractable %}
+                        {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
+                    {% endif %}
+                </div>
+                <div class="col-lg-2">
+                    {# Affichage du statut du classeur #}
+                    {% if classeur.status == 0 %}
+                        <p class="status_classeur statut_refuse"><span class="glyphicon statut_0"> </span> Classeur refusé</p>
+                    {% elseif classeur.status == 1 %}
+                        <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
+                    {% elseif classeur.status == 2 %}
+                        <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
+                    {% elseif classeur.status == 3 %}
+                        <p class="status_classeur statut_retire"><span class="glyphicon statut_3"> </span> Classeur retiré</p>
+                    {% elseif classeur.status == 4 %}
+                        <p class="status_classeur statut_retracte"><span class="glyphicon statut_4"> </span> Classeur rétracté</p>
+                    {% endif %}
+                    {# FIN Affichage du statut du classeur #}
+                </div>
+                <div class="col-lg-2">
+                    {% if classeur.status != 3 and classeur.status != 2 %}
+                        <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+                            <button type="submit" class="btn btn-danger">
+                                <span class="glyphicon glyphicon-trash"></span>
+                                &nbsp;Retirer
+                            </button>
+                            <input type="hidden" value="{{ classeur.id }}" name="id"/>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
 
 
         {% if isDelegatedToMe %}
@@ -221,8 +246,6 @@
 
         <style>
 
-
-
             #circuit {
 
                 opacity: .5;
@@ -238,8 +261,6 @@
              .top_selects_circuits {
                  display: none !important;
              }
-
-
 
         </style>
 
@@ -329,31 +350,52 @@
 
             </div>
         </form>
+            <div class="row">
+                <div class="col-lg-8">
+                    <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+                        <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                        &nbsp;Historique
+                    </button>
+
+                    {% if classeur.isSupprimableByDelegates(usersdelegated) %}
+                        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+                    {% else %}
+                        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+                    {% endif %}
+                    {% if retractable %}
+                        {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
+                    {% endif %}
+                </div>
+                <div class="col-lg-2">
+                    {# Affichage du statut du classeur #}
+                    {% if classeur.status == 0 %}
+                        <p class="status_classeur statut_refuse"><span class="glyphicon statut_0"> </span> Classeur refusé</p>
+                    {% elseif classeur.status == 1 %}
+                        <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
+                    {% elseif classeur.status == 2 %}
+                        <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
+                    {% elseif classeur.status == 3 %}
+                        <p class="status_classeur statut_retire"><span class="glyphicon statut_3"> </span> Classeur retiré</p>
+                    {% elseif classeur.status == 4 %}
+                        <p class="status_classeur statut_retracte"><span class="glyphicon statut_4"> </span> Classeur rétracté</p>
+                    {% endif %}
+                    {# FIN Affichage du statut du classeur #}
+                </div>
+                <div class="col-lg-2">
+                    {% if classeur.status != 3 and classeur.status != 2 %}
+                        <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
+                            <button type="submit" class="btn btn-danger">
+                                <span class="glyphicon glyphicon-trash"></span>
+                                &nbsp;Retirer
+                            </button>
+                            <input type="hidden" value="{{ classeur.id }}" name="id"/>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
     <br>
     <br>
-    <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
-            <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-            &nbsp;Historique
-        </button>
 
-    {% if classeur.status != 3 and classeur.status != 2 %}
-    <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-        <button type="submit" class="btn btn-danger">
-            <span class="glyphicon glyphicon-trash"></span>
-            &nbsp;Retirer
-        </button>
-        <input type="hidden" value="{{ classeur.id }}" name="id"/>
-    </form>
-    {% endif %}
-
-    {% if classeur.isSupprimableByDelegates(usersdelegated) %}
-        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
-    {% else %}
-        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
-    {% endif %}
-    {% if retractable %}
-        {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
-    {% endif %}
 
     <br/>
     <br/>

@@ -727,7 +727,8 @@ class ClasseurController extends Controller {
         // On recupere tous les types de classeur et les groupes
         $em = $this->getDoctrine()->getManager();
 //        $groupes = $em->getRepository('SesileUserBundle:Groupe')->findByCollectivite($this->get("session")->get("collectivite"));
-        $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
+//        $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
+        $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findBy(array(), array('nom' => 'ASC'));
 
         // Nouveau code pour afficher l ordre des groupes
         $id_user = $this->get('security.context')->getToken()->getUser()->getId();

@@ -213,6 +213,22 @@ class DocumentController extends Controller
     }
 
     /**
+     * @Route("/edit-history/{id}/document", name="edit_history_document",  options={"expose"=true})
+     * @Method("POST")
+     */
+    public function editHistoryFactory($id) {
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        // Ecriture de l'hitorique du document
+        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Edition du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+
+        return new Response();
+    }
+
+
+    /**
      * @Route("/visu/{id}", name="visu",  options={"expose"=true})
      * @Method("GET")
      * @Template()

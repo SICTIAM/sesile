@@ -146,6 +146,18 @@
     $('#visubutton').click(function(e) {
         e.preventDefault();
         editDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');
+
+        idDoc = {{ doc.id}};
+        $.ajax({
+            url: Routing.generate('edit_history_document', {id:idDoc}),
+            type: "post"
+//            success: function () {
+//                console.log('historique ok')
+//            },
+//            error: function () {
+//                console.log('historique pas ok !!')
+//            }
+        });
     });
 
     // On supprime le bouton pour le plugin MS Ofice 2013

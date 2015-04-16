@@ -49,6 +49,7 @@ class Groupe {
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", inversedBy="groupes", cascade={"persist"})
      * @ORM\JoinTable(name="classeur_groupe")
+     * @ORM\OrderBy({"nom" = "ASC"})
      */
     private $types;
 
