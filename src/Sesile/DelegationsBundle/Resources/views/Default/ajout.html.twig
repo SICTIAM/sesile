@@ -11,34 +11,47 @@
 	    &nbsp;&nbsp;&nbsp;Déléguer ses droits
 	</div>
 	<form action="{{ path("delegation_create") }}" method="post">
-	    <div id="delegaqui" class="col-md-4">
-		<span class="deleg-to-someone">Déléguer à : &nbsp;</span>
-		<select name="user" id="selectuser">
-		    {% for user in users %}
-			<option value="{{ user.id }}">{{ user.Nom }} {{ user.Prenom }}</option>
-		    {% endfor %}
-		</select>
-	    </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            {#<div id="delegaqui" class="col-md-6">#}
+            <span class="deleg-to-someone col-md-2">Déléguer à : &nbsp;</span>
+            <div class="col-md-3">
+                <select name="user" id="selectuser">
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.Nom }} {{ user.Prenom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
 
-	    <div id="delegdate" class="col-md-8">
-		<div class="row">
-		<span class="deleg-to-someone col-md-3">Début délégation : &nbsp;</span>
-		<input class="datepicker deleg_debut_fin col-md-6 " id="deleg_debut" name="debut" type="datetime"/>
-		<br>
-		</div>
-		<div class="row">
-		<span class="deleg-to-someone col-md-3">Fin délégation : &nbsp;</span>
-		<input class="datepicker deleg_debut_fin col-md-6 " id="deleg_fin" name="fin" type="datetime"/>
-		<br>
-		</div>
-	    </div>
-	    <br>
-	    <button type="submit" class="btn btn-success">Enregistrer</button>
-	    <a href="{{ path('delegations_list') }}">
-		<button type="button" class="btn btn-default navbar-btn">
-		    Retour à la liste des délégations
-		</button>
-	    </a>
+        <div class="row">&nbsp;</div>
+
+            {#<div id="delegdate" class="col-md-6">#}
+        <div class="row">
+            <span class="deleg-to-someone col-md-2">Début délégation : &nbsp;</span>
+            <input class="datepicker deleg_debut_fin col-md-3" id="deleg_debut" name="debut" type="datetime"/>
+        </div>
+
+        <div class="row">&nbsp;</div>
+
+        <div class="row">
+            <span class="deleg-to-someone col-md-2">Fin délégation : &nbsp;</span>
+            <input class="datepicker deleg_debut_fin col-md-3" id="deleg_fin" name="fin" type="datetime"/>
+        </div>
+
+        <div class="row">&nbsp;</div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-success">
+                    Enregistrer
+                </button>
+                <a href="{{ path('delegations_list') }}" class="btn btn-default navbar-btn">
+                    Retour à la liste des délégations
+                </a>
+            </div>
+        </div>
+
 	</form>
     </div>
     <script type="text/javascript">

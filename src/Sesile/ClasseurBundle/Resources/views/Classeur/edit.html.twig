@@ -6,17 +6,35 @@
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
     <div class="bloc_page">
-        {% if classeur.isModifiableByDelegates(usersdelegated) %}
-            <div class="titre_page">
-                <span class="glyphicon glyphicon-pencil"></span>
-                &nbsp;&nbsp;&nbsp;Édition du classeur
+            <div class="titre_page row">
+                <div class="col-lg-10">
+                    {% if classeur.isModifiableByDelegates(usersdelegated) %}
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    &nbsp;&nbsp;&nbsp;Édition du classeur
+                    {% else %}
+                        <span class="glyphicon glyphicon-eye"></span>
+                        &nbsp;&nbsp;&nbsp;Visualisation du classeur
+                    {% endif %}
+                </div>
+
+                <div class="col-lg-2 text-right">
+                    {# Affichage du statut du classeur #}
+                    {% if classeur.status == 0 %}
+                        <p class="status_classeur statut_refuse"><span class="glyphicon statut_0"> </span> Classeur refusé</p>
+                    {% elseif classeur.status == 1 %}
+                        <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
+                    {% elseif classeur.status == 2 %}
+                        <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
+                    {% elseif classeur.status == 3 %}
+                        <p class="status_classeur statut_retire"><span class="glyphicon statut_3"> </span> Classeur retiré</p>
+                    {% elseif classeur.status == 4 %}
+                        <p class="status_classeur statut_retracte"><span class="glyphicon statut_4"> </span> Classeur rétracté</p>
+                    {% endif %}
+                    {# FIN Affichage du statut du classeur #}
+                </div>
             </div>
-        {% else %}
-            <div class="titre_page">
-                <span class="glyphicon glyphicon-eye"></span>
-                &nbsp;&nbsp;&nbsp;Visualisation du classeur
-            </div>
-        {% endif %}
+
+
 
 
         <div class="row">
@@ -30,21 +48,6 @@
                 {% else %}
                     {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
                 {% endif %}
-            </div>
-            <div class="col-lg-2">
-                {# Affichage du statut du classeur #}
-                {% if classeur.status == 0 %}
-                    <p class="status_classeur statut_refuse"><span class="glyphicon statut_0"> </span> Classeur refusé</p>
-                {% elseif classeur.status == 1 %}
-                    <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
-                {% elseif classeur.status == 2 %}
-                    <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
-                {% elseif classeur.status == 3 %}
-                    <p class="status_classeur statut_retire"><span class="glyphicon statut_3"> </span> Classeur retiré</p>
-                {% elseif classeur.status == 4 %}
-                    <p class="status_classeur statut_retracte"><span class="glyphicon statut_4"> </span> Classeur rétracté</p>
-                {% endif %}
-                {# FIN Affichage du statut du classeur #}
             </div>
         </div>
 
@@ -130,36 +133,17 @@
 
 
         <div class="bloc_page">
-        {% if classeur.isModifiableByDelegates(usersdelegated) %}
-            <div class="titre_page">
-                <span class="glyphicon glyphicon-pencil"></span>
-                &nbsp;&nbsp;&nbsp;Édition du classeur
-            </div>
-        {% else %}
-            <div class="titre_page">
-                <span class="glyphicon glyphicon-eye"></span>
-                &nbsp;&nbsp;&nbsp;Visualisation du classeur
-            </div>
-        {% endif %}
-
-
-            <div class="row">
-                <div class="col-lg-8">
-                    <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
-                        <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-                        &nbsp;Historique
-                    </button>
-                    {% if classeur.isSupprimableByDelegates(usersdelegated) %}
-                        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+            <div class="titre_page row">
+                <div class="col-lg-10">
+                    {% if classeur.isModifiableByDelegates(usersdelegated) %}
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        &nbsp;&nbsp;&nbsp;Édition du classeur
                     {% else %}
-                        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
-                    {% endif %}
-
-                    {% if retractable %}
-                        {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        &nbsp;&nbsp;&nbsp;Visualisation du classeur
                     {% endif %}
                 </div>
-                <div class="col-lg-2">
+                <div class="col-lg-2 text-right">
                     {# Affichage du statut du classeur #}
                     {% if classeur.status == 0 %}
                         <p class="status_classeur statut_refuse"><span class="glyphicon statut_0"> </span> Classeur refusé</p>
@@ -173,6 +157,25 @@
                         <p class="status_classeur statut_retracte"><span class="glyphicon statut_4"> </span> Classeur rétracté</p>
                     {% endif %}
                     {# FIN Affichage du statut du classeur #}
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-10">
+                    <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+                        <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                        &nbsp;Historique
+                    </button>
+                    {% if classeur.isSupprimableByDelegates(usersdelegated) %}
+                        {% include "SesileClasseurBundle:Classeur:boutonRefus.html.twig" %}
+                    {% else %}
+                        {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
+                    {% endif %}
+
+                    {% if retractable %}
+                        {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
+                    {% endif %}
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}
@@ -351,7 +354,7 @@
             </div>
         </form>
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-10">
                     <button id="btn_historique" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
                         <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
                         &nbsp;Historique
@@ -365,21 +368,6 @@
                     {% if retractable %}
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
-                </div>
-                <div class="col-lg-2">
-                    {# Affichage du statut du classeur #}
-                    {% if classeur.status == 0 %}
-                        <p class="status_classeur statut_refuse"><span class="glyphicon statut_0"> </span> Classeur refusé</p>
-                    {% elseif classeur.status == 1 %}
-                        <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
-                    {% elseif classeur.status == 2 %}
-                        <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
-                    {% elseif classeur.status == 3 %}
-                        <p class="status_classeur statut_retire"><span class="glyphicon statut_3"> </span> Classeur retiré</p>
-                    {% elseif classeur.status == 4 %}
-                        <p class="status_classeur statut_retracte"><span class="glyphicon statut_4"> </span> Classeur rétracté</p>
-                    {% endif %}
-                    {# FIN Affichage du statut du classeur #}
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}

@@ -74,7 +74,7 @@ class ClasseurController extends Controller {
     public function retiredAction()
     {
 
-        return array();
+        return array("menu_color" => "bleu");
     }
 
     /**
@@ -109,6 +109,9 @@ class ClasseurController extends Controller {
                     $intervenant = $aRow->{"get" . $columns[$i]}();
 
                     $row[] = ($intervenant == 0) ? "" : $em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
+                } elseif ($columns[$i] == 'Type') {
+//                    var_dump($aRow->getType()->getNom());
+                    $row[] = $aRow->getType()->getNom();
                 } elseif ($columns[$i] != ' ') {
                     $row[] = $aRow->{"get" . $columns[$i]}();
                 }
