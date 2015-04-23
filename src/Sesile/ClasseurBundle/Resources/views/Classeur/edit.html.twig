@@ -464,7 +464,6 @@
 
     <script type="application/javascript">
 
-
         function loadDocuments() {
                 $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
                     //enableUploads();
@@ -499,8 +498,8 @@
                 $(".perso_circuit").css("cursor", "-moz-grab");
                 {% endif %}
 
-                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer").click(function () {
-                    if($(this).hasClass("btn-modifs") || $(this).hasClass("btn-valider-signer") || $(this).hasClass("btn-valider")) {
+                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer").click(function () {
+                    if($(this).hasClass("btn-modifs") || $(this).hasClass("btn-valider-signer") || $(this).hasClass("btn-valider-non-signer") || $(this).hasClass("btn-valider")) {
                         // ?? est ce nécessaire
                     }
 

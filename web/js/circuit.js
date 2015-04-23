@@ -6,6 +6,8 @@ delete_src = "/images/delete.png";
 favoris_url = "";
 del_favoris_url = "";
 
+// Pour l affichage des boutons valider et signer
+var valid_sign = 0;
 
 $('#users_list p:first, #circuits_list p:first').addClass("list_selected_element");
 
@@ -39,8 +41,20 @@ if (typeof deposant != 'undefined') {
    /* $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);*/
 }
 
-/* Ajoute un utilisateur dans le cadre "circuits" */
+// Fonction pour afficher les bouton valider et signer
+function aff_button_valider (valid_sign) {
+    if(valid_sign == 0) {
+        $(".btn-valider-signer").css('display', 'inline-block');
+        $(".btn-valider-non-signer").css('display', 'none');
+        //console.log("valider ok : " + valid_sign);
+    } else {
+        $(".btn-valider-signer").css('display', 'none');
+        $(".btn-valider-non-signer").css('display', 'inline-block');
+        //console.log("valider : " + valid_sign);
+    }
+}
 
+/* Ajoute un utilisateur dans le cadre "circuits" */
 function ajoutUser(id, k) {
 
     var sel_user = $('#users_list p[data-id="' + id + '"]');
@@ -92,7 +106,13 @@ function ajoutUser(id, k) {
                 //ajoutUser(sel_user.attr("data-id"), true);
                 creerFleches();
             });
+            // pour les boutons valider et signer
+            valid_sign = valid_sign -1;
+            aff_button_valider (valid_sign)
         });
+        // pour les boutons valider et signer
+        this.valid_sign ++;
+        aff_button_valider(valid_sign);
     }
 
     perso_src = sel_user.data("img") ? path + sel_user.data("img") : perso_src_init;
@@ -270,4 +290,5 @@ $(document).ready(function () {
         });
     });
     // FIN de la recherche dans les utilisateurs
+    aff_button_valider (valid_sign);
 });
