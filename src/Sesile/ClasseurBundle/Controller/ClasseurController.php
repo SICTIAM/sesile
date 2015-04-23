@@ -1048,8 +1048,8 @@ class ClasseurController extends Controller {
             $em->flush();
         }
 
-        if(!$classeur->isSignable()) {
-
+//        if(!$classeur->isSignable()) {
+        if($request->get("moncul") != 1) {
             $visibilite = $request->get("visibilite");
             $classeur->setVisibilite($visibilite);
             $classeur->setNom($request->get("name"));
@@ -1314,6 +1314,12 @@ class ClasseurController extends Controller {
         //  var_dump($user);
 
         $em = $this->getDoctrine()->getManager();
+        if($request->request->get('circuit')) {
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+            $circuit = $request->request->get('circuit');
+            $classeur->setCircuit($circuit);
+            $em->flush();
+        }
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
 
 
