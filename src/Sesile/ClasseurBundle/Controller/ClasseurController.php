@@ -1042,6 +1042,12 @@ class ClasseurController extends Controller {
         // mise a jour des données soumises
 //        if(!$isvalidator && $this->getUser()->getId() == $classeur->getValidant()) {
 
+        if($request->request->get('circuit')) {
+            $circuit = $request->request->get('circuit');
+            $classeur->setCircuit($circuit);
+            $em->flush();
+        }
+
         if(!$classeur->isSignable()) {
 
             $visibilite = $request->get("visibilite");
@@ -1051,11 +1057,17 @@ class ClasseurController extends Controller {
             list($d, $m, $a) = explode("/", $request->request->get('validation'));
             $valid = new \DateTime($m . "/" . $d . "/" . $a);
             $classeur->setValidation($valid);
-            $circuit = $request->request->get('circuit');
-            $classeur->setCircuit($circuit);
+//            $circuit = $request->request->get('circuit');
+//            $classeur->setCircuit($circuit);
         } else {
             $circuit = $classeur->getCircuit();
             $visibilite = $classeur->getVisibilite();
+
+            // On renomme le document avec -sign
+            $doc = $classeur->getDocuments()[0];
+            $path_parts = pathinfo($doc->getName());
+            $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
+            $doc->setName($nouveauNom);
         }
 
         $currentvalidant = $classeur->getValidant();
@@ -1262,7 +1274,6 @@ class ClasseurController extends Controller {
         $path_parts = pathinfo($ancienNom);
         $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
         $doc->setName($nouveauNom);
-
 
         $em->flush();
 
