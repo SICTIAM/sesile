@@ -420,7 +420,7 @@ class ClasseurController extends Controller {
 //        var_dump($validant);
 //        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1";
 //        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status = 1";
-        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (1,4)";
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (0,1,4)";
 
         $query = $em->createQuery($sql);
         $rResult = $query->getResult();
@@ -461,7 +461,7 @@ class ClasseurController extends Controller {
         }
 
 //        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN($validant) AND c.status = 1 $where $order";
-        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (1,4) $where $order";
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (0,1,4) $where $order";
 
 
 //        var_dump($sql);
@@ -516,7 +516,7 @@ class ClasseurController extends Controller {
         unset($rResult);
 
 //        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant = '$validant' AND c.status = 1 $order";
-        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (1,4) $order";
+        $sql = "SELECT $aColumnStr FROM SesileClasseurBundle:Classeur c WHERE c.validant IN ($validant) AND c.status IN (0,1,4) $order";
         $query = $em->createQuery($sql);
         $rResult = $query->getResult();
         $output["recordsFiltered"] = count($rResult);
@@ -1135,7 +1135,11 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-        $this->sendValidationMail($classeur);
+        if($classeur->getStatus() != 2) {
+            $this->sendCreationMail($classeur);
+        } else {
+            $this->sendValidationMail($classeur);
+        }
 
         //$this->updateAction($request);
 
@@ -1541,21 +1545,21 @@ class ClasseurController extends Controller {
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
+                "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
             )
         );
 
         $validant_obj = ($classeur->getValidant() == 0)?$em->getRepository('SesileUserBundle:User')->find($classeur->getUser()):$em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
         if ($validant_obj != null) {
-            $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
+            $this->sendMail("SESILE - Classeur validé", $validant_obj->getEmail(), $body);
         }
     }
 
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
+        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
 
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextmailnew(),
@@ -1563,7 +1567,7 @@ class ClasseurController extends Controller {
                 'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
+                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
             )
         );
 
