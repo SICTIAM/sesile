@@ -8,7 +8,7 @@
         </div>
         <br>
 
-        <form id="new_classeur" class="form-horizontal" role="form" action="{{ path('classeur_create') }}" method="POST">
+        <form id="new_classeur" name="new_classeur" class="form-horizontal" role="form" action="{{ path('classeur_create') }}" method="POST">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -24,7 +24,7 @@
                         </select>
                         -->
 
-                        <label for="type" class="col-lg-2 control-label">Groupe fonctionnel</label>
+                        <label for="type" class="col-lg-2 control-label">Service organisationnel</label>
 
                         <div class="col-lg-3">
                             <select id="userGroupe" name="userGroupe" class="form-control" required="required">
@@ -57,6 +57,8 @@
 		</button>
 	    </a>
 	    </div>
+            {#<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">#}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
         </form>
     </div>
 {% endblock %}

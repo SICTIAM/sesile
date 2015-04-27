@@ -22,8 +22,13 @@
             <div class="col-md-3">
                 {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 {{ form_widget(form.Enregister, {'attr': {'class': 'btn btn-success'}}) }}
+            </div>
+            <div class="col-md-2">
+                <a class="btn btn-primary pull-right" href="{{ path('liste_type_classeur') }}">
+                    <span class="glyphicon glyphicon-share-alt"></span>&nbsp;&nbsp;Retour aux types
+                </a>
             </div>
         </div>
 

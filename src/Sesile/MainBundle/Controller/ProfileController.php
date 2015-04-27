@@ -150,8 +150,10 @@ class ProfileController extends ContainerAware
 
                         // $person est un nom ou une partie de nom (par exemple, "Jean")
 
+                        // On entre la meme valeur dans cn et sn pour eviter les problemes entre dev et demo
                         $entry["cn"] = $user->getUsername();
-                        $entry["sn"] = $user->getNom() . ' ' . $user->getPrenom();
+//                        $entry["sn"] = $user->getNom() . ' ' . $user->getPrenom();
+                        $entry["sn"] = $user->getUsername();
                         $entry["givenName"] = $user->getUsername();
                         $entry["displayName"] = $user->getNom() . ' ' . $user->getPrenom();
 
@@ -201,6 +203,9 @@ class ProfileController extends ContainerAware
 
                     return $response;
                 }
+            }
+            else {
+                $this->container->get('session')->getFlashBag()->add('notice', 'Vous devez remplir les champs correctement.');
             }
         }
 
