@@ -93,7 +93,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         $em = $this->getDoctrine()->getManager();
 
 
-        $entity = $em->getRepository('SesileUserBundle:User')->findAll();;
+        $entity = $em->getRepository('SesileUserBundle:User')->findAll();
         $users = array();
         foreach($entity as $e){
             $array = array();
@@ -111,5 +111,71 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
 
     }
 
+    /**
+     * Cette méthode permet de récupérer les groupes ayant accès au type de classeur spécifié
+     *
+     *
+     * @var Request $request
+     * @return array
+     * @Route("/groupes/types/{type}")
+     * @Rest\View()
+     * @Method("get")
+     *
+     *
+     * @param ParamFetcher $param
+     *
+     * @ApiDoc(
+     *  resource=false,
+     *  description="Permet de récupérer la liste des groupes fonctionnels ayant accès à un type de classeur"
+     * )
+     */
+    public function getGroupesFonctionnelsAction(Request $request, $type)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+
+        $type = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($type);
+
+        $groupes = $type->getGroupes();
+        $tabGroupes = array();
+        foreach ($groupes as $groupe) {
+            $tabGroupes[] = array('id' => $groupe->getId(), 'nom' => $groupe->getNom());
+        }
+
+        return $tabGroupes;
+    }
+
+    /**
+     * Cette méthode permet de récupérer les groupes auxquels a accès l'utilisateur dont l'id est resenseigné
+     *
+     *
+     * @var Request $request
+     * @return array
+     * @Route("/groupes/{email}")
+     * @Rest\View()
+     * @Method("get")
+     *
+     *
+     * @param ParamFetcher $param
+     *
+     * @ApiDoc(
+     *  resource=false,
+     *  description="Permet de récupérer ma liste des groupes fonctionnels ayant accès à un type de classeur"
+     * )
+     */
+    public function getGroupesFonctionnelsForUserAction(Request $request, $email)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+
+        $tabGroupes = array();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($email);
+        $usergroups = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($user);
+        foreach ($usergroups as $ugroup) {
+            $groupe = $ugroup->getGroupe();
+            $tabGroupes[] = array('id' => $groupe->getId(), 'nom' => $groupe->getNom());
+        }
+        return $tabGroupes;
+    }
 
 }

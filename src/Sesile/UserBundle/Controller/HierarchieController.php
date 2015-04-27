@@ -43,9 +43,10 @@ class HierarchieController extends Controller {
     public function createAction() {
         // recup la liste des users en base
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ));
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
         // Ajout du formulaire pour les types
         $form = $this->createForm(new GroupeType());
 
@@ -112,9 +113,10 @@ class HierarchieController extends Controller {
         $groupe = $em->getRepository('SesileUserBundle:Groupe')->find($id);
         if($groupe) {
             // recup la liste des users en base
-            $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-                "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-            ));
+            $users = $em->getRepository('SesileUserBundle:User')->findBy(
+                array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+                array("Nom" => "ASC")
+            );
 
             $form = $this->createForm(new GroupeType(), $groupe);
 

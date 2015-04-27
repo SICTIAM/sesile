@@ -464,8 +464,12 @@ label{
 	height: 2em;
 	min-width:5em;
 	line-height: 18px;
-	padding: 4px 4px 4px 5px;
+	/*padding: 4px 4px 4px 5px;*/
+    padding-top: 4px;
 	text-shadow: 0 1px 0 #ffffff;
+}
+#s2id_selectuser {
+    width: 100%;
 }
 .delegdo{
 	color: #83B13A;
@@ -723,9 +727,52 @@ select [name=user] {
 	display: none;
 }
 
+.status_classeur {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-bottom: 0;
+    margin-top: -15px;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1;
+    /*line-height: 1.428571429;*/
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-image: none;
+    border: 0px solid transparent;
+    border-radius: 0px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    color: #ffffff;
+}
 
-
-
+.statut_refuse {
+    background-color: rgb(213, 0, 25);;
+    border-color: rgb(213, 0, 25);;
+}
+.statut_cours {
+    background-color: rgb(0, 131, 201);
+    border-color: rgb(0, 131, 201);
+}
+.statut_finalise {
+    background-color: rgb(15, 148, 0);
+    border-color: rgb(15, 148, 0);
+}
+.statut_retire {
+    background-color: rgb(109, 109, 109);
+    border-color: rgb(109, 109, 109);
+}
+.statut_retracte {
+    background-color: rgb(240, 117, 0);
+    border-color: rgb(240, 117, 0);
+}
+.status_classeur .statut_0, .status_classeur .statut_1, .status_classeur .statut_2, .status_classeur .statut_3, .status_classeur .statut_4 {
+    color: #FFFFFF;
+}
 
 
 

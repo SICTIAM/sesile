@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-lg-3">
         <select class="fuckingvisibility form-control" id="visibilite" name="visibilite">
-            <option value="3">Pour le groupe fonctionnel</option>
+            <option value="3">Pour le service organisationnel</option>
             <option value="0">Privé</option>
             <option value="1">Public</option>
             {#<option value="2">Privé à partir de moi</option>#}
@@ -79,9 +79,27 @@ $("#visibilite").select2();
 
 <div>
     <br/>
-    <button type="submit" name="Mybutton" id="Mybutton" class="btn btn-success">Envoyer</button>
+    <input type="submit" name="Mybutton" id="Mybutton" class="btn btn-success" value="Envoyer">
 </div>
 <script type="text/javascript">
+    // jQuery plugin to prevent double submission of forms
+    jQuery.fn.preventDoubleSubmission = function() {
+        $(this).on('submit',function(e){
+            var $form = $(this);
+
+            if ($form.data('submitted') === true) {
+//                e.preventDefault();
+                e.stopImmediatePropagation();
+                // Previously submitted - don't submit again
+            } else {
+                // Mark it so that the next submit can be ignored
+                $form.data('submitted', true);
+            }
+        });
+
+        // Keep chainability
+        return this;
+    };
     $(document).ready(function () {
         $('#Mybutton').click(function () {
             $(this).addClass('disabled');
@@ -90,6 +108,7 @@ $("#visibilite").select2();
                 $('#Mybutton').removeClass('disabled');
             }, 2000)
         });
+        $('#new_classeur').preventDoubleSubmission();
     });
 
     var nowTemp = new Date();

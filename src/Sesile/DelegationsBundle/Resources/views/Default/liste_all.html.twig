@@ -20,7 +20,7 @@
             {% for delegation in delegations %}
                 <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
                     <td><span class="glyphicon glyphicon-import delegre"></span></td>
-                    <td>{{ delegation.delegant.prenom }} {{ delegation.delegant.nom }}</td>
+                    <td>{{ delegation.delegant.nom }} {{ delegation.delegant.prenom }}</td>
                     <td>{{ delegation.debut | date('d/m/Y') }}</td>
                     <td>{{ delegation.fin | date('d/m/Y') }}</td>
 
@@ -35,7 +35,7 @@
             {% for delegation in donnees %}
                 <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
                     <td><span class="glyphicon glyphicon-export delegdo"></span></td>
-                    <td>{{ delegation.user.prenom }} {{ delegation.user.nom }}</td>
+                    <td>{{ delegation.user.nom }} {{ delegation.user.prenom }}</td>
                     <td>{{ delegation.debut | date('d/m/Y') }}</td>
                     <td>{{ delegation.fin | date('d/m/Y') }}</td>
 

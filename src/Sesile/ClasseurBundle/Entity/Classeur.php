@@ -457,7 +457,8 @@ class Classeur {
 
     public function refuser()
     {
-        $this->setOrdreZero();
+//        $this->setOrdreZero();
+        $this->setOrdreCircuit(-1);
 //        $this->setValidant($this->getPrevValidant());
         $this->setValidant($this->getUser());
         $this->setStatus(0);
