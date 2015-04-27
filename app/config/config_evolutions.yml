@@ -1,0 +1,55 @@
+imports:
+    - { resource: config.yml }
+
+framework:
+    router:
+        resource: "%kernel.root_dir%/config/routing_dev.yml"
+        strict_requirements: true
+    profiler: { only_exceptions: false }
+
+web_profiler:
+    toolbar: true
+    intercept_redirects: false
+
+monolog:
+    handlers:
+        main:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+        firephp:
+            type:  firephp
+            level: info
+        chromephp:
+            type:  chromephp
+            level: info
+
+assetic:
+    use_controller: true
+
+#swiftmailer:
+#    delivery_address: me@example.com
+
+parameters:
+    database_name: evolutions
+    database_user: root
+    database_password: sictiam
+    cas_server: sso.dev.sictiam.fr
+    cas_port: 389
+    cas_path: /
+    cas_protocol: '2.0'
+    gorg:
+        path: %kernel.root_dir%/../vendor/gorg/phpcas/
+    upload:
+        path: %kernel.root_dir%/../web/uploads/avatars/
+        logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
+        msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
+        fics: %kernel.root_dir%/../web/uploads/docs/
+    ldap:
+        dn_admin: cn=admin,dc=sictiam,dc=local
+        dn_user: cn=Users,dc=sictiam,dc=local
+        password: WcJa37BI
+    domain_parse:
+        default: sesile
+        dbname: sictiam
+    url_applet: signature.dev.sesile.fr
