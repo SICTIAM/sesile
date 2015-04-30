@@ -137,6 +137,21 @@ class User extends BaseUser {
     private $classeurs;
 
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", mappedBy="users", cascade={"persist"})
+     */
+    private $userPacks;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="users", cascade={"persist"})
+     */
+    private $etapeClasseurs;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="users", cascade={"persist"})
+     */
+    private $etapeGroupes;
+
     public function setPath($path) {
         return $this->path = $path;
     }
@@ -639,5 +654,104 @@ class User extends BaseUser {
     public function getClasseurs()
     {
         return $this->classeurs;
+    }
+
+    /**
+     * Add userPacks
+     *
+     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     * @return User
+     */
+    public function addUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    {
+        $this->userPacks[] = $userPacks;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userPacks
+     *
+     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     */
+    public function removeUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    {
+        $this->userPacks->removeElement($userPacks);
+    }
+
+    /**
+     * Get userPacks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserPacks()
+    {
+        return $this->userPacks;
+    }
+
+    /**
+     * Add etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     * @return User
+     */
+    public function addEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs[] = $etapeClasseurs;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     */
+    public function removeEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs->removeElement($etapeClasseurs);
+    }
+
+    /**
+     * Get etapeClasseurs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeClasseurs()
+    {
+        return $this->etapeClasseurs;
+    }
+
+    /**
+     * Add etapeGroupes
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     * @return User
+     */
+    public function addEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    {
+        $this->etapeGroupes[] = $etapeGroupes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeGroupes
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     */
+    public function removeEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    {
+        $this->etapeGroupes->removeElement($etapeGroupes);
+    }
+
+    /**
+     * Get etapeGroupes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeGroupes()
+    {
+        return $this->etapeGroupes;
     }
 }

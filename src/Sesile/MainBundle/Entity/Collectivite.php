@@ -98,6 +98,15 @@ class Collectivite
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", mappedBy="collectivite")
+     */
+    private $userPacks;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\Groupe", mappedBy="collectivite")
+     */
+    private $groupes;
 
     /**
      * Get id
@@ -463,5 +472,71 @@ class Collectivite
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * Add userPacks
+     *
+     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     * @return Collectivite
+     */
+    public function addUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    {
+        $this->userPacks[] = $userPacks;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userPacks
+     *
+     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     */
+    public function removeUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    {
+        $this->userPacks->removeElement($userPacks);
+    }
+
+    /**
+     * Get userPacks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserPacks()
+    {
+        return $this->userPacks;
+    }
+
+    /**
+     * Add groupes
+     *
+     * @param \Sesile\UserBundle\Entity\Groupe $groupes
+     * @return Collectivite
+     */
+    public function addGroupe(\Sesile\UserBundle\Entity\Groupe $groupes)
+    {
+        $this->groupes[] = $groupes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove groupes
+     *
+     * @param \Sesile\UserBundle\Entity\Groupe $groupes
+     */
+    public function removeGroupe(\Sesile\UserBundle\Entity\Groupe $groupes)
+    {
+        $this->groupes->removeElement($groupes);
+    }
+
+    /**
+     * Get groupes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGroupes()
+    {
+        return $this->groupes;
     }
 }

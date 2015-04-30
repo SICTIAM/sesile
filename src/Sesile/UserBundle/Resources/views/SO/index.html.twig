@@ -14,24 +14,19 @@
             </tr>
             </thead>
             <tbody>
-            {% for groupe in groupes %}
-                <tr class="user-row" data-id="{{ groupe.id }}">
-                    <td><a href="{{ path("service_edit", {'id' : groupe.id }) }}" class="link-datatable">{{ groupe.Nom }}</a></td>
+            {% for servOrg in servOrgs %}
+                <tr class="user-row" data-id="{{ servOrg.id }}">
+                    <td>{{ servOrg.nom }}</td>
                     <td class="boutons_action">
-                        <a href="{{ path("service_edit", {'id' : groupe.id }) }}">
+                        <a href="{{ path('edit_serviceorg',{id:servOrg.id}) }}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-
-                        <a href="#" class="delete_button">
-                        <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                        <form class="delete_form" method="POST" action="{{ path("service_delete", {'id' : groupe.id }) }}"></form>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path("create_service") }}">
+        <a href="{{ path("new_serviceorg") }}">
             <button type="button" class="btn btn-default navbar-btn">
                 Ajouter un service organisationnel
             </button>
@@ -50,10 +45,10 @@
                         "sFirst": "",
                         "sPrevious": "",
                         "sNext": "",
-                        "sLast": "",
+                        "sLast": ""
                     },
-		    "sZeroRecords": "Aucun groupe &agrave; afficher",
-		    "sEmptyTable": "Aucun groupe &agrave; afficher"
+                    "sZeroRecords": "Aucun service organisationnel &agrave; afficher",
+                    "sEmptyTable": "Aucun service organisationnel &agrave; afficher"
                 },
                 "iDisplayLength": 15,
                 "aLengthMenu": [15, 30, 50, 100],
@@ -64,11 +59,6 @@
                 "sPaginationType": "full_numbers"
             });
 
-            $(".delete_button").click(function () {
-                if(confirm("Confirmer la suppression de ce groupe?")) {
-                    $(this).next(".delete_form").trigger("submit");
-                }
-            });
         </script>
     </div>
 {% endblock %}

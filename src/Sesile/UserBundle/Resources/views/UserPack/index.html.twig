@@ -4,7 +4,7 @@
     <div class="bloc_page">
         <div class="titre_page">
             <span class="glyphicon glyphicon-floppy-saved"></span>
-            &nbsp;&nbsp;&nbsp;Liste des services organisationnels
+            &nbsp;&nbsp;&nbsp;Liste des groupes d'utilisateurs
         </div>
         <table class="table tableau dtables">
             <thead>
@@ -14,26 +14,21 @@
             </tr>
             </thead>
             <tbody>
-            {% for groupe in groupes %}
-                <tr class="user-row" data-id="{{ groupe.id }}">
-                    <td><a href="{{ path("service_edit", {'id' : groupe.id }) }}" class="link-datatable">{{ groupe.Nom }}</a></td>
+            {% for userPack in userPacks %}
+                <tr class="user-row" data-id="{{ userPack.id }}">
+                    <td>{{ userPack.nom }}</td>
                     <td class="boutons_action">
-                        <a href="{{ path("service_edit", {'id' : groupe.id }) }}">
+                        <a href="{{ path('edit_userpack',{id:userPack.id}) }}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-
-                        <a href="#" class="delete_button">
-                        <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                        <form class="delete_form" method="POST" action="{{ path("service_delete", {'id' : groupe.id }) }}"></form>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path("create_service") }}">
+        <a href="{{ path("new_userpack") }}">
             <button type="button" class="btn btn-default navbar-btn">
-                Ajouter un service organisationnel
+                Ajouter un groupe d'utilisateurs
             </button>
         </a>
         <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
@@ -50,10 +45,10 @@
                         "sFirst": "",
                         "sPrevious": "",
                         "sNext": "",
-                        "sLast": "",
+                        "sLast": ""
                     },
-		    "sZeroRecords": "Aucun groupe &agrave; afficher",
-		    "sEmptyTable": "Aucun groupe &agrave; afficher"
+                    "sZeroRecords": "Aucun groupe d'utilisateurs &agrave; afficher",
+                    "sEmptyTable": "Aucun groupe d'utilisateurs &agrave; afficher"
                 },
                 "iDisplayLength": 15,
                 "aLengthMenu": [15, 30, 50, 100],
