@@ -30,10 +30,10 @@ class RouteListener {
 
         $sousdom = explode(".", $request->getHost());
         $conf = $this->container->getParameter("domain_parse");
-        $sousdom = $sousdom[0] != $conf["default"] ? $sousdom[0] : $conf["dbname"];
+        $ssdom = $sousdom[0] == $conf["default"] ? $sousdom[0] : $conf["dbname"];
 
         $collectivite = $this->em->getRepository('SesileMainBundle:Collectivite')->findOneBy(
-            array("domain" => $sousdom, "active" => 1)
+            array("domain" => $ssdom, "active" => 1)
         );
 
         $session = $request->getSession();
