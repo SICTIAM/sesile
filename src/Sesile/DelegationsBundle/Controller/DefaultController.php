@@ -84,7 +84,8 @@ class DefaultController extends Controller
 //        $users = $userManager->findUsers();
         $em = $this->getDoctrine()->getManager();
         $users = $em->getRepository('SesileUserBundle:User')->findBy(
-            array('collectivite' => $this->get("session")->get("collectivite"), 'enabled' => 1)
+            array('collectivite' => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array('Nom' => 'ASC')
         );
         foreach ($users as $index => $user) {
             if ($user->getId() == $this->getUser()->getId()) {

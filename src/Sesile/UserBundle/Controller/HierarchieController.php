@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 class HierarchieController extends Controller {
 
     /**
-     * @Route("/groupes", name="groupes")
+     * @Route("/services", name="services")
      * @Method("GET")
      * @Template()
      */
@@ -36,16 +36,17 @@ class HierarchieController extends Controller {
 
 
     /**
-     * @Route("/groupe/new", name="create_groupe")
+     * @Route("/service/new", name="create_service")
      * @Method("GET")
      * @Template("SesileUserBundle:Hierarchie:edit.html.twig")
      */
     public function createAction() {
         // recup la liste des users en base
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ));
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
         // Ajout du formulaire pour les types
         $form = $this->createForm(new GroupeType());
 
@@ -58,7 +59,7 @@ class HierarchieController extends Controller {
 
 
     /**
-     * @Route("/groupe/new", name="new_groupe")
+     * @Route("/service/new", name="new_service")
      * @Method("POST")
      */
     public function newAction(Request $request) {
@@ -98,12 +99,12 @@ class HierarchieController extends Controller {
         }
 
         $em->flush();
-        return $this->redirect($this->generateUrl('groupes'));
+        return $this->redirect($this->generateUrl('services'));
     }
 
 
     /**
-     * @Route("/groupe/edit/{id}", name="groupe_edit", options={"expose"=true})
+     * @Route("/service/edit/{id}", name="service_edit", options={"expose"=true})
      * @Method("GET")
      * @Template()
      */
@@ -112,9 +113,10 @@ class HierarchieController extends Controller {
         $groupe = $em->getRepository('SesileUserBundle:Groupe')->find($id);
         if($groupe) {
             // recup la liste des users en base
-            $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-                "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-            ));
+            $users = $em->getRepository('SesileUserBundle:User')->findBy(
+                array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+                array("Nom" => "ASC")
+            );
 
             $form = $this->createForm(new GroupeType(), $groupe);
 
@@ -126,13 +128,13 @@ class HierarchieController extends Controller {
             );
         }
         else {
-            return $this->redirect($this->generateUrl('groupes'));
+            return $this->redirect($this->generateUrl('services'));
         }
     }
 
 
     /**
-     * @Route("/groupe/update/", name="update_groupe")
+     * @Route("/service/update/", name="update_service")
      * @Method("POST")
      * @Template()
      */
@@ -184,7 +186,7 @@ class HierarchieController extends Controller {
             }
 
             $em->flush();
-            return $this->redirect($this->generateUrl('groupes'));
+            return $this->redirect($this->generateUrl('services'));
         }
         else {
             // TODO pétage d'erreur
@@ -195,7 +197,7 @@ class HierarchieController extends Controller {
 
     /**
      * Deletes a Group entity.
-     * @Route("/groupe/delete/{id}", name="group_delete")
+     * @Route("/service/delete/{id}", name="service_delete")
      * @Method("POST")
      */
     public function deleteAction($id) {
@@ -203,7 +205,7 @@ class HierarchieController extends Controller {
         $entity = $em->getRepository('SesileUserBundle:Groupe')->findOneById($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Groupe introuvable');
+            throw $this->createNotFoundException('Service introuvable');
         }
         $em->remove($entity);
         $em->flush();
@@ -213,7 +215,7 @@ class HierarchieController extends Controller {
             "success",
             "Le groupe vient d'être supprimé"
         );
-        return $this->redirect($this->generateUrl('groupes'));
+        return $this->redirect($this->generateUrl('services'));
     }
 
     /**

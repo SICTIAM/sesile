@@ -31,6 +31,7 @@ assetic:
 #    delivery_address: me@example.com
 
 parameters:
+    database_name: sesile-evo
     cas_server: sso.dev.sictiam.fr
     cas_port: 389
     cas_path: /

@@ -128,6 +128,38 @@ class Classeur {
      */
     private $visible;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur")
+     */
+    private $etapeClasseurs;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupes", cascade={"persist"})
+     */
+    private $etapeGroupes;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ordreEtape", type="string", length=255)
+     */
+    private $ordreEtape;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EtapeValidante", type="string", length=255)
+     */
+    private $etapeValidante;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EtapeDeposante", type="string", length=255)
+     */
+    private $etapeDeposante;
+
     /**
      * Get id
      *
@@ -774,4 +806,139 @@ class Classeur {
         return $this->ordreCircuit;
     }
 
+
+    /**
+     * Add etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     * @return Classeur
+     */
+    public function addEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs[] = $etapeClasseurs;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     */
+    public function removeEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs->removeElement($etapeClasseurs);
+    }
+
+    /**
+     * Get etapeClasseurs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeClasseurs()
+    {
+        return $this->etapeClasseurs;
+    }
+
+    /**
+     * Set ordreEtape
+     *
+     * @param string $ordreEtape
+     * @return Classeur
+     */
+    public function setOrdreEtape($ordreEtape)
+    {
+        $this->ordreEtape = $ordreEtape;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordreEtape
+     *
+     * @return string 
+     */
+    public function getOrdreEtape()
+    {
+        return $this->ordreEtape;
+    }
+
+    /**
+     * Set etapeValidante
+     *
+     * @param string $etapeValidante
+     * @return Classeur
+     */
+    public function setEtapeValidante($etapeValidante)
+    {
+        $this->etapeValidante = $etapeValidante;
+    
+        return $this;
+    }
+
+    /**
+     * Get etapeValidante
+     *
+     * @return string 
+     */
+    public function getEtapeValidante()
+    {
+        return $this->etapeValidante;
+    }
+
+    /**
+     * Set etapeDeposante
+     *
+     * @param string $etapeDeposante
+     * @return Classeur
+     */
+    public function setEtapeDeposante($etapeDeposante)
+    {
+        $this->etapeDeposante = $etapeDeposante;
+    
+        return $this;
+    }
+
+    /**
+     * Get etapeDeposante
+     *
+     * @return string 
+     */
+    public function getEtapeDeposante()
+    {
+        return $this->etapeDeposante;
+    }
+
+    /**
+     * Add etapeGroupes
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     * @return Classeur
+     */
+    public function addEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    {
+        $this->etapeGroupes[] = $etapeGroupes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeGroupes
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     */
+    public function removeEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    {
+        $this->etapeGroupes->removeElement($etapeGroupes);
+    }
+
+    /**
+     * Get etapeGroupes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeGroupes()
+    {
+        return $this->etapeGroupes;
+    }
 }

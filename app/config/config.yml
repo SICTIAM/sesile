@@ -115,12 +115,6 @@ parameters:
         buildnumber: 90
     majorversion: 1
 
-
-jms_di_extra:
-    locations:
-        all_bundles: true
-
-
 # La suite, c'est pour l'api
 fos_rest:
     param_fetcher_listener: true
@@ -169,6 +163,3 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }
-
-
-
