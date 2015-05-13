@@ -29,7 +29,7 @@ class EtapeClasseur
     /**
      * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="$etapeClasseurs")
+     * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="etapeClasseurs")
      * @ORM\JoinColumn(name="classeur", referencedColumnName="id")
      *
      */
@@ -37,7 +37,7 @@ class EtapeClasseur
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", inversedBy="$etapeClasseurs", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", inversedBy="etapeClasseurs", cascade={"persist"})
      */
     private $userPacks;
 

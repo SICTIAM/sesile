@@ -78,13 +78,8 @@ class Classeur {
     private $user;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="validant", type="integer")
-     *
-     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs_a_valider")
-     * @ORM\JoinColumn(name="validant", referencedColumnName="id")
-     *
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs_a_valider", cascade={"persist"})
+     * @ORM\JoinTable(name="Classeur_valider")
      */
     private $validant;
 
@@ -95,11 +90,10 @@ class Classeur {
      */
     private $ordreCircuit = 0;
 
-    public $validantName;
 
     /**
      * @var int
-     * 0 = privé, id groupe = public pour le groupeid
+     * 0 = privé, 1 = public, 2 = prive a partir de moi, 3 = service organisationnel (et le circuit)
      * @ORM\Column(name="visibilite", type="integer")
      *
      */
@@ -108,7 +102,7 @@ class Classeur {
     /**
      * @var string
      *
-     * @ORM\Column(name="circuit", type="string", length=255)
+     * @ORM\Column(name="circuit", type="string", length=255, nullable=true)
      */
     private $circuit;
 
@@ -135,28 +129,27 @@ class Classeur {
     private $etapeClasseurs;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupes", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="classeurs", cascade={"persist"})
      */
     private $etapeGroupes;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="ordreEtape", type="string", length=255)
+     * @ORM\Column(name="ordreEtape", type="integer")
      */
-    private $ordreEtape;
+    private $ordreEtape = 0;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="EtapeValidante", type="string", length=255)
+     * @ORM\OneToOne(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe")
+     * @ORM\JoinColumn(name="etapeValidante", referencedColumnName="id")
      */
     private $etapeValidante;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="EtapeDeposante", type="string", length=255)
+     * @ORM\Column(name="EtapeDeposante", type="integer")
      */
     private $etapeDeposante;
 
@@ -318,19 +311,6 @@ class Classeur {
     }
 
     /**
-     * Set validant
-     *
-     * @param integer $validant
-     * @return Classeur
-     */
-    public function setValidant($validant)
-    {
-        $this->validant = $validant;
-
-        return $this;
-    }
-
-    /**
      * @ORM\PrePersist
      */
     public function setValidantValue()
@@ -350,14 +330,6 @@ class Classeur {
     public function setStatusValue()
     {
         $this->status = 1;
-    }
-
-    /**
-     * Get validant
-     * @return integer
-     */
-    public function getValidant() {
-        return $this->validant;
     }
 
     /**
@@ -398,31 +370,11 @@ class Classeur {
      * @return int l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
      */
 
-
-    /*    private function getPrevValidant()
-    {
-
-
-        $circuit = explode(",", $this->getCircuit());
-        $curr_validant = array_search($this->validant, $circuit);
-        $prev_validant = ($curr_validant - $curr_validant);
-        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
-
-    }
-*/
-
     public function getPrevValidant()
     {
         $circuit = explode(",", $this->getCircuit());
-//        $curr_validant = array_search($this->validant, $circuit);
-
-//        $prev_validant = ($curr_validant - $curr_validant) - 1;
-//        $this->setOrdreMoins();
         $ordre =  $this->setOrdreMoins();
-//        var_dump($this->setOrdreMoins());
-//        $prev_validant = $circuit[$this->getOrdreCircuit()];
         return ($this->getOrdreCircuit() > 0) ? $circuit[$ordre] : $this->getUser();
-//        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
     }
 
 
@@ -443,19 +395,13 @@ class Classeur {
      */
     public function getCurrentValidant(\Doctrine\ORM\EntityManager $em)
     {
-        //$d = $em->getRepository("SesileDelegationsBundle:Delegations");
-        //$delegation = $d->getClasseursRetractables($userid);
 
         $circuit = explode(",", $this->getCircuit());
-//        $curr_validant = array_search($this->validant, $circuit);
         $curr_validant = $circuit[$this->getOrdreCircuit()];
         return $curr_validant;
     }
 
 
-//    public function isAtLastValidant(\Doctrine\ORM\EntityManager $em){
-//        return ($this->getNextValidant($em)==0);
-//    }
     public function isAtLastValidant(){
         $ordreCircuit = $this->getOrdreCircuit() + 1;
         if ($ordreCircuit == count(explode(",", $this->getCircuit()))) {
@@ -463,7 +409,6 @@ class Classeur {
         } else {
             return false;
         }
-
 
     }
 
@@ -864,29 +809,6 @@ class Classeur {
     }
 
     /**
-     * Set etapeValidante
-     *
-     * @param string $etapeValidante
-     * @return Classeur
-     */
-    public function setEtapeValidante($etapeValidante)
-    {
-        $this->etapeValidante = $etapeValidante;
-    
-        return $this;
-    }
-
-    /**
-     * Get etapeValidante
-     *
-     * @return string 
-     */
-    public function getEtapeValidante()
-    {
-        return $this->etapeValidante;
-    }
-
-    /**
      * Set etapeDeposante
      *
      * @param string $etapeDeposante
@@ -940,5 +862,61 @@ class Classeur {
     public function getEtapeGroupes()
     {
         return $this->etapeGroupes;
+    }
+
+    /**
+     * Add validant
+     *
+     * @param \Sesile\UserBundle\Entity\User $validant
+     * @return Classeur
+     */
+    public function addValidant(\Sesile\UserBundle\Entity\User $validant)
+    {
+        $this->validant[] = $validant;
+    
+        return $this;
+    }
+
+    /**
+     * Remove validant
+     *
+     * @param \Sesile\UserBundle\Entity\User $validant
+     */
+    public function removeValidant(\Sesile\UserBundle\Entity\User $validant)
+    {
+        $this->validant->removeElement($validant);
+    }
+
+    /**
+     * Get validant
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getValidant()
+    {
+        return $this->validant;
+    }
+
+    /**
+     * Set etapeValidante
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeValidante
+     * @return Classeur
+     */
+    public function setEtapeValidante(\Sesile\UserBundle\Entity\EtapeGroupe $etapeValidante = null)
+    {
+        $this->etapeValidante = $etapeValidante;
+    
+        return $this;
+    }
+
+    /**
+     * Get etapeValidante
+     *
+     * @return \Sesile\UserBundle\Entity\EtapeGroupe 
+     */
+    public function getEtapeValidante()
+    {
+        return $this->etapeValidante;
     }
 }

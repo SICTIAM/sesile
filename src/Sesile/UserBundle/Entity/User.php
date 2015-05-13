@@ -125,11 +125,17 @@ class User extends BaseUser {
     /**
      * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="$users")
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
      *
      */
     protected $collectivite;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="validant", cascade={"persist"})
+     * @ORM\JoinTable(name="Classeur_valider")
+     */
+    private $classeurs_a_valider;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="visible", cascade={"persist"})
@@ -151,6 +157,19 @@ class User extends BaseUser {
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="users", cascade={"persist"})
      */
     private $etapeGroupes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="usersTools", cascade={"persist"})
+     * @ORM\JoinTable(name="EtapeGroupe_user_tools")
+     */
+    private $etapeGroupesTools;
+
+    /**
+     * @var
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="user")
+     */
+    private $hierarchie;
+
 
     public function setPath($path) {
         return $this->path = $path;
@@ -753,5 +772,104 @@ class User extends BaseUser {
     public function getEtapeGroupes()
     {
         return $this->etapeGroupes;
+    }
+
+    /**
+     * Add etapeGroupesTools
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesTools
+     * @return User
+     */
+    public function addEtapeGroupesTool(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesTools)
+    {
+        $this->etapeGroupesTools[] = $etapeGroupesTools;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeGroupesTools
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesTools
+     */
+    public function removeEtapeGroupesTool(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesTools)
+    {
+        $this->etapeGroupesTools->removeElement($etapeGroupesTools);
+    }
+
+    /**
+     * Get etapeGroupesTools
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeGroupesTools()
+    {
+        return $this->etapeGroupesTools;
+    }
+
+    /**
+     * Add hierarchie
+     *
+     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
+     * @return User
+     */
+    public function addHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
+    {
+        $this->hierarchie[] = $hierarchie;
+    
+        return $this;
+    }
+
+    /**
+     * Remove hierarchie
+     *
+     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
+     */
+    public function removeHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
+    {
+        $this->hierarchie->removeElement($hierarchie);
+    }
+
+    /**
+     * Get hierarchie
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHierarchie()
+    {
+        return $this->hierarchie;
+    }
+
+    /**
+     * Add classeurs_a_valider
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursAValider
+     * @return User
+     */
+    public function addClasseursAValider(\Sesile\ClasseurBundle\Entity\Classeur $classeursAValider)
+    {
+        $this->classeurs_a_valider[] = $classeursAValider;
+    
+        return $this;
+    }
+
+    /**
+     * Remove classeurs_a_valider
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursAValider
+     */
+    public function removeClasseursAValider(\Sesile\ClasseurBundle\Entity\Classeur $classeursAValider)
+    {
+        $this->classeurs_a_valider->removeElement($classeursAValider);
+    }
+
+    /**
+     * Get classeurs_a_valider
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getClasseursAValider()
+    {
+        return $this->classeurs_a_valider;
     }
 }

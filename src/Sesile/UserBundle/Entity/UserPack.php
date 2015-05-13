@@ -35,7 +35,7 @@ class UserPack
     private $users;
 
 
-    /***
+    /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="userPacks", cascade={"persist"})
      */
     private $etapeClasseurs;
@@ -50,11 +50,18 @@ class UserPack
     /**
      * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="$userPacks")
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="userPacks")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
      *
      */
     protected $collectivite;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="creation", type="datetime", nullable=true)
+     */
+    private $creation;
 
 
     /**
@@ -96,6 +103,8 @@ class UserPack
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->etapeGroupes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->etapeClasseurs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->creation = new \DateTime('now');
     }
     
     /**
@@ -185,5 +194,61 @@ class UserPack
     public function getCollectivite()
     {
         return $this->collectivite;
+    }
+
+    /**
+     * Set creation
+     *
+     * @param \DateTime $creation
+     * @return UserPack
+     */
+    public function setCreation($creation)
+    {
+        $this->creation = $creation;
+    
+        return $this;
+    }
+
+    /**
+     * Get creation
+     *
+     * @return \DateTime 
+     */
+    public function getCreation()
+    {
+        return $this->creation;
+    }
+
+    /**
+     * Add etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     * @return UserPack
+     */
+    public function addEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs[] = $etapeClasseurs;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     */
+    public function removeEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs->removeElement($etapeClasseurs);
+    }
+
+    /**
+     * Get etapeClasseurs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeClasseurs()
+    {
+        return $this->etapeClasseurs;
     }
 }
