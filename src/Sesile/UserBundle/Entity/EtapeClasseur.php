@@ -114,4 +114,37 @@ class EtapeClasseur
     {
         return $this->userPacks;
     }
+
+    /**
+     * Add users
+     *
+     * @param \Sesile\UserBundle\Entity\User $users
+     * @return EtapeClasseur
+     */
+    public function addUser(\Sesile\UserBundle\Entity\User $users)
+    {
+        $this->users[] = $users;
+    
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \Sesile\UserBundle\Entity\User $users
+     */
+    public function removeUser(\Sesile\UserBundle\Entity\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
 }
