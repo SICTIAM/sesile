@@ -16,42 +16,22 @@ use Symfony\Component\HttpFoundation\Response;
 class CircuitController extends Controller
 {
     /**
-     * @Route("/new/", name="new_circuit", options={"expose"=true})
+     * @Route("/new/{so}", name="new_circuit", options={"expose"=true})
      * @method("GET")
      * @Template()
      */
-    public function newAction($forClasseur = true)
+    public function newAction($so)
     {
-        // recup la liste des users en base
+
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ), array("Nom" => "ASC"));
 
-        // recup la list des circuits
-        // TODO recup uniquement pour le user connecté
-        $circuits = array();
-        $em = $this->getDoctrine()->getManager();
-        $circuits_du_user = $em->getRepository('SesileCircuitBundle:Circuit')->findByUser_id($this->getUser()->getId());
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $serviceOrg = $em->getRepository('SesileUserBundle:Groupe')->findOneById($so);
 
-        foreach ($circuits_du_user as $circuit) {
-            $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre(), "groupe" => false);
-        }
-
-        if($forClasseur) {
-            $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
-            foreach($groupes_du_user as $group) {
-                $circuits[] = array(
-                    "id" => $group->getGroupe()->getId(),
-                    "name" => $group->getGroupe()->getNom(),
-                    "ordre" => $this->getCircuitFromgroupForUser($this->getUser(), $group->getgroupe()),
-                    "groupe" => true
-                );
-            }
-        }
-
-
-        return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
+        //Retourne un tableau avec tous les users de la collectivité et un booléen disant si chaque user est dans l'étape ou pas
+        return array('userPacks' => $userPacks, 'users' => $users, 'service' => $serviceOrg);
     }
 
 

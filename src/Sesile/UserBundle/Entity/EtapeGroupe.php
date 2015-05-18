@@ -27,6 +27,12 @@ class EtapeGroupe
     private $users;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeGroupesTools", cascade={"persist"})
+     * @ORM\JoinTable(name="EtapeGroupe_user_tools")
+     */
+    private $usersTools;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", inversedBy="etapeGroupes", cascade={"persist"})
      */
     private $userPacks;
@@ -34,7 +40,7 @@ class EtapeGroupe
     /**
      * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\Groupe", inversedBy="$etapeGroupes")
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\Groupe", inversedBy="etapeGroupes")
      * @ORM\JoinColumn(name="groupe", referencedColumnName="id")
      *
      */
@@ -45,6 +51,20 @@ class EtapeGroupe
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="etapeGroupes", cascade={"persist"})
      */
     private $classeurs;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ordre", type="integer", nullable=true)
+     *
+     */
+    private $ordre;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur")
+     * @ORM\JoinColumn(name="classeur_validante_id", referencedColumnName="id")
+     **/
+    private $classeur_validante;
 
     /**
      * Get id
@@ -187,5 +207,84 @@ class EtapeGroupe
         $this->groupe = $groupe;
     
         return $this;
+    }
+
+    /**
+     * Set ordre
+     *
+     * @param integer $ordre
+     * @return EtapeGroupe
+     */
+    public function setOrdre($ordre)
+    {
+        $this->ordre = $ordre;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordre
+     *
+     * @return integer 
+     */
+    public function getOrdre()
+    {
+        return $this->ordre;
+    }
+
+    /**
+     * Add usersTools
+     *
+     * @param \Sesile\UserBundle\Entity\User $usersTools
+     * @return EtapeGroupe
+     */
+    public function addUsersTool(\Sesile\UserBundle\Entity\User $usersTools)
+    {
+        $this->usersTools[] = $usersTools;
+    
+        return $this;
+    }
+
+    /**
+     * Remove usersTools
+     *
+     * @param \Sesile\UserBundle\Entity\User $usersTools
+     */
+    public function removeUsersTool(\Sesile\UserBundle\Entity\User $usersTools)
+    {
+        $this->usersTools->removeElement($usersTools);
+    }
+
+    /**
+     * Get usersTools
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsersTools()
+    {
+        return $this->usersTools;
+    }
+
+    /**
+     * Set classeur_validante
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurValidante
+     * @return EtapeGroupe
+     */
+    public function setClasseurValidante(\Sesile\ClasseurBundle\Entity\Classeur $classeurValidante = null)
+    {
+        $this->classeur_validante = $classeurValidante;
+    
+        return $this;
+    }
+
+    /**
+     * Get classeur_validante
+     *
+     * @return \Sesile\ClasseurBundle\Entity\Classeur 
+     */
+    public function getClasseurValidante()
+    {
+        return $this->classeur_validante;
     }
 }

@@ -31,9 +31,7 @@ assetic:
 #    delivery_address: me@example.com
 
 parameters:
-    database_name: evolutions
-    database_user: root
-    database_password: sictiam
+    database_name: sesile_evolutions
     cas_server: sso.dev.sictiam.fr
     cas_port: 389
     cas_path: /

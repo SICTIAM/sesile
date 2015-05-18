@@ -2,13 +2,14 @@
 function loadtype() {
     $('#loadinggif').show();
     dataUserGroupe = { 'usergroupe': $('#userGroupe').val() };
+    var id_so = $('#userGroupe').val();
 
     $.ajax({
         url: Routing.generate('user_groupe_selected'),
         type: "post",
         data: dataUserGroupe,
         success: function (html) {
-            loadcorrectform();
+            loadcorrectform(id_so);
             $('#type').html(html);
             $('#loadinggif').hide();
         }
@@ -16,7 +17,7 @@ function loadtype() {
 }
 
 // Fonction permettant de charger le formulaire en fonction du type de classeur sélectionné
-function loadcorrectform() {
+function loadcorrectform(id_so) {
     $('#loadinggif').show();
     datatosend = { 'type': $("#type").val() };
 
@@ -27,7 +28,7 @@ function loadcorrectform() {
         success: function (html) {
 
             $('#contenttypedform').html(html);
-            $('#circuitcontent').load(Routing.generate('new_circuit', { slug: 'walter'} ));
+            $('#circuitcontent').load(Routing.generate('new_circuit', { 'so': id_so} ));
             $('#documentcontent').load(Routing.generate('new_document'));
             $('#loadinggif').hide();
 

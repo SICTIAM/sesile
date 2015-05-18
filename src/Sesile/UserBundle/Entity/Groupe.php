@@ -30,7 +30,7 @@ class Groupe {
     /**
      * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="$groupes")
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="groupes", cascade={"persist"})
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
      *
      */
@@ -73,6 +73,13 @@ class Groupe {
     private $ordreEtape;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="creation", type="datetime", nullable=true)
+     */
+    private $creation;
+
+    /**
      * Get id
      *
      * @return integer
@@ -108,6 +115,7 @@ class Groupe {
      */
     public function __construct() {
         $this->hierarchie = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->creation = new \DateTime('now');
     }
     
 
@@ -301,5 +309,28 @@ class Groupe {
     public function getCollectivite()
     {
         return $this->collectivite;
+    }
+
+    /**
+     * Set creation
+     *
+     * @param \DateTime $creation
+     * @return Groupe
+     */
+    public function setCreation($creation)
+    {
+        $this->creation = $creation;
+    
+        return $this;
+    }
+
+    /**
+     * Get creation
+     *
+     * @return \DateTime 
+     */
+    public function getCreation()
+    {
+        return $this->creation;
     }
 }

@@ -1,6 +1,3 @@
-<!--<link rel="stylesheet" href="{{ asset("/css/bootstrapValidator.min.css") }}"/>
-<script type="text/javascript" src="{{ asset("/js/js/bootstrapValidator.min.js") }}"></script> -->
-
 <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 <script src="{{ asset("/js/select2.min.js") }}"></script>
@@ -22,22 +19,6 @@
         </select>
     </div>
 </div>
-
-{#
-<select class="fuckingvisibility" id="visibilite" name="visibilite">
-    <option value="0">Privé</option>
-    <optgroup label="Pour le groupe">
-    {% for groupe in groupes %}
-        <option value="{{ groupe.id }}">{{ groupe.nom }}</option>
-    {% endfor %}
-    </optgroup>
-</select>
-
-<script type="text/javascript">
-$("#visibilite").select2();
-</script>
-#}
-
 
 <div class="titre_form_element">
     <span class="glyphicon glyphicon-play"></span>

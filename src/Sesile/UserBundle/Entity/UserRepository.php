@@ -12,4 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository {
 
+    public function findByUserPacks($userPack) {
+
+        return $this
+            ->createQueryBuilder('c')
+            ->leftJoin('c.userPacks', 'u')
+            ->where('u.id = :userid')
+            ->setParameter('userid', $userPack)
+            ->getQuery()
+            ->getResult();
+    }
 }

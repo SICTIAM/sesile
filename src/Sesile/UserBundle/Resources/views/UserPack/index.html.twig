@@ -10,16 +10,29 @@
             <thead>
             <tr>
                 <th>Nom</th>
+                <th>Date de création</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
             {% for userPack in userPacks %}
                 <tr class="user-row" data-id="{{ userPack.id }}">
-                    <td>{{ userPack.nom }}</td>
+                    <td>
+                        <a href="{{ path('edit_userpack',{id:userPack.id}) }}" class="link-datatable">
+                            {{ userPack.nom }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if userPack.creation %}
+                            <a href="{{ path("edit_userpack", {'id' : userPack.id }) }}" class="link-datatable">{{ userPack.creation|date("d/m/Y") }}</a>
+                        {% endif %}
+                    </td>
                     <td class="boutons_action">
                         <a href="{{ path('edit_userpack',{id:userPack.id}) }}">
                             <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a data-href="{{ path("delete_userpack", {'id' : userPack.id }) }}" data-toggle="modal" data-target="#confirm-delete">
+                            <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>
                 </tr>
@@ -54,16 +67,34 @@
                 "aLengthMenu": [15, 30, 50, 100],
                 "sDom": 'lft<"footer_datatables"p>',
                 "aoColumnDefs": [
-                    { "bSortable": false, "aTargets": [ 1 ] }
+                    { "aTargets": [ 1 ], sClass: "center" },
+                    { "aTargets": [ 2 ], sClass: "center" },
+                    { "bSortable": false, "aTargets": [ -1 ] }
                 ],
                 "sPaginationType": "full_numbers"
             });
 
-            $(".delete_button").click(function () {
-                if(confirm("Confirmer la suppression de ce groupe?")) {
-                    $(this).next(".delete_form").trigger("submit");
-                }
-            });
         </script>
     </div>
+
+    {# Modal Delete #}
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    Etes-vous sur de voulor supprimer ce groupe ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-danger btn-ok">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+    </script>
+
 {% endblock %}

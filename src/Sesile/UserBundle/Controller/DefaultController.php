@@ -313,10 +313,14 @@ class DefaultController extends Controller
      */
     public function userPackIndexAction()
     {
+
+        // fonction pour la securite
+        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
+
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
-        return array('userPacks'=>$userPacks);
+        return array('userPacks'=>$userPacks, "menu_color" => "vert");
     }
 
     /**
@@ -328,10 +332,13 @@ class DefaultController extends Controller
      */
     public function userPackNewAction()
     {
+        // fonction pour la securite
+        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
+
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
-        return array('users'=>$users);
+        return array('users'=>$users, "menu_color" => "vert");
 
     }
 
@@ -427,13 +434,16 @@ class DefaultController extends Controller
     public function userPackEditAction($id)
     {
 
+        // fonction pour la securite
+        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
+
         $em = $this->getDoctrine()->getManager();
         $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
 
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
 
-        return array('userPack'=>$userPack,'users'=>$users);
+        return array('userPack'=>$userPack,'users'=>$users, "menu_color" => "vert");
 
     }
 
@@ -555,6 +565,40 @@ class DefaultController extends Controller
 
         }
         return $tabRetour;
+    }
+
+
+    /**
+     * Delete an existing userPack.
+     *
+     * @Route("groupes/delete/{id}", name="delete_userpack")
+     * @Method("get")
+     */
+    public function deleteUserPackAction($id) {
+
+        // fonction pour la securite
+        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
+
+        // On recupere l enregistrement a supprimer
+        $em = $this->getDoctrine()->getManager();
+        $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
+
+        // On supprime l enregistrement
+        $em->remove($userPack);
+        $em->flush();
+
+        // on redirige avec un petit message
+        $this->get('session')->getFlashBag()->add('success', 'Le groupe d\'utilisateurs a bien été supprimé');
+        return $this->redirect($this->generateUrl('userpacks'));
+    }
+
+    private function securityContext() {
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 

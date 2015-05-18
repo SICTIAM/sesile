@@ -12,4 +12,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class EtapeGroupeRepository extends EntityRepository
 {
+    public function findByUsers( User $user) {
+
+        return $this
+            ->createQueryBuilder('c')
+            ->leftJoin('c.users', 'u')
+            ->where('u.id = :userid')
+            ->setParameter('userid', $user->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByUsersTools( User $user) {
+
+        return $this
+            ->createQueryBuilder('c')
+            ->leftJoin('c.usersTools', 'u')
+            ->where('u.id = :userid')
+            ->setParameter('userid', $user->getId())
+            ->getQuery()
+            ->getResult();
+    }
 }
