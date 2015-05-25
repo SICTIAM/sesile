@@ -38,7 +38,7 @@ if (typeof deposant != 'undefined') {
     var new_perso = $('<div/>').addClass('deposant no_sort perso_circuit').insertBefore("#debut_circuit");
     perso_src = deposant.path ? path+deposant.path : perso_src;
     $('<img />').attr("src", perso_src).appendTo(new_perso);
-   /* $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);*/
+    $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
 
 // Fonction pour afficher les bouton valider et signer
