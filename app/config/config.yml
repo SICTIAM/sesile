@@ -112,8 +112,8 @@ parameters:
         repository: "git@gitlab.sictiam.fr:sesile/sesile.git"
         branch: master
         commit: 994e6f7902355e6bf62dde14804e0bd9863d5662
-        buildnumber: 90
-    majorversion: 1
+        buildnumber: 1
+    majorversion: 2
 
 # La suite, c'est pour l'api
 fos_rest:

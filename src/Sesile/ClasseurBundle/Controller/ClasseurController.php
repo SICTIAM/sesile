@@ -1537,7 +1537,7 @@ class ClasseurController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
+        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getValidant());
 
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextMailwalid(),
