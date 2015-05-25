@@ -1138,7 +1138,7 @@ class ClasseurController extends Controller {
         if($classeur->getStatus() != 2) {
             $this->sendCreationMail($classeur);
         } else {
-            $this->sendValidationMail($classeur);
+            $this->sendValidationMail($classeur, $currentvalidant);
         }
 
         //$this->updateAction($request);
@@ -1533,11 +1533,14 @@ class ClasseurController extends Controller {
         $this->get('mailer')->send($message);
     }
 
-    private function sendValidationMail($classeur)
+    private function sendValidationMail($classeur, $currentvalidant = null)
     {
+        if (is_null($currentvalidant)) {
+            $currentvalidant = $classeur->getValidant();
+        }
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getValidant());
+        $c_user = $em->getRepository("SesileUserBundle:User")->findOneById($currentvalidant);
 
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextMailwalid(),
