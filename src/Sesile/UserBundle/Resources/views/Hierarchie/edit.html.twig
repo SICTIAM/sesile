@@ -48,12 +48,6 @@
 	        {#<div id="edit_service">#}
 
                 <div class="row">
-                    <a class="btn btn-default col-md-11" href="{{ path('groupes') }}">Retour aux services organisationnels</a>
-                </div>
-
-                <div class="row">&nbsp;</div>
-
-                <div class="row">
                     {% if groupe is defined %}
                         <input type="hidden" name="id" id="id_groupe" value="{% if groupe is defined %}{{ groupe.id }}{% endif %}"/>
                     {% endif %}
@@ -96,4 +90,14 @@
 	    });
 	});
     </script>
+
+    <div class="row">
+        <div class="col-lg-3 col-lg-push-9">
+            <a class="btn btn-primary navbar-btn" href="{{ path('groupes') }}">
+                <span class="glyphicon glyphicon-share-alt"></span>
+                Retour aux services organisationnels
+            </a>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
 {% endblock %}

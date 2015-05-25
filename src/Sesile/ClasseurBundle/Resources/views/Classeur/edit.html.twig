@@ -368,6 +368,11 @@
                     {% if retractable %}
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
+
+                    <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        Retour à la liste des classeur
+                    </a>
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}
