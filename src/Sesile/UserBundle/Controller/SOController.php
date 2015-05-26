@@ -145,11 +145,6 @@ class SOController extends Controller {
 
                     $step->addUserPack($userPack);
 
-                    // On ajoute les utilisateurs dans la EtapeGroupe_user_tools
-                    $usersPack = $em->getRepository('SesileUserBundle:User')->findByUserPacks($idUPack);
-                    foreach ($usersPack as $UP) {
-                        $usersTools[] = $UP->getId();
-                    }
                 }
                 else{
                     list($reste,$idUser) = explode('-',$elementEtape->id);
@@ -161,13 +156,6 @@ class SOController extends Controller {
             }
             // On met l'ordre des étapes a jour
             $step->setOrdre($k);
-
-            // On dedoublonne les idUsers pour EtapeGroupe_user_tools
-            $usersTools = array_unique($usersTools);
-            foreach ($usersTools as $userTools) {
-                $userT = $em->getRepository('SesileUserBundle:User')->findOneById($userTools);
-                $step->addUsersTool($userT);
-            }
 
             $em->persist($step);
             /*
@@ -328,6 +316,7 @@ class SOController extends Controller {
         // On enregistre les etapes de validation
         $tabEtapes = json_decode($request->request->get('valeurs'));
 
+        //var_dump($request->request->get('valeurs'));
 
         foreach($tabEtapes as $k => $etape) {
             /*
@@ -339,7 +328,7 @@ class SOController extends Controller {
                 $step = $em->getRepository('SesileUserBundle:EtapeGroupe')->findOneById($etape->etape_id);
                 $step->getUsers()->clear();
                 $step->getUserPacks()->clear();
-                $step->getUsersTools()->clear();
+//                $step->getUsersTools()->clear();
             }
             // Sinon c est une nouvelle etape
             else {
@@ -371,10 +360,10 @@ class SOController extends Controller {
                     $step->addUserPack($userPack);
 
                     // On ajoute les utilisateurs dans la EtapeGroupe_user_tools
-                    $usersPack = $em->getRepository('SesileUserBundle:User')->findByUserPacks($idUPack);
-                    foreach ($usersPack as $UP) {
-                        $usersTools[] = $UP->getId();
-                    }
+//                    $usersPack = $em->getRepository('SesileUserBundle:User')->findByUserPacks($idUPack);
+//                    foreach ($usersPack as $UP) {
+//                        $usersTools[] = $UP->getId();
+//                    }
 
                 } else {
                     list($reste, $idUser) = explode('-', $elementEtape->id);
@@ -386,11 +375,11 @@ class SOController extends Controller {
             }
 
             // On dedoublonne les idUsers pour userTool
-            $usersTools = array_unique($usersTools);
-            foreach ($usersTools as $userTools) {
-                $userT = $em->getRepository('SesileUserBundle:User')->findOneById($userTools);
-                $step->addUsersTool($userT);
-            }
+//            $usersTools = array_unique($usersTools);
+//            foreach ($usersTools as $userTools) {
+//                $userT = $em->getRepository('SesileUserBundle:User')->findOneById($userTools);
+//                $step->addUsersTool($userT);
+//            }
             $em->persist($step);
             /*
              * On ajoute son id à ordreEtape
@@ -398,6 +387,22 @@ class SOController extends Controller {
             $ordreEtape[] = $step->getId();
 
 
+        }
+
+        /*
+         * Suppression des etapes qui ne sont plus utilisées
+         */
+        $etapes = $serviceOrg->getEtapeGroupes();
+        foreach ($etapes as $etape) {
+            // recuperation de tous les id de l etape
+            $etapeId[] = $etape->getId();
+        }
+        // On recupere la différence entre les id utilisées et les id du SO
+        $etapesDiff = array_diff($etapeId, $ordreEtape);
+        foreach ($etapesDiff as $etapeDiffId) {
+            $etapeDiff = $em->getRepository('SesileUserBundle:EtapeGroupe')->findOneById($etapeDiffId);
+
+            $em->remove($etapeDiff);
         }
 
         $ordreEtapeString = '';

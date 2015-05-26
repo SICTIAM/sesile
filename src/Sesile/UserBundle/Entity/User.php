@@ -142,7 +142,6 @@ class User extends BaseUser {
      */
     private $classeurs;
 
-
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", mappedBy="users", cascade={"persist"})
      */
@@ -157,12 +156,6 @@ class User extends BaseUser {
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="users", cascade={"persist"})
      */
     private $etapeGroupes;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="usersTools", cascade={"persist"})
-     * @ORM\JoinTable(name="EtapeGroupe_user_tools")
-     */
-    private $etapeGroupesTools;
 
     /**
      * @var
@@ -772,39 +765,6 @@ class User extends BaseUser {
     public function getEtapeGroupes()
     {
         return $this->etapeGroupes;
-    }
-
-    /**
-     * Add etapeGroupesTools
-     *
-     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesTools
-     * @return User
-     */
-    public function addEtapeGroupesTool(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesTools)
-    {
-        $this->etapeGroupesTools[] = $etapeGroupesTools;
-    
-        return $this;
-    }
-
-    /**
-     * Remove etapeGroupesTools
-     *
-     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesTools
-     */
-    public function removeEtapeGroupesTool(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesTools)
-    {
-        $this->etapeGroupesTools->removeElement($etapeGroupesTools);
-    }
-
-    /**
-     * Get etapeGroupesTools
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getEtapeGroupesTools()
-    {
-        return $this->etapeGroupesTools;
     }
 
     /**

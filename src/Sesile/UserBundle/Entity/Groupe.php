@@ -62,6 +62,7 @@ class Groupe {
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupe")
+     * @ORM\OrderBy({"ordre" = "ASC"})
      */
     private $etapeGroupes;
 

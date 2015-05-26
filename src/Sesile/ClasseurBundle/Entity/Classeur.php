@@ -124,14 +124,9 @@ class Classeur {
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur")
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"persist"})
      */
     private $etapeClasseurs;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="classeurs", cascade={"persist"})
-     */
-    private $etapeGroupes;
 
     /**
      * @var integer
@@ -139,12 +134,6 @@ class Classeur {
      * @ORM\Column(name="ordreEtape", type="integer")
      */
     private $ordreEtape = 0;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe")
-     * @ORM\JoinColumn(name="etapeValidante", referencedColumnName="id")
-     */
-    private $etapeValidante;
 
     /**
      * @var integer
@@ -832,39 +821,6 @@ class Classeur {
     }
 
     /**
-     * Add etapeGroupes
-     *
-     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
-     * @return Classeur
-     */
-    public function addEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
-    {
-        $this->etapeGroupes[] = $etapeGroupes;
-    
-        return $this;
-    }
-
-    /**
-     * Remove etapeGroupes
-     *
-     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
-     */
-    public function removeEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
-    {
-        $this->etapeGroupes->removeElement($etapeGroupes);
-    }
-
-    /**
-     * Get etapeGroupes
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getEtapeGroupes()
-    {
-        return $this->etapeGroupes;
-    }
-
-    /**
      * Add validant
      *
      * @param \Sesile\UserBundle\Entity\User $validant
@@ -887,36 +843,4 @@ class Classeur {
         $this->validant->removeElement($validant);
     }
 
-    /**
-     * Get validant
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getValidant()
-    {
-        return $this->validant;
-    }
-
-    /**
-     * Set etapeValidante
-     *
-     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeValidante
-     * @return Classeur
-     */
-    public function setEtapeValidante(\Sesile\UserBundle\Entity\EtapeGroupe $etapeValidante = null)
-    {
-        $this->etapeValidante = $etapeValidante;
-    
-        return $this;
-    }
-
-    /**
-     * Get etapeValidante
-     *
-     * @return \Sesile\UserBundle\Entity\EtapeGroupe 
-     */
-    public function getEtapeValidante()
-    {
-        return $this->etapeValidante;
-    }
 }

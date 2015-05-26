@@ -68,12 +68,19 @@
         {{ form_widget(edit_form.message) }}
 	<br>
 	<br>
-        {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
-	<a href="{{ path('index_collectivite') }}">
-	    <button type="button" class="btn btn-default navbar-btn">
-		Retour à la liste des collectivités
-	    </button>
-	</a>
+
+        <div class="row">
+            <div class="col-lg-3">
+                {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+            </div>
+            <div class="col-lg-4">
+                <a href="{{ path('index_collectivite') }}" class="btn btn-primary navbar-btn">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                    Retour aux collectivités
+                </a>
+            </div>
+        </div>
+
         {{ form_end(edit_form) }}
         {#{{ form_start(delete_form) }}{{ form_end(delete_form) }}#}
     </div>

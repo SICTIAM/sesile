@@ -44,7 +44,7 @@ class UserPack
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="userPacks", cascade={"persist"})
      */
-    private $etapeGroupes;
+    private $etapeGroupesUP;
 
 
     /**
@@ -102,7 +102,7 @@ class UserPack
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->etapeGroupes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->etapeGroupesUP = new \Doctrine\Common\Collections\ArrayCollection();
         $this->etapeClasseurs = new \Doctrine\Common\Collections\ArrayCollection();
         $this->creation = new \DateTime('now');
     }
@@ -138,39 +138,6 @@ class UserPack
     public function getUsers()
     {
         return $this->users;
-    }
-
-    /**
-     * Add etapeGroupes
-     *
-     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
-     * @return UserPack
-     */
-    public function addEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
-    {
-        $this->etapeGroupes[] = $etapeGroupes;
-    
-        return $this;
-    }
-
-    /**
-     * Remove etapeGroupes
-     *
-     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
-     */
-    public function removeEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
-    {
-        $this->etapeGroupes->removeElement($etapeGroupes);
-    }
-
-    /**
-     * Get etapeGroupes
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getEtapeGroupes()
-    {
-        return $this->etapeGroupes;
     }
 
     /**

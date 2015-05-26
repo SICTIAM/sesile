@@ -141,14 +141,26 @@
         </div>
         <br/>
 
+        <div class="row">
+            <div class="col-lg-2">
+                {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+                {{ form_end(edit_form) }}
+            </div>
+            <div class="col-lg-3">
+                <a class="btn btn-primary navbar-btn" href="{{ path('liste_users') }}">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                    Retour aux utilisateurs
+                </a>
+            </div>
+            <div class="col-lg-2 text-center">
+                {{ form_start(delete_form) }}
+                {{ form_widget(delete_form.submit, {'attr': {'class': 'btn btn-danger' }}) }}
+                {{ form_end(delete_form) }}
+            </div>
+        </div>
 
         <br/>
-        {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
-        {{ form_end(edit_form) }}
-        <br/>
-        {{ form_start(delete_form) }}
-        {{ form_widget(delete_form.submit, {'attr': {'class': 'btn btn-danger' }}) }}
-        {{ form_end(delete_form) }}
+
     </div>
 
     <script type="text/javascript">
