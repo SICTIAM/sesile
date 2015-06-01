@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\DocumentBundle\Entity\Document;
 use Sesile\UserBundle\Entity\EtapeGroupe;
+use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\DelegationsBundle\Entity\Delegations;
@@ -86,7 +87,8 @@ class ClasseurController extends Controller {
     public function listAjaxRetiredAction(Request $request)
     {
         $get = $request->query->all();
-        $columns = array('Nom', 'Creation', 'Validation', 'Validant', 'Type', 'Status', 'Id');
+//        $columns = array('Nom', 'Creation', 'Validation', 'Validant', 'Type', 'Status', 'Id');
+        $columns = array('Nom', 'Creation', 'Validation', 'Visibilite', 'Type', 'Status', 'Id');
         $get['colonnes'] = &$columns;
 
         $em = $this->getDoctrine()->getManager();
@@ -107,7 +109,7 @@ class ClasseurController extends Controller {
                     $row[] = $aRow->{"get" . $columns[$i]}()->format('d/m/Y H:i');
                 } elseif ($columns[$i] == "Validation") {
                     $row[] = $aRow->{"get" . $columns[$i]}()->format('d/m/Y');
-                } elseif ($columns[$i] == "Validant") {
+                } elseif ($columns[$i] == "Visibilite") {
                     $intervenant = $aRow->{"get" . $columns[$i]}();
 
                     $row[] = ($intervenant == 0) ? "" : $em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
@@ -131,7 +133,7 @@ class ClasseurController extends Controller {
     // SUPPRIMER UN CLASSEUR
 
     /**
-     * Edits an existing Classeur entity.
+     * Delete an existing Classeur entity.
      *
      * @Route("/delete/{id}", name="delete_classeur")
      * @Method("get")
@@ -157,7 +159,7 @@ class ClasseurController extends Controller {
     }
 
     /**
-     * Edits an existing Classeur entity.
+     * Delete an existing Classeur entity.
      *
      * @Route("/multiple_delete", name="multiple_delete_classeur")
      * @Method("POST")
@@ -193,7 +195,7 @@ class ClasseurController extends Controller {
      */
     public function listAjaxAction(Request $request) {
         $get = $request->query->all();
-        $columns = array( 'Nom', 'Creation', 'Validation', 'etapeValidante', 'Type', 'Status', 'Id' );
+        $columns = array( 'Nom', 'Creation', 'Validation', 'etapeDeposante', 'Type', 'Status', 'Id' );
         $get['colonnes'] = &$columns;
 
         $em = $this->getDoctrine()->getManager();
@@ -208,9 +210,7 @@ class ClasseurController extends Controller {
             "data" => array()
         );
 
-//        foreach($rResult["data"] as $aRow) {
         foreach($rResult as $aRow) {
-//            var_dump($aRow->getNom());
             $row = array();
             for ($i = 0 ; $i < count($columns) ; $i++) {
                 if ($columns[$i] == "Creation") {
@@ -218,11 +218,19 @@ class ClasseurController extends Controller {
                 } elseif ($columns[$i] == "Validation") {
                     $row[] = $aRow->{"get".$columns[$i]}()->format('d/m/Y');
 //                } elseif ($columns[$i] == "Validant") {
-                } elseif ($columns[$i] == "etapeValidante") {
+                } elseif ($columns[$i] == "etapeDeposante") {
 //                    $intervenants = $aRow->{"get".$columns[$i]."->getId"}();
-                    $intervenant = $aRow->getEtapeValidante()->getId();
+//                    $intervenant = $aRow->getEtapeValidante()->getId();
+                    $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($aRow);
+                    $userValidant = '';
+                    foreach ($validants as $k => $validant) {
+                        $userValidant .= $validant->getNom() . ' ' . $validant->getPrenom();
+                        if (count($validants) != $k) {
+                            $userValidant .= ' / ';
+                        }
+                    }
 
-                    $row[] = $intervenant;
+                    $row[] = $userValidant;
 //                    $row[] = ($intervenant == 0)?"":$em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
                 } elseif ($columns[$i] == "Id") {
                     if ($aRow->getType()->getNom() == 'Helios') {
@@ -286,14 +294,14 @@ class ClasseurController extends Controller {
         if(!empty($usersdelegated)) {
             $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
                 array(
-                    "validant" => $usersdelegated,
+//                    "validant" => $usersdelegated,
                     "status" => 1
                 ));
         }
         else{
             $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
                 array(
-                    "validant" => $this->getUser(),
+//                    "validant" => $this->getUser(),
                     "status" => 1
                 ));
         }
@@ -606,21 +614,21 @@ class ClasseurController extends Controller {
         $valid = new \DateTime($m . "/" . $d . "/" . $a);
         $classeur->setValidation($valid);
 
+//        var_dump($classeur);
+//        die();
+
         $type = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($request->request->get('type'));
         $classeur->setType($type);
 
         // Et on commence l enregistrement des circuits
         $tabEtapes = json_decode($request->request->get('valeurs'));
-        // Variable pour l'ordre des étapes
-
-        // initialisation de la variable pour avoir les utilisateurs qui seront validant
-        $usersValidant = array();
 
         foreach($tabEtapes as $k => $etape) {
             // On boucle pour créer les étapes
-            $step  = new EtapeGroupe();
+            $step  = new EtapeClasseur();
             // On met l'ordre des étapes a jour
             $step->setOrdre($k);
+            $step->setClasseur($classeur);
 
             // initialisation de la variable pour avoir les utilisateurs qui seront visible
             $usersVisible = array();
@@ -649,7 +657,6 @@ class ClasseurController extends Controller {
                     $step->addUser($user);
                     // On recupere les utilisateurs pour la visibilite
                     $usersVisible[] = $idUser;
-                    if ($k == 0) { $usersValidant[] = $idUser; }
                 }
             }
 
@@ -657,32 +664,12 @@ class ClasseurController extends Controller {
             $usersVisible = array_unique($usersVisible);
 
             $em->persist($step);
-
             // On enregistre la prochaine etape validante
             if ($k == 0) {
-                $step->setClasseurValidante($classeur);
-                $classeur->setEtapeValidante($step);
+                $step->setEtapeValidante(1);
             }
 
         }
-
-        // On dedoublonne les users validants
-        $usersValidant = array_unique($usersValidant);
-
-
-        // On enregistre les users validant
-        // ! Le premier enregistrement ne se fait pas !?
-        foreach ($usersValidant as $userValidant) {
-            $userVal = $em->getRepository('SesileUserBundle:User')->findOneById($userValidant);
-
-            $userVal->addClasseursAValider($classeur);
-            $classeur->addValidant($userVal);
-
-            $em->persist($classeur);
-            $em->persist($userVal);
-//            var_dump($userVal->getId(), $classeur->getNom());
-        }
-//        die();
 
 
 
@@ -707,7 +694,6 @@ class ClasseurController extends Controller {
 
         $em->persist($classeur);
         $em->flush();
-
 
         // enregistrer les users du circuit
         //$users = explode(',', $circuit);
@@ -815,20 +801,21 @@ class ClasseurController extends Controller {
         $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findBy(array(), array('nom' => 'ASC'));
 
         // Nouveau code pour afficher l ordre des groupes
-        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+//        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
 //        $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
-        $groupes_du_user = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsersTools($this->getUser());
+        $serviceOrgs = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($this->getUser()->getId());
 
-        if(!$groupes_du_user) {
+        if(!count($serviceOrgs)) {
             $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun service organisationnel.');
             return $this->redirect($this->generateUrl('classeur'));
         }
 
-        foreach($groupes_du_user as $group) {
+        foreach($serviceOrgs as $serviceOrg) {
+            $group = $em->getRepository('SesileUserBundle:Groupe')->findOneById($serviceOrg);
             $circuits[] = array(
-                "id" => $group->getGroupe()->getId(),
-                "name" => $group->getGroupe()->getNom(),
-                "ordre" => $group->getGroupe()->getOrdreEtape(),
+                "id" => $group->getId(),
+                "name" => $group->getNom(),
+//                "ordre" => $group->getOrdre(),
                 "groupe" => true
             );
 
@@ -841,7 +828,6 @@ class ClasseurController extends Controller {
                 "groupe" => true
             );*/
         }
-        $circuits = array_unique($circuits, SORT_REGULAR);
         // FIN du Nouveau code pour afficher l ordre des groupes
 
         return array(
@@ -868,6 +854,8 @@ class ClasseurController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($entity);
+        $prevValidants = $em->getRepository('SesileClasseurBundle:Classeur')->getPrevValidant($entity);
 
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
             "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
@@ -875,7 +863,6 @@ class ClasseurController extends Controller {
 
         $repositorydelegates = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
 //        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
-
 
         $usersdelegated = $repositorydelegates->getUsersWhoHasMeAsDelegate($this->getUser()->getId());
 //        $usersdelegated[]=$this->getUser();
@@ -895,9 +882,21 @@ class ClasseurController extends Controller {
 //        var_dump($delegants[0], $entity->getValidant());
 
 //        $isDelegatedToMe = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($entity, $this->getUser());
-        $isRetractableByDelegates = $entity->isRetractableByDelegates($delegants);
+        $validantsId = array();
+        $prevValidantsId = array();
+        foreach ($validants as $validant) {
+            $validantsId[] = $validant->getId();
+        }
+        foreach ($prevValidants as $prevValidant) {
+            $prevValidantsId[] = $prevValidant->getId();
+        }
 
-        if (($entity->getValidant() == $delegants[0] || ($isRetractableByDelegates && $entity->getPrevValidant() == $delegants[0])) && $this->getUser()->getId() != $delegants[0]) {
+        $isRetractableByDelegates = $entity->isRetractableByDelegates($delegants, $validantsId, $prevValidantsId);
+
+        var_dump($delegants);
+
+//        if (($entity->getValidant() == $delegants[0] || ($isRetractableByDelegates && $entity->getPrevValidant() == $delegants[0])) && $this->getUser()->getId() != $delegants[0]) {
+        if ((in_array($validantsId, $delegants[0]) || ($isRetractableByDelegates && in_array($prevValidantsId, $delegants[0]))) && $this->getUser()->getId() != $delegants[0]) {
             $isDelegatedToMe = true;
             $uservalidant = $usersdelegated[0];
         } else {
@@ -1652,12 +1651,15 @@ class ClasseurController extends Controller {
                 "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
             )
         );
-        foreach($classeur->getValidant() as $validant) {
-            var_dump($validant->getId());
-            $validant_obj = $em->getRepository('SesileUserBundle:User')->findOneById($validant->getId());
+        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+//        foreach($classeur->getValidant() as $validant) {
+        foreach($validants as $validant) {
+//            var_dump($validant->getId());
+//            die();
+//            $validant_obj = $em->getRepository('SesileUserBundle:User')->findOneById($validant->getId());
 
-            if ($validant_obj != null) {
-                $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
+            if ($validant != null) {
+                $this->sendMail("SESILE - Nouveau classeur à valider", $validant->getEmail(), $body);
             }
         }
 
@@ -1715,7 +1717,14 @@ class ClasseurController extends Controller {
         return $this->ordre;
     }
 
-    // Fonction pour determiner enregister dans Classeur_visible
+    /**
+     * Fonction pour determiner la visibilite et enregister dans Classeur_visible
+     *
+     * @param $visibilite
+     * @param $users
+     * @param null $requestUserGroupe
+     * @return string|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     private function classeur_visible($visibilite, $users, $requestUserGroupe = null) {
         $em = $this->getDoctrine()->getManager();
         switch ($visibilite) {
@@ -1734,10 +1743,35 @@ class ClasseurController extends Controller {
             // Pour le service organisationnel (et le circuit)
             case 3:
                 if ($requestUserGroupe) {
-                    $usersGF = $em->getRepository('SesileUserBundle:UserGroupe')->findByGroupe($requestUserGroupe);
-                    foreach ($usersGF as $k => $userGF) {
-                        $userGroupe[] = $usersGF[$k]->getUser()->getId();
+
+                    $userGroupe = array();
+                    // Service Organistionnel
+                    $servicesOrg = $em->getRepository('SesileUserBundle:Groupe')->findById($requestUserGroupe);
+                    foreach ($servicesOrg as $serviceOrg) {
+
+                        // Etapes du SO
+                        $etapesGroupe = $serviceOrg->getEtapeGroupes();
+                        foreach ($etapesGroupe as $etapeGroupe) {
+
+                            // UserPack des etapes
+                            $usersPacks = $etapeGroupe->getUserPacks();
+                            foreach ($usersPacks as $usersPack) {
+
+                                // Users des UserPack
+                                $usersFromUserPack = $usersPack->getUsers();
+                                foreach ($usersFromUserPack as $userFromUserPack) {
+                                    $userGroupe[] = $userFromUserPack->getId();
+                                }
+                            }
+
+                            // Liste des utilisateurs directement ajouté
+                            $usersFromEtapes = $etapeGroupe->getUsers();
+                            foreach ($usersFromEtapes as $usersFromEtape) {
+                                $userGroupe[] = $usersFromEtape->getId();
+                            }
+                        }
                     }
+
                     $usersAll = array_unique(array_merge($userGroupe, $users));
                     return $em->getRepository('SesileUserBundle:User')->findById($usersAll);
                 } else {

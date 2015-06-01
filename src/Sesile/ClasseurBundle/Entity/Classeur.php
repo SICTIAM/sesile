@@ -78,18 +78,11 @@ class Classeur {
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs_a_valider", cascade={"persist"})
-     * @ORM\JoinTable(name="Classeur_valider")
-     */
-    private $validant;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="ordreCircuit", type="integer"))
      */
     private $ordreCircuit = 0;
-
 
     /**
      * @var int
@@ -141,6 +134,13 @@ class Classeur {
      * @ORM\Column(name="EtapeDeposante", type="integer")
      */
     private $etapeDeposante;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ordreValidant", type="string", length=255, nullable=true)
+     */
+    private $ordreValidant;
 
     /**
      * Get id
@@ -359,12 +359,13 @@ class Classeur {
      * @return int l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
      */
 
-    public function getPrevValidant()
+    /*public function getPrevValidant()
     {
+
         $circuit = explode(",", $this->getCircuit());
         $ordre =  $this->setOrdreMoins();
         return ($this->getOrdreCircuit() > 0) ? $circuit[$ordre] : $this->getUser();
-    }
+    }*/
 
 
     /**
@@ -478,9 +479,9 @@ class Classeur {
      *
      * La fonction renvoie true or false pour les boutons retractable et l affichage des dossiers retractable
      */
-    public function isRetractableByDelegates($userid) {
+    public function isRetractableByDelegates($userid, $validants, $prevValidants) {
 
-        if (in_array($this->getPrevValidant(), $userid)  && $this->getValidant() != $userid && $this->getStatus() == 1 && $this->getOrdreCircuit() != 0) {
+        if (in_array($prevValidants, $userid)  && $validants != $userid && $this->getStatus() == 1 && $this->getOrdreEtape() != 0) {
             return true;
         } else {
             return false;
@@ -798,6 +799,36 @@ class Classeur {
     }
 
     /**
+     * Précédente étape
+     * @return int
+     */
+    public function getPrevOrdreEtape() {
+        $prevOrdreEtape = intval($this->getOrdreEtape());
+        if ($prevOrdreEtape != 0) {
+            $prevOrdreEtape--;
+        }
+        else {
+            $prevOrdreEtape = 0;
+        }
+        return $prevOrdreEtape;
+    }
+
+    /**
+     * Etape suivante
+     * @param $maxEtapes
+     * @return bool|int
+     */
+    public function getNextOrdreEtape($maxEtapes) {
+        $nextOrdreEtape = intval($this->getOrdreEtape());
+        if ($nextOrdreEtape << $maxEtapes) {
+            $nextOrdreEtape++;
+        } else {
+            return false;
+        }
+        return $nextOrdreEtape;
+    }
+
+    /**
      * Set etapeDeposante
      *
      * @param string $etapeDeposante
@@ -821,26 +852,26 @@ class Classeur {
     }
 
     /**
-     * Add validant
+     * Set ordreValidant
      *
-     * @param \Sesile\UserBundle\Entity\User $validant
+     * @param string $ordreValidant
      * @return Classeur
      */
-    public function addValidant(\Sesile\UserBundle\Entity\User $validant)
+    public function setOrdreValidant($ordreValidant)
     {
-        $this->validant[] = $validant;
+        $this->ordreValidant = $ordreValidant;
     
         return $this;
     }
 
     /**
-     * Remove validant
+     * Get ordreValidant
      *
-     * @param \Sesile\UserBundle\Entity\User $validant
+     * @return string 
      */
-    public function removeValidant(\Sesile\UserBundle\Entity\User $validant)
+    public function getOrdreValidant()
     {
-        $this->validant->removeElement($validant);
+        return $this->ordreValidant;
     }
 
 }

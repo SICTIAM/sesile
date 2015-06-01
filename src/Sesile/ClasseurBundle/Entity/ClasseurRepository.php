@@ -2,6 +2,7 @@
 
 namespace Sesile\ClasseurBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
@@ -105,6 +106,69 @@ class ClasseurRepository extends EntityRepository {
         }
 
         return false;
+    }
+
+    /**
+     * On passe le classeur en parametre et la fonction retourne un tableau  d'objet avec users validant du classeur
+     *
+     * @param Classeur $classeur
+     * @return array
+     *
+     */
+    public function getValidant(Classeur $classeur) {
+        $em = $this->getEntityManager();
+        $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneBy(
+            array(
+                'classeur' => $classeur->getId(),
+                'etapeValidante' => 1
+            )
+        );
+
+        $users = $etapeClasseurs->getUsers();
+
+        $userPacks = $etapeClasseurs->getUserPacks();
+        foreach ($userPacks as $userPack) {
+            $usersP = $userPack->getUsers();
+        }
+
+//        $usersValidant = new ArrayCollection(
+//            array_merge($users->toArray(), $usersP->toArray())
+//        );
+        $usersValidant = array_merge($users->toArray(), $usersP->toArray());
+        $usersValidant = array_unique($usersValidant);
+
+        return $usersValidant;
+
+    }
+
+
+    /**
+     * On passe le classeur en parametre et la fonction retourne un tableau d'objet avec users validant du classeur de l étape précedente
+     *
+     * @param Classeur $classeur
+     * @return array
+     */
+    public function getPrevValidant(Classeur $classeur) {
+
+        $em = $this->getEntityManager();
+        $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneBy(
+            array(
+                'classeur' => $classeur->getId(),
+                'ordre' => $classeur->getOrdreEtape()
+            )
+        );
+
+        $users = $etapeClasseurs->getUsers();
+
+        $userPacks = $etapeClasseurs->getUserPacks();
+        foreach ($userPacks as $userPack) {
+            $usersP = $userPack->getUsers();
+        }
+
+        $usersValidant = array_merge($users->toArray(), $usersP->toArray());
+        $usersValidant = array_unique($usersValidant);
+
+        return $usersValidant;
     }
 
 }

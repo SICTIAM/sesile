@@ -297,7 +297,9 @@ class AdminController extends Controller
             // Les données sont un tableau avec les clés "sujet", et "mailMessage"
             $em = $this->getDoctrine()->getManager();
             // On recupere tous les utilisateurs
-            $users = $em->getRepository('SesileUserBundle:User')->findAll();
+            $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
+                'enabled' => 1
+            ));
             // On recupère les données du formulaire
             $data = $form->getData();
 
@@ -310,7 +312,7 @@ class AdminController extends Controller
             // Envoie du mail pour chaque utilisateur
             foreach ($users as $key => $user) {
                 $message->setTo($user->getEmail());
-                //$this->get('mailer')->send($message);
+                $this->get('mailer')->send($message);
             }
 
             // Message de confirmation pour l'utilisateur

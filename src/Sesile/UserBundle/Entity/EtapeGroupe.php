@@ -31,7 +31,6 @@ class EtapeGroupe
      */
     private $userPacks;
 
-
     /**
      * @var int
      *
@@ -100,41 +99,6 @@ class EtapeGroupe
     {
         return $this->users;
     }
-
-    /**
-     * Add userPacks
-     *
-     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
-     * @return EtapeGroupe
-     */
-    public function addUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
-    {
-        $this->userPacks[] = $userPacks;
-    
-        return $this;
-    }
-
-    /**
-     * Remove userPacks
-     *
-     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
-     */
-    public function removeUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
-    {
-        $this->userPacks->removeElement($userPacks);
-    }
-
-    /**
-     * Get userPacks
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUserPacks()
-    {
-        return $this->userPacks;
-    }
-
-    
 
     /**
      * Get groupe
@@ -215,4 +179,37 @@ class EtapeGroupe
         return $this->ordre;
     }
 
+
+    /**
+     * Add userPacks
+     *
+     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     * @return EtapeGroupe
+     */
+    public function addUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    {
+        $this->userPacks[] = $userPacks;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userPacks
+     *
+     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     */
+    public function removeUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    {
+        $this->userPacks->removeElement($userPacks);
+    }
+
+    /**
+     * Get userPacks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserPacks()
+    {
+        return $this->userPacks;
+    }
 }

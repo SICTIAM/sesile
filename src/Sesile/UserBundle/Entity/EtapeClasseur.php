@@ -35,12 +35,26 @@ class EtapeClasseur
      */
     protected $classeur;
 
-
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", inversedBy="etapeClasseurs", cascade={"persist"})
      */
     private $userPacks;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ordre", type="integer", nullable=true)
+     *
+     */
+    private $ordre;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="EtapeValidante", type="integer", nullable=true)
+     *
+     */
+    private $etapeValidante = 0;
 
     /**
      * Get id
@@ -146,5 +160,52 @@ class EtapeClasseur
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * Set ordre
+     *
+     * @param integer $ordre
+     * @return EtapeClasseur
+     */
+    public function setOrdre($ordre)
+    {
+        $this->ordre = $ordre;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordre
+     *
+     * @return integer 
+     */
+    public function getOrdre()
+    {
+        return $this->ordre;
+    }
+
+
+    /**
+     * Set etapeValidante
+     *
+     * @param integer $etapeValidante
+     * @return EtapeClasseur
+     */
+    public function setEtapeValidante($etapeValidante)
+    {
+        $this->etapeValidante = $etapeValidante;
+    
+        return $this;
+    }
+
+    /**
+     * Get etapeValidante
+     *
+     * @return integer 
+     */
+    public function getEtapeValidante()
+    {
+        return $this->etapeValidante;
     }
 }

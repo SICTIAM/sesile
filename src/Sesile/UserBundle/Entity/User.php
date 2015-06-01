@@ -132,12 +132,6 @@ class User extends BaseUser {
     protected $collectivite;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="validant", cascade={"persist"})
-     * @ORM\JoinTable(name="Classeur_valider")
-     */
-    private $classeurs_a_valider;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="visible", cascade={"persist"})
      */
     private $classeurs;
@@ -798,38 +792,5 @@ class User extends BaseUser {
     public function getHierarchie()
     {
         return $this->hierarchie;
-    }
-
-    /**
-     * Add classeurs_a_valider
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursAValider
-     * @return User
-     */
-    public function addClasseursAValider(\Sesile\ClasseurBundle\Entity\Classeur $classeursAValider)
-    {
-        $this->classeurs_a_valider[] = $classeursAValider;
-    
-        return $this;
-    }
-
-    /**
-     * Remove classeurs_a_valider
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursAValider
-     */
-    public function removeClasseursAValider(\Sesile\ClasseurBundle\Entity\Classeur $classeursAValider)
-    {
-        $this->classeurs_a_valider->removeElement($classeursAValider);
-    }
-
-    /**
-     * Get classeurs_a_valider
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getClasseursAValider()
-    {
-        return $this->classeurs_a_valider;
     }
 }

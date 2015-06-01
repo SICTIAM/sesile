@@ -12,15 +12,52 @@ use Doctrine\ORM\EntityRepository;
  */
 class EtapeGroupeRepository extends EntityRepository
 {
-    public function findByUsers( User $user) {
+    public function findByUsers($userId) {
 
-        return $this
+        $serviceOrgs = array();
+
+        /*
+         * On recupere les etapes qui sont attribués a l utilisateur directement
+         */
+        $groupes_du_user = $this
             ->createQueryBuilder('c')
             ->leftJoin('c.users', 'u')
             ->where('u.id = :userid')
-            ->setParameter('userid', $user->getId())
+            ->setParameter('userid', $userId)
             ->getQuery()
             ->getResult();
+
+        foreach($groupes_du_user as $group) {
+            $serviceOrgs[] = $group->getGroupe()->getId();
+        }
+
+        /*
+         * On recupere les etapes qui sont attribués a l utilisateur via un groupe
+         */
+        $etapesGroupe = $this->findAll();
+
+        // Liste des etapes des SO
+        foreach ($etapesGroupe as $etapeGroupe) {
+            $userPacks = $etapeGroupe->getUserPacks();
+            // Liste des UserPack connectes aux SO
+            foreach ($userPacks as $userPack) {
+                $users = $userPack->getUsers();
+                // Liste des utilisateurs connectés aux aux userPack connectés aux SO
+                foreach ($users as $user) {
+                    // Si on trouve un utilisateur qui est l utilisateur courant, on enregistre l 'id du SO
+                    if ($user->getId() == $userId) {
+                        $serviceOrgs[] = $etapeGroupe->getGroupe()->getId();
+                    }
+                }
+            }
+        }
+
+        // dedoublonnage des id
+        $serviceOrgs = array_unique($serviceOrgs);
+
+        // On retourne les id des services organisationels
+        return $serviceOrgs;
+
     }
 
     public function findByUsersTools( User $user) {
