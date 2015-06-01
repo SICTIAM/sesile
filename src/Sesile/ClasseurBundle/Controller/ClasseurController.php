@@ -70,6 +70,36 @@ class ClasseurController extends Controller {
     /**
      * Liste des classeurs en cours
      *
+     * @Route("/liste", name="liste_classeurs_a_valider")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:liste_a_valider.html.twig")
+     */
+    public function listeAValiderAction() {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser()->getId());
+
+//        foreach ($entities->getClasseurs() as $entity) {
+////            $user = $em->getRepository('SesileUserBundle:User')->findOneById($entity->getValidant());
+//            $serviceOrg = $em->getRepository('SesileUserBundle:EtapeGroupe')->findOneById($entity->getEtapeValidante());
+//            $entity->validantName = $user ? $user->getPrenom() . " " . $user->getNom() : " ";
+//        }
+//        $entities = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($this->getUser()->getId());
+
+//        foreach ($entities as $key => $value) {
+//            $user = $em->getRepository('SesileUserBundle:User')->findOneById($value->getValidant());
+//            $value->validantName = $user ? $user->getPrenom() . " " . $user->getNom() : " ";
+//        }
+
+        return array(
+            'classeurs' => $entities->getClasseurs(),
+            "menu_color" => "bleu"
+        );
+    }
+
+    /**
+     * Liste des classeurs en cours
+     *
      * @Route("/liste/retire", name="liste_classeurs_retired")
      * @Method("GET")
      * @Template("SesileClasseurBundle:Classeur:retired.html.twig")
@@ -188,6 +218,7 @@ class ClasseurController extends Controller {
         $em->flush();
         return new JsonResponse(array('ret' => true));
     }
+
 
     /**
      * @Route("/ajax/list", name="ajax_classeurs_list")
@@ -621,6 +652,33 @@ class ClasseurController extends Controller {
         $classeur->setType($type);
 
         // Et on commence l enregistrement des circuits
+
+
+
+
+//        $circuit = $request->request->get('circuit');
+//        $classeur->setCircuit($circuit);
+
+        $classeur->setUser($this->getUser()->getId());
+        // TODO a modifier par la bonne etape ?
+        $classeur->setEtapeDeposante($this->getUser()->getId());
+
+        $classeur->setVisibilite($request->request->get('visibilite'));
+
+        // enregistrer les users du circuit
+//        $users = explode(',', $circuit);
+        $usersVisible[] = $this->getUser()->getId();
+        // Fonction pour enregistrer dans la table Classeur_visible
+        $usersCV = $this->classeur_visible($request->request->get('visibilite'), $usersVisible, $request->request->get('userGroupe'));
+        foreach ($usersCV as $userCV) {
+            $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
+            $classeur->addVisible($userVisible);
+        }
+
+        $em->persist($classeur);
+        $em->flush();
+
+
         $tabEtapes = json_decode($request->request->get('valeurs'));
 
         foreach($tabEtapes as $k => $etape) {
@@ -664,36 +722,14 @@ class ClasseurController extends Controller {
             $usersVisible = array_unique($usersVisible);
 
             $em->persist($step);
+            $em->flush();
+
             // On enregistre la prochaine etape validante
-            if ($k == 0) {
-                $step->setEtapeValidante(1);
+            if ($k == 1) {
+                $classeur->setOrdreValidant($step->getId());
             }
-
+            $em->flush();
         }
-
-
-
-//        $circuit = $request->request->get('circuit');
-//        $classeur->setCircuit($circuit);
-
-        $classeur->setUser($this->getUser()->getId());
-        // TODO a modifier par la bonne etape ?
-        $classeur->setEtapeDeposante($this->getUser()->getId());
-
-        $classeur->setVisibilite($request->request->get('visibilite'));
-
-        // enregistrer les users du circuit
-//        $users = explode(',', $circuit);
-        $usersVisible[] = $this->getUser()->getId();
-        // Fonction pour enregistrer dans la table Classeur_visible
-        $usersCV = $this->classeur_visible($request->request->get('visibilite'), $usersVisible, $request->request->get('userGroupe'));
-        foreach ($usersCV as $userCV) {
-            $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
-            $classeur->addVisible($userVisible);
-        }
-
-        $em->persist($classeur);
-        $em->flush();
 
         // enregistrer les users du circuit
         //$users = explode(',', $circuit);
