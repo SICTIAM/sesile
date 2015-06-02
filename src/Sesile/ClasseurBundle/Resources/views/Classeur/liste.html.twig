@@ -1,4 +1,4 @@
-<table class="table tableau dtables">
+<table class="table tableau dtables" id="fulltable">
     <thead>
     <tr>
         <th>Titre du classeur</th>
@@ -16,7 +16,7 @@
             <td>{{ classeur.nom }}</td>
             <td>{{ classeur.creation|date("d/m/Y") }}</td>
             <td>{{ classeur.validation|date("d/m/Y") }}</td>
-            <td></td>
+            <td>{% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %}</td>
             <td>{{ classeur.type.nom }}</td>
             <td>{{ classeur.status }}</td>
             <td></td>
@@ -24,12 +24,11 @@
     {% endfor %}
     </tbody>
 </table>
-
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="application/javascript">
         $(document).ready(function () {
-            $(".dtables").dataTable({
+            $("#fulltable").dataTable({
                 oLanguage: {
                     sSearch: "Rechercher&nbsp;",
                     sInfo: "Classeur  _START_ &agrave; _END_ sur _TOTAL_",

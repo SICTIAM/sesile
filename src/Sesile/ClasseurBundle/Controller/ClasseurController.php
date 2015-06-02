@@ -61,41 +61,26 @@ class ClasseurController extends Controller {
 //            $value->validantName = $user ? $user->getPrenom() . " " . $user->getNom() : " ";
 //        }
 
+        $tabClasseurs = array();
+        foreach($entities->getClasseurs() as $classeur)
+        {
+            $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+            $tabClasseurs[] = array('id'=>$classeur->getId(),
+                'nom'=>$classeur->getNom(),
+                'creation'=>$classeur->getCreation(),
+                'validation'=>$classeur->getCreation(),
+                'type'=>$classeur->getType(),
+                'status'=>$classeur->getStatus(),
+                'document'=>$classeur->getDocuments(),
+                'validants'=>$validants);
+        }
+
         return array(
-            'classeurs' => $entities->getClasseurs(),
+            'classeurs' => $tabClasseurs,
             "menu_color" => "bleu"
         );
     }
 
-    /**
-     * Liste des classeurs en cours
-     *
-     * @Route("/liste", name="liste_classeurs_a_valider")
-     * @Method("GET")
-     * @Template("SesileClasseurBundle:Classeur:liste_a_valider.html.twig")
-     */
-    public function listeAValiderAction() {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser()->getId());
-
-//        foreach ($entities->getClasseurs() as $entity) {
-////            $user = $em->getRepository('SesileUserBundle:User')->findOneById($entity->getValidant());
-//            $serviceOrg = $em->getRepository('SesileUserBundle:EtapeGroupe')->findOneById($entity->getEtapeValidante());
-//            $entity->validantName = $user ? $user->getPrenom() . " " . $user->getNom() : " ";
-//        }
-//        $entities = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($this->getUser()->getId());
-
-//        foreach ($entities as $key => $value) {
-//            $user = $em->getRepository('SesileUserBundle:User')->findOneById($value->getValidant());
-//            $value->validantName = $user ? $user->getPrenom() . " " . $user->getNom() : " ";
-//        }
-
-        return array(
-            'classeurs' => $entities->getClasseurs(),
-            "menu_color" => "bleu"
-        );
-    }
 
     /**
      * Liste des classeurs en cours
@@ -315,7 +300,7 @@ class ClasseurController extends Controller {
      *
      * @Route("/a_valider", name="classeur_a_valider")
      * @Method("GET")
-     * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
+     * @Template("SesileClasseurBundle:Classeur:liste_a_valider.html.twig")
      */
     public function aValiderAction() {
         $em = $this->getDoctrine()->getManager();
@@ -337,8 +322,27 @@ class ClasseurController extends Controller {
                 ));
         }
 
+        $tabClasseurs = array();
+        foreach($entities as $classeur)
+        {
+            $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+            if(in_array($this->getUser(),$validants))
+            {
+                $tabClasseurs[] = array('id'=>$classeur->getId(),
+                    'nom'=>$classeur->getNom(),
+                    'creation'=>$classeur->getCreation(),
+                    'validation'=>$classeur->getCreation(),
+                    'type'=>$classeur->getType(),
+                    'status'=>$classeur->getStatus(),
+                    'document'=>$classeur->getDocuments(),
+                    'validants'=>$validants);
+            }
+
+        }
+
+
         return array(
-            'classeurs' => $entities,
+            'classeurs' => $tabClasseurs,
             "menu_color" => "bleu"
         );
     }
