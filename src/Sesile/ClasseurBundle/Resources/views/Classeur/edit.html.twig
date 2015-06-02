@@ -1,14 +1,14 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    {% if classeur.isValidableByDelegates(usersdelegated) %}
+    {% if classeur.isValidableByDelegates(usersdelegated, validant) %}
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
     <div class="bloc_page">
             <div class="titre_page row">
                 <div class="col-lg-10">
-                    {% if classeur.isModifiableByDelegates(usersdelegated) %}
+                    {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
                         <span class="glyphicon glyphicon-pencil"></span>
                     &nbsp;&nbsp;&nbsp;Édition du classeur
                     {% else %}
@@ -135,7 +135,7 @@
         <div class="bloc_page">
             <div class="titre_page row">
                 <div class="col-lg-10">
-                    {% if classeur.isModifiableByDelegates(usersdelegated) %}
+                    {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
                         <span class="glyphicon glyphicon-pencil"></span>
                         &nbsp;&nbsp;&nbsp;Édition du classeur
                     {% else %}
@@ -338,7 +338,7 @@
                     var circuit_users = "{{ classeur.circuit }}";
                     {#var ordre_circuit = {{ classeur.ordreCircuit }} - 1;#}
                     var ordre_circuit = {{ classeur.ordreCircuit }};
-                    var validant = {{ validant }};
+                    {#var validant = {{ validant }};#}
                     var status = {{ classeur.status }};
                     /*voir cette ligne*/
                     var deposant = {{ deposant|json_encode|raw }};
@@ -490,7 +490,7 @@
                 $(".perso_circuit").css("cursor", "Default");
 
 
-                {% if classeur.isModifiableByDelegates(usersdelegated) %}
+                {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
                 $("#name, #desc, #validation").removeAttr("disabled");
                 $("#enregistrer_modif").show();
                 $(".top_selects_circuits, .suppr_perso").show();

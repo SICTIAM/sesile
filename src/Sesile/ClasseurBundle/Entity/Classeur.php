@@ -359,13 +359,13 @@ class Classeur {
      * @return int l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
      */
 
-    /*public function getPrevValidant()
+    public function getPrevValidant()
     {
 
         $circuit = explode(",", $this->getCircuit());
         $ordre =  $this->setOrdreMoins();
         return ($this->getOrdreCircuit() > 0) ? $circuit[$ordre] : $this->getUser();
-    }*/
+    }
 
 
     /**
@@ -443,33 +443,33 @@ class Classeur {
         $this->setStatus(3);
     }
 
-    public function isValidable($userid) {
-        return ($this->getValidant() == $userid);
+    public function isValidable($userid,  $validants) {
+        return (in_array($userid, $validants));
     }
 
-    public function isValidableByDelegates($delegates) {
+    public function isValidableByDelegates($delegates, $validants) {
         $arrayid = array();
 
         foreach($delegates as $d){
             $arrayid[] = $d->getId();
         }
 
-        return (in_array($this->getValidant(), $arrayid));
+        return (in_array($validants, $arrayid));
     }
 
-    public function isModifiable($userid)
+    public function isModifiable($userid, $validants)
     {
-        return ((($this->getValidant() == $userid) || ($this->getUser() == $userid)) && $this->getStatus() != 3);
+        return (((in_array($validants, $userid)) || ($this->getUser() == $userid)) && $this->getStatus() != 3);
     }
 
-    public function isModifiableByDelegates($delegates){
+    public function isModifiableByDelegates($delegates, $validants){
 
         $arrayid = array();
         foreach($delegates as $d){
             $arrayid[] = $d->getId();
         }
 
-        return (( (in_array($this->getValidant(), $arrayid) ) || (in_array($this->getUser(), $arrayid))) && $this->getStatus() != 3);
+        return (( (in_array($validants, $arrayid) ) || (in_array($this->getUser(), $arrayid))) && $this->getStatus() != 3);
 
     }
 
@@ -727,14 +727,14 @@ class Classeur {
     public function setOrdreCircuit($ordre)
     {
         $this->ordreCircuit = $ordre;
-    
+
         return $this;
     }
 
     /**
      * Get ordre
      *
-     * @return integer 
+     * @return integer
      */
     public function getOrdreCircuit()
     {

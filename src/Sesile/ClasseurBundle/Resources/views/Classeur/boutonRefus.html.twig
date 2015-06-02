@@ -1,4 +1,4 @@
-{% if classeur.isValidableByDelegates(usersdelegated) %}
+{% if classeur.isValidableByDelegates(usersdelegated, validant) %}
     {% if classeur.getType.id == 2 %}
     {#{% if signable %}#}
         <button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">

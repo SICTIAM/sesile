@@ -672,10 +672,6 @@ class ClasseurController extends Controller {
         }
 
 
-
-//        $circuit = $request->request->get('circuit');
-//        $classeur->setCircuit($circuit);
-
         $classeur->setUser($this->getUser()->getId());
         // TODO a modifier par la bonne etape ?
         $classeur->setEtapeDeposante($this->getUser()->getId());
@@ -758,9 +754,6 @@ class ClasseurController extends Controller {
         // envoi d'un mail au premier validant
         $this->sendCreationMail($classeur);
 
-        // TODO envoi du mail au déposant et aux autres personnes du circuit ?
-
-
         $error = false; /*
         if($respCircuit->getContent()!='OK') {
             $this->get('session')->getFlashBag()->add(
@@ -815,7 +808,6 @@ class ClasseurController extends Controller {
             $circuits[] = array(
                 "id" => $group->getId(),
                 "name" => $group->getNom(),
-//                "ordre" => $group->getOrdre(),
                 "groupe" => true
             );
 
@@ -893,10 +885,9 @@ class ClasseurController extends Controller {
 
         $isRetractableByDelegates = $entity->isRetractableByDelegates($delegants, $validantsId, $prevValidantsId);
 
-        var_dump($delegants);
 
 //        if (($entity->getValidant() == $delegants[0] || ($isRetractableByDelegates && $entity->getPrevValidant() == $delegants[0])) && $this->getUser()->getId() != $delegants[0]) {
-        if ((in_array($validantsId, $delegants[0]) || ($isRetractableByDelegates && in_array($prevValidantsId, $delegants[0]))) && $this->getUser()->getId() != $delegants[0]) {
+        if ((in_array($validantsId, $delegants) || ($isRetractableByDelegates && in_array($prevValidantsId, $delegants))) && $this->getUser()->getId() != $delegants[0]) {
             $isDelegatedToMe = true;
             $uservalidant = $usersdelegated[0];
         } else {
@@ -910,7 +901,7 @@ class ClasseurController extends Controller {
 
         $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
         $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
-        $validant = $entity->getvalidant();
+//        $validant = $entity->getvalidant();
 
 
 
@@ -918,7 +909,7 @@ class ClasseurController extends Controller {
 
         return array(
             'deposant'      => $deposant,
-            'validant'      => $validant,
+            'validant'      => $validantsId,
             'classeur'      => $entity,
             'retractable'   => $isRetractableByDelegates,
             'signable'      => $isSignable,

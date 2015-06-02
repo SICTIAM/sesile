@@ -28,7 +28,45 @@ class CircuitController extends Controller
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
         $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
-        $serviceOrg = $em->getRepository('SesileUserBundle:Groupe')->findOneById($so);
+//        $serviceOrg = $em->getRepository('SesileUserBundle:Groupe')->findOneById($so);
+
+        $etapesGroupe = $em->getRepository('SesileUserBundle:EtapeGroupe')->findBy(
+            array('groupe' => $so),
+            array('ordre' => 'ASC')
+        );
+
+        $enable = false;
+        $etapeDeposante = 0;
+
+        foreach ($etapesGroupe as $etapeGroupe) {
+
+            $usersFromEtapes = $etapeGroupe->getUsers();
+            foreach ($usersFromEtapes as $user) {
+
+                if($user->getId() == $this->getUser()->getId() && $etapeDeposante == 0) {
+                    $etapeDeposante = $etapeGroupe->getId();
+                    $enable = true;
+                }
+            }
+
+            $userPacksEtapes = $etapeGroupe->getUserPacks();
+            foreach ($userPacksEtapes as $userPacksEtape) {
+                $usersFromUP = $userPacksEtape->getUsers();
+
+                foreach ($usersFromUP as $userFromUP) {
+
+                    if($userFromUP->getId() == $this->getUser()->getId() && $etapeDeposante == 0) {
+                        $etapeDeposante = $etapeGroupe->getId();
+                        $enable = true;
+                    }
+                }
+            }
+
+            if($enable && $etapeDeposante != $etapeGroupe->getId()) {
+                $serviceOrg[] = $etapeGroupe;
+            }
+
+        }
 
         //Retourne un tableau avec tous les users de la collectivité et un booléen disant si chaque user est dans l'étape ou pas
         return array('userPacks' => $userPacks, 'users' => $users, 'service' => $serviceOrg);
