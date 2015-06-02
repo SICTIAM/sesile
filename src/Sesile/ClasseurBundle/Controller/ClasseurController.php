@@ -729,7 +729,7 @@ class ClasseurController extends Controller {
             $em->flush();
 
             // On enregistre la prochaine etape validante
-            if ($k == 1) {
+            if ($k == 0) {
                 $classeur->setOrdreValidant($step->getId());
             }
             $em->flush();

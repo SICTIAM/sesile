@@ -117,14 +117,16 @@ class ClasseurRepository extends EntityRepository {
      */
     public function getValidant(Classeur $classeur) {
         $em = $this->getEntityManager();
+        //var_dump($classeur->getOrdreValidant());
+
         $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
+
 
         /**
         * Pour réucpérer le validant je récupère le dernier id de la liste getOrdreValidant
         */
 
-            $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
-
+        $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
 
 
 
