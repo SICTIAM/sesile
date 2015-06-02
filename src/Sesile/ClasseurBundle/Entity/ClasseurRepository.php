@@ -117,24 +117,29 @@ class ClasseurRepository extends EntityRepository {
      */
     public function getValidant(Classeur $classeur) {
         $em = $this->getEntityManager();
-        $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneBy(
-            array(
-                'classeur' => $classeur->getId(),
-                'etapeValidante' => 1
-            )
-        );
+        $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
+
+        /**
+        * Pour réucpérer le validant je récupère le dernier id de la liste getOrdreValidant
+        */
+
+            $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
+
+
+
 
         $users = $etapeClasseurs->getUsers();
-
+        $usersValidant = array();
         $userPacks = $etapeClasseurs->getUserPacks();
         foreach ($userPacks as $userPack) {
             $usersP = $userPack->getUsers();
+            $usersValidant = array_merge($usersValidant, $usersP->toArray());
         }
 
 //        $usersValidant = new ArrayCollection(
 //            array_merge($users->toArray(), $usersP->toArray())
 //        );
-        $usersValidant = array_merge($users->toArray(), $usersP->toArray());
+        $usersValidant = array_merge($users->toArray(), $usersValidant);
         $usersValidant = array_unique($usersValidant);
 
         return $usersValidant;

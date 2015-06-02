@@ -118,6 +118,7 @@ class Classeur {
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"persist"})
+     * @ORM\JoinColumn(name="etapeClasseur", referencedColumnName="id",nullable=true)
      */
     private $etapeClasseurs;
 
