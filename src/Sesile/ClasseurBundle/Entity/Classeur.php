@@ -238,7 +238,14 @@ class Classeur {
      */
     public function setCircuit($circuit)
     {
-        $this->circuit = $circuit;
+
+        if ($this->getCircuit() != null) {
+            $this->circuit = $this->getCircuit() . ',' . $circuit;
+        }
+        else {
+            $this->circuit = $circuit;
+        }
+//        $this->circuit = $circuit;
 
         return $this;
     }
@@ -394,12 +401,20 @@ class Classeur {
 
 
     public function isAtLastValidant(){
-        $ordreCircuit = $this->getOrdreCircuit() + 1;
+        $ordreCircuit = $this->getOrdreEtape();
+        $nbEtapes = count($this->getEtapeClasseurs());
+        if ($ordreCircuit == $nbEtapes){
+            return true;
+        }
+        else {
+            return false;
+        }
+        /*$ordreCircuit = $this->getOrdreCircuit() + 1;
         if ($ordreCircuit == count(explode(",", $this->getCircuit()))) {
             return true;
         } else {
             return false;
-        }
+        }*/
 
     }
 
@@ -431,10 +446,11 @@ class Classeur {
         $this->setStatus(0);
     }
 
-    public function retracter($userid)
+    public function retracter()
     {
-        $this->setValidant($this->getPrevValidant());
-        $this->setOrdreCircuit($this->setOrdreMoins());
+        $this->setCircuit('');
+        $this->setOrdreValidant('');
+        $this->setOrdreEtape($this->setOrdreMoins());
         $this->setStatus(4);
     }
 
@@ -449,13 +465,13 @@ class Classeur {
     }
 
     public function isValidableByDelegates($delegates, $validants) {
-        $arrayid = array();
 
-        foreach($delegates as $d){
-            $arrayid[] = $d->getId();
+        foreach($validants as $validant){
+            if (in_array($validant, $delegates)) {
+                return true;
+            }
         }
-
-        return (in_array($validants, $arrayid));
+        return false;
     }
 
     public function isModifiable($userid, $validants)
@@ -475,14 +491,23 @@ class Classeur {
     }
 
     /**
-     * Return true or false
-     * @param array
-     *
      * La fonction renvoie true or false pour les boutons retractable et l affichage des dossiers retractable
+     *
+     * @param $userid           : id du user courant + delegant
+     * @param $validants        : id des validants courant du classeur
+     * @param $prevValidants    : id des validants de l etape precedente du classeur
+     * @return bool             : true or false
      */
     public function isRetractableByDelegates($userid, $validants, $prevValidants) {
+//        var_dump('userId : ', $userid, 'prevValidants : ', $prevValidants, $this->getId(), '<br>');
 
-        if (in_array($prevValidants, $userid)  && $validants != $userid && $this->getStatus() == 1 && $this->getOrdreEtape() != 0) {
+
+        if ( in_array($prevValidants, $userid)
+             && !in_array($userid, $validants)
+//            && !array_diff($userid, $validants)
+            && $this->getStatus() == 1
+            && $this->getOrdreEtape() != 0
+        ) {
             return true;
         } else {
             return false;
@@ -509,7 +534,7 @@ class Classeur {
     public function isSignable()
     {
 
-        if($this->getType()->getNom() == 'Helios' && $this->isAtLastValidant()){
+        if($this->getType()->getId() == 2 && $this->isAtLastValidant()){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
                 if($doc->getType()=='application/xml'){
@@ -538,7 +563,7 @@ class Classeur {
      */
     public function setOrdrePlus()
     {
-        $this->ordreCircuit++;
+        $this->ordreEtape++;
 
         return $this;
     }
@@ -548,7 +573,7 @@ class Classeur {
      */
     public function setOrdreMoins()
     {
-        $oCircuit = $this->getOrdreCircuit();
+        $oCircuit = $this->getOrdreEtape();
 
         $oCircuit = $oCircuit - 1;
         $oCircuit <= 0 ? $oCircuit = 0 : $oCircuit;
@@ -561,7 +586,7 @@ class Classeur {
      */
     public function setOrdreZero()
     {
-        $this->ordreCircuit = 0;
+        $this->ordreEtape = 0;
 
         return $this;
     }
@@ -569,10 +594,10 @@ class Classeur {
     /**
      * Get private visibility after me
      */
-    public function getPrivateAfterMeVisible() {
+    /*public function getPrivateAfterMeVisible() {
         $circuit = explode(",", $this->circuit);
         return array_slice($circuit, $this->getOrdreCircuit());
-    }
+    }*/
 
     /**
      * Add documents

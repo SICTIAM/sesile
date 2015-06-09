@@ -10,7 +10,7 @@
                 <div class="col-lg-10">
                     {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
                         <span class="glyphicon glyphicon-pencil"></span>
-                    &nbsp;&nbsp;&nbsp;Édition du classeur
+                        &nbsp;&nbsp;&nbsp;Édition du classeur
                     {% else %}
                         <span class="glyphicon glyphicon-eye"></span>
                         &nbsp;&nbsp;&nbsp;Visualisation du classeur
@@ -215,8 +215,7 @@
             <span class="glyphicon glyphicon-play"></span>
             &nbsp;&nbsp;&nbsp;Titre
         </div>
-        <input class="form-control" name="name" placeholder="Nom" required="required" disabled
-               value="{{ classeur.nom }}">
+        <input class="form-control" name="name" placeholder="Nom" required="required" disabled value="{{ classeur.nom }}">
         <br>
 
         <div class="titre_form_element">
@@ -241,34 +240,26 @@
             <span class="glyphicon glyphicon-play"></span>
             &nbsp;&nbsp;&nbsp;Date limite de validation
         </div>
-        <input class="datepicker" name="validation" type="datetime" disabled
-               value="{{ classeur.validation  | date('d/m/Y') }}"/>
-
-
+        <input class="datepicker" name="validation" type="datetime" disabled value="{{ classeur.validation  | date('d/m/Y') }}"/>
 
 
         <style>
 
             #circuit {
-
                 opacity: .5;
                 pointer-events: none;
             }
 
             #circuitvalidation {
-
                 opacity: .5;
                 pointer-events: none;
             }
 
-             .top_selects_circuits {
+             /*.top_selects_circuits {
                  display: none !important;
-             }
+             }*/
 
         </style>
-
-
-
 
 
     {% endif %}
@@ -308,48 +299,38 @@
             <!-- Intégration de la liste des utilisateurs -->
 
             <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
-            <div class="top_selects_circuits">
-
-
-                <div class="selects_circuit">
-                    <div class="titre_select">
-                        <label class="nametitle" id="users_complete">
-                            <span class="glyphicon glyphicon-search"></span>
-                            &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-                        <input class="nameinput" type="text" id="circuit-search" autocomplete="off">
-                    </div>
-                    <div id="users_list">
-                        {% for user in users %}
-                            <p class="users-search" data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.nom }} {{ user.prenom }}</p>
-                        {% endfor %}
-                    </div>
-                    <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
-                </div>
-
-            </div>
 
 
             <div id="circuitcontent">
 
-
+                {% if currentValidant %}
+                    <input type="hidden" name="curentValidant" value="{{ currentValidant.id }}">
+                {% endif %}
                 <script type="application/javascript">
 
 
-                    var circuit_users = "{{ classeur.circuit }}";
-                    {#var ordre_circuit = {{ classeur.ordreCircuit }} - 1;#}
-                    var ordre_circuit = {{ classeur.ordreCircuit }};
-                    {#var validant = {{ validant }};#}
+                    {% if classeur.circuit and currentValidant %}
+                        var circuit_users = "{{ classeur.circuit }}" + "," + {{ currentValidant.id }};
+                    {% elseif currentValidant  %}
+                        var circuit_users = {{ currentValidant.id }} + "," ;
+                    {% elseif classeur.circuit %}
+                        var circuit_users = "{{ classeur.circuit }}";
+                    {% else %}
+                        var circuit_users = "";
+                    {% endif %}
+                    var ordre_circuit = {{ classeur.ordreetape }};
+                    var validant = {{ currentValidant|json_encode|raw }};
                     var status = {{ classeur.status }};
                     /*voir cette ligne*/
                     var deposant = {{ deposant|json_encode|raw }};
-
                     var path = "{{ asset(upload_path) }}";
                 </script>
 
 
                 <!-- Nouvelle vue ajouté "validation.html.twig" -->
 
-                {% render url("new_validate_edit_classeur") %}
+                {#{% render url("new_validate_edit_classeur") %}#}
+                {{ render(controller('SesileCircuitBundle:Circuit:validationeditclasseur', { 'id': classeur.id, 'validant': currentValidant })) }}
 
             </div>
         </form>
@@ -446,20 +427,12 @@
     </div>
 
 
-
-
     <style>
-
         .modal-dialog {
-
             width: 90%;
             height: 50px;
-
         }
-
-
     </style>
-
 
 
     <script type="application/javascript">
@@ -486,14 +459,14 @@
                 $(".selects_circuit:nth-child(2)").hide();
                 loadDocuments();
 
-                $(".top_selects_circuits, .suppr_perso").hide();
+//                $(".top_selects_circuits, .suppr_perso").hide();
                 $(".perso_circuit").css("cursor", "Default");
 
 
                 {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
                 $("#name, #desc, #validation").removeAttr("disabled");
                 $("#enregistrer_modif").show();
-                $(".top_selects_circuits, .suppr_perso").show();
+//                $(".top_selects_circuits, .suppr_perso").show();
                 $("#circuit").sortable("enable");
                 $(".perso_circuit").css("cursor", "-moz-grab");
                 {% endif %}
@@ -517,6 +490,5 @@
             });
         </script>
     </div>
-    <object id="winFirefoxPlugin" type="application/x-sharepoint"
-            style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
+    <object id="winFirefoxPlugin" type="application/x-sharepoint" style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
 {% endblock %}

@@ -17,6 +17,7 @@ if (typeof circuit_users != 'undefined') {
     user_a_charger = circuit_users.split(",");
     if (user_a_charger.length > 0) {
         var sort = false;
+
         $.each(user_a_charger, function (k, v) {
             //console.log("Ordre : " + ordre_circuit + " - Variable k : " + k);
             if (typeof validant != 'undefined') { // && validant > 0 ????
@@ -38,9 +39,16 @@ if (typeof deposant != 'undefined') {
     var new_perso = $('<div/>').addClass('deposant no_sort perso_circuit').insertBefore("#debut_circuit");
     perso_src = deposant.path ? path+deposant.path : perso_src;
     $('<img />').attr("src", perso_src).appendTo(new_perso);
-   /* $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);*/
+    $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
-
+/*if ( typeof validant != 'undefined') {
+    var new_perso = $('<div/>').addClass('no_sort perso_circuit curr_user').appendTo("#circuit");
+    perso_src = validant.path ? path+validant.path : perso_src;
+    $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);
+    $('<img />').attr("src", perso_src).appendTo(new_perso);
+    $('<span class="nom_perso" />').text(validant.nom).appendTo(new_perso);
+    //$("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(.deposant)");
+}*/
 // Fonction pour afficher les bouton valider et signer
 function aff_button_valider (valid_sign) {
     if(valid_sign == 0) {

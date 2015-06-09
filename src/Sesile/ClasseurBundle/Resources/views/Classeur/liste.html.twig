@@ -8,6 +8,8 @@
         <th>Type de classeur</th>
         <th>Statut actuel</th>
         <th>Action</th>
+        <th>document</th>
+        <th>Type de classeur</th>
     </tr>
     </thead>
     <tbody>
@@ -16,10 +18,12 @@
             <td>{{ classeur.nom }}</td>
             <td>{{ classeur.creation|date("d/m/Y") }}</td>
             <td>{{ classeur.validation|date("d/m/Y") }}</td>
-            <td>{% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %}</td>
+            <td>{% if classeur.status != 2 %} {% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %} {% endif %}</td>
             <td>{{ classeur.type.nom }}</td>
             <td>{{ classeur.status }}</td>
-            <td></td>
+            <td>{{ classeur.id }}</td>
+            <td>{% for document in classeur.document %}{{ document.id }}{% endfor %}</td>
+            <td>{{ classeur.type.id }}</td>
         </tr>
     {% endfor %}
     </tbody>
@@ -49,11 +53,7 @@
                 sDom: 'lft<"footer_datatables"ip>',
                 aoColumnDefs: [
                     {
-                        aTargets: [1],
-                        sClass: "center"
-                    },
-                    {
-                        aTargets: [2],
+                        aTargets: [1,2,3,4],
                         sClass: "center"
                     },
                     {
@@ -68,19 +68,23 @@
                         sClass: "center",
                         bSortable: false,
                         "mRender": function ( data, type, full ) {
-                            var retour = '<a class="col-sm-6" href="' + Routing.generate('classeur_edit', {id: data.id}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
-                            if (data.idDoc) {
-                                retour += '<a class="col-sm-6"href="' + Routing.generate('visu', {id: data.idDoc}) + '"><span class="glyphicon glyphicon-eye-open"></span></a>';
+                            var retour = '<a class="col-sm-6" href="' + Routing.generate('classeur_edit', {id: data}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
+                            if (full[8] == 2) {
+                                retour += '<a class="col-sm-6"href="' + Routing.generate('visu', {id: full[7]}) + '"><span class="glyphicon glyphicon-eye-open"></span></a>';
                             }
                             return retour;
                         }
+                    },
+                    {
+                        aTargets: [7,8],
+                        visible:false
                     }
                 ],
                 sPaginationType: "full_numbers",
                 fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     $(nRow).addClass("classeur-row");
                     $(nRow).click(function (e) {
-                        document.location.href = Routing.generate('classeur_edit', {id: aData[6].id});
+                        document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
                     });
                     return nRow;
                 }

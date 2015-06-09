@@ -29,6 +29,7 @@ class CircuitController extends Controller
         $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
         $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
 //        $serviceOrg = $em->getRepository('SesileUserBundle:Groupe')->findOneById($so);
+        $serviceOrg = array();
 
         $etapesGroupe = $em->getRepository('SesileUserBundle:EtapeGroupe')->findBy(
             array('groupe' => $so),
@@ -77,33 +78,29 @@ class CircuitController extends Controller
      * @Route("/validation/", name="new_validate_edit_classeur", options={"expose"=true})
      * @Template("SesileCircuitBundle:Circuit:validation.html.twig")
      */
-    public function validationeditclasseurAction()
+    public function validationeditclasseurAction($id, $validant = false)
     {
-        // recup la liste des users en base
+        // Test si l utilisateur est le validant
+        $edit = $validant ? true : false;
+
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ), array("Nom" => "ASC"));
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+        $etapesGroupes = $em->getRepository('SesileUserBundle:EtapeClasseur')->findByEtapesAValider($classeur, $edit);
+        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+
 
         // recup la list des circuits
-        // TODO recup uniquement pour le user connecté
-        $em = $this->getDoctrine()->getManager();
-
-
-        $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
-        foreach ($groupes_du_user as $group) {
-            $circuits[] = array(
-                "id" => $group->getGroupe()->getId(),
-                "name" => $group->getGroupe()->getNom(),
-                "ordre" => $this->getCircuitFromgroupForUser($this->getUser(), $group->getgroupe()),
-                "groupe" => true
-            );
-
-        }
 
         return array(
-            'users' => $users,
-            "edit" => true
+            'userPacks'     => $userPacks,
+            'users'         => $users,
+            "etapesGroupe"  => $etapesGroupes,
+            "edit"          => $edit,
+            "validants"      => $validants
         );
     }
 

@@ -21,7 +21,7 @@ class ClasseurRepository extends EntityRepository {
      * @param integer user id
      * @return integer
      */
-    public function countClasseursVisiblesForDTablesV3($userid) {
+    /*public function countClasseursVisiblesForDTablesV3($userid) {
         return $this
             ->createQueryBuilder('c')
             ->join('c.visible', 'v', 'WITH', 'v.id = :id')
@@ -29,7 +29,7 @@ class ClasseurRepository extends EntityRepository {
             ->getQuery()
             ->getSingleScalarResult()
         ;
-    }
+    }*/
 
     /*
      * Get current classeurs visible for Data Tables
@@ -37,7 +37,7 @@ class ClasseurRepository extends EntityRepository {
      * @param integer user id
      * @param array get values of Data Tables
      */
-    public function getClasseursVisiblesForDTablesV3($userid, array $get) {
+    /*public function getClasseursVisiblesForDTablesV3($userid, array $get) {
 
         $qb = $this
             ->createQueryBuilder('c')
@@ -80,9 +80,9 @@ class ClasseurRepository extends EntityRepository {
             ->getResult()
         ;
 
-    }
+    }*/
 
-    public function isDelegatedToUserV2($classeur, $user) {
+    /*public function isDelegatedToUserV2($classeur, $user) {
         $em = $this->getEntityManager();
         $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
         $liste_delegants = $repositorydelegates->getUsersWhoHasMeAsDelegateRecursively($user);
@@ -106,7 +106,7 @@ class ClasseurRepository extends EntityRepository {
         }
 
         return false;
-    }
+    }*/
 
     /**
      * On passe le classeur en parametre et la fonction retourne un tableau  d'objet avec users validant du classeur
@@ -128,21 +128,26 @@ class ClasseurRepository extends EntityRepository {
 
         $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
 
+        if($etapeClasseurs !== null) {
 
-
-        $users = $etapeClasseurs->getUsers();
-        $usersValidant = array();
-        $userPacks = $etapeClasseurs->getUserPacks();
-        foreach ($userPacks as $userPack) {
-            $usersP = $userPack->getUsers();
-            $usersValidant = array_merge($usersValidant, $usersP->toArray());
-        }
+            $users = $etapeClasseurs->getUsers();
+            $usersValidant = array();
+            $userPacks = $etapeClasseurs->getUserPacks();
+            foreach ($userPacks as $userPack) {
+                $usersP = $userPack->getUsers();
+                $usersValidant = array_merge($usersValidant, $usersP->toArray());
+            }
 
 //        $usersValidant = new ArrayCollection(
 //            array_merge($users->toArray(), $usersP->toArray())
 //        );
-        $usersValidant = array_merge($users->toArray(), $usersValidant);
-        $usersValidant = array_unique($usersValidant);
+            $usersValidant = array_merge($users->toArray(), $usersValidant);
+            $usersValidant = array_unique($usersValidant);
+
+        }
+        else {
+            $usersValidant = array();
+        }
 
         return $usersValidant;
 
@@ -165,17 +170,94 @@ class ClasseurRepository extends EntityRepository {
             )
         );
 
-        $users = $etapeClasseurs->getUsers();
+        if ($etapeClasseurs !== null) {
 
-        $userPacks = $etapeClasseurs->getUserPacks();
-        foreach ($userPacks as $userPack) {
-            $usersP = $userPack->getUsers();
+            $users = $etapeClasseurs->getUsers();
+            $usersValidant = array();
+
+            $userPacks = $etapeClasseurs->getUserPacks();
+            foreach ($userPacks as $userPack) {
+                $usersP = $userPack->getUsers();
+                $usersValidant = array_merge($usersValidant, $usersP->toArray());
+            }
+
+//        $usersValidant = array_merge($users->toArray(), $usersP->toArray());
+            $usersValidant = array_merge($users->toArray(), $usersValidant);
+            $usersValidant = array_unique($usersValidant);
+        }
+        else {
+            $usersValidant = array();
         }
 
-        $usersValidant = array_merge($users->toArray(), $usersP->toArray());
-        $usersValidant = array_unique($usersValidant);
-
         return $usersValidant;
+    }
+
+
+
+    public function getPrevValidantForRetract(Classeur $classeur) {
+        $prevValidant = explode(',', $classeur->getCircuit());
+        $prevValidant = end($prevValidant);
+        return $prevValidant;
+    }
+
+    /**
+     * Fonction pour valider les classeurs
+     *
+     * @param Classeur $classeur
+     * @return Classeur
+     */
+    public function validerClasseur (Classeur $classeur) {
+
+        $ordreEtape = $classeur->getOrdreEtape();
+        $ordreEtape++;
+//        $tabEtapeClasseur = $classeur->getOrdreEtape());
+//        $ordreEtape = count($tabEtapeClasseur);
+
+
+        $em = $this->getEntityManager();
+        $currentEtape = $em->getRepository('SesileUserBundle:EtapeClasseur')->findBy(
+            array('classeur' => $classeur)
+        );
+
+//        var_dump($currentEtape->getId());
+//        foreach ($currentEtape as $c) {
+//            var_dump($c->getId());
+//        }
+
+
+
+//        var_dump('Current etaape id : ', $currentEtapeId);
+
+
+        /**
+         * Pour réucpérer le validant je récupère le dernier id de la liste getOrdreValidant
+         */
+        $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
+        $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
+
+
+//        $nbEtapesClasseur = count($classeur->getEtapeClasseurs()) - 1;
+        $nbEtapesClasseur = count($classeur->getEtapeClasseurs());
+
+
+//        var_dump($nbEtapesClasseur, $ordreEtape);
+        // Si c est la derniere etape
+        if($nbEtapesClasseur == $ordreEtape) {
+            $classeur->setStatus(2);
+//            $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',');
+        }
+        else {
+            $classeur->setStatus(1);
+            $currentEtapeId = $currentEtape[$ordreEtape]->getId();
+//            $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $currentEtape->getId());
+            $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $currentEtapeId);
+        }
+//        var_dump($currentEtapeId);
+//        die();
+
+        $classeur->setOrdreEtape($ordreEtape);
+
+        return $classeur;
     }
 
 }

@@ -37,8 +37,16 @@ function loadcorrectform(id_so) {
 }
 
 $(document).ready(function () {
-    $('#userGroupe').change(loadtype);
+    var id_so = $('#userGroupe').val();
+    //$('#userGroupe').change(loadtype);
+    $('#userGroupe').on('change', function() {
+        loadtype();
+    });
     loadtype();
-    $("#type").change(loadcorrectform);
+    //$("#type").change(loadcorrectform(id_so));
+    $("#type").on('change', function() {
+        var id_so = $('#userGroupe').val();
+        loadcorrectform(id_so);
+    });
     //loadcorrectform();
 });

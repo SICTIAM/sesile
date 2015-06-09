@@ -1,6 +1,6 @@
 {% if classeur.isValidableByDelegates(usersdelegated, validant) %}
-    {% if classeur.getType.id == 2 %}
-    {#{% if signable %}#}
+    {#{% if classeur.getType.id == 2 %}#}
+    {% if signable %}
         <button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
             <span class="glyphicon glyphicon-ok"></span>
             &nbsp;Valider et Signer
@@ -17,8 +17,6 @@
             &nbsp;Refuser
         </button>
 
-
-
     {% else %}
 
         {% if classeur.status == 0 %}
@@ -27,7 +25,7 @@
                 &nbsp;Soumettre
             </button>
 
-        {% else %}
+        {% elseif classeur.status != 2 %}
             <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_valider") }}">
                 <span class="glyphicon glyphicon-ok"></span>
                 &nbsp;Valider
@@ -40,20 +38,6 @@
         {% endif %}
 
 
-
-
     {% endif %}
 
-
-
-
 {% endif %}
-
-
-
-
-
-{% if classeur.isSupprimableByDelegates(usersdelegated) %}
-
-{% endif %}
-

@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Sesile\ClasseurBundle\Entity\Classeur;
 
 /**
  * EtapeGroupeRepository
@@ -60,7 +61,7 @@ class EtapeGroupeRepository extends EntityRepository
 
     }
 
-    public function findByUsersTools( User $user) {
+/*    public function findByUsersTools( User $user) {
 
         return $this
             ->createQueryBuilder('c')
@@ -69,5 +70,5 @@ class EtapeGroupeRepository extends EntityRepository
             ->setParameter('userid', $user->getId())
             ->getQuery()
             ->getResult();
-    }
+    }*/
 }

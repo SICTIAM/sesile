@@ -9,8 +9,8 @@ function loadtype() {
         type: "post",
         data: dataUserGroupe,
         success: function (html) {
-            $('#type').html(html);
             loadcorrectform(id_so);
+            $('#type').html(html);
             $('#loadinggif').hide();
         }
     });
@@ -45,6 +45,7 @@ $(document).ready(function () {
     loadtype();
     //$("#type").change(loadcorrectform(id_so));
     $("#type").on('change', function() {
+        var id_so = $('#userGroupe').val();
         loadcorrectform(id_so);
     });
     //loadcorrectform();

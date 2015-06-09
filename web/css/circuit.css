@@ -43,7 +43,8 @@
 }
 
 #circuit {
-    width: 100%;
+    /*width: 100%;*/
+    width: auto;
     min-height: 180px;
     border: 1px solid #cccccc;
     border-top: 0;
