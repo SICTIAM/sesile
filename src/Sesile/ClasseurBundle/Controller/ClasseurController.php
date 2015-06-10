@@ -53,18 +53,22 @@ class ClasseurController extends Controller {
         foreach($entities->getClasseurs() as $classeur)
         {
             $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+//            var_dump($classeur->getUser());
+            $deposant = $em->getRepository('SesileUserBundle:User')->findOneById($classeur->getUser());
             $tabClasseurs[] = array('id'=>$classeur->getId(),
-                'nom'=>$classeur->getNom(),
-                'creation'=>$classeur->getCreation(),
-                'validation'=>$classeur->getCreation(),
-                'type'=>$classeur->getType(),
-                'status'=>$classeur->getStatus(),
-                'document'=>$classeur->getDocuments(),
-                'validants'=>$validants);
+                'nom'       => $classeur->getNom(),
+                'creation'  => $classeur->getCreation(),
+                'validation'=> $classeur->getCreation(),
+                'type'      => $classeur->getType(),
+                'status'    => $classeur->getStatus(),
+                'document'  => $classeur->getDocuments(),
+                'validants' => $validants,
+                'deposant'  => $deposant->getNom() . " " . $deposant->getPrenom()
+            );
         }
 
         return array(
-            'classeurs' => $tabClasseurs,
+            'classeurs'  => $tabClasseurs,
             "menu_color" => "bleu"
         );
     }
@@ -294,27 +298,19 @@ class ClasseurController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
+        $usersdelegated[] = $this->getUser();
 
-        if(!empty($usersdelegated)) {
-            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
-                array(
-//                    "validant" => $usersdelegated,
-                    "status" => 1
-                ));
-        }
-        else{
-            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
-                array(
-//                    "validant" => $this->getUser(),
-                    "status" => 1
-                ));
-        }
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+            array(
+                "status" => array(1,4)
+            ));
 
         $tabClasseurs = array();
         foreach($entities as $classeur)
         {
             $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
-            if(in_array($this->getUser(),$validants))
+
+            if(array_intersect($usersdelegated, $validants))
             {
                 $tabClasseurs[] = array(
                     'id'=>$classeur->getId(),
@@ -832,10 +828,11 @@ class ClasseurController extends Controller {
             "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
         ), array("Nom" => "ASC"));
 
-        $repositorydelegates = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+//        $repositorydelegates = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+//        $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
 //        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
 
-        $usersdelegated = $repositorydelegates->getUsersWhoHasMeAsDelegate($this->getUser()->getId());
+        $usersdelegated = $em->getRepository('SesileDelegationsBundle:delegations')->getUsersWhoHasMeAsDelegate($this->getUser()->getId());
 //        $usersdelegated[]=$this->getUser();
 
         // Definition des users pour le bouton retractable
@@ -883,7 +880,6 @@ class ClasseurController extends Controller {
         $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
 
 //        $validant = $entity->getvalidant();
-
 
 
 
@@ -1018,9 +1014,17 @@ class ClasseurController extends Controller {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
-        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur->getId(), $this->getUser());
+//        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur->getId(), $this->getUser());
+        $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
+        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
 
-        if(!$isvalidator && $this->getUser()->getId() == $classeur->getValidant()) {
+//        if(!$isvalidator && $this->getUser()->getId() == $classeur->getValidant()) {
+        $validantsId = array();
+        foreach ($validants as $validant) {
+            $validantsId[] = $validant->getId();
+        }
+
+        if(!$isvalidator && in_array($this->getUser()->getId(), $validantsId)) {
             $classeur->setVisibilite($request->get("visibilite"));
             $classeur->setNom($request->get("name"));
             $classeur->setDescription($request->get("desc"));
@@ -1032,12 +1036,15 @@ class ClasseurController extends Controller {
 
         }
 
-        $currentvalidant = $classeur->getValidant();
-        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
-        $delegator = $repositoryusers->find($currentvalidant);
+//        $currentvalidant = $classeur->getValidant();
+//        $repositoryusers = $em->getRepository('SesileUserBundle:user');
+//        $delegator = $em->getRepository('SesileUserBundle:user')->find($currentvalidant);
 
         // Remet le circuit a zero
-        $classeur->setValidant($classeur->soumettre());
+//        $classeur->setValidant($classeur->soumettre());
+//        $classeur->setOrdreValidant($classeur->soumettre());
+
+        $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
         // Et on met le bon status
         $classeur->setStatus(1);
 
@@ -1058,9 +1065,15 @@ class ClasseurController extends Controller {
         $action->setCommentaire($request->request->get('comment'));
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
-        $action_libelle = ($classeur->getValidant() == 0) ? "Classeur finalisé" : "Validation";
+//        $action_libelle = ($classeur->getValidant() == 0) ? "Classeur finalisé" : "Validation";
+        $action_libelle = "Classeur à nouveau soumis";
 
-        if ($isvalidator) $action_libelle .= " (Délégation recue de " . $delegator->getPrenom() . " " . $delegator->getNom() . ")";
+        if ($isvalidator) {
+            $delegators = $em->getRepository('SesileDelegationsBundle:Delegations')->getDelegantsForUser($this->getUser());
+            foreach ($delegators as $delegator) {
+                $action_libelle .= " (Délégation recue de " . $delegator->getPrenom() . " " . $delegator->getNom() . ")";
+            }
+        }
         $action->setAction($action_libelle);
         $em->persist($action);
         $em->flush();
@@ -1097,7 +1110,8 @@ class ClasseurController extends Controller {
 
         // Met a jour les etapes de validations
         $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
-        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
+//        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
+        $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
 //        $currentvalidant = $classeur->getValidant();
 
         $em->flush();
@@ -1224,10 +1238,11 @@ class ClasseurController extends Controller {
         }
 
 
-        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
-        $currentvalidant = $classeur->getValidant();
-        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
-        $delegator=$repositoryusers->find($currentvalidant);
+//        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
+        $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
+//        $currentvalidant = $classeur->getValidant();
+//        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
+//        $delegator=$repositoryusers->find($currentvalidant);
 
         // envoi d'un mail validant suivant
         $this->sendRefusMail($classeur);
@@ -1247,7 +1262,12 @@ class ClasseurController extends Controller {
         $action->setUser($this->getUser());
         $action_libelle = "Refus";
 
-        if($isvalidator) $action_libelle.=" (Délégation recue de ".$delegator->getPrenom()." ".$delegator->getNom().")";
+        if($isvalidator) {
+            $delegators = $em->getRepository('SesileDelegationsBundle:Delegations')->getDelegantsForUser($this->getUser());
+            foreach ($delegators as $delegator) {
+                $action_libelle .= " (Délégation reçue de " . $delegator->getDelegant()->getPrenom() . " " . $delegator->getDelegant()->getNom() . ")";
+            }
+        }
         $action->setAction($action_libelle);
         $em->persist($action);
         $em->flush();
@@ -1417,7 +1437,6 @@ class ClasseurController extends Controller {
         }
 
         $classeur->retracter();
-//        $classeur->setOrdreCircuit($classeur->setOrdreMoins());
 
         $em->flush();
 
@@ -1583,7 +1602,8 @@ class ClasseurController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
         if (is_null($currentvalidant)) {
-            $currentvalidant = $classeur->getValidant();
+//            $currentvalidant = $classeur->getValidant();
+            $currentvalidant = $this->getUser();
         }
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
 //        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
@@ -1595,7 +1615,7 @@ class ClasseurController extends Controller {
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
+                "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
             )
         );
 
@@ -1640,7 +1660,8 @@ class ClasseurController extends Controller {
     private function sendRefusMail($classeur) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getValidant());
+//        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getValidant());
+        $c_user = $em->getRepository("SesileClasseurBundle:Classeur")->classeurValidator($classeur, $this->getUser());
 
 //        var_dump($classeur->getId(), $classeur->getValidant()); die();
 

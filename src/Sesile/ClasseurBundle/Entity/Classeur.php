@@ -251,6 +251,19 @@ class Classeur {
     }
 
     /**
+     * Set circuit
+     *
+     * @param array $circuit
+     * @return Classeur
+     */
+    public function setCircuitZero($circuit)
+    {
+        $this->circuit = $circuit;
+
+        return $this;
+    }
+
+    /**
      * Get circuit
      *
      * @return array
@@ -442,14 +455,16 @@ class Classeur {
     {
         $this->setOrdreZero();
 //        $this->setValidant($this->getPrevValidant());
-        $this->setValidant($this->getUser());
+//        $this->setValidant($this->getUser());
+        $this->setCircuitZero('');
+        $this->setOrdreValidant('');
         $this->setStatus(0);
     }
 
     public function retracter()
     {
-        $this->setCircuit('');
-        $this->setOrdreValidant('');
+        $this->setCircuitZero( substr($this->getCircuit(), 0, strrpos($this->getCircuit(), ',')) );
+        $this->setOrdreValidant( substr($this->getOrdreValidant(), 0, strrpos($this->getOrdreValidant(), ',')) );
         $this->setOrdreEtape($this->setOrdreMoins());
         $this->setStatus(4);
     }

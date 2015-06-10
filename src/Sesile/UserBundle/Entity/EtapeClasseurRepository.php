@@ -32,7 +32,7 @@ class EtapeClasseurRepository extends EntityRepository
         $countEtape = $classeur->getOrdreEtape();
 
         if ($countEtape <= 0) $countEtape = 0;
-        if ($edit) {
+        if ($edit && $classeur->getStatus() != 0) {
             $countEtape++;
         }
 
@@ -135,7 +135,7 @@ class EtapeClasseurRepository extends EntityRepository
             }
 
             // On met l'ordre des étapes a jour
-            if($ajout) {
+            if($ajout || $classeur->getStatus() == 0) {
                 $step->setOrdre($k);
             }
             else {
@@ -173,7 +173,8 @@ class EtapeClasseurRepository extends EntityRepository
             $em->flush();
 
             // On enregistre la prochaine etape validante
-            if ($k == 0 && $classeur->getOrdreValidant() === null) {
+            if (($k == 0 && $classeur->getOrdreValidant() === null) ||
+                ($k == 0 && $classeur->getStatus() == 0)) {
                 $classeur->setOrdreValidant($step->getId());
             }
 

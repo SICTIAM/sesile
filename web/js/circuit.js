@@ -259,7 +259,7 @@ if (form_parent.length > 0) {
             ordre_circuit.push($(this).data("id"));
         });
 
-        if(ordre_circuit.length == 0) {
+        if(ordre_circuit.length == 0 && status != 0) {
             alert("Le circuit ne peut pas être vide");
             return false;
         }

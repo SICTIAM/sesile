@@ -48,6 +48,12 @@
                 {% else %}
                     {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
                 {% endif %}
+
+                <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                    Retour à la liste des classeur
+                </a>
+
             </div>
         </div>
 
@@ -176,6 +182,11 @@
                     {% if retractable %}
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
+
+                    <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        Retour à la liste des classeur
+                    </a>
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}
@@ -309,11 +320,11 @@
                 <script type="application/javascript">
 
 
-                    {% if classeur.circuit and currentValidant %}
+                    {% if classeur.circuit and currentValidant and classeur.status != 0 %}
                         var circuit_users = "{{ classeur.circuit }}" + "," + {{ currentValidant.id }};
-                    {% elseif currentValidant  %}
+                    {% elseif currentValidant and classeur.status != 0 %}
                         var circuit_users = {{ currentValidant.id }} + "," ;
-                    {% elseif classeur.circuit %}
+                    {% elseif classeur.circuit and classeur.status != 0 %}
                         var circuit_users = "{{ classeur.circuit }}";
                     {% else %}
                         var circuit_users = "";
@@ -349,6 +360,12 @@
                     {% if retractable %}
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
+
+                    <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        Retour à la liste des classeur
+                    </a>
+
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}
@@ -416,8 +433,7 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-primary" href="{{ path('classeur_create') }}"
-                                    id="refus">Confirmer
+                            <button type="submit" class="btn btn-primary" href="{{ path('classeur_create') }}" id="refus">Confirmer
                             </button>
                         </div>
                     </form>
