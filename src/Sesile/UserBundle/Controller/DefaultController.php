@@ -131,8 +131,11 @@ class DefaultController extends Controller
                         ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
                     $this->get('mailer')->send($message);
                 } else {
-                    echo 'coucs';
-                    exit;
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        'l\'utilisateur existe déjà'
+                    );
+                    return $this->redirect($this->generateUrl('ajout_user'));
                 }
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
             }
