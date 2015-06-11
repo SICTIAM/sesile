@@ -165,14 +165,14 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
-        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($id, $user->getId());
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
 
 
-        if (empty($classeur[0])) {
+        if (!in_array($classeur, $user->getClasseurs())) {
             throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
         }
 
-        return $this->classeurToArray($classeur[0]);
+        return $this->classeurToArray($classeur);
 
 
     }
@@ -733,6 +733,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             'validant' => $classeur->getValidant(),
             'visibilite' => $classeur->getVisibilite(),
             'circuit' => $classeur->getCircuit(),
+            'status' => $classeur->getStatus(),
             'documents' => $cleanTabDocs,
             'actions' => $cleanTabAction);
     }

@@ -6,7 +6,33 @@
             <span class="glyphicon glyphicon-list"></span>
             &nbsp;&nbsp;&nbsp;Liste des classeurs retirés
         </div>
-        {% include 'SesileClasseurBundle:Classeur:liste_retired.html.twig' %}
+        <table class="table tableau" id="dtables">
+            <thead>
+            <tr>
+                <th>Titre du classeur</th>
+                <th>Date de création</th>
+                <th>Date limite de validation</th>
+                <th>Type de classeur</th>
+                <th>Statut actuel</th>
+                <th>Action</th>
+                <th>Supprimer</th>
+            </tr>
+            </thead>
+            <tbody id="tbud">
+            {% for classeur in classeurs %}
+                <tr>
+                    <td>{{ classeur.nom }}</td>
+                    <td>{{ classeur.creation|date('d/m/Y') }}</td>
+                    <td>{{ classeur.validation|date('d/m/Y') }}</td>
+                    <td>{{ classeur.type.nom }}</td>
+                    <td></td>
+                    <td><a href="{{ path('classeur_edit', {id: classeur.id}) }}"><span
+                                    class="glyphicon glyphicon-pencil"></span></a></td>
+                    <td data-id="{{ classeur.id }}"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         <a>
             <button type="button" class="btn btn-default navbar-btn" id="deleter">
                 Supprimer les classeurs sélectionnés
@@ -18,9 +44,6 @@
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="text/javascript">
         $("#dtables").dataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ path("ajax_classeurs_list_retired") }}",
             oLanguage: {
                 sSearch: "Rechercher&nbsp;:",
                 sInfo: "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
@@ -41,26 +64,23 @@
                     sClass: "center"
                 },
                 {
-                    aTargets: [2,4],
+                    aTargets: [2, 3],
                     sClass: "center"
                 },
                 {
-                    "aTargets": [5],
+                    "aTargets": [4],
                     sClass: "center",
                     "mRender": function (data, type, full) {
-                        return '<span class="glyphicon statut_' + data + '"></span>';
+                        return '<span class="glyphicon statut_3"></span>';
                     }
                 },
                 {
-                    aTargets: [6],
+                    aTargets: [5],
                     sClass: "center",
-                    bSortable: false,
-                    "mRender": function (data, type, full) {
-                        return '<a class="act" data-id="' + data + '" href="' + Routing.generate('classeur_edit', {id: data}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
-                    }
+                    bSortable: false
                 },
                 {
-                    "aTargets": [7],
+                    "aTargets": [6],
                     sClass: "center",
                     "mRender": function (data, type, full) {
                         return '<input type="checkbox" class="chk">';
@@ -70,9 +90,6 @@
             sPaginationType: "full_numbers",
             fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).addClass("classeur-row");
-                $(nRow).dblclick(function (e) {
-                    document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
-                });
                 return nRow;
             }
 
@@ -86,7 +103,7 @@
                 $('.chk').each(function () {
                     if ($(this).is(':checked')) {
                         // alert($(this).parent().parent().find('.act').attr('data-id'))
-                        tabId.push($(this).parent().parent().find('.act').attr('data-id'));
+                        tabId.push($(this).parent().attr('data-id'));
                     }
                 });
                 $.ajax({

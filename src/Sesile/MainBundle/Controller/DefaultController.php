@@ -18,8 +18,17 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $msg_accueil = $CollecEntity->getMessage();
+        $msg_err = 'vous n\'êtes pas connecté à l\'interface SESILE de votre collectivité de rattachement';
+        if (is_object($this->getUser()) && $this->get('session')->get('nocoll')) {
+            //var_dump($this->get('session')->get('nocoll'));
+            return array('msg_err' => $msg_err);
+        }
+
+
+        #TODO tester en prod acces autre collec user
         return array('msg_acc' => $msg_accueil);
         //test
+
     }
 
     /**
@@ -33,4 +42,5 @@ class DefaultController extends Controller
 
         return array('majorversion' => $major, 'commit' => $tabversion['commit'], 'buildnumber' => $tabversion['buildnumber']);
     }
+
 }
