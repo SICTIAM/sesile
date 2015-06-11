@@ -81,7 +81,10 @@ class DefaultController extends Controller
                 $userObj = $em->getRepository('SesileUserBundle:User')->findOneByUsername($form->get('username')->getData());
 
                 if (empty($userObj)) {
-
+                    $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+                    if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+                        $entity->setCollectivite($collectivite);
+                    }
                     $entity->setEmail($form->get('username')->getData());
                     $em->persist($entity);
                     $entity->upload($DirPath);
@@ -221,6 +224,11 @@ class DefaultController extends Controller
                         $entity->setPlainPassword($pwd);
                         $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($pwd)));
                     }
+                    $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+
+                    if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+                        $entity->setCollectivite($collectivite);
+                    }
 
 
                     $entity->setEmail($editForm->get('username')->getData());
@@ -314,22 +322,35 @@ class DefaultController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('roles', 'choice', array(
-            'choices' => array(
-                'ROLE_USER' => 'Utilisateurs',
-                'ROLE_ADMIN' => 'Admin',
-                'ROLE_SUPER_ADMIN' => 'Super admin',
-                'ROLE_AGENT_SICTIAM' => 'Agent Sictiam'
-            ),
-            'multiple' => true
-        ));
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('roles', 'choice', array(
+                'choices' => array(
+                    'ROLE_USER' => 'Utilisateurs',
+                    'ROLE_ADMIN' => 'Admin',
+                    'ROLE_SUPER_ADMIN' => 'Super admin'
+                ),
+                'multiple' => true
+            ));
+        } else {
+            $form->add('roles', 'choice', array(
+                'choices' => array(
+                    'ROLE_USER' => 'Utilisateurs',
+                    'ROLE_ADMIN' => 'Admin',
+                ),
+                'multiple' => true
+            ));
+        }
 
         // liste des collectivités
-        $form->add('collectivite', 'entity', array(
-            'class' => "SesileMainBundle:Collectivite",
-            'query_builder' => function($repository) { return $repository->createQueryBuilder('p'); },
-            'property' => 'Nom',
-        ));
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('collectivite', 'entity', array(
+                'class' => "SesileMainBundle:Collectivite",
+                'query_builder' => function ($repository) {
+                    return $repository->createQueryBuilder('p');
+                },
+                'property' => 'Nom',
+            ));
+        }
 
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 
@@ -353,22 +374,37 @@ class DefaultController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('roles', 'choice', array(
-            'choices' => array(
-                'ROLE_USER' => 'Utilisateurs',
-                'ROLE_ADMIN' => 'Admin',
-                'ROLE_SUPER_ADMIN' => 'Super admin',
-                'ROLE_AGENT_SICTIAM' => 'Agent Sictiam'
-            ),
-            'multiple' => true
-        ));
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('roles', 'choice', array(
+                'choices' => array(
+                    'ROLE_USER' => 'Utilisateurs',
+                    'ROLE_ADMIN' => 'Admin',
+                    'ROLE_SUPER_ADMIN' => 'Super admin'
+                ),
+                'multiple' => true
+            ));
+        } else {
+            $form->add('roles', 'choice', array(
+                'choices' => array(
+                    'ROLE_USER' => 'Utilisateurs',
+                    'ROLE_ADMIN' => 'Admin',
+                ),
+                'multiple' => true
+            ));
+        }
 
         // liste des collectivités
-        $form->add('collectivite', 'entity', array(
-            'class' => "SesileMainBundle:Collectivite",
-            'query_builder' => function($repository) { return $repository->createQueryBuilder('p'); },
-            'property' => 'Nom',
-        ));
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('collectivite', 'entity', array(
+                'class' => "SesileMainBundle:Collectivite",
+                'query_builder' => function ($repository) {
+                    return $repository->createQueryBuilder('p');
+                },
+                'property' => 'Nom',
+            ));
+        }
+
+
 
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
 

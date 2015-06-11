@@ -143,7 +143,6 @@ class User extends BaseUser {
 
     public function setFile($file) {
         $this->file = $file;
-        return $this;
     }
 
     public function getPath() {

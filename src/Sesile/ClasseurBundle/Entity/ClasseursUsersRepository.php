@@ -157,11 +157,9 @@ class ClasseursUsersRepository extends EntityRepository
         $rsm = new ResultSetMappingBuilder($em);
         $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
 
-        $sql = 'SELECT c.* FROM ClasseursUsers cu
+        $sql = 'SELECT c.* FROM Classeur_visible cu
             inner join Classeur c on cu.classeur_id = c.id
-            WHERE (c.visibilite = 0 and cu.user_id = :userid  and cu.classeur_id = :classeurid )
-            or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid) and cu.classeur_id = :classeurid )
-            group by cu.classeur_id';
+            WHERE cu.user_id = :userid  and cu.classeur_id = :classeurid ';
 
         $query = $em->createNativeQuery($sql, $rsm)->setParameter('userid', $userid)->setParameter('classeurid', $classeurid);
 

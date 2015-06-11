@@ -247,7 +247,10 @@ class DocumentController extends Controller
         $param = $this->container->getParameter('upload');
         $dir = $param['fics'];
         $path = $dir . $doc->getRepourl();
-        $str = str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path)));
+
+        // on enleve tout les putains de préfixes de mes 2
+
+        $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
         $xml = simplexml_load_string($str);
 
         $arrayPJ = array();
@@ -260,8 +263,10 @@ class DocumentController extends Controller
 
         if (isset($xml->PES_DepenseAller)) {
             $typePES = 'Depense';
-        } else {
+        } elseif ($xml->PES_RecetteAller) {
             $typePES = 'Recette';
+        } else {
+            return array('isPJ' => true);
         }
 
 
@@ -270,9 +275,8 @@ class DocumentController extends Controller
             $arrayBord[] = $Bord;
         }
 
-        // on enleve tout les putains de préfixes de mes 2
 
-        if (isset($xml->{'PES_' . $typePES . 'Aller'}->Bordereau->Signature)) {
+        if (count($xml->{'PES_' . $typePES . 'Aller'}->Bordereau->Signature)) {
             //si on a une signature  on récupère le certificat
             $sign = $xml->{'PES_' . $typePES . 'Aller'}->Bordereau->Signature->KeyInfo->X509Data->X509Certificate;
             $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
@@ -287,7 +291,7 @@ class DocumentController extends Controller
             list($jourMoche, $heureMoche) = explode('T', $dateMoche);
             list($annee, $jour, $mois) = explode('-', $jourMoche);
             list($heure, $minute, $reste) = explode(':', $heureMoche);
-            $date = $jour . '/' . $mois . '/' . $annee . ' ' . $heure . ':' . $minute;
+            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure + 2) . ':' . $minute;
 
         } else {
             $Signataire = '';

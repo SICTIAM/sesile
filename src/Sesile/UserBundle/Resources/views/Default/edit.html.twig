@@ -103,11 +103,12 @@
             {{ form_widget(edit_form.roles) }}
         </div>
         <br/>
-
-        <div class="label_form pickuser">
-            {{ form_label(edit_form.collectivite) }}
-            {{ form_widget(edit_form.collectivite) }}
-        </div>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <div class="label_form pickuser">
+                {{ form_label(edit_form.collectivite) }}
+                {{ form_widget(edit_form.collectivite) }}
+            </div>
+        {% endif %}
         <br/>
 
         <div class="acti">

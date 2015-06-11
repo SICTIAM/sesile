@@ -8,23 +8,38 @@
 
 <script type="text/javascript">
 
+
     var selected = null;
 
     var selectedFile = null;
 
     var openeddesc = false;
 
+    if ($("#type").val() == 2) {
+        var dropzone = new Dropzone("div#fichiers", {
+            url: "{{ oneup_uploader_endpoint('docs') }}",
+            previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
+            '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
+            ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
+            '<a class="dz-remove">Supprimer le fichier</a>' +
+            ' <div class="dz-error-message"><span data-dz-errormessage></span></div>' +
+            '</div>',
+            maxFiles: 1,
+            dictMaxFilesExceeded: " vous ne pouvez télécharger qu'un seul fichier"
+        });
+    }
+    else {
+        var dropzone = new Dropzone("div#fichiers", {
+            url: "{{ oneup_uploader_endpoint('docs') }}",
+            previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
+            '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
+            ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
+            '<a class="dz-remove">Supprimer le fichier</a>' +
+            ' <div class="dz-error-message"><span data-dz-errormessage></span></div>' +
+            '</div>'
+        });
+    }
 
-    var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
-        previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
-                '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
-                ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
-                '<a class="dz-remove">Supprimer le fichier</a>' +
-                ' <div class="dz-error-message"><span data-dz-errormessage></span></div>' +
-                '</div>'
-
-
-    });
 
     function removedropzonefile(file) {
 

@@ -74,57 +74,12 @@ class ClasseurController extends Controller {
     public function retiredAction()
     {
 
-        return array("menu_color" => "bleu");
-    }
-
-    /**
-     * @Route("/ajax/listRetired", name="ajax_classeurs_list_retired")
-     * @Template()
-     */
-    public function listAjaxRetiredAction(Request $request)
-    {
-        $get = $request->query->all();
-        $columns = array('Nom', 'Creation', 'Validation', 'Validant', 'Type', 'Status', 'Id');
-        $get['colonnes'] = &$columns;
-
         $em = $this->getDoctrine()->getManager();
-        $rResult = $em->getRepository('SesileClasseurBundle:Classeur')->findByStatus(3);
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findByStatus(3);
 
-        // $em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId())
-        $output = array(
-            "draw" => $get["draw"],
-            "recordsTotal" => 0,//$em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId()),
-            "recordsFiltered" => count($rResult),
-            "data" => array()
-        );
-
-        foreach ($rResult as $aRow) {
-            $row = array();
-            for ($i = 0; $i < count($columns); $i++) {
-                if ($columns[$i] == "Creation") {
-                    $row[] = $aRow->{"get" . $columns[$i]}()->format('d/m/Y H:i');
-                } elseif ($columns[$i] == "Validation") {
-                    $row[] = $aRow->{"get" . $columns[$i]}()->format('d/m/Y');
-                } elseif ($columns[$i] == "Validant") {
-                    $intervenant = $aRow->{"get" . $columns[$i]}();
-
-                    $row[] = ($intervenant == 0) ? "" : $em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
-                } elseif ($columns[$i] == 'Type') {
-//                    var_dump($aRow->getType()->getNom());
-                    $row[] = $aRow->getType()->getNom();
-                } elseif ($columns[$i] != ' ') {
-                    $row[] = $aRow->{"get" . $columns[$i]}();
-                }
-            }
-            $output['data'][] = $row;
-        }
-
-        unset($rResult);
-
-        return new Response(
-            json_encode($output)
-        );
+        return array("menu_color" => "bleu", "classeurs" => $classeurs);
     }
+
 
     // SUPPRIMER UN CLASSEUR
 

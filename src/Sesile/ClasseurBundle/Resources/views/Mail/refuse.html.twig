@@ -1,5 +1,7 @@
+Bonjour {{ deposant }},
+<br>
 Le classeur "{{ titre_classeur }}" vient d'être refusé par {{ validant }}
 <br>
-Il devra être corrigé et validé avant le {{ date_limite | date('d/m/Y') }}..<br>
-
-Lien vers le classeur <a href ="{{ lien }}"></a>
+Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
+<br>
+Vous pouvez visionner le classeur <a href="{{ lien|raw }}"></a>

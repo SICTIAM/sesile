@@ -33,6 +33,7 @@ twig:
     globals:
         upload_path: uploads/avatars/
         upload_path_logo: uploads/logo_coll/
+        upload_path_docs: /uploads/docs/
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 # Assetic Configuration
@@ -114,6 +115,7 @@ parameters:
         commit: 994e6f7902355e6bf62dde14804e0bd9863d5662
         buildnumber: 1
     majorversion: 2
+    url_applet: signature.sesile.fr
 
 # La suite, c'est pour l'api
 fos_rest:

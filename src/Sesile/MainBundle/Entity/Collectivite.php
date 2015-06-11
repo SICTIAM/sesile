@@ -276,31 +276,29 @@ class Collectivite
 
 
         if ($this->getTextmailnew() == null) {
-            $this->setTextmailnew("Un nouveau classeur vient d'être déposé par {{ deposant }}
-                                    <br>
-                                        {{ titre_classeur }}
-                                        <br>
-                                    Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..
-
-                            Lien vers le classeur {{ lien }})");
+            $this->setTextmailnew("Un nouveau classeur {{ titre_classeur }} vient d'être déposé par {{ deposant }}
+<br>
+Il convient de le valider avant le {{ date_limite | date('d/m/Y') }}.
+<br>
+Vous pouvez visionner le classeur {{lien|raw}}");
         }
 
         if ($this->getTextmailrefuse() == null) {
-            $this->setTextmailrefuse("Le classeur \"{{ titre_classeur }}\" vient d'être refusé par {{ validant }}
-                <br>
-                Il devra être corrigé et validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+            $this->setTextmailrefuse("Bonjour {{ deposant }},
 
-                Lien vers le classeur {{ lien }}");
+Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }}
+<br>
+Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
+<br>
+Vous pouvez visionner le classeur {{lien|raw}}");
         }
 
         if ($this->getTextmailwalid() == null) {
-            $this->setTextmailwalid("Un nouveau classeur vient d'être validé par {{ validant }}
-                <br>
-                {{ titre_classeur }}
-                <br>
-                Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..<br>
-
-                Lien vers le classeur {{ lien }}");
+            $this->setTextmailwalid("Bonjour {{ deposant }},
+<br>
+Le classeur {{ titre_classeur }} vient d'être validé par {{ validant }}
+<br>
+Vous pouvez visionner le classeur {{lien|raw}}");
         }
     }
 
@@ -404,31 +402,29 @@ class Collectivite
     {
 
         if ($this->getTextmailnew() == null) {
-            $this->setTextmailnew("Un nouveau classeur vient d'être déposé par {{ deposant }}
-                                    <br>
-                                        {{ titre_classeur }}
-                                        <br>
-                                    Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..
-
-                            Lien vers le classeur {{ lien }})");
+            $this->setTextmailnew("Un nouveau classeur {{ titre_classeur }} vient d'être déposé par {{ deposant }}
+<br>
+Il convient de le valider avant le {{ date_limite | date('d/m/Y') }}.
+<br>
+Vous pouvez visionner le classeur {{ lien|raw }}");
         }
 
         if ($this->getTextmailrefuse() == null) {
-            $this->setTextmailrefuse("Le classeur \"{{ titre_classeur }}\" vient d'être refusé par {{ validant }}
-                <br>
-                Il devra être corrigé et validé avant le {{ date_limite | date('d/m/Y') }}..<br>
+            $this->setTextmailrefuse("Bonjour {{ deposant }},
 
-                Lien vers le classeur {{ lien }}");
+Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }}
+<br>
+Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
+<br>
+Vous pouvez visionner le classeur {{lien|raw}}");
         }
 
         if ($this->getTextmailwalid() == null) {
-            $this->setTextmailwalid("Un nouveau classeur vient d'être validé par {{ validant }}
-                <br>
-                {{ titre_classeur }}
-                <br>
-                Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..<br>
-
-                Lien vers le classeur {{ lien }}");
+            $this->setTextmailwalid("Bonjour {{ deposant }},
+<br>
+Le classeur {{ titre_classeur }} vient d'être validé par {{ validant }}
+<br>
+Vous pouvez visionner le classeur {{lien|raw}}");
         }
     }
 

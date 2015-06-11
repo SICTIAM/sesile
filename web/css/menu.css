@@ -44,6 +44,23 @@
     height: 3em;
 }
 
+.menu-orange .entete-menu {
+    background-color: rgb(219, 104, 18);
+}
+
+.menu-orange .dd-menu {
+    background-color: rgba(219, 104, 18, 0.6);
+}
+
+.menu-orange .dd-menu li:hover {
+    background-color: rgba(219, 104, 18, 0.3);
+}
+
+#orangeclair {
+    background-color: rgba(219, 104, 18, 1);
+}
+
+
 .menu-rouge .entete-menu {
     background-color: rgba(202, 76, 77, 1);
 }

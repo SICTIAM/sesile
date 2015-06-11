@@ -73,13 +73,13 @@ var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('
             ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
 
 
-    createThumbnail: false,
-    maxFileSize: 1024,
-    dictMaxFilesExceeded: "Vous n'êtes pas en mode modification, cliquez sur modifier puis réessayez !"
-
-
+    createThumbnail: false{% if classeur.type.id == 2 %},
+    maxFiles: 1,
+    dictMaxFilesExceeded: " vous ne pouvez télécharger qu'un seul fichier"
+    {% endif %}
 
 });
+
 {% if isvalidable == false %}
     dropzone.disable();
 {% endif %}

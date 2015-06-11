@@ -44,7 +44,7 @@
 	    <img  id="img_imposetonstyle"  src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" />
     </div>
     </div>
-    {% if is_granted('ROLE_USER') and app.user.collectivite is not null %}
+    {% if is_granted('ROLE_USER') and app.user.collectivite is not null and msg_err is not defined %}
 	{% include 'SesileMainBundle:Default:menu.html.twig' %}
     {% endif %}
 </div>
@@ -84,7 +84,10 @@
     {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
     <div id="lecontenu">
         {% block content %}
-            <div id="contenu_acceuil">
+            {% if msg_err is defined %}
+                {{ msg_err }}
+            {% else %}
+                <div id="contenu_acceuil">
                 {% if app.user == null %}
                     <div class="bloc_accueil">
                         <div id="bienvenue">
@@ -128,24 +131,24 @@
                             $(document).ready(function () {
                                 $("#delegations_recues .dtables").dataTable({
                                     "oLanguage": {
-                                    "sSearch": "Rechercher&nbsp;:",
-                                    "sInfo": "Délégation  _START_ &agrave; _END_ sur _TOTAL_",
-                                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-                                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                                    "sZeroRecords": "Aucun enregistrement &agrave; afficher",
-                                    "sLengthMenu": "Afficher _MENU_ délégations par page",
-                                    "oPaginate": {
-                                        "sFirst": "",
-                                        "sPrevious": "",
-                                        "sNext": "",
-                                        "sLast": ""
-                                    }
+                                        "sSearch": "Rechercher&nbsp;:",
+                                        "sInfo": "Délégation  _START_ &agrave; _END_ sur _TOTAL_",
+                                        "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                                        "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                                        "sZeroRecords": "Aucun enregistrement &agrave; afficher",
+                                        "sLengthMenu": "Afficher _MENU_ délégations par page",
+                                        "oPaginate": {
+                                            "sFirst": "",
+                                            "sPrevious": "",
+                                            "sNext": "",
+                                            "sLast": ""
+                                        }
                                     },
                                     "iDisplayLength": 15,
                                     "aLengthMenu": [15, 30, 50, 100],
                                     "sDom": 'lft<"footer_datatables"ip>',
                                     "aoColumnDefs": [
-                                    { "bSortable": false, "aTargets": [ 4 ] }
+                                        {"bSortable": false, "aTargets": [4]}
                                     ],
                                     "sPaginationType": "full_numbers"
                                 });
@@ -285,7 +288,8 @@
                         </div>
                     {% endif %}
                 </div>
-            </div>
+                </div>
+            {% endif %}
         {% endblock %}
     </div>
     <div id="footer">
