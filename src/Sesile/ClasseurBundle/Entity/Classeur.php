@@ -117,7 +117,7 @@ class Classeur {
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"remove"})
      * @ORM\JoinColumn(name="etapeClasseur", referencedColumnName="id",nullable=true)
      */
     private $etapeClasseurs;
@@ -471,7 +471,7 @@ class Classeur {
 
     public function supprimer()
     {
-        $this->setValidant(0);
+        $this->setOrdreValidant('');
         $this->setStatus(3);
     }
 
