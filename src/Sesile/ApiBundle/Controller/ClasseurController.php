@@ -179,7 +179,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
     /**
-     * Cette méthode permet de récupérer un classeur
+     * Cette méthode permet de déposer un classeur
      *
      * Si l'utilisateur courant n'as pas accès au classeur, un 403 not allowed sera renvoyé
      * @ApiDoc(
@@ -322,13 +322,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         // envoi d'un mail au premier validant
         $this->sendCreationMail($classeur);
         //  return $circuits['ordre'];
-        // TODO envoi du mail au déposant et aux autres personnes du circuit ?
+
 
 
         return $this->classeurToArray($classeur); //$em->getRepository("SesileClasseurBundle:Classeur")->findOneById($classeur->getId());
 
     }
-
+#TODO Modifier cette fonction (dépot pour autrui + etapes de validation)
 
     /**
      * Cette méthode permet d'editer un classeur
@@ -638,7 +638,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         }
     }
 
-    private function sendCreationMail($classeur)
+    /*private function sendCreationMail($classeur)
     {
         $body = $this->renderView('SesileClasseurBundle:Mail:nouveau.html.twig',
             array(
@@ -655,8 +655,37 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
         }
-    }
+    }*/
 
+    private function sendCreationMail($classeur) {
+        $em = $this->getDoctrine()->getManager();
+        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
+
+        $env = new \Twig_Environment(new \Twig_Loader_String());
+
+        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+//        foreach($classeur->getValidant() as $validant) {
+        foreach($validants as $validant) {
+//            var_dump($validant->getId());
+//            die();
+//            $validant_obj = $em->getRepository('SesileUserBundle:User')->findOneById($validant->getId());
+
+            if ($validant != null) {
+                $body = $env->render($coll->getTextmailnew(),
+                    array(
+                        'validant' => $validant->getPrenom()." ".$validant->getNom(),
+                        'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
+                        'titre_classeur' => $classeur->getNom(),
+                        'date_limite' => $classeur->getValidation(),
+                        "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
+                    )
+                );
+                $this->sendMail("SESILE - Nouveau classeur à valider", $validant->getEmail(), $body);
+            }
+        }
+
+    }
 
     private function sendRefusMail($classeur)
     {
@@ -725,14 +754,20 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         foreach ($tabDocs as $doc) {
             $cleanTabDocs[] = $this->docToArray($doc);
         }
+        $em = $this->getDoctrine()->getManager();
+        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+        $tabValidant = array();
+        foreach($validants as $validant)
+        {
+            $tabValidant[] = $validant->getId();
+        }
 
         return array('id' => $classeur->getId(),
             'nom' => $classeur->getNom(), 'description' => $classeur->getDescription(),
             'creation' => $classeur->getCreation(),
             'validation' => $classeur->getValidation(), 'type' => $classeur->getType()->getId(),
-            'validant' => $classeur->getValidant(),
+            'validant' => $tabValidant,
             'visibilite' => $classeur->getVisibilite(),
-            'circuit' => $classeur->getCircuit(),
             'documents' => $cleanTabDocs,
             'actions' => $cleanTabAction);
     }
