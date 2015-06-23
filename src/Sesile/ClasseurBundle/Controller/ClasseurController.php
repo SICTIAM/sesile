@@ -75,7 +75,7 @@ class ClasseurController extends Controller {
 
 
     /**
-     * Liste des classeurs en cours
+     * Liste des classeurs retiré
      *
      * @Route("/liste/retire", name="liste_classeurs_retired")
      * @Method("GET")
@@ -110,17 +110,16 @@ class ClasseurController extends Controller {
             'classeurs' => $tabClasseurs,
             "menu_color" => "bleu"
         );
-//        return array("menu_color" => "bleu");
     }
 
     /**
      * @Route("/ajax/listRetired", name="ajax_classeurs_list_retired")
      * @Template()
      */
-    public function listAjaxRetiredAction(Request $request)
+    /*public function listAjaxRetiredAction(Request $request)
     {
 
-        /*$get = $request->query->all();
+        $get = $request->query->all();
 //        $columns = array('Nom', 'Creation', 'Validation', 'Validant', 'Type', 'Status', 'Id');
         $columns = array('Nom', 'Creation', 'Validation', 'Visibilite', 'Type', 'Status', 'Id');
         $get['colonnes'] = &$columns;
@@ -161,8 +160,8 @@ class ClasseurController extends Controller {
 
         return new Response(
             json_encode($output)
-        );*/
-    }
+        );
+    }*/
 
     // SUPPRIMER UN CLASSEUR
 
@@ -1451,13 +1450,12 @@ class ClasseurController extends Controller {
     {
 
         $user = $this->get('security.context')->getToken()->getUser();
-        //  var_dump($user);
 
         $em = $this->getDoctrine()->getManager();
         if($request->request->get('circuit')) {
             $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
-            $circuit = $request->request->get('circuit');
-            $classeur->setCircuit($circuit);
+//            $circuit = $request->request->get('circuit');
+            $classeur->setCircuit($user->getId());
             $em->flush();
         }
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
@@ -1479,6 +1477,7 @@ class ClasseurController extends Controller {
         }
 
         $servername = $_SERVER['HTTP_HOST'];
+        var_dump($servername);
         $url_applet = $this->container->getParameter('url_applet');
 
         return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername' => $servername, "url_applet" => $url_applet);
@@ -1565,7 +1564,7 @@ class ClasseurController extends Controller {
             'success',
             "Le classeur a été retiré"
         );
-        return $this->redirect($this->generateUrl('index_valider'));
+        return $this->redirect($this->generateUrl('classeur'));
     }
 
     /**
