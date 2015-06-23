@@ -857,3 +857,10 @@ select [name=user] {
     cursor: -webkit-grab;
     cursor: -moz-grab;
 }
+
+#winFirefoxPlugin {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    margin-top: -500px;
+}

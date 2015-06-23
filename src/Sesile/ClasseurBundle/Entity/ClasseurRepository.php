@@ -128,7 +128,7 @@ class ClasseurRepository extends EntityRepository {
 
         $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
 
-        if($etapeClasseurs !== null) {
+        if($etapeClasseurs !== null && $classeur->getStatus() != 2) {
 
             $users = $etapeClasseurs->getUsers();
             $usersValidant = array();
@@ -175,7 +175,6 @@ class ClasseurRepository extends EntityRepository {
         );
 
         if ($etapeClasseurs !== null) {
-
             $users = $etapeClasseurs->getUsers();
             $usersValidant = array();
 
