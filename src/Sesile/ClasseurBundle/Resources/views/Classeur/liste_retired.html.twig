@@ -48,22 +48,23 @@
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="text/javascript">
         $("#dtables").dataTable({
-            /*processing: true,
-            serverSide: true,*/
-            /*ajax: "{{ path("ajax_classeurs_list_retired") }}",*/
             oLanguage: {
-                sSearch: "Rechercher&nbsp;:",
+                sSearch: "Rechercher&nbsp;",
                 sInfo: "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
                 sInfoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                 sInfoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                oPaginate: {sFirst: "", sPrevious: "", sNext: "", sLast: ""},
-                sZeroRecords: "Aucun classeur &agrave; afficher",
-                sEmptyTable: "Aucun classeur &agrave; afficher",
-                sLengthMenu: "Afficher _MENU_ classeurs par page"
+                sZeroRecords: "Aucun enregistrement &agrave; afficher",
+                sLengthMenu: "Afficher _MENU_ classeurs par page",
+                oPaginate: {
+                    sFirst: "",
+                    sPrevious: "",
+                    sNext: "",
+                    sLast: ""
+                }
             },
             iDisplayLength: 15,
             aLengthMenu: [15, 30, 50, 100],
-            sDom: 'lft<"footer_datatables"p>',
+            sDom: 'lft<"footer_datatables"ip>',
             order: [[1, "desc"]],
             aoColumnDefs: [
                 {

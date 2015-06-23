@@ -76,6 +76,8 @@
         // Pour le bouton de suppression de l etape
         $(document).on('click','#suppetape',function() {
             $(this).parent().remove();
+            // Pour savoir si on valide ou si on signe
+            aff_button_valider();
         });
 
 
@@ -87,10 +89,13 @@
             '<div class="col-lg-2 well etapes-circuit"><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button></div>');
             $("select.selusers").select2();
 
+            // Pour savoir si on valide ou si on signe
+            aff_button_valider();
+
         });
         var tabGeneral = [];
 //        $("#form_edit").submit(function(){
-        $(".btn-valider").on('click',function(){
+        $(".btn-valider, .btn-valider-non-signer").on('click',function(){
             /*
              * Pour chaque etape de validation créé on récupère les options sélectionnées
              *
