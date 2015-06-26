@@ -732,6 +732,24 @@ class ClasseurController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
 
+        $user = $this->getUser();
+
+
+        $entity = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+
+
+        if (!in_array($entity, $user->getClasseurs()->toArray())) {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                "Vous n'avez pas accès à ce classeur"
+            );
+            return $this->redirect($this->generateUrl('index'));
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+
 
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
             "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
