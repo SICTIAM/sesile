@@ -48,10 +48,10 @@ class RouteListener {
                     $user = $this->context->getToken()->getUser();
                     if($user->getCollectivite() != $collectivite) {
                         $session->set('nocoll', true);
-                        $session->getFlashBag()->add(
-                            'success',
-                            "Merci pour votre connexion. Votre compte sera opérationnel après activation par l'administrateur de SESILE"
-                        );
+                        /*   $session->getFlashBag()->add(
+                               'success',
+                               "Merci pour votre connexion. Votre compte sera opérationnel après activation par l'administrateur de SESILE"
+                           ); */
                     }
                 }
                 else {

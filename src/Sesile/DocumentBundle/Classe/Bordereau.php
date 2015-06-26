@@ -113,7 +113,7 @@ class Bordereau
                     $prenom = '';
 
                 }
-                $tabPJs = array();
+                //  $tabPJs = array();
                 if ($typePES === 'Depense') {
                     $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePce->MtHT->attributes()[0]);
                     $tmpTVA = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->TVAIntraCom->attributes()[0]);

@@ -338,7 +338,7 @@ class DocumentController extends Controller
             $typePES = 'Recette';
         }
 
-
+//var_dump(count($arrayPJ));exit;
         $arrayBord = array();
         foreach ($xml->{'PES_' . $typePES . 'Aller'}->Bordereau as $Bord) {
             $arrayBord[] = $Bord;
