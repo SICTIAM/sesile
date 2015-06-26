@@ -413,7 +413,7 @@ Vous pouvez visionner le classeur {{ lien|raw }}');
 
         if ($this->getTextmailrefuse() == null) {
             $this->setTextmailrefuse("Bonjour {{ deposant }},
-
+<br><br>
 Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }}
 <br><br>
 Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
