@@ -732,9 +732,6 @@ class ClasseurController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Classeur entity.');
-        }
 
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
             "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
@@ -961,13 +958,13 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-        $this->sendValidationMail($classeur);
+        $this->sendCreationMail($classeur);
 
         //$this->updateAction($request);
 
         $request->getSession()->getFlashBag()->add(
             'success',
-            "Le classeur a été validé"
+            "Le classeur a été déposé"
         );
         return $this->redirect($this->generateUrl('index_valider'));
 
@@ -1034,6 +1031,7 @@ class ClasseurController extends Controller {
         $users = explode(',', $circuit);
 
         if ($visibilite != 2 && $visibilite != 3) {
+            $users[] = $classeur->getUser();
             $usersCV = $this->classeur_visible($visibilite, $users);
             // On vide la table many to many
             $classeur->getVisible()->clear();
@@ -1497,17 +1495,20 @@ class ClasseurController extends Controller {
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
         $c_user = $em->getRepository("SesileUserBundle:User")->findOneById($currentvalidant);
 
+        $validant_obj = ($classeur->getValidant() == 0) ? $em->getRepository('SesileUserBundle:User')->find($classeur->getUser()) : $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+
+
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextMailwalid(),
             array(
-                'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
+                'validant' => $validant_obj->getPrenom() . " " . $validant_obj->getNom(),
+                'deposant' => $c_user->getPrenom() . " " . $c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
             )
         );
 
-        $validant_obj = ($classeur->getValidant() == 0)?$em->getRepository('SesileUserBundle:User')->find($classeur->getUser()):$em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Classeur validé", $validant_obj->getEmail(), $body);

@@ -25,7 +25,10 @@
             ' <div class="dz-error-message"><span data-dz-errormessage></span></div>' +
             '</div>',
             maxFiles: 1,
-            dictMaxFilesExceeded: " vous ne pouvez télécharger qu'un seul fichier"
+            dictMaxFilesExceeded: "Dans le cas d'un classeur de type Hélios le dépôt d'un seul fichier par classeur est autorisé.",
+            acceptedFiles: ".xml",
+            dictInvalidFileType: "Attention, seuls les fichiers xml sont acceptés"
+
         });
     }
     else {
@@ -63,18 +66,21 @@
 
     dropzone.on("addedfile", function (file, serverfilename) {
         $('#Mybutton').attr('disabled', true);
+        $('.dz-remove').click(function () {
+            dropzone.removeFile(file);
+        });
+        /*  file.previewElement.find('.dz-remove').addEventListener("click", function () {
 
-        file.previewElement.addEventListener("click", function () {
 //            myDropzone.removeFile(file);
             dropzone.removeFile(file);
             $("#documentcontent").children("#" + file.idfilename).remove();
             console.log("#" + file.idfilename);
-
+         $('#Mybutton').attr('disabled', false);
             if(dropzone.getAcceptedFiles().length == 0) {
                 $('#Mybutton').attr('disabled', true);
             }
 
-        });
+         }); */
     });
 
 
