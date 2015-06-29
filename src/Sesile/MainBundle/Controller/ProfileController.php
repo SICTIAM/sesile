@@ -205,7 +205,7 @@ class ProfileController extends ContainerAware
                 }
             }
             else {
-                $this->container->get('session')->getFlashBag()->add('notice', 'Vous devez remplir les champs correctement.');
+                $this->container->get('session')->getFlashBag()->add('notice', 'Merci de vérifier votre saisie');
             }
         }
 
