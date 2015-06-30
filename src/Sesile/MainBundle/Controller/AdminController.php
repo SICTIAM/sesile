@@ -310,7 +310,7 @@ class AdminController extends Controller
             // Envoie du mail pour chaque utilisateur
             foreach ($users as $key => $user) {
                 $message->setTo($user->getEmail());
-                //$this->get('mailer')->send($message);
+                $this->get('mailer')->send($message);
             }
 
             // Message de confirmation pour l'utilisateur
