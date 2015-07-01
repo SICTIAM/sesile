@@ -1,10 +1,24 @@
+<div class="row row-padding">
+    <div class="col-lg-3 col-lg-offset-3">
+        <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeAllUsers">
+            <span class="glyphicon glyphicon-plus-sign"></span> Déplier toutes les étapes</button>
+    </div>
+    <div class="col-lg-3">
+        <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeAllUsers">
+            <span class="glyphicon glyphicon-minus-sign"></span> Replier toutes les étapes</button>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-lg-12">
         <div id="contetapes">
             {% for etape in service %}
 
                 <div class="col-lg-2 well etapes-circuit">
-                    <div class="text-center"><h4>Etape de validation {{ etape.id }}</h4></div>
+
+                    <button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>
+
+                    <div class="text-center"><h4>Etape</h4></div>
                     {#<input type="hidden" name="etape_id" value="{{ etape.id }}">#}
                     <select class="selusers" multiple="multiple" style="width: 100%" data-etape="{{ etape.id }}">
                         <optgroup label="Groupes d'utilisateurs">
@@ -18,7 +32,10 @@
                             {% endfor %}
                         </optgroup>
                     </select>
-                    <button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button>
+
+                    <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
+                    <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
+
                 </div>
             {% endfor %}
         </div>
@@ -35,72 +52,79 @@
 <script>
     $(document).ready(function() {
 
+        // Bug pourquoi devoir remmettre la fonction et la relancer dans l ajout d etape ?
+        function creerFleches() {
+            $(".fleche_circuit").remove();
+            $("<span/>").addClass("fleche_circuit glyphicon glyphicon-chevron-right").insertAfter(".etapes-circuit:not(:last)");
+        }
+
         $(document).on('click', '#addetape', function (e) {
             /*
              A chaque fois qu'on clicque sur le bouton bleu une nouvelle etape de validation se crée
              */
-            $('#contetapes').append('' +
-            '<div class="col-lg-2 well etapes-circuit"><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button></div>');
+            var contetapes = $('#contetapes');
+
+            contetapes.append('' +
+            '<div class="col-lg-2 well etapes-circuit"><div class="text-center"><h4>Etape</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers" style="display:none;"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>');
+
             $("select.selusers").select2();
 
             e.stopImmediatePropagation();
+            creerFleches()
 
         });
+
+
+        /*
+         * Fonction permettant de recuperer les utilisateurs et les groupes pour l'envoie
+         * La fonction recupère toutes les informations des selects et les stringify pour les passer dans un champs hidden
+         */
+        var tabGeneral = [];
+        $('#new_classeur').submit(function(){
+            /*
+             * Pour chaque etape de validation créé on récupère les options sélectionnées
+             *
+             * */
+            $('select.selusers').each(function(){
+
+                var Etapes = {};
+                Etapes.etape_id = $(this).data('etape');
+                Etapes.etapes = [];
+
+                if($(this).val())
+                {
+                    $(this).find(':selected').each(function(){
+                        /*
+                         * Pour chaque option selectionnée, on récupère son data-type(groupe ou user) et sa value (id du user ou du userPack)
+                         * */
+                        Etapes.etapes.push({
+                            entite: $(this).data('type'),
+                            id: $(this).val()
+                        });
+                    });
+                } else {
+                    e.preventDefault();
+                }
+                tabGeneral.push(Etapes);
+            });
+
+            /*
+             * on met tout ça dans un tableau que l'on stringifie et qu'on met dans le hidden
+             * */
+            $('#valeurs').val(JSON.stringify(tabGeneral));
+
+        });
+
+        $(function() {
+            $( "#contetapes" ).sortable({
+                tolerance: "pointer",
+                stop: function (e, ui) {
+                    creerFleches();
+                }
+            }).disableSelection();
+        });
+
+
+
     });
 </script>
-{#
-
-<link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
-<div class="top_selects_circuits">
-
-    <div class="selects_circuit">
-        <div class="titre_select">
-            <label class="nametitle" id="users_complete">
-                <span class="glyphicon glyphicon-search"></span>
-                &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-            <input class="nameinput" type="text" id="circuit-search" autocomplete="off">
-        </div>
-        <div id="users_list">
-            {% for user in users %}
-                <p class="users-search" data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.nom }} {{ user.prenom }}</p>
-            {% endfor %}
-        </div>
-        <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
-    </div>
-
-</div>
-
-
-<div id="circuit_editor">
-    <div class="titre_select">
-    </div>
-    <div id="circuit">
-        <img id="debut_circuit" src="{{ asset("/images/buttonlist.png") }}"/>
-    </div>
-</div>
-
-
-<script type="text/javascript">
-    $(".nameinput").focus(function () {
-        $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
-        $(this).prev("label").addClass("glyphicon-search-blue");
-    });
-
-    $("#users_list p, #circuits_list p").click(function () {
-        $(this).siblings(".list_selected_element").removeClass("list_selected_element");
-        $(this).addClass("list_selected_element");
-    });
-
-    var path = "{{ asset(upload_path) }}";
-</script>
-<script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
-<script type="text/javascript">
-    var users_list = new Array();
-    $("#users_list p").each(function () {
-        users_list.push($(this).text());
-    });
-    // $("#users_complete").autocomplete({ lookup: users_list });
-</script>
-#}

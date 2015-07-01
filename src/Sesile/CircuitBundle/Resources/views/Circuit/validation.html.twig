@@ -1,26 +1,126 @@
-
+<link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 
 
-<div id="circuit_editor">
+{#<div id="circuit_editor">
     <div class="titre_select">
     </div>
     <div id="circuit">
         <img id="debut_circuit" src="{{ asset("/images/buttonlist.png") }}"/>
     </div>
+</div>#}
+
+<div class="row row-padding">
+    <div class="col-lg-3 col-lg-offset-3">
+        <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeAllUsers">
+            <span class="glyphicon glyphicon-plus-sign"></span> Déplier toutes les étapes</button>
+    </div>
+    <div class="col-lg-3">
+        <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeAllUsers">
+            <span class="glyphicon glyphicon-minus-sign"></span> Replier toutes les étapes</button>
+    </div>
 </div>
 
 <div class="row">
     <div class="col-lg-12">
+
+        <div class="col-lg-2 well etapes-circuit">
+
+            <span class="ok_perso glyphicon glyphicon-download-alt"></span>
+
+            <div class="text-center"><h4>Etape déposante</h4></div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    {% if deposant.path is empty %}
+                        <img src="{{ asset('/images/imghomme.png') }}" alt="{{ deposant.Prenom }} {{ deposant.Nom }}">
+                    {% else %}
+                        <img src="{{ asset(upload_path ~ deposant.path) }}" alt="{{ deposant.Prenom }} {{ deposant.Nom }}">
+                    {% endif %}
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                    <span class="circuit-user">{{ deposant.Prenom }}<br>{{ deposant.Nom }}</span>
+                </div>
+            </div>
+        </div>
+
+        {% for circuit_user in circuit_users %}
+
+            <div class="col-lg-2 well etapes-circuit">
+
+                <span class="ok_perso glyphicon glyphicon-ok"></span>
+
+                <div class="text-center"><h4>Etape validée {{ circuit_user.id }}</h4></div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        {% if circuit_user.path is empty %}
+                            <img src="{{ asset('/images/imghomme.png') }}" alt="{{ circuit_user.Prenom }} {{ circuit_user.Nom }}">
+                        {% else %}
+                            <img src="{{ asset(upload_path ~ circuit_user.path) }}" alt="{{ circuit_user.Prenom }} {{ circuit_user.Nom }}">
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="circuit-user">{{ circuit_user.Prenom }}<br>{{ circuit_user.Nom }}</span>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+
         <div id="contetapes">
+
+            {% if edit %}
+                <div class="col-lg-2 well etapes-circuit etape-validante">
+
+                    <span class="valid_perso glyphicon glyphicon-pencil"></span>
+
+                    <div class="text-center"><h4>Etape en cours</h4></div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {% if app.security.getToken().getUser().getPath() is empty %}
+                                <img src="{{ asset('/images/imghomme.png') }}" alt="{{ app.security.getToken().getUser().getPrenom() }} {{ app.security.getToken().getUser().getNom() }}">
+                            {% else %}
+                                <img src="{{ asset(upload_path ~ app.security.getToken().getUser().getPath()) }}" alt="{{ app.security.getToken().getUser().getPrenom() }} {{ app.security.getToken().getUser().getNom() }}">
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-6">
+                            <span class="circuit-user">{{ app.security.getToken().getUser().getPrenom() }}<br>{{ app.security.getToken().getUser().getNom() }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 list-validants">
+                        <ul class="select2-choices">
+                            {% for validant in validants %}
+                                <li class="select2-search-choice">{{ validant.nom }} {{ validant.prenom }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <button type="button" class="btn btn-info btn-block btn-voirInter seeValidants" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
+                    <button type="button" class="btn btn-info btn-block btn-voirInter hideValidants" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
+
+                </div>
+            {% endif %}
+
+
             {% for etape in etapesGroupe %}
 
                 <div class="col-lg-2 well etapes-circuit">
-                    <div class="text-center"><h4>Etape de validation {{ etape.id }}</h4></div>
-                    <select class="selusers" multiple="multiple" style="width: 100%" data-etape="{{ etape.id }}" {% if edit != true %}disabled="disabled"{% endif %}>
+
+                    {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>{% endif %}
+
+                    <div class="text-center"><h4>Etape à venir</h4></div>
+
+                    {% if etape.countUserPacksUsers() > 3 %}
+                        <span class="glyphicon glyphicon-user etape-groupe" title="Cliquez pour voir les utilisateurs de l'étape"></span>
+                    {% endif %}
+
+                    <select class="selusers{% if etape.countUserPacksUsers() > 3 %} etape-groupe-users{% endif %}" multiple="multiple" style="width: 100%;{% if etape.countUserPacksUsers() > 3 %} display: none;{% endif %}" data-etape="{{ etape.id }}" {% if edit != true %}disabled="disabled"{% endif %}>
                         <optgroup label="Groupes d'utilisateurs">
                             {% for userPack in userPacks %}
-                                <option value="userpack-{{ userPack.id }}" {% if userPack in etape.userPacks %} selected{% endif %} data-type="groupe">{{ userPack.nom }}</option>
+                                <option value="userpack-{{ userPack.id }}" {% if userPack in etape.userPacks %} selected{% endif %} data-type="groupe" title="Voir les utilisateurs du groupe">
+                                    {{ userPack.nom }}
+                                </option>
                             {% endfor %}
                         </optgroup>
                         <optgroup label="utilisateurs">
@@ -29,7 +129,9 @@
                             {% endfor %}
                         </optgroup>
                     </select>
-                    {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button>{% endif %}
+
+                    <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
+                    <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
                 </div>
             {% endfor %}
         </div>
@@ -62,37 +164,87 @@
 </div>
 
 <script type="application/javascript" src="{{ asset("/js/select2.min.js") }}"></script>
-<link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
 
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>
+{#<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>#}
+
 <script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
 
 <script>
     $(document).ready(function() {
 
-        $(".selusers").select2();
+//        $(".selusers").select2();
+        /*
+         * Initialisations
+         */
+        aff_button_valider();
+        $('.list-validants').hide();
 
-        // Pour le bouton de suppression de l etape
+
+        // Fonction creer une fleche pour le sens de lecture
+        function creerFleches() {
+            $(".fleche_circuit").remove();
+            $("<span/>").addClass("fleche_circuit glyphicon glyphicon-chevron-right").insertAfter(".etapes-circuit:not(:last)");
+        }
+
+        $('.etape-groupe').on('click', function() {
+            $(this).siblings('.selusers').css('display', 'block');
+            $(this).siblings('#seeUsers').show();
+            $(this).hide();
+        });
+
+        // Surcharge Pour le bouton de suppression de l etape
         $(document).on('click','#suppetape',function() {
-            $(this).parent().remove();
+//            $(this).parent().remove();
             // Pour savoir si on valide ou si on signe
             aff_button_valider();
         });
 
+        // pour les validants courant
+        $(document).on('click', '.seeValidants', function() {
+            $('.list-validants').show();
+        });
+        $(document).on('click', '.hideValidants', function() {
+            $('.list-validants').hide();
+        });
 
+
+        /*
+        * Surcharge des boutons cacher et voir tous les utilisateurs par rapport au commun
+        * */
+        // Evenement du bouton voir tous les utilisateurs
+        $(document).on('click','#seeAllUsers',function(event) {
+            $('.list-validants').show();
+        });
+
+        // Pour cacher tous les utilisateurs
+        $(document).on('click','#hiddeAllUsers',function() {
+            $('.list-validants').hide();
+        });
+        /*
+         * Fin de la surcharge
+        */
+
+        // Ajouter une nouvelle étape
         $(document).on('click','#addetape',function(){
             /*
              A chaque fois qu'on clicque sur le bouton bleu une nouvelle etape de validation se crée
              */
             $('#contetapes').append('' +
-            '<div class="col-lg-2 well etapes-circuit"><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button></div>');
+            '<div class="col-lg-2 well etapes-circuit"><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>');
             $("select.selusers").select2();
 
             // Pour savoir si on valide ou si on signe
             aff_button_valider();
 
+            $('.list-validants').hide();
+
         });
+
+        /*
+         * Fonction permettant de recuperer les utilisateurs et les groupes pour l'envoie
+         * La fonction recupère toutes les informations des selects et les stringify pour les passer dans un champs hidden
+         */
         var tabGeneral = [];
 //        $("#form_edit").submit(function(){
         $(".btn-valider, .btn-valider-non-signer").on('click',function(){
@@ -131,12 +283,33 @@
         });
 
         {% if edit %}
-            $(function() {
-                $( "#contetapes" ).sortable({
-                    tolerance: "pointer"
+//            $(function() {
+                $( "#contetapes:not(.etape-validante)" ).sortable({
+                    items :'> div:not(.etape-validante)',
+                    tolerance: "pointer",
+                    stop: function (e, ui) {
+                        creerFleches();
+                    }
                 }).disableSelection();
-            });
+//            });
         {% endif %}
+
+        // Fonction pour afficher les bouton valider et signer
+        function aff_button_valider () {
+            //var c = document.getElementById("#contetapes").childNodes.length;
+            var nbEtapes = $('.etapes-circuit').length;
+            //console.log(nbEtapes);
+            //if(valid_sign == 0) {
+            if(nbEtapes == 0) {
+                $(".btn-valider-signer").css('display', 'inline-block');
+                $(".btn-valider-non-signer").css('display', 'none');
+            } else {
+                $(".btn-valider-signer").css('display', 'none');
+                $(".btn-valider-non-signer").css('display', 'inline-block');
+            }
+        }
+
 
     });
 </script>
+<script type="text/javascript" src="{{ asset('/js/circuit_etape.js') }}"></script>

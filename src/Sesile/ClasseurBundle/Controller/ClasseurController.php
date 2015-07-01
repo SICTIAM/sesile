@@ -903,7 +903,6 @@ class ClasseurController extends Controller {
         // Test pour le validant courant
         if ($entity->isValidableByDelegates($usersdelegated, $validants)) {
             $currentValidant = array("id" => end($usersdelegated)->getId(), "nom" => end($usersdelegated)->getPrenom() . " " . end($usersdelegated)->getNom(), "path" => end($usersdelegated)->getPath());
-//            $currentValidant = array("id" => reset($usersdelegated)->getId(), "nom" => reset($usersdelegated)->getPrenom() . " " . reset($usersdelegated)->getNom(), "path" => reset($usersdelegated)->getPath());
         }
         else {
             $currentValidant = '';
@@ -924,15 +923,15 @@ class ClasseurController extends Controller {
         $isSignable = $entity->isSignable();
 
 
-        $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
-        $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
+//        $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
+//        $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
 
 //        $validant = $entity->getvalidant();
 
 
 
         return array(
-            'deposant'      => $deposant,
+//            'deposant'      => $deposant,
             'validant'      => $validants,
             'currentValidant' => $currentValidant,
             'classeur'      => $entity,
@@ -1400,7 +1399,8 @@ class ClasseurController extends Controller {
 
         $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
 
-        $classeur->valider($em);
+//        $classeur->valider($em);
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur);
 
         $doc = $classeur->getDocuments()[0];
         $ancienNom = $doc->getName();
@@ -1477,7 +1477,6 @@ class ClasseurController extends Controller {
         }
 
         $servername = $_SERVER['HTTP_HOST'];
-        var_dump($servername);
         $url_applet = $this->container->getParameter('url_applet');
 
         return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername' => $servername, "url_applet" => $url_applet);

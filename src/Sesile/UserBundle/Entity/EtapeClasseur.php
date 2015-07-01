@@ -208,4 +208,13 @@ class EtapeClasseur
     {
         return $this->etapeValidante;
     }
+
+    public function countUserPacksUsers() {
+
+        $nbUsers =  count($this->getUsers());
+        $nbUserPacks = count($this->getUserPacks());
+        $total = $nbUsers + $nbUserPacks;
+
+        return $total;
+    }
 }

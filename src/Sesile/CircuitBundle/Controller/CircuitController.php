@@ -92,6 +92,16 @@ class CircuitController extends Controller
         $etapesGroupes = $em->getRepository('SesileUserBundle:EtapeClasseur')->findByEtapesAValider($classeur, $edit);
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
 
+        // obtention du deposant
+        $deposant = $em->getRepository('SesileUserBundle:User')->findOneById($classeur->getUser());
+
+        // obtention des users du circuit
+        $circuit_users_id = explode(',', $classeur->getCircuit());
+        // Un foreach pour eviter que la requete reorder a sa sauce
+        foreach ($circuit_users_id as $circuit_user_id) {
+            $circuit_users[] = $em->getRepository('SesileUserBundle:User')->findOneById($circuit_user_id);
+        }
+
 
         // recup la list des circuits
 
@@ -100,7 +110,9 @@ class CircuitController extends Controller
             'users'         => $users,
             "etapesGroupe"  => $etapesGroupes,
             "edit"          => $edit,
-            "validants"      => $validants
+            "validants"     => $validants,
+            "deposant"      => $deposant,
+            "circuit_users" => $circuit_users
         );
     }
 
