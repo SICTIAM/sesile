@@ -50,7 +50,11 @@ class SOController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
-        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+//        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
         $typeClasseurs = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
         return array('userPacks'=>$userPacks,'users'=>$users,'types'=>$typeClasseurs, "menu_color" => "vert");
     }
@@ -244,7 +248,11 @@ class SOController extends Controller {
 
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
-        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+//        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
         $serviceOrg = $em->getRepository('SesileUserBundle:Groupe')->findOneById($id);
         $typeClasseurs = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
 

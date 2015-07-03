@@ -27,7 +27,11 @@ class CircuitController extends Controller
 
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
-        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+//        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
 //        $serviceOrg = $em->getRepository('SesileUserBundle:Groupe')->findOneById($so);
         $serviceOrg = array();
 
@@ -86,7 +90,11 @@ class CircuitController extends Controller
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
-        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+//        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
 
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
         $etapesGroupes = $em->getRepository('SesileUserBundle:EtapeClasseur')->findByEtapesAValider($classeur, $edit);
@@ -124,9 +132,10 @@ class CircuitController extends Controller
     {
         // recup la liste des users en base
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ), array("Nom" => "ASC"));
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
 
         // recup la list des circuits
         // TODO recup uniquement pour le user connecté

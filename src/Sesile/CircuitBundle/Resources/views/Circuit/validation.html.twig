@@ -21,13 +21,14 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-12">
+<div class="row" id="circuit_main">
+    <div {#class="col-lg-12"#} id="circuit_etapes">
+        <div id="circuit_with_js">
 
-        <div class="col-lg-2 well etapes-circuit">
 
+        {# Etape déposante #}
+        <div class="{#col-lg-2#} well etapes-circuit">
             <span class="ok_perso glyphicon glyphicon-download-alt"></span>
-
             <div class="text-center"><h4>Etape déposante</h4></div>
             <div class="row">
                 <div class="col-lg-6 col-sm-12">
@@ -44,12 +45,11 @@
         </div>
 
         {% for circuit_user in circuit_users %}
-
-            <div class="col-lg-2 well etapes-circuit">
-
+        {% if circuit_user is not empty %}
+            {# Etapes validées #}
+            <div class="{#col-lg-2#} well etapes-circuit">
                 <span class="ok_perso glyphicon glyphicon-ok"></span>
-
-                <div class="text-center"><h4>Etape validée {{ circuit_user.id }}</h4></div>
+                <div class="text-center"><h4>Etape validée</h4></div>
                 <div class="row">
                     <div class="col-lg-6">
                         {% if circuit_user.path is empty %}
@@ -63,17 +63,16 @@
                     </div>
                 </div>
             </div>
-
+        {% endif %}
         {% endfor %}
 
 
         <div id="contetapes">
 
             {% if edit %}
-                <div class="col-lg-2 well etapes-circuit etape-validante">
-
+                {# Etape en cours #}
+                <div class="{#col-lg-2#} well etapes-circuit etape-validante">
                     <span class="valid_perso glyphicon glyphicon-pencil"></span>
-
                     <div class="text-center"><h4>Etape en cours</h4></div>
                     <div class="row">
                         <div class="col-lg-6">
@@ -87,7 +86,6 @@
                             <span class="circuit-user">{{ app.security.getToken().getUser().getPrenom() }}<br>{{ app.security.getToken().getUser().getNom() }}</span>
                         </div>
                     </div>
-
                     <div class="col-lg-12 list-validants">
                         <ul class="select2-choices">
                             {% for validant in validants %}
@@ -95,7 +93,6 @@
                             {% endfor %}
                         </ul>
                     </div>
-
                     <button type="button" class="btn btn-info btn-block btn-voirInter seeValidants" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
                     <button type="button" class="btn btn-info btn-block btn-voirInter hideValidants" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
 
@@ -105,10 +102,9 @@
 
             {% for etape in etapesGroupe %}
 
-                <div class="col-lg-2 well etapes-circuit">
-
+                {# Etapes restantes a valider #}
+                <div class="{#col-lg-2#} well etapes-circuit">
                     {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>{% endif %}
-
                     <div class="text-center"><h4>Etape à venir</h4></div>
 
                     {% if etape.countUserPacksUsers() > 3 %}
@@ -129,18 +125,21 @@
                             {% endfor %}
                         </optgroup>
                     </select>
-
                     <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
                     <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
                 </div>
             {% endfor %}
+
+            {# Bouton ajouter une étape #}
+            {% if edit %}
+                <input type="hidden" name="valeurs" id="valeurs">
+                <div class="{#col-lg-2 #}text-center div-btn-ajout-etape">
+                    <button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button>
+                </div>
+            {% endif %}
         </div>
-        {% if edit %}
-        <div class="col-lg-2 text-center">
-            <input type="hidden" name="valeurs" id="valeurs">
-            <button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button>
+
         </div>
-        {% endif %}
     </div>
 </div>
 
@@ -164,10 +163,9 @@
 </div>
 
 <script type="application/javascript" src="{{ asset("/js/select2.min.js") }}"></script>
-
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/jquery.mousewheel.min.js') }}"></script>
 {#<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>#}
-
 <script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
 
 <script>
@@ -180,6 +178,33 @@
         aff_button_valider();
         $('.list-validants').hide();
 
+        scrollFrisque();
+        // Fonction permettant d agrandir la frise dynamiquement.
+        function scrollFrisque () {
+            var widthLine = $('#circuit_main').css('width');
+            $('#circuit_etapes').css('width', widthLine);
+            var widthScroll = $('.etapes-circuit').length * 300 + 250;
+            $('#circuit_with_js').css('width', widthScroll);
+//            console.log($('.etapes-circuit').length + ' ' + 'widthScroll : ' + widthScroll);
+        }
+
+        // Sans bootstrap c'est la galère. Faut se gérer le rediementsionnement de la fenêtre à la mano...
+        window.onresize = function(event) {
+            scrollFrisque();
+        };
+
+        // Pour le bouton de suppression de l etape
+        $(document).on('click','#suppetape',function() {
+            $(this).parent().remove();
+            creerFleches();
+            aff_button_valider();
+        });
+
+        // Pour le scroll à la molette de la souris
+        $("#circuit_etapes").mousewheel(function(event, delta) {
+            this.scrollLeft -= (delta * 100);
+            event.preventDefault();
+        });
 
         // Fonction creer une fleche pour le sens de lecture
         function creerFleches() {
@@ -191,13 +216,6 @@
             $(this).siblings('.selusers').css('display', 'block');
             $(this).siblings('#seeUsers').show();
             $(this).hide();
-        });
-
-        // Surcharge Pour le bouton de suppression de l etape
-        $(document).on('click','#suppetape',function() {
-//            $(this).parent().remove();
-            // Pour savoir si on valide ou si on signe
-            aff_button_valider();
         });
 
         // pour les validants courant
@@ -228,12 +246,16 @@
         // Ajouter une nouvelle étape
         $(document).on('click','#addetape',function(){
             /*
-             A chaque fois qu'on clicque sur le bouton bleu une nouvelle etape de validation se crée
+             A chaque fois qu'on clique sur le bouton bleu une nouvelle etape de validation se crée
              */
+            $(this).parent().remove();
+
             $('#contetapes').append('' +
-            '<div class="col-lg-2 well etapes-circuit"><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>');
+            '<div class="well etapes-circuit"><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
+            '<div class="text-center div-btn-ajout-etape"><button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button></div>');
             $("select.selusers").select2();
 
+            scrollFrisque();
             // Pour savoir si on valide ou si on signe
             aff_button_valider();
 
@@ -285,7 +307,7 @@
         {% if edit %}
 //            $(function() {
                 $( "#contetapes:not(.etape-validante)" ).sortable({
-                    items :'> div:not(.etape-validante)',
+                    items :'> div:not(.etape-validante, .div-btn-ajout-etape)',
                     tolerance: "pointer",
                     stop: function (e, ui) {
                         creerFleches();
@@ -297,10 +319,10 @@
         // Fonction pour afficher les bouton valider et signer
         function aff_button_valider () {
             //var c = document.getElementById("#contetapes").childNodes.length;
-            var nbEtapes = $('.etapes-circuit').length;
-            //console.log(nbEtapes);
+            var nbEtapes = $('#contetapes').children('.etapes-circuit').length;
+//            console.log('nbEtapes : ' + nbEtapes);
             //if(valid_sign == 0) {
-            if(nbEtapes == 0) {
+            if(nbEtapes <= 1) {
                 $(".btn-valider-signer").css('display', 'inline-block');
                 $(".btn-valider-non-signer").css('display', 'none');
             } else {

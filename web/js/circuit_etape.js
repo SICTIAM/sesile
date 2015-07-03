@@ -5,12 +5,13 @@ $(document).ready(function() {
     eventSelect.select2();
     creerFleches();
     affButtons ();
-    $('#hiddeUsers').hide();
+
 
 
 
 
     // Fonction pour calculer la hauteur max des etapes
+    // Cette fonction n'est pas utilisée pour le mono-ligne
     function heightEtapes () {
 
         var heightEtapes = 0;
@@ -21,7 +22,6 @@ $(document).ready(function() {
             if (heightEtapes < heightEtapeCurrent) {
                 heightEtapes = heightEtapeCurrent;
             }
-            //console.log('heightEtapes : ' + heightEtapes);
         });
         contetapes.children('.etapes-circuit').each(function() {
             $(this).css('height', heightEtapes);
@@ -43,20 +43,12 @@ $(document).ready(function() {
                 $(this).children('#seeUsers').show();
             }
         });
+        $('#hiddeUsers').hide();
+        $('.etape-groupe').siblings('#seeUsers').show();
     }
 
     // Fonction permettant d afficher le bouton #seeUsers
     function affSeeUsers (that, aff) {
-        /*console.log(that);
-        console.log(that.children('.display-selusers').length > 1);*/
-
-        /*var maxHeight = zoneHeight(that);
-        console.log('Test de affSeeUsers : ' + maxHeight);
-        console.log(that.children('.selusers').clientHeight);
-        if (maxHeight < 80) {
-            console.log('Test de affSeeUsers 2 : ' + maxHeight);
-        }*/
-
         if (!aff) {
 
             that.children('#seeUsers').show();
@@ -72,6 +64,11 @@ $(document).ready(function() {
 
     // Fonction permettant d afficher le bouton #hiddeUsers
     function affHiddeUsers (that) {
+
+        that.children('.etape-groupe-users').show();
+        that.children('.etape-groupe').hide();
+        //$('.etape-groupe').siblings('#seeUsers, #hiddeUsers').hide();
+
         that.children('#seeUsers').hide();
         that.children('#hiddeUsers').show();
         that.children('.select2-container-multi').children('.select2-choices').css('height', 'auto');
@@ -87,7 +84,8 @@ $(document).ready(function() {
             clicked.children('.select2-container-multi').show();
             clicked.children('.etape-groupe').hide();
             clicked.children('.select2-container-multi').children('.select2-choices').css('height', 'auto');
-            heightEtapes();
+            // Décommenter pour l'affichage multi-lignes
+            //heightEtapes();
         });
     }
 
@@ -97,6 +95,11 @@ $(document).ready(function() {
         contetapes.children('.etapes-circuit').each(function() {
             affSeeUsers($(this), aff);
         });
+        //$('.etape-groupe').siblings('#seeUsers, #hiddeUsers').hide();
+        $('.etape-groupe-users').hide();
+        $('.etape-groupe').show();
+        //$('.etape-groupe').siblings('#seeUsers, #hiddeUsers').hide();
+        $('.etape-groupe').siblings('#hiddeUsers').hide();
     }
 
     // Fonction creer une fleche pour le sens de lecture
@@ -135,7 +138,7 @@ $(document).ready(function() {
         //console.log(maxHeight);
 
         //if (e.currentTarget.selectedOptions.length > 3) {
-        console.log('close : ' + maxHeight);
+        //console.log('close : ' + maxHeight);
         if (maxHeight > 80) {
             //affSeeUsers($(this).parent());
             $(this).parent().children('#hiddeUsers').hide();
@@ -148,7 +151,7 @@ $(document).ready(function() {
         //console.log(e);
         //if (e.currentTarget.selectedOptions.length <= 3) {
         var maxHeight = zoneHeight(e.currentTarget.selectedOptions);
-        console.log('removed : ' + maxHeight);
+        //console.log('removed : ' + maxHeight);
         if (maxHeight < 80) {
             //affSeeUsers($(this).parent());
 
@@ -158,12 +161,6 @@ $(document).ready(function() {
         }
     });
 
-    // Pour le bouton de suppression de l etape
-    $(document).on('click','#suppetape',function() {
-        $(this).parent().remove();
-        creerFleches();
-    });
-
     // Evenement du bouton voir les utilisateurs
     $(document).on('click','#seeUsers',function(event) {
         var clicked = $(this);
@@ -171,7 +168,8 @@ $(document).ready(function() {
         affHiddeUsers (clicked.parent());
         //clicked.parent().children('.select2-container-multi').children('.select2-choices').css('height', 'auto');
         clicked.siblings('.select2-container-multi').children('.select2-choices').css('height', 'auto');
-        heightEtapes();
+        // Décommenter pour l affichage multi-lignes
+        //heightEtapes();
     });
 
 
@@ -193,7 +191,6 @@ $(document).ready(function() {
         $('.etape-groupe-users').hide();
         $('.etape-groupe').show();
         $('.etape-groupe').siblings('#seeUsers, #hiddeUsers').hide();
-
     });
 
     // Pour cacher tous les utilisateurs

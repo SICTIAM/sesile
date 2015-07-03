@@ -58,7 +58,7 @@ class ClasseurController extends Controller {
             $tabClasseurs[] = array('id'=>$classeur->getId(),
                 'nom'       => $classeur->getNom(),
                 'creation'  => $classeur->getCreation(),
-                'validation'=> $classeur->getCreation(),
+                'validation'=> $classeur->getValidation(),
                 'type'      => $classeur->getType(),
                 'status'    => $classeur->getStatus(),
                 'document'  => $classeur->getDocuments(),
@@ -99,7 +99,7 @@ class ClasseurController extends Controller {
                 'id'=>$classeur->getId(),
                 'nom'=>$classeur->getNom(),
                 'creation'=>$classeur->getCreation(),
-                'validation'=>$classeur->getCreation(),
+                'validation'=>$classeur->getValidation(),
                 'type'=>$classeur->getType(),
                 'status'=>$classeur->getStatus(),
                 'document'=>$classeur->getDocuments(),
@@ -344,7 +344,7 @@ class ClasseurController extends Controller {
                     'id'=>$classeur->getId(),
                     'nom'=>$classeur->getNom(),
                     'creation'=>$classeur->getCreation(),
-                    'validation'=>$classeur->getCreation(),
+                    'validation'=>$classeur->getValidation(),
                     'type'=>$classeur->getType(),
                     'status'=>$classeur->getStatus(),
                     'document'=>$classeur->getDocuments(),
@@ -971,10 +971,8 @@ class ClasseurController extends Controller {
         $classeur->setNom($request->request->get('name'));
         $classeur->setDescription($request->request->get('desc'));
 
-        list($d, $m, $a) = explode("/",
 
-            $request->request->get('validation'));
-
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
         $valid = new \DateTime($m . "/" . $d . "/" . $a);
         $classeur->setValidation($valid);
         $circuit = $request->request->get('circuit');
