@@ -381,7 +381,7 @@
                     var validant = {{ currentValidant|json_encode|raw }};
                     var status = {{ classeur.status }};
                     /*voir cette ligne*/
-                    var deposant = {{ deposant|json_encode|raw }};
+                    {#var deposant = {{ deposant|json_encode|raw }};#}
                     var path = "{{ asset(upload_path) }}";
                 </script>
 

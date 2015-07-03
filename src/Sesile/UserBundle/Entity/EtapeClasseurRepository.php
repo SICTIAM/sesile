@@ -115,104 +115,108 @@ class EtapeClasseurRepository extends EntityRepository
         $ordreEtape = array();
         $etapeId = array();
         $em = $this->getEntityManager();
-        foreach($tabEtapes as $k => $etape) {
 
-            // Si c est une modification d etape
-            if ($etape->etape_id != 0 && !$ajout) {
-                $step = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($etape->etape_id);
+        if ($tabEtapes !== null) {
 
-                $step->getUsers()->clear();
-                $step->getUserPacks()->clear();
+            foreach ($tabEtapes as $k => $etape) {
 
-            }
-            // Sinon c est une nouvelle etape
-            else {
-                $step  = new EtapeClasseur();
-                $step->setClasseur($classeur);
+                // Si c est une modification d etape
+                if ($etape->etape_id != 0 && !$ajout) {
+                    $step = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($etape->etape_id);
 
-                // on ajoute l'étape au SO
-                $classeur->addEtapeClasseur($step);
-            }
+                    $step->getUsers()->clear();
+                    $step->getUserPacks()->clear();
 
-            // On met l'ordre des étapes a jour
-            if($ajout || $classeur->getStatus() == 0) {
-                $step->setOrdre($k);
-            }
-            else {
-                $step->setOrdre($k + $classeur->getOrdreEtape() + 1);
-            }
+                } // Sinon c est une nouvelle etape
+                else {
+                    $step = new EtapeClasseur();
+                    $step->setClasseur($classeur);
 
-            // On boucle pour créer les étapes
-            foreach ($etape->etapes as $elementEtape) {
+                    // on ajoute l'étape au SO
+                    $classeur->addEtapeClasseur($step);
+                }
+
+                // On met l'ordre des étapes a jour
+                if ($ajout || $classeur->getStatus() == 0) {
+                    $step->setOrdre($k);
+                } else {
+                    $step->setOrdre($k + $classeur->getOrdreEtape() + 1);
+                }
+
+                // On boucle pour créer les étapes
+                foreach ($etape->etapes as $elementEtape) {
+
+                    /*
+                     * on boucle pour affecter les users et userPack à l'étape
+                     * */
+                    if ($elementEtape->entite == 'groupe') {
+                        // J'ai mis un préfixe user ou userpack dans la value de l'option pour différencié un user d'un userpack car si un user et un userpack on le meme id ça plante
+                        list($reste, $idUPack) = explode('-', $elementEtape->id);
+                        $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($idUPack);
+
+                        $step->addUserPack($userPack);
+                        // On recupere les utilisateurs pour la visibilite
+                        $usersPack = $em->getRepository('SesileUserBundle:User')->findByUserPacks($idUPack);
+                        foreach ($usersPack as $UP) {
+                            if ($k == 0) {
+                                $usersValidant[] = $UP->getId();
+                            }
+                        }
+
+                    } else {
+                        list($reste, $idUser) = explode('-', $elementEtape->id);
+                        $user = $em->getRepository('SesileUserBundle:User')->findOneById($idUser);
+                        $step->addUser($user);
+                        // On recupere les utilisateurs pour la visibilite
+                        $usersVisible[] = $idUser;
+                    }
+                }
+
+                $em->persist($step);
+                $em->flush();
+
+                // On enregistre la prochaine etape validante
+                if (($k == 0 && $classeur->getOrdreValidant() === null) ||
+                    ($k == 0 && $classeur->getStatus() == 0)
+                ) {
+                    $classeur->setOrdreValidant($step->getId());
+                }
 
                 /*
-                 * on boucle pour affecter les users et userPack à l'étape
+                 * On ajoute son id à ordreEtape
                  * */
-                if ($elementEtape->entite == 'groupe') {
-                    // J'ai mis un préfixe user ou userpack dans la value de l'option pour différencié un user d'un userpack car si un user et un userpack on le meme id ça plante
-                    list($reste, $idUPack) = explode('-', $elementEtape->id);
-                    $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($idUPack);
+                $ordreEtape[] = $step->getId();
 
-                    $step->addUserPack($userPack);
-                    // On recupere les utilisateurs pour la visibilite
-                    $usersPack = $em->getRepository('SesileUserBundle:User')->findByUserPacks($idUPack);
-                    foreach ($usersPack as $UP) {
-                        if ($k == 0) { $usersValidant[] = $UP->getId(); }
-                    }
+                $em->flush();
 
-                } else {
-                    list($reste, $idUser) = explode('-', $elementEtape->id);
-                    $user = $em->getRepository('SesileUserBundle:User')->findOneById($idUser);
-                    $step->addUser($user);
-                    // On recupere les utilisateurs pour la visibilite
-                    $usersVisible[] = $idUser;
-                }
-            }
-
-            $em->persist($step);
-            $em->flush();
-
-            // On enregistre la prochaine etape validante
-            if (($k == 0 && $classeur->getOrdreValidant() === null) ||
-                ($k == 0 && $classeur->getStatus() == 0)) {
-                $classeur->setOrdreValidant($step->getId());
+                //            return $classeur;
             }
 
             /*
-             * On ajoute son id à ordreEtape
-             * */
-            $ordreEtape[] = $step->getId();
+             * Suppression des etapes qui ne sont plus utilisées
+             */
+            if (!$ajout) {
+                $etapes = $classeur->getEtapeClasseurs();
+                foreach ($etapes as $etape) {
+                    // recuperation de tous les id de l etape
+                    $etapeId[] = $etape->getId();
+                }
+                // On garde les etapes deja validees
+                $etapesValides = explode(',', $classeur->getOrdreValidant());
+                $etapeValidesId = array_diff($etapeId, $etapesValides);
+                //            var_dump($etapesValides, '<br>', $etapeId, '<br>', $etapeValidesId);
+                // On recupere la différence entre les id utilisées et les id du SO
+                $etapesDiff = array_diff($etapeValidesId, $ordreEtape);
+                //            var_dump($etapesDiff);
+                foreach ($etapesDiff as $etapeDiffId) {
+                    $etapeDiff = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($etapeDiffId);
+
+                    $em->remove($etapeDiff);
+                }
+            }
 
             $em->flush();
-
-//            return $classeur;
         }
-
-        /*
-         * Suppression des etapes qui ne sont plus utilisées
-         */
-        if (!$ajout) {
-            $etapes = $classeur->getEtapeClasseurs();
-            foreach ($etapes as $etape) {
-                // recuperation de tous les id de l etape
-                $etapeId[] = $etape->getId();
-            }
-            // On garde les etapes deja validees
-            $etapesValides = explode(',', $classeur->getOrdreValidant());
-            $etapeValidesId = array_diff($etapeId, $etapesValides);
-//            var_dump($etapesValides, '<br>', $etapeId, '<br>', $etapeValidesId);
-            // On recupere la différence entre les id utilisées et les id du SO
-            $etapesDiff = array_diff($etapeValidesId, $ordreEtape);
-//            var_dump($etapesDiff);
-            foreach ($etapesDiff as $etapeDiffId) {
-                $etapeDiff = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($etapeDiffId);
-
-                $em->remove($etapeDiff);
-            }
-        }
-
-        $em->flush();
-//        die();
 
         return $classeur;
     }

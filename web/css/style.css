@@ -515,20 +515,6 @@ select [name=user] {
 	background-color: rgb(240, 117, 0);
 }
 
-.btn-ajout-etape {
-    font-size: 1.2em;
-    line-height: 2em;
-    padding-top: 0.4em;
-}
-.btn-ajout-etape > span {
-    font-size: 1.4em;
-}
-
-.btn-suppetape {
-    width: 100%;
-    margin-top: 20px !important;
-}
-
 .btndemerde{
 	position: relative;
 	bottom: 2.4em;
@@ -847,15 +833,6 @@ select [name=user] {
     text-decoration: none;
     display: block;
     color: rgba(109, 110, 112, 1);
-}
-
-#contetapes>div {
-    min-height: 200px;
-}
-
-.etapes-circuit {
-    cursor: -webkit-grab;
-    cursor: -moz-grab;
 }
 
 #winFirefoxPlugin {

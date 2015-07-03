@@ -78,7 +78,7 @@
     margin-top: 1.5em;
 }
 
-.perso_circuit img {
+.etapes-circuit img, .perso_circuit img {
     width: 80px;
     height: 80px;
     margin: auto;
@@ -107,13 +107,15 @@
     position: relative;
     float: right;
     font-size: 1.2em;
-    top: .6em;
+    /*top: .6em;*/
+    top: 0;
     left: .1em;
-    cursor: pointer;
+    /*cursor: pointer;*/
     background-color: #ffffff;
     border-radius: 1em;
-    width: 1.5em !important;
-    height: 1.2em !important;
+    width: 2em !important;
+    height: 2em !important;
+    padding: 0.5em;
 }
 
 .suppr_perso {
@@ -142,11 +144,12 @@
 .fleche_circuit {
     position: relative;
     top: 70px;
-    font-size: 1.3em;
+    font-size: 3em;
 }
 
 .fleche_circuit, .perso_circuit, .emplacement, #debut_circuit {
     float: left;
+    color: #cccccc;
 }
 
 .favoris_circuit {
@@ -206,4 +209,112 @@
 
 #circuit_modifier, #btn-group-supp {
     display: none;
+}
+
+#contetapes>div, .etapes-circuit {
+    min-height: 235px;
+    width: 250px;
+    float: left;
+    position: relative;
+}
+
+#contetapes .etapes-circuit {
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+}
+
+.etapes-circuit h4 {
+    border-bottom: 1px solid #d3d3d3;
+    padding-bottom: 0.8em;
+    margin-bottom: 0.8em;
+}
+
+.circuit-user {
+    font-size: 1.3em;
+    font-weight: normal;
+}
+
+.btn-voirInter {
+    margin-top: 10px !important;
+}
+
+.btn-ajout-etape {
+    font-size: 1.2em;
+    line-height: 2em;
+    padding-top: 0.4em;
+}
+.btn-ajout-etape > span {
+    font-size: 1.4em;
+}
+
+.btn-suppetape {
+    position: absolute;
+    width: 13%;
+    top: 0;
+    right: 0;
+    margin: 3px 3px 0 0 !important;
+    height: auto;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 7px;
+}
+
+#hiddeUsers {
+    display: none;
+}
+#seeUsers {
+    display: none;
+}
+#seeUsers.seeValidants {
+    display: block;
+}
+
+#contetapes .etape-validante {
+    cursor: default;
+}
+.list-validants .select2-choices {
+    list-style-type: none;
+}
+.list-validants .select2-choices .select2-search-choice {
+    padding: 3px 5px 3px 18px;
+    margin: 3px 0 3px 5px;
+    position: relative;
+    line-height: 13px;
+    color: #333;
+    cursor: default;
+    border: 1px solid #aaaaaa;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    background-clip: padding-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #e4e4e4;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#f4f4f4', GradientType=0);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eee));
+    background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+    background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+    background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+}
+
+.select2-container-multi .select2-choices .select2-search-choice {
+    margin: 3px 3px 3px 5px;
+}
+.select2-container-multi .select2-choices li { float: none; }
+
+.etape-groupe {
+    font-size: 7em;
+    width: 100% !important;
+    text-align: center;
+    cursor: pointer;
+}
+
+#circuit_main {
+    margin: 10px 0 30px 0;
+}
+#circuit_etapes {
+    overflow: auto;
 }

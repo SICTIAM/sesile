@@ -31,28 +31,32 @@
                 </div>
             </div>
             <br>
-            <div class="row">
-                <div class="col-lg-12" style="height: 300px">
-                    <div id="contetapes" class="ui-sortable">
-                        <div class="col-lg-2 well etapes-circuit">
-                            <div class="text-center"><h4>Etape de validation</h4></div>
-                            <select class="selusers " multiple="multiple" style="width: 100%">
-                                <optgroup label="Groupes d'utilisateurs">
-                                    {% for userPack in userPacks %}
-                                        <option  value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>
-                                    {% endfor %}
-                                </optgroup>
-                                <optgroup label="utilisateurs">
-                                    {% for user in users %}
-                                        <option  value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>
-                                    {% endfor %}
-                                </optgroup>
-                            </select>
-                            <button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button>
+            <div class="row" id="circuit_main">
+                <div id="circuit_etapes">
+                    <div id="circuit_with_js">
+                        <div id="contetapes" class="ui-sortable">
+                            <div class="col-lg-2 well etapes-circuit">
+                                <div class="text-center"><h4>Etape de validation</h4></div>
+                                <select class="selusers " multiple="multiple" style="width: 100%">
+                                    <optgroup label="Groupes d'utilisateurs">
+                                        {% for userPack in userPacks %}
+                                            <option  value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="utilisateurs">
+                                        {% for user in users %}
+                                            <option  value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                                <button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>
+                                <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
+                                <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
+                            </div>
+                            <div class="{#col-lg-2 #}text-center  div-btn-ajout-etape">
+                                <button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-2 text-center">
-                        <button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape<br>de validation</button>
                     </div>
                 </div>
             </div>
@@ -61,7 +65,7 @@
                     <button type="button" class="btn btn-info" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;Ajouter une etape de validation</button>
                 </div>
             </div>#}
-<br><br>
+            <br><br>
             <div class="form-group">
                 <div class="col-lg-6">
                     <input type="submit" class="btn btn-success" value="Enregistrer le service organisationnel">
@@ -78,17 +82,120 @@
         <br>
 
     </div>
+
+    <link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
+
     <script type="application/javascript" src="{{ asset("/js/select2.min.js") }}"></script>
     <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
-    <link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
+    <script type="text/javascript" src="{{ asset('/js/circuit_etape.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/jquery.mousewheel.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
 
-            $(".selusers").select2();
+            /*
+             * Initialisations
+             */
+            $('.list-validants').hide();
+
+            scrollFrisque();
+            // Fonction permettant d agrandir la frise dynamiquement.
+            function scrollFrisque () {
+                var widthLine = $('#circuit_main').css('width');
+                $('#circuit_etapes').css('width', widthLine);
+                var widthScroll = $('.etapes-circuit').length * 300 + 250;
+                $('#circuit_with_js').css('width', widthScroll);
+//            console.log($('.etapes-circuit').length + ' ' + 'widthScroll : ' + widthScroll);
+            }
+
+            // Sans bootstrap c'est la galère. Faut se gérer le rediementsionnement de la fenêtre à la mano...
+            window.onresize = function(event) {
+                scrollFrisque();
+            };
+
+            // Pour le bouton de suppression de l etape
+            $(document).on('click','#suppetape',function() {
+                $(this).parent().remove();
+                creerFleches();
+            });
+
+            // Pour le scroll à la molette de la souris
+            $("#circuit_etapes").mousewheel(function(event, delta) {
+                this.scrollLeft -= (delta * 100);
+                event.preventDefault();
+            });
+
+            // Fonction creer une fleche pour le sens de lecture
+            function creerFleches() {
+                $(".fleche_circuit").remove();
+                $("<span/>").addClass("fleche_circuit glyphicon glyphicon-chevron-right").insertAfter(".etapes-circuit:not(:last)");
+            }
+
+            $('.etape-groupe').on('click', function() {
+                $(this).siblings('.selusers').css('display', 'block');
+                $(this).siblings('#seeUsers').show();
+                $(this).hide();
+            });
+
+            // pour les validants courant
+            $(document).on('click', '.seeValidants', function() {
+                $('.list-validants').show();
+            });
+            $(document).on('click', '.hideValidants', function() {
+                $('.list-validants').hide();
+            });
+
+
+            /*
+             * Surcharge des boutons cacher et voir tous les utilisateurs par rapport au commun
+             * */
+            // Evenement du bouton voir tous les utilisateurs
+            $(document).on('click','#seeAllUsers',function(event) {
+                $('.list-validants').show();
+            });
+
+            // Pour cacher tous les utilisateurs
+            $(document).on('click','#hiddeAllUsers',function() {
+                $('.list-validants').hide();
+            });
+            /*
+             * Fin de la surcharge
+             */
+
+            // Ajouter une nouvelle étape
             $(document).on('click','#addetape',function(){
                 /*
-                A chaque fois qu'on clicque sur le bouton bleu une nouvelle etape de validation se crée
+                 A chaque fois qu'on clique sur le bouton bleu une nouvelle etape de validation se crée
                  */
+                $(this).parent().remove();
+
+                $('#contetapes').append('' +
+                '<div class="well etapes-circuit"><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
+                '<div class="text-center div-btn-ajout-etape"><button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button></div>');
+
+                $("select.selusers").select2();
+
+                scrollFrisque();
+                creerFleches();
+
+                $('.list-validants').hide();
+
+            });
+
+            $( "#contetapes" ).sortable({
+                items :'> div:not(.div-btn-ajout-etape)',
+                tolerance: "pointer",
+                stop: function (e, ui) {
+                    creerFleches();
+                }
+            }).disableSelection();
+
+            /*$(".selusers").select2();
+            $(document).on('click','#addetape',function(){
+                *//*
+                A chaque fois qu'on clicque sur le bouton bleu une nouvelle etape de validation se crée
+                 *//*
                 $('#contetapes').append('' +
                 '<div class="col-lg-2 well etapes-circuit"><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers " multiple="multiple" style="width: 100%"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option  value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option  value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button></div>');
                 $("select.selusers").select2();
@@ -96,7 +203,11 @@
             });
             $(document).on('click','#suppetape',function() {
                 $(this).parent().remove();
-            });
+            });*/
+
+
+
+
             var tabGeneral = [];
             var tabEtape = [];
             var ItemSelected = {};
