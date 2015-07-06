@@ -166,7 +166,7 @@
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/jquery.mousewheel.min.js') }}"></script>
 {#<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>#}
-<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>
+{#<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>#}
 
 <script>
     $(document).ready(function() {
@@ -177,8 +177,8 @@
          */
         aff_button_valider();
         $('.list-validants').hide();
-
         scrollFrisque();
+
         // Fonction permettant d agrandir la frise dynamiquement.
         function scrollFrisque () {
             var widthLine = $('#circuit_main').css('width');
@@ -200,11 +200,6 @@
             aff_button_valider();
         });
 
-        // Pour le scroll à la molette de la souris
-        $("#circuit_etapes").mousewheel(function(event, delta) {
-            this.scrollLeft -= (delta * 100);
-            event.preventDefault();
-        });
 
         // Fonction creer une fleche pour le sens de lecture
         function creerFleches() {

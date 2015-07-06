@@ -7,7 +7,22 @@ $(document).ready(function() {
     affButtons ();
 
 
+    scrollStart ();
+    // Pour scrolle le circuit tout a droite
+    // Fonction permettant d agrandir la frise dynamiquement.
+    function scrollStart () {
+        var widthLine = Math.max.apply(null, $('#circuit_etapes').map(function () { return $('#circuit_etapes').width(); }).get());
+        var widthScroll = Math.max.apply(null, $('#circuit_with_js').map(function () { return $('#circuit_with_js').width(); }).get());
 
+        var scroll = widthScroll - widthLine;
+        $('#circuit_etapes').scrollLeft(scroll);
+        console.log(scroll);
+    }
+    // Pour le scroll à la molette de la souris
+    $("#circuit_etapes").mousewheel(function(event, delta) {
+        this.scrollLeft -= (delta * 100);
+        event.preventDefault();
+    });
 
 
     // Fonction pour calculer la hauteur max des etapes
@@ -190,7 +205,8 @@ $(document).ready(function() {
         creerFleches();
         $('.etape-groupe-users').hide();
         $('.etape-groupe').show();
-        $('.etape-groupe').siblings('#seeUsers, #hiddeUsers').hide();
+        $('.etape-groupe').siblings('#hiddeUsers').hide();
+        $('.etape-groupe').siblings('#seeUsers').show();
     });
 
     // Pour cacher tous les utilisateurs

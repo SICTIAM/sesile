@@ -48,19 +48,14 @@
 </div>
 
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/circuit_etape.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/jquery.mousewheel.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/circuit_etape.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 <script>
     $(document).ready(function() {
 
         scrollFrisque();
 
-        // Pour le scroll à la molette de la souris
-        $("#circuit_etapes").mousewheel(function(event, delta) {
-            this.scrollLeft -= (delta * 100);
-            event.preventDefault();
-        });
 
         // Fonction permettant d agrandir la frise dynamiquement.
         function scrollFrisque () {
@@ -71,7 +66,7 @@
 //            console.log('widthScroll : ' + widthScroll);
         }
 
-        // Sans bootstrap c'est la galère. Faut se gérer le rediementsionnement de la fenêtre à la mano...
+        // Sans bootstrap c'est la galère. Faut se gérer le rediemensionnement de la fenêtre à la mano...
         window.onresize = function(event) {
             scrollFrisque();
         };
@@ -90,16 +85,14 @@
 
         $(document).on('click', '#addetape', function (e) {
             /*
-             A chaque fois qu'on clicque sur le bouton bleu une nouvelle etape de validation se crée
+             A chaque fois qu'on clique sur le bouton bleu une nouvelle etape de validation se crée
              */
             $(this).parent().remove();
             var contetapes = $('#contetapes');
 
             contetapes.append('' +
-            {#'<div class="col-lg-2 well etapes-circuit"><div class="text-center"><h4>Etape</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers" style="display:none;"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>');#}
             '<div class="well etapes-circuit"><div class="text-center"><h4>Etape</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers" style="display:none;"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
             '<div class="text-center div-btn-ajout-etape"><button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button></div>');
-
 
             scrollFrisque();
 
@@ -107,7 +100,6 @@
 
             e.stopImmediatePropagation();
             creerFleches()
-
         });
 
 
