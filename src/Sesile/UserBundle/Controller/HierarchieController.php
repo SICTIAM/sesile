@@ -63,9 +63,11 @@ class HierarchieController extends Controller {
      * @Method("POST")
      */
     public function newAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $group = new Groupe();
         $group->setNom($request->request->get('nom'));
-        $group->setCollectivite($this->get("session")->get("collectivite"));
+        $group->setCollectivite($collectivite);
         $group->setJson($request->request->get('tree'));
 //        $group->setType(0);
         $group->setCouleur("white");
