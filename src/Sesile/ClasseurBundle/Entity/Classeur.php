@@ -381,13 +381,14 @@ class Classeur {
 
     public function getPrevValidant()
     {
+
         $circuit = explode(",", $this->getCircuit());
 //        $curr_validant = array_search($this->validant, $circuit);
 
 //        $prev_validant = ($curr_validant - $curr_validant) - 1;
 //        $this->setOrdreMoins();
         $ordre =  $this->setOrdreMoins();
-//        var_dump($this->setOrdreMoins());
+        //  var_dump($this->getId(),$this->setOrdreMoins());
 //        $prev_validant = $circuit[$this->getOrdreCircuit()];
         return ($this->getOrdreCircuit() > 0) ? $circuit[$ordre] : $this->getUser();
 //        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();

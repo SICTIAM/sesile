@@ -103,11 +103,12 @@
             {{ form_widget(edit_form.roles) }}
         </div>
         <br/>
-
-        <div class="label_form pickuser">
-            {{ form_label(edit_form.collectivite) }}
-            {{ form_widget(edit_form.collectivite) }}
-        </div>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <div class="label_form pickuser">
+                {{ form_label(edit_form.collectivite) }}
+                {{ form_widget(edit_form.collectivite) }}
+            </div>
+        {% endif %}
         <br/>
 
         <div class="acti">
@@ -155,11 +156,7 @@
                     Retour aux utilisateurs
                 </a>
             </div>
-            <div class="col-lg-2 text-center">
-                {{ form_start(delete_form) }}
-                {{ form_widget(delete_form.submit, {'attr': {'class': 'btn btn-danger' }}) }}
-                {{ form_end(delete_form) }}
-            </div>
+
         </div>
 
 

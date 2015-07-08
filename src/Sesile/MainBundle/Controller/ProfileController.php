@@ -64,7 +64,7 @@ class ProfileController extends ContainerAware
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
-
+//var_dump($user->getRoles()[0]);
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
 
@@ -205,7 +205,7 @@ class ProfileController extends ContainerAware
                 }
             }
             else {
-                $this->container->get('session')->getFlashBag()->add('notice', 'Vous devez remplir les champs correctement.');
+                $this->container->get('session')->getFlashBag()->add('notice', 'Merci de vérifier votre saisie');
             }
         }
 

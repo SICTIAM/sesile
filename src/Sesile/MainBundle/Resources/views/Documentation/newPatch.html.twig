@@ -1,0 +1,42 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-book"></span>
+            &nbsp;&nbsp;&nbsp;Ajouter une documentation Patch
+        </div>
+        <form action="{{ path('createPatch') }}" method="POST" class="form-horizontal" enctype="multipart/form-data"
+              id="form">
+            <div class="form-group">
+                <label for="description" class="required col-sm-3 control-label">Description</label>
+
+                <div class="col-sm-4 col-xs-10">
+                    <input type="text" class="form-control" id="description" name="description" required="required"
+                           maxlength="255"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="version" class="required col-sm-3 control-label">Version</label>
+
+                <div class="col-sm-4 col-xs-10">
+                    <input type="text" class="form-control" id="version" name="version" required="required"
+                           maxlength="255"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="file" class="required col-sm-3 control-label" required="required">Document</label>
+
+                <div class="col-sm-4 col-xs-10">
+                    <input type="file" id="file" name="file" maxlength="255"/>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div class="col-sm-4 col-xs-10">
+                    <input type="submit" id="submit" name="submit" value="Enregistrer" class="btn btn-success">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

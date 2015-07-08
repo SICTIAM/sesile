@@ -8,23 +8,41 @@
 
 <script type="text/javascript">
 
+
     var selected = null;
 
     var selectedFile = null;
 
     var openeddesc = false;
 
+    if ($("#type").val() == 2) {
+        var dropzone = new Dropzone("div#fichiers", {
+            url: "{{ oneup_uploader_endpoint('docs') }}",
+            previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
+            '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
+            ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
+            '<a class="dz-remove">Supprimer le fichier</a>' +
+            ' <div class="dz-error-message"><span data-dz-errormessage></span></div>' +
+            '</div>',
+            maxFiles: 1,
+            dictMaxFilesExceeded: "Dans le cas d'un classeur de type Hélios le dépôt d'un seul fichier par classeur est autorisé.",
+            acceptedFiles: ".xml",
+            dictInvalidFileType: "Attention, seuls les fichiers xml sont acceptés"
 
-    var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
-        previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
-                '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
-                ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
-                '<a class="dz-remove">Supprimer le fichier</a>' +
-                ' <div class="dz-error-message"><span data-dz-errormessage></span></div>' +
-                '</div>'
+        });
+    }
+    else {
+        var dropzone = new Dropzone("div#fichiers", {
+            url: "{{ oneup_uploader_endpoint('docs') }}",
+            previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
+            '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
+            ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
+            '<a class="dz-remove">Supprimer le fichier</a>' +
+            ' <div class="dz-error-message"><span data-dz-errormessage></span></div>' +
+            '</div>'
+        });
+    }
 
-
-    });
 
     function removedropzonefile(file) {
 
@@ -49,17 +67,19 @@
     dropzone.on("addedfile", function (file, serverfilename) {
         $('#Mybutton').attr('disabled', true);
 
-        file.previewElement.addEventListener("click", function () {
+        $('.dz-remove').on("click", function () {
+
 //            myDropzone.removeFile(file);
             dropzone.removeFile(file);
             $("#documentcontent").children("#" + file.idfilename).remove();
             console.log("#" + file.idfilename);
-
-            if(dropzone.getAcceptedFiles().length == 0) {
+            $('#Mybutton').attr('disabled', false);
+            if (dropzone.getAcceptedFiles().length == 0) {
                 $('#Mybutton').attr('disabled', true);
             }
 
         });
+
     });
 
 
@@ -67,10 +87,19 @@
 
     dropzone.on("success", function (file) {
         $('#Mybutton').attr('disabled', false);
-//        file.previewElement.addEventListener("click", function () {
-////            myDropzone.removeFile(file);
-//            dropzone.removeFile(file);
-//        });
+
+        $('.dz-remove').on("click", function () {
+
+//            myDropzone.removeFile(file);
+            dropzone.removeFile(file);
+            $("#documentcontent").children("#" + file.idfilename).remove();
+            console.log("#" + file.idfilename);
+            $('#Mybutton').attr('disabled', false);
+            if (dropzone.getAcceptedFiles().length == 0) {
+                $('#Mybutton').attr('disabled', true);
+            }
+
+        });
     });
 
 

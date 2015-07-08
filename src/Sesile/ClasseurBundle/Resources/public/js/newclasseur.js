@@ -10,6 +10,7 @@ function loadtype() {
         success: function (html) {
             loadcorrectform();
             $('#type').html(html);
+
             $('#loadinggif').hide();
         }
     });
@@ -19,7 +20,6 @@ function loadtype() {
 function loadcorrectform() {
     $('#loadinggif').show();
     datatosend = { 'type': $("#type").val() };
-
     $.ajax({
         url: Routing.generate('classeur_new_type'),
         type: "post",

@@ -279,7 +279,7 @@ class AdminController extends Controller
      */
     public function indexMailingAction(Request $request) {
 
-        if (!$this->get('security.context')->isGranted('ROLE_AGENT_SICTIAM')) {
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
 
@@ -297,7 +297,7 @@ class AdminController extends Controller
             // Les données sont un tableau avec les clés "sujet", et "mailMessage"
             $em = $this->getDoctrine()->getManager();
             // On recupere tous les utilisateurs
-            $users = $em->getRepository('SesileUserBundle:User')->findAll();
+            $users = $em->getRepository('SesileUserBundle:User')->findByEnabled(true);
             // On recupère les données du formulaire
             $data = $form->getData();
 

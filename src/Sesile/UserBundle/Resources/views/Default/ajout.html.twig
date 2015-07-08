@@ -82,13 +82,14 @@
             {{ form_label(form.roles) }}
             {{ form_widget(form.roles) }}
         </div>
+
         <br/>
-
-        <div class="label_form pickuser">
-            {{ form_label(form.collectivite) }}
-            {{ form_widget(form.collectivite) }}
-        </div>
-
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <div class="label_form pickuser">
+                {{ form_label(form.collectivite) }}
+                {{ form_widget(form.collectivite) }}
+            </div>
+        {% endif %}
         <div class="acti">
             <label for="{{ form.enabled.vars.id }}" class="cb-enable selected">
                 <span>Activé</span>
@@ -116,7 +117,7 @@
 
 
 
-
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
     <script type="text/javascript">
         $(".label_form input, .ui-autocomplete-input").focus(function () {
             $(".glyphicon-search-blue").removeClass("glyphicon-search-blue");
@@ -174,4 +175,5 @@
             }
         });
     </script>
+    {% endif %}
 {% endblock %}

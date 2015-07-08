@@ -1,7 +1,7 @@
-Un nouveau classeur vient d'être déposé par {{ deposant }}
+Bonjour {{ validant }},
 <br>
-{{ titre_classeur }}
+Un nouveau classeur {{ titre_classeur }} vient d'être déposé par {{ deposant }}
 <br>
-Il devra être validé avant le {{ date_limite | date('d/m/Y') }}..
-
-Lien vers le classeur <a href ="">{{ lien }}</a>
+Il convient de le valider avant le {{ date_limite | date('d/m/Y') }}.
+<br>
+Vous pouvez visionner le classeur <a href="{{ lien|raw }}"></a>

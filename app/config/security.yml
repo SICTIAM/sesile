@@ -28,7 +28,7 @@ security:
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN]
-        ROLE_AGENT_SICTIAM: [ROLE_SUPER_ADMIN]
+
     access_control:
         - { path: ^/doc/uploadfile, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/notifymodif, roles: IS_AUTHENTICATED_ANONYMOUSLY}

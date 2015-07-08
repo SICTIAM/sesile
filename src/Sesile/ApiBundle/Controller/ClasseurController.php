@@ -165,14 +165,14 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
-        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($id, $user->getId());
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
 
 
-        if (empty($classeur[0])) {
+        if (!in_array($classeur, $user->getClasseurs()->toArray())) {
             throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
         }
 
-        return $this->classeurToArray($classeur[0]);
+        return $this->classeurToArray($classeur);
 
 
     }
@@ -516,20 +516,14 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
 
 
-        $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($id, $user->getId());
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
 
 
-        if (empty($classeur[0])) {
-            $classuse = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
-            if ($classuse->getUser() == $user->getId()) {
-                $elclasseur = $classuse;
-            } else {
-                throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur " . $id);
-            }
-
-        } else {
-            $elclasseur = $classeur[0];
+        if (!in_array($classeur, $user->getClasseurs()->toArray())) {
+            throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
         }
+
+        $elclasseur = $classeur;
 
         $added = array();
 
@@ -640,8 +634,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
     private function sendCreationMail($classeur)
     {
+
+        $em = $this->getDoctrine()->getManager();
+        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+
         $body = $this->renderView('SesileClasseurBundle:Mail:nouveau.html.twig',
             array(
+                'validant' => $validant_obj->getPrenom() . " " . $validant_obj->getNom(),
                 'deposant' => $classeur->getUser(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
@@ -649,8 +648,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             )
         );
 
-        $em = $this->getDoctrine()->getManager();
-        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
 
         if ($validant_obj != null) {
             $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
@@ -662,6 +659,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
     {
         $body = $this->renderView('SesileClasseurBundle:Mail:refuse.html.twig',
             array(
+
                 'deposant' => $classeur->getUser(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
@@ -733,6 +731,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             'validant' => $classeur->getValidant(),
             'visibilite' => $classeur->getVisibilite(),
             'circuit' => $classeur->getCircuit(),
+            'status' => $classeur->getStatus(),
             'documents' => $cleanTabDocs,
             'actions' => $cleanTabAction);
     }

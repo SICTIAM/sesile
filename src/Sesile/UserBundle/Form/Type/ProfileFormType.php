@@ -31,7 +31,7 @@ class ProfileFormType extends BaseType
             ->add('apitoken', 'text', array('read_only' => true))
             ->add('apisecret', 'text', array('read_only' => true));
 
-        $builder->add('password', 'text', array('label' => 'Mot de passe actuel', 'required' => false));
+        $builder->add('password', 'password', array('label' => 'Mot de passe actuel', 'required' => false));
     }
 
     public function getName()

@@ -76,25 +76,10 @@ class Bordereau
             } else {
                 $idP = $piece->BlocPiece->IdPce->attributes()[0];
             }
-            if (isset($piece->LigneDePiece->Tiers->InfoTiers->Civilite)) {
-                $civilite = $piece->LigneDePiece->Tiers->InfoTiers->Civilite->attributes()[0];
-            } else {
-                $civilite = '';
 
-            }
-            $nom = $piece->LigneDePiece->Tiers->InfoTiers->Nom->attributes()[0];
-
-            if (isset($piece->LigneDePiece->Tiers->InfoTiers->Prenom)) {
-                $prenom = $piece->LigneDePiece->Tiers->InfoTiers->Prenom->attributes()[0];
-            } else {
-                $prenom = '';
-
-            }
             $tabPJs = array();
             if ($typePES === 'Depense') {
                 $objet = $piece->BlocPiece->InfoPce->Obj->attributes()[0];
-                $tmpHT = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtHT->attributes()[0]);
-                $tmpTVA = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->TVAIntraCom->attributes()[0]);
                 if (isset($piece->BlocPiece->InfoPce->PJRef)) {
                     foreach ($piece->BlocPiece->InfoPce->PJRef as $pj) {
                         $tabPJs[] = $pj;
@@ -102,8 +87,6 @@ class Bordereau
                 }
             } else {
                 $objet = $piece->BlocPiece->ObjPce->attributes()[0];
-                $tmpHT = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePiece->MtHT->attributes()[0]);
-                $tmpTVA = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePiece->TvaIntraCom->attributes()[0]);
                 if (isset($piece->BlocPiece->PJRef)) {
                     foreach ($piece->BlocPiece->PJRef as $pj) {
                         $tabPJs[] = $pj;
@@ -111,20 +94,58 @@ class Bordereau
                 }
             }
 
-            //formatage montant HT
-            $mtHT = number_format($tmpHT, 2, ',', ' ');
+            $totHT = 0;
+            $totTTC = 0;
+            $totTVA = 0;
+            /*  On fait un foreach car on a découvert 3 mois après qu'une piece pouvait avoir plusieurs lignes de pieces*/
+            foreach ($piece->LigneDePiece as $LignePiece) {
+                if (isset($LignePiece->Tiers->InfoTiers->Civilite)) {
+                    $civilite = $LignePiece->Tiers->InfoTiers->Civilite->attributes()[0];
+                } else {
+                    $civilite = '';
 
-            //formatage montant TVA
-            $mtTVA = number_format($tmpTVA, 2, ',', ' ');
+                }
+                $nom = $LignePiece->Tiers->InfoTiers->Nom->attributes()[0];
+
+                if (isset($LignePiece->Tiers->InfoTiers->Prenom)) {
+                    $prenom = $LignePiece->Tiers->InfoTiers->Prenom->attributes()[0];
+                } else {
+                    $prenom = '';
+
+                }
+                //  $tabPJs = array();
+                if ($typePES === 'Depense') {
+                    $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePce->MtHT->attributes()[0]);
+                    $tmpTVA = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->TVAIntraCom->attributes()[0]);
+                } else {
+                    $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePiece->MtHT->attributes()[0]);
+                    $tmpTVA = doubleval($LignePiece->BlocLignePiece->InfoLignePiece->TvaIntraCom->attributes()[0]);
+                }
+
+                $totHT += $tmpHT;
+
+                //formatage montant HT
+                $mtHT = number_format($tmpHT, 2, ',', ' ');
+
+                //formatage montant TVA
+                $mtTVA = number_format($tmpTVA, 2, ',', ' ');
+
+                $totTVA += $tmpTVA;
+                //Calcul du TTC
+                $mtTTCNum = tofloat($mtHT) + tofloat($mtTVA);
+
+                $totTTC += $mtTTCNum;
+
+                //  $mtTTC = number_format($mtTTCNum, 2, ',', ' ');
+
+            }
 
 
-            //Calcul du TTC
-            $mtTTCNum = tofloat($mtHT) + tofloat($mtTVA);
+            $formatHT = number_format($totHT, 2, ',', ' ');
+            $formatTVA = number_format($totTVA, 2, ',', ' ');
+            $formatTTC = number_format($totTTC, 2, ',', ' ');
 
-            $mtTTC = number_format($mtTTCNum, 2, ',', ' ');
-
-
-            $this->listPieces[] = new Piece($idP, $civilite, $nom, $prenom, $objet, $mtHT, $mtTVA, $mtTTC, $tabPJs, $tabPJ2);
+            $this->listPieces[] = new Piece($idP, $civilite, $nom, $prenom, $objet, $formatHT, $formatTVA, $formatTTC, $tabPJs, $tabPJ2);
         }
     }
 }

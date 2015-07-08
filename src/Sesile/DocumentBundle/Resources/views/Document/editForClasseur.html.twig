@@ -73,13 +73,15 @@ var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('
             ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
 
 
-    createThumbnail: false,
-    maxFileSize: 1024,
-    dictMaxFilesExceeded: "Vous n'êtes pas en mode modification, cliquez sur modifier puis réessayez !"
-
-
+    createThumbnail: false{% if classeur.type.id == 2 %},
+    maxFiles: 1,
+    dictMaxFilesExceeded: "Dans le cas d'un classeur de type Hélios le dépôt d'un seul fichier par classeur est autorisé.",
+    acceptedFiles: ".xml",
+    dictInvalidFileType: "Attention, seuls les fichiers xml sont acceptés"
+    {% endif %}
 
 });
+
 {% if isvalidable == false %}
     dropzone.disable();
 {% endif %}
