@@ -1123,7 +1123,9 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-        $this->sendValidationMail($classeur);
+//        $this->sendValidationMail($classeur);
+        $this->sendCreationMail($classeur);
+
 
         //$this->updateAction($request);
 
@@ -1193,6 +1195,7 @@ class ClasseurController extends Controller {
         // recuperation des users du circuit
 //        $users = explode(',', $circuit);
         $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
+        $users[] = $classeur->getUser();
 
         if ($visibilite != 2 && $visibilite != 3) {
             $usersCV = $this->classeur_visible($visibilite, $users);
@@ -1262,6 +1265,7 @@ class ClasseurController extends Controller {
         } else {
             $this->sendValidationMail($classeur, $currentvalidant);
         }
+//        $this->sendValidationMail($classeur, $currentvalidant);
 
         $request->getSession()->getFlashBag()->add(
             'success',
@@ -1683,12 +1687,14 @@ class ClasseurController extends Controller {
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
+                "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>'
             )
         );
 
 //        $validant_obj = ($classeur->getValidant() == 0)?$em->getRepository('SesileUserBundle:User')->find($classeur->getUser()):$em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
-        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+
+        $validants_id = $classeur->getUser();
+        $validants = $em->getRepository("SesileUserBundle:User")->findById($validants_id);
 
         foreach($validants as $validant_obj) {
             if ($validant_obj != null) {
@@ -1708,15 +1714,12 @@ class ClasseurController extends Controller {
                 'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
+                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">valider le classeur</a>'
             )
         );
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
 //        foreach($classeur->getValidant() as $validant) {
         foreach($validants as $validant) {
-//            var_dump($validant->getId());
-//            die();
-//            $validant_obj = $em->getRepository('SesileUserBundle:User')->findOneById($validant->getId());
 
             if ($validant != null) {
                 $this->sendMail("SESILE - Nouveau classeur à valider", $validant->getEmail(), $body);
@@ -1739,7 +1742,7 @@ class ClasseurController extends Controller {
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
+                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>'
             )
         );
 

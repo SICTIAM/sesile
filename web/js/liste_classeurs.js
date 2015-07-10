@@ -3,6 +3,7 @@
  * script utilisé pour la configuration des datables : affichage liste_a_valider et liste_retired
  */
 $(document).ready(function () {
+    $.fn.dataTable.moment( 'DD/MM/YYYY' );
     $("#validTable").dataTable({
         oLanguage: {
             sSearch: "Rechercher&nbsp;",

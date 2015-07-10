@@ -2,14 +2,6 @@
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 
 
-{#<div id="circuit_editor">
-    <div class="titre_select">
-    </div>
-    <div id="circuit">
-        <img id="debut_circuit" src="{{ asset("/images/buttonlist.png") }}"/>
-    </div>
-</div>#}
-
 <div class="row row-padding">
     <div class="col-lg-3 col-lg-offset-3">
         <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeAllUsers">
@@ -22,12 +14,12 @@
 </div>
 
 <div class="row" id="circuit_main">
-    <div {#class="col-lg-12"#} id="circuit_etapes">
+    <div id="circuit_etapes">
         <div id="circuit_with_js">
 
 
         {# Etape déposante #}
-        <div class="{#col-lg-2#} well etapes-circuit">
+        <div class="well etapes-circuit">
             <span class="ok_perso glyphicon glyphicon-download-alt"></span>
             <div class="text-center"><h4>Etape déposante</h4></div>
             <div class="row">
@@ -45,33 +37,33 @@
         </div>
 
         {% for circuit_user in circuit_users %}
-        {% if circuit_user is not empty %}
-            {# Etapes validées #}
-            <div class="{#col-lg-2#} well etapes-circuit">
-                <span class="ok_perso glyphicon glyphicon-ok"></span>
-                <div class="text-center"><h4>Etape validée</h4></div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        {% if circuit_user.path is empty %}
-                            <img src="{{ asset('/images/imghomme.png') }}" alt="{{ circuit_user.Prenom }} {{ circuit_user.Nom }}">
-                        {% else %}
-                            <img src="{{ asset(upload_path ~ circuit_user.path) }}" alt="{{ circuit_user.Prenom }} {{ circuit_user.Nom }}">
-                        {% endif %}
-                    </div>
-                    <div class="col-lg-6">
-                        <span class="circuit-user">{{ circuit_user.Prenom }}<br>{{ circuit_user.Nom }}</span>
+            {% if circuit_user is not empty %}
+                {# Etapes validées #}
+                <div class="well etapes-circuit">
+                    <span class="ok_perso glyphicon glyphicon-ok"></span>
+                    <div class="text-center"><h4>Etape validée</h4></div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {% if circuit_user.path is empty %}
+                                <img src="{{ asset('/images/imghomme.png') }}" alt="{{ circuit_user.Prenom }} {{ circuit_user.Nom }}">
+                            {% else %}
+                                <img src="{{ asset(upload_path ~ circuit_user.path) }}" alt="{{ circuit_user.Prenom }} {{ circuit_user.Nom }}">
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-6">
+                            <span class="circuit-user">{{ circuit_user.Prenom }}<br>{{ circuit_user.Nom }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
         {% endfor %}
 
 
         <div id="contetapes">
 
-            {% if edit %}
+            {% if edit and classeur_status != 0 %}
                 {# Etape en cours #}
-                <div class="{#col-lg-2#} well etapes-circuit etape-validante">
+                <div class="well etapes-circuit etape-validante">
                     <span class="valid_perso glyphicon glyphicon-pencil"></span>
                     <div class="text-center"><h4>Etape en cours</h4></div>
                     <div class="row">
@@ -103,7 +95,7 @@
             {% for etape in etapesGroupe %}
 
                 {# Etapes restantes a valider #}
-                <div class="{#col-lg-2#} well etapes-circuit">
+                <div class="well etapes-circuit">
                     {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>{% endif %}
                     <div class="text-center"><h4>Etape à venir</h4></div>
 
@@ -133,7 +125,7 @@
             {# Bouton ajouter une étape #}
             {% if edit %}
                 <input type="hidden" name="valeurs" id="valeurs">
-                <div class="{#col-lg-2 #}text-center div-btn-ajout-etape">
+                <div class="text-center div-btn-ajout-etape">
                     <button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button>
                 </div>
             {% endif %}
@@ -165,8 +157,6 @@
 <script type="application/javascript" src="{{ asset("/js/select2.min.js") }}"></script>
 <script type="text/javascript" src="{{ asset('/js/jquery-ui.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/jquery.mousewheel.min.js') }}"></script>
-{#<script type="text/javascript" src="{{ asset('/js/circuit.js') }}"></script>#}
-{#<script type="text/javascript" src="{{ asset('/js/autocomplete.js') }}"></script>#}
 
 <script>
     $(document).ready(function() {
@@ -185,7 +175,6 @@
             $('#circuit_etapes').css('width', widthLine);
             var widthScroll = $('.etapes-circuit').length * 300 + 250;
             $('#circuit_with_js').css('width', widthScroll);
-//            console.log($('.etapes-circuit').length + ' ' + 'widthScroll : ' + widthScroll);
         }
 
         // Sans bootstrap c'est la galère. Faut se gérer le rediementsionnement de la fenêtre à la mano...
@@ -300,7 +289,6 @@
         });
 
         {% if edit %}
-//            $(function() {
                 $( "#contetapes:not(.etape-validante)" ).sortable({
                     items :'> div:not(.etape-validante, .div-btn-ajout-etape)',
                     tolerance: "pointer",
@@ -308,7 +296,6 @@
                         creerFleches();
                     }
                 }).disableSelection();
-//            });
         {% endif %}
 
         // Fonction pour afficher les bouton valider et signer

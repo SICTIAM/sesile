@@ -120,7 +120,8 @@ class CircuitController extends Controller
             "edit"          => $edit,
             "validants"     => $validants,
             "deposant"      => $deposant,
-            "circuit_users" => $circuit_users
+            "circuit_users" => $circuit_users,
+            "classeur_status" => $classeur->getStatus()
         );
     }
 

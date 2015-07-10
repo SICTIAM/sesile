@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Sesile\UserBundle\Entity\EtapeClasseur;
 
 class AddEtapesClasseurCommand extends ContainerAwareCommand
 {
@@ -23,7 +24,6 @@ class AddEtapesClasseurCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine')->getManager();
 
         $classeurs = $em->getRepository("SesileClasseurBundle:Classeur")->findAll();
-
 
         if ($classeurs !== null) {
 
@@ -52,17 +52,25 @@ class AddEtapesClasseurCommand extends ContainerAwareCommand
 
 
                     // On enregistre les etapes validantes dans le classeur
-    //                if ($k == 0 && $classeur->getOrdreCircuit() <= 0) { // useless
                     if ($k == 0) {
                         $classeur->setOrdreValidant($step->getId());
                     }
                     else if ($k <= $classeur->getOrdreCircuit()) {
-                        $classeur->setOrdreValidant(',' . $step->getId());
+                        $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $step->getId());
                     }
 
                     $em->flush();
                 }
 
+            }
+
+            foreach ($classeurs as $classeur) {
+                $etapes_circuit = explode(',', $classeur->getCircuit());
+                $etapes_circuit = array_slice($etapes_circuit, 0, $classeur->getOrdreEtape());
+
+                $classeur->setCircuitZero(implode(',', $etapes_circuit));
+
+                $em->flush();
             }
 
             $output->writeln('Les étapes classeurs ont été modifié');
