@@ -1519,8 +1519,8 @@ class ClasseurController extends Controller {
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextMailwalid(),
             array(
-                'validant' => $validant_obj->getPrenom() . " " . $validant_obj->getNom(),
-                'deposant' => $c_user->getPrenom() . " " . $c_user->getNom(),
+                'deposant' => $validant_obj->getPrenom() . " " . $validant_obj->getNom(),
+                'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Voir le classeur</a>'
@@ -1536,7 +1536,8 @@ class ClasseurController extends Controller {
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
+//        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
+        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
 
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextmailnew(),
