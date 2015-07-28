@@ -71,7 +71,7 @@
                             Droit de retractation
                         </a>
                     </li>
-                    {% if is_granted('ROLE_AGENT_SICTIAM') %}
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
                         <li>
                             <a href="{{ path("liste_classeurs_retired") }}">
                                 <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
@@ -132,25 +132,23 @@
                             Gestion des utilisateurs
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ path("userpacks") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Groupes d'utilisateurs
+                        </a>
+                    </li>
 
-
-
-		    <li>
+		    {#<li>
 			<a href="{{ path("services") }}">
 			    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
 			    Services organisationnels
 			</a>
-		    </li>
+		    </li>#}
             <li>
                 <a href="{{ path("servicesorg") }}">
                     <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                    Nouveaux Services organisationnels
-                </a>
-            </li>
-            <li>
-                <a href="{{ path("userpacks") }}">
-                    <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
-                    Groupes d'utilisateurs
+                    {#Nouveaux #}Services organisationnels
                 </a>
             </li>
             {% if is_granted('ROLE_SUPER_ADMIN') %}
@@ -161,7 +159,7 @@
                     </a>
                 </li>
             {% endif %}
-            {% if is_granted('ROLE_AGENT_SICTIAM') %}
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <li>
                     <a href="{{ path("index_emailing") }}">
                         <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
