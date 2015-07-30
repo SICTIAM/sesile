@@ -390,4 +390,55 @@ class DocumentController extends Controller
         $PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
         return new JsonResponse($PJ);
     }
+
+    /**
+     * @Route("/getpjie/{id}/{bord}/{piece}/{peji}", name="getpjie",  options={"expose"=true})
+     * @Method("GET")
+     * @Template()
+     */
+    public function getPJieAction($id, $bord, $piece, $peji)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+
+        $param = $this->container->getParameter('upload');
+        $dir = $param['fics'];
+        $path = $dir . $doc->getRepourl();
+        $xml = simplexml_load_file($path);
+
+        $arrayPJ = array();
+        if (isset($xml->PES_PJ)) {
+            foreach ($xml->PES_PJ->PJ as $pj) {
+                $arrayPJ[] = $pj;
+            }
+        }
+
+        if (isset($xml->PES_DepenseAller)) {
+            $typePES = 'Depense';
+        } else {
+            $typePES = 'Recette';
+        }
+
+
+        $arrayBord = array();
+        foreach ($xml->{'PES_' . $typePES . 'Aller'}->Bordereau as $Bord) {
+            $arrayBord[] = $Bord;
+        }
+
+
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], '', '', $arrayBord, $typePES, $arrayPJ);
+        $response = new Response();
+        /*$PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
+        return new JsonResponse($PJ);*/
+
+        $PJ = gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content));
+        //set headers
+        $response->headers->set('Content-Type', 'mime/type');
+        $response->headers->set('Content-Disposition', 'attachment;filename=' . $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0]);
+
+        $response->setContent($PJ);
+        return $response;
+    }
 }
