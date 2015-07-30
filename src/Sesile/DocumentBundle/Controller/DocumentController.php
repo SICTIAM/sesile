@@ -36,7 +36,13 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
-        $isvalidable = $classeur->isValidable($this->getUser()->getId());
+        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+        $validantsId = array();
+        foreach ($validants as $validant) {
+            $validantsId[] =$validant->getId();
+        }
+
+        $isvalidable = $classeur->isValidable($this->getUser()->getId(), $validantsId);
 
         $docs = $classeur->getDocuments();
         $tailles = array();
@@ -106,12 +112,18 @@ class DocumentController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+            $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($doc->getClasseur());
+            $validantsId = array();
+            foreach ($validants as $validant) {
+                $validantsId[] =$validant->getId();
+            }
+
             $name = $doc->getName();
             $historyinverse = $em->getRepository('SesileDocumentBundle:DocumentHistory')->getHistory($doc);
 
             // Test pour les droits de modifications des documents
             $id_classeur = $doc->getClasseur()->getId();
-            $isValidant = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id_classeur)->isValidable($this->getUser()->getId());
+            $isValidant = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id_classeur)->isValidable($this->getUser()->getId(), $validantsId);
 
         } else {
             $doc = null;

@@ -10,61 +10,55 @@
 
         <form id="new_classeur" name="new_classeur" class="form-horizontal" role="form" action="{{ path('classeur_create') }}" method="POST">
             <div class="row">
+                <div class="col-lg-5">
+                    <div class="titre_form_element">
+                        <span class="glyphicon glyphicon-play"></span>
+                        &nbsp;&nbsp;&nbsp;Service organisationnel
+                    </div>
+                </div>
+                <div class="col-lg-5 col-lg-push-1">
+                    <div class="titre_form_element">
+                        <span class="glyphicon glyphicon-play"></span>
+                        &nbsp;&nbsp;&nbsp;Type de classeur
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <!--
-                        <select id="type" name="type">
-                            <option value="Classique" selected>Divers</option>
-                            <option value="Helios">Hélios</option>
-                            <option value="Acte">Acte Budgétaire</option>
-                            <option value="Marchés">Marchés</option>
-                            <option value="Convocation">Convocation</option>
-                            <option value="Courrier AR">Courrier AR</option>
-                            <option value="Document Urba">Document Urba</option>
-                        </select>
-                        -->
 
-                        <label for="type" class="col-lg-2 control-label">Service organisationnel</label>
-
-                        <div class="col-lg-3">
+                        <div class="col-lg-5">
                             <select id="userGroupe" name="userGroupe" class="form-control" required="required">
                                 {% for userGroupe in userGroupes %}
-                                    <option value="{{ userGroupe.id }}" data-id="{{ userGroupe.id }}" data-ordre="{{ userGroupe.ordre }}">{{ userGroupe.name }}</option>
+                                    <option value="{{ userGroupe.id }}" data-id="{{ userGroupe.id }}" {#data-ordre="{{ userGroupe.ordre }}"#}>{{ userGroupe.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
-
-                        <label for="type" class="col-lg-2 control-label">Type de classeur</label>
-
-                        <div class="col-lg-3" id="testgroupe">
+                        <div class="col-lg-5 col-lg-push-1" id="testgroupe">
                             <select id="type" name="type" class="form-control" required="required">
                             </select>
                         </div>
 
-                        <div class="col-lg-1">
+                        <div class="col-lg-1 col-lg-push-1">
                             <img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
                         </div>
-
 
                     </div>
                 </div>
             </div>
             <div id="contenttypedform"></div>
-	    <div class="btndemerde">
-
-        </div>
-            {#<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">#}
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+            <div class="btndemerde">
+                <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                    Retour à la liste des classeur
+                </a>
+            </div>
         </form>
     </div>
 {% endblock %}
 
 {% block losjavascriptos %}
-    <script type="text/javascript" src="{{ asset("/bundles/sesileclasseur/js/newclasseur.js") }}">
-
-    </script>
-
-
+    <script type="text/javascript" src="{{ asset("/bundles/sesileclasseur/js/newclasseur.js") }}"></script>
 
 {% endblock %}

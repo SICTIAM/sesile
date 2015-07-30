@@ -36,6 +36,22 @@
             </div>
         </div>
 
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-lg-3">
+                <a href="{{ path('delegations_list') }}" class="btn btn-primary navbar-btn">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                    Retour à la liste des délégations
+                </a>
+            </div>
+            <div class="col-lg-3">
+                <form action="{{ path("delegation_delete") }}" method="post"  onsubmit="return confirm('Voulez vous vraiment supprimer cette délégation ?');">
+                    <input type="hidden" value="{{ delegation.id }}" name="id"/>
+
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
 
     </div>
 

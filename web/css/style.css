@@ -834,3 +834,10 @@ select [name=user] {
     display: block;
     color: rgba(109, 110, 112, 1);
 }
+
+#winFirefoxPlugin {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    margin-top: -500px;
+}

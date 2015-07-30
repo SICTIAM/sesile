@@ -78,28 +78,15 @@ class Classeur {
     private $user;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="validant", type="integer")
-     *
-     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs_a_valider")
-     * @ORM\JoinColumn(name="validant", referencedColumnName="id")
-     *
-     */
-    private $validant;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="ordreCircuit", type="integer"))
      */
     private $ordreCircuit = 0;
 
-    public $validantName;
-
     /**
      * @var int
-     * 0 = privé, id groupe = public pour le groupeid
+     * 0 = privé, 1 = public, 2 = prive a partir de moi, 3 = service organisationnel (et le circuit)
      * @ORM\Column(name="visibilite", type="integer")
      *
      */
@@ -108,7 +95,7 @@ class Classeur {
     /**
      * @var string
      *
-     * @ORM\Column(name="circuit", type="string", length=255)
+     * @ORM\Column(name="circuit", type="string", length=255, nullable=true)
      */
     private $circuit;
 
@@ -127,6 +114,34 @@ class Classeur {
      * @ORM\JoinTable(name="Classeur_visible")
      */
     private $visible;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"remove"})
+     * @ORM\JoinColumn(name="etapeClasseur", referencedColumnName="id",nullable=true)
+     */
+    private $etapeClasseurs;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ordreEtape", type="integer")
+     */
+    private $ordreEtape = 0;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="EtapeDeposante", type="integer")
+     */
+    private $etapeDeposante;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ordreValidant", type="string", length=255, nullable=true)
+     */
+    private $ordreValidant;
 
     /**
      * Get id
@@ -223,6 +238,26 @@ class Classeur {
      */
     public function setCircuit($circuit)
     {
+
+        if ($this->getCircuit() != null) {
+            $this->circuit = $this->getCircuit() . ',' . $circuit;
+        }
+        else {
+            $this->circuit = $circuit;
+        }
+//        $this->circuit = $circuit;
+
+        return $this;
+    }
+
+    /**
+     * Set circuit
+     *
+     * @param array $circuit
+     * @return Classeur
+     */
+    public function setCircuitZero($circuit)
+    {
         $this->circuit = $circuit;
 
         return $this;
@@ -286,19 +321,6 @@ class Classeur {
     }
 
     /**
-     * Set validant
-     *
-     * @param integer $validant
-     * @return Classeur
-     */
-    public function setValidant($validant)
-    {
-        $this->validant = $validant;
-
-        return $this;
-    }
-
-    /**
      * @ORM\PrePersist
      */
     public function setValidantValue()
@@ -318,14 +340,6 @@ class Classeur {
     public function setStatusValue()
     {
         $this->status = 1;
-    }
-
-    /**
-     * Get validant
-     * @return integer
-     */
-    public function getValidant() {
-        return $this->validant;
     }
 
     /**
@@ -366,32 +380,12 @@ class Classeur {
      * @return int l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
      */
 
-
-    /*    private function getPrevValidant()
-    {
-
-
-        $circuit = explode(",", $this->getCircuit());
-        $curr_validant = array_search($this->validant, $circuit);
-        $prev_validant = ($curr_validant - $curr_validant);
-        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
-
-    }
-*/
-
     public function getPrevValidant()
     {
 
         $circuit = explode(",", $this->getCircuit());
-//        $curr_validant = array_search($this->validant, $circuit);
-
-//        $prev_validant = ($curr_validant - $curr_validant) - 1;
-//        $this->setOrdreMoins();
         $ordre =  $this->setOrdreMoins();
-        //  var_dump($this->getId(),$this->setOrdreMoins());
-//        $prev_validant = $circuit[$this->getOrdreCircuit()];
         return ($this->getOrdreCircuit() > 0) ? $circuit[$ordre] : $this->getUser();
-//        return ($prev_validant >= 0) ? $circuit[$prev_validant] : $this->getUser();
     }
 
 
@@ -412,27 +406,28 @@ class Classeur {
      */
     public function getCurrentValidant(\Doctrine\ORM\EntityManager $em)
     {
-        //$d = $em->getRepository("SesileDelegationsBundle:Delegations");
-        //$delegation = $d->getClasseursRetractables($userid);
 
         $circuit = explode(",", $this->getCircuit());
-//        $curr_validant = array_search($this->validant, $circuit);
         $curr_validant = $circuit[$this->getOrdreCircuit()];
         return $curr_validant;
     }
 
 
-//    public function isAtLastValidant(\Doctrine\ORM\EntityManager $em){
-//        return ($this->getNextValidant($em)==0);
-//    }
     public function isAtLastValidant(){
-        $ordreCircuit = $this->getOrdreCircuit() + 1;
+        $ordreCircuit = $this->getOrdreEtape();
+        $nbEtapes = count($this->getEtapeClasseurs());
+        if ($ordreCircuit == $nbEtapes){
+            return true;
+        }
+        else {
+            return false;
+        }
+        /*$ordreCircuit = $this->getOrdreCircuit() + 1;
         if ($ordreCircuit == count(explode(",", $this->getCircuit()))) {
             return true;
         } else {
             return false;
-        }
-
+        }*/
 
     }
 
@@ -458,65 +453,76 @@ class Classeur {
 
     public function refuser()
     {
-//        $this->setOrdreZero();
-        $this->setOrdreCircuit(-1);
+        $this->setOrdreZero();
 //        $this->setValidant($this->getPrevValidant());
-        $this->setValidant($this->getUser());
+//        $this->setValidant($this->getUser());
+        $this->setCircuitZero('');
+        $this->setOrdreValidant('');
         $this->setStatus(0);
     }
 
-    public function retracter($userid)
+    public function retracter()
     {
-        $this->setValidant($this->getPrevValidant());
-        $this->setOrdreCircuit($this->setOrdreMoins());
+        $this->setCircuitZero( substr($this->getCircuit(), 0, strrpos($this->getCircuit(), ',')) );
+        $this->setOrdreValidant( substr($this->getOrdreValidant(), 0, strrpos($this->getOrdreValidant(), ',')) );
+        $this->setOrdreEtape($this->setOrdreMoins());
         $this->setStatus(4);
     }
 
     public function supprimer()
     {
-        $this->setValidant(0);
+        $this->setOrdreValidant('');
         $this->setStatus(3);
     }
 
-    public function isValidable($userid) {
-        return ($this->getValidant() == $userid);
+    public function isValidable($userid,  $validants) {
+        return (in_array($userid, $validants));
     }
 
-    public function isValidableByDelegates($delegates) {
-        $arrayid = array();
+    public function isValidableByDelegates($delegates, $validants) {
 
-        foreach($delegates as $d){
-            $arrayid[] = $d->getId();
+        foreach($validants as $validant){
+            if (in_array($validant, $delegates)) {
+                return true;
+            }
         }
-
-        return (in_array($this->getValidant(), $arrayid));
+        return false;
     }
 
-    public function isModifiable($userid)
+    public function isModifiable($userid, $validants)
     {
-        return ((($this->getValidant() == $userid) || ($this->getUser() == $userid)) && $this->getStatus() != 3);
+        return (((in_array($validants, $userid)) || ($this->getUser() == $userid)) && $this->getStatus() != 3);
     }
 
-    public function isModifiableByDelegates($delegates){
+    public function isModifiableByDelegates($delegates, $validants){
 
         $arrayid = array();
         foreach($delegates as $d){
             $arrayid[] = $d->getId();
         }
 
-        return (( (in_array($this->getValidant(), $arrayid) ) || (in_array($this->getUser(), $arrayid))) && $this->getStatus() != 3);
+        return (( (in_array($validants, $arrayid) ) || (in_array($this->getUser(), $arrayid))) && $this->getStatus() != 3);
 
     }
 
     /**
-     * Return true or false
-     * @param array
-     *
      * La fonction renvoie true or false pour les boutons retractable et l affichage des dossiers retractable
+     *
+     * @param $userid           : id du user courant + delegant
+     * @param $validants        : id des validants courant du classeur
+     * @param $prevValidants    : id des validants de l etape precedente du classeur
+     * @return bool             : true or false
      */
-    public function isRetractableByDelegates($userid) {
+    public function isRetractableByDelegates($userid, $validants, $prevValidants) {
+//        var_dump('userId : ', $userid, 'prevValidants : ', $prevValidants, $this->getId(), '<br>');
 
-        if (in_array($this->getPrevValidant(), $userid)  && $this->getValidant() != $userid && $this->getStatus() == 1 && $this->getOrdreCircuit() != 0) {
+
+        if ( in_array($prevValidants, $userid)
+             && !in_array($userid, $validants)
+//            && !array_diff($userid, $validants)
+            && $this->getStatus() == 1
+            && $this->getOrdreEtape() != 0
+        ) {
             return true;
         } else {
             return false;
@@ -543,7 +549,7 @@ class Classeur {
     public function isSignable()
     {
 
-        if($this->getType()->getNom() == 'Helios' && $this->isAtLastValidant()){
+        if($this->getType()->getId() == 2 && $this->isAtLastValidant()){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
                 if($doc->getType()=='application/xml'){
@@ -572,7 +578,7 @@ class Classeur {
      */
     public function setOrdrePlus()
     {
-        $this->ordreCircuit++;
+        $this->ordreEtape++;
 
         return $this;
     }
@@ -582,7 +588,7 @@ class Classeur {
      */
     public function setOrdreMoins()
     {
-        $oCircuit = $this->getOrdreCircuit();
+        $oCircuit = $this->getOrdreEtape();
 
         $oCircuit = $oCircuit - 1;
         $oCircuit <= 0 ? $oCircuit = 0 : $oCircuit;
@@ -595,7 +601,7 @@ class Classeur {
      */
     public function setOrdreZero()
     {
-        $this->ordreCircuit = 0;
+        $this->ordreEtape = 0;
 
         return $this;
     }
@@ -603,10 +609,10 @@ class Classeur {
     /**
      * Get private visibility after me
      */
-    public function getPrivateAfterMeVisible() {
+    /*public function getPrivateAfterMeVisible() {
         $circuit = explode(",", $this->circuit);
         return array_slice($circuit, $this->getOrdreCircuit());
-    }
+    }*/
 
     /**
      * Add documents
@@ -762,18 +768,151 @@ class Classeur {
     public function setOrdreCircuit($ordre)
     {
         $this->ordreCircuit = $ordre;
-    
+
         return $this;
     }
 
     /**
      * Get ordre
      *
-     * @return integer 
+     * @return integer
      */
     public function getOrdreCircuit()
     {
         return $this->ordreCircuit;
+    }
+
+
+    /**
+     * Add etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     * @return Classeur
+     */
+    public function addEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs[] = $etapeClasseurs;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     */
+    public function removeEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs->removeElement($etapeClasseurs);
+    }
+
+    /**
+     * Get etapeClasseurs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeClasseurs()
+    {
+        return $this->etapeClasseurs;
+    }
+
+    /**
+     * Set ordreEtape
+     *
+     * @param string $ordreEtape
+     * @return Classeur
+     */
+    public function setOrdreEtape($ordreEtape)
+    {
+        $this->ordreEtape = $ordreEtape;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordreEtape
+     *
+     * @return string 
+     */
+    public function getOrdreEtape()
+    {
+        return $this->ordreEtape;
+    }
+
+    /**
+     * Précédente étape
+     * @return int
+     */
+    public function getPrevOrdreEtape() {
+        $prevOrdreEtape = intval($this->getOrdreEtape());
+        if ($prevOrdreEtape != 0) {
+            $prevOrdreEtape--;
+        }
+        else {
+            $prevOrdreEtape = 0;
+        }
+        return $prevOrdreEtape;
+    }
+
+    /**
+     * Etape suivante
+     * @param $maxEtapes
+     * @return bool|int
+     */
+    public function getNextOrdreEtape($maxEtapes) {
+        $nextOrdreEtape = intval($this->getOrdreEtape());
+        if ($nextOrdreEtape << $maxEtapes) {
+            $nextOrdreEtape++;
+        } else {
+            return false;
+        }
+        return $nextOrdreEtape;
+    }
+
+    /**
+     * Set etapeDeposante
+     *
+     * @param string $etapeDeposante
+     * @return Classeur
+     */
+    public function setEtapeDeposante($etapeDeposante)
+    {
+        $this->etapeDeposante = $etapeDeposante;
+    
+        return $this;
+    }
+
+    /**
+     * Get etapeDeposante
+     *
+     * @return string 
+     */
+    public function getEtapeDeposante()
+    {
+        return $this->etapeDeposante;
+    }
+
+    /**
+     * Set ordreValidant
+     *
+     * @param string $ordreValidant
+     * @return Classeur
+     */
+    public function setOrdreValidant($ordreValidant)
+    {
+        $this->ordreValidant = $ordreValidant;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordreValidant
+     *
+     * @return string 
+     */
+    public function getOrdreValidant()
+    {
+        return $this->ordreValidant;
     }
 
 }

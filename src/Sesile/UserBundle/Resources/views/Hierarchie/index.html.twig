@@ -16,22 +16,22 @@
             <tbody>
             {% for groupe in groupes %}
                 <tr class="user-row" data-id="{{ groupe.id }}">
-                    <td><a href="{{ path("groupe_edit", {'id' : groupe.id }) }}" class="link-datatable">{{ groupe.Nom }}</a></td>
+                    <td><a href="{{ path("service_edit", {'id' : groupe.id }) }}" class="link-datatable">{{ groupe.Nom }}</a></td>
                     <td class="boutons_action">
-                        <a href="{{ path("groupe_edit", {'id' : groupe.id }) }}">
+                        <a href="{{ path("service_edit", {'id' : groupe.id }) }}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
 
                         <a href="#" class="delete_button">
                         <span class="glyphicon glyphicon-trash"></span>
                         </a>
-                        <form class="delete_form" method="POST" action="{{ path("group_delete", {'id' : groupe.id }) }}"></form>
+                        <form class="delete_form" method="POST" action="{{ path("service_delete", {'id' : groupe.id }) }}"></form>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path("create_groupe") }}">
+        <a href="{{ path("create_service") }}">
             <button type="button" class="btn btn-default navbar-btn">
                 Ajouter un service organisationnel
             </button>

@@ -288,4 +288,18 @@ class DelegationsRepository extends EntityRepository
 
 
     }
+
+
+    public function getDelegantsForUser($user) {
+
+        return $query = $this->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', $user->getId())
+            ->andWhere('p.debut <= :now')
+            ->andWhere('p.fin >= :now')
+            ->setParameter('now', new \Datetime())
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

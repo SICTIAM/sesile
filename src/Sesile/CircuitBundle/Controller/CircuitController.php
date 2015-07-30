@@ -16,42 +16,65 @@ use Symfony\Component\HttpFoundation\Response;
 class CircuitController extends Controller
 {
     /**
-     * @Route("/new/", name="new_circuit", options={"expose"=true})
+     * @Route("/new/{so}", name="new_circuit", options={"expose"=true})
      * @method("GET")
      * @Template()
      */
-    public function newAction($forClasseur = true)
+    public function newAction($so)
     {
-        // recup la liste des users en base
+
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ), array("Nom" => "ASC"));
 
-        // recup la list des circuits
-        // TODO recup uniquement pour le user connecté
-        $circuits = array();
-        $em = $this->getDoctrine()->getManager();
-        $circuits_du_user = $em->getRepository('SesileCircuitBundle:Circuit')->findByUser_id($this->getUser()->getId());
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
+//        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
+//        $serviceOrg = $em->getRepository('SesileUserBundle:Groupe')->findOneById($so);
+        $serviceOrg = array();
 
-        foreach ($circuits_du_user as $circuit) {
-            $circuits[] = array("id" => $circuit->getId(), "name" => $circuit->getName(), "ordre" => $circuit->getOrdre(), "groupe" => false);
-        }
+        $etapesGroupe = $em->getRepository('SesileUserBundle:EtapeGroupe')->findBy(
+            array('groupe' => $so),
+            array('ordre' => 'ASC')
+        );
 
-        if($forClasseur) {
-            $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
-            foreach($groupes_du_user as $group) {
-                $circuits[] = array(
-                    "id" => $group->getGroupe()->getId(),
-                    "name" => $group->getGroupe()->getNom(),
-                    "ordre" => $this->getCircuitFromgroupForUser($this->getUser(), $group->getgroupe()),
-                    "groupe" => true
-                );
+        $enable = false;
+        $etapeDeposante = 0;
+
+        foreach ($etapesGroupe as $etapeGroupe) {
+
+            $usersFromEtapes = $etapeGroupe->getUsers();
+            foreach ($usersFromEtapes as $user) {
+
+                if($user->getId() == $this->getUser()->getId() && $etapeDeposante == 0) {
+                    $etapeDeposante = $etapeGroupe->getId();
+                    $enable = true;
+                }
             }
+
+            $userPacksEtapes = $etapeGroupe->getUserPacks();
+            foreach ($userPacksEtapes as $userPacksEtape) {
+                $usersFromUP = $userPacksEtape->getUsers();
+
+                foreach ($usersFromUP as $userFromUP) {
+
+                    if($userFromUP->getId() == $this->getUser()->getId() && $etapeDeposante == 0) {
+                        $etapeDeposante = $etapeGroupe->getId();
+                        $enable = true;
+                    }
+                }
+            }
+
+            if($enable && $etapeDeposante != $etapeGroupe->getId()) {
+                $serviceOrg[] = $etapeGroupe;
+            }
+
         }
 
-
-        return array('users' => $users, "circuits" => $circuits,"menu_color" => "vert");
+        //Retourne un tableau avec tous les users de la collectivité et un booléen disant si chaque user est dans l'étape ou pas
+        return array('userPacks' => $userPacks, 'users' => $users, 'service' => $serviceOrg);
     }
 
 
@@ -59,33 +82,46 @@ class CircuitController extends Controller
      * @Route("/validation/", name="new_validate_edit_classeur", options={"expose"=true})
      * @Template("SesileCircuitBundle:Circuit:validation.html.twig")
      */
-    public function validationeditclasseurAction()
+    public function validationeditclasseurAction($id, $validant = false)
     {
-        // recup la liste des users en base
+        // Test si l utilisateur est le validant
+        $edit = $validant ? true : false;
+
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ), array("Nom" => "ASC"));
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
+//        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
 
-        // recup la list des circuits
-        // TODO recup uniquement pour le user connecté
-        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+        $etapesGroupes = $em->getRepository('SesileUserBundle:EtapeClasseur')->findByEtapesAValider($classeur, $edit);
+        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
 
+        // obtention du deposant
+        $deposant = $em->getRepository('SesileUserBundle:User')->findOneById($classeur->getUser());
 
-        $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
-        foreach ($groupes_du_user as $group) {
-            $circuits[] = array(
-                "id" => $group->getGroupe()->getId(),
-                "name" => $group->getGroupe()->getNom(),
-                "ordre" => $this->getCircuitFromgroupForUser($this->getUser(), $group->getgroupe()),
-                "groupe" => true
-            );
-
+        // obtention des users du circuit
+        $circuit_users_id = explode(',', $classeur->getCircuit());
+        // Un foreach pour eviter que la requete reorder a sa sauce
+        foreach ($circuit_users_id as $circuit_user_id) {
+            $circuit_users[] = $em->getRepository('SesileUserBundle:User')->findOneById($circuit_user_id);
         }
 
+
+        // recup la list des circuits
+
         return array(
-            'users' => $users,
-            "edit" => true
+            'userPacks'     => $userPacks,
+            'users'         => $users,
+            "etapesGroupe"  => $etapesGroupes,
+            "edit"          => $edit,
+            "validants"     => $validants,
+            "deposant"      => $deposant,
+            "circuit_users" => $circuit_users,
+            "classeur_status" => $classeur->getStatus()
         );
     }
 
@@ -97,9 +133,10 @@ class CircuitController extends Controller
     {
         // recup la liste des users en base
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ), array("Nom" => "ASC"));
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
 
         // recup la list des circuits
         // TODO recup uniquement pour le user connecté

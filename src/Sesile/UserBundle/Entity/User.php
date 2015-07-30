@@ -125,7 +125,7 @@ class User extends BaseUser {
     /**
      * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="$users")
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
      *
      */
@@ -135,6 +135,27 @@ class User extends BaseUser {
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="visible", cascade={"persist"})
      */
     private $classeurs;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", mappedBy="users", cascade={"persist"})
+     */
+    private $userPacks;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="users", cascade={"persist"})
+     */
+    private $etapeClasseurs;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="users", cascade={"persist"})
+     */
+    private $etapeGroupes;
+
+    /**
+     * @var
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="user")
+     */
+    private $hierarchie;
 
 
     public function setPath($path) {
@@ -638,5 +659,137 @@ class User extends BaseUser {
     public function getClasseurs()
     {
         return $this->classeurs;
+    }
+
+    /**
+     * Add userPacks
+     *
+     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     * @return User
+     */
+    public function addUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    {
+        $this->userPacks[] = $userPacks;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userPacks
+     *
+     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     */
+    public function removeUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    {
+        $this->userPacks->removeElement($userPacks);
+    }
+
+    /**
+     * Get userPacks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserPacks()
+    {
+        return $this->userPacks;
+    }
+
+    /**
+     * Add etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     * @return User
+     */
+    public function addEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs[] = $etapeClasseurs;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeClasseurs
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     */
+    public function removeEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    {
+        $this->etapeClasseurs->removeElement($etapeClasseurs);
+    }
+
+    /**
+     * Get etapeClasseurs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeClasseurs()
+    {
+        return $this->etapeClasseurs;
+    }
+
+    /**
+     * Add etapeGroupes
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     * @return User
+     */
+    public function addEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    {
+        $this->etapeGroupes[] = $etapeGroupes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeGroupes
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     */
+    public function removeEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    {
+        $this->etapeGroupes->removeElement($etapeGroupes);
+    }
+
+    /**
+     * Get etapeGroupes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeGroupes()
+    {
+        return $this->etapeGroupes;
+    }
+
+    /**
+     * Add hierarchie
+     *
+     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
+     * @return User
+     */
+    public function addHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
+    {
+        $this->hierarchie[] = $hierarchie;
+    
+        return $this;
+    }
+
+    /**
+     * Remove hierarchie
+     *
+     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
+     */
+    public function removeHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
+    {
+        $this->hierarchie->removeElement($hierarchie);
+    }
+
+    /**
+     * Get hierarchie
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHierarchie()
+    {
+        return $this->hierarchie;
     }
 }
