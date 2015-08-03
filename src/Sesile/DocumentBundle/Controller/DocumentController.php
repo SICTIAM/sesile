@@ -316,7 +316,7 @@ class DocumentController extends Controller
             $tabIdBord[] = $bordereau->id;
         }
 
-        return array('budget' => $PES->budget, 'signataire' => $PES->signataire, 'dateSign' => $PES->dateSign, 'bords' => $tabIdBord, 'idDoc' => $doc->getId());
+        return array('budget' => $PES->budget, 'signataire' => utf8_decode($PES->signataire), 'dateSign' => $PES->dateSign, 'bords' => $tabIdBord, 'idDoc' => $doc->getId());
     }
 
     /**

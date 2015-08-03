@@ -19,6 +19,8 @@
 
     {% else %}
 
+        {# Pour l amelioration du validant qui doit se retracter...
+        {% if classeur.status == 0 or classeur.status == 4 and classeur.circuit is empty %}#}
         {% if classeur.status == 0 %}
             <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_soumis") }}">
                 <span class="glyphicon glyphicon-ok"></span>
@@ -26,10 +28,20 @@
             </button>
 
         {% elseif classeur.status != 2 %}
-            <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_valider") }}">
+            {#<button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_valider") }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Valider
+            </button>#}
+            <button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Valider et Signer
+            </button>
+
+            <button type="submit" class="btn btn-success btn-valider-non-signer" data-action="{{ path("classeur_valider") }}">
                 <span class="glyphicon glyphicon-ok"></span>
                 &nbsp;Valider
             </button>
+
 
             <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal" data-whatever="@mdo">
                 <span class="glyphicon glyphicon-remove"></span>

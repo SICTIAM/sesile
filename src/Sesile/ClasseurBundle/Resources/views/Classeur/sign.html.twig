@@ -58,8 +58,7 @@
 </script>
 
 <script type="text/javascript">
-    var docstosign =
-    {{ docstosign|json_encode|raw }}
+    var docstosign = {{ docstosign|json_encode|raw }};
     var attributes = {width: 1, height: 1, id: "javaapplet"};
     var parameters = {jnlp_href: 'http://{{ url_applet }}/launch.jnlp'}; // url : signature DEMO
 
@@ -69,7 +68,8 @@
 
     function appletReady() {
 
-        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod*/
+        {#document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod*/#}
+        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '{{ path('upload_doc') }}'); // Prod*/
 
         var divmethod = document.getElementById('listemethod');
 

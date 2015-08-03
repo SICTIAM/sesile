@@ -109,7 +109,7 @@ class ClasseurRepository extends EntityRepository {
     }*/
 
     /**
-     * On passe le classeur en parametre et la fonction retourne un tableau  d'objet avec users validant du classeur
+     * On passe le classeur en parametre et la fonction retourne un tableau d'objet avec users validant du classeur
      *
      * @param Classeur $classeur
      * @return array
@@ -145,7 +145,9 @@ class ClasseurRepository extends EntityRepository {
             $usersValidant = array_unique($usersValidant);
 
         }
-        elseif ($classeur->getStatus() == 0) {
+        elseif ($classeur->getStatus() == 0
+            || ($classeur->getStatus() == 4 && $etapeClasseurs === null)
+        ) {
             $user = $em->getRepository('SesileUserBundle:User')->findOneById($classeur->getUser());
             $usersValidant[] = $user;
         }
@@ -200,6 +202,10 @@ class ClasseurRepository extends EntityRepository {
     public function getPrevValidantForRetract(Classeur $classeur) {
         $prevValidant = explode(',', $classeur->getCircuit());
         $prevValidant = end($prevValidant);
+        // Pour l amelioration du validant qui doit se retracter...
+        /*if (empty($prevValidant)) {
+            $prevValidant = $classeur->getUser();
+        }*/
         return $prevValidant;
     }
 
