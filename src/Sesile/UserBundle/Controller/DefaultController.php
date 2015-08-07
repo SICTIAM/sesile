@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Controller;
 
 use Sesile\UserBundle\Entity\User;
+use Sesile\UserBundle\Entity\UserPack;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,6 +19,7 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 use vendor\symfony\src\Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DefaultController extends Controller
 {
@@ -311,6 +313,306 @@ class DefaultController extends Controller
     }
 
 
+
+
+    /**
+     *
+     *
+     * @Route("/groupes/", name="userpacks")
+     * @Method("GET")
+     * @Template("SesileUserBundle:UserPack:index.html.twig")
+     */
+    public function userPackIndexAction()
+    {
+
+        // fonction pour la securite
+        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
+
+        $em = $this->getDoctrine()->getManager();
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
+        return array('userPacks'=>$userPacks, "menu_color" => "vert");
+    }
+
+    /**
+     *
+     *
+     * @Route("/groupes/new", name="new_userpack")
+     * @Method("GET")
+     * @Template("SesileUserBundle:UserPack:new.html.twig")
+     */
+    public function userPackNewAction()
+    {
+        // fonction pour la securite
+        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
+
+        $em = $this->getDoctrine()->getManager();
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        return array('users'=>$users, "menu_color" => "vert");
+
+    }
+
+    /**
+     *
+     *
+     * @Route("/groupes/new", name="create_userpack")
+     * @Method("POST")
+     *
+     */
+    public function userPackCreateAction(Request $request)
+    {
+/*
+ * On check si le nom est rempli et si on a des users dans le groupe
+ * */
+        if(!$request->request->get('nom'))
+        {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Le groupe doit porter un nom'
+            );
+            return new RedirectResponse($this->container->get('router')->generate('new_userpack'));
+        }
+
+        if(!$request->request->get('valeurs'))
+        {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Le groupe doit comporter des utilisateurs'
+            );
+            return new RedirectResponse($this->container->get('router')->generate('new_userpack'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $testUserPack = $em->getRepository('SesileUserBundle:UserPack')->findBy(array('collectivite'=>$collectivite,'nom'=>$request->request->get('nom') ));
+
+        /*
+         * si on trouve un userPack avec ce nom alors il est déjà pris : ça dégage
+         * */
+
+        if(count($testUserPack))
+        {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Ce nom de groupe existe déjà'
+            );
+            return new RedirectResponse($this->container->get('router')->generate('new_userpack'));
+        }
+        /*
+         * valeurs contient les ids des users sélectionnés séparés par des virgules
+         */
+
+        $idUsers = explode(',',$request->request->get('valeurs'));
+
+
+
+        $nom = $request->request->get('nom');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $userPack = new UserPack();
+        $userPack->setNom($nom);
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $userPack->setCollectivite($collectivite);
+        foreach($idUsers as $idUser)
+        {
+            $user = $em->getRepository('SesileUserBundle:User')->findOneById($idUser);
+            $userPack->addUser($user);
+        }
+
+
+        $em->persist($userPack);
+        $em->flush();
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Le groupe d\'utilisateurs a bien été enregistré'
+        );
+        return new RedirectResponse($this->container->get('router')->generate('userpacks'));
+
+
+    }
+
+
+    /**
+     *
+     *
+     * @Route("/groupes/edit/{id}", name="edit_userpack")
+     * @Method("GET")
+     * @Template("SesileUserBundle:UserPack:edit.html.twig")
+     */
+    public function userPackEditAction($id)
+    {
+
+        // fonction pour la securite
+        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
+
+        $em = $this->getDoctrine()->getManager();
+        $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
+
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+
+        return array('userPack'=>$userPack,'users'=>$users, "menu_color" => "vert");
+
+    }
+
+    /**
+     *
+     *
+     * @Route("/groupes/modify/{id}", name="modify_userpack")
+     * @Method("POST")
+     *
+     */
+    public function userPackModifyAction(Request $request,$id)
+    {
+        if(!$request->request->get('nom'))
+        {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Le groupe doit porter un nom'
+            );
+            return new RedirectResponse($this->container->get('router')->generate('edit_userpack',array('id'=>$id)));
+        }
+
+        if(!$request->request->get('valeurs'))
+        {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Le groupe doit comporter des utilisateurs'
+            );
+            return new RedirectResponse($this->container->get('router')->generate('edit_userpack',array('id'=>$id)));
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $testUserPack = $em->getRepository('SesileUserBundle:UserPack')->findBy(array('collectivite'=>$collectivite,'nom'=>$request->request->get('nom') ));
+/*
+ * Si on trouve un userPack à ce nom, on vérifie que c'est pas nous, si ce n'est pas nous on dégage!
+ * */
+        if(count($testUserPack))
+        {
+            foreach($testUserPack as $pack)
+            {
+                if($pack->getId() != $id)
+                {
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        'Ce nom de groupe existe déjà'
+                    );
+                    return new RedirectResponse($this->container->get('router')->generate('edit_userpack',array('id'=>$id)));
+                }
+            }
+
+        }
+
+        $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
+        $userPack->setNom($request->request->get('nom'));
+        $idUsers = explode(',',$request->request->get('valeurs'));
+        foreach($userPack->getUsers() as $user)
+        {
+            $userPack->removeUser($user);
+        }
+
+        foreach($idUsers as $idUser)
+        {
+            $user = $em->getRepository('SesileUserBundle:User')->findOneById($idUser);
+            $userPack->addUser($user);
+        }
+        $em->flush();
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'Le groupe d\'utilisateurs a bien été modifié'
+        );
+        return new RedirectResponse($this->container->get('router')->generate('edit_userpack',array('id'=>$id)));
+
+    }
+
+    private function getUserPackSelection($userPack)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        /*
+         * On récupère tout les users de la collectivité et tous ceux qui sont dans le UserPack
+         * */
+        $usersFromCollectivite = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+
+        $usersFromPack = $userPack->getUsers();
+
+        $tabIdUFC = array();
+        $tabIdUFP = array();
+        $tabRetour = array();
+        /*
+         * On crée un tableau où on met les ids des users de la collec
+         */
+        foreach( $usersFromCollectivite as $ufc)
+        {
+            $tabIdUFC[] = $ufc->getId();
+        }
+        /*
+         * On crée un tableau où on met les ids des users du Pack
+         */
+        foreach($usersFromPack as $ufp)
+        {
+            $tabIdUFP[] = $ufp->getId();
+        }
+
+        /*
+         * Pour chaque user de la collectivité on regarde s'il est dans le pack et on crée un tableau ou on met ce booléen(dans le pack ou pas)et le user
+         * On trasforme ce tableau en objet (plus facile à manipuler dans le twig) et on ajoute ça a un tableau contenant un objet pour chaque user de la collec
+         */
+        foreach($tabIdUFC as $idUFC)
+        {
+            if(in_array($idUFC,$tabIdUFP))
+            {
+                $tabRetour[] = (object)array('inPack'=>true,'user'=>$em->getRepository('SesileUserBundle:User')->findOneById($idUFC));
+            }
+            else{
+                $tabRetour[] = (object)array('inPack'=>false,'user'=>$em->getRepository('SesileUserBundle:User')->findOneById($idUFC));
+            }
+
+        }
+        return $tabRetour;
+    }
+
+
+    /**
+     * Delete an existing userPack.
+     *
+     * @Route("groupes/delete/{id}", name="delete_userpack")
+     * @Method("get")
+     */
+    public function deleteUserPackAction($id) {
+
+        // fonction pour la securite
+        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
+
+        // On recupere l enregistrement a supprimer
+        $em = $this->getDoctrine()->getManager();
+        $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
+
+        // On supprime l enregistrement
+        $em->remove($userPack);
+        $em->flush();
+
+        // on redirige avec un petit message
+        $this->get('session')->getFlashBag()->add('success', 'Le groupe d\'utilisateurs a bien été supprimé');
+        return $this->redirect($this->generateUrl('userpacks'));
+    }
+
+    private function securityContext() {
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
     /**
      * Creates a form to create a User entity.
      *
@@ -449,6 +751,8 @@ class DefaultController extends Controller
 
         return array();
     }
+
+
 
     /**
      * @Route("/cas/list", name="user_list_cas")

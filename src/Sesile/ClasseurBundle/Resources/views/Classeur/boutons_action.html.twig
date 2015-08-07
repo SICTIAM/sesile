@@ -1,4 +1,4 @@
-{% if classeur.isValidableByDelegates(usersdelegated) %}
+{% if classeur.isValidableByDelegates(usersdelegated, validant) %}
 
     {#{% if signable %}#}
     {% if classeur.getType.id == 2 %}
@@ -28,11 +28,9 @@
 
     {% endif %}
 
-    <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
-            data-whatever="@mdo">
+    <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal" data-whatever="@mdo">
         <span class="glyphicon glyphicon-remove"></span>
         &nbsp;Refuser
-
     </button>
 
 

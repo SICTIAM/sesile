@@ -17,6 +17,7 @@ if (typeof circuit_users != 'undefined') {
     user_a_charger = circuit_users.split(",");
     if (user_a_charger.length > 0) {
         var sort = false;
+
         $.each(user_a_charger, function (k, v) {
             //console.log("Ordre : " + ordre_circuit + " - Variable k : " + k);
             if (typeof validant != 'undefined') { // && validant > 0 ????
@@ -40,10 +41,21 @@ if (typeof deposant != 'undefined') {
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
-
+/*if ( typeof validant != 'undefined') {
+    var new_perso = $('<div/>').addClass('no_sort perso_circuit curr_user').appendTo("#circuit");
+    perso_src = validant.path ? path+validant.path : perso_src;
+    $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);
+    $('<img />').attr("src", perso_src).appendTo(new_perso);
+    $('<span class="nom_perso" />').text(validant.nom).appendTo(new_perso);
+    //$("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(.deposant)");
+}*/
 // Fonction pour afficher les bouton valider et signer
-function aff_button_valider (valid_sign) {
-    if(valid_sign == 0) {
+function aff_button_valider () {
+    //var c = document.getElementById("#contetapes").childNodes.length;
+    var nbEtapes = $('.etapes-circuit').length;
+    //console.log(nbEtapes);
+    //if(valid_sign == 0) {
+    if(nbEtapes == 0) {
         $(".btn-valider-signer").css('display', 'inline-block');
         $(".btn-valider-non-signer").css('display', 'none');
         //console.log("valider ok : " + valid_sign);
@@ -107,12 +119,12 @@ function ajoutUser(id, k) {
                 creerFleches();
             });
             // pour les boutons valider et signer
-            valid_sign = valid_sign -1;
-            aff_button_valider (valid_sign)
+            /*valid_sign = valid_sign -1;
+            aff_button_valider (valid_sign)*/
         });
         // pour les boutons valider et signer
-        this.valid_sign ++;
-        aff_button_valider(valid_sign);
+        /*this.valid_sign ++;
+        aff_button_valider(valid_sign);*/
     }
 
     perso_src = sel_user.data("img") ? path + sel_user.data("img") : perso_src_init;
@@ -251,7 +263,7 @@ if (form_parent.length > 0) {
             ordre_circuit.push($(this).data("id"));
         });
 
-        if(ordre_circuit.length == 0) {
+        if(ordre_circuit.length == 0 && status != 0) {
             alert("Le circuit ne peut pas être vide");
             return false;
         }
@@ -290,5 +302,6 @@ $(document).ready(function () {
         });
     });
     // FIN de la recherche dans les utilisateurs
-    aff_button_valider (valid_sign);
+    //aff_button_valider (valid_sign);
+    aff_button_valider();
 });

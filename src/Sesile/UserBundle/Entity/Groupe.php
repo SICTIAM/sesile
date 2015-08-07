@@ -28,11 +28,13 @@ class Groupe {
     private $nom;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="collectivite", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="groupes", cascade={"persist"})
+     * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
+     *
      */
-    private $collectivite;
+    protected $collectivite;
 
     /**
      * @var
@@ -42,24 +44,41 @@ class Groupe {
 
     /**
      * @var string
-     * @ORM\Column(name="couleur", type="string", length=255)
+     * @ORM\Column(name="couleur", type="string", length=255, nullable=true)
      */
     private $couleur;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", inversedBy="groupes", cascade={"persist"})
      * @ORM\JoinTable(name="classeur_groupe")
-     * @ORM\OrderBy({"nom" = "ASC"})
      */
     private $types;
 
     /**
      * @var string
-     * @ORM\Column(name="json", type="text")
+     * @ORM\Column(name="json", type="text",nullable=true)
      */
     private $json;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupe")
+     * @ORM\OrderBy({"ordre" = "ASC"})
+     */
+    private $etapeGroupes;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ordreEtape", type="string", length=255)
+     */
+    private $ordreEtape;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="creation", type="datetime", nullable=true)
+     */
+    private $creation;
 
     /**
      * Get id
@@ -90,31 +109,14 @@ class Groupe {
         return $this->nom;
     }
 
-    /**
-     * Set collectivite
-     *
-     * @param string $collectivite
-     * @return Groupe
-     */
-    public function setCollectivite($collectivite) {
-        $this->collectivite = $collectivite;
-        return $this;
-    }
-
-    /**
-     * Get collectivite
-     *
-     * @return string
-     */
-    public function getCollectivite() {
-        return $this->collectivite;
-    }
+    
 
     /**
      * Constructor
      */
     public function __construct() {
         $this->hierarchie = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->creation = new \DateTime('now');
     }
     
 
@@ -229,5 +231,107 @@ class Groupe {
     public function getTypes()
     {
         return $this->types;
+    }
+
+    /**
+     * Add etapeGroupes
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     * @return Groupe
+     */
+    public function addEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    {
+        $this->etapeGroupes[] = $etapeGroupes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeGroupes
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     */
+    public function removeEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    {
+        $this->etapeGroupes->removeElement($etapeGroupes);
+    }
+
+    /**
+     * Get etapeGroupes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeGroupes()
+    {
+        return $this->etapeGroupes;
+    }
+
+    /**
+     * Set ordreEtape
+     *
+     * @param string $ordreEtape
+     * @return Groupe
+     */
+    public function setOrdreEtape($ordreEtape)
+    {
+        $this->ordreEtape = $ordreEtape;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordreEtape
+     *
+     * @return string 
+     */
+    public function getOrdreEtape()
+    {
+        return $this->ordreEtape;
+    }
+
+    /**
+     * Set collectivite
+     *
+     * @param \Sesile\MainBundle\Entity\Collectivite $collectivite
+     * @return Groupe
+     */
+    public function setCollectivite(\Sesile\MainBundle\Entity\Collectivite $collectivite = null)
+    {
+        $this->collectivite = $collectivite;
+    
+        return $this;
+    }
+
+    /**
+     * Get collectivite
+     *
+     * @return \Sesile\MainBundle\Entity\Collectivite 
+     */
+    public function getCollectivite()
+    {
+        return $this->collectivite;
+    }
+
+    /**
+     * Set creation
+     *
+     * @param \DateTime $creation
+     * @return Groupe
+     */
+    public function setCreation($creation)
+    {
+        $this->creation = $creation;
+    
+        return $this;
+    }
+
+    /**
+     * Get creation
+     *
+     * @return \DateTime 
+     */
+    public function getCreation()
+    {
+        return $this->creation;
     }
 }

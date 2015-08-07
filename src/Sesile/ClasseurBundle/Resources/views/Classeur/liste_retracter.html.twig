@@ -16,7 +16,7 @@
             <td><a href="{{ path('classeur_edit', {id: classeur.id}) }}" class="link-datatable">{{ classeur.nom }}</a></td>
             <td><a href="{{ path('classeur_edit', {id: classeur.id}) }}" class="link-datatable">{{ classeur.creation |date("d/m/Y H:m") }}</a></td>
             <td><a href="{{ path('classeur_edit', {id: classeur.id}) }}" class="link-datatable">{{ classeur.validation |date("d/m/Y") }}</a></td>
-            <td><a href="{{ path('classeur_edit', {id: classeur.id}) }}" class="link-datatable">{{ classeur.validantName }}</a></td>
+            <td><a href="{{ path('classeur_edit', {id: classeur.id}) }}" class="link-datatable">{% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %} </a></td>
             <td><a href="{{ path('classeur_edit', {id: classeur.id}) }}" class="link-datatable">{{ classeur.type.nom }}</a></td>
             <td>
                 <a href="{{ path('classeur_edit', {id: classeur.id}) }}" class="link-datatable"><span class="glyphicon statut_{{ classeur.status }}"></span></a>

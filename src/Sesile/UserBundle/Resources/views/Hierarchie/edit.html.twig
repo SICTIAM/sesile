@@ -27,7 +27,7 @@
 	</div>
 	{% include 'SesileUserBundle:Hierarchie:legende.organigramme.html.twig' %}
 
-	<form id="form_hierarchy" method="post" action="{% if groupe is defined %}{{ path("update_groupe") }} {% else %}{{ path("new_groupe") }} {% endif %}">
+	<form id="form_hierarchy" method="post" action="{% if groupe is defined %}{{ path("update_service") }} {% else %}{{ path("new_service") }} {% endif %}">
         <div class="row">
             <div class="col-lg-12 col-lg-push-1">
                 <h4>Choisir les types de classeur du service</h4>
@@ -46,6 +46,12 @@
 
             <div class="col-lg-4 col-lg-push-1">
 	        {#<div id="edit_service">#}
+
+                <div class="row">
+                    <a class="btn btn-default col-md-11" href="{{ path('services') }}">Retour aux services organisationnels</a>
+                </div>
+
+                <div class="row">&nbsp;</div>
 
                 <div class="row">
                     {% if groupe is defined %}

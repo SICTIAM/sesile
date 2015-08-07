@@ -1,0 +1,56 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-floppy-saved"></span>
+            &nbsp;&nbsp;&nbsp;Editer un groupe d'utilisateurs
+        </div>
+        <form action="{{ path('modify_userpack',{id:userPack.id}) }}" class="form-horizontal" method="post" id="form">
+
+            <div class="form-group">
+                <label for="nom" class="col-lg-2 control-label">Nom</label>
+                <div class="col-lg-6 ">
+                    <input type="text" name="nom" class="form-control" id="nom_groupe" value="{{ userPack.nom }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="listUsers" class="col-lg-2 control-label">Liste des utilisateurs</label>
+                <div class="col-lg-6 ">
+                    <!--
+                    our chaque user on regarde si le booleen inPack est true ou false, s'il est true l'option a l'attribut selected
+                    -->
+                    <select class="js-example-basic-multiple required" style="width: 100%" multiple="multiple" id="listUsers" name="listUsers">
+                        {% for user in users %}
+                            <option value="{{ user.id }}"{% if user in userPack.users %}  selected {% endif %}>{{ user.prenom}} {{ user.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <input type="submit" class="btn btn-success" value="Enregistrer">
+                </div>
+                <div class="col-lg-2">
+                    <a class="btn btn-primary pull-right" href="{{ path('userpacks') }}">
+                        <span class="glyphicon glyphicon-share-alt"></span>&nbsp;&nbsp;Retour aux groupes
+                    </a>
+                </div>
+                <input type="hidden" name="valeurs" id="valeurs">
+            </div>
+
+        </form>
+    </div>
+    <script type="application/javascript" src="{{ asset("/js/select2.min.js") }}"></script>
+    <link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
+    <script>
+        $(document).ready(function(){
+            $("#listUsers").select2({});
+
+
+            $('#form').submit(function(){
+                $('#valeurs').val($('#listUsers').val());
+            });
+        })
+    </script>
+{% endblock %}

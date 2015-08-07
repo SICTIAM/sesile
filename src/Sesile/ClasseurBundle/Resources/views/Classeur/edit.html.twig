@@ -1,16 +1,16 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    {% if classeur.isValidableByDelegates(usersdelegated) %}
+    {% if classeur.isValidableByDelegates(usersdelegated, validant) %}
     <script type="text/javascript" src="{{ asset("/js/bootstrap-datepicker.js") }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset("/css/datepicker.css") }}">
 
     <div class="bloc_page">
             <div class="titre_page row">
                 <div class="col-lg-10">
-                    {% if classeur.isModifiableByDelegates(usersdelegated) %}
+                    {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
                         <span class="glyphicon glyphicon-pencil"></span>
-                    &nbsp;&nbsp;&nbsp;Édition du classeur
+                        &nbsp;&nbsp;&nbsp;Édition du classeur
                     {% else %}
                         <span class="glyphicon glyphicon-eye"></span>
                         &nbsp;&nbsp;&nbsp;Visualisation du classeur
@@ -48,6 +48,12 @@
                 {% else %}
                     {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
                 {% endif %}
+
+                <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                    Retour à la liste des classeurs
+                </a>
+
             </div>
         </div>
 
@@ -72,23 +78,37 @@
         <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
-            <div class="titre_form_element">
-                <span class="glyphicon glyphicon-play"></span>
-                &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="titre_form_element">
+                        <span class="glyphicon glyphicon-play"></span>
+                        &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="titre_form_element">
+                        <span class="glyphicon glyphicon-play"></span>
+                        &nbsp;&nbsp;&nbsp;Type du classeur
+                    </div>
+                </div>
             </div>
+        
 
             <div class="row">
-                <div class="col-lg-3">
-
-
-                <select class="fuckingvisibility form-control" id="visibilite" name="visibilite">
-                    <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
-                    <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
-                    <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
-                    {% if classeur.visibilite == 3 %}
-                        <option value="3" selected="selected">Pour le service organisationnel</option>
-                    {% endif %}
-                </select>
+                <div class="col-lg-6">
+                    <select class="fuckingvisibility form-control" id="visibilite" name="visibilite">
+                        <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
+                        <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
+                        <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
+                        {% if classeur.visibilite == 3 %}
+                            <option value="3" selected="selected">Pour le service organisationnel</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-lg-6 disabled">
+                    <select class="form-control" disabled>
+                        <option>{{ classeur.type.nom }}</option>
+                    </select>
                 </div>
             </div>
 
@@ -135,7 +155,7 @@
         <div class="bloc_page">
             <div class="titre_page row">
                 <div class="col-lg-10">
-                    {% if classeur.isModifiableByDelegates(usersdelegated) %}
+                    {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
                         <span class="glyphicon glyphicon-pencil"></span>
                         &nbsp;&nbsp;&nbsp;Édition du classeur
                     {% else %}
@@ -176,6 +196,11 @@
                     {% if retractable %}
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
+
+                    <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        Retour à la liste des classeurs
+                    </a>
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}
@@ -209,14 +234,47 @@
         <br/>
 
         <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
-        <input type="hidden" name="id" value="{{ classeur.id }}"/>
+            <input type="hidden" name="id" value="{{ classeur.id }}"/>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="titre_form_element">
+                        <span class="glyphicon glyphicon-play"></span>
+                        &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="titre_form_element">
+                        <span class="glyphicon glyphicon-play"></span>
+                        &nbsp;&nbsp;&nbsp;Type du classeur
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <select class="fuckingvisibility form-control" id="visibilite" name="visibilite" disabled>
+                        <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
+                        <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
+                        <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
+                        {% if classeur.visibilite == 3 %}
+                            <option value="3" selected="selected">Pour le service organisationnel</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-lg-6 disabled">
+                    <select class="form-control" disabled>
+                        <option>{{ classeur.type.nom }}</option>
+                    </select>
+                </div>
+            </div>
 
         <div class="titre_form_element" disabled>
             <span class="glyphicon glyphicon-play"></span>
             &nbsp;&nbsp;&nbsp;Titre
         </div>
-        <input class="form-control" name="name" placeholder="Nom" required="required" disabled
-               value="{{ classeur.nom }}">
+        <input class="form-control" name="name" placeholder="Nom" required="required" disabled value="{{ classeur.nom }}">
         <br>
 
         <div class="titre_form_element">
@@ -241,34 +299,26 @@
             <span class="glyphicon glyphicon-play"></span>
             &nbsp;&nbsp;&nbsp;Date limite de validation
         </div>
-        <input class="datepicker" name="validation" type="datetime" disabled
-               value="{{ classeur.validation  | date('d/m/Y') }}"/>
-
-
+        <input class="datepicker" name="validation" type="datetime" disabled value="{{ classeur.validation  | date('d/m/Y') }}"/>
 
 
         <style>
 
             #circuit {
-
                 opacity: .5;
                 pointer-events: none;
             }
 
             #circuitvalidation {
-
                 opacity: .5;
                 pointer-events: none;
             }
 
-             .top_selects_circuits {
+             /*.top_selects_circuits {
                  display: none !important;
-             }
+             }*/
 
         </style>
-
-
-
 
 
     {% endif %}
@@ -308,48 +358,38 @@
             <!-- Intégration de la liste des utilisateurs -->
 
             <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
-            <div class="top_selects_circuits">
-
-
-                <div class="selects_circuit">
-                    <div class="titre_select">
-                        <label class="nametitle" id="users_complete">
-                            <span class="glyphicon glyphicon-search"></span>
-                            &nbsp;&nbsp;Utilisateurs&nbsp;&nbsp;</label>
-                        <input class="nameinput" type="text" id="circuit-search" autocomplete="off">
-                    </div>
-                    <div id="users_list">
-                        {% for user in users %}
-                            <p class="users-search" data-id="{{ user.id }}" data-img="{{ user.path }}">{{ user.nom }} {{ user.prenom }}</p>
-                        {% endfor %}
-                    </div>
-                    <span id="useradd_btn" class="glyphicon glyphicon-chevron-down"></span>
-                </div>
-
-            </div>
 
 
             <div id="circuitcontent">
 
-
+                {% if currentValidant %}
+                    <input type="hidden" name="curentValidant" value="{{ currentValidant.id }}">
+                {% endif %}
                 <script type="application/javascript">
 
 
-                    var circuit_users = "{{ classeur.circuit }}";
-                    {#var ordre_circuit = {{ classeur.ordreCircuit }} - 1;#}
-                    var ordre_circuit = {{ classeur.ordreCircuit }};
-                    var validant = {{ validant }};
+                    {% if classeur.circuit and currentValidant and classeur.status != 0 %}
+                        var circuit_users = "{{ classeur.circuit }}" + "," + {{ currentValidant.id }};
+                    {% elseif currentValidant and classeur.status != 0 %}
+                        var circuit_users = {{ currentValidant.id }} + "," ;
+                    {% elseif classeur.circuit and classeur.status != 0 %}
+                        var circuit_users = "{{ classeur.circuit }}";
+                    {% else %}
+                        var circuit_users = "";
+                    {% endif %}
+                    var ordre_circuit = {{ classeur.ordreetape }};
+                    var validant = {{ currentValidant|json_encode|raw }};
                     var status = {{ classeur.status }};
                     /*voir cette ligne*/
-                    var deposant = {{ deposant|json_encode|raw }};
-
+                    {#var deposant = {{ deposant|json_encode|raw }};#}
                     var path = "{{ asset(upload_path) }}";
                 </script>
 
 
                 <!-- Nouvelle vue ajouté "validation.html.twig" -->
 
-                {% render url("new_validate_edit_classeur") %}
+                {#{% render url("new_validate_edit_classeur") %}#}
+                {{ render(controller('SesileCircuitBundle:Circuit:validationeditclasseur', { 'id': classeur.id, 'validant': currentValidant })) }}
 
             </div>
         </form>
@@ -371,8 +411,9 @@
 
                     <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
                         <span class="glyphicon glyphicon-share-alt"></span>
-                        Retour à la liste des classeur
+                        Retour à la liste des classeurs
                     </a>
+
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}
@@ -440,8 +481,7 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-primary" href="{{ path('classeur_create') }}"
-                                    id="refus">Confirmer
+                            <button type="submit" class="btn btn-primary" href="{{ path('classeur_create') }}" id="refus">Confirmer
                             </button>
                         </div>
                     </form>
@@ -451,20 +491,12 @@
     </div>
 
 
-
-
     <style>
-
         .modal-dialog {
-
             width: 90%;
             height: 50px;
-
         }
-
-
     </style>
-
 
 
     <script type="application/javascript">
@@ -491,14 +523,14 @@
                 $(".selects_circuit:nth-child(2)").hide();
                 loadDocuments();
 
-                $(".top_selects_circuits, .suppr_perso").hide();
+//                $(".top_selects_circuits, .suppr_perso").hide();
                 $(".perso_circuit").css("cursor", "Default");
 
 
-                {% if classeur.isModifiableByDelegates(usersdelegated) %}
+                {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
                 $("#name, #desc, #validation").removeAttr("disabled");
                 $("#enregistrer_modif").show();
-                $(".top_selects_circuits, .suppr_perso").show();
+//                $(".top_selects_circuits, .suppr_perso").show();
                 $("#circuit").sortable("enable");
                 $(".perso_circuit").css("cursor", "-moz-grab");
                 {% endif %}
@@ -522,6 +554,6 @@
             });
         </script>
     </div>
-    <object id="winFirefoxPlugin" type="application/x-sharepoint"
-            style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>
+    {#<object id="winFirefoxPlugin" type="application/x-sharepoint" style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>#}
+    <object id="winFirefoxPlugin" type="application/x-sharepoint"></object>
 {% endblock %}

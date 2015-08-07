@@ -1,0 +1,37 @@
+<div id="sioux">
+<table class="table tableau dtables" id="validTable">
+    <thead>
+    <tr>
+        <th>Titre du classeur</th>
+        <th>Date de création</th>
+        <th>Date limite de validation</th>
+        <th>Intervenant</th>
+        <th>Type de classeur</th>
+        <th>Statut actuel</th>
+        <th>Action</th>
+        <th>document</th>
+        <th>Type de classeur</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for classeur in classeurs %}
+        <tr>
+            <td>{{ classeur.nom }}</td>
+            <td>{{ classeur.creation|date("d/m/Y") }}</td>
+            <td>{{ classeur.validation|date("d/m/Y") }}</td>
+            <td>{% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %}</td>
+            <td>{{ classeur.type.nom }}</td>
+            <td>{{ classeur.status }}</td>
+            <td>{{ classeur.id }}</td>
+            <td>{% for document in classeur.document %}{{ document.id }}{% endfor %}</td>
+            <td>{{ classeur.type.id }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+<script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+<link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+<script type="application/javascript" src="{{ asset("/js/liste_classeurs.js") }}"></script>
+<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script type="application/javascript" src="//cdn.datatables.net/plug-ins/1.10.7/sorting/datetime-moment.js"></script>

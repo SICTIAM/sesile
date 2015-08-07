@@ -1,0 +1,98 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-floppy-saved"></span>
+            &nbsp;&nbsp;&nbsp;Liste des services organisationnels
+        </div>
+        <table class="table tableau dtables">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Date de création</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for servOrg in servOrgs %}
+                <tr class="user-row" data-id="{{ servOrg.id }}">
+                    <td>
+                        <a href="{{ path('edit_serviceorg',{id:servOrg.id}) }}" class="link-datatable">{{ servOrg.nom }}</a>
+                    </td>
+
+                    <td>
+                        {% if servOrg.creation %}
+                            <a href="{{ path("edit_serviceorg", {'id' : servOrg.id }) }}" class="link-datatable">{{ servOrg.creation|date("d/m/Y") }}</a>
+                        {% endif %}
+                    </td>
+                    <td class="boutons_action">
+                        <a href="{{ path('edit_serviceorg',{id:servOrg.id}) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a data-href="{{ path("delete_serviceorg", {'id' : servOrg.id }) }}" data-toggle="modal" data-target="#confirm-delete">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path("new_serviceorg") }}">
+            <button type="button" class="btn btn-default navbar-btn">
+                Ajouter un service organisationnel
+            </button>
+        </a>
+        <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+        <script type="text/javascript">
+            $(".dtables").dataTable({
+                "oLanguage": {
+                    "sSearch": "Rechercher&nbsp;:",
+                    "sInfo": "Groupe  _START_ &agrave; _END_ sur _TOTAL_",
+                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    "sLengthMenu": "Afficher _MENU_ groupes par page",
+                    "oPaginate": {
+                        "sFirst": "",
+                        "sPrevious": "",
+                        "sNext": "",
+                        "sLast": ""
+                    },
+                    "sZeroRecords": "Aucun service organisationnel &agrave; afficher",
+                    "sEmptyTable": "Aucun service organisationnel &agrave; afficher"
+                },
+                "iDisplayLength": 15,
+                "aLengthMenu": [15, 30, 50, 100],
+                "sDom": 'lft<"footer_datatables"p>',
+                "aoColumnDefs": [
+                    { "aTargets": [ 1 ], sClass: "center" },
+                    { "aTargets": [ 2 ], sClass: "center" },
+                    { "bSortable": false, "aTargets": [ -1 ] }
+                ],
+                "sPaginationType": "full_numbers"
+            });
+
+        </script>
+    </div>
+
+    {# Modal Delete #}
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    Etes-vous sur de voulor supprimer ce service organisationnel ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-danger btn-ok">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+    </script>
+{% endblock %}
