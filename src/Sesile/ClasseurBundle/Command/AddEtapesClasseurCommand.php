@@ -32,35 +32,38 @@ class AddEtapesClasseurCommand extends ContainerAwareCommand
                 $etapes_circuit = explode(',', $classeur->getCircuit());
 
                 foreach ($etapes_circuit as $k => $etape_circuit) {
-                    $step  = new EtapeClasseur();
+                    if (!empty($etape_circuit) AND $classeur->getOrdreValidant() === null) {
+                        $step = new EtapeClasseur();
 
-                    // Enregistrement de l etape construite
-                    $step->setClasseur($classeur);
-                    $classeur->addEtapeClasseur($step);
+                        // Enregistrement de l etape construite
+                        $step->setClasseur($classeur);
+                        $classeur->addEtapeClasseur($step);
 
-                    // Enregistrement de l ordre des etapes
-                    $step->setOrdre($k);
+                        // Enregistrement de l ordre des etapes
+                        $step->setOrdre($k);
 
-                    // Enregistrement de l utilisateur lié à l'étape
-                    // Et oui un seul utilisateur car ce n etait pas le multi-pattes donc pas de boucles et pas de groupes
-                    $user = $em->getRepository('SesileUserBundle:User')->findOneById($etape_circuit);
-                    $step->addUser($user);
-
-
-                    $em->persist($step);
-                    $em->flush();
+                        // Enregistrement de l utilisateur lié à l'étape
+                        // Et oui un seul utilisateur car ce n etait pas le multi-pattes donc pas de boucles et pas de groupes
+                        $user = $em->getRepository('SesileUserBundle:User')->findOneById($etape_circuit);
+                        $step->addUser($user);
 
 
-                    // On enregistre les etapes validantes dans le classeur
-                    if ($k == 0) {
-                        $classeur->setOrdreValidant($step->getId());
+                        $em->persist($step);
+                        $em->flush();
+
+
+                        // On enregistre les etapes validantes dans le classeur
+                        if ($k == 0) {
+                            $classeur->setOrdreValidant($step->getId());
+                        } else if ($k <= $classeur->getOrdreCircuit()) {
+                            $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $step->getId());
+                        }
+
+                        $em->flush();
                     }
-                    else if ($k <= $classeur->getOrdreCircuit()) {
-                        $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $step->getId());
-                    }
 
-                    $em->flush();
                 }
+                $output->writeln('Classeur : ' . $classeur->getId());
 
             }
 
@@ -71,6 +74,8 @@ class AddEtapesClasseurCommand extends ContainerAwareCommand
                 $classeur->setCircuitZero(implode(',', $etapes_circuit));
 
                 $em->flush();
+
+                $output->writeln('Classeur setCircuit : ' . $classeur->getId());
             }
 
             $output->writeln('Les étapes classeurs ont été modifié');
