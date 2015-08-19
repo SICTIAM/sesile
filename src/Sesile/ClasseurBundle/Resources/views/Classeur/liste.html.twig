@@ -18,9 +18,8 @@
             <td>{{ classeur.nom }}</td>
             <td>{{ classeur.creation|date("d/m/Y") }}</td>
             <td>{{ classeur.validation|date("d/m/Y") }}</td>
-            <td>{% if classeur.status == 0 %}
-                    {{ classeur.deposant }}
-                {% elseif classeur.status != 2 %}
+            <td>
+                {% if classeur.status != 2 %}
                     {% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %}
                 {% endif %}
             </td>

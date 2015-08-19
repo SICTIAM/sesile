@@ -54,7 +54,7 @@ class Classeur {
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur")
+     * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", fetch="EAGER")
      * @ORM\JoinColumn(name="type", referencedColumnName="id")
      */
     private $type;
@@ -67,11 +67,11 @@ class Classeur {
     private $status;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="user", type="integer")
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs")
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
      *
      */

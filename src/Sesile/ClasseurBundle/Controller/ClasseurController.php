@@ -54,16 +54,17 @@ class ClasseurController extends Controller {
         {
             $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
 //            var_dump($classeur->getUser());
-            $deposant = $em->getRepository('SesileUserBundle:User')->findOneById($classeur->getUser());
-            $tabClasseurs[] = array('id'=>$classeur->getId(),
+//            $deposant = $em->getRepository('SesileUserBundle:User')->findOneById($classeur->getUser());
+            $tabClasseurs[] = array(
+                'id'        => $classeur->getId(),
                 'nom'       => $classeur->getNom(),
                 'creation'  => $classeur->getCreation(),
                 'validation'=> $classeur->getValidation(),
                 'type'      => $classeur->getType(),
                 'status'    => $classeur->getStatus(),
                 'document'  => $classeur->getDocuments(),
-                'validants' => $validants,
-                'deposant'  => $deposant->getPrenom() . " " . $deposant->getNom()
+                'validants' => $validants
+//                'deposant'  => $deposant->getPrenom() . " " . $deposant->getNom()
             );
         }
 
@@ -336,7 +337,7 @@ class ClasseurController extends Controller {
                 "status" => array(1,4)
             ));
 
-        $tabClasseurs = array();
+//        $tabClasseurs = array();
         foreach($entities as $classeur)
         {
             $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
@@ -344,14 +345,15 @@ class ClasseurController extends Controller {
             if(array_intersect($usersdelegated, $validants))
             {
                 $tabClasseurs[] = array(
-                    'id'=>$classeur->getId(),
-                    'nom'=>$classeur->getNom(),
-                    'creation'=>$classeur->getCreation(),
-                    'validation'=>$classeur->getValidation(),
-                    'type'=>$classeur->getType(),
-                    'status'=>$classeur->getStatus(),
-                    'document'=>$classeur->getDocuments(),
-                    'validants'=>$validants);
+                    'id'        => $classeur->getId(),
+                    'nom'       => $classeur->getNom(),
+                    'creation'  => $classeur->getCreation(),
+                    'validation'=> $classeur->getValidation(),
+                    'type'      => $classeur->getType(),
+                    'status'    => $classeur->getStatus(),
+                    'document'  => $classeur->getDocuments(),
+                    'validants' => $validants
+                );
             }
 
         }

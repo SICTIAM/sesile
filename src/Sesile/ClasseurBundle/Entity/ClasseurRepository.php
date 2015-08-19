@@ -82,6 +82,31 @@ class ClasseurRepository extends EntityRepository {
 
     }*/
 
+    /*
+     * Get current classeurs visible for Data Tables
+     *
+     * @param integer user id
+     * @param array get values of Data Tables
+     */
+    public function getClasseursVisiblesForDTablesV3($userid) {
+
+        $qb = $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userid)
+            ->join('c.type', 't')
+            ->addSelect('t')
+        ;
+
+
+        // on retourne la requete
+        return $qb
+            ->getQuery()
+            ->getResult()
+        ;
+
+    }
+
     /*public function isDelegatedToUserV2($classeur, $user) {
         $em = $this->getEntityManager();
         $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
