@@ -117,14 +117,21 @@
                                     Classeurs à valider
                                 </div>
 
+                                {#<div id="classeur-a-valider">
+                                    <img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                                </div>#}
                                 {% render url("classeur_a_valider") %}
+
                             </div>
                             <div id="liste_classeurs">
                                 <div class="titre_bloc_accueil">
                                     <span class="glyphicon glyphicon-eye-open"></span>
                                     Liste des classeurs
                                 </div>
-                                {% render url("liste_classeurs") %}
+                                <div id="liste-classeurs">
+                                    <img id="loadinggif-liste" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                                </div>
+                                {#{% render url("liste_classeurs") %}#}
                             </div>
                             {% include 'SesileClasseurBundle:Classeur:legende.html.twig' %}
 
@@ -183,6 +190,14 @@
 {% block losjavascriptos %}
 {% endblock %}
 <script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $('#liste-classeurs').load("{{ path("liste_classeurs") }}");
+        {#$('#classeur-a-valider').load("{{ path("classeur_a_valider") }}");#}
+        {#{% render url("liste_classeurs") %}#}
+    });
+
 
 
     $(".cb-enable").click(function () {
