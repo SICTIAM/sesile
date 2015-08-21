@@ -336,8 +336,9 @@ class ClasseurController extends Controller {
             array(
                 "status" => array(1,4)
             ));
+//        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->gatClasseurToValidate();
 
-//        $tabClasseurs = array();
+        $tabClasseurs = array();
         foreach($entities as $classeur)
         {
             $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
@@ -1233,6 +1234,24 @@ class ClasseurController extends Controller {
             $usersCV = array_unique($usersCV);
             // On vide la table many to many
             $classeur->getVisible()->clear();
+            foreach ($usersCV as $userCV) {
+                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
+                $classeur->addVisible($userVisible);
+            }
+        } elseif ($visibilite == 3) {
+//            $usersCV = $classeur->getPrivateAfterMeVisible();
+
+            $usersVisible = $classeur->getVisible();
+            $usersAlreadyVisible = array();
+            foreach ($usersVisible as $userV) {
+                $usersAlreadyVisible[] = $userV->getId();
+            }
+            $usersCV = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
+            $usersCV = array_unique($usersCV);
+
+            $usersCV = array_diff($usersCV, $usersAlreadyVisible);
+            // On vide la table many to many
+//            $classeur->getVisible()->clear();
             foreach ($usersCV as $userCV) {
                 $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
                 $classeur->addVisible($userVisible);

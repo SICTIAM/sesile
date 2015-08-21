@@ -107,6 +107,24 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
+    public function gatClasseurToValidate() {
+        $qb = $this
+            ->createQueryBuilder('c')
+            ->select('c.status', 'c.id')
+            ->where('c.status = :sta')
+            ->orWhere('c.status = :stat')
+            ->setParameter('sta', 1)
+            ->setParameter('stat', 4)
+        ;
+
+
+        // on retourne la requete
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     /*public function isDelegatedToUserV2($classeur, $user) {
         $em = $this->getEntityManager();
         $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
@@ -166,7 +184,10 @@ class ClasseurRepository extends EntityRepository {
 //        $usersValidant = new ArrayCollection(
 //            array_merge($users->toArray(), $usersP->toArray())
 //        );
-            $usersValidant = array_merge($users->toArray(), $usersValidant);
+//            var_dump($users);
+            if($users !== null) {
+                $usersValidant = array_merge($users->toArray(), $usersValidant);
+            }
             $usersValidant = array_unique($usersValidant);
 
         }

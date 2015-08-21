@@ -90,7 +90,9 @@ class EtapeClasseurRepository extends EntityRepository
 
         foreach ($etapesGroupes as $k => $etapesGroupe) {
             if($k < $etapeCourante) continue;
-            $users = array_merge($users, $etapesGroupe->getUsers()->toArray());
+            if ($etapesGroupe->getUsers() !== null) {
+                $users = array_merge($users, $etapesGroupe->getUsers()->toArray());
+            }
 
             $usersPacks = $etapesGroupe->getUserPacks();
             foreach ($usersPacks as $usersPack) {
