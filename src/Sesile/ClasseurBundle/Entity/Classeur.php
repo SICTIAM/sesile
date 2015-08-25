@@ -415,6 +415,7 @@ class Classeur {
 
     public function isAtLastValidant(){
         $ordreCircuit = $this->getOrdreEtape();
+        $ordreCircuit++;
         $nbEtapes = count($this->getEtapeClasseurs());
         if ($ordreCircuit == $nbEtapes){
             return true;
