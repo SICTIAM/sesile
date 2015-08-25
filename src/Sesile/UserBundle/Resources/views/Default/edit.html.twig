@@ -9,21 +9,6 @@
 
         {{ form_start(edit_form) }}
 
-        <div class="label_form label-form-input">
-            {{ form_label(edit_form.Prenom) }}
-            {{ form_widget(edit_form.Prenom) }}
-        </div>
-        <br/>
-
-
-        <div class="label_form label-form-input">
-            {{ form_label(edit_form.Nom) }}
-            {{ form_widget(edit_form.Nom) }}
-
-        </div>
-
-        <br/>
-
 
         <div class="label_form label-form-input">
             {{ form_label(edit_form.username) }}
@@ -45,6 +30,19 @@
         {% endfor %}
 
 
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.Nom) }}
+            {{ form_widget(edit_form.Nom) }}
+        </div>
+
+        <br/>
+
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.Prenom) }}
+            {{ form_widget(edit_form.Prenom) }}
+        </div>
+
+        <br/>
 
         <div class="label_form label-form-input">
             {{ form_label(edit_form.ville) }}
@@ -99,13 +97,13 @@
         <br/>
 
         <div class="label_form pickuser">
-            {{ form_label(edit_form.roles) }}
+            {{ form_label(edit_form.roles, 'Rôles') }}
             {{ form_widget(edit_form.roles) }}
         </div>
         <br/>
         {% if is_granted('ROLE_SUPER_ADMIN') %}
             <div class="label_form pickuser">
-                {{ form_label(edit_form.collectivite) }}
+                {{ form_label(edit_form.collectivite, 'Collectivités') }}
                 {{ form_widget(edit_form.collectivite) }}
             </div>
         {% endif %}
@@ -122,10 +120,12 @@
         </div>
         <br/>
         <br/>
-        Accès aux API :
+        <br/>
+        <div class="row">
+            <div class="col-lg-2">Accès aux API :</div>
+            <div class="col-lg-2">{{ form_widget(edit_form.apiactivated, {'attr': {'class': 'checkbox' }}) }}</div>
+        </div>
 
-
-        {{ form_widget(edit_form.apiactivated, {'attr': {'class': 'checkbox' }}) }}
 
         <br/>
 

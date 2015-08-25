@@ -189,7 +189,8 @@ class ClasseurController extends Controller {
 
         $em->remove($classeur);
         $em->flush();
-        return $this->redirect($this->generateUrl('index'));
+//        return $this->redirect($this->generateUrl('index'));
+        return $this->redirect($this->generateUrl('liste_classeurs_retired'));
     }
 
     /**
@@ -869,7 +870,7 @@ class ClasseurController extends Controller {
                 'error',
                 "Vous n'avez pas accès à ce classeur"
             );
-            return $this->redirect($this->generateUrl('index'));
+            return $this->redirect($this->generateUrl('classeur'));
         }
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($entity);
         $prevValidants = $em->getRepository('SesileClasseurBundle:Classeur')->getPrevValidant($entity);

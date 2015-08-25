@@ -4,7 +4,7 @@
     <div class="bloc_page">
         <div class="titre_page">
             <span class="glyphicon glyphicon-book"></span>
-            &nbsp;&nbsp;&nbsp;Documentation Patchs
+            &nbsp;&nbsp;&nbsp;Documentation évolutions
         </div>
 
         <div id="liste_patchs">
@@ -37,7 +37,7 @@
             $("#liste_patchs .dtables").dataTable({
                 "oLanguage": {
                     "sSearch": "Rechercher&nbsp;:",
-                    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                    "sInfo": "Patchs _START_ &agrave; _END_ sur _TOTAL_",
                     "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                     "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                     "sLengthMenu": "Afficher _MENU_ utilisateurs par page",
@@ -45,14 +45,15 @@
                         "sFirst": "",
                         "sPrevious": "",
                         "sNext": "",
-                        "sZeroRecords": "Aucun utilisateur &agrave; afficher",
-                        "sEmptyTable": "Aucun utilisateur &agrave; afficher"
-                    }
+                        "sLast": ""
+                    },
+                    "sZeroRecords": "Aucun patchs &agrave; afficher",
+                    "sEmptyTable": "Aucun patchs &agrave; afficher"
                 },
                 order: [[0, "asc"], [1, "asc"]],
                 "iDisplayLength": 15,
                 "aLengthMenu": [15, 30, 50, 100],
-                "sDom": 'lft<"footer_datatables"p>',
+                "sDom": 'lft<"footer_datatables"ip>',
                 "sPaginationType": "full_numbers"
             });
         </script>

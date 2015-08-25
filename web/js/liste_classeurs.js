@@ -7,7 +7,7 @@ $(document).ready(function () {
     $("#validTable").dataTable({
         oLanguage: {
             sSearch: "Rechercher&nbsp;",
-            sInfo: "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+            sInfo: "Classeurs _START_ &agrave; _END_ sur _TOTAL_",
             sInfoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
             sInfoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
             sZeroRecords: "Aucun enregistrement &agrave; afficher",
@@ -31,6 +31,7 @@ $(document).ready(function () {
             {
                 aTargets: [5],
                 sClass: "center",
+                bSortable: false,
                 "mRender": function ( data, type, full ) {
                     return '<span class="glyphicon statut_' + data + '"></span>';
                 }
@@ -40,9 +41,9 @@ $(document).ready(function () {
                 sClass: "center",
                 bSortable: false,
                 "mRender": function ( data, type, full ) {
-                    var retour = '<a class="col-sm-6" href="' + Routing.generate('classeur_edit', {id: data}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
+                    var retour = '<a class="col-sm-6" href="' + Routing.generate('classeur_edit', {id: data}) + '"><span class="glyphicon glyphicon-pencil" title="Editer le document"></span></a>';
                     if (full[8] == 2) {
-                        retour += '<a class="col-sm-6"href="' + Routing.generate('visu', {id: full[7]}) + '"><span class="glyphicon glyphicon-eye-open"></span></a>';
+                        retour += '<a class="col-sm-6"href="' + Routing.generate('visu', {id: full[7]}) + '"><span class="glyphicon glyphicon-eye-open" title="Voir le document"></span></a>';
                     }
                     return retour;
                 }

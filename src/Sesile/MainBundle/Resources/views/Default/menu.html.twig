@@ -81,7 +81,7 @@
                     {% endif %}
                 </ul>
             </li>
-            {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
+            {#{% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
             <li class="menu-elem menu-rouge">
                 <div class="dd-toggle entete-menu">
                     <a href="#">
@@ -103,7 +103,7 @@
                     </li>
                 </ul>
             </li>
-            {% endif %}
+            {% endif %}#}
             <li class="menu-elem menu-orange ">
                 <div class="dd-toggle entete-menu">
                     <a href="#">
@@ -122,7 +122,7 @@
                     <li>
                         <a href="{{ path("patchs") }}">
                             <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
-                            Documentation des patchs
+                            Documentation des évolutions
                         </a>
                     </li>
                     <li>
