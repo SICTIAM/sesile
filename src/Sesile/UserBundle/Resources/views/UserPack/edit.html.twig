@@ -45,7 +45,18 @@
     <link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
     <script>
         $(document).ready(function(){
-            $("#listUsers").select2({});
+//            $("#listUsers").select2({});
+//            $("input[type=submit]").addClass('disabled');
+
+            $("#listUsers").select2().on("click", function() {
+
+                if($('.select2-choices').children().length > 2 ) {
+                    console.log('ok');
+                    $("input[type=submit]").removeClass('disabled');
+                } else {
+                    $("input[type=submit]").addClass('disabled');
+                }
+            });
 
 
             $('#form').submit(function(){

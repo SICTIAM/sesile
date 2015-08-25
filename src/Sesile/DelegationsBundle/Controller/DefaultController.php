@@ -132,7 +132,7 @@ class DefaultController extends Controller
 
         $this->get('session')->getFlashBag()->add(
             'success',
-            'Délégations ajoutée avec succès !'
+            'Délégation ajoutée avec succès !'
         );
 
 

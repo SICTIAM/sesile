@@ -23,7 +23,7 @@
                         <td style="line-height: 30px;vertical-align: middle">{{ aide.date|date("d/m/Y") }}</td>
                         <td style="text-align: center"><a href="{{ asset('/uploads/docs/') ~ aide.path }}"
                                                           target="_blank"><img src="{{ asset("/images/imgpdf.png") }}"
-                                                                               height="30px"></a></td>
+                                                                               height="30px" title="Télécharger le fichier"></a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

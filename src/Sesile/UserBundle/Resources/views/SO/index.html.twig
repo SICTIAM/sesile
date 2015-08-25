@@ -27,10 +27,10 @@
                         {% endif %}
                     </td>
                     <td class="boutons_action">
-                        <a href="{{ path('edit_serviceorg',{id:servOrg.id}) }}">
+                        <a href="{{ path('edit_serviceorg',{id:servOrg.id}) }}" title="Editer le service organisationnel">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        <a data-href="{{ path("delete_serviceorg", {'id' : servOrg.id }) }}" data-toggle="modal" data-target="#confirm-delete">
+                        <a data-href="{{ path("delete_serviceorg", {'id' : servOrg.id }) }}" data-toggle="modal" data-target="#confirm-delete" title="Supprimer le service organisationnel">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>

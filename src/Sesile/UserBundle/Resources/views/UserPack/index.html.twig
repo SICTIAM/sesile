@@ -28,10 +28,10 @@
                         {% endif %}
                     </td>
                     <td class="boutons_action">
-                        <a href="{{ path('edit_userpack',{id:userPack.id}) }}">
+                        <a href="{{ path('edit_userpack',{id:userPack.id}) }}" title="Editer le groupe d'utilisateur">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        <a data-href="{{ path("delete_userpack", {'id' : userPack.id }) }}" data-toggle="modal" data-target="#confirm-delete">
+                        <a data-href="{{ path("delete_userpack", {'id' : userPack.id }) }}" data-toggle="modal" data-target="#confirm-delete" title="Supprimer le groupe d'utilisateur">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>
@@ -82,7 +82,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
-                    Etes-vous sur de voulor supprimer ce groupe ?
+                    Etes-vous sur de vouloir supprimer ce groupe ?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>

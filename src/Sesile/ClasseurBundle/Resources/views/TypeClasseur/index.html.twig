@@ -34,11 +34,11 @@
                     </td>
                     {#<td></td>#}
                     <td class="boutons_action">
-                        <a href="{{ path("update_type_classeur", {'id' : type.id }) }}">
+                        <a href="{{ path("update_type_classeur", {'id' : type.id }) }}" title="Modifier le type de classeur">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                         {% if type.supprimable %}
-                        <a href="{{ path("delete_classeur_type", {'id' : type.id }) }}">
+                        <a href="{{ path("delete_classeur_type", {'id' : type.id }) }}" title="Supprimer le type de classeur">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                         {% endif %}

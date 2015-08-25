@@ -574,8 +574,9 @@ select [name=user] {
 /*FLASHBAG*/
 .alert {
 	position: absolute;
-	width: 50%;
-	left: 25%;
+	width: 45%;
+	left: 35%;
+    top: 125px;
     z-index: 1000;
 }
 .alert-info {
