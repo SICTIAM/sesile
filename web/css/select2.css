@@ -597,9 +597,3 @@ disabled look for disabled choices in the results dropdown
     height: 100px;
     overflow: scroll;
 }
-
-/* Personnalisation */
-.select2-container-multi .select2-choices {
-    min-height: 95px;
-    height: 95px;
-}

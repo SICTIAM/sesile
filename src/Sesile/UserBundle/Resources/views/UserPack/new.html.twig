@@ -16,7 +16,7 @@
             <div class="form-group">
                 <label for="nom" class="col-lg-2 control-label">Liste des utilisateurs</label>
                 <div class="col-lg-6 ">
-                    <select class="js-example-basic-multiple" style="width: 100%" multiple="multiple" id="listUsers" name="listUsers">
+                    <select class="js-example-basic-multiple" style="width: 100%" multiple="multiple" data-placeholder="Cliquer ici pour ajouter un utilisateur" id="listUsers" name="listUsers">
                         {% for user in users %}
                             <option value="{{ user.id }}">{{ user.prenom}} {{ user.nom }}</option>
                         {% endfor %}
@@ -43,7 +43,12 @@
         $(document).ready(function(){
 
             $("input[type=submit]").addClass('disabled');
+            $("#listUsers").select2({
 
+                placeholder: function() {
+                    $(this).data('placeholder');
+                }
+            });
             $("#listUsers").select2().on("click", function() {
 
                 if($('.select2-choices').children().length > 2 ) {
