@@ -626,7 +626,14 @@ class DefaultController extends Controller
             'action' => $this->generateUrl('ajout_user'),
             'method' => 'POST',
         ));
-
+        $form->add('plainPassword', 'repeated', array(
+            'type' => 'password',
+            'required' => true,
+            'options' => array('translation_domain' => 'FOSUserBundle', 'always_empty' => 'true'),
+            'first_options' => array('label' => 'form.password'),
+            'second_options' => array('label' => 'form.password_confirmation'),
+            'invalid_message' => 'fos_user.password.mismatch',
+        ));
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('roles', 'choice', array(
                 'choices' => array(
@@ -678,7 +685,14 @@ class DefaultController extends Controller
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-
+        $form->add('plainPassword', 'repeated', array(
+            'type' => 'password',
+            'required' => false,
+            'options' => array('translation_domain' => 'FOSUserBundle', 'always_empty' => 'true'),
+            'first_options' => array('label' => 'form.password'),
+            'second_options' => array('label' => 'form.password_confirmation'),
+            'invalid_message' => 'fos_user.password.mismatch',
+        ));
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('roles', 'choice', array(
                 'choices' => array(

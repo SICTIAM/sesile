@@ -29,6 +29,7 @@ class AdminController extends Controller
         $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $msg_accueil = $coll->getMessage();
 
+
         if ($request->isMethod('POST')) {
             $msg_accueil = $request->request->get('message');
             $coll->setMessage($msg_accueil);
