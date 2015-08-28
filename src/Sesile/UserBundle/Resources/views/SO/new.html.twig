@@ -6,13 +6,20 @@
             <span class="glyphicon glyphicon-floppy-saved"></span>
             &nbsp;&nbsp;&nbsp;Créer un service organisationnel
         </div>
-
+        <div class="alert alert-danger alert-dismissible" style="display: none" id="stepAlert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            Le service organisationnel doit comporter des utilisateurs
+        </div>
+        <div class="alert alert-danger alert-dismissible" style="display: none" id="typeAlert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            Le service organisationnel doit être lié à au moins un type de classeur
+        </div>
         <form action="{{ path('create_serviceorg') }}" class="form-horizontal" method="post" id="form">
 
             <div class="row">
                 <label for="nom" class="col-lg-1 control-label">Nom</label>
                 <div class="col-lg-6 ">
-                    <input type="text" name="nom" class="form-control" id="nom">
+                    <input type="text" name="nom" class="form-control" required="required" id="nom">
                 </div>
             </div>
             <br>
@@ -22,7 +29,7 @@
                     {% for type in types %}
                         {#<input type="checkbox" name="types[]" value="{{ type.id }}"/>&nbsp;&nbsp;{{ type.nom }}<br>#}
                         <div class="col-lg-1 text-right">
-                            <input type="checkbox" name="types[]" value="{{ type.id }}" id="types_classeur_{{ type.id }}" />
+                            <input type="checkbox" name="types[]" value="{{ type.id }}" id="types_classeur_{{ type.id }}" class="checkType" />
                         </div>
                         <div class="col-lg-2 text-left">
                             <label for="types_classeur_{{ type.id }}">{{ type.nom }}</label>
@@ -209,7 +216,7 @@
             var tabGeneral = [];
             var tabEtape = [];
             var ItemSelected = {};
-            $('#form').submit(function(){
+            $('#form').submit(function(e){
                 /*
                 * Pour chaque etape de validation créé on récupère les options sélectionnées
                 *
@@ -233,8 +240,23 @@
                 /*
                 * on met tout ça dans un tableau que l'on stringifie et qu'on met dans le hidden
                 * */
+
+                var cptType = 0;
+                $('.checkType:checked').each(function(e){
+                   cptType++;
+                });
+                if(cptType == 0){
+                    e.preventDefault();
+                    $('#typeAlert').delay(300).show("slow").delay(3000).hide("slow");
+                }
+                if(tabGeneral.length == 0)
+                {
+                    e.preventDefault();
+                    $('#stepAlert').delay(300).show("slow").delay(3000).hide("slow");
+                }
                 $('#valeurs').val(JSON.stringify(tabGeneral));
                 tabGeneral = [];
+
             });
 
 

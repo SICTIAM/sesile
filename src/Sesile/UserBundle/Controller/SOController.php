@@ -67,35 +67,6 @@ class SOController extends Controller {
     public function createAction(Request $request)
     {
 
-        if(!$request->request->get('nom'))
-        {
-            $this->get('session')->getFlashBag()->add(
-                'error',
-                'Le service organisationnel doit porter un nom'
-            );
-            return new RedirectResponse($this->container->get('router')->generate('create_serviceorg'));
-        }
-
-        if(!count(json_decode($request->request->get('valeurs'))))
-        {
-            $this->get('session')->getFlashBag()->add(
-                'error',
-                'Le service organisationnel doit comporter des utilisateurs'
-            );
-            return new RedirectResponse($this->container->get('router')->generate('create_serviceorg'));
-        }
-/*
- * On vérifie qu le SO a accès à au moins un type
- * */
-        if(is_null($request->request->get('types')))
-        {
-            $this->get('session')->getFlashBag()->add(
-                'error',
-                'Le service organisationnel doit être lié à au moins un type de classeur'
-            );
-            return new RedirectResponse($this->container->get('router')->generate('new_serviceorg'));
-        }
-
         $em = $this->getDoctrine()->getManager();
 
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
