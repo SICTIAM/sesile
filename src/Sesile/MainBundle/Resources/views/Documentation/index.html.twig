@@ -30,7 +30,7 @@
                                                           target="_blank" title="Voir l'évolution"><img src="{{ asset("/images/imgpdf.png") }}"
                                                                                height="30px"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a
                                     href="{{ path('editPatch',{'id':patch.id}) }}"><span
-                                        class="glyphicon glyphicon-pencil" title="Editer l'évolution"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                        class="glyphicon glyphicon-pencil" title="Editer l'évolution"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="deleterEvo"
                                     href="{{ path('deletePatch',{'id':patch.id}) }}"><span
                                         class="glyphicon glyphicon-trash" title="Supprimer l'évolution"></span></a></td>
                     </tr>
@@ -68,7 +68,7 @@
                                                           target="_blank" title="Voir l'aide"><img src="{{ asset("/images/imgpdf.png") }}"
                                                                                height="30px"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a
                                     href="{{ path('editAide',{'id':aide.id}) }}"><span
-                                        class="glyphicon glyphicon-pencil" title="Editer l'aide"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                        class="glyphicon glyphicon-pencil" title="Editer l'aide"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="deleterAide"
                                     href="{{ path('deleteAide',{'id':aide.id}) }}"><span
                                         class="glyphicon glyphicon-trash" title="Supprimer l'aide"></span></a></td>
                     </tr>
@@ -129,6 +129,24 @@
                 "aLengthMenu": [15, 30, 50, 100],
                 "sDom": 'lft<"footer_datatables"ip>',
                 "sPaginationType": "full_numbers"
+            });
+
+            $('.deleterAide').confirm({
+                text: "Etes-vous sur de vouloir supprimer cette aide en ligne",
+                confirmButton: "Supprimer",
+                cancelButton: "Annuler",
+                confirmButtonClass: "btn btn-danger pull-right",
+                dialogClass: "modal-dialog modal-sm"
+
+            });
+
+            $('.deleterEvo').confirm({
+                text: "Etes-vous sur de vouloir supprimer cette documentation?",
+                confirmButton: "Supprimer",
+                cancelButton: "Annuler",
+                confirmButtonClass: "btn btn-danger pull-right",
+                dialogClass: "modal-dialog modal-sm"
+
             });
         </script>
     </div>

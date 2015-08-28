@@ -576,7 +576,7 @@ select [name=user] {
 	position: absolute;
 	width: 45%;
 	left: 35%;
-    top: 125px;
+    top: 5px;
     z-index: 1000;
 }
 .alert-info {

@@ -21,6 +21,7 @@
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script src="{{ asset('/js/lettering.js') }}"></script>
     <script src="{{ asset('/js/textillate.js') }}"></script>
+    <script src="{{ asset('/js/jquery.confirm.min.js') }}"></script>
     <!--[if gte IE 9]>
     <style type="text/css">
         .gradient {
@@ -32,8 +33,9 @@
     {% endblock %}
 </head>
 <body>
-
+{% include 'SesileMainBundle:Default:flashbag.html.twig' %}
 <div id="maman">
+
     <div id="gauche">
         <a href="{{ path('index') }}">
         <div id="logo">
@@ -53,7 +55,10 @@
     </div>
 
     <div id="droite">
+
+
         <div id="header">
+
             {% if app.user != null %}
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -79,12 +84,15 @@
                         </li>
                     </ul>
                 </div>
+
+
+
             {% else %}
                 <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
             {% endif %}
         </div>
 
-        {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
+
         <div id="lecontenu">
             {% block content %}
                 <div id="contenu_acceuil">

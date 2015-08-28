@@ -254,6 +254,10 @@ class ClasseurController extends Controller {
         }
 
         $em->flush();
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            "Les classeurs ont bien été supprimés"
+        );
         return new JsonResponse(array('ret' => true));
     }
 
@@ -1347,7 +1351,7 @@ class ClasseurController extends Controller {
             'success',
             "Le classeur a été validé"
         );
-        return $this->redirect($this->generateUrl('index_valider'));
+        return $this->redirect($this->generateUrl('classeur'));
     }
 
 
@@ -1599,13 +1603,13 @@ class ClasseurController extends Controller {
     /**
      * Deletes a Classeur entity.
      *
-     * @Route("/supprimer", name="classeur_supprimer")
-     * @Method("POST")
+     * @Route("/supprimer/{id}", name="classeur_supprimer")
+     * @Method("get")
      */
-    public function supprimerAction(Request $request)
+    public function supprimerAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
@@ -1636,8 +1640,8 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-        $session = $request->getSession();
-        $session->getFlashBag()->add(
+
+        $this->get('session')->getFlashBag()->add(
             'success',
             "Le classeur a été retiré"
         );

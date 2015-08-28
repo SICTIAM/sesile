@@ -109,7 +109,10 @@ class AdminController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
-
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                "La collectivité a été créée avec succès"
+            );
             return $this->redirect($this->generateUrl('index_collectivite'));
         }
 
@@ -315,7 +318,7 @@ class AdminController extends Controller
             }
 
             // Message de confirmation pour l'utilisateur
-            $request->getSession()->getFlashBag()->add('notice', 'Emailing envoyé !');
+            $request->getSession()->getFlashBag()->add('success',"L'emailing a été envoyé avec succès");
 
         }
 
