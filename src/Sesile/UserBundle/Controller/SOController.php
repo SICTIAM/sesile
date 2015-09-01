@@ -435,10 +435,10 @@ class SOController extends Controller {
         // On met a jour
         $em->flush();
         // petit message pour dire que tout c'est bien passé
-        $this->get('session')->getFlashBag()->add('success', 'Le service organisationnel a bien été enregistré');
+        $this->get('session')->getFlashBag()->add('success', 'Le service organisationnel a bien été modfié');
 
         // On revient a la page d edition
-        return new RedirectResponse($this->container->get('router')->generate('edit_serviceorg', array('id' => $id)));
+        return new RedirectResponse($this->container->get('router')->generate('servicesorg'));
 
 
     }

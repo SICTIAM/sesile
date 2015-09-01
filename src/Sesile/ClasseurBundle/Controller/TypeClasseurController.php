@@ -65,11 +65,12 @@ class TypeClasseurController extends Controller
             $em->flush();
 
             // Un petit message pour prévenir que tout va bien
-            $request->getSession()->getFlashBag()->add('notice', 'Le nouveau type de classeur a bien été enregistré.');
+            $request->getSession()->getFlashBag()->add('success', 'Le nouveau type de classeur a bien été enregistré.');
 
             // On vide le formulaire
             $typeClasseur = new TypeClasseur();
             $form = $this->createForm(new TypeClasseurType(), $typeClasseur);
+            return $this->redirect($this->generateUrl('liste_type_classeur'));
         }
 
         return array(
@@ -102,7 +103,7 @@ class TypeClasseurController extends Controller
             $em->flush();
 
             // Un petit message pour prévenir que tout va bien
-            $request->getSession()->getFlashBag()->add('notice', 'Le type de classeur a bien été modifié.');
+            $request->getSession()->getFlashBag()->add('success', 'Le type de classeur a bien été modifié.');
 
             return $this->redirect($this->generateUrl('liste_type_classeur'));
 
@@ -132,7 +133,7 @@ class TypeClasseurController extends Controller
         $em->remove($typeClasseur);
         $em->flush();
 
-        $this->get('session')->getFlashBag()->add('notice', 'Le type de classeur a bien été supprimé.');
+        $this->get('session')->getFlashBag()->add('success', 'Le type de classeur a bien été supprimé.');
 
         return $this->redirect($this->generateUrl('liste_type_classeur'));
     }

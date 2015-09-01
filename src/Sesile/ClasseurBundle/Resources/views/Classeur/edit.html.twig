@@ -49,9 +49,9 @@
                     {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
                 {% endif %}
 
-                <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                <a href="{{ app.request.headers.get('referer') }}"  class="btn btn-primary navbar-btn">
                     <span class="glyphicon glyphicon-share-alt"></span>
-                    Retour à la liste des classeurs
+                    Retour à la page précédente
                 </a>
 
             </div>
@@ -197,9 +197,9 @@
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
 
-                    <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                    <a href="{{ app.request.headers.get('referer') }}"  class="btn btn-primary navbar-btn">
                         <span class="glyphicon glyphicon-share-alt"></span>
-                        Retour à la liste des classeurs
+                        Retour à la page précédente
                     </a>
                 </div>
                 <div class="col-lg-2">
@@ -409,21 +409,15 @@
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
 
-                    <a href="{{ path('classeur') }}" class="btn btn-primary navbar-btn">
+                    <a href="{{ app.request.headers.get('referer') }}"  class="btn btn-primary navbar-btn">
                         <span class="glyphicon glyphicon-share-alt"></span>
-                        Retour à la liste des classeurs
+                        Retour à la page précédente
                     </a>
 
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}
-                        <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-                            <button type="submit" class="btn btn-danger">
-                                <span class="glyphicon glyphicon-trash"></span>
-                                &nbsp;Retirer
-                            </button>
-                            <input type="hidden" value="{{ classeur.id }}" name="id"/>
-                        </form>
+                        <a href="{{ path('classeur_supprimer',{'id':classeur.id}) }}" class="deleter btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Retirer</a>
                     {% endif %}
                 </div>
             </div>
@@ -544,14 +538,14 @@
                 });
             });
 
-            $("#suprclasseur").submit(function (e) {
-                if (confirm('Confirmez-vous le retrait du classeur ?')) {
+        $('.deleter').confirm({
+            text: "Etes-vous sur de vouloir retirer ce classeur?",
+            confirmButton: "Supprimer",
+            cancelButton: "Annuler",
+            confirmButtonClass: "btn btn-danger pull-right",
+            dialogClass: "modal-dialog modal-sm"
 
-                } else {
-                    e.preventDefault();
-                    return false;
-                }
-            });
+        });
         </script>
     </div>
     {#<object id="winFirefoxPlugin" type="application/x-sharepoint" style="position: absolute; top: 2000000 px; left: 2000000 px;"></object>#}

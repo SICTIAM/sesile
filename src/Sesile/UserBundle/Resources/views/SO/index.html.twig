@@ -30,7 +30,7 @@
                         <a href="{{ path('edit_serviceorg',{id:servOrg.id}) }}" title="Editer le service organisationnel">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        <a data-href="{{ path("delete_serviceorg", {'id' : servOrg.id }) }}" data-toggle="modal" data-target="#confirm-delete" title="Supprimer le service organisationnel">
+                        <a href="{{ path("delete_serviceorg", {'id' : servOrg.id }) }}" data-toggle="modal" data-target="#confirm-delete" class="deleter" title="Supprimer le service organisationnel">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>
@@ -76,23 +76,13 @@
         </script>
     </div>
 
-    {# Modal Delete #}
-    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    Etes-vous sur de voulor supprimer ce service organisationnel ?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                    <a class="btn btn-danger btn-ok">Supprimer</a>
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
-        $('#confirm-delete').on('show.bs.modal', function (e) {
-            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        $('.deleter').confirm({
+            text: "Etes-vous sur de vouloir supprimer ce service organisationnel?",
+            confirmButton: "Supprimer",
+            cancelButton: "Annuler",
+            confirmButtonClass: "btn btn-danger pull-right"
+
         });
     </script>
 {% endblock %}

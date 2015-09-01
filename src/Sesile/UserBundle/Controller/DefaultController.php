@@ -139,6 +139,10 @@ class DefaultController extends Controller
                     );
                     return $this->redirect($this->generateUrl('ajout_user'));
                 }
+                $this->get('session')->getFlashBag()->add(
+                    'success',
+                    "L'utilisateur a bien été enregistré"
+                );
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
             }
         }
@@ -262,7 +266,10 @@ class DefaultController extends Controller
                         echo "pb rename ldap";
                         exit;
                     }
-
+                    $this->get('session')->getFlashBag()->add(
+                        'success',
+                        "L'utilisateur a bien été modifié"
+                    );
                     return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
                     ldap_close($ldapconn);
@@ -526,7 +533,7 @@ class DefaultController extends Controller
             'success',
             'Le groupe d\'utilisateurs a bien été modifié'
         );
-        return new RedirectResponse($this->container->get('router')->generate('edit_userpack',array('id'=>$id)));
+        return new RedirectResponse($this->container->get('router')->generate('userpacks'));
 
     }
 
