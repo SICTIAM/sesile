@@ -318,3 +318,8 @@
 #circuit_etapes {
     overflow: auto;
 }
+
+#circuit_etapes .div-btn-ajout-etape {
+    width: 162px;
+    margin-left: 15px;
+}
