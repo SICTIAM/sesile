@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\BrowserKit\Request;
 
 /**
  * ClasseurRepository
@@ -21,15 +22,16 @@ class ClasseurRepository extends EntityRepository {
      * @param integer user id
      * @return integer
      */
-    /*public function countClasseursVisiblesForDTablesV3($userid) {
+    public function countClasseursVisiblesForDTablesV3($userid) {
         return $this
             ->createQueryBuilder('c')
             ->join('c.visible', 'v', 'WITH', 'v.id = :id')
             ->setParameter('id', $userid)
             ->getQuery()
-            ->getSingleScalarResult()
+//            ->getSingleScalarResult()
+            ->getResult()
         ;
-    }*/
+    }
 
     /*
      * Get current classeurs visible for Data Tables
@@ -37,7 +39,7 @@ class ClasseurRepository extends EntityRepository {
      * @param integer user id
      * @param array get values of Data Tables
      */
-    /*public function getClasseursVisiblesForDTablesV3($userid, array $get) {
+    public function getClasseursVisiblesForDTablesV3($userid, $get) {
 
         $qb = $this
             ->createQueryBuilder('c')
@@ -47,16 +49,25 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
         ;
 
+//        var_dump($get->get('order'));
         // Pour changer l ordre du tableau
-        if(isset($get['order'])) {
+        $colonnes = array('nom', 'creation', 'validation', 'intervenants', 'type', 'status');
+
+        if($get->get('order') !== null) {
+            $order = 'c.' . $colonnes[$get->get('order')[0]["column"]];
+//        $order == 'c.type' ? $order = 't.nom' : $order;
+            $qb->orderBy($order, $get->get('order')[0]["dir"]);
+        }
+
+        /*if(isset($get['order'])) {
             $order = 'c.'.strtolower($get["colonnes"][$get["order"][0]["column"]]);
             $order == 'c.type' ? $order = 't.nom' : $order;
             $qb->orderBy($order, $get['order'][0]["dir"]);
-        }
+        }*/
 
         // Pour la recherche dans le tableau
-        if (isset($get['search']) && $get['search']['value'] != '') {
-            $str = $get['search']['value'];
+        if (isset($get->get('search')["value"]) && $get->get('search')['value'] != '') {
+            $str = $get->get('search')['value'];
 
             $qb
                 ->where('c.nom LIKE :str')
@@ -64,40 +75,32 @@ class ClasseurRepository extends EntityRepository {
                 ->setParameter('str', '%'.$str.'%')
             ;
         }
+        /*if (isset($get['search']) && $get['search']['value'] != '') {
+            $str = $get['search']['value'];
+
+            $qb
+                ->where('c.nom LIKE :str')
+                ->orWhere('t.nom LIKE :str')
+                ->setParameter('str', '%'.$str.'%')
+            ;
+        }*/
         // Pour l affichage parcellaire
-        if (isset($get['start']) && $get['length'] != '-1') {
+        if ($get->get('start') != '' && $get->get('length') != '-1') {
+            $start = (int)$get->get('start');
+            $length = (int)$get->get('length');
+            $qb
+                ->setFirstResult($start)
+                ->setMaxResults($length)
+            ;
+        }
+        /*if (isset($get['start']) && $get['length'] != '-1') {
             $start = (int)$get['start'];
             $length = (int)$get['length'];
             $qb
                 ->setFirstResult($start)
                 ->setMaxResults($length)
             ;
-        }
-
-        // on retourne la requete
-        return $qb
-            ->getQuery()
-            ->getResult()
-        ;
-
-    }*/
-
-    /*
-     * Get current classeurs visible for Data Tables
-     *
-     * @param integer user id
-     * @param array get values of Data Tables
-     */
-    public function getClasseursVisiblesForDTablesV3($userid) {
-
-        $qb = $this
-            ->createQueryBuilder('c')
-            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
-            ->setParameter('id', $userid)
-            ->join('c.type', 't')
-            ->addSelect('t')
-        ;
-
+        }*/
 
         // on retourne la requete
         return $qb
@@ -107,8 +110,22 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
-    public function gatClasseurToValidate() {
-        $qb = $this
+    public function countClasseurToValidate($userid) {
+
+        return $this
+            ->createQueryBuilder('c')
+            ->select('c.status', 'c.id')
+            ->where('c.status = :sta')
+            ->orWhere('c.status = :stat')
+            ->setParameter('sta', 1)
+            ->setParameter('stat', 4)
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userid)
+            ->getQuery()
+            ->getResult()
+            ;
+
+        /*$qb = $this
             ->createQueryBuilder('c')
             ->select('c.status', 'c.id')
             ->where('c.status = :sta')
@@ -122,7 +139,7 @@ class ClasseurRepository extends EntityRepository {
         return $qb
             ->getQuery()
             ->getResult()
-            ;
+            ;*/
     }
 
     /*public function isDelegatedToUserV2($classeur, $user) {

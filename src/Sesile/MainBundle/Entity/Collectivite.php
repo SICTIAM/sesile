@@ -417,7 +417,7 @@ Un nouveau classeur {{ titre_classeur }} vient d\'être déposé par {{ deposant
 <br><br>
 Il convient de le valider avant le {{ date_limite | date("d/m/Y") }}.
 <br><br>
-Vous pouvez visionner le classeur {{ lien|raw }}');
+Vous pouvez visionner le classeur {{lien|raw}}');
         }
 
         if ($this->getTextmailrefuse() == null) {

@@ -22,7 +22,7 @@
 			<td>{{ coll.domain }}</td>
 			<td>{% if  coll.active == 1 %}<div class="glyphicon glyphicon-ok" style="color: #5CB85C"></div>{% else %}<div class="glyphicon glyphicon-remove" style="color: #D9534F"></div>{% endif %}</td>
 			<td class="boutons_action">
-			    <a href="{{ path("edit_collectivite", {'id' : coll.id }) }}">
+			    <a href="{{ path("edit_collectivite", {'id' : coll.id }) }}" title="Editer la collectivité">
 				<span class="glyphicon glyphicon-pencil"></span>
 			    </a>
 			</td>
@@ -46,7 +46,7 @@
 	    $(".table").dataTable({
 		"oLanguage": {
 		    "sSearch": "Rechercher&nbsp;:",
-		    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+		    "sInfo": "Collectivités _START_ &agrave; _END_ sur _TOTAL_",
 		    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
 		    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
 		    "sZeroRecords": "Aucun enregistrement &agrave; afficher",
@@ -60,9 +60,10 @@
 		},
 		"iDisplayLength": 15,
 		"aLengthMenu": [15, 30, 50, 100],
-		"sDom": 'lft<"footer_datatables"p>',
+		"sDom": 'lft<"footer_datatables"ip>',
 		"aoColumnDefs": [
-		    { "bSortable": false, "aTargets": [ 3 ] }
+		    { "aTargets": [ 2 ], sClass: "center" },
+		    { "bSortable": false, "aTargets": [ 3 ], sClass: "center" }
 		],
 		"sPaginationType": "full_numbers"
 	    });

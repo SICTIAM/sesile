@@ -139,6 +139,10 @@ class DefaultController extends Controller
                     );
                     return $this->redirect($this->generateUrl('ajout_user'));
                 }
+                $this->get('session')->getFlashBag()->add(
+                    'success',
+                    "L'utilisateur a bien été enregistré"
+                );
                 return $this->redirect($this->generateUrl('liste_users', array('id' => $entity->getId())));
             }
         }
@@ -262,7 +266,10 @@ class DefaultController extends Controller
                         echo "pb rename ldap";
                         exit;
                     }
-
+                    $this->get('session')->getFlashBag()->add(
+                        'success',
+                        "L'utilisateur a bien été modifié"
+                    );
                     return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
                     ldap_close($ldapconn);
@@ -526,7 +533,7 @@ class DefaultController extends Controller
             'success',
             'Le groupe d\'utilisateurs a bien été modifié'
         );
-        return new RedirectResponse($this->container->get('router')->generate('edit_userpack',array('id'=>$id)));
+        return new RedirectResponse($this->container->get('router')->generate('userpacks'));
 
     }
 
@@ -626,7 +633,14 @@ class DefaultController extends Controller
             'action' => $this->generateUrl('ajout_user'),
             'method' => 'POST',
         ));
-
+        $form->add('plainPassword', 'repeated', array(
+            'type' => 'password',
+            'required' => true,
+            'options' => array('translation_domain' => 'FOSUserBundle', 'always_empty' => 'true'),
+            'first_options' => array('label' => 'form.password'),
+            'second_options' => array('label' => 'form.password_confirmation'),
+            'invalid_message' => 'fos_user.password.mismatch',
+        ));
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('roles', 'choice', array(
                 'choices' => array(
@@ -678,7 +692,14 @@ class DefaultController extends Controller
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-
+        $form->add('plainPassword', 'repeated', array(
+            'type' => 'password',
+            'required' => false,
+            'options' => array('translation_domain' => 'FOSUserBundle', 'always_empty' => 'true'),
+            'first_options' => array('label' => 'form.password'),
+            'second_options' => array('label' => 'form.password_confirmation'),
+            'invalid_message' => 'fos_user.password.mismatch',
+        ));
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('roles', 'choice', array(
                 'choices' => array(

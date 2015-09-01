@@ -21,6 +21,7 @@
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script src="{{ asset('/js/lettering.js') }}"></script>
     <script src="{{ asset('/js/textillate.js') }}"></script>
+    <script src="{{ asset('/js/jquery.confirm.min.js') }}"></script>
     <!--[if gte IE 9]>
     <style type="text/css">
         .gradient {
@@ -32,8 +33,9 @@
     {% endblock %}
 </head>
 <body>
-
+{% include 'SesileMainBundle:Default:flashbag.html.twig' %}
 <div id="maman">
+
     <div id="gauche">
         <a href="{{ path('index') }}">
         <div id="logo">
@@ -53,7 +55,10 @@
     </div>
 
     <div id="droite">
+
+
         <div id="header">
+
             {% if app.user != null %}
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -79,12 +84,15 @@
                         </li>
                     </ul>
                 </div>
+
+
+
             {% else %}
                 <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
             {% endif %}
         </div>
 
-        {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
+
         <div id="lecontenu">
             {% block content %}
                 <div id="contenu_acceuil">
@@ -117,10 +125,10 @@
                                     Classeurs à valider
                                 </div>
 
-                                {#<div id="classeur-a-valider">
+                                <div id="classeur-a-valider">
                                     <img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
-                                </div>#}
-                                {% render url("classeur_a_valider") %}
+                                </div>
+                                {#{% render url("classeur_a_valider") %}#}
 
                             </div>
                             <div id="liste_classeurs">
@@ -128,10 +136,7 @@
                                     <span class="glyphicon glyphicon-eye-open"></span>
                                     Liste des classeurs
                                 </div>
-                                <div id="liste-classeurs">
-                                    <img id="loadinggif-liste" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
-                                </div>
-                                {#{% render url("liste_classeurs") %}#}
+                                {% include "SesileClasseurBundle:Classeur:liste.html.twig" %}
                             </div>
                             {% include 'SesileClasseurBundle:Classeur:legende.html.twig' %}
 
@@ -155,14 +160,13 @@
                         <span class="lettersmove">CONTACT</span>
                     </a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="sesiletooltip mentionlegales" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode"
-                       target="_blank"><!-- data-toggle="tooltip"
+                    <a class="sesiletooltip mentionlegales" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode" target="_blank"><!-- data-toggle="tooltip"
                     title="Parapheur Sesile - 2013" -->
                         <span class="lettersmove">MENTIONS L&Eacute;GALES</span>
 
                     </a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/"> <!--data-toggle="tooltip"
+                    <a class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank"> <!--data-toggle="tooltip"
                     title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France"-->
                         <span class="lettersmove">CREATIVE COMMONS</span>
                     </a>
@@ -179,6 +183,8 @@
                         COPYRIGHT &copy;2014
                         &nbsp; &ndash; &nbsp;
                         R&Eacute;ALIS&Eacute; PAR LE SICTIAM
+                        &nbsp; &ndash; &nbsp;
+                        SESILE version 3.0
                     </a>
                     </span>
             </div>
@@ -193,8 +199,8 @@
 
     $(document).ready(function() {
 
-        $('#liste-classeurs').load("{{ path("liste_classeurs") }}");
-        {#$('#classeur-a-valider').load("{{ path("classeur_a_valider") }}");#}
+        /*$('#liste-classeurs').load("{{ path("liste_classeurs") }}");*/
+        $('#classeur-a-valider').load("{{ path("classeur_a_valider") }}");
         {#{% render url("liste_classeurs") %}#}
     });
 

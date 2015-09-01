@@ -14,9 +14,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="nom" class="col-lg-2 control-label">Liste de utilisateurs</label>
+                <label for="nom" class="col-lg-2 control-label">Liste des utilisateurs</label>
                 <div class="col-lg-6 ">
-                    <select class="js-example-basic-multiple" style="width: 100%" multiple="multiple" id="listUsers" name="listUsers">
+                    <select class="js-example-basic-multiple" style="width: 100%" multiple="multiple" data-placeholder="Cliquer ici pour ajouter un utilisateur" id="listUsers" name="listUsers">
                         {% for user in users %}
                             <option value="{{ user.id }}">{{ user.prenom}} {{ user.nom }}</option>
                         {% endfor %}
@@ -41,14 +41,35 @@
     <link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
     <script>
         $(document).ready(function(){
-            $("#listUsers").select2();
-            $('#form').submit(function(e){
+
+            $("input[type=submit]").addClass('disabled');
+            $("#listUsers").select2({
+
+                placeholder: function() {
+                    $(this).data('placeholder');
+                }
+            });
+            $("#listUsers").select2().on("click", function() {
+
+                if($('.select2-choices').children().length > 2 ) {
+                    console.log('ok');
+                    $("input[type=submit]").removeClass('disabled');
+                } else {
+                    $("input[type=submit]").addClass('disabled');
+                }
+            });
+//            $('#form').submit(function(e){
+
+            $('#form').submit(function(){
                 /*
                  * valeurs contient les ids des users sélectionnés séparés par des virgules
                  */
                 $('#valeurs').val($('#listUsers').val());
 
             });
+
+
+
         })
     </script>
 {% endblock %}

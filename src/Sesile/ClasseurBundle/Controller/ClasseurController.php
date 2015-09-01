@@ -33,29 +33,60 @@ class ClasseurController extends Controller {
      */
     public function indexAction()
     {
-        return $this->listeAction();
+//        return $this->listeAction();
+        return array(
+            "menu_color" => "bleu"
+        );
     }
 
 
     /**
      * Liste des classeurs en cours
      *
-     * @Route("/liste", name="liste_classeurs")
-     * @Method("GET")
+     * @Route("/liste", name="liste_classeurs", options={"expose"=true})
      * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
      */
-    public function listeAction() {
+    public function listeAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser()->getId());
+        $get = $request->query;
+//        $entities = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser()->getId())->getClasseurs();
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3($this->getUser()->getId(), $get);
 
-        $tabClasseurs = array();
-        foreach($entities->getClasseurs() as $classeur)
+        $output = array(
+            "draw" => $get->get("draw"),
+            "recordsTotal" => count($entities),
+            "recordsFiltered" => count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3($this->getUser()->getId())),
+            "data" => array()
+        );
+
+        foreach($entities as $classeur)
         {
             $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
-//            var_dump($classeur->getUser());
-//            $deposant = $em->getRepository('SesileUserBundle:User')->findOneById($classeur->getUser());
-            $tabClasseurs[] = array(
+            $doc = array();
+            foreach ($classeur->getDocuments() as $document) {
+                $doc[] = $document->getId();
+            }
+
+            $val = array();
+            foreach ($validants as $validant) {
+                $val[] = $validant->getPrenom() . " " . $validant->getNom();
+            }
+
+            $tabClasseurs = array(
+
+                $classeur->getNom(),
+                $classeur->getCreation()->format('d/m/Y H:i'),
+                $classeur->getValidation()->format('d/m/Y'),
+                implode($val),
+                $classeur->getType()->getNom(),
+                $classeur->getStatus(),
+                $classeur->getId(),
+                implode($doc),
+                $classeur->getType()->getId(),
+
+            );
+            /*$tabClasseurs[] = array(
                 'id'        => $classeur->getId(),
                 'nom'       => $classeur->getNom(),
                 'creation'  => $classeur->getCreation(),
@@ -65,13 +96,15 @@ class ClasseurController extends Controller {
                 'document'  => $classeur->getDocuments(),
                 'validants' => $validants
 //                'deposant'  => $deposant->getPrenom() . " " . $deposant->getNom()
-            );
+            );*/
+            $output['data'][] = $tabClasseurs;
         }
 
-        return array(
+        /*return array(
             'classeurs'  => $tabClasseurs,
             "menu_color" => "bleu"
-        );
+        );*/
+        return new Response(json_encode($output));
     }
 
 
@@ -189,7 +222,8 @@ class ClasseurController extends Controller {
 
         $em->remove($classeur);
         $em->flush();
-        return $this->redirect($this->generateUrl('index'));
+//        return $this->redirect($this->generateUrl('index'));
+        return $this->redirect($this->generateUrl('liste_classeurs_retired'));
     }
 
     /**
@@ -220,6 +254,10 @@ class ClasseurController extends Controller {
         }
 
         $em->flush();
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            "Les classeurs ont bien été supprimés"
+        );
         return new JsonResponse(array('ret' => true));
     }
 
@@ -869,7 +907,7 @@ class ClasseurController extends Controller {
                 'error',
                 "Vous n'avez pas accès à ce classeur"
             );
-            return $this->redirect($this->generateUrl('index'));
+            return $this->redirect($this->generateUrl('classeur'));
         }
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($entity);
         $prevValidants = $em->getRepository('SesileClasseurBundle:Classeur')->getPrevValidant($entity);
@@ -1313,7 +1351,7 @@ class ClasseurController extends Controller {
             'success',
             "Le classeur a été validé"
         );
-        return $this->redirect($this->generateUrl('index_valider'));
+        return $this->redirect($this->generateUrl('classeur'));
     }
 
 
@@ -1565,13 +1603,13 @@ class ClasseurController extends Controller {
     /**
      * Deletes a Classeur entity.
      *
-     * @Route("/supprimer", name="classeur_supprimer")
-     * @Method("POST")
+     * @Route("/supprimer/{id}", name="classeur_supprimer")
+     * @Method("get")
      */
-    public function supprimerAction(Request $request)
+    public function supprimerAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
         if (!$classeur) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
@@ -1602,8 +1640,8 @@ class ClasseurController extends Controller {
         $em->persist($action);
         $em->flush();
 
-        $session = $request->getSession();
-        $session->getFlashBag()->add(
+
+        $this->get('session')->getFlashBag()->add(
             'success',
             "Le classeur a été retiré"
         );

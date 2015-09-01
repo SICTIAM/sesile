@@ -9,7 +9,7 @@
         <div id="liste_patchs">
             <div class="titre_bloc_accueil">
                 <span class="glyphicon glyphicon-eye-open"></span>
-                Liste des patchs
+                Liste des évolutions
             </div>
             <table class="table tableau dtables">
                 <thead>
@@ -17,7 +17,7 @@
                     <th>Description</th>
                     <th>Version</th>
                     <th>Date de parution</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,19 +27,19 @@
                         <td style="line-height: 30px;vertical-align: middle">{{ patch.version }}</td>
                         <td style="line-height: 30px;vertical-align: middle">{{ patch.date|date("d/m/Y") }}</td>
                         <td style="text-align: center"><a href="{{ asset('/uploads/docs/') ~ patch.path }}"
-                                                          target="_blank"><img src="{{ asset("/images/imgpdf.png") }}"
+                                                          target="_blank" title="Voir l'évolution"><img src="{{ asset("/images/imgpdf.png") }}"
                                                                                height="30px"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a
                                     href="{{ path('editPatch',{'id':patch.id}) }}"><span
-                                        class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                        class="glyphicon glyphicon-pencil" title="Editer l'évolution"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="deleterEvo"
                                     href="{{ path('deletePatch',{'id':patch.id}) }}"><span
-                                        class="glyphicon glyphicon-trash"></span></a></td>
+                                        class="glyphicon glyphicon-trash" title="Supprimer l'évolution"></span></a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <a href="{{ path("newPatch") }}">
                 <button type="button" class="btn btn-default navbar-btn">
-                    Ajouter une documentation patch
+                    Ajouter une documentation d'évolution
                 </button>
             </a>
         </div>
@@ -56,7 +56,7 @@
 
                     <th>Description</th>
                     <th>Date de parution</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -65,12 +65,12 @@
                         <td style="line-height: 30px;vertical-align: middle">{{ aide.description }}</td>
                         <td style="line-height: 30px;vertical-align: middle">{{ aide.date|date("d/m/Y") }}</td>
                         <td style="text-align: center"><a href="{{ asset('/uploads/docs/') ~ aide.path }}"
-                                                          target="_blank"><img src="{{ asset("/images/imgpdf.png") }}"
+                                                          target="_blank" title="Voir l'aide"><img src="{{ asset("/images/imgpdf.png") }}"
                                                                                height="30px"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a
                                     href="{{ path('editAide',{'id':aide.id}) }}"><span
-                                        class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                        class="glyphicon glyphicon-pencil" title="Editer l'aide"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="deleterAide"
                                     href="{{ path('deleteAide',{'id':aide.id}) }}"><span
-                                        class="glyphicon glyphicon-trash"></span></a></td>
+                                        class="glyphicon glyphicon-trash" title="Supprimer l'aide"></span></a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -88,7 +88,7 @@
             $("#liste_patchs .dtables").dataTable({
                 "oLanguage": {
                     "sSearch": "Rechercher&nbsp;:",
-                    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                    "sInfo": "Documentation  _START_ &agrave; _END_ sur _TOTAL_",
                     "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                     "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                     "sLengthMenu": "Afficher _MENU_ utilisateurs par page",
@@ -96,21 +96,22 @@
                         "sFirst": "",
                         "sPrevious": "",
                         "sNext": "",
-                        "sZeroRecords": "Aucun utilisateur &agrave; afficher",
-                        "sEmptyTable": "Aucun utilisateur &agrave; afficher"
-                    }
+                        "sLast": ""
+                    },
+                    "sZeroRecords": "Aucune documentation &agrave; afficher",
+                    "sEmptyTable": "Aucune documentation &agrave; afficher"
                 },
                 order: [[0, "asc"], [1, "asc"]],
                 "iDisplayLength": 15,
                 "aLengthMenu": [15, 30, 50, 100],
-                "sDom": 'lft<"footer_datatables"p>',
+                "sDom": 'lft<"footer_datatables"ip>',
                 "sPaginationType": "full_numbers"
             });
 
             $("#liste_aides .dtables").dataTable({
                 "oLanguage": {
                     "sSearch": "Rechercher&nbsp;:",
-                    "sInfo": "Classeur  _START_ &agrave; _END_ sur _TOTAL_",
+                    "sInfo": "Aide  _START_ &agrave; _END_ sur _TOTAL_",
                     "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
                     "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
                     "sLengthMenu": "Afficher _MENU_ utilisateurs par page",
@@ -118,15 +119,34 @@
                         "sFirst": "",
                         "sPrevious": "",
                         "sNext": "",
-                        "sZeroRecords": "Aucun utilisateur &agrave; afficher",
-                        "sEmptyTable": "Aucun utilisateur &agrave; afficher"
-                    }
+                        "sLast": ""
+                    },
+                    "sZeroRecords": "Aucune aide &agrave; afficher",
+                    "sEmptyTable": "Aucune aide &agrave; afficher"
                 },
                 order: [[0, "asc"], [1, "asc"]],
                 "iDisplayLength": 15,
                 "aLengthMenu": [15, 30, 50, 100],
-                "sDom": 'lft<"footer_datatables"p>',
+                "sDom": 'lft<"footer_datatables"ip>',
                 "sPaginationType": "full_numbers"
+            });
+
+            $('.deleterAide').confirm({
+                text: "Etes-vous sur de vouloir supprimer cette aide en ligne",
+                confirmButton: "Supprimer",
+                cancelButton: "Annuler",
+                confirmButtonClass: "btn btn-danger pull-right",
+                dialogClass: "modal-dialog modal-sm"
+
+            });
+
+            $('.deleterEvo').confirm({
+                text: "Etes-vous sur de vouloir supprimer cette documentation?",
+                confirmButton: "Supprimer",
+                cancelButton: "Annuler",
+                confirmButtonClass: "btn btn-danger pull-right",
+                dialogClass: "modal-dialog modal-sm"
+
             });
         </script>
     </div>

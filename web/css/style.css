@@ -417,6 +417,23 @@ label{
 	border: 1px solid #cccccc;
 	padding: 0.5em 1em 0.5em 1em;
 	margin: 3em 0em 1em 0em;
+    font-size: 14px;
+}
+
+@media screen and (min-width: 1285px) and (max-width: 1470px) {
+    .legende {
+        font-size: 12px;
+    }
+    .pipe {
+        padding: 0 5px;}
+}
+@media screen and (max-width: 1285px) {
+    .legende {
+        font-size: 10px;
+    }
+    .pipe {
+        padding: 0 2px;
+    }
 }
 
 .legendeitem,
@@ -443,6 +460,7 @@ label{
 
 .pipe {
 	color: #cccccc;
+    padding: 0 8px;
 }
 
 .plus  {
@@ -556,8 +574,9 @@ select [name=user] {
 /*FLASHBAG*/
 .alert {
 	position: absolute;
-	width: 50%;
-	left: 25%;
+	width: 45%;
+	left: 35%;
+    top: 5px;
     z-index: 1000;
 }
 .alert-info {
@@ -840,4 +859,8 @@ select [name=user] {
     top: 0;
     left: 0px;
     margin-top: -500px;
+}
+
+.table > thead > tr > th {
+    vertical-align: middle;
 }

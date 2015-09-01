@@ -4,9 +4,12 @@
 <div class="bloc_page">
     <div class="titre_page">
         <span class="glyphicon glyphicon-list"></span>
-        &nbsp;&nbsp;&nbsp;Liste des classeurs retirés
+        &nbsp;&nbsp;&nbsp;Classeurs à supprimer
     </div>
-
+    <div class="alert alert-danger alert-dismissible" style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        Veuillez sélectionner le(s) classeur(s) à supprimer
+    </div>
     <table class="table tableau" id="dtables">
     <thead>
     <tr>
@@ -16,7 +19,7 @@
         <th>Intervenant</th>
         <th>Type de classeur</th>
         <th>Statut actuel</th>
-        <th>Action</th>
+        <th>Actions</th>
         <th>Supprimer</th>
     </tr>
     </thead>
@@ -87,7 +90,7 @@
                     sClass: "center",
                     bSortable: false,
                     "mRender": function (data, type, full) {
-                        return '<a class="act" data-id="' + data + '" href="' + Routing.generate('classeur_edit', {id: data}) + '"><span class="glyphicon glyphicon-pencil"></span></a>';
+                        return '<a class="act" data-id="' + data + '" href="' + Routing.generate('classeur_edit', {id: data}) + '"><span class="glyphicon glyphicon-pencil" title="Editer le document"></span></a>';
                     }
                 },
                 {
@@ -112,23 +115,38 @@
     <script>
 
         $(document).ready(function () {
-            $('#deleter').click(function () {
-                var tabId = [];
-                $('.chk').each(function () {
-                    if ($(this).is(':checked')) {
-                        // alert($(this).parent().parent().find('.act').attr('data-id'))
-                        tabId.push($(this).parent().parent().find('.act').attr('data-id'));
+            $('#deleter').confirm({
+                text: "Supprimer les classeurs sélectionnés?",
+                confirmButton: "Supprimer",
+                cancelButton: "Annuler",
+                confirmButtonClass: "btn btn-danger pull-right",
+                dialogClass: "modal-dialog modal-sm",
+                confirm: function(){
+                    var tabId = [];
+                    $('.chk').each(function () {
+                        if ($(this).is(':checked')) {
+                            // alert($(this).parent().parent().find('.act').attr('data-id'))
+                            tabId.push($(this).parent().parent().find('.act').attr('data-id'));
+                        }
+                    });
+                    if(tabId.length > 0)
+                    {
+                        $.ajax({
+                            url: "{{ path('multiple_delete_classeur') }}",
+                            method: 'POST',
+                            data: {data: JSON.stringify(tabId)},
+                            success: function (retour) {
+                                window.location.href = "{{ path('liste_classeurs_retired') }}"
+                            }
+                        });
                     }
-                });
-                $.ajax({
-                    url: "{{ path('multiple_delete_classeur') }}",
-                    method: 'POST',
-                    data: {data: JSON.stringify(tabId)},
-                    success: function (retour) {
-                        window.location.href = "{{ path('liste_classeurs_retired') }}"
+                    else{
+                        $('.alert').delay(300).show("slow").delay(3000).hide("slow");
                     }
-                });
+                }
+
             });
+
         });
 
     </script>

@@ -7,7 +7,7 @@
         <th>Intervenant</th>
         <th>Type de classeur</th>
         <th>Statut actuel</th>
-        <th>Action</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -22,7 +22,7 @@
                 <a href="{{ path('classeur_edit', {id: classeur.id}) }}" class="link-datatable"><span class="glyphicon statut_{{ classeur.status }}"></span></a>
             </td>
             <td>
-                <a class="col-sm-6" href="{{ path('classeur_edit', {id: classeur.id}) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="col-sm-6" href="{{ path('classeur_edit', {id: classeur.id}) }}"><span class="glyphicon glyphicon-pencil" title="Editer le document"></span></a>
             </td>
         </tr>
     {% endfor %}

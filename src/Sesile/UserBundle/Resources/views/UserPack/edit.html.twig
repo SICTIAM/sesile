@@ -20,7 +20,7 @@
                     <!--
                     our chaque user on regarde si le booleen inPack est true ou false, s'il est true l'option a l'attribut selected
                     -->
-                    <select class="js-example-basic-multiple required" style="width: 100%" multiple="multiple" id="listUsers" name="listUsers">
+                    <select class="js-example-basic-multiple required" style="width: 100%" data-placeholder="Cliquer ici pour ajouter un utilisateur" multiple="multiple" id="listUsers" name="listUsers">
                         {% for user in users %}
                             <option value="{{ user.id }}"{% if user in userPack.users %}  selected {% endif %}>{{ user.prenom}} {{ user.nom }}</option>
                         {% endfor %}
@@ -45,7 +45,23 @@
     <link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
     <script>
         $(document).ready(function(){
-            $("#listUsers").select2({});
+//            $("#listUsers").select2({});
+//            $("input[type=submit]").addClass('disabled');
+            $("#listUsers").select2({
+
+                placeholder: function() {
+                    $(this).data('placeholder');
+                }
+            });
+            $("#listUsers").select2().on("click", function() {
+
+                if($('.select2-choices').children().length > 2 ) {
+                    console.log('ok');
+                    $("input[type=submit]").removeClass('disabled');
+                } else {
+                    $("input[type=submit]").addClass('disabled');
+                }
+            });
 
 
             $('#form').submit(function(){

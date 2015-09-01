@@ -13,10 +13,7 @@
             <td>{{ delegation.fin | date('d/m/Y') }}</td>
             {% if donnees is defined %}
                 <td class="boutons_action">
-                    <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
+                    <a href="{{ path("delegation_delete", {'id' : delegation.id }) }}" class="deleter">
                         <span class="glyphicon glyphicon-trash"></span>
                     </a>
                 </td>
@@ -24,3 +21,12 @@
         </tr>
     {% endfor %}
 </table>
+<script>
+    $('.deleter').confirm({
+        text: "Etes-vous sur de vouloir supprimer cette délégation?",
+        confirmButton: "Supprimer",
+        cancelButton: "Annuler",
+        confirmButtonClass: "btn btn-danger pull-right"
+
+    });
+</script>
