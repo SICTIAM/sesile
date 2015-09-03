@@ -32,6 +32,7 @@
             {% endfor %}
 
 
+
             {% for delegation in donnees %}
                 <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
                     <td><span class="glyphicon glyphicon-export delegdo"></span></td>
@@ -40,8 +41,8 @@
                     <td>{{ delegation.fin | date('d/m/Y') }}</td>
 
                     <td class="boutons_action">
-                        <a href="{{ path("delegation_edit", {'id' : delegation.id }) }}">
-                            <span class="glyphicon glyphicon-pencil"></span>
+                        <a href="{{ path("delegation_delete", {'id' : delegation.id }) }}" class="deleter" title="Supprimer la délégation">
+                            <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>
 
@@ -49,4 +50,13 @@
             {% endfor %}
         </table>
     </div>
+    <script>
+        $('.deleter').confirm({
+            text: "Etes-vous sur de vouloir supprimer cette délégation?",
+            confirmButton: "Supprimer",
+            cancelButton: "Annuler",
+            confirmButtonClass: "btn btn-danger pull-right"
+
+        });
+    </script>
 {% endif %}

@@ -28,7 +28,7 @@
                         {% endif %}
                     </td>
                     <td class="boutons_action">
-                        <a href="{{ path('edit_userpack',{id:userPack.id}) }}" title="Editer le groupe d'utilisateur">
+                        <a href="{{ path('edit_userpack',{id:userPack.id}) }}" title="Editer le groupe d'utilisateurs">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                         <a data-href="{{ path("delete_userpack", {'id' : userPack.id }) }}" data-toggle="modal" data-target="#confirm-delete" title="Supprimer le groupe d'utilisateur">

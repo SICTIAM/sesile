@@ -116,6 +116,10 @@ parameters:
         buildnumber: 1
     majorversion: 2
     url_applet: signature.sesile.fr
+    ovh_credential:
+        application: ***REMOVED***
+        secret: ***REMOVED***
+        consumer_key: ***REMOVED***
 
 # La suite, c'est pour l'api
 fos_rest:

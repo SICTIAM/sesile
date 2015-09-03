@@ -50,3 +50,7 @@ parameters:
         default: sesile
         dbname: sictiam
     url_applet: signature.dev.sesile.fr
+    ovh:
+        environnement: demo.sesile
+        zone: sictiam.fr
+        target: dmzproxy.sictiam.fr.

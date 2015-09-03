@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Yaml\Yaml;
+use Sesile\MainBundle\Classe\OvhApi;
 
 class AdminController extends Controller
 {
@@ -106,13 +107,39 @@ class AdminController extends Controller
 
 
         if ($form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
             $this->get('session')->getFlashBag()->add(
                 'success',
-                "La collectivité a été créée avec succès"
+                "La collectivité a été créée avec succès, elle sera accessible sous 24 heures"
             );
+
+            /**
+             * on crée le CNAME chez OVH en utilisant l'api ovh et la surcouche (clase ovhapi)
+             */
+
+            $ovh = (object)$this->container->getParameter('ovh');
+            $ovhCredential = (object)$this->container->getParameter('ovh_credential');
+            $api = new OvhApi(OVH_API_EU,$ovhCredential->application,$ovhCredential->secret,$ovhCredential->consumer_key);
+            $post = new \stdClass();
+            $post->fieldType = 'CNAME';
+            $post->subDomain = $form->get('domain')->getData().'.'.$ovh->environnement;
+            $post->target = $ovh->target;
+            $post->ttl = 0;
+            $api->post('/domain/zone/'.$ovh->zone.'/record',$post);
+
+            /**
+             * on prévient les devs
+             */
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Nouvelle Collectivité créée')
+                ->setFrom('sesile@sictiam.fr')
+                ->setTo('j.mercier@sictiam.fr')
+                ->setBody("La collectivité ".$form->get('nom')->getData()." vient d'être créée dans SESILE merci d'ajouter l'adresse ".$post->subDomain.".".$ovh->zone." dans vProxymus")
+                ->setContentType('text/html');
+            $this->get('mailer')->send($message);
             return $this->redirect($this->generateUrl('index_collectivite'));
         }
 
@@ -241,10 +268,11 @@ class AdminController extends Controller
             'action' => $this->generateUrl('new_collectivite'),
             'method' => 'POST',
         ));
-
+        $form->add('domain', 'text', array("label" => "Domaine"));
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
         return $form;
     }
+
 
     /**
      * Creates a form to edit a Collectivite entity.
@@ -256,7 +284,7 @@ class AdminController extends Controller
             'action' => $this->generateUrl('update_collectivite', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-
+        $form->add('domain', 'text', array("label" => "Domaine","disabled"=>true));
         $form->add('submit', 'submit', array('label' => 'Enregistrer'));
         return $form;
     }

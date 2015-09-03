@@ -80,6 +80,7 @@
         // Pour le bouton de suppression de l etape
         $(document).on('click','#suppetape',function() {
             $(this).parent().remove();
+            scrollFrisque();
             creerFleches();
         });
 
