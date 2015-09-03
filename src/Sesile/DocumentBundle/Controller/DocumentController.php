@@ -250,6 +250,31 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        $user = $this->getUser();
+
+
+        $entity = $doc->getClasseur();
+
+        $usersdelegated = $em->getRepository('SesileDelegationsBundle:delegations')->getUsersWhoHasMeAsDelegate($this->getUser()->getId());
+        $isusersdelegated = $em->getRepository('SesileDelegationsBundle:delegations')->getUsersWhoHasMeAsDelegate($this->getUser()->getId());
+        $editDelegants = false;
+        foreach($usersdelegated as $userdelegated) {
+            $delegants[] = $userdelegated->getId();
+            if (in_array($entity, $userdelegated->getClasseurs()->toArray())) {
+                $editDelegants = true;
+            }
+        }
+
+        if (!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants) {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                "Vous n'avez pas accès à ce classeur"
+            );
+            return $this->redirect($this->generateUrl('index'));
+        }
+
+
+
         // Ecriture de l'hitorique du document
         $id_user = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);

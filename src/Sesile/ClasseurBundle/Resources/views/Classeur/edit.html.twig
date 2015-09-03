@@ -49,10 +49,19 @@
                     {% include "SesileClasseurBundle:Classeur:boutons_action.html.twig" %}
                 {% endif %}
 
-                <a href="{{ app.request.headers.get('referer') }}"  class="btn btn-primary navbar-btn">
-                    <span class="glyphicon glyphicon-share-alt"></span>
-                    Retour à la page précédente
-                </a>
+
+                {% if path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer')  %}
+                    <a href="javascript:history.go(-3)"  class="btn btn-primary navbar-btn">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        Retour à la page précédente
+                    </a>
+                {% else %}
+                    <a href="javascript:history.go(-1)"  class="btn btn-primary navbar-btn">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        Retour à la page précédente
+                    </a>
+                {% endif %}
+
 
             </div>
         </div>
@@ -197,20 +206,21 @@
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
 
-                    <a href="{{ app.request.headers.get('referer') }}"  class="btn btn-primary navbar-btn">
-                        <span class="glyphicon glyphicon-share-alt"></span>
-                        Retour à la page précédente
-                    </a>
+                    {% if path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer')  %}
+                        <a href="javascript:history.go(-3)"  class="btn btn-primary navbar-btn">
+                            <span class="glyphicon glyphicon-share-alt"></span>
+                            Retour à la page précédente
+                        </a>
+                    {% else %}
+                        <a href="javascript:history.go(-1)"  class="btn btn-primary navbar-btn">
+                            <span class="glyphicon glyphicon-share-alt"></span>
+                            Retour à la page précédente
+                        </a>
+                    {% endif %}
                 </div>
                 <div class="col-lg-2">
                     {% if classeur.status != 3 and classeur.status != 2 %}
-                        <form id='suprclasseur' class="form_action pull-right" action="{{ path("classeur_supprimer") }}" method="post">
-                            <button type="submit" class="btn btn-danger">
-                                <span class="glyphicon glyphicon-trash"></span>
-                                &nbsp;Retirer
-                            </button>
-                            <input type="hidden" value="{{ classeur.id }}" name="id"/>
-                        </form>
+                        <a href="{{ path('classeur_supprimer',{'id':classeur.id}) }}" class="deleter btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Retirer</a>
                     {% endif %}
                 </div>
             </div>
@@ -409,10 +419,17 @@
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
 
-                    <a href="{{ app.request.headers.get('referer') }}"  class="btn btn-primary navbar-btn">
-                        <span class="glyphicon glyphicon-share-alt"></span>
-                        Retour à la page précédente
-                    </a>
+                    {% if path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer')  %}
+                        <a href="javascript:history.go(-3)"  class="btn btn-primary navbar-btn">
+                            <span class="glyphicon glyphicon-share-alt"></span>
+                            Retour à la page précédente
+                        </a>
+                    {% else %}
+                        <a href="javascript:history.go(-1)"  class="btn btn-primary navbar-btn">
+                            <span class="glyphicon glyphicon-share-alt"></span>
+                            Retour à la page précédente
+                        </a>
+                    {% endif %}
 
                 </div>
                 <div class="col-lg-2">

@@ -34,11 +34,11 @@
                     </td>
                     {#<td></td>#}
                     <td class="boutons_action">
-                        <a href="{{ path("update_type_classeur", {'id' : type.id }) }}" title="Modifier le type de classeur">
+                        <a href="{{ path("update_type_classeur", {'id' : type.id }) }}" title="Editer le type de classeur">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                         {% if type.supprimable %}
-                        <a href="{{ path("delete_classeur_type", {'id' : type.id }) }}" title="Supprimer le type de classeur">
+                        <a href="{{ path("delete_classeur_type", {'id' : type.id }) }}" class="deleter" title="Supprimer le type de classeur">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                         {% endif %}
@@ -85,6 +85,15 @@
                 { "bSortable": false, "aTargets": [ -1 ] }
             ],
             "sPaginationType": "full_numbers"
+        });
+
+        $('.deleter').confirm({
+            text: "Etes-vous sur de vouloir retirer ce classeur?",
+            confirmButton: "Supprimer",
+            cancelButton: "Annuler",
+            confirmButtonClass: "btn btn-danger pull-right",
+            dialogClass: "modal-dialog modal-sm"
+
         });
     </script>
 

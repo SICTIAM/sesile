@@ -143,3 +143,9 @@ table.dataTable thead th:active,
 table.dataTable thead td:active {
     outline: none;
 }
+
+.paginate_button.current {
+    background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #fff 0%, #dcdcdc 100%) repeat scroll 0 0;
+    border: 1px solid #979797;
+    color: #333 !important;
+}

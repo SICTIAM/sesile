@@ -4,6 +4,9 @@
         <th>Utilisateur</th>
         <th>Début</th>
         <th>Fin</th>
+        {% if donnees is defined %}
+            <th>Action</th>
+        {% endif %}
     </tr>
     </thead>
     {% for delegation in delegations %}
@@ -13,7 +16,7 @@
             <td>{{ delegation.fin | date('d/m/Y') }}</td>
             {% if donnees is defined %}
                 <td class="boutons_action">
-                    <a href="{{ path("delegation_delete", {'id' : delegation.id }) }}" class="deleter">
+                    <a href="{{ path("delegation_delete", {'id' : delegation.id }) }}" class="deleter" title="Supprimer la délégation">
                         <span class="glyphicon glyphicon-trash"></span>
                     </a>
                 </td>
