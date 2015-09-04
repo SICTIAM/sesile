@@ -29,6 +29,10 @@ $(document).ready(function () {
                 sClass: "center"
             },
             {
+                aTargets: [3],
+                bSortable: false
+            },
+            {
                 aTargets: [5],
                 sClass: "center",
                 bSortable: false,

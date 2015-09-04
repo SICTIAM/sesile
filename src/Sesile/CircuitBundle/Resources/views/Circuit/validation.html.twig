@@ -173,7 +173,12 @@
         function scrollFrisque () {
             var widthLine = $('#circuit_main').css('width');
             $('#circuit_etapes').css('width', widthLine);
-            var widthScroll = $('.etapes-circuit').length * 300 + 250;
+            {% if edit %}
+                var btn = 250;
+            {% else %}
+            var btn = 0;
+            {% endif %}
+            var widthScroll = $('.etapes-circuit').length * 300 + btn;
             $('#circuit_with_js').css('width', widthScroll);
         }
 

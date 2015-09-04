@@ -70,7 +70,13 @@ class ClasseurController extends Controller {
 
             $val = array();
             foreach ($validants as $validant) {
-                $val[] = $validant->getPrenom() . " " . $validant->getNom();
+                if(count($val))
+                {
+                    $val[] = " / ".$validant->getPrenom() . " " . $validant->getNom();
+                }
+                else{
+                    $val[] = $validant->getPrenom() . " " . $validant->getNom();
+                }
             }
 
             $tabClasseurs = array(
