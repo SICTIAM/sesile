@@ -68,6 +68,5 @@ $(document).ready(function () {
             return nRow;
         }
     });
-
-    tab.page('last').draw('page');
+    
 });
