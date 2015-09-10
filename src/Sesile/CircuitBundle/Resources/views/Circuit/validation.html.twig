@@ -35,8 +35,8 @@
                 </div>
             </div>
         </div>
-
         {% for circuit_user in circuit_users %}
+           circuit user {{ circuit_user }}
             {% if circuit_user is not empty %}
                 {# Etapes validées #}
                 <div class="well etapes-circuit">
@@ -61,7 +61,7 @@
 
         <div id="contetapes">
 
-            {% if edit and classeur_status != 0 %}
+            {% if edit and classeur_status != 0 and classeur_status != 4 %}
                 {# Etape en cours #}
                 <div class="well etapes-circuit etape-validante">
                     <span class="valid_perso glyphicon glyphicon-pencil"></span>
@@ -173,7 +173,12 @@
         function scrollFrisque () {
             var widthLine = $('#circuit_main').css('width');
             $('#circuit_etapes').css('width', widthLine);
-            var widthScroll = $('.etapes-circuit').length * 300 + 250;
+            {% if edit %}
+                var btn = 250;
+            {% else %}
+            var btn = 0;
+            {% endif %}
+            var widthScroll = $('.etapes-circuit').length * 300 + btn;
             $('#circuit_with_js').css('width', widthScroll);
         }
 
@@ -186,6 +191,7 @@
         $(document).on('click','#suppetape',function() {
             $(this).parent().remove();
             creerFleches();
+            scrollFrisque();
             aff_button_valider();
         });
 

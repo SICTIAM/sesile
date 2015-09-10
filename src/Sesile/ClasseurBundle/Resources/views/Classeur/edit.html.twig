@@ -378,15 +378,16 @@
                 <script type="application/javascript">
 
 
-                    {% if classeur.circuit and currentValidant and classeur.status != 0 %}
+                    {% if classeur.circuit and currentValidant and classeur.status != 0 and classeur.status != 4 %}
                         var circuit_users = "{{ classeur.circuit }}" + "," + {{ currentValidant.id }};
-                    {% elseif currentValidant and classeur.status != 0 %}
+                    {% elseif currentValidant and classeur.status != 0 and classeur.status != 4 %}
                         var circuit_users = {{ currentValidant.id }} + "," ;
-                    {% elseif classeur.circuit and classeur.status != 0 %}
+                    {% elseif classeur.circuit and classeur.status != 0 and classeur.status != 4 %}
                         var circuit_users = "{{ classeur.circuit }}";
                     {% else %}
                         var circuit_users = "";
                     {% endif %}
+
                     var ordre_circuit = {{ classeur.ordreetape }};
                     var validant = {{ currentValidant|json_encode|raw }};
                     var status = {{ classeur.status }};

@@ -7,6 +7,7 @@
             &nbsp;&nbsp;&nbsp;Gérer les Délégations
         </div>
         {% set donnees = true %}
+        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
         {% include 'SesileDelegationsBundle:Default:listemesdelegs.html.twig' %}
         <a href="{{ path('delegation_new') }}">
             <button type="button" class="btn btn-default navbar-btn">
@@ -15,7 +16,7 @@
         </a>
     </div>
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
-    <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+
     <script type="text/javascript">
         $(".dtables").dataTable({
             "oLanguage": {
@@ -37,7 +38,10 @@
             "aLengthMenu": [15, 30, 50, 100],
             "sDom": 'lft<"footer_datatables"ip>',
             "aoColumnDefs": [
-                { "bSortable": false, "aTargets": [ 2 ] }
+                {
+                    aTargets: [1,2,3],
+                    sClass: "center"
+                }
             ],
             "sPaginationType": "full_numbers"
         });

@@ -79,8 +79,14 @@
                     sClass: "center"
                 },
                 {
+                    aTargets: [3],
+                    bSortable: false,
+                    sClass: "center"
+                },
+                {
                     "aTargets": [5],
                     sClass: "center",
+                    bSortable: false,
                     "mRender": function (data, type, full) {
                         return '<span class="glyphicon statut_' + data + '"></span>';
                     }
@@ -96,6 +102,7 @@
                 {
                     "aTargets": [7],
                     sClass: "center",
+                    bSortable: false,
                     "mRender": function (data, type, full) {
                         return '<input type="checkbox" class="chk">';
                     }

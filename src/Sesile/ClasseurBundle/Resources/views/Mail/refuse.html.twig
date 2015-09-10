@@ -1,7 +1,9 @@
 Bonjour {{ deposant }},
+
+Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }} pour le motif suivant:
 <br>
-Le classeur "{{ titre_classeur }}" vient d'être refusé par {{ validant }}
+{{ motif }}
 <br>
 Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
 <br>
-Vous pouvez visionner le classeur <a href="{{ lien|raw }}"></a>
+Vous pouvez visionner le classeur {{lien|raw}}

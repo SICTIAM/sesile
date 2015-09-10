@@ -295,7 +295,9 @@ Vous pouvez visionner le classeur {{lien|raw}}");
         if ($this->getTextmailrefuse() == null) {
             $this->setTextmailrefuse("Bonjour {{ deposant }},
 
-Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }}
+Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }} pour le motif suivant:
+<br>
+{{ motif }}
 <br>
 Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
 <br>
@@ -422,11 +424,13 @@ Vous pouvez visionner le classeur {{lien|raw}}');
 
         if ($this->getTextmailrefuse() == null) {
             $this->setTextmailrefuse("Bonjour {{ deposant }},
-<br><br>
-Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }}
-<br><br>
+
+Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }} pour le motif suivant:
+<br>
+{{ motif }}
+<br>
 Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
-<br><br>
+<br>
 Vous pouvez visionner le classeur {{lien|raw}}");
         }
 

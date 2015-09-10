@@ -1,4 +1,4 @@
-<table class="table tableau dtables">
+<table class="table tableau dtables" style="text-align: center">
     <thead>
     <tr>
         <th>Utilisateur</th>
@@ -10,12 +10,12 @@
     </tr>
     </thead>
     {% for delegation in delegations %}
-        <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %}">
+        <tr class="delegation_row {% if loop.index0 % 2 != 0 %}even{% else %}odd{% endif %} " >
             <td>{{ delegation.user.nom }} {{ delegation.user.prenom }}</td>
             <td>{{ delegation.debut | date('d/m/Y') }}</td>
             <td>{{ delegation.fin | date('d/m/Y') }}</td>
             {% if donnees is defined %}
-                <td class="boutons_action">
+                <td class="boutons_action text-center">
                     <a href="{{ path("delegation_delete", {'id' : delegation.id }) }}" class="deleter" title="Supprimer la délégation">
                         <span class="glyphicon glyphicon-trash"></span>
                     </a>

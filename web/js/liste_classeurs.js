@@ -2,9 +2,10 @@
  * Created by f.laussinot on 12/06/2015.
  * script utilisé pour la configuration des datables : affichage liste_a_valider et liste_retired
  */
+
 $(document).ready(function () {
     $.fn.dataTable.moment( 'DD/MM/YYYY' );
-    $("#validTable").dataTable({
+    var tab = $("#validTable").DataTable({
         oLanguage: {
             sSearch: "Rechercher&nbsp;",
             sInfo: "Classeurs _START_ &agrave; _END_ sur _TOTAL_",
@@ -27,6 +28,10 @@ $(document).ready(function () {
             {
                 aTargets: [1,2,3,4],
                 sClass: "center"
+            },
+            {
+                aTargets: [3],
+                bSortable: false
             },
             {
                 aTargets: [5],
@@ -55,11 +60,14 @@ $(document).ready(function () {
         ],
         sPaginationType: "full_numbers",
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            $(nRow).addClass("classeur-row");
+
+            $(nRow).addClass("classeur-row statut_"+aData[5]+"_line");
             $(nRow).click(function (e) {
                 document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
             });
             return nRow;
         }
     });
+
+    tab.page('last').draw('page');
 });

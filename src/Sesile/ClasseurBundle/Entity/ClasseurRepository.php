@@ -180,7 +180,16 @@ class ClasseurRepository extends EntityRepository {
         //var_dump($classeur->getOrdreValidant());
 
         $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
-
+        $usersValidant = array();
+     /*   if(!count($tabEtapeClasseur))
+        {
+            if($classeur->getEtapeDeposante())
+            {
+                error_log('classeur refusé');
+                $usersValidant[] = $classeur->getEtapeDeposante();
+                return $usersValidant;
+            }
+        }*/
 
         /**
         * Pour réucpérer le validant je récupère le dernier id de la liste getOrdreValidant
@@ -191,7 +200,7 @@ class ClasseurRepository extends EntityRepository {
         if($etapeClasseurs !== null && $classeur->getStatus() != 2) {
 
             $users = $etapeClasseurs->getUsers();
-            $usersValidant = array();
+
             $userPacks = $etapeClasseurs->getUserPacks();
             foreach ($userPacks as $userPack) {
                 $usersP = $userPack->getUsers();
@@ -266,9 +275,11 @@ class ClasseurRepository extends EntityRepository {
         $prevValidant = explode(',', $classeur->getCircuit());
         $prevValidant = end($prevValidant);
         // Pour l amelioration du validant qui doit se retracter...
-        /*if (empty($prevValidant)) {
+        //var_dump($prevValidant);
+        if (!is_object($prevValidant)) {
             $prevValidant = $classeur->getUser();
-        }*/
+        }
+
         return $prevValidant;
     }
 

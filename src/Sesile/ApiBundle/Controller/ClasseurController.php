@@ -669,7 +669,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($sujet)
-            ->setFrom('sesile@sictiam.fr')
+            ->setFrom($this->container->getParameter('email_sender_address'))
             ->setTo($to)
             ->setBody($body, "text/html");
         $this->get('mailer')->send($message);
