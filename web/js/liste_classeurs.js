@@ -69,5 +69,4 @@ $(document).ready(function () {
         }
     });
 
-    tab.page('last').draw('page');
 });
