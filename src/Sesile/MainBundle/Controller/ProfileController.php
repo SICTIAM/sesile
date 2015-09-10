@@ -29,7 +29,6 @@ use Sesile\UserBundle\Entity\User;
 use Symfony\Component\Yaml\Yaml;
 
 
-include '/home/sesile/src/Sesile/MainBundle/phpCAS.php';
 /**
  * Controller managing the user profile
  *
