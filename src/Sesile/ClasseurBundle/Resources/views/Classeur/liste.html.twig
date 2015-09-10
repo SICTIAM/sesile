@@ -35,11 +35,13 @@
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
     <script type="application/javascript" src="//cdn.datatables.net/plug-ins/1.10.7/sorting/datetime-moment.js"></script>
+<script type="application/javascript" src="//cdn.datatables.net/plug-ins/1.10.9/api/page.jumpToData().js"></script>
+
 <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="application/javascript">
         $(document).ready(function () {
             $.fn.dataTable.moment( 'DD/MM/YYYY' );
-            $("#fulltable").dataTable({
+            var tab = $("#fulltable").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -98,12 +100,21 @@
                 ],
                 sPaginationType: "full_numbers",
                 fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                    $(nRow).addClass("classeur-row");
+                  /*  if (aData[5] == 0)
+                    {
+                        $(nRow).addClass("text-danger statut_"+aData[5]+"-line");
+                    } */
+                    $(nRow).addClass("classeur-row statut_"+aData[5]+"_line");
                     $(nRow).click(function (e) {
                         document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
                     });
                     return nRow;
                 }
             });
+            tab.page('last').draw('page');
+          // var pos = tab.column(column, {order:'current'}).data().indexOf( "rename2" );
+           // alert(pos)
+
+            //tab.page.jumpToData();
         });
     </script>

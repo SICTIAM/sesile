@@ -411,6 +411,19 @@ label{
 .tl0 {
 	color: rgb(213, 0, 25);
 }
+.statut_0_line{
+    font-weight: bold;
+    color: rgb(213, 0, 25);
+}
+
+.statut_1_line{
+    font-weight: bold;
+
+}
+
+.statut_3_line{
+    text-decoration: line-through
+}
 
 /*LEGENDE*/
 .legende {

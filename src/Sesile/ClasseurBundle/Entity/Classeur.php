@@ -415,7 +415,7 @@ class Classeur {
 
     public function isAtLastValidant(){
         $ordreCircuit = $this->getOrdreEtape();
-        $ordreCircuit++;
+      //  $ordreCircuit++;
         $nbEtapes = count($this->getEtapeClasseurs());
         if ($ordreCircuit == $nbEtapes){
             return true;
@@ -464,10 +464,24 @@ class Classeur {
 
     public function retracter()
     {
-        $this->setCircuitZero( substr($this->getCircuit(), 0, strrpos($this->getCircuit(), ',')) );
-        $this->setOrdreValidant( substr($this->getOrdreValidant(), 0, strrpos($this->getOrdreValidant(), ',')) );
-        $this->setOrdreEtape($this->setOrdreMoins());
-        $this->setStatus(4);
+
+        if(count(explode(',',$this->getOrdreValidant()) == 1))
+        {
+            $this->setOrdreZero();
+//        $this->setValidant($this->getPrevValidant());
+//        $this->setValidant($this->getUser());
+            $this->setCircuitZero('');
+            $this->setOrdreValidant('');
+            $this->setStatus(4);
+        }
+        else{
+            var_dump("wrong way");exit;
+            $this->setCircuitZero( substr($this->getCircuit(), 0, strrpos($this->getCircuit(), ',')) );
+            $this->setOrdreValidant( substr($this->getOrdreValidant(), 0, strrpos($this->getOrdreValidant(), ',')) );
+            $this->setOrdreEtape($this->setOrdreMoins());
+            $this->setStatus(4);
+        }
+
     }
 
     public function supprimer()
@@ -522,7 +536,7 @@ class Classeur {
              && !in_array($userid, $validants)
 //            && !array_diff($userid, $validants)
             && $this->getStatus() == 1
-            && $this->getOrdreEtape() != 0
+        /*    && $this->getOrdreEtape() != 0 */
         ) {
             return true;
         } else {

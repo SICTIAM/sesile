@@ -33,6 +33,11 @@ parameters:
         default: sesile
         dbname: sictiam
     url_applet: signature.sesile.fr
+    ovh:
+        environnement: ""
+        zone: sesile.fr
+        target: sesile.fr.
+    email_sender_address: sictiam@sesile.fr
 
 security:
 

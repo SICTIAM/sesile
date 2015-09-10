@@ -18,7 +18,7 @@ class PES
     public $signataire;
     public $dateSign;
 
-    function __construct($budget, $signataire, $dateSign, $tabBord, $typePES, $listPJ)
+    function __construct($budget, $signataire, $dateSign, $tabBord, $listPJ)
     {
         $this->budget = $budget;
         $this->signataire = $signataire;
@@ -26,7 +26,7 @@ class PES
         foreach ($tabBord as $bordereau) {
 
             $id = $bordereau->BlocBordereau->IdBord->attributes()[0];
-
+//var_dump((string)$bordereau->type);
             //Formatage Date Emission
             $dateEmWFormat = $bordereau->BlocBordereau->DteBordEm->attributes()[0];
             list($y, $m, $d) = explode('-', $dateEmWFormat);
@@ -34,7 +34,7 @@ class PES
             $dateEm = $d . '/' . $m . '/' . $y;
 
             $nbPiece = $bordereau->BlocBordereau->NbrPce->attributes()[0];
-            if ($typePES == 'Depense') {
+            if ((string)$bordereau->type === 'Depense') {
                 $tmpHT = doubleval($bordereau->BlocBordereau->MtBordHT->attributes()[0]);
             } else {
                 //non non c'est pas la même chsoe qu'en haut regarde bien
@@ -58,8 +58,8 @@ class PES
                 $tabPiece[] = $piece;
 
             }
-
-            $this->listBord[] = new Bordereau($id, $dateEm, $nbPiece, $mtBordHT, $mtCumulAnnuel, $exercice, $type, $tabPiece, $typePES, $listPJ);
+//var_dump($bordereau->type,$id);
+            $this->listBord[] = new Bordereau($id, $dateEm, $nbPiece, $mtBordHT, $mtCumulAnnuel, $exercice, $type, $tabPiece, (string)$bordereau->type, $listPJ);
             //exit;
             //error_log(print_r('TEST'));
         }

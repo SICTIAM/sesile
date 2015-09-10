@@ -32,13 +32,14 @@ class EtapeClasseurRepository extends EntityRepository
         $countEtape = $classeur->getOrdreEtape();
 
         if ($countEtape <= 0) $countEtape = 0;
-        if ($edit && $classeur->getStatus() != 0) {
+        if ($edit && $classeur->getStatus() != 0 && $classeur->getStatus() != 4) {
             $countEtape++;
         }
 
         foreach ($etapesGroupes as $etapesGroupe) {
-//            var_dump('Ordre classeur : ', $countEtape, 'Ordre etapes : ', $etapesGroupe->getOrdre(), '<br>');
+
             if($countEtape <= $etapesGroupe->getOrdre()) {
+                //var_dump('Ordre classeur : ', $countEtape, 'Ordre etapes : ', $etapesGroupe->getOrdre(), '<br>');
                 $etapesValidantes[] = $etapesGroupe;
             }
         }
@@ -143,7 +144,7 @@ class EtapeClasseurRepository extends EntityRepository
                 }
 
                 // On met l'ordre des étapes a jour
-                if ($ajout || $classeur->getStatus() == 0) {
+                if ($ajout || $classeur->getStatus() == 0 || $classeur->getStatus() == 4) {
                     $step->setOrdre($k);
                 } else {
                     $step->setOrdre($k + $classeur->getOrdreEtape() + 1);
@@ -183,7 +184,7 @@ class EtapeClasseurRepository extends EntityRepository
 
                 // On enregistre la prochaine etape validante
                 if (($k == 0 && $classeur->getOrdreValidant() === null) ||
-                    ($k == 0 && $classeur->getStatus() == 0)
+                    (($k == 0 && $classeur->getStatus() == 0) || ($k == 0 && $classeur->getStatus() == 4))
                 ) {
                     $classeur->setOrdreValidant($step->getId());
                 }

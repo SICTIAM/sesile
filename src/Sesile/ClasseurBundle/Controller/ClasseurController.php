@@ -378,7 +378,7 @@ class ClasseurController extends Controller {
 
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
             array(
-                "status" => array(1,4)
+                "status" => array(0,1,4)
             ));
 //        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->gatClasseurToValidate();
 
@@ -386,7 +386,10 @@ class ClasseurController extends Controller {
         foreach($entities as $classeur)
         {
             $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
-
+          /*  if($classeur->getId() == 106)
+            {
+                error_log(print_r($validants,true));
+            }*/
             if(array_intersect($usersdelegated, $validants))
             {
                 $tabClasseurs[] = array(
@@ -1132,6 +1135,7 @@ class ClasseurController extends Controller {
         }
 
         if(!$isvalidator && in_array($this->getUser()->getId(), $validantsId)) {
+
             $classeur->setVisibilite($request->get("visibilite"));
             $classeur->setNom($request->get("name"));
             $classeur->setDescription($request->get("desc"));
@@ -1140,7 +1144,7 @@ class ClasseurController extends Controller {
             $classeur->setValidation($valid);
             $circuit = $request->request->get('circuit');
             $classeur->setCircuit($circuit);
-
+       //     var_dump($circuit);exit;
         }
 
 //        $currentvalidant = $classeur->getValidant();
@@ -1387,7 +1391,7 @@ class ClasseurController extends Controller {
 //        $delegator=$repositoryusers->find($currentvalidant);
 
         // envoi d'un mail validant suivant
-        $this->sendRefusMail($classeur);
+        $this->sendRefusMail($classeur,$request->request->get('text-message'));
 
         $classeur->refuser();
 
@@ -1749,7 +1753,7 @@ class ClasseurController extends Controller {
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($sujet)
-            ->setFrom('sesile@sictiam.fr')
+            ->setFrom($this->container->getParameter('email_sender_address'))
             ->setTo($to)
             ->setBody($body)
             ->setContentType('text/html');
@@ -1814,7 +1818,7 @@ class ClasseurController extends Controller {
         }
     }
 
-    private function sendRefusMail($classeur) {
+    private function sendRefusMail($classeur,$motif) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
 //        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getValidant());
@@ -1828,7 +1832,8 @@ class ClasseurController extends Controller {
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
-                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>'
+                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>',
+                "motif" => $motif
             )
         );
 

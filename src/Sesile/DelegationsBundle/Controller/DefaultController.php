@@ -126,9 +126,24 @@ class DefaultController extends Controller
         $delegation->setFin($fin);
 
 
+
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $repository->addDelegationWithFusion($delegation);
 
+        $messageDelegataire = \Swift_Message::newInstance()
+            ->setSubject("Nouvelle délégation donnée")
+            ->setFrom($this->container->getParameter('email_sender_address'))
+            ->setTo($delegation->getDelegant()->getEmail())
+            ->setBody($this->renderView( 'SesileDelegationsBundle:Notifications:delegataireCreation.html.twig',array("delegation"=>$delegation) ), 'text/html');
+
+        $this->get('mailer')->send($messageDelegataire);
+
+        $messageDelegue = \Swift_Message::newInstance()
+            ->setSubject("Nouvelle délégation reçue")
+            ->setFrom($this->container->getParameter('email_sender_address'))
+            ->setTo($delegation->getUser()->getEmail())
+            ->setBody($this->renderView( 'SesileDelegationsBundle:Notifications:delegueCreation.html.twig',array("delegation"=>$delegation) ), 'text/html');
+        $this->get('mailer')->send($messageDelegue);
 
         $this->get('session')->getFlashBag()->add(
             'success',
@@ -150,8 +165,18 @@ class DefaultController extends Controller
         if (!$delegation) {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
+
+        $messageDelegue = \Swift_Message::newInstance()
+            ->setSubject("Délégation annulée")
+            ->setFrom($this->container->getParameter('email_sender_address'))
+            ->setTo($delegation->getUser()->getEmail())
+            ->setBody($this->renderView( 'SesileDelegationsBundle:Notifications:delegationSuppression.html.twig',array("delegation"=>$delegation) ), 'text/html');
+        $this->get('mailer')->send($messageDelegue);
+
         $em->remove($delegation);
         $em->flush();
+
+
 
         $this->get('session')->getFlashBag()->add(
             'success',

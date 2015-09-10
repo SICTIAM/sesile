@@ -47,12 +47,6 @@
                         Classeurs<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
-                    <li>
-                        <a href="{{ path("classeur") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
-                            Liste des classeurs
-                        </a>
-                    </li>
 		    <li>
 			<a href="{{ path("classeur_new") }}">
 			    <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
@@ -63,6 +57,12 @@
                         <a href="{{ path("index_valider") }}">
                             <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
                             Classeur(s) à valider
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("classeur") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowblue.png") }}"/>
+                            Liste des classeurs
                         </a>
                     </li>
                     <li>
@@ -81,29 +81,6 @@
                     {% endif %}
                 </ul>
             </li>
-            {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
-            <li class="menu-elem menu-rouge">
-                <div class="dd-toggle entete-menu">
-                    <a href="#">
-                        <div class="rectanglemenu" id="rougeclair"></div>
-                        Préférences<b class="caret carette"></b></a>
-                </div>
-                <ul class="dd-menu">
-                    <li>
-                        <a href="{{ path("notifications") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
-                            Notifications
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("message_accueil") }}">
-                            <img class="arrows" src="{{ asset("/images/arrowred.png") }}"/>
-                            Message d'accueil
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            {% endif %}
             <li class="menu-elem menu-orange ">
                 <div class="dd-toggle entete-menu">
                     <a href="#">
@@ -142,6 +119,21 @@
                         Administration<b class="caret carette"></b></a>
                 </div>
                 <ul class="dd-menu">
+                    {% if not is_granted('ROLE_SUPER_ADMIN') %}
+                    <li>
+                        <a href="{{ path("notifications") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Notifications
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path("message_accueil") }}">
+                            <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>
+                            Message d'accueil
+                        </a>
+                    </li>
+                    {% endif %}
                     {#<li>
                         <a href="{{ path("gestion_circuit") }}">
                             <img class="arrows" src="{{ asset("/images/arrowgreen.png") }}"/>

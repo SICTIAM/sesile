@@ -19,9 +19,9 @@
 
     {% else %}
 
-        {# Pour l amelioration du validant qui doit se retracter...
-        {% if classeur.status == 0 or classeur.status == 4 and classeur.circuit is empty %}#}
-        {% if classeur.status == 0 %}
+        {# Pour l amelioration du validant qui doit se retracter...#}
+        {% if classeur.status == 0 or classeur.status == 4 and classeur.ordreValidant is empty %}
+
             <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_soumis") }}">
                 <span class="glyphicon glyphicon-ok"></span>
                 &nbsp;Soumettre
