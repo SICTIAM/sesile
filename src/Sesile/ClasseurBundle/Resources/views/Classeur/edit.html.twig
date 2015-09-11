@@ -206,11 +206,18 @@
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
 
-                    {% if path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer')  %}
-                        <a href="javascript:history.go(-3)"  class="btn btn-primary navbar-btn">
-                            <span class="glyphicon glyphicon-share-alt"></span>
-                            Retour à la page précédente
-                        </a>
+                    {% if classeur.documents|length > 0 %}
+                        {% if path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer') %}
+                            <a href="javascript:history.go(-3)"  class="btn btn-primary navbar-btn">
+                                <span class="glyphicon glyphicon-share-alt"></span>
+                                Retour à la page précédente
+                            </a>
+                        {% else %}
+                            <a href="javascript:history.go(-1)"  class="btn btn-primary navbar-btn">
+                                <span class="glyphicon glyphicon-share-alt"></span>
+                                Retour à la page précédente
+                            </a>
+                        {% endif %}
                     {% else %}
                         <a href="javascript:history.go(-1)"  class="btn btn-primary navbar-btn">
                             <span class="glyphicon glyphicon-share-alt"></span>
@@ -420,11 +427,18 @@
                         {% include "SesileClasseurBundle:Classeur:boutons_retractable.html.twig" %}
                     {% endif %}
 
-                    {% if path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer')  %}
-                        <a href="javascript:history.go(-3)"  class="btn btn-primary navbar-btn">
-                            <span class="glyphicon glyphicon-share-alt"></span>
-                            Retour à la page précédente
-                        </a>
+                    {% if classeur.documents|length > 0 %}
+                        {% if path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer') %}
+                            <a href="javascript:history.go(-3)"  class="btn btn-primary navbar-btn">
+                                <span class="glyphicon glyphicon-share-alt"></span>
+                                Retour à la page précédente
+                            </a>
+                        {% else %}
+                            <a href="javascript:history.go(-1)"  class="btn btn-primary navbar-btn">
+                                <span class="glyphicon glyphicon-share-alt"></span>
+                                Retour à la page précédente
+                            </a>
+                        {% endif %}
                     {% else %}
                         <a href="javascript:history.go(-1)"  class="btn btn-primary navbar-btn">
                             <span class="glyphicon glyphicon-share-alt"></span>
