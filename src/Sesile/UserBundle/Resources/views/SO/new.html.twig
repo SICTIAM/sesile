@@ -52,7 +52,7 @@
                                     </optgroup>
                                     <optgroup label="utilisateurs">
                                         {% for user in users %}
-                                            <option  value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>
+                                            <option  value="user-{{ user.id }}" data-type="user">{{ user.nom }} {{ user.prenom }}</option>
                                         {% endfor %}
                                     </optgroup>
                                 </select>

@@ -112,7 +112,7 @@
                         </optgroup>
                         <optgroup label="utilisateurs">
                             {% for user in users %}
-                                <option value="user-{{ user.id }}" data-etape="{{ etape.id }}" data-type="user" {% if user in etape.users %} selected{% endif %}>{{ user.prenom }} {{ user.nom }}</option>
+                                <option value="user-{{ user.id }}" data-etape="{{ etape.id }}" data-type="user" {% if user in etape.users %} selected{% endif %}>{{ user.nom }} {{ user.prenom }}</option>
                             {% endfor %}
                         </optgroup>
                     </select>
@@ -240,7 +240,7 @@
             $(this).parent().remove();
 
             $('#contetapes').append('' +
-            '<div class="well etapes-circuit"><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
+            '<div class="well etapes-circuit"><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.nom }} {{ user.prenom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
             '<div class="text-center div-btn-ajout-etape"><button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button></div>');
             $("select.selusers").select2();
 

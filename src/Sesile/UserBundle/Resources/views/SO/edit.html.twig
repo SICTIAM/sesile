@@ -51,7 +51,7 @@
                                     </optgroup>
                                     <optgroup label="utilisateurs">
                                         {% for user in users %}
-                                            <option value="user-{{ user.id }}" data-etape="{{ etape.id }}" data-type="user" {% if user in etape.users %} selected{% endif %}>{{ user.prenom }} {{ user.nom }}</option>
+                                            <option value="user-{{ user.id }}" data-etape="{{ etape.id }}" data-type="user" {% if user in etape.users %} selected{% endif %}>{{ user.nom }} {{ user.prenom }}</option>
                                         {% endfor %}
                                     </optgroup>
                                 </select>
