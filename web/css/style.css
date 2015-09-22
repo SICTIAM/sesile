@@ -375,7 +375,7 @@ label{
 }
 
 .tableau tr.even {
-	background-color: white;
+	background-color: rgba(242, 244, 245);
 }
 
 .tableau tr td {
@@ -401,7 +401,11 @@ label{
 .tl4 {
 	color: rgb(240, 117, 0);
 }
+.statut_4_line{
+    /*font-weight: bold;*/
+    color: rgb(240, 117, 0);
 
+}
 .statut_3,
 .tl3 {
 	color: rgb(109, 109, 109);
@@ -412,12 +416,19 @@ label{
 	color: rgb(213, 0, 25);
 }
 .statut_0_line{
-    font-weight: bold;
+    /*font-weight: bold;*/
     color: rgb(213, 0, 25);
 }
 
 .statut_1_line{
-    font-weight: bold;
+    /*font-weight: bold;*/
+    color: rgb(0, 131, 201);
+
+}
+
+.statut_2_line{
+    /*font-weight: bold;*/
+    color: rgb(48, 52, 54);
 
 }
 
@@ -876,4 +887,14 @@ select [name=user] {
 
 .table > thead > tr > th {
     vertical-align: middle;
+}
+
+.btn-circle-lg {
+    width: 79px;
+    height: 79px;
+    text-align: center;
+    padding: 13px 0;
+    font-size: 30px;
+    line-height: 2.00;
+    border-radius: 70px;
 }
