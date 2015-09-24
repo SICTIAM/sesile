@@ -1,8 +1,86 @@
+function findUsersByUserPackId(ident){
+    var total = '';
+    $.ajax({
+        url: Routing.generate('show_userpack', {id: ident}),
+        async: false,
+        method: "GET",
+        success:function(resp){
+            $.each (resp,function(index,value){
+                if(total == '')
+                {
+                    total = value;
+                }
+                else{
+                    total += '<br>'+value;
+                }
+
+            });
+
+        }
+    });
+    return total;
+}
+
+function initPopover(){
+
+
+
+    $('[data-toggle="popover"]').popover({
+        html: true,
+        trigger: 'hover',
+        container: 'body',
+        title: function(){return $(this).text();},
+        content: function(){return findUsersByUserPackId($(this).data('id'));}
+    });
+}
+
 $(document).ready(function() {
 
-    //console.log('Max : ' + maxHeight);
-    var eventSelect = $(".selusers");
-    eventSelect.select2();
+
+
+    function formatState (state) {
+
+        if (!state.id) { return state.text; }
+        var tabType = state.id.split('-');
+
+        if(tabType[0] == 'user')
+        {
+            return '<span><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;'+ state.text+'</span>';
+        }
+        else{
+            return '<span data-toggle="popover" data-id="'+tabType[1]+'" style="display: block"><i class="fa fa-group"></i>&nbsp;&nbsp;'+ state.text+'</span>';
+        }
+
+    };
+
+
+    $("select.selusers").select2({
+        formatResult: formatState,
+        formatSelection:formatState
+    });
+
+
+
+    initPopover();
+    $(".selusers").on("select2-selecting", function () {
+        $('[data-toggle="popover"]').popover('destroy');
+        initPopover();
+
+        //alert('select')
+    });
+
+    $(".selusers").on("select2-close", function () {
+        //alert('close')
+        initPopover();
+
+    });
+    $(".selusers").on("select2-open", function () {
+        initPopover();
+
+    });
+
+  /*  var eventSelect = $(".selusers");
+    eventSelect.select2(); */
     creerFleches();
     affButtons ();
 
@@ -70,8 +148,8 @@ $(document).ready(function() {
             that.children('#hiddeUsers').hide();
         }
 
-        that.children('.select2-container-multi').children('.select2-choices').css('height', '25px');
-        that.css('height', '200px');
+    //    that.children('.select2-container-multi').children('.select2-choices').css('height', '25px');
+        that.css('height', 'auto');
 
         //that.children('.etape-groupe').hide();
 
@@ -95,10 +173,20 @@ $(document).ready(function() {
         var contetapes = $('#contetapes');
         contetapes.children('.etapes-circuit').each(function() {
             var clicked = $(this);
-            affHiddeUsers(clicked);
-            clicked.children('.select2-container-multi').show();
-            clicked.children('.etape-groupe').hide();
-            clicked.children('.select2-container-multi').children('.select2-choices').css('height', 'auto');
+            var cpt = 0
+            $(this).find('.selusers').find(':selected').each(function(){
+                cpt ++;
+            });
+            if(cpt > 3){
+                affHiddeUsers(clicked);
+                clicked.children('.select2-container-multi').show();
+                clicked.children('.etape-groupe').hide();
+                clicked.children('.select2-container-multi').children('.select2-choices').css('height', 'auto');
+            }
+            else{
+                clicked.children('#seeUsers').hide();
+            }
+
             // Décommenter pour l'affichage multi-lignes
             //heightEtapes();
         });
@@ -196,6 +284,8 @@ $(document).ready(function() {
 
     // Evenement du bouton voir tous les utilisateurs
     $(document).on('click','#seeAllUsers',function(event) {
+
+
         affAllUsers ();
     });
 
@@ -214,6 +304,7 @@ $(document).ready(function() {
         hideAllUsers ();
     });
 
+    //$('#seeAllUsers').trigger( "click" );
 
 /*    var tabGeneral = [];
     $('#new_classeur').submit(function(){

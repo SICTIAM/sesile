@@ -117,9 +117,17 @@ class Bordereau
                 if ($typePES === 'Depense') {
                     $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePce->MtHT->attributes()[0]);
                     $tmpTVA = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->TVAIntraCom->attributes()[0]);
+                    if(isset($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA))
+                    {
+                        $tmpTVA += doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA->attributes()[0]);
+                    }
                 } else {
                     $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePiece->MtHT->attributes()[0]);
                     $tmpTVA = doubleval($LignePiece->BlocLignePiece->InfoLignePiece->TvaIntraCom->attributes()[0]);
+                    if(isset($LignePiece->BlocLignePiece->InfoLignePiece->MtTVA))
+                    {
+                        $tmpTVA += doubleval($LignePiece->BlocLignePiece->InfoLignePiece->MtTVA->attributes()[0]);
+                    }
                 }
 
                 $totHT += $tmpHT;
