@@ -169,8 +169,8 @@ dropzone.on("addedfile", function (file) {
         console.log('add:' + uploadingfiles);
 
         $.each(docsjson, function (key, value) {
-
-            if (key == file.name) {
+            //au cas où il y ait un & dans le nom de fichier
+            if (key.replace('&','&amp;') == file.name) {
 
                 file.type = value;
 
@@ -284,7 +284,7 @@ dropzone.on("addedfile", function (file) {
 
         $.each(ids, function (key, value) {
 
-            if (value == file.name) {
+            if (value.replace('&','&amp;') == file.name) {
 
 
                 idfile = key;
@@ -299,7 +299,7 @@ dropzone.on("addedfile", function (file) {
         }
 
 
-        $.ajax(Routing.generate('show_document', {id: idfile}), {
+        $.ajax(Routing.generate('show_document', {id:idfile }), {
             method: 'POST',
             success: function (html) {
 
@@ -337,7 +337,7 @@ dropzone.on("addedfile", function (file) {
 {% for file in docs %}
 
 
-    var mockFile = { name: "{{ file.name }}", size: {{ tailles[file.id] }} };
+    var mockFile = { name: "{{ names[file.id] }}", size: {{ tailles[file.id] }} };
 
 
 // Call the default addedfile event handler

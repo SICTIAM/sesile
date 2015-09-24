@@ -130,14 +130,6 @@ class DefaultController extends Controller
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $repository->addDelegationWithFusion($delegation);
 
-        $messageDelegataire = \Swift_Message::newInstance()
-            ->setSubject("Nouvelle délégation donnée")
-            ->setFrom($this->container->getParameter('email_sender_address'))
-            ->setTo($delegation->getDelegant()->getEmail())
-            ->setBody($this->renderView( 'SesileDelegationsBundle:Notifications:delegataireCreation.html.twig',array("delegation"=>$delegation) ), 'text/html');
-
-        $this->get('mailer')->send($messageDelegataire);
-
         $messageDelegue = \Swift_Message::newInstance()
             ->setSubject("Nouvelle délégation reçue")
             ->setFrom($this->container->getParameter('email_sender_address'))

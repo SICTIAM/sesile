@@ -48,15 +48,16 @@ class DocumentController extends Controller
         $tailles = array();
         $types = array();
         $ids = array();
-
+        $names = array();
         foreach ($docs as $doc) {
+            $names[$doc->getId()] = addslashes($doc->getName());
             $tailles[$doc->getId()] = filesize('uploads/docs/' . $doc->getRepoUrl());
             $types[$doc->getName()] = $doc->getType();
             $ids[$doc->getId()] = $doc->getName();
         }
 
 
-        return array('docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types, 'ids' => $ids, 'isvalidable' => $isvalidable);
+        return array('names'=>$names,'docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types, 'ids' => $ids, 'isvalidable' => $isvalidable);
 
     }
 
@@ -103,7 +104,7 @@ class DocumentController extends Controller
      */
     public function showAction(Request $request, $id)
     {
-
+//var_dump($id);exit;
 
         $servername = $this->getRequest()->getHost();
 

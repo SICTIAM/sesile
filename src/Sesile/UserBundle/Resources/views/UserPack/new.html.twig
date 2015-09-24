@@ -18,7 +18,7 @@
                 <div class="col-lg-6 ">
                     <select class="js-example-basic-multiple" style="width: 100%" multiple="multiple" data-placeholder="Cliquer ici pour ajouter un utilisateur" id="listUsers" name="listUsers">
                         {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.prenom}} {{ user.nom }}</option>
+                            <option value="{{ user.id }}">{{ user.nom }} {{ user.prenom}}</option>
                         {% endfor %}
                     </select>
                 </div>
