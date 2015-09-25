@@ -994,7 +994,7 @@ class ClasseurController extends Controller {
 //        $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
 
 //        $validant = $entity->getvalidant();
-
+//var_dump($isSignable);exit;
         return array(
 //            'deposant'      => $deposant,
             'validant'      => $validants,
@@ -1488,7 +1488,21 @@ class ClasseurController extends Controller {
 //        $currentvalidant = $classeur->getValidant();
 //        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
 //        $delegator=$repositoryusers->find($currentvalidant);
+        if($request->get("moncul") != 1) {
+            // Met a jour les etapes de validations
+            $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
+            $em->flush();
 
+            $visibilite = $request->get("visibilite");
+            $classeur->setVisibilite($visibilite);
+            $classeur->setNom($request->get("name"));
+            $classeur->setDescription($request->get("desc"));
+            list($d, $m, $a) = explode("/", $request->request->get('validation'));
+            $valid = new \DateTime($m . "/" . $d . "/" . $a);
+            $classeur->setValidation($valid);
+            $currentvalidant = $request->request->get('curentValidant');
+
+        }
         $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
 
 //        $classeur->valider($em);

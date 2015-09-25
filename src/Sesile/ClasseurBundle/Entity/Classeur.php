@@ -413,10 +413,15 @@ class Classeur {
     }
 
 
-    public function isAtLastValidant(){
+    public function isAtLastValidant($forButton=false){
         $ordreCircuit = $this->getOrdreEtape();
-      //  $ordreCircuit++;
+        if($forButton && $this->getStatus() != 0)
+        {
+            $ordreCircuit++;
+        }
+        //$ordreCircuit++;
         $nbEtapes = count($this->getEtapeClasseurs());
+        //var_dump($ordreCircuit,$nbEtapes);
         if ($ordreCircuit == $nbEtapes){
             return true;
         }
@@ -563,11 +568,12 @@ class Classeur {
 //    public function isSignable(\Doctrine\ORM\EntityManager $em)
     public function isSignable()
     {
-
-        if($this->getType()->getId() == 2 && $this->isAtLastValidant()){
+//var_dump($this->isAtLastValidant());exit;
+        if($this->getType()->getId() == 2 && $this->isAtLastValidant(true)){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
-                if($doc->getType()=='application/xml'){
+                if($doc->getType() == 'application/xml'){
+                    //var_dump('test');exit;
                     return true;
                 }
             }
