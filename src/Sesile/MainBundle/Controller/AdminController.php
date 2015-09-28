@@ -136,7 +136,7 @@ class AdminController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Nouvelle Collectivité créée')
                 ->setFrom('sesile@sictiam.fr')
-                ->setTo('j.mercier@sictiam.fr')
+                ->setTo('serviceinternet@sictiam.fr')
                 ->setBody("La collectivité ".$form->get('nom')->getData()." vient d'être créée dans SESILE merci d'ajouter l'adresse ".$post->subDomain.".".$ovh->zone." dans vProxymus")
                 ->setContentType('text/html');
             $this->get('mailer')->send($message);
@@ -151,6 +151,7 @@ class AdminController extends Controller
 
 
     }
+
 
     /**
      * Displays a form to edit an existing Collectivite entity.

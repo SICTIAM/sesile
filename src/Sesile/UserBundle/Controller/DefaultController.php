@@ -610,6 +610,32 @@ class DefaultController extends Controller
         return $this->redirect($this->generateUrl('userpacks'));
     }
 
+    /**
+     * Show users in  an existing userPack.
+     *
+     * @Route("groupes/show/{id}", name="show_userpack", options={"expose"=true})
+     * @Method("get")
+     *
+     */
+    public function getUsersFromUserPackAction($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
+        $users = $userPack->getUsers();
+
+        $tabUsers = array();
+        foreach($users as $user)
+        {
+            $tabUsers[] = $user->getNom().' '.$user->getPrenom();
+        }
+        sort($tabUsers);
+
+        //var_dump($tabUsers);
+        return new JsonResponse($tabUsers);
+
+    }
+
+
     private function securityContext() {
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
             return true;
@@ -618,6 +644,7 @@ class DefaultController extends Controller
             return false;
         }
     }
+
 
 
     /**

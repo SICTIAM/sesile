@@ -121,7 +121,7 @@ Version: 3.4.5 Timestamp: Mon Nov  4 08:22:42 PST 2013
     height: auto;
     width: auto;
     opacity: 0;
-    z-index: 9998;
+    z-index: 0;
     /* styles required for IE to work */
     background-color: #fff;
     filter: alpha(opacity=0);
@@ -131,7 +131,7 @@ Version: 3.4.5 Timestamp: Mon Nov  4 08:22:42 PST 2013
     width: 100%;
     margin-top: -1px;
     position: absolute;
-    z-index: 9999;
+    z-index: 0;
     top: 100%;
 
     background: #fff;
@@ -209,9 +209,9 @@ Version: 3.4.5 Timestamp: Mon Nov  4 08:22:42 PST 2013
     margin: 0;
     padding-left: 4px;
     padding-right: 4px;
-
+background-color: red;
     position: relative;
-    z-index: 10000;
+    z-index: 0;
 
     white-space: nowrap;
 }
@@ -535,7 +535,7 @@ disabled look for disabled choices in the results dropdown
 }
 
 .select2-container-multi .select2-search-choice-close {
-    left: 3px;
+    right: 3px;
 }
 
 .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:hover {
