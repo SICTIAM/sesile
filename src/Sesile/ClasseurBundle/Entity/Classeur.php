@@ -569,7 +569,7 @@ class Classeur {
     public function isSignable()
     {
 //var_dump($this->isAtLastValidant());exit;
-        if($this->getType()->getId() == 2 && $this->isAtLastValidant(true)){
+        if($this->getType()->getId() == 2 && $this->isAtLastValidant(false)){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
                 if($doc->getType() == 'application/xml'){
