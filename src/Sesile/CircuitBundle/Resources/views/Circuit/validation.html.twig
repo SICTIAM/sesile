@@ -1,7 +1,7 @@
 <link type="text/css" href="{{ asset("/css/select2.css") }}" rel="stylesheet"/>
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 
-
+<!--
 <div class="row row-padding">
     <div class="col-lg-3 col-lg-offset-3">
         <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeAllUsers">
@@ -12,7 +12,7 @@
             <span class="glyphicon glyphicon-minus-sign"></span> Replier toutes les étapes</button>
     </div>
 </div>
-
+-->
 <div class="row" id="circuit_main">
     <div id="circuit_etapes">
         <div id="circuit_with_js">
@@ -96,13 +96,13 @@
                 {# Etapes restantes a valider #}
                 <div class="well etapes-circuit">
                     {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>{% endif %}
-                    <div class="text-center"><h4>Etape à venir</h4></div>
+                    <div class="text-center"><h4 title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer">Etape à venir</h4></div>
 
                     {% if etape.countUserPacksUsers() > 3 %}
                         <span class="glyphicon glyphicon-user etape-groupe" title="Cliquez pour voir les utilisateurs de l'étape"></span>
                     {% endif %}
 
-                    <select class="selusers{% if etape.countUserPacksUsers() > 3 %} etape-groupe-users{% endif %}" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" multiple="multiple" style="width: 100%;{% if etape.countUserPacksUsers() > 3 %} display: none;{% endif %}" data-etape="{{ etape.id }}" {% if edit != true %}disabled="disabled"{% endif %}>
+                    <select class="selusers {% if etape.countUserPacksUsers() > 3 %} etape-groupe-users{% endif %}" required="required" multiple="multiple" style="width: 100%;{% if etape.countUserPacksUsers() > 3 %} display: none;{% endif %}" data-etape="{{ etape.id }}" {% if edit != true %}disabled="disabled"{% endif %}>
                         <optgroup label="Groupes d'utilisateurs">
                             {% for userPack in userPacks %}
                                 <option value="userpack-{{ userPack.id }}" {% if userPack in etape.userPacks %} selected{% endif %} data-type="groupe" title="Voir les utilisateurs du groupe">
@@ -116,8 +116,10 @@
                             {% endfor %}
                         </optgroup>
                     </select>
+
                     <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
                     <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
+
                 </div>
             {% endfor %}
 
@@ -248,7 +250,7 @@
             $(this).parent().remove();
 
             $('#contetapes').append('' +
-            '<div class="well etapes-circuit"><div class="text-center"><h4>Etape</h4></div><select class="selusers" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.nom }} {{ user.prenom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers" style="display:none;"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
+            '<div class="well etapes-circuit"><div class="text-center"><h4 title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer">Etape à venir</h4></div><select class="selusers" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.nom }} {{ user.prenom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers" style="display:none;"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
             '<div class="text-center div-btn-ajout-etape"><button type="button" class="btn btn-circle-lg btn-info dyn" id="addetape"><span class="glyphicon glyphicon-plus"></span></button></div>');
             $('.dyn').popover('destroy');
             $('.dyn').popover({
@@ -287,9 +289,15 @@
                 $('[data-toggle="popover"]').popover('destroy');
                 initPopover();
 
-                //alert('select')
+              //  alert('select')
             });
 
+            $(".selusers").on("select2-removing", function () {
+                $('[data-toggle="popover"]').popover('destroy');
+                initPopover();
+
+              //  alert('select')
+            });
             $(".selusers").on("select2-close", function () {
                 //alert('close')
                 initPopover();
@@ -314,12 +322,13 @@
          */
         var tabGeneral = [];
 //        $("#form_edit").submit(function(){
-        $(".btn-valider, .btn-valider-non-signer").on('click',function(){
+        $(".btn-valider, .btn-valider-non-signer, .btn-valider-signer").on('click',function(){
             /*
              * Pour chaque etape de validation créé on récupère les options sélectionnées
              *
              * */
             $('select.selusers').each(function(){
+//alert('fr')
 
                 var Etapes = {};
                 Etapes.etape_id = $(this).data('etape');
@@ -337,9 +346,9 @@
                         });
                     });
                 } else {
-//alert($(this).parent().find('h4').attr('class'))
+//alert($(this).parent().find('h4').attr('title'))
                     var moncul = $(this).parent().find('h4');
-                    $(this).parent().find('h4').tooltip();
+                    $(this).parent().find('h4').tooltip({placement:'bottom'});
                     $(this).parent().find('h4').tooltip('show');
 
                     setTimeout(function(){moncul.tooltip('hide');},3000);
@@ -351,7 +360,7 @@
                 }
                 tabGeneral.push(Etapes);
             });
-
+            //e.preventDefault();
             /*
              * on met tout ça dans un tableau que l'on stringifie et qu'on met dans le hidden
              * */
@@ -374,6 +383,7 @@
             //var c = document.getElementById("#contetapes").childNodes.length;
             var nbEtapes = $('#contetapes').children('.etapes-circuit').length;
 //            console.log('nbEtapes : ' + nbEtapes);
+            //alert(nbEtapes);
             //if(valid_sign == 0) {
             if(nbEtapes <= 1) {
                 $(".btn-valider-signer").css('display', 'inline-block');
@@ -383,7 +393,8 @@
                 $(".btn-valider-non-signer").css('display', 'inline-block');
             }
         }
-$('#circuit_etapes').scrollLeft = 10
+//$('#circuit_etapes').scrollLeft = 10
+       // $('#circuit_etapes').scrollLeft(0);
 //        $("#circuit_etapes").scrollWidth($("#circuit_etapes").scrollLeft())
     });
 

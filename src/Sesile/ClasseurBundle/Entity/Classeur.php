@@ -470,7 +470,7 @@ class Classeur {
     public function retracter()
     {
 
-        if(count(explode(',',$this->getOrdreValidant()) == 1))
+        if(count(explode(',',$this->getOrdreValidant())) == 1)
         {
             $this->setOrdreZero();
 //        $this->setValidant($this->getPrevValidant());
@@ -480,7 +480,7 @@ class Classeur {
             $this->setStatus(4);
         }
         else{
-            var_dump("wrong way");exit;
+
             $this->setCircuitZero( substr($this->getCircuit(), 0, strrpos($this->getCircuit(), ',')) );
             $this->setOrdreValidant( substr($this->getOrdreValidant(), 0, strrpos($this->getOrdreValidant(), ',')) );
             $this->setOrdreEtape($this->setOrdreMoins());
@@ -534,11 +534,11 @@ class Classeur {
      * @return bool             : true or false
      */
     public function isRetractableByDelegates($userid, $validants, $prevValidants) {
-//        var_dump('userId : ', $userid, 'prevValidants : ', $prevValidants, $this->getId(), '<br>');
-
+      // var_dump('userId : ', $userid, 'prevValidants : ', $prevValidants, $this->getId(), '<br>');
+//var_dump($prevValidants);
 
         if ( in_array($prevValidants, $userid)
-             && !in_array($userid, $validants)
+             && !in_array($userid[0], $validants)
 //            && !array_diff($userid, $validants)
             && $this->getStatus() == 1
         /*    && $this->getOrdreEtape() != 0 */
@@ -569,7 +569,7 @@ class Classeur {
     public function isSignable()
     {
 //var_dump($this->isAtLastValidant());exit;
-        if($this->getType()->getId() == 2 && $this->isAtLastValidant(true)){
+        if($this->getType()->getId() == 2 && $this->isAtLastValidant(false)){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
                 if($doc->getType() == 'application/xml'){

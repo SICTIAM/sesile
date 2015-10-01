@@ -1,3 +1,4 @@
+<!--
 <div class="row row-padding">
     <div class="col-lg-3 col-lg-offset-3">
         <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeAllUsers">
@@ -8,7 +9,7 @@
             <span class="glyphicon glyphicon-minus-sign"></span> Replier toutes les étapes</button>
     </div>
 </div>
-
+-->
 <div class="row" id="circuit_main">
     <div {#class="col-lg-12"#} id="circuit_etapes">
         <div id="contetapes">
@@ -18,7 +19,7 @@
 
                     <button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>
 
-                    <div class="text-center"><h4>Etape</h4></div>
+                    <div class="text-center"><h4></h4></div>
                     {#<input type="hidden" name="etape_id" value="{{ etape.id }}">#}
                     <select class="selusers" multiple="multiple" style="width: 100%" data-etape="{{ etape.id }}" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer">
                         <optgroup label="Groupes d'utilisateurs">
@@ -101,7 +102,7 @@
             var contetapes = $('#contetapes');
 
             contetapes.append('' +
-            '<div class="well etapes-circuit"><div class="text-center"><h4>Etape</h4></div><select class="selusers" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.nom }} {{ user.prenom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers" style="display:none;"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
+            '<div class="well etapes-circuit"><div class="text-center"><h4></h4></div><select class="selusers" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.nom }} {{ user.prenom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers" style="display:none;"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
             '<div class="text-center div-btn-ajout-etape"><button type="button" class="btn btn-circle-lg btn-info dyn" id="addetape"><span class="glyphicon glyphicon-plus"></span></button></div>');
             $('.dyn').popover('destroy');
             $('.dyn').popover({

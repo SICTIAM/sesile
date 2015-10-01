@@ -1,21 +1,30 @@
 {% if classeur.isValidableByDelegates(usersdelegated, validant) %}
     {#{% if classeur.getType.id == 2 %}#}
     {% if signable %}
-        <button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
-            <span class="glyphicon glyphicon-ok"></span>
-            &nbsp;Valider et Signer
-        </button>
+        {% if classeur.status == 4 and classeur.ordreValidant is empty  %}
+            <button type="submit" class="btn btn-success btn-valider" data-action="{{ path("classeur_soumis") }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Soumettre
+            </button>
 
-        <button type="submit" class="btn btn-success btn-valider-non-signer" data-action="{{ path("classeur_valider") }}">
-            <span class="glyphicon glyphicon-ok"></span>
-            &nbsp;Valider
-        </button>
+        {% else %}
+            <button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Valider et Signer
+            </button>
 
-        <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
-                data-whatever="@mdo" class=".bs-example-modal-lg">
-            <span class="glyphicon glyphicon-remove"></span>
-            &nbsp;Refuser
-        </button>
+            <button type="submit" class="btn btn-success btn-valider-non-signer" data-action="{{ path("classeur_valider") }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Valider
+            </button>
+
+            <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
+                    data-whatever="@mdo" class=".bs-example-modal-lg">
+                <span class="glyphicon glyphicon-remove"></span>
+                &nbsp;Refuser
+            </button>
+                {% endif %}
+
 
     {% else %}
 

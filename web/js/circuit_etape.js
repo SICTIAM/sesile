@@ -85,7 +85,7 @@ $(document).ready(function() {
     affButtons ();
 
 
-    scrollStart ();
+ //   scrollStart ();
     // Pour scrolle le circuit tout a droite
     // Fonction permettant d agrandir la frise dynamiquement.
     function scrollStart () {
