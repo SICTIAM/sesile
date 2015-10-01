@@ -272,11 +272,13 @@ class ClasseurRepository extends EntityRepository {
 
 
     public function getPrevValidantForRetract(Classeur $classeur) {
+
         $prevValidant = explode(',', $classeur->getCircuit());
         $prevValidant = end($prevValidant);
+       // var_dump($prevValidant);exit;
         // Pour l amelioration du validant qui doit se retracter...
         //var_dump($prevValidant);
-        if (!is_object($prevValidant)) {
+        if (!$prevValidant) {
             $prevValidant = $classeur->getUser();
         }
 

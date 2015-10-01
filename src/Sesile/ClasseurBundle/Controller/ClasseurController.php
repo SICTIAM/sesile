@@ -1554,7 +1554,7 @@ class ClasseurController extends Controller {
      */
     public function signAction(Request $request, $id)
     {
-
+        //var_dump($request->get("moncul"));exit;
         $user = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
@@ -1581,7 +1581,22 @@ class ClasseurController extends Controller {
             $tmpdo['repourl'] = $value->getRepourl();
             $docstosign[$key] = $tmpdo;
         }
+        if($request->get("moncul") != 1) {
 
+            // Met a jour les etapes de validations
+            $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
+            $em->flush();
+
+            $visibilite = $request->get("visibilite");
+            $classeur->setVisibilite($visibilite);
+            $classeur->setNom($request->get("name"));
+            $classeur->setDescription($request->get("desc"));
+            list($d, $m, $a) = explode("/", $request->request->get('validation'));
+            $valid = new \DateTime($m . "/" . $d . "/" . $a);
+            $classeur->setValidation($valid);
+            $currentvalidant = $request->request->get('curentValidant');
+
+        }
         $servername = $_SERVER['HTTP_HOST'];
         $url_applet = $this->container->getParameter('url_applet');
 

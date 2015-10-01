@@ -322,12 +322,13 @@
          */
         var tabGeneral = [];
 //        $("#form_edit").submit(function(){
-        $(".btn-valider, .btn-valider-non-signer").on('click',function(){
+        $(".btn-valider, .btn-valider-non-signer, .btn-valider-signer").on('click',function(){
             /*
              * Pour chaque etape de validation créé on récupère les options sélectionnées
              *
              * */
             $('select.selusers').each(function(){
+//alert('fr')
 
                 var Etapes = {};
                 Etapes.etape_id = $(this).data('etape');
@@ -359,7 +360,7 @@
                 }
                 tabGeneral.push(Etapes);
             });
-
+            //e.preventDefault();
             /*
              * on met tout ça dans un tableau que l'on stringifie et qu'on met dans le hidden
              * */
