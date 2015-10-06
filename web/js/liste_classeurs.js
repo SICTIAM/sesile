@@ -2,7 +2,7 @@
  * Created by f.laussinot on 12/06/2015.
  * script utilisé pour la configuration des datables : affichage liste_a_valider et liste_retired
  */
-
+$.fn.dataTable.moment( 'DD/MM/YYYY' );
     var tab = $("#validTable").DataTable({
         oLanguage: {
             sSearch: "Rechercher&nbsp;",
@@ -66,7 +66,7 @@
             return nRow;
         },
        "initComplete" :function(){
-           $.fn.dataTable.moment( 'DD/MM/YYYY' );
+         //  $.fn.dataTable.moment( 'DD/MM/YYYY' );
            var tab = $("#fulltable").DataTable({
                "processing": true,
                "serverSide": true,
