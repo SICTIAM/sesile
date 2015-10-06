@@ -38,6 +38,17 @@ parameters:
         zone: sesile.fr
         target: sesile.fr.
     email_sender_address: sictiam@sesile.fr
+    url_applet: signature.sesile.fr
+    upload:
+        path: %kernel.root_dir%/../web/uploads/avatars/
+        fics: %kernel.root_dir%/../web/uploads/docs/
+        logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
+        msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
+    majorversion: 2
+    ovh_credential:
+        application: ***REMOVED***
+        secret: ***REMOVED***
+        consumer_key: ***REMOVED***
 
 security:
 

@@ -413,13 +413,13 @@ class Classeur {
     }
 
 
-    public function isAtLastValidant($forButton=false){
+    public function isAtLastValidant(){
         $ordreCircuit = $this->getOrdreEtape();
-        if($forButton && $this->getStatus() != 0)
+        if($this->getStatus() != 0)
         {
             $ordreCircuit++;
         }
-        //$ordreCircuit++;
+//        $ordreCircuit++;
         $nbEtapes = count($this->getEtapeClasseurs());
         //var_dump($ordreCircuit,$nbEtapes);
         if ($ordreCircuit == $nbEtapes){
@@ -569,7 +569,7 @@ class Classeur {
     public function isSignable()
     {
 //var_dump($this->isAtLastValidant());exit;
-        if($this->getType()->getId() == 2 && $this->isAtLastValidant(false)){
+        if($this->getType()->getId() == 2 && $this->isAtLastValidant()){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
                 if($doc->getType() == 'application/xml'){
