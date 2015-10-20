@@ -56,12 +56,12 @@ class EtapeClasseurRepository extends EntityRepository
      */
     public function findAllUsers(Classeur $classeur) {
 
-//        $em = $this->getEntityManager();
-//        $etapesGroupes = $em->getRepository('SesileUserBundle:EtapeClasseur')->findBy(array('classeur' => $classeur));
-        $etapesGroupes = $classeur->getEtapeClasseurs();
+        $em = $this->getEntityManager();
+        $etapesGroupes = $em->getRepository('SesileUserBundle:EtapeClasseur')->findBy(array('classeur' => $classeur));
+       // $etapesGroupes = $classeur->getEtapeClasseurs();
         $users = array();
         $usersId = array();
-
+//var_dump('ta race',$etapesGroupes);exit;
         foreach ($etapesGroupes as $etapesGroupe) {
 
             if($etapesGroupe->getUsers() !== null) {

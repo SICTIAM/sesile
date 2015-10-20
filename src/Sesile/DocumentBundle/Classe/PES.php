@@ -34,6 +34,7 @@ class PES
             $dateEm = $d . '/' . $m . '/' . $y;
 
             $nbPiece = $bordereau->BlocBordereau->NbrPce->attributes()[0];
+
             if ((string)$bordereau->type === 'Depense') {
                 $tmpHT = doubleval($bordereau->BlocBordereau->MtBordHT->attributes()[0]);
             } else {
