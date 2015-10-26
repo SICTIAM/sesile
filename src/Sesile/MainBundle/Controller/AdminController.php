@@ -127,7 +127,7 @@ class AdminController extends Controller
             $post->fieldType = 'CNAME';
             $post->subDomain = $form->get('domain')->getData().'.'.$ovh->environnement;
             $post->target = $ovh->target;
-            $post->ttl = 0;
+            $post->ttl = 60;
             $api->post('/domain/zone/'.$ovh->zone.'/record',$post);
 
             /**
@@ -136,7 +136,7 @@ class AdminController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Nouvelle Collectivité créée')
                 ->setFrom('sesile@sictiam.fr')
-                ->setTo('serviceinternet@sictiam.fr')
+                ->setTo('internet@sictiam.fr')
                 ->setBody("La collectivité ".$form->get('nom')->getData()." vient d'être créée dans SESILE merci d'ajouter l'adresse ".$post->subDomain.".".$ovh->zone." dans vProxymus")
                 ->setContentType('text/html');
             $this->get('mailer')->send($message);
