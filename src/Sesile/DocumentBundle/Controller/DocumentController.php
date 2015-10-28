@@ -386,7 +386,8 @@ class DocumentController extends Controller
         $dir = $param['fics'];
         $path = $dir . $doc->getRepourl();
 
-        $xml = simplexml_load_file($path);
+        $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
+        $xml = simplexml_load_string($str);
 
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {
@@ -477,7 +478,8 @@ class DocumentController extends Controller
         $param = $this->container->getParameter('upload');
         $dir = $param['fics'];
         $path = $dir . $doc->getRepourl();
-        $xml = simplexml_load_file($path);
+        $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
+        $xml = simplexml_load_string($str);
 
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {
@@ -487,19 +489,27 @@ class DocumentController extends Controller
         }
 
         if (isset($xml->PES_DepenseAller)) {
-            $typePES = 'Depense';
-        } else {
-            $typePES = 'Recette';
+
+            foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
+                $Bord->type = 'Depense';
+                $arrayBord[] = $Bord;
+            }
         }
+        if (isset($xml->PES_RecetteAller)) {
 
-
-        $arrayBord = array();
-        foreach ($xml->{'PES_' . $typePES . 'Aller'}->Bordereau as $Bord) {
-            $arrayBord[] = $Bord;
+            foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
+                $Bord->type = 'Recette';
+                $arrayBord[] = $Bord;
+            }
         }
+        if(!isset($xml->PES_RecetteAller) && !isset($xml->PES_DepenseAller))
+        {
+            return array('isPJ' => true);
+        }
+        $Signataire = '';
+        $date = '';
 
-
-        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], '', '', $arrayBord, $typePES, $arrayPJ);
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $Signataire, $date, $arrayBord, $arrayPJ);
         $PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
         return new JsonResponse($PJ);
     }
@@ -519,7 +529,8 @@ class DocumentController extends Controller
         $param = $this->container->getParameter('upload');
         $dir = $param['fics'];
         $path = $dir . $doc->getRepourl();
-        $xml = simplexml_load_file($path);
+        $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
+        $xml = simplexml_load_string($str);
 
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {
@@ -529,19 +540,28 @@ class DocumentController extends Controller
         }
 
         if (isset($xml->PES_DepenseAller)) {
-            $typePES = 'Depense';
-        } else {
-            $typePES = 'Recette';
+
+            foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
+                $Bord->type = 'Depense';
+                $arrayBord[] = $Bord;
+            }
         }
+        if (isset($xml->PES_RecetteAller)) {
 
-
-        $arrayBord = array();
-        foreach ($xml->{'PES_' . $typePES . 'Aller'}->Bordereau as $Bord) {
-            $arrayBord[] = $Bord;
+            foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
+                $Bord->type = 'Recette';
+                $arrayBord[] = $Bord;
+            }
         }
+        if(!isset($xml->PES_RecetteAller) && !isset($xml->PES_DepenseAller))
+        {
+            return array('isPJ' => true);
+        }
+        $Signataire = '';
+        $date = '';
 
 
-        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], '', '', $arrayBord, $typePES, $arrayPJ);
+        $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $Signataire, $date, $arrayBord, $arrayPJ);
         $response = new Response();
         /*$PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
         return new JsonResponse($PJ);*/

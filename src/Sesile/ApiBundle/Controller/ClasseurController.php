@@ -192,7 +192,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
      *          {"name"="type", "dataType"="integer", "format"="", "required"=true, "description"="id du type du classeur"},
      *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
-     *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"}
+     *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"},
+     *          {"name"="email", "dataType"="string", "required"=false, "description"="email du déposant"},
+     *
      *
      *
      *
@@ -213,10 +215,17 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $em = $this->getDoctrine()->getManager();
 
+        $email = $request->request->get('email');
+//var_dump($email);exit;
+        if(is_null($email))
+        {
+            $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+        }
+        else{
+            $user = $em->getRepository('SesileUserBundle:User')->findOneByUsername($email);
+            $userAPI = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+        }
 
-        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
-
-        $group = $em->getRepository('SesileUserBundle:Groupe')->findOneById($request->request->get('groupe'));
 
 
         $serviceOrgs = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($user->getId());
@@ -255,6 +264,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         $name = $request->request->get('name');
+
+
      
         $validation = $request->request->get('validation');
  
@@ -297,7 +308,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $tabEtapes = array();
 
         $etapesGroupe = $em->getRepository('SesileUserBundle:EtapeGroupe')->findBy(
-            array('groupe' => $group),
+            array('groupe' => $request->request->get('groupe')),
             array('ordre' => 'ASC')
         );
 
@@ -367,6 +378,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         // Fonction pour enregistrer dans la table Classeur_visible
         $usersVisible = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
         $usersVisible[] = $user->getId();
+        $usersVisible[] = $userAPI->getId();
         $usersCV = $this->classeur_visible($request->request->get('visibilite'), $usersVisible, $request->request->get('groupe'));
         foreach ($usersCV as $userCV) {
           //  $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
