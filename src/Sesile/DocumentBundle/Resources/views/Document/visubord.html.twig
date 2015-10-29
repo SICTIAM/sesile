@@ -125,6 +125,52 @@
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script>
+
+        function msieversion() {
+
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {      // If Internet Explorer, return version number
+//                    alert(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))));
+                return true;
+            }
+            else {                 // If another browser, return 0
+                return false;
+            }
+        }
+
+        $('.pj').click(function () {
+            var idDoc = '{{ idDoc }}';
+            if ( msieversion()) {
+                window.open(Routing.generate('getpjie', {
+                    'id': idDoc,
+                    'bord': $('#bordx').val(),
+                    'piece': $(this).parent().parent().attr('data-pieceselected'),
+                    'peji': $(this).attr('data-pjselected')
+                }));
+            }
+            else {
+                $('#mtitre').empty();
+                $('#mtitre').text($(this).text());
+                $('#mymodal').modal('show');
+                $.ajax({
+                    url: Routing.generate('getpj', {
+                        'id': idDoc,
+                        'bord': $('#bordx').val(),
+                        'piece': $(this).parent().parent().attr('data-pieceselected'),
+                        'peji': $(this).attr('data-pjselected')
+                    }),
+                    method: "GET",
+                    success: function (retour) {
+                        $('#mbody').empty();
+                        $('#mbody').append('<iframe src="data:application/pdf;base64,' + retour + '" width="100%" height="800px"></iframe>');
+                    }
+                });
+            }
+        });
+
+
         $(document).ready(function () {
             oTable = $('#ptable').dataTable({
                 "oLanguage": {
@@ -147,54 +193,8 @@
                 "sDom": 'lft<"footer_datatables"ip>'
             });
 
-
-            function msieversion() {
-
-                var ua = window.navigator.userAgent;
-                var msie = ua.indexOf("MSIE ");
-
-                if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {      // If Internet Explorer, return version number
-//                    alert(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))));
-                    return true;
-                }
-                else {                 // If another browser, return 0
-//                    alert('otherbrowser');
-                    return false;
-                }
-
-            }
             //  $('#ptable').iDisplayLength(10)
-            $('.pj').click(function () {
-                var idDoc = '{{ idDoc }}';
-                if ( msieversion()) {
-                    window.open(Routing.generate('getpjie', {
-                        'id': idDoc,
-                        'bord': $('#bordx').val(),
-                        'piece': $(this).parent().parent().attr('data-pieceselected'),
-                        'peji': $(this).attr('data-pjselected')
-                    }));
-                }
-                else {
-                    $('#mtitre').empty();
-                    $('#mtitre').text($(this).text());
-                    $('#mymodal').modal('show');
-                    $.ajax({
-                        url: Routing.generate('getpj', {
-                            'id': idDoc,
-                            'bord': $('#bordx').val(),
-                            'piece': $(this).parent().parent().attr('data-pieceselected'),
-                            'peji': $(this).attr('data-pjselected')
-                        }),
-                        method: "GET",
-                        success: function (retour) {
-                            $('#mbody').empty();
-                            $('#mbody').append('<iframe src="data:application/pdf;base64,' + retour + '" width="100%" height="800px"></iframe>');
-                        }
-                    });
-                }
 
 
-
-            });
         });
     </script>
