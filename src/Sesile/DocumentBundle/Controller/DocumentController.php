@@ -568,8 +568,15 @@ class DocumentController extends Controller
 
         $PJ = gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content));
         //set headers
+
+        /* Download du PDF
         $response->headers->set('Content-Type', 'mime/type');
         $response->headers->set('Content-Disposition', 'attachment;filename=' . $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0]);
+        */
+        // Affichage du PDF dans un onglet
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline;filename=' . $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0]);
+
 
         $response->setContent($PJ);
         return $response;
