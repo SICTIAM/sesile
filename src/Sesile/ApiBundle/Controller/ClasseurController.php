@@ -127,7 +127,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         } else {
-            $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($user->getId());
+            $classeurs = array();
+            foreach($user->getClasseurs() as $classeur)
+            {
+                $classeurs[] = array('id'=>$classeur->getId(),'Nom'=>$classeur->getNom());
+            }
+            //$classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($user->getId());
+            return $classeurs;
         }
 
 
