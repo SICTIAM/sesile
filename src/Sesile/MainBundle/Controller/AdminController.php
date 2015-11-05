@@ -125,7 +125,14 @@ class AdminController extends Controller
             $api = new OvhApi(OVH_API_EU,$ovhCredential->application,$ovhCredential->secret,$ovhCredential->consumer_key);
             $post = new \stdClass();
             $post->fieldType = 'CNAME';
-            $post->subDomain = $form->get('domain')->getData().'.'.$ovh->environnement;
+            if($ovh->environnement == "")
+            {
+                $post->subDomain = $form->get('domain')->getData();
+            }
+            else{
+                $post->subDomain = $form->get('domain')->getData().'.'.$ovh->environnement;
+            }
+
             $post->target = $ovh->target;
             $post->ttl = 60;
             $api->post('/domain/zone/'.$ovh->zone.'/record',$post);
