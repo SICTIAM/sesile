@@ -1361,7 +1361,7 @@ class ClasseurController extends Controller {
             'success',
             "Le classeur a été validé"
         );
-        return $this->redirect($this->generateUrl('classeur'));
+        return $this->redirect($this->generateUrl('index_valider'));
     }
 
 
