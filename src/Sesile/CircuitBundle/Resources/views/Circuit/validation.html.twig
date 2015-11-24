@@ -183,7 +183,7 @@
             {% if edit %}
                 var btn = 250;
             {% else %}
-            var btn = 0;
+                var btn = 0;
             {% endif %}
             var widthScroll = $('.etapes-circuit').length * 300 + btn;
             $('#circuit_with_js').css('width', widthScroll);
@@ -248,6 +248,7 @@
             $('.first').popover('destroy');
             $('.dyn').popover('destroy');
             $(this).parent().remove();
+            $('.popover').remove();
 
             $('#contetapes').append('' +
             '<div class="well etapes-circuit"><div class="text-center"><h4 title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer">Etape à venir</h4></div><select class="selusers" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.nom }} {{ user.prenom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers" style="display:none;"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
