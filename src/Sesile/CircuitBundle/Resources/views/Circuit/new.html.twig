@@ -19,7 +19,7 @@
 
                     <button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>
 
-                    <div class="text-center"><h4></h4></div>
+                    <div class="text-center"><h4 title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer">Valideur</h4></div>
                     {#<input type="hidden" name="etape_id" value="{{ etape.id }}">#}
                     <select class="selusers" multiple="multiple" style="width: 100%" data-etape="{{ etape.id }}" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer">
                         <optgroup label="Groupes d'utilisateurs">
