@@ -1,100 +1,164 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-    <div class="bloc_page">
-
-<div class="titre_page">
-    <span class="glyphicon glyphicon-edit"></span>
-    &nbsp;&nbsp;&nbsp;Signer le classeur
-</div>
-
-<h3>{{ classeur.nom }}</h3>
-
-<div class='pull-right' id="help">
-    <br/>
-    <button type="button" class="btn btn-info" data-dismiss="modal">Le bouton Signer et Valider le classeur ne s’affiche pas… cliquez ici</button>
-</div>
-<div class='pull-right' id="bouttons" style="display:none">
-    <br/>
-    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-    <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le
-        classeur
-    </button>
-</div>
+<div class="container">
 
 
-<form id="lacommode" action="{{ path("classeur_valider") }}" method="post">
+<div class="bloc_page">
 
-
-    <input type="hidden" name="id" value="{{ classeur.id }}">
-    <input type="hidden" name="moncul" value="1">
-
-    <strong>Role : </strong>{{ user.role }}<br/>
-    <strong>Ville : </strong>{{ user.ville }}<br/>
-    <strong>Code postal : </strong>{{ user.cp }}<br/>
-    <strong>D&eacute;partement : </strong>{{ user.departement }}<br/>
-    <strong>Pays : </strong>{{ user.pays }}<br/>
-
-
-    <div id='listemethod' name='listemethod'></div>
-
-    <div id='listecertif' name='listecertif'></div>
-
-    <br>
-
-    <div id='avancement' name='avancement'> Système de signature en cours de chargement..<br/>Ceci peut prendre
-        plusieurs minutes. Merci d'accepter toutes les demandes qui vous seront formulées par des boites de dialogues.
+    <div class="titre_page">
+        <span class="glyphicon glyphicon-edit"></span>
+        &nbsp;&nbsp;&nbsp;Signer le classeur
     </div>
-    <br>
 
+    <div class="row">
+        <div class="col-md-12"><h3>{{ classeur.nom }}</h3></div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
 
-    <div class='progress progress-striped active'>
-        <div class='progress-bar' id='progressbar' role='progressbar' aria-valuenow='100' aria-valuemin='0'
-             aria-valuemax='100' style='width: 100%'>
-            <span class='sr-only'>45% Complete</span>
+            <form id="lacommode" action="{{ path("classeur_valider") }}" method="post">
+
+                <input type="hidden" name="id" value="{{ classeur.id }}">
+                <input type="hidden" name="moncul" value="1">
+
+                <div class="col-md-4"><strong>Role : </strong></div>
+                <div class="col-md-8">{{ user.role }}</div>
+
+                <div class="col-md-4"><strong>Ville : </strong></div>
+                <div class="col-md-8">{{ user.ville }}</div>
+
+                <div class="col-md-4"><strong>Code postal : </strong></div>
+                <div class="col-md-8">{{ user.cp }}</div>
+
+                <div class="col-md-4"><strong>D&eacute;partement : </strong></div>
+                <div class="col-md-8">{{ user.departement }}</div>
+
+                <div class="col-md-4"><strong>Pays : </strong></div>
+                <div class="col-md-8">{{ user.pays }}</div>
+
+                <div class="col-md-4"><strong>Choix du certificat : </strong></div>
+                <div class="col-md-8"><div id='listecertif' name='listecertif'></div></div>
+
+                {#<div id='listemethod' name='listemethod'></div>#}
+
+                {#<div id='avancement' name='avancement'> Système de signature en cours de chargement..<br/>Ceci peut prendre
+                    plusieurs minutes. Merci d'accepter toutes les demandes qui vous seront formulées par des boites de dialogues.
+                </div>#}
+
+                {#<div class='progress progress-striped active'>
+                    <div class='progress-bar' id='progressbar' role='progressbar' aria-valuenow='100' aria-valuemin='0'
+                         aria-valuemax='100' style='width: 100%'>
+                        <span class='sr-only'>45% Complete</span>
+                    </div>
+                </div>#}
+
+            </form>
+
+            <div class="modal fade" id="IEModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Aide</h4>
+                        </div>
+                        <div class="modal-body">
+                            Le problème est probablement dû à un blocage des composants JAVA du navigateur, voici comment le résoudre:<br><br>
+                            <img src="{{ asset("/images/iesc.jpg") }}"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Aide</h4>
+                        </div>
+                        <div class="modal-body">
+                            Le problème est probablement dû à un blocage des composants JAVA du navigateur, voici comment le résoudre:<br><br>
+                            <img src="{{ asset("/images/ffsc.jpg") }}"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+
+            <div class='pull-right' id="help">
+                <br/>
+                <button type="button" class="btn btn-info" data-dismiss="modal">Le bouton Signer et Valider le classeur ne s’affiche pas… cliquez ici</button>
+            </div>
+            <div class='pull-right' id="bouttons" style="display:none">
+                <br/>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le classeur</button>
+            </div>
+
         </div>
     </div>
 
+    <div class="row">&nbsp;</div>
 
-</form>
+    <div class="row">
+        <div class="col-md-12"><h3>Etapes de validations</h3></div>
+        <div class="col-md-6">
+            {#<ul class="etape_progress">
+            </ul>#}
 
-<div class="modal fade" id="IEModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Aide</h4>
-            </div>
-            <div class="modal-body">
-                Le problème est probablement dû à un blocage des composants JAVA du navigateur, voici comment le résoudre:<br><br>
-                <img src="{{ asset("/images/iesc.jpg") }}"/>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
-            </div>
+            <ul class="etape_progress">
+                <li>
+                    <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                    <span class="glyphicon glyphicon-ok"> </span> Etape 1 : Chargement...
+                </li>
+                <li>
+                    <span class="glyphicon glyphicon-arrow-right"> </span>
+                    <span class="glyphicon glyphicon-ok"> </span> Etape 2 : Prêt à signer
+                </li>
+                <li>
+                    <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                    <span class="glyphicon glyphicon-ok"> </span> Etape 3 : Chargement du fichier...
+                </li>
+                <li>
+                    <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                    <span class="glyphicon glyphicon-ok"> </span> Etape 4 : Fichier téléchargé !
+                </li>
+                <li>
+                    <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                    <span class="glyphicon glyphicon-ok"> </span> Etape 5 : Signature du fichier
+                </li>
+                <li>
+                    <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                    <span class="glyphicon glyphicon-ok"> </span> Etape 6 : Fichier Signé
+                </li>
+                <li>
+                    <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                    <span class="glyphicon glyphicon-ok"> </span> Etape 7 : Envoi du fichier...
+                </li>
+                <li>
+                    <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                    <span class="glyphicon glyphicon-ok"> </span> Etape 8 : Terminé ! Validation du classeur...
+                </li>
+            </ul>
+
+
         </div>
     </div>
+
+    <div class="row">&nbsp;</div>
+
+    <div class="row"><small>URL Aplet : {{ url_applet }}</small></div>
+
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Aide</h4>
-            </div>
-            <div class="modal-body">
-                Le problème est probablement dû à un blocage des composants JAVA du navigateur, voici comment le résoudre:<br><br>
-                <img src="{{ asset("/images/ffsc.jpg") }}"/>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
-{{ url_applet }}
-<script type="text/javascript" src="http://www.java.com/js/deployJava.js">
-</script>
+<script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 
 <script type="text/javascript">
     var docstosign = {{ docstosign|json_encode|raw }};
@@ -104,13 +168,18 @@
     var version = '1.7';
     deployJava.runApplet(attributes, parameters, version);
 
+    // Init pour l affichage du processus
+    var nbEtape = 0;
+    $('.etape_progress li .glyphicon-arrow-right').css('display', 'none');
+    $('.etape_progress li .glyphicon-ok').css('display', 'none');
+    $('.etape_progress li .loadinggif').css('display', 'none');
 
     function appletReady() {
 
         {#document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod*/#}
         document.javaapplet.setUploadUrl('http://' + window.location.hostname + '{{ path('upload_doc') }}'); // Prod*/
 
-        var divmethod = document.getElementById('listemethod');
+//        var divmethod = document.getElementById('listemethod');
 
         var divcertif = document.getElementById('listecertif');
         var selectcertif = document.createElement('select');
@@ -120,6 +189,7 @@
         var i = 0;
         while (i < nbcertif) {
             var nomcertif = document.javaapplet.getSigningCertificateName(i);
+            console.log('nomcertif : ' + nomcertif);
             var element = document.createElement('option');
             element.setAttribute('value', i);
             element.text = nomcertif;
@@ -130,8 +200,7 @@
         divcertif.appendChild(selectcertif);
         $('#help').hide();
         $('#bouttons').show('slow');
-        setStatusText('Pret à signer');
-
+//        setStatusText('Pret à signer');
 
     }
 
@@ -141,6 +210,9 @@
         var ua = window.navigator.userAgent;
         var msie = ua.indexOf("MSIE ");
 
+        // If Internet Explorer, else return false
+        return (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./));
+        /*
         if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {      // If Internet Explorer, return version number
 //                    alert(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))));
             return true;
@@ -148,8 +220,7 @@
         else {                 // If another browser, return 0
 //                    alert('otherbrowser');
             return false;
-        }
-
+        }*/
 
     }
 
@@ -182,7 +253,7 @@
     function getFileLinkFromNumber(i) {
 
         //alert('http://
-        console.log()
+        //console.log();
         document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/' + docstosign[i].repourl, docstosign[i].repourl, docstosign[i].id);
 
     }
@@ -234,13 +305,24 @@
 
 
     function setStatusText(txt) {
-        $('#avancement').html(txt);
+        //$('#avancement').html(txt);
+        $('.etape_progress li:nth-child(' + nbEtape + ')').addClass('alert-success');
+        $('.etape_progress li:nth-child(' + nbEtape + ') .loadinggif').css('display', 'none');
+        $('.etape_progress li:nth-child(' + nbEtape + ') .glyphicon-arrow-right').css('display', 'none');
+        $('.etape_progress li:nth-child(' + nbEtape + ') .glyphicon-ok').css('display', 'inline-block');
+        nbEtape++;
+        $('.etape_progress li:nth-child(' + nbEtape + ') .loadinggif').css('display', 'inline-block');
+        $('.etape_progress li:nth-child(' + nbEtape + ') .glyphicon-arrow-right').css('display', 'inline-block');
+
+        console.log("setStatusText : " + txt);
+
     }
 
     function setProgress(permil) {
 
-        $('#progressbar').attr('aria-valuenow', permil / 10 + '%');
-        $('#progressbar').attr('style', 'width: ' + permil / 10 + '%');
+        /*$('#progressbar').attr('aria-valuenow', permil / 10 + '%');
+        $('#progressbar').attr('style', 'width: ' + permil / 10 + '%');*/
+        console.log("Permil : " + permil);
     }
 
     function setColor(col) {
