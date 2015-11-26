@@ -22,10 +22,10 @@
                     <div class="row">
                     {% for type in types %}
 
-                        <div class="col-lg-1 text-right">
+                        <div class="col-lg-1 col-sm-1 text-right">
                             <input type="checkbox" name="types[]" {% if type in service.types %}checked{% endif %} value="{{ type.id }}" id="types_classeur_{{ type.id }}"/>
                         </div>
-                        <div class="col-lg-2 text-left">
+                        <div class="col-lg-2 col-sm-5 text-left">
                             <label for="types_classeur_{{ type.id }}">{{ type.nom }}</label>
                         </div>
 
