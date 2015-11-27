@@ -80,7 +80,9 @@
                     <div class="col-lg-12 list-validants">
                         <ul class="select2-choices">
                             {% for validant in validants %}
-                                <li class="select2-search-choice">{{ validant.nom }} {{ validant.prenom }}</li>
+                                {% if app.security.getToken().getUser() != validant %}
+                                    <li class="select2-search-choice">{{ validant.nom }} {{ validant.prenom }}</li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </div>
@@ -173,7 +175,7 @@
             placement: 'bottom'
         });
         aff_button_valider();
-        $('.list-validants').hide();
+//        $('.list-validants').hide();
         scrollFrisque();
 
         // Fonction permettant d agrandir la frise dynamiquement.
@@ -181,11 +183,13 @@
             var widthLine = $('#circuit_main').css('width');
             $('#circuit_etapes').css('width', widthLine);
             {% if edit %}
-                var btn = 250;
+                var btn = 143;
             {% else %}
                 var btn = 0;
             {% endif %}
-            var widthScroll = $('.etapes-circuit').length * 300 + btn;
+            // 42 c est la solution... et la taille de la flèche
+            var widthScroll = $('.etapes-circuit').length * 292 + btn;
+            console.log(widthScroll);
             $('#circuit_with_js').css('width', widthScroll);
         }
 
@@ -308,12 +312,12 @@
                 initPopover();
 
             });
-            creerFleches()
+            creerFleches();
             scrollFrisque();
             // Pour savoir si on valide ou si on signe
             aff_button_valider();
 
-            $('.list-validants').hide();
+            //$('.list-validants').hide();
 
         });
 

@@ -23,8 +23,6 @@ function findUsersByUserPackId(ident){
 
 function initPopover(){
 
-
-
     $('[data-toggle="popover"]').popover({
         html: true,
         trigger: 'hover',
@@ -35,7 +33,6 @@ function initPopover(){
 }
 
 $(document).ready(function() {
-
 
 
     function formatState (state) {
@@ -82,6 +79,7 @@ $(document).ready(function() {
   /*  var eventSelect = $(".selusers");
     eventSelect.select2(); */
     creerFleches();
+    affAllUsers();
     affButtons ();
 
 
@@ -126,33 +124,39 @@ $(document).ready(function() {
         var contetapes = $('#contetapes');
         contetapes.children('.etapes-circuit').each(function() {
             var maxHeight = zoneHeight($(this).children('.selusers').children('.select2-choices').children('li'));
+            var maxHeightValidant = zoneHeight($(this).children('.list-validants').children('.select2-choices').children('li'));
 
+            //console.log('maxHeight : ' + maxHeight);
+            //console.log('maxHeightValidant : ' + maxHeightValidant);
             //console.log($(this).children('.selusers').children('.select2-choices').children('li'));
 
-            if (maxHeight > 85) {
+            if (maxHeight > 115) {
                 //var maxHeight = zoneHeight($(this).currentTarget.selectedOptions);
-                console.log(maxHeight);
-                $(this).children('#hiddeUsers').hide();
-                $(this).children('#seeUsers').show();
+                //console.log('maxHeight > 85 : ' + maxHeight);
+                $(this).children('#hiddeUsers').show();
+                //$(this).children('#seeUsers').show();
+            }
+            if (maxHeightValidant > 20) {
+                //var maxHeight = zoneHeight($(this).currentTarget.selectedOptions);
+                //console.log('maxHeightValidant > 20 : ' + maxHeightValidant);
+                $(this).children('#hiddeUsers').show();
             }
         });
-        $('#hiddeUsers').hide();
-        $('.etape-groupe').siblings('#seeUsers').show();
+
+        /*$('#hiddeUsers').show();
+        $('.etape-groupe').siblings('#seeUsers').hide();*/
     }
 
     // Fonction permettant d afficher le bouton #seeUsers
     function affSeeUsers (that, aff) {
         if (!aff) {
-
             that.children('#seeUsers').show();
             that.children('#hiddeUsers').hide();
         }
+        that.children('.select2-container-multi').children('.select2-choices').css('height', '85px');
 
-    //    that.children('.select2-container-multi').children('.select2-choices').css('height', '25px');
-        that.css('height', 'auto');
-
+        //that.css('height', 'auto');
         //that.children('.etape-groupe').hide();
-
     }
 
     // Fonction permettant d afficher le bouton #hiddeUsers
@@ -173,7 +177,7 @@ $(document).ready(function() {
         var contetapes = $('#contetapes');
         contetapes.children('.etapes-circuit').each(function() {
             var clicked = $(this);
-            var cpt = 0
+            var cpt = 0;
             $(this).find('.selusers').find(':selected').each(function(){
                 cpt ++;
             });
@@ -238,14 +242,14 @@ $(document).ready(function() {
         for(var i= 0; i < x.length; i++) {
             maxHeight += x[i].clientHeight + 4;
         }*/
-        //console.log(maxHeight);
+        //console.log("close : " + maxHeight);
 
         //if (e.currentTarget.selectedOptions.length > 3) {
         //console.log('close : ' + maxHeight);
         if (maxHeight > 80) {
             //affSeeUsers($(this).parent());
-            $(this).parent().children('#hiddeUsers').hide();
-            $(this).parent().children('#seeUsers').show();
+            $(this).parent().children('#hiddeUsers').show();
+            $(this).parent().children('#seeUsers').hide();
         }
     });
 
@@ -284,8 +288,6 @@ $(document).ready(function() {
 
     // Evenement du bouton voir tous les utilisateurs
     $(document).on('click','#seeAllUsers',function(event) {
-
-
         affAllUsers ();
     });
 
