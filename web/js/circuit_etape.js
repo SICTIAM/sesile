@@ -34,6 +34,13 @@ function initPopover(){
 
 $(document).ready(function() {
 
+    $('.first').popover({
+        trigger: 'hover',
+        container: 'body',
+        content: 'Ajouter une étape',
+        placement: 'bottom'
+    });
+
 
     function formatState (state) {
 

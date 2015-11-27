@@ -55,12 +55,12 @@
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 <script>
     $(document).ready(function() {
-        $('.first').popover({
+        /*$('.first').popover({
             trigger: 'hover',
             container: 'body',
             content: 'Ajouter une étape',
             placement: 'bottom'
-        });
+        });*/
         scrollFrisque();
 
 
@@ -99,6 +99,7 @@
             $('.first').popover('destroy');
             $('.dyn').popover('destroy');
             $(this).parent().remove();
+            $('.popover').remove();
             var contetapes = $('#contetapes');
 
             contetapes.append('' +
