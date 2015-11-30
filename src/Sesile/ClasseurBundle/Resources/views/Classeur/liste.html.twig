@@ -115,9 +115,7 @@
                     return nRow;
                 },
                 fnDrawCallback: function (o) {
-                    console.log("Youhou ter !");
                     if ( o._iDisplayStart != oldStart ) {
-                        console.log("Youhou ter bis !");
                         var targetOffset = $('#fulltable').offset().top;
                         $('html,body').animate({scrollTop: targetOffset}, 500);
                         oldStart = o._iDisplayStart;

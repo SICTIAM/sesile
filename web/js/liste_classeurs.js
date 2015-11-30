@@ -56,9 +56,10 @@ $.fn.dataTable.moment( 'DD/MM/YYYY' );
             {
                 aTargets: [5],
                 sClass: "center",
-                bSortable: false,
+                bSortable: true,
                 "mRender": function ( data, type, full ) {
-                    return '<span class="glyphicon statut_' + data + '"></span>';
+                    console.log('Full  : ' + data);
+                    return '<span class="glyphicon statut_' + data + '"><span class="hidden">' + data + '</span></span>';
                 }
             },
             {
