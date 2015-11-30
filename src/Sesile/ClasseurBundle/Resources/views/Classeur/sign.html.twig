@@ -10,6 +10,17 @@
         <span class="glyphicon glyphicon-edit"></span>
         &nbsp;&nbsp;&nbsp;Signer le classeur
     </div>
+<div class='pull-right' id="help">
+    <br/>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-warning-sign"></span>&nbsp;&nbsp;Si le bouton Signer et Valider le classeur ne s’affiche pas… cliquez ici</button>
+</div>
+<div class='pull-right' id="bouttons" style="display:none">
+    <br/>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+    <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le
+        classeur
+    </button>
+</div>
 
     <div class="row">
         <div class="col-md-12"><h3>{{ classeur.nom }}</h3></div>
@@ -53,25 +64,19 @@
                     </div>
                 </div>#}
 
-            </form>
 
-            <div class="modal fade" id="IEModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Aide</h4>
-                        </div>
-                        <div class="modal-body">
-                            Le problème est probablement dû à un blocage des composants JAVA du navigateur, voici comment le résoudre:<br><br>
-                            <img src="{{ asset("/images/iesc.jpg") }}"/>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
-                        </div>
-                    </div>
-                </div>
+</form>
+
+<div class="modal fade col-lg-12" id="IEModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg col-lg-12" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Aide</h4>
             </div>
+            <div class="modal-body">
+                Le problème est probablement dû à un blocage des composants JAVA du navigateur, voici comment le résoudre:<br><br>
+                <img src="{{ asset("/images/iesc.jpg") }}" width="100%"/>
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">

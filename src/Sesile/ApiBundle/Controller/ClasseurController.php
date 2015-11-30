@@ -127,7 +127,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         } else {
-            $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($user->getId());
+            $classeurs = array();
+            foreach($user->getClasseurs() as $classeur)
+            {
+                $classeurs[] = array('id'=>$classeur->getId(),'Nom'=>$classeur->getNom());
+            }
+            //$classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursVisibles($user->getId());
+            return $classeurs;
         }
 
 
@@ -220,6 +226,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         if(is_null($email))
         {
             $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
+            $userAPI = null;
         }
         else{
             $user = $em->getRepository('SesileUserBundle:User')->findOneByUsername($email);
@@ -378,7 +385,11 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         // Fonction pour enregistrer dans la table Classeur_visible
         $usersVisible = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
         $usersVisible[] = $user->getId();
-        $usersVisible[] = $userAPI->getId();
+        if(!is_null($userAPI))
+        {
+            $usersVisible[] = $userAPI->getId();
+        }
+
         $usersCV = $this->classeur_visible($request->request->get('visibilite'), $usersVisible, $request->request->get('groupe'));
         foreach ($usersCV as $userCV) {
           //  $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
