@@ -237,6 +237,7 @@
             console.log('nomcertif : ' + nomcertif);
             var element = document.createElement('option');
             element.setAttribute('value', i);
+            nomcertif = nomcertif.substring(nomcertif.lastIndexOf('-'), -1);
             element.text = nomcertif;
             selectcertif.appendChild(element);
             i = i + 1;
