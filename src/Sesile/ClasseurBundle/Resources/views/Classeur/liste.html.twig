@@ -41,6 +41,9 @@
 {% if 'classeur' in app.request.attributes.get('_route') %}
     <script type="application/javascript">
         $(document).ready(function () {
+
+            var oldStart = 0;
+
             $.fn.dataTable.moment( 'DD/MM/YYYY' );
             var tab = $("#fulltable").DataTable({
                 "processing": true,
@@ -110,6 +113,13 @@
                         document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
                     });
                     return nRow;
+                },
+                fnDrawCallback: function (o) {
+                    if ( o._iDisplayStart != oldStart ) {
+                        var targetOffset = $('#fulltable').offset().top;
+                        $('html,body').animate({scrollTop: targetOffset}, 500);
+                        oldStart = o._iDisplayStart;
+                    }
                 }
             });
             tab.page('last').draw('page');

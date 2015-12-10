@@ -54,8 +54,14 @@ class ClasseurRepository extends EntityRepository {
         $colonnes = array('nom', 'creation', 'validation', 'intervenants', 'type', 'status');
 
         if($get->get('order') !== null) {
-            $order = 'c.' . $colonnes[$get->get('order')[0]["column"]];
+            // Condition spéciale pour trier par type par ordre alphabétique
+            if ($colonnes[$get->get('order')[0]["column"]] == "type") {
+                $order = 't.nom';
+            } else {
+                $order = 'c.' . $colonnes[$get->get('order')[0]["column"]];
+            }
 //        $order == 'c.type' ? $order = 't.nom' : $order;
+//            var_dump('Column', $get->get('order')[0]["column"], "GET order : ", $get->get('order')[0]["dir"]);
             $qb->orderBy($order, $get->get('order')[0]["dir"]);
         }
 

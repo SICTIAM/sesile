@@ -898,3 +898,11 @@ select [name=user] {
     line-height: 2.00;
     border-radius: 70px;
 }
+
+.etape_progress > li {
+    list-style-type: none;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}

@@ -19,9 +19,9 @@
 
                     <button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>
 
-                    <div class="text-center"><h4></h4></div>
+                    <div class="text-center"><h4 title="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer">Valideur</h4></div>
                     {#<input type="hidden" name="etape_id" value="{{ etape.id }}">#}
-                    <select class="selusers" multiple="multiple" style="width: 100%" data-etape="{{ etape.id }}" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer">
+                    <select class="selusers" multiple="multiple" style="width: 100%" data-etape="{{ etape.id }}" required="required" title="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer">
                         <optgroup label="Groupes d'utilisateurs">
                             {% for userPack in userPacks %}
                                 <option value="userpack-{{ userPack.id }}" {% if userPack in etape.userPacks %} selected{% endif %} data-type="groupe"><i class="fa fa-group"></i>{{ userPack.nom }}</option>
@@ -55,12 +55,12 @@
 <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 <script>
     $(document).ready(function() {
-        $('.first').popover({
+        /*$('.first').popover({
             trigger: 'hover',
             container: 'body',
             content: 'Ajouter une étape',
             placement: 'bottom'
-        });
+        });*/
         scrollFrisque();
 
 
@@ -99,6 +99,7 @@
             $('.first').popover('destroy');
             $('.dyn').popover('destroy');
             $(this).parent().remove();
+            $('.popover').remove();
             var contetapes = $('#contetapes');
 
             contetapes.append('' +

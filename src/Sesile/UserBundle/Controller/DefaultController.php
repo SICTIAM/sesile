@@ -692,7 +692,8 @@ class DefaultController extends Controller
             $form->add('collectivite', 'entity', array(
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
-                    return $repository->createQueryBuilder('p');
+                    return $repository->createQueryBuilder('p')
+                        ->orderBy('p.nom', 'asc');
                 },
                 'property' => 'Nom',
             ));
@@ -751,7 +752,8 @@ class DefaultController extends Controller
             $form->add('collectivite', 'entity', array(
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
-                    return $repository->createQueryBuilder('p');
+                    return $repository->createQueryBuilder('p')
+                        ->orderBy('p.nom', 'asc');
                 },
                 'property' => 'Nom',
             ));

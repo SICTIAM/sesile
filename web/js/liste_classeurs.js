@@ -3,6 +3,28 @@
  * script utilisé pour la configuration des datables : affichage liste_a_valider et liste_retired
  */
 $.fn.dataTable.moment( 'DD/MM/YYYY' );
+
+    // Fonction permettant le retour en haut de page lors du chargement d une nouvelle page
+    /*$(document).on('click', '#classeur-a-valider .paginate_button', function() {
+            console.log("OK Coral 4");
+            //console.log($("#liste_classeurs").position().top);
+            console.log("Scroll ValidTable : " + $("#liste_classeurs").position().top);
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+            //$("html, body").animate({ scrollTop: $("#liste_classeurs").position().top }, "slow");
+            return false;
+        }
+    );*/
+
+    // Fonction permettant le retour en haut de page lors du chargement d une nouvelle page
+    $(document).on('click', '#liste_classeurs .paginate_button', function() {
+            console.log("Scoll liste_classeurs de valid : " + $("#liste_classeurs").position().top);
+            $("html, body").animate({ scrollTop: $("#liste_classeurs").position().top }, "slow");
+            //$("html, body").scrollTop("#liste_classeurs");
+            return false;
+        }
+    );
+
+    var oldStart = 0;
     var tab = $("#validTable").DataTable({
         oLanguage: {
             sSearch: "Rechercher&nbsp;",
@@ -34,9 +56,10 @@ $.fn.dataTable.moment( 'DD/MM/YYYY' );
             {
                 aTargets: [5],
                 sClass: "center",
-                bSortable: false,
+                bSortable: true,
                 "mRender": function ( data, type, full ) {
-                    return '<span class="glyphicon statut_' + data + '"></span>';
+                    console.log('Full  : ' + data);
+                    return '<span class="glyphicon statut_' + data + '"><span class="hidden">' + data + '</span></span>';
                 }
             },
             {
@@ -64,6 +87,13 @@ $.fn.dataTable.moment( 'DD/MM/YYYY' );
                 document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
             });
             return nRow;
+        },
+        "fnDrawCallback": function (o) {
+            if ( o._iDisplayStart != oldStart ) {
+                var targetOffset = $('#validTable').position().top;
+                $('html,body').animate({scrollTop: targetOffset}, 500);
+                oldStart = o._iDisplayStart;
+            }
         },
        "initComplete" :function(){
          //  $.fn.dataTable.moment( 'DD/MM/YYYY' );
