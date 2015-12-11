@@ -38,10 +38,8 @@
             "aLengthMenu": [15, 30, 50, 100],
             "sDom": 'lft<"footer_datatables"ip>',
             "aoColumnDefs": [
-                {
-                    aTargets: [1,2,3],
-                    sClass: "center"
-                }
+                { aTargets: [1,2,3], sClass: "center"},
+                { "aTargets": [ -1 ], "bSortable": false }
             ],
             "sPaginationType": "full_numbers"
         });

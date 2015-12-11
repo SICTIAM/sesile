@@ -48,15 +48,28 @@
                 <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}"
                    class="btn btn-default" role="button">
                     <span class="glyphicon glyphicon-download-alt"></span>
-                    Télécharger
+                    Télécharger {#Original#}
                 </a>&nbsp;
 
+                {#{% if doc.type == 'application/pdf' %}
+                    <a id='download' href="{{ path('download_doc_visa', {'id':doc.id}) }}"
+                       class="btn btn-default" role="button">
+                        <span class="glyphicon glyphicon-download-alt"></span>
+                        Télécharger visa
+                    </a>&nbsp;
+
+                    <a id='download' href="{{ path('download_doc_sign', {'id':doc.id}) }}"
+                       class="btn btn-default" role="button">
+                        <span class="glyphicon glyphicon-download-alt"></span>
+                        Télécharger sign
+                    </a>&nbsp;
+                {% endif %}#}
             {% endif %}
             {% if isvalidant %}
-            <button id='deleteconfirm' type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-trash"> </span>
-                Supprimer
-            </button>
+                <button id='deleteconfirm' type="button" class="btn btn-danger dropdown-toggle dz-remove" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-trash"> </span>
+                    Supprimer
+                </button>
             {% endif %}
 
         </div>

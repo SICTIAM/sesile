@@ -51,7 +51,7 @@
             });
             $("#listUsers").select2().on("click", function() {
 
-                if($('.select2-choices').children().length > 2 ) {
+                if($('.select2-choices').children().length > 0 ) {
                     console.log('ok');
                     $("input[type=submit]").removeClass('disabled');
                 } else {

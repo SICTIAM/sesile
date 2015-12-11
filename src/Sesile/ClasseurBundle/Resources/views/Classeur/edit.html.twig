@@ -50,7 +50,7 @@
                 {% endif %}
 
 
-                {% if path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer')  %}
+                {% if classeur.documents|length > 0 and path('visu', {'id':classeur.documents[0].id}) in app.request.headers.get('referer')  %}
                     <a href="javascript:history.go(-3)"  class="btn btn-primary navbar-btn">
                         <span class="glyphicon glyphicon-share-alt"></span>
                         Retour à la page précédente
@@ -566,7 +566,16 @@
                         // ?? est ce nécessaire
                     }
 
-                    $("#form_edit").attr("action", $(this).attr("data-action")).submit();
+                    if(typeof(dropzone) != 'undefined') {
+                        if( ( typeof(mockFile) != 'object' && dropzone.getAcceptedFiles().length == 0) || ( typeof(mockFile) == 'object' && mockFile == {} ) || (dropzone.element.childElementCount < 2)) {
+                            alert("Vous devez au moins déposer un document dans le classeur.");
+                        } else {
+                            $("#form_edit").attr("action", $(this).attr("data-action")).submit();
+                        }
+                    } else {
+                        alert("Le type du fichier déposé n'est pas bon.");
+                    }
+
                 });
             });
 

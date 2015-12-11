@@ -70,8 +70,11 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: mail
-    host:      localhost
+    transport: %mailer_transport%
+    host:      %mailer_host%
+    port:      25
+#    transport: mail
+#    host:      localhost
 
 oneup_uploader:
     mappings:
@@ -116,7 +119,8 @@ parameters:
         commit: 994e6f7902355e6bf62dde14804e0bd9863d5662
         buildnumber: 1
     majorversion: 2
-    url_applet: signature.sesile.fr
+#    url_applet: signature.sesile.fr
+    url_applet: signature.dev.sesile.fr
     ovh_credential:
         application: ***REMOVED***
         secret: ***REMOVED***

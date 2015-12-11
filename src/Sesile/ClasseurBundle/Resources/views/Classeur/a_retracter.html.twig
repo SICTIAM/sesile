@@ -9,9 +9,16 @@
         {% include 'SesileClasseurBundle:Classeur:liste_retracter.html.twig' %}
     </div>
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+    <script type="application/javascript" src="//cdn.datatables.net/plug-ins/1.10.9/api/page.jumpToData().js"></script>
+    <script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="application/javascript" src="//cdn.datatables.net/plug-ins/1.10.7/sorting/datetime-moment.js"></script>
+
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="application/javascript">
 	$(document).ready(function () {
+
+        $.fn.dataTable.moment( 'DD/MM/YYYY HH:mm' );
+        $.fn.dataTable.moment( 'DD/MM/YYYY' );
         $(".dtables").dataTable({
 		"oLanguage": {
 		    "sSearch": "Rechercher&nbsp;:",
@@ -32,9 +39,9 @@
 		"aLengthMenu": [15, 30, 50, 100],
 		"sDom": 'lft<"footer_datatables"ip>',
 		"aoColumnDefs": [
-            { "aTargets": [ 1,2,3,4 ], sClass: "center" },
-            { "bSortable": false, "aTargets": [ 5 ], sClass: "center" },
-            { "bSortable": false, "aTargets": [ 6 ], sClass: "center" }
+            { "aTargets": [ 1,2,3,4,5 ], sClass: "center" },
+//            { "bSortable": false, "aTargets": [ 3 ], sClass: "center" },
+            { "bSortable": false, "aTargets": [ 3,6 ], sClass: "center" }
 		],
 		"sPaginationType": "full_numbers",
 

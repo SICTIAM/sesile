@@ -195,6 +195,66 @@ class DocumentController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/download_visa/{id}", name="download_doc_visa",  options={"expose"=true})
+     *
+     */
+    public function downloadVisaAction(Request $request, $id)
+    {
+
+        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        // Ecriture de l'hitorique du document
+        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+
+        /* SetaPDF */
+
+        // Params
+        $translateX = 30;
+        $translateY = -30;
+        $firstPage = true;
+        $texteVisa = 'VISE PAR';
+        $classeurId = $doc->getClasseur()->getId();
+//        $color = '#454545';
+        $color = '#454545';
+
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, $color);
+        /* FIN SetaPDF */
+
+    }
+
+    /**
+     * @Route("/download_sign/{id}", name="download_doc_sign",  options={"expose"=true})
+     *
+     */
+    public function downloadSignAction(Request $request, $id)
+    {
+        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        // Ecriture de l'hitorique du document
+        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+
+        /* SetaPDF */
+
+        // Params
+        $translateX = 30;
+        $translateY = -30;
+        $firstPage = true;
+        $texteVisa = false;
+        $classeurId = $doc->getClasseur()->getId();
+
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa);
+        /* FIN SetaPDF */
+    }
+
 
     /**
      * @Route("/{id}/delete", name="delete_document",  options={"expose"=true})
@@ -337,7 +397,7 @@ class DocumentController extends Controller
             list($jourMoche, $heureMoche) = explode('T', $dateMoche);
             list($annee, $jour, $mois) = explode('-', $jourMoche);
             list($heure, $minute, $reste) = explode(':', $heureMoche);
-            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure + 2) . ':' . $minute;
+            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure) . ':' . $minute;
 
         } elseif(isset($xml->PES_RecetteAller) && count($xml->PES_RecetteAller->Bordereau->Signature)) {
             //si on a une signature  on récupère le certificat
@@ -354,7 +414,7 @@ class DocumentController extends Controller
             list($jourMoche, $heureMoche) = explode('T', $dateMoche);
             list($annee, $jour, $mois) = explode('-', $jourMoche);
             list($heure, $minute, $reste) = explode(':', $heureMoche);
-            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure + 2) . ':' . $minute;
+            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure) . ':' . $minute;
         }
         else{
             $Signataire = '';
