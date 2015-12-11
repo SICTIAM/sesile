@@ -115,6 +115,7 @@ class ProfileController extends ContainerAware
                 }
 
 
+
                 $userManager->updateUser($user);
 
                 // ancienne methode de connexion, ne fonctionne pas sur le serveur de demo

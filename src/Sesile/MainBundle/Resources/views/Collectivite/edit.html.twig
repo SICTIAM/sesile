@@ -7,67 +7,101 @@
             &nbsp;&nbsp;&nbsp;Editer une collectivité
         </div>
         <br>
-	{{ form_start(edit_form) }}
-	<div class="row">
-	    <div class="col-md-3">{{ form_label(edit_form.nom) }}</div>
-	    <div class="col-md-9">{{ form_widget(edit_form.nom) }}</div>
-	</div>
-	<div class="row">
-	    <div class="col-md-3">{{ form_label(edit_form.domain) }}</div>
-	    <div class="col-md-9">{{ form_widget(edit_form.domain) }}</div>
-	</div>
-	<div class="row">
-	    <div class="col-md-3">{{ form_label(edit_form.active) }}</div>
-	    <div class="col-md-9">{{ form_widget(edit_form.active) }}</div>
-	</div>
-	<div class="row">
-	    <div class="col-md-3">{{ form_label(edit_form.file) }}</div>
-	    <div class="col-md-9">{{ form_widget(edit_form.file) }}</div>
-	</div>
-	<br>
-	<br>
-	<div class="row">
-	    <div class="col-md-2"></div>
-	    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
-	    <div class="col-md-2"></div>
-	</div>
-        {{ form_label(edit_form.textmailnew) }}
-        {{ form_widget(edit_form.textmailnew) }}
+        {{ form_start(edit_form) }}
+        <div class="row">
+            <div class="col-md-3">{{ form_label(edit_form.nom) }}</div>
+            <div class="col-md-9">{{ form_widget(edit_form.nom) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">{{ form_label(edit_form.domain) }}</div>
+            <div class="col-md-9">{{ form_widget(edit_form.domain) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">{{ form_label(edit_form.active) }}</div>
+            <div class="col-md-9">{{ form_widget(edit_form.active) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">{{ form_label(edit_form.file) }}</div>
+            <div class="col-md-9">{{ form_widget(edit_form.file) }}</div>
+        </div>
         <br>
-	<br>
-	<br>
-	<div class="row">
-	    <div class="col-md-2"></div>
-	    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
-	    <div class="col-md-2"></div>
-	</div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a aria-expanded="true" href="#mail" data-toggle="tab">Mails</a></li>
+            <li class=""><a aria-expanded="false" href="#visa" data-toggle="tab">Visa</a></li>
+            <li class=""><a aria-expanded="false" href="#signature" data-toggle="tab">Signature</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="mail">
+                <br>
+                {{ form_label(edit_form.textmailnew) }}
+                {{ form_widget(edit_form.textmailnew) }}
 
-        {{ form_label(edit_form.textmailrefuse) }}
-        {{ form_widget(edit_form.textmailrefuse) }}
-	<br>
-	<br>
-	<br>
-	<div class="row">
-	    <div class="col-md-2"></div>
-	    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
-	    <div class="col-md-2"></div>
-	</div>
+                <br><br><br>
 
-        {{ form_label(edit_form.textmailwalid) }}
-        {{ form_widget(edit_form.textmailwalid) }}
-	<br>
-	<br>
-	<br>
-	<div class="row">
-	    <div class="col-md-2"></div>
-	    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
-	    <div class="col-md-2"></div>
-	</div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+                    <div class="col-md-2"></div>
+                </div>
+                {{ form_label(edit_form.textmailrefuse) }}
+                {{ form_widget(edit_form.textmailrefuse) }}
+                <br><br><br>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+                    <div class="col-md-2"></div>
+                </div>
+                {{ form_label(edit_form.textmailwalid) }}
+                {{ form_widget(edit_form.textmailwalid) }}
+                <br><br><br>
 
-        {{ form_label(edit_form.message) }}
-        {{ form_widget(edit_form.message) }}
-	<br>
-	<br>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+                    <div class="col-md-2"></div>
+                </div>
+                {{ form_label(edit_form.message) }}
+                {{ form_widget(edit_form.message) }}
+                <br>
+                <br>
+            </div>
+            <div class="tab-pane fade" id="visa">
+                <br>
+                <label class="underline">Disposition du cartouche visa</label>
+                <br><br>
+                {{ form_widget(edit_form.couleurVisa) }}
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="colorPicker">Couleur</label>
+                    </div>
+                    <div class="bfh-colorpicker col-md-3" id="colorPicker" data-name="colorpicker1" style="z-index: 1000">
+                    </div>
+
+                </div>
+                <br>
+                <label class="underline">Texte</label>
+                <br><br>
+                <div class="row">
+                    <div class="col-md-3">{{ form_label(edit_form.titreVisa) }}</div>
+                    <div class="col-md-9">{{ form_widget(edit_form.titreVisa) }}</div>
+                </div>
+                <br>
+                <br>
+            </div>
+
+            <div class="tab-pane fade" id="signature">
+                <br>
+                <label class="underline">Disposition de la signature</label>
+                <br><br>
+                <div class="row">
+                    <div class="col-md-3">{{ form_label(edit_form.pageSignature) }}</div>
+                    <div class="col-md-9">{{ form_widget(edit_form.pageSignature) }}</div>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-3">
                 {{ form_widget(edit_form.submit, {'attr': {'class': 'btn btn-success' }}) }}
@@ -80,18 +114,28 @@
             </div>
         </div>
 
+
         {{ form_end(edit_form) }}
         {#{{ form_start(delete_form) }}{{ form_end(delete_form) }}#}
     </div>
 
     <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap/css/bootstrap-formhelpers.min.css") }}"/>
     <script src="{{ asset("/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js") }}" type="text/javascript"></script>
     <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
     <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
+    <script src="{{ asset("/js/bootstrap-formhelpers.js") }}" type="text/javascript"></script>
     <script type="text/javascript">
         $('textarea').wysihtml5({
             "image": false,
             locale: "fr-FR"
         });
+        $(document).ready(function(){
+            $('#colorPicker').val($('#sesile_mainbundle_collectivite_couleurVisa').val());
+            $('#colorPicker').on('change.bfhcolorpicker',function(){
+                $('#sesile_mainbundle_collectivite_couleurVisa').val($(this).val())
+            });
+        });
+
     </script>
 {% endblock %}

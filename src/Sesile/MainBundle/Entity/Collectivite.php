@@ -93,6 +93,57 @@ class Collectivite
      */
     private $textmailwalid;
 
+
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="abscissesVisa", type="integer",nullable=true)
+     */
+    private $abscissesVisa;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ordonneesVisa", type="integer", length=255,nullable=true)
+     */
+    private $ordonneesVisa;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="abscissesSignature", type="integer", length=255,nullable=true)
+     */
+    private $abscissesSignature;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ordonneesSignature", type="integer", length=255,nullable=true)
+     */
+    private $ordonneesSignature;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="couleurVisa", type="string", length=10,nullable=true)
+     */
+    private $couleurVisa;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="titreVisa", type="string", length=10,nullable=true,options={"default":"VISE PAR"})
+     */
+    private $titreVisa='VISE PAR';
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="pageSignature", type="integer",nullable=true)
+     */
+    private $pageSignature;
+
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\User", mappedBy="collectivite")
      */
@@ -540,5 +591,166 @@ Vous pouvez visionner le classeur {{lien|raw}}");
     public function getGroupes()
     {
         return $this->groupes;
+    }
+
+    /**
+     * Set abscissesVisa
+     *
+     * @param integer $abscissesVisa
+     * @return Collectivite
+     */
+    public function setAbscissesVisa($abscissesVisa)
+    {
+        $this->abscissesVisa = $abscissesVisa;
+    
+        return $this;
+    }
+
+    /**
+     * Get abscissesVisa
+     *
+     * @return integer 
+     */
+    public function getAbscissesVisa()
+    {
+        return $this->abscissesVisa;
+    }
+
+    /**
+     * Set ordonneesVisa
+     *
+     * @param integer $ordonneesVisa
+     * @return Collectivite
+     */
+    public function setOrdonneesVisa($ordonneesVisa)
+    {
+        $this->ordonneesVisa = $ordonneesVisa;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordonneesVisa
+     *
+     * @return integer 
+     */
+    public function getOrdonneesVisa()
+    {
+        return $this->ordonneesVisa;
+    }
+
+    /**
+     * Set abscissesSignature
+     *
+     * @param integer $abscissesSignature
+     * @return Collectivite
+     */
+    public function setAbscissesSignature($abscissesSignature)
+    {
+        $this->abscissesSignature = $abscissesSignature;
+    
+        return $this;
+    }
+
+    /**
+     * Get abscissesSignature
+     *
+     * @return integer 
+     */
+    public function getAbscissesSignature()
+    {
+        return $this->abscissesSignature;
+    }
+
+    /**
+     * Set ordonneesSignature
+     *
+     * @param integer $ordonneesSignature
+     * @return Collectivite
+     */
+    public function setOrdonneesSignature($ordonneesSignature)
+    {
+        $this->ordonneesSignature = $ordonneesSignature;
+    
+        return $this;
+    }
+
+    /**
+     * Get ordonneesSignature
+     *
+     * @return integer 
+     */
+    public function getOrdonneesSignature()
+    {
+        return $this->ordonneesSignature;
+    }
+
+    /**
+     * Set couleurVisa
+     *
+     * @param string $couleurVisa
+     * @return Collectivite
+     */
+    public function setCouleurVisa($couleurVisa)
+    {
+        $this->couleurVisa = $couleurVisa;
+    
+        return $this;
+    }
+
+    /**
+     * Get couleurVisa
+     *
+     * @return string 
+     */
+    public function getCouleurVisa()
+    {
+        return $this->couleurVisa;
+    }
+
+    /**
+     * Set titreVisa
+     *
+     * @param string $titreVisa
+     * @return Collectivite
+     */
+    public function setTitreVisa($titreVisa)
+    {
+        $this->titreVisa = $titreVisa;
+    
+        return $this;
+    }
+
+    /**
+     * Get titreVisa
+     *
+     * @return string 
+     */
+    public function getTitreVisa()
+    {
+        return $this->titreVisa;
+    }
+
+    /**
+     * Set pageSignature
+     *
+     * @param integer $pageSignature
+     * @return Collectivite
+     */
+    public function setPageSignature($pageSignature)
+    {
+        $this->pageSignature = $pageSignature;
+    
+        return $this;
+    }
+
+    /**
+     * Get pageSignature
+     *
+     * @return integer 
+     */
+    public function getPageSignature()
+    {
+        return $this->pageSignature;
     }
 }
