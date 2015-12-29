@@ -98,6 +98,7 @@ class Bordereau
             $totTTC = 0;
             $totTVA = 0;
             /*  On fait un foreach car on a découvert 3 mois après qu'une piece pouvait avoir plusieurs lignes de pieces*/
+            $tabImput = array();
             foreach ($piece->LigneDePiece as $LignePiece) {
                 if (isset($LignePiece->Tiers->InfoTiers->Civilite)) {
                     $civilite = $LignePiece->Tiers->InfoTiers->Civilite->attributes()[0];
@@ -115,6 +116,13 @@ class Bordereau
                 }
                 //  $tabPJs = array();
                 if ($typePES === 'Depense') {
+                    $imputation = $LignePiece->BlocLignePiece->InfoLignePce->Nature->attributes()[0];
+                    if(isset($LignePiece->BlocLignePiece->InfoLignePce->Fonction)){
+                        $imputation .= '.'.$LignePiece->BlocLignePiece->InfoLignePce->Fonction->attributes()[0];
+                    }
+                    if(isset($LignePiece->BlocLignePiece->InfoLignePce->Operation)){
+                        $imputation .= '.'.$LignePiece->BlocLignePiece->InfoLignePce->Operation->attributes()[0];
+                    }
                     $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePce->MtHT->attributes()[0]);
                     $tmpTVA = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->TVAIntraCom->attributes()[0]);
                     if(isset($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA))
@@ -122,14 +130,22 @@ class Bordereau
                         $tmpTVA += doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA->attributes()[0]);
                     }
                 } else {
+                    $imputation = $LignePiece->BlocLignePiece->InfoLignePiece->Nature->attributes()[0];
+                    if(isset($LignePiece->BlocLignePiece->InfoLignePiece->Fonction)){
+                        $imputation .= '.'.$LignePiece->BlocLignePiece->InfoLignePiece->Fonction->attributes()[0];
+                    }
+                    if(isset($LignePiece->BlocLignePiece->InfoLignePiece->Operation)){
+                        $imputation .= '.'.$LignePiece->BlocLignePiece->InfoLignePiece->Operation->attributes()[0];
+                    }
                     $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePiece->MtHT->attributes()[0]);
                     $tmpTVA = doubleval($LignePiece->BlocLignePiece->InfoLignePiece->TvaIntraCom->attributes()[0]);
                     if(isset($LignePiece->BlocLignePiece->InfoLignePiece->MtTVA))
                     {
                         $tmpTVA += doubleval($LignePiece->BlocLignePiece->InfoLignePiece->MtTVA->attributes()[0]);
                     }
-                }
 
+                }
+                $tabImput[] = $imputation;
                 $totHT += $tmpHT;
 
                 //formatage montant HT
@@ -153,7 +169,7 @@ class Bordereau
             $formatTVA = number_format($totTVA, 2, ',', ' ');
             $formatTTC = number_format($totTTC, 2, ',', ' ');
 
-            $this->listPieces[] = new Piece($idP, $civilite, $nom, $prenom, $objet, $formatHT, $formatTVA, $formatTTC, $tabPJs, $tabPJ2);
+            $this->listPieces[] = new Piece($idP, $civilite, $nom, $prenom, $objet,$tabImput, $formatHT, $formatTVA, $formatTTC, $tabPJs, $tabPJ2);
         }
     }
 }

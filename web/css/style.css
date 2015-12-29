@@ -684,12 +684,12 @@ select [name=user] {
     padding-left: 32%;
 }
 
-.parcou label,
+.parcou label, .parcouSignature label,
 .pickuser label {
 	border: 1px solid #cccccc;
 }
 
-.label-form-input, .btn_avatar {
+.label-form-input, .btn_avatar, .btn_signature {
 	border: 1px solid #cccccc;
 }
 
@@ -697,12 +697,16 @@ select [name=user] {
 	color: rgb(50, 133, 171) !important;
 }
 
-/*INPUT AVATAR*/
+/*INPUT AVATAR SIGNATURE*/
 .parcou label {
 	position: relative;
 }
 
-.btn_avatar {
+.parcouSignature label {
+    position: relative;
+}
+
+.btn_avatar, .btn_signature {
 	display: inline;
 	left: -0.4em;
 	position: relative;
@@ -711,7 +715,7 @@ select [name=user] {
 	padding: 0 2em 0 2em;
 }
 
-.nom_avatar {
+.nom_avatar, .nom_signature {
 	color: #A9A9A9;
 	font-weight: bold;
 }
@@ -905,4 +909,8 @@ select [name=user] {
     margin-bottom: 20px;
     border: 1px solid transparent;
     border-radius: 4px;
+}
+
+.underline{
+    text-decoration: underline;
 }

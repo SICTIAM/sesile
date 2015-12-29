@@ -74,6 +74,12 @@
         </div>
         <br/>
 
+        <div class="label_form label-form-input">
+            {{ form_label(edit_form.qualite) }}
+            {{ form_widget(edit_form.qualite) }}
+        </div>
+        <br/>
+
         <div class="label_form parcou">
 
             <label class="lbl_avatar">Avatar</label>
@@ -92,6 +98,26 @@
             $(".parcou input[type='file']").change(function (e) {
                 var nom_fichier = e.target.files[0].name;
                 $('.nom_avatar').text(nom_fichier);
+            });
+        </script>
+        <div class="label_form parcouSignature">
+
+            <label class="lbl_avatar">Signature</label>
+            <button type="button" class="btn_signature">
+                Choisir un fichier
+            </button>
+            <span class="nom_signature"></span>
+            {{ form_widget(edit_form.fileSignature, { 'attr': {'class': 'parc_avatar'} }) }}
+        </div>
+        <script type="text/javascript">
+            $(".btn_signature").click(function () {
+                // alert('ta race');
+                $(".parcouSignature input[type='file']").trigger("click");
+            });
+
+            $(".parcouSignature input[type='file']").change(function (e) {
+                var nom_fichierSignature = e.target.files[0].name;
+                $('.nom_signature').text(nom_fichierSignature);
             });
         </script>
         <br/>

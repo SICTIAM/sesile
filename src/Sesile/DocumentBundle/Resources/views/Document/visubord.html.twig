@@ -54,6 +54,7 @@
             <th>N°Piece</th>
             <th>Créancier Référence bancaire</th>
             <th>Nature de la dépense</th>
+            <th>Imputation</th>
             <th>Montant HT</th>
             <th>Montant TVA</th>
             <th>Montant TTC</th>
@@ -66,6 +67,19 @@
                 <td>{{ p.id }}</td>
                 <td>{{ p.civilite }}&nbsp;{{ p.nom }}&nbsp;{{ p.prenom }}</td>
                 <td>{{ p.objet }}</td>
+                <td><div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle btn-xs" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown" aria-expanded="true">
+                            Liste
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuDivider"
+                            data-pieceselected="{{ loop.index-1 }}">
+                            {% for imputation in p.imputations %}
+                                <li role="presentation"><a>{{ imputation }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div></td>
                 <td style="text-align: right">{{ p.mtHT }}</td>
                 <td style="text-align: right">{{ p.mtTVA }}</td>
                 <td style="text-align: right">{{ p.mtTTC }}</td>

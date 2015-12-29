@@ -218,4 +218,37 @@ class UserPack
     {
         return $this->etapeClasseurs;
     }
+
+    /**
+     * Add etapeGroupesUP
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesUP
+     * @return UserPack
+     */
+    public function addEtapeGroupesUP(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesUP)
+    {
+        $this->etapeGroupesUP[] = $etapeGroupesUP;
+    
+        return $this;
+    }
+
+    /**
+     * Remove etapeGroupesUP
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesUP
+     */
+    public function removeEtapeGroupesUP(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupesUP)
+    {
+        $this->etapeGroupesUP->removeElement($etapeGroupesUP);
+    }
+
+    /**
+     * Get etapeGroupesUP
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEtapeGroupesUP()
+    {
+        return $this->etapeGroupesUP;
+    }
 }

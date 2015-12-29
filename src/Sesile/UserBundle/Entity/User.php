@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
  * User
@@ -62,6 +62,30 @@ class User extends BaseUser {
      */
     protected $file;
 
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pathSignature", type="string", length=255, nullable=true)
+     */
+    protected $pathSignature;
+
+    /**
+     * @Assert\Image(
+     *
+     *      mimeTypesMessage = "Ce fichier n'est pas une image",
+     *      maxSize = "5M",
+     *      maxSizeMessage = "Too big."
+     *      )
+     */
+    protected $fileSignature;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="qualite", type="string", length=255, nullable=true)
+     */
+    protected $qualite;
 
     /**
      * @var string
@@ -791,5 +815,126 @@ class User extends BaseUser {
     public function getHierarchie()
     {
         return $this->hierarchie;
+    }
+
+    /**
+     * Set pathSignature
+     *
+     * @param string $pathSignature
+     * @return User
+     */
+    public function setPathSignature($pathSignature)
+    {
+        $this->pathSignature = $pathSignature;
+    
+        return $this;
+    }
+
+    /**
+     * Get pathSignature
+     *
+     * @return string 
+     */
+    public function getPathSignature()
+    {
+        return $this->pathSignature;
+    }
+
+    /**
+     * Set qualite
+     *
+     * @param string $qualite
+     * @return User
+     */
+    public function setQualite($qualite)
+    {
+        $this->qualite = $qualite;
+    
+        return $this;
+    }
+
+    /**
+     * Get qualite
+     *
+     * @return string 
+     */
+    public function getQualite()
+    {
+        return $this->qualite;
+    }
+
+    public function getFileSignature() {
+        return $this->fileSignature;
+    }
+
+    public function setFileSignature($file)
+    {
+        $this->fileSignature = $file;
+
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUploadSignature() {
+        if (null !== $this->fileSignature) {
+            // faites ce que vous voulez pour générer un nom unique
+
+            $this->pathSignature = sha1(uniqid(mt_rand(), true)) . '.' . $this->fileSignature->guessExtension();
+
+        }
+
+    }
+
+    /**
+     *
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function uploadSignature() {
+        if (null === $this->fileSignature) {
+            return;
+        }
+
+        $Dirpath  = $this->getUploadRootDirSign();
+        // s'il y a une erreur lors du déplacement du fichier, une exception
+        // va automatiquement être lancée par la méthode move(). Cela va empêcher
+        // proprement l'entité d'être persistée dans la base de données si
+        // erreur il y a
+        if (!file_exists($Dirpath)) {
+            mkdir($Dirpath);
+        }
+        $this->fileSignature->move($Dirpath, $this->pathSignature);
+        unset($this->fileSignature);
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUploadSignature($Dirpath) {
+
+        if ($file = $Dirpath . $this->pathSignature) {
+            unlink($file);
+        }
+    }
+
+    public function getAbsolutePathSign() {
+        return null === $this->pathSignature ? null : $this->getUploadDirSign() . $this->pathSignature;
+    }
+
+    public function getWebPathSign() {
+        return null === $this->pathSignature ? null : $this->getUploadDirSign() . $this->pathSignature;
+    }
+
+    protected function getUploadRootDirSign() {
+        // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
+        return __DIR__ . '/../../../../web/' . $this->getUploadDirSign();
+    }
+
+    protected function getUploadDirSign() {
+        // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
+        // le document/image dans la vue.
+        return 'uploads/signatures/';
     }
 }

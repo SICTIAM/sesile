@@ -51,6 +51,7 @@
             <img  id="img_imposetonstyle"  src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" />
         </div>
         </div>
+
         {% if is_granted('ROLE_USER') and app.user.collectivite is not null %}
         {% include 'SesileMainBundle:Default:menu.html.twig' %}
         {% endif %}
