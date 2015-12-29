@@ -169,18 +169,18 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
 
         $em = $this->getDoctrine()->getManager();
         $tabGroupes = array();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($email);
-        $users = array();
-        $usersId = array();
+        $theUser = $em->getRepository('SesileUserBundle:User')->findOneByEmail($email);
 
         $groupes = $em->getRepository('SesileUserBundle:Groupe')->findAll();
 
         foreach ($groupes as $groupe) {
+            $users = array();
+            $usersId = array();
             $etapesGroupes = $groupe->getEtapeGroupes();
-            foreach ($etapesGroupes as $etapesGroupe) {
-                $users = array_merge($users, $etapesGroupe->getUsers()->toArray());
+            foreach ($etapesGroupes as $etapeGroupe) {
+                $users = array_merge($users, $etapeGroupe->getUsers()->toArray());
 
-                $usersPacks = $etapesGroupe->getUserPacks();
+                $usersPacks = $etapeGroupe->getUserPacks();
                 foreach ($usersPacks as $usersPack) {
                     $users = array_merge($users, $usersPack->getUsers()->toArray());
                 }
@@ -189,25 +189,12 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
                 $usersId[] = $user->getId();
             }
             $usersId = array_unique($usersId);
-            if (in_array($user->getId(), $usersId)) {
+            if (in_array($theUser->getId(), $usersId)) {
                 $tabGroupes[] = array('id' => $groupe->getId(), 'nom' => $groupe->getNom());
             }
         }
 
 
         return $tabGroupes;
-
-        /*
-                $em = $this->getDoctrine()->getManager();
-
-
-
-                $usergroups = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($user);
-                foreach ($usergroups as $ugroup) {
-                    $groupe = $ugroup->getGroupe();
-                    $tabGroupes[] = array('id' => $groupe->getId(), 'nom' => $groupe->getNom());
-                }
-                return $tabGroupes;
-        */
     }
 }
