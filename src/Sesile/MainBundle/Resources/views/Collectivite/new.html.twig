@@ -73,9 +73,8 @@
                     <div class="col-md-3">
                         <label for="colorPicker">Couleur</label>
                     </div>
-                        <div class="bfh-colorpicker col-md-3" id="colorPicker" data-name="colorpicker1" style="z-index: 1000">
+                        <div class="bfh-colorpicker col-md-3" id="colorPicker" data-name="colorpicker1" data-color="#454545" style="z-index: 1000">
                         </div>
-
                 </div>
                 <br>
                 <label class="underline">Texte</label>
@@ -84,8 +83,17 @@
                     <div class="col-md-3">{{ form_label(form.titreVisa) }}</div>
                     <div class="col-md-9">{{ form_widget(form.titreVisa) }}</div>
                 </div>
+
                 <br>
                 <br>
+                <label class="underline">Emplacement</label>
+                <div class="row">
+
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9">
+                        <div id="containment"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="signature">
@@ -123,6 +131,7 @@
     <script src="{{ asset("/js/bootstrap-formhelpers.js") }}" type="text/javascript"></script>
     <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
     <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
+    <script src="{{ asset("/js/drag.js") }}" type="text/javascript"></script>
     <script type="text/javascript">
 	$('textarea').wysihtml5({
 	    "image": false,
@@ -132,5 +141,11 @@
            $('#sesile_mainbundle_collectivite_couleurVisa').val($(this).val())
             alert($('#sesile_mainbundle_collectivite_couleurVisa').val())
         });
+
+        $('#containment').drag('init',{
+                cWidth:"210px",
+                cHeight:"297px"
+        });
+
     </script>
 {% endblock %}

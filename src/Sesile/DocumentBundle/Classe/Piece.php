@@ -18,6 +18,7 @@ class Piece
     public $nom;
     public $prenom;
     public $objet;
+    public $imputations;
     public $mtHT;
     public $mtTVA;
     public $mtTTC;
@@ -25,7 +26,7 @@ class Piece
 
     //public $listPJ=array();
 
-    function __construct($id, $civilite, $nom, $prenom, $objet, $mtHT, $mtTVA, $mtTTC, $tabPJ, $tabPJ2)
+    function __construct($id, $civilite, $nom, $prenom, $objet,$imputation, $mtHT, $mtTVA, $mtTTC, $tabPJ, $tabPJ2)
     {
 
         $this->id = $id;
@@ -36,6 +37,7 @@ class Piece
         $this->mtHT = $mtHT;
         $this->mtTVA = $mtTVA;
         $this->mtTTC = $mtTTC;
+        $this->imputations = $imputation;
         //  error_log(count($tabPJ));
         foreach ($tabPJ as $pj) {
             $idPJ = $pj->IdUnique->attributes()[0];

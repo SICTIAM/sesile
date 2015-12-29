@@ -166,6 +166,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
     public function getServicesOrganisationnelsForUserAction(Request $request, $email)
     {
 
+
         $em = $this->getDoctrine()->getManager();
         $tabGroupes = array();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($email);
