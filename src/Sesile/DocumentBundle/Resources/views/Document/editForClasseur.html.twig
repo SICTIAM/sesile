@@ -123,7 +123,7 @@ function removeFile(file) {
 }
 
 function enableUploads() {
-    dropzone.options.maxFiles = null
+    dropzone.options.maxFiles = null;
     allowmodif = true;
     buttonModifRoutine();
 
@@ -151,7 +151,7 @@ dropzone.on('success', function (file, response) {
 
 dropzone.on('complete', function (file) {
     uploadingfiles--;
-    console.log('complete :' + uploadingfiles);
+//    console.log('complete :' + uploadingfiles);
     if (uploadingfiles == 0) {
 
         addDocToCurrentClasseur(uploadedfiles);
@@ -166,7 +166,7 @@ dropzone.on("addedfile", function (file) {
 
         uploadingfiles++;
 
-        console.log('add:' + uploadingfiles);
+//        console.log('add:' + uploadingfiles);
 
         $.each(docsjson, function (key, value) {
             //au cas où il y ait un & dans le nom de fichier
@@ -272,14 +272,17 @@ dropzone.on("addedfile", function (file) {
         if (selected != null) {
             selected.removeClass('selectedfile');
         }
-
         selected = $(this);
+
+//        console.log(selected);
+        console.log("id : " +  file.id);
 
         selected.addClass('selectedfile');
 
         // $('[rel=popover]').not(button).popover('hide');
 
-        var idfile = -1;
+//        var idfile = -1;
+        var idfile = file.id;
 
 
         $.each(ids, function (key, value) {
@@ -287,7 +290,7 @@ dropzone.on("addedfile", function (file) {
             if (value.replace('&','&amp;') == file.name) {
 
 
-                idfile = key;
+//                idfile = key;
 
 
             }
@@ -337,7 +340,7 @@ dropzone.on("addedfile", function (file) {
 {% for file in docs %}
 
 
-    var mockFile = { name: "{{ names[file.id] }}", size: {{ tailles[file.id] }} };
+    var mockFile = { id:{{ file.id }}, name: "{{ names[file.id] }}", size: {{ tailles[file.id] }} };
 
 
 // Call the default addedfile event handler
@@ -346,7 +349,6 @@ dropzone.emit("addedfile", mockFile);
 
 uploadingfiles--;
 
-console.log(uploadingfiles);
 
 {% endfor %}
 
