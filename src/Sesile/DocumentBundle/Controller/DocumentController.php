@@ -126,16 +126,20 @@ class DocumentController extends Controller
             $id_classeur = $doc->getClasseur()->getId();
             $isValidant = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id_classeur)->isValidable($this->getUser()->getId(), $validantsId);
 
+            // Recup infos users
+            $signature = $this->get('security.context')->getToken()->getUser()->getPathSignature();
+
         } else {
             $doc = null;
             $historyinverse = null;
             $name = $id;
             $isValidant = null;
+            $signature = null;
 
         }
 
 
-        return array('doc' => $doc, 'name' => $name, 'servername' => $servername, 'historyinverse' => $historyinverse, 'isvalidant' => $isValidant);
+        return array('doc' => $doc, 'name' => $name, 'servername' => $servername, 'historyinverse' => $historyinverse, 'isvalidant' => $isValidant, 'signature' => $signature);
 
     }
 
@@ -211,18 +215,21 @@ class DocumentController extends Controller
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
+        $city = $user->getCollectivite();
+
         /* SetaPDF */
 
         // Params
-        $translateX = 30;
-        $translateY = -30;
+        $translateX = $city->getAbscissesVisa() * 3;
+        $translateY = $city->getOrdonneesVisa() * -3;
         $firstPage = true;
-        $texteVisa = 'VISE PAR';
+//        $texteVisa = 'VISE PAR';
+        $texteVisa = $city->getTitreVisa();
         $classeurId = $doc->getClasseur()->getId();
 //        $color = '#454545';
-        $color = '#454545';
+        $color = $city->getCouleurVisa();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, $color);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponVisa($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, $color);
         /* FIN SetaPDF */
 
     }
@@ -231,8 +238,7 @@ class DocumentController extends Controller
      * @Route("/download_sign/{id}", name="download_doc_sign",  options={"expose"=true})
      *
      */
-    public function downloadSignAction(Request $request, $id)
-    {
+    public function downloadSignAction(Request $request, $id) {
         require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
 
         $em = $this->getDoctrine()->getManager();
@@ -242,16 +248,55 @@ class DocumentController extends Controller
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
+        $city = $user->getCollectivite();
+
         /* SetaPDF */
 
         // Params
-        $translateX = 30;
-        $translateY = -30;
-        $firstPage = true;
-        $texteVisa = false;
-        $classeurId = $doc->getClasseur()->getId();
+        $translateX = $city->getAbscissesSignature() * 3;
+        $translateY = $city->getOrdonneesSignature() * -3;
+        $firstPage = $city->getPageSignature();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa);
+        $imageSignature = $this->container->getParameter('upload')['signatures'] . $user->getPathSignature();
+
+//        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, false, $imageSignature);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $translateX, $translateY, $firstPage, $imageSignature);
+        /* FIN SetaPDF */
+    }
+
+    /**
+     * @Route("/download_all/{id}", name="download_doc_all",  options={"expose"=true})
+     *
+     */
+    public function downloadAllAction(Request $request, $id) {
+        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        // Ecriture de l'hitorique du document
+        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+
+        $city = $user->getCollectivite();
+
+        /* SetaPDF */
+
+        // Params Visa
+        $translateXVisa = $city->getAbscissesVisa() * 3;
+        $translateYVisa = $city->getOrdonneesVisa() * -3;
+        $texteVisa = $city->getTitreVisa();
+        $color = $city->getCouleurVisa();
+        $firstVisa = true;
+
+        // Params Signature
+        $translateXSign = ($city->getAbscissesSignature() + 14) * 3;
+        $translateYSign = $city->getOrdonneesSignature() * -3;
+        $firstSign = $city->getPageSignature();
+        $classeurId = $doc->getClasseur()->getId();
+        $imageSignature = $this->container->getParameter('upload')['signatures'] . $user->getPathSignature();
+
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $translateXVisa, $translateYVisa, $translateXSign, $translateYSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color);
         /* FIN SetaPDF */
     }
 
@@ -260,9 +305,7 @@ class DocumentController extends Controller
      * @Route("/{id}/delete", name="delete_document",  options={"expose"=true})
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id)
-    {
-
+    public function deleteAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);

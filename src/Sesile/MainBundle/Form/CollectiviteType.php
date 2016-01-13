@@ -33,7 +33,7 @@ class CollectiviteType extends AbstractType
             ->add('ordonneesSignature', 'hidden', array("label" => "Ordonnees"))
             ->add('couleurVisa', 'hidden', array("label" => "Couleur"))
             ->add('titreVisa', 'text', array("label" => "Titre"))
-            ->add('pageSignature', 'choice', array("label" => "Page",'choices'=>array(0=>'Première page',1=>'Dernière page')));
+            ->add('pageSignature', 'choice', array("label" => "Page",'choices'=>array(1=>'Première page',0=>'Dernière page')));
 
     }
 
