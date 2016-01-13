@@ -108,6 +108,9 @@
             </button>
             <span class="nom_signature"></span>
             {{ form_widget(edit_form.fileSignature, { 'attr': {'class': 'parc_avatar'} }) }}
+            {% if entity.getWebPathSign() %}
+                <img src="{{ asset(entity.getWebPathSign()) }}" />
+            {% endif %}
         </div>
         <script type="text/javascript">
             $(".btn_signature").click(function () {

@@ -906,7 +906,7 @@ class User extends BaseUser {
             mkdir($Dirpath);
         }
         $this->fileSignature->move($Dirpath, $this->pathSignature);
-        unset($this->fileSignature);
+        $this->fileSignature = null;
     }
 
     /**

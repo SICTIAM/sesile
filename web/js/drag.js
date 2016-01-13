@@ -6,8 +6,8 @@
     $.fn.drag = function(action,options){
 
         options = $.extend({
-                cHeight:"594px",
-                cWidth:"420px",
+                cHeight:"297px",
+                cWidth:"210px",
                 cVerticalPadding:"10px",
                 cHorizontalPadding:"10px",
                 cBorder:"solid 1px #000000",
@@ -18,9 +18,9 @@
                 dBorder: "solid 1px #000000",
                 dColor:"#000000",
                 dBgCol:"#ffffff",
-                dText: "Drag Me",
-                posX:100,
-                posY:100
+                dText: "VISA",
+                posX:"134px",
+                posY:"10px"
 
         }, options);
 
@@ -35,41 +35,81 @@
 		if(action == "init")
 		{
 			return this.each(function() {
-            $(this).addClass('visaContainer');
-            $(this).empty();
-            $(this).append('<div class="draggable ui-widget-content text-center">'+options.dText+'</div>');
+                $(this).addClass('visaContainer');
+                $(this).empty();
+                $(this).append('<div class="draggable ui-widget-content text-center">'+options.dText+'</div>');
 
-            $('.draggable').draggable({
-                containment:"parent"
+                $('#containment .draggable').draggable({
+                    containment:"parent"
+                });
+
+                $('.visaContainer').css({
+
+                    height:options.cHeight,
+                    width:options.cWidth,
+                    "padding-top": options.cVerticalPadding,
+                    "padding-left": options.cHorizontalPadding,
+                    "padding-bottom": options.cVerticalPadding,
+                    "padding-right": options.cHorizontalPadding,
+                    border: options.cBorder,
+                    color: options.cColor,
+                    "background-color": options.cBgCol
+                });
+
+                var padTop = parseInt(options.cVerticalPadding.substr(0,options.cVerticalPadding.length-2));
+                var padLeft = parseInt(options.cHorizontalPadding.substr(0,options.cHorizontalPadding.length-2));
+
+                $('#containment .draggable').css({
+                    position: "relative",
+                    top: options.posY - padTop ,
+                    left: options.posX - padLeft,
+                    height:options.dHeight,
+                    width:options.dWidth,
+                    border: options.dBorder,
+                    color: options.dColor,
+                    "background-color": options.dBgCol
+                });
             });
+		}
 
-            $('.visaContainer').css({
+		if(action == "initSign")
+		{
+			return this.each(function() {
+                $(this).addClass('visaContainer');
+                $(this).empty();
+                $(this).append('<div class="draggable ui-widget-content text-center">'+options.dText+'</div>');
 
-                height:options.cHeight,
-                width:options.cWidth,
-                "padding-top": options.cVerticalPadding,
-                "padding-left": options.cHorizontalPadding,
-                "padding-bottom": options.cVerticalPadding,
-                "padding-right": options.cHorizontalPadding,
-                border: options.cBorder,
-                color: options.cColor,
-                "background-color": options.cBgCol
+                $('#containmentSignature .draggable').draggable({
+                    containment:"parent"
+                });
+
+                $('.visaContainer').css({
+
+                    height:options.cHeight,
+                    width:options.cWidth,
+                    "padding-top": options.cVerticalPadding,
+                    "padding-left": options.cHorizontalPadding,
+                    "padding-bottom": options.cVerticalPadding,
+                    "padding-right": options.cHorizontalPadding,
+                    border: options.cBorder,
+                    color: options.cColor,
+                    "background-color": options.cBgCol
+                });
+
+                var padTop = parseInt(options.cVerticalPadding.substr(0,options.cVerticalPadding.length-2));
+                var padLeft = parseInt(options.cHorizontalPadding.substr(0,options.cHorizontalPadding.length-2));
+
+                $('#containmentSignature .draggable').css({
+                    position: "relative",
+                    top: options.posY - padTop ,
+                    left: options.posX - padLeft,
+                    height:options.dHeight,
+                    width:options.dWidth,
+                    border: options.dBorder,
+                    color: options.dColor,
+                    "background-color": options.dBgCol
+                });
             });
-
-            var padTop = parseInt(options.cVerticalPadding.substr(0,options.cVerticalPadding.length-2));
-            var padLeft = parseInt(options.cHorizontalPadding.substr(0,options.cHorizontalPadding.length-2));
-
-            $('.draggable').css({
-                position: "relative",
-                top: options.posY - padTop ,
-                left: options.posX - padLeft,
-                height:options.dHeight,
-                width:options.dWidth,
-                border: options.dBorder,
-                color: options.dColor,
-                "background-color": options.dBgCol
-            });
-        });
 		}
         
     };
