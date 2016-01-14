@@ -1780,11 +1780,17 @@ class ClasseurController extends Controller {
 
     private function sendMail($sujet, $to, $body)
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($sujet)
+        $message = \Swift_Message::newInstance();
+        $htmlBody = '<table>
+                        <tr>
+                            <td><img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '"></td>
+                            <td>' . $body . '</td>
+                        </tr>
+                    </table>';
+        $message->setSubject($sujet)
             ->setFrom($this->container->getParameter('email_sender_address'))
             ->setTo($to)
-            ->setBody($body)
+            ->setBody($htmlBody)
             ->setContentType('text/html');
         $this->get('mailer')->send($message);
     }
