@@ -206,6 +206,18 @@
 <script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 
 <script type="text/javascript">
+    // Permet l'affichage a retardement du helper
+    $("#help").hide();
+    timeoutId = window.setTimeout(showHelp, 20000);
+    timeoutIdHide = true;
+
+    function showHelp () {
+        if (timeoutIdHide) {
+            $("#help").show(400);
+        }
+    }
+    // FIN de l'affichage a retardement du helper
+
     var docstosign = {{ docstosign|json_encode|raw }};
     var attributes = {width: 1, height: 1, id: "javaapplet"};
     var parameters = {jnlp_href: 'http://{{ url_applet }}/launch.jnlp'}; // url : signature DEMO
@@ -244,6 +256,7 @@
 
         }
         divcertif.appendChild(selectcertif);
+        timeoutIdHide = false;
         $('#help').hide();
         $('#bouttons').show('slow');
 //        setStatusText('Pret à signer');
