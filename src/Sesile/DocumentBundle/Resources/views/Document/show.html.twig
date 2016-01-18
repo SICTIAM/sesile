@@ -43,27 +43,41 @@
 
 
                 {% endif %}
-                &nbsp;
 
-                <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}"
-                   class="btn btn-default" role="button">
-                    <span class="glyphicon glyphicon-download-alt"></span>
-                    Télécharger {#Original#}
-                </a>&nbsp;
 
-                {#{% if doc.type == 'application/pdf' %}
-                    <a id='download' href="{{ path('download_doc_visa', {'id':doc.id}) }}"
+                {% if doc.type != 'application/pdf' and user.id == 2 %}
+                    <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}"
                        class="btn btn-default" role="button">
                         <span class="glyphicon glyphicon-download-alt"></span>
-                        Télécharger visa
+                        Télécharger {#Original#}
                     </a>&nbsp;
 
-                    <a id='download' href="{{ path('download_doc_sign', {'id':doc.id}) }}"
-                       class="btn btn-default" role="button">
-                        <span class="glyphicon glyphicon-download-alt"></span>
-                        Télécharger sign
-                    </a>&nbsp;
-                {% endif %}#}
+                {% else %}
+                        {#<a id='download' href="{{ path('download_doc_visa', {'id':doc.id}) }}" class="btn btn-default" role="button" target="_blank">
+                            <span class="glyphicon glyphicon-download-alt"></span>Télécharger visa
+                        </a>&nbsp;
+
+                        <a id='download' href="{{ path('download_doc_sign', {'id':doc.id}) }}" class="btn btn-default" role="button" target="_blank">
+                            <span class="glyphicon glyphicon-download-alt"></span>Télécharger signa
+                        </a>#}
+                    <div class="row">
+                        <div class="col-md-6 col-md-push-3">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Télécharger le fichier <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="{{ path('download_doc', {'id':doc.id}) }}">Télécharger l'original</a></li>
+                                    <li><a href="{{ path('download_doc_visa', {'id':doc.id}) }}" target="_blank">Télécharger visa</a></li>
+                                    <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_sign', {'id':doc.id}) }}" target="_blank">Télécharger signature</a></li>
+                                    <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_all', {'id':doc.id}) }}" target="_blank">Télécharger visa + signature</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <script>$('.dropdown-toggle').dropdown();</script>
+
+                {% endif %}
             {% endif %}
             {% if isvalidant %}
                 <button id='deleteconfirm' type="button" class="btn btn-danger dropdown-toggle dz-remove" data-toggle="dropdown">

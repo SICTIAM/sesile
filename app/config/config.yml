@@ -106,6 +106,7 @@ parameters:
         fics: %kernel.root_dir%/../web/uploads/docs/
         logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
         msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
+        signatures: %kernel.root_dir%/../web/uploads/signatures/
     ldap:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local

@@ -65,41 +65,77 @@
                 <br>
                 <br>
             </div>
+
+
+            <!-- Visa -->
             <div class="tab-pane fade" id="visa">
-                <br>
-                <label class="underline">Disposition du cartouche visa</label>
-                <br><br>
-                {{ form_widget(edit_form.couleurVisa) }}
-                <div class="row">
-                    <div class="col-md-3">
-                        <label for="colorPicker">Couleur</label>
-                    </div>
-                    <div class="bfh-colorpicker col-md-3" id="colorPicker" data-name="colorpicker1" style="z-index: 1000">
-                    </div>
 
+                <div class="row row-padding">
+                    <div class="col-md-12">
+                        <label>Disposition du cartouche visa</label>
+                    </div>
                 </div>
-                <br>
-                <label class="underline">Texte</label>
-                <br><br>
+
                 <div class="row">
-                    <div class="col-md-3">{{ form_label(edit_form.titreVisa) }}</div>
-                    <div class="col-md-9">{{ form_widget(edit_form.titreVisa) }}</div>
+                    <div class="col-md-6">
+                        <div class="row row-padding">
+                            <div class="col-md-3">
+                                <label for="colorPicker">{{ form_label(edit_form.couleurVisa) }}</label>
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(edit_form.couleurVisa) }}
+                                <div class="bfh-colorpicker col-md-6" id="colorPicker" data-name="colorpicker1" data-color="{{ edit_form.couleurVisa.vars.value }}"></div>
+                            </div>
+                        </div>
+                        <div class="row row-padding">
+                            <div class="col-md-3">{{ form_label(edit_form.titreVisa) }}</div>
+                            <div class="col-md-9">{{ form_widget(edit_form.titreVisa, {'attr': {'class': 'col-md-6'} }) }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row row-padding">
+                            <div class="col-md-12">
+                                <label>Emplacement du visa</label>
+                                <div id="containment"></div>
+                                {# Input hidden #}
+                                {{ form_widget(edit_form.abscissesVisa) }}
+                                {{ form_widget(edit_form.ordonneesVisa) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <br>
-                <br>
+
             </div>
 
+            <!-- Signature -->
             <div class="tab-pane fade" id="signature">
-                <br>
-                <label class="underline">Disposition de la signature</label>
-                <br><br>
-                <div class="row">
-                    <div class="col-md-3">{{ form_label(edit_form.pageSignature) }}</div>
-                    <div class="col-md-9">{{ form_widget(edit_form.pageSignature) }}</div>
+                <div class="row row-padding">
+                    <div class="col-md-12"><label>Disposition de la signature</label></div>
                 </div>
-                <br>
-                <br>
+
+                <div class="row row-padding">
+                    <div class="col-md-6">
+                        <div class="row row-padding">
+                            <div class="col-md-3">{{ form_label(edit_form.pageSignature) }}</div>
+                            <div class="col-md-3">{{ form_widget(edit_form.pageSignature, {'attr': {'class': 'col-md-12'} }) }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row row-padding">
+                            <div class="col-md-12">
+                                <label>Emplacement de la signature</label>
+                                <div id="containmentSignature"></div>
+                                {# Input hidden #}
+                                {{ form_widget(edit_form.abscissesSignature) }}
+                                {{ form_widget(edit_form.ordonneesSignature) }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
 
         <div class="row">
@@ -125,6 +161,7 @@
     <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
     <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
     <script src="{{ asset("/js/bootstrap-formhelpers.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/js/drag.js") }}" type="text/javascript"></script>
     <script type="text/javascript">
         $('textarea').wysihtml5({
             "image": false,
@@ -135,6 +172,61 @@
             $('#colorPicker').on('change.bfhcolorpicker',function(){
                 $('#sesile_mainbundle_collectivite_couleurVisa').val($(this).val())
             });
+        });
+
+
+        cVerticalPadding = 10;
+        cHorizontalPadding = 10;
+
+        $('#containment').drag('init',{
+            cVerticalPadding:cVerticalPadding + "px",
+            cHorizontalPadding:cHorizontalPadding + "px",
+            dText: "VISA",
+        {% if edit_form.abscissesVisa.vars.value %}
+            posX:{{ edit_form.abscissesVisa.vars.value }},
+        {% else %}
+            posX:135,
+        {% endif %}
+        {% if edit_form.ordonneesVisa.vars.value %}
+            posY:{{ edit_form.ordonneesVisa.vars.value }}
+        {% else %}
+            posY:11
+        {% endif %}
+        });
+
+        $('#containmentSignature').drag('initSign',{
+            dWidth:"75px",
+            cVerticalPadding:cVerticalPadding + "px",
+            cHorizontalPadding:cHorizontalPadding + "px",
+            dText: "SIGNATURE",
+            /*posX:{{ edit_form.abscissesSignature.vars.value }},
+            posY:{{ edit_form.ordonneesSignature.vars.value }}*/
+        {% if edit_form.abscissesSignature.vars.value %}
+            posX:{{ edit_form.abscissesSignature.vars.value }},
+        {% else %}
+            posX:123,
+        {% endif %}
+        {% if edit_form.ordonneesSignature.vars.value %}
+            posY:{{ edit_form.ordonneesSignature.vars.value }}
+        {% else %}
+            posY:253
+        {% endif %}
+        });
+
+        $("#containment .draggable").on('dragstop', function(event, ui) {
+
+            $('#sesile_mainbundle_collectivite_abscissesVisa').val(ui.position.left + cHorizontalPadding);
+            $('#sesile_mainbundle_collectivite_ordonneesVisa').val(ui.position.top + cVerticalPadding);
+
+            /*$('#sesile_mainbundle_collectivite_abscissesVisa').val($('#container').drag('getPosX'));
+             $('#sesile_mainbundle_collectivite_ordonneesVisa').val($('#container').drag('getPosY'));*/
+        });
+
+        $("#containmentSignature .draggable").on('dragstop', function(event, ui) {
+
+            $('#sesile_mainbundle_collectivite_abscissesSignature').val(ui.position.left + cHorizontalPadding);
+            $('#sesile_mainbundle_collectivite_ordonneesSignature').val(ui.position.top + cVerticalPadding);
+
         });
 
     </script>

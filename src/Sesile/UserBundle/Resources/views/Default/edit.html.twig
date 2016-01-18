@@ -80,14 +80,22 @@
         </div>
         <br/>
 
-        <div class="label_form parcou">
+        <div class="label_form parcou row">
 
-            <label class="lbl_avatar">Avatar</label>
+            <div class="col-md-6">
+                <label class="lbl_avatar">Avatar</label>
                 <button type="button" class="btn_avatar">
                     Choisir un fichier
                 </button>
                 <span class="nom_avatar"></span>
                 {{ form_widget(edit_form.file, { 'attr': {'class': 'parc_avatar'} }) }}
+            </div>
+
+            {#{% if entity.getWebPath() %}#}
+            {% if app.user.path %}
+                {#<img src="{{ asset(entity.getWebPath()) }}" class="col-md-3" />#}
+                <img class="col-md-3" src="{{ asset(upload_path ~ app.user.path) }}"/>
+            {% endif %}
         </div>
 
         <script type="text/javascript">
@@ -100,14 +108,20 @@
                 $('.nom_avatar').text(nom_fichier);
             });
         </script>
-        <div class="label_form parcouSignature">
+        <div class="label_form parcouSignature row">
 
-            <label class="lbl_avatar">Signature</label>
-            <button type="button" class="btn_signature">
-                Choisir un fichier
-            </button>
-            <span class="nom_signature"></span>
-            {{ form_widget(edit_form.fileSignature, { 'attr': {'class': 'parc_avatar'} }) }}
+            <div class="col-md-6">
+                <label class="lbl_avatar">Signature</label>
+                <button type="button" class="btn_signature">
+                    Choisir un fichier
+                </button>
+                <span class="nom_signature"></span>
+                {{ form_widget(edit_form.fileSignature, { 'attr': {'class': 'parc_avatar'} }) }}
+            </div>
+
+            {% if app.user.getPathSignature %}
+                <img src="{{ asset(upload_path_signatures ~ app.user.getPathSignature) }}" class="col-md-6" />
+            {% endif %}
         </div>
         <script type="text/javascript">
             $(".btn_signature").click(function () {

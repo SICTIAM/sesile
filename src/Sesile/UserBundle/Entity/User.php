@@ -214,9 +214,11 @@ class User extends BaseUser {
     protected function getUploadDir() {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
         // le document/image dans la vue.
-        $controller = new Controller();
+        /*$controller = new Controller();
         $upload = $controller->container->getParameter('upload');
-        return $upload['path'];
+        return $upload['path'];*/
+
+        return 'uploads/avatars/';
     }
 
     /**
@@ -906,7 +908,7 @@ class User extends BaseUser {
             mkdir($Dirpath);
         }
         $this->fileSignature->move($Dirpath, $this->pathSignature);
-        unset($this->fileSignature);
+        $this->fileSignature = null;
     }
 
     /**

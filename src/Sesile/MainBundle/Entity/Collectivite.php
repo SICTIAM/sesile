@@ -100,42 +100,42 @@ class Collectivite
      *
      * @ORM\Column(name="abscissesVisa", type="integer",nullable=true)
      */
-    private $abscissesVisa;
+    private $abscissesVisa = 135;
 
     /**
      * @var int
      *
      * @ORM\Column(name="ordonneesVisa", type="integer", length=255,nullable=true)
      */
-    private $ordonneesVisa;
+    private $ordonneesVisa = 11;
 
     /**
      * @var int
      *
      * @ORM\Column(name="abscissesSignature", type="integer", length=255,nullable=true)
      */
-    private $abscissesSignature;
+    private $abscissesSignature = 123;
 
     /**
      * @var int
      *
      * @ORM\Column(name="ordonneesSignature", type="integer", length=255,nullable=true)
      */
-    private $ordonneesSignature;
+    private $ordonneesSignature = 253;
 
     /**
      * @var string
      *
      * @ORM\Column(name="couleurVisa", type="string", length=10,nullable=true)
      */
-    private $couleurVisa;
+    private $couleurVisa = "#454545";
 
     /**
      * @var string
      *
      * @ORM\Column(name="titreVisa", type="string", length=10,nullable=true,options={"default":"VISE PAR"})
      */
-    private $titreVisa='VISE PAR';
+    private $titreVisa = "VISE PAR";
 
     /**
      * @var int

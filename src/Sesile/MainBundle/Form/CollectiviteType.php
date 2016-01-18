@@ -27,13 +27,13 @@ class CollectiviteType extends AbstractType
             ->add('textmailrefuse', 'textarea', array('label' => "Texte du mail d'un classeur refusé", 'required' => false))
             ->add('textmailwalid', 'textarea', array('label' => "Texte du mail d'un classeur validé", 'required' => false, 'attr' => array('name' => 'textmailwalid')))
             ->add('message', 'textarea', array('label' => "Message d'accueil", 'required' => false, 'attr' => array('name' => 'message')))
-/*            ->add('abscissesVisa', 'text', array("label" => "Abscisses"))
-            ->add('ordonneesVisa', 'text', array("label" => "Ordonnees"))
-            ->add('abscissesSignature', 'text', array("label" => "Abscisses"))
-            ->add('ordonneesSignature', 'text', array("label" => "Ordonnees"))*/
+            ->add('abscissesVisa', 'hidden', array("label" => "Abscisses"))
+            ->add('ordonneesVisa', 'hidden', array("label" => "Ordonnees"))
+            ->add('abscissesSignature', 'hidden', array("label" => "Abscisses"))
+            ->add('ordonneesSignature', 'hidden', array("label" => "Ordonnees"))
             ->add('couleurVisa', 'hidden', array("label" => "Couleur"))
             ->add('titreVisa', 'text', array("label" => "Titre"))
-            ->add('pageSignature', 'choice', array("label" => "Page",'choices'=>array(0=>'Première page',1=>'Dernière page')));
+            ->add('pageSignature', 'choice', array("label" => "Page",'choices'=>array(1=>'Première page',0=>'Dernière page')));
 
     }
 

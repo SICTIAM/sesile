@@ -195,7 +195,9 @@ class DefaultController extends Controller
      */
     public function updateAction(Request $request, $id) {
         $upload = $this->container->getParameter('upload');
+
         $DirPath = $upload['path'];
+        $DirPathSign = $upload['signatures'];
         $cas = $this->getCASParams();
 
         $LdapInfo = $this->container->getParameter('ldap');
@@ -257,6 +259,15 @@ class DefaultController extends Controller
                             }
                             $entity->preUpload();
                             $entity->upload($DirPath);
+
+                        }
+                        if ($editForm->get('fileSignature')->getData()) {
+                            // echo "true";exit;
+                            if ($entity->getPathSignature()) {
+                                $entity->removeUploadSignature($DirPathSign);
+                            }
+                            $entity->preUploadSignature();
+                            $entity->uploadSignature($DirPathSign);
 
                         }
                         //echo "false";exit;

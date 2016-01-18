@@ -885,7 +885,7 @@ select [name=user] {
 #winFirefoxPlugin {
     position: absolute;
     top: 0;
-    left: 0px;
+    left: 0;
     margin-top: -500px;
 }
 
@@ -913,4 +913,18 @@ select [name=user] {
 
 .underline{
     text-decoration: underline;
+}
+
+.draggable {
+    cursor: all-scroll;
+    padding-top: 5px;
+}
+
+.row-paddingx {
+    padding: 15px 0;
+}
+
+.bfh-colorpicker-toggle {
+    margin-left: -15px;
+    margin-right: -15px;
 }
