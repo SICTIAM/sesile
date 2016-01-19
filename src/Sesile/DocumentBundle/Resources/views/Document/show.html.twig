@@ -45,7 +45,7 @@
                 {% endif %}
 
 
-                {% if doc.type != 'application/pdf' and user.id == 2 %}
+                {% if doc.type != 'application/pdf' and signature %}
                     <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}"
                        class="btn btn-default" role="button">
                         <span class="glyphicon glyphicon-download-alt"></span>
@@ -197,10 +197,9 @@
 
         if (confirm('Confirmez-vous la suppression du fichier ?')) {
             {% if doc is null %}
-            removedropzonefile("{{ name }}");
+                removedropzonefile("{{ name }}");
             {% else %}
-            removeFile("{{ doc.id }}");
-
+                removeFile("{{ doc.id }}");
             {% endif %}
         } else {
 
@@ -216,71 +215,44 @@
 
     $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
 
-    if ("{{ doc.type }}" == "application/pdf"
-            ) {
-
+    if ("{{ doc.type }}" == "application/pdf") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
-
     }
-    if ("{{ doc.type }}" == "application/msword" ||
-            "{{ doc.type }}" ==
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            ) {
 
+    if ("{{ doc.type }}" == "application/msword" || "{{ doc.type }}" == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/WORD/icon_doc_256.png') }}");
-
     }
 
-    if ("{{ doc.type }}" == "application/zip"
-            ) {
-
+    if ("{{ doc.type }}" == "application/zip") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/ZIP/icon_zip_256.png') }}");
-
     }
 
-    if ("{{ doc.type }}" == "image/png"
-            ) {
-
+    if ("{{ doc.type }}" == "image/png") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
-
     }
-    if ("{{ doc.type }}" == "image/png"
-            ) {
-
+    if ("{{ doc.type }}" == "image/png") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
-
     }
 
-    if ("{{ doc.type }}" == "image/jpeg"
-            ) {
-
+    if ("{{ doc.type }}" == "image/jpeg") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/JPG/icon_jpg_256.png') }}");
-
     }
 
     if ("{{ doc.type }}" == "text/xml" || "{{ doc.type }}" == "application/xml") {
-
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
-
     }
 
-    if ("{{ doc.type }}" == "application/vnd.ms-excel" ||
-            "{{ doc.type }}" ==
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            ) {
+    if ("{{ doc.type }}" == "application/vnd.ms-excel" || "{{ doc.type }}" == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XLS/icon_xls_256.png') }}");
     }
 
-    if ("{{ doc.type }}" == "application/x-rar"
-            ) {
+    if ("{{ doc.type }}" == "application/x-rar") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/RAR/icon_rar_256.png') }}");
     }
 
-    if ("{{ doc.type }}" == "text/plain"
-            ) {
+    if ("{{ doc.type }}" == "text/plain") {
         $('#fileimgpreview').attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/TXT/icon_txt_256.png') }}");
     }
-
 
     {% endif %}
 
