@@ -106,7 +106,8 @@ class DocumentController extends Controller
     {
 //var_dump($id);exit;
 
-        $servername = $this->getRequest()->getHost();
+//        $servername = $this->getRequest()->getHost();
+        $servername = $this->get('router')->getContext()->getHost();
 
         if (ctype_digit($id)) {
 
@@ -128,6 +129,8 @@ class DocumentController extends Controller
 
             // Recup infos users
             $signature = $this->get('security.context')->getToken()->getUser()->getPathSignature();
+            $city = $this->get('security.context')->getToken()->getUser()->getCollectivite();
+
 
         } else {
             $doc = null;
@@ -135,11 +138,12 @@ class DocumentController extends Controller
             $name = $id;
             $isValidant = null;
             $signature = null;
+            $city = null;
 
         }
 
 
-        return array('doc' => $doc, 'name' => $name, 'servername' => $servername, 'historyinverse' => $historyinverse, 'isvalidant' => $isValidant, 'signature' => $signature);
+        return array('doc' => $doc, 'name' => $name, 'servername' => $servername, 'historyinverse' => $historyinverse, 'isvalidant' => $isValidant, 'signature' => $signature, 'city' => $city);
 
     }
 
@@ -200,10 +204,10 @@ class DocumentController extends Controller
     }
 
     /**
-     * @Route("/download_visa/{id}", name="download_doc_visa",  options={"expose"=true})
+     * @Route("/download_visa/{id}/{absVisa}/{ordVisa}", name="download_doc_visa",  options={"expose"=true})
      *
      */
-    public function downloadVisaAction(Request $request, $id)
+    public function downloadVisaAction($id, $absVisa = 10, $ordVisa = 10)
     {
 
         require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
@@ -220,8 +224,10 @@ class DocumentController extends Controller
         /* SetaPDF */
 
         // Params
-        $translateX = $city->getAbscissesVisa() * 3;
-        $translateY = $city->getOrdonneesVisa() * -3;
+        /*$translateX = $city->getAbscissesVisa() * 3;
+        $translateY = $city->getOrdonneesVisa() * -3;*/
+        $translateX = $absVisa * 3;
+        $translateY = $ordVisa * -3;
         $firstPage = true;
 //        $texteVisa = 'VISE PAR';
         $texteVisa = $city->getTitreVisa();
@@ -235,10 +241,10 @@ class DocumentController extends Controller
     }
 
     /**
-     * @Route("/download_sign/{id}", name="download_doc_sign",  options={"expose"=true})
+     * @Route("/download_sign/{id}/{absSign}/{ordSign}", name="download_doc_sign",  options={"expose"=true})
      *
      */
-    public function downloadSignAction(Request $request, $id) {
+    public function downloadSignAction($id, $absSign = 10, $ordSign = 10) {
         require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
 
         $em = $this->getDoctrine()->getManager();
@@ -253,22 +259,24 @@ class DocumentController extends Controller
         /* SetaPDF */
 
         // Params
-        $translateX = $city->getAbscissesSignature() * 3;
-        $translateY = $city->getOrdonneesSignature() * -3;
+        /*$translateX = ($city->getAbscissesSignature()+ 14) * 3;
+        $translateY = $city->getOrdonneesSignature() * -3;*/
+        $translateX = ($absSign + 14) * 3;
+        $translateY = $ordSign * -3;
         $firstPage = $city->getPageSignature();
 
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $user->getPathSignature();
 
 //        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, false, $imageSignature);
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $translateX, $translateY, $firstPage, $imageSignature);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $translateX, $translateY, $firstPage, $imageSignature, $user);
         /* FIN SetaPDF */
     }
 
     /**
-     * @Route("/download_all/{id}", name="download_doc_all",  options={"expose"=true})
+     * @Route("/download_all/{id}/{absVisa}/{ordVisa}/{absSign}/{ordSign}", name="download_doc_all",  options={"expose"=true})
      *
      */
-    public function downloadAllAction(Request $request, $id) {
+    public function downloadAllAction($id, $absVisa = 10, $ordVisa = 10, $absSign = 10, $ordSign = 10) {
         require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
 
         $em = $this->getDoctrine()->getManager();
@@ -283,20 +291,24 @@ class DocumentController extends Controller
         /* SetaPDF */
 
         // Params Visa
-        $translateXVisa = $city->getAbscissesVisa() * 3;
-        $translateYVisa = $city->getOrdonneesVisa() * -3;
+        /*$translateXVisa = $city->getAbscissesVisa() * 3;
+        $translateYVisa = $city->getOrdonneesVisa() * -3;*/
+        $translateXVisa = $absVisa * 3;
+        $translateYVisa = $ordVisa * -3;
         $texteVisa = $city->getTitreVisa();
         $color = $city->getCouleurVisa();
         $firstVisa = true;
 
         // Params Signature
-        $translateXSign = ($city->getAbscissesSignature() + 14) * 3;
-        $translateYSign = $city->getOrdonneesSignature() * -3;
+        /*$translateXSign = ($city->getAbscissesSignature() + 14) * 3;
+        $translateYSign = $city->getOrdonneesSignature() * -3;*/
+        $translateXSign = ($absSign + 14) * 3;
+        $translateYSign = $ordSign * -3;
         $firstSign = $city->getPageSignature();
         $classeurId = $doc->getClasseur()->getId();
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $user->getPathSignature();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $translateXVisa, $translateYVisa, $translateXSign, $translateYSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $translateXVisa, $translateYVisa, $translateXSign, $translateYSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $user);
         /* FIN SetaPDF */
     }
 

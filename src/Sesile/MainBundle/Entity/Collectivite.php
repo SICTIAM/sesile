@@ -133,7 +133,7 @@ class Collectivite
     /**
      * @var string
      *
-     * @ORM\Column(name="titreVisa", type="string", length=10,nullable=true,options={"default":"VISE PAR"})
+     * @ORM\Column(name="titreVisa", type="string", length=250,nullable=true,options={"default":"VISE PAR"})
      */
     private $titreVisa = "VISE PAR";
 

@@ -60,7 +60,7 @@
                         <a id='download' href="{{ path('download_doc_sign', {'id':doc.id}) }}" class="btn btn-default" role="button" target="_blank">
                             <span class="glyphicon glyphicon-download-alt"></span>Télécharger signa
                         </a>#}
-                    <div class="row">
+                    <div class="row row-padding">
                         <div class="col-md-6 col-md-push-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -68,14 +68,103 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                     <li><a href="{{ path('download_doc', {'id':doc.id}) }}">Télécharger l'original</a></li>
-                                    <li><a href="{{ path('download_doc_visa', {'id':doc.id}) }}" target="_blank">Télécharger visa</a></li>
-                                    <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_sign', {'id':doc.id}) }}" target="_blank">Télécharger signature</a></li>
-                                    <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_all', {'id':doc.id}) }}" target="_blank">Télécharger visa + signature</a></li>
+                                    <li><a href="{{ path('download_doc_visa', {'id':doc.id}) }}/{{ city.AbscissesVisa }}/{{ city.OrdonneesVisa }}" target="_blank" id="visaLink">Télécharger visa</a></li>
+                                    <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_sign', {'id':doc.id}) }}/{{ city.AbscissesSignature }}/{{ city.OrdonneesSignature }}" target="_blank" id="signLink">Télécharger signature</a></li>
+                                    <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_all', {'id':doc.id}) }}/{{ city.AbscissesVisa }}/{{ city.OrdonneesVisa }}/{{ city.AbscissesSignature }}/{{ city.OrdonneesSignature }}" target="_blank" id="visaSignLink">Télécharger visa + signature</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <script>$('.dropdown-toggle').dropdown();</script>
+
+                    <div class="row">
+                        <div class="col-md-6 text-left">
+                            <label>Emplacement du visa</label>
+                            {#<embed src="pdfFiles/interfaces.pdf" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html" type="application/pdf">#}
+                            {#<object type="application/pdf" height="297" data="{{ path('download_doc_visa', {'id':doc.id}) }}/{{ city.AbscissesVisa }}/{{ city.OrdonneesVisa }}"></object>#}
+                            <input type="hidden" id="absVisa" value="{{ city.AbscissesVisa }}" />
+                            <input type="hidden" id="ordVisa" value="{{ city.OrdonneesVisa }}" />
+                            <input type="hidden" id="absSign" value="{{ city.AbscissesSignature }}" />
+                            <input type="hidden" id="ordSign" value="{{ city.OrdonneesSignature }}" />
+                            <div id="containment"></div>
+                        </div>
+
+                        {% if signature is not null %}
+                        <div class="col-md-6 text-left">
+                            <label>Emplacement de la signature</label>
+                            <div id="containmentSignature"></div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                <script src="{{ asset("/js/drag.js") }}" type="text/javascript"></script>
+                <script>
+                    // Dropdown init
+                    $('.dropdown-toggle').dropdown();
+
+                    // Emplacement init
+                    cVerticalPadding = 10;
+                    cHorizontalPadding = 10;
+
+                    $('#containment').drag('init',{
+                        cWidth:"210px",
+                        cHeight:"297px",
+                        cVerticalPadding:cVerticalPadding + "px",
+                        cHorizontalPadding:cHorizontalPadding + "px",
+                        dText: "VISA",
+                        posX:{{ city.AbscissesVisa }},
+                        posY:{{ city.OrdonneesVisa }}
+                    });
+
+                    $('#containmentSignature').drag('initSign',{
+                        cWidth:"210px",
+                        cHeight:"297px",
+                        dWidth:"75px",
+                        cVerticalPadding:cVerticalPadding + "px",
+                        cHorizontalPadding:cHorizontalPadding + "px",
+                        dText: "SIGNATURE",
+                        posX:{{ city.AbscissesSignature }},
+                        posY:{{ city.OrdonneesSignature }}
+                    });
+
+                    $("#containment .draggable").on('dragstop', function(event, ui) {
+
+                        var posLeft = ui.position.left + cHorizontalPadding;
+                        var posTop = ui.position.top + cVerticalPadding;
+                        var posSignLeft = $("#absSign").val();
+                        var posSignTop = $("#ordSign").val();
+
+                        $('#sesile_mainbundle_collectivite_abscissesVisa').val(posLeft);
+                        $('#sesile_mainbundle_collectivite_ordonneesVisa').val(posTop);
+
+                        $("#absVisa").val(posLeft);
+                        $("#ordVisa").val(posTop);
+
+                        $('#visaLink').attr('href', "{{ path('download_doc_visa', {'id':doc.id}) }}" + "/" + posLeft + "/" + posTop);
+                        $('#visaSignLink').attr('href', "{{ path('download_doc_all', {'id':doc.id}) }}" + "/" + posLeft + "/" + posTop + "/" + posSignLeft + "/" + posSignTop);
+
+
+                    });
+
+                    $("#containmentSignature .draggable").on('dragstop', function(event, ui) {
+
+                        var posSignLeft = ui.position.left + cHorizontalPadding;
+                        var posSignTop = ui.position.top + cVerticalPadding;
+                        var posLeft = $("#absVisa").val();
+                        var posTop = $("#ordVisa").val();
+
+                        $('#sesile_mainbundle_collectivite_abscissesSignature').val(posSignLeft);
+                        $('#sesile_mainbundle_collectivite_ordonneesSignature').val(posSignTop);
+
+                        $("#absSign").val(posSignLeft);
+                        $("#ordSign").val(posSignTop);
+
+                        $('#signLink').attr('href', "{{ path('download_doc_sign', {'id':doc.id}) }}" + "/" + posSignLeft + "/" + posSignTop);
+                        $('#visaSignLink').attr('href', "{{ path('download_doc_all', {'id':doc.id}) }}" + "/" + posLeft + "/" + posTop + "/" + posSignLeft + "/" + posSignTop);
+
+                    });
+
+                </script>
+
 
                 {% endif %}
             {% endif %}

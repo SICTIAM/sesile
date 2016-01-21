@@ -146,10 +146,11 @@ class DocumentRepository extends EntityRepository
      * @param $translateY
      * @param $first
      * @param $imageSignature
+     * @param $user
      *
      * Creation d une signature a apposer au document
      */
-    protected function createSignature($document, $translateX, $translateY, $first, $imageSignature) {
+    protected function createSignature($document, $translateX, $translateY, $first, $imageSignature, $user) {
         if ($first) {
 //            $pagePosition = \SetaPDF_Stamper::PAGES_FIRST;
             $pagePosition = 'first';
@@ -158,7 +159,37 @@ class DocumentRepository extends EntityRepository
             $pagePosition = 'last';
         }
 
+        $texteVisa = $user->getPrenom(). " " . $user->getNom() . "\n" . $user->getRole();
+        $fontSize = 12;
+        // Color convert
+        $colorRGB = $this->hex2rgb("#454545");
+        $colorVisa = new \SetaPDF_Core_DataStructure_Color_Rgb($colorRGB[0] / 255, $colorRGB[1] / 255, $colorRGB[2] / 255);
+
+        // create a font object
+        $font = \SetaPDF_Core_Font_Standard_Helvetica::create($document);
+
+        // Stamp Visa
+        $stampTxt = new \SetaPDF_Stamper_Stamp_Text($font, $fontSize);
+        $stampTxt->setText($texteVisa);
+        $stampTxt->setAlign("left");
+        $stampTxt->setTextColor($colorVisa);
+
         // create a stamper instance
+        $stamperTxt = new \SetaPDF_Stamper($document);
+
+
+        // add stamp to stamper on position left top for all pages with a specific translation
+        $stamperTxt->addStamp($stampTxt, array(
+            'showOnPage' => $pagePosition,
+            'position' => \SetaPDF_Stamper::POSITION_LEFT_TOP,
+            'translateX' => $translateX,
+            'translateY' => $translateY + 30
+        ));
+
+        // stamp the document
+        $stamperTxt->stamp();
+
+        // create a stamper instance for image
         $stamper = new \SetaPDF_Stamper($document);
 
         // get an image instance
@@ -167,7 +198,8 @@ class DocumentRepository extends EntityRepository
         // initiate the stamp
         $stamp = new \SetaPDF_Stamper_Stamp_Image($image);
         // set height (and width until no setWidth is set the ratio will retain)
-        $stamp->setHeight(50);
+//        $stamp->setHeight(50);
+        $stamp->setWidth(150);
 
         // add stamp to stamper on position left top for all pages with a specific translation
         $stamper->addStamp($stamp, array(
@@ -180,6 +212,7 @@ class DocumentRepository extends EntityRepository
         // stamp the document
         $stamper->stamp();
     }
+
     /**
      * @param $doc
      * @param $classeurId
@@ -212,11 +245,11 @@ class DocumentRepository extends EntityRepository
      *
      * Affiche le fichier PDF avec la signature directement dans le navigateur
      */
-    public function setaPDFTamponSignature($doc, $translateX = 30, $translateY = -30, $first = true, $imageSignature = '') {
+    public function setaPDFTamponSignature($doc, $translateX = 30, $translateY = -30, $first = true, $imageSignature = '', $user) {
 
         $document = $this->init_setaPDF($doc);
 
-        $this->createSignature($document, $translateX, $translateY, $first, $imageSignature);
+        $this->createSignature($document, $translateX, $translateY, $first, $imageSignature, $user);
 
         $this->finish_setaPDF($document);
     }
@@ -235,14 +268,18 @@ class DocumentRepository extends EntityRepository
      *
      * Affiche le fichier PDF avec la signature et le visa directement dans le navigateur
      */
-    public function setaPDFTamponALL($doc, $classeurId, $translateXVisa = 30, $translateYVisa = -30, $translateXSign = 30, $translateYSign = -30, $firstSign = true, $firstVisa = true, $imageSignature = '', $texteVisa, $color = false) {
+    public function setaPDFTamponALL($doc, $classeurId, $translateXVisa = 30, $translateYVisa = -30, $translateXSign = 30, $translateYSign = -30, $firstSign = true, $firstVisa = true, $imageSignature = '', $texteVisa, $color = false, $user) {
 
         $document = $this->init_setaPDF($doc);
 
-        $this->createSignature($document, $translateXSign, $translateYSign, $firstSign, $imageSignature);
+        $this->createSignature($document, $translateXSign, $translateYSign, $firstSign, $imageSignature, $user);
         $this->createVisa($document, $classeurId, $translateXVisa, $translateYVisa, $firstVisa, $texteVisa, $color);
 
         $this->finish_setaPDF($document);
+    }
+
+    public function affPDF($doc, $classeurId) {
+
     }
 
     private function hex2rgb($hex) {
