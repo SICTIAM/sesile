@@ -111,8 +111,8 @@
                         cVerticalPadding:cVerticalPadding + "px",
                         cHorizontalPadding:cHorizontalPadding + "px",
                         dText: "VISA",
-                        posX:{% if city.AbscissesVisa %}10{% else %}{{ city.AbscissesVisa }}{% endif %},
-                        posY:{% if city.OrdonneesVisa %}10{% else %}{{ city.OrdonneesVisa }}{% endif %}
+                        posX:{% if city.AbscissesVisa is null %}10{% else %}{{ city.AbscissesVisa }}{% endif %},
+                        posY:{% if city.OrdonneesVisa is null %}10{% else %}{{ city.OrdonneesVisa }}{% endif %}
                     });
 
                     $('#containmentSignature').drag('initSign',{
@@ -122,8 +122,8 @@
                         cVerticalPadding:cVerticalPadding + "px",
                         cHorizontalPadding:cHorizontalPadding + "px",
                         dText: "SIGNATURE",
-                        posX:{% if city.AbscissesSignature %}10{% else %}{{ city.AbscissesSignature }}{% endif %},
-                        posY:{% if city.OrdonneesSignature %}10{% else %}{{ city.OrdonneesSignature }}{% endif %}
+                        posX:{% if city.AbscissesSignature is null %}10{% else %}{{ city.AbscissesSignature }}{% endif %},
+                        posY:{% if city.OrdonneesSignature is null %}10{% else %}{{ city.OrdonneesSignature }}{% endif %}
                     });
 
                     $("#containment .draggable").on('dragstop', function(event, ui) {
