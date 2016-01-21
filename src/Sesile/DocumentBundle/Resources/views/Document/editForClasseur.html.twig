@@ -52,7 +52,7 @@ function tim() {
             if (launchtim) {
                 setTimeout(function () {
                     tim()
-                }, 2000);
+                }, 40000);
             }
 
 
@@ -66,20 +66,24 @@ var docsjson = {{ types|json_encode|raw }};
 var ids = {{ ids|json_encode|raw }};
 
 
-var dropzone = new Dropzone("div#fichiers", { url: "{{ oneup_uploader_endpoint('docs') }}",
+var dropzone = new Dropzone("div#fichiers", {
+    url: "{{ oneup_uploader_endpoint('docs') }}",
     previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
-            '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
-            ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
-            ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
-
-
+    '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
+    ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
+    ' <div class="dz-error-message"><span data-dz-errormessage></span></div></div>',
     createThumbnail: false{% if classeur.type.id == 2 %},
     maxFiles: 1,
     dictMaxFilesExceeded: "Dans le cas d'un classeur de type Hélios le dépôt d'un seul fichier par classeur est autorisé.",
     acceptedFiles: ".xml",
     dictInvalidFileType: "Attention, seuls les fichiers xml sont acceptés"
     {% endif %}
+});
 
+//dropzone.options.maxFiles = 1;
+dropzone.on("maxfilesexceeded", function(file) {
+    this.removeFile(file);
+    alert ('Dans le cas d\'un classeur de type Hélios le dépôt d\'un seul fichier par classeur est autorisé.');
 });
 
 {% if isvalidable == false %}
@@ -100,13 +104,10 @@ function removedropzonefile(file) {
     });
 
     dropzone.removeFile(selectedFile);
-
-
 }
 
 
 function removeFile(file) {
-
 
     $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
 
@@ -114,19 +115,19 @@ function removeFile(file) {
         method: 'POST',
         success: function (html) {
             loadDocuments();
-
-
         }
-
     });
-
 }
 
 function enableUploads() {
-    dropzone.options.maxFiles = null;
+    {% if classeur.type.id == 2 %}
+        console.log('ok enable: ' + {{ classeur.type.id }});
+    {% else %}
+        console.log('Nok enable : ' + {{ classeur.type.id }});
+        dropzone.options.maxFiles = null;
+    {% endif %}
     allowmodif = true;
     buttonModifRoutine();
-
 }
 
 
@@ -144,9 +145,7 @@ dropzone.on('success', function (file, response) {
 
         uploadedfiles[serverfilename] = originalname;
 
-
     });
-
 });
 
 dropzone.on('complete', function (file) {
@@ -185,43 +184,31 @@ dropzone.on("addedfile", function (file) {
         $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/BLANK/icon_blanc_256.png') }}");
 
         if (file.type == "application/pdf") {
-
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PDF/icon_pdf_256.png') }}");
-
         }
+
         if (file.type == "application/msword" || file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/WORD/icon_doc_256.png') }}");
-
         }
 
         if (file.type == "application/zip") {
-
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/ZIP/icon_zip_256.png') }}");
-
         }
 
         if (file.type == "image/png") {
-
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
-
         }
+
         if (file.type == "image/png") {
-
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/PNG/icon_png_256.png') }}");
-
         }
 
         if (file.type == "image/jpeg") {
-
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/JPG/icon_jpg_256.png') }}");
-
         }
 
         if (file.type == "text/xml" || file.type == "application/xml") {
-
             $(this).attr("src", "{{ asset('bundles/sesiledocument/img/ICONS/XML/icon_xml_256.png') }}");
-
         }
 
         if (file.type == "application/vnd.ms-excel" || file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
@@ -275,7 +262,7 @@ dropzone.on("addedfile", function (file) {
         selected = $(this);
 
 //        console.log(selected);
-        console.log("id : " +  file.id);
+//        console.log("id : " +  file.id);
 
         selected.addClass('selectedfile');
 
@@ -288,11 +275,7 @@ dropzone.on("addedfile", function (file) {
         $.each(ids, function (key, value) {
 
             if (value.replace('&','&amp;') == file.name) {
-
-
 //                idfile = key;
-
-
             }
         });
 
@@ -311,7 +294,6 @@ dropzone.on("addedfile", function (file) {
 
                 } else {
                     $("#filedescription").html(html).slideDown();
-
                 }
 
                 buttonModifRoutine();
@@ -325,30 +307,29 @@ dropzone.on("addedfile", function (file) {
                     tim()
                 }, 2000);
 
-
             }
 
         });
 
-
     });
-
 
 });
 
 
 {% for file in docs %}
 
-
     var mockFile = { id:{{ file.id }}, name: "{{ names[file.id] }}", size: {{ tailles[file.id] }} };
 
+    // Call the default addedfile event handler
+    dropzone.emit("addedfile", mockFile);
 
-// Call the default addedfile event handler
-dropzone.emit("addedfile", mockFile);
+    uploadingfiles--;
+//    console.log("emmit:" + uploadingfiles);
 
 
-uploadingfiles--;
-
+//    dropzone.files.length ++;
+    dropzone.options.maxFiles = dropzone.options.maxFiles - 1;
+//console.log("maxFiles:" + dropzone.options.maxFiles);
 
 {% endfor %}
 
