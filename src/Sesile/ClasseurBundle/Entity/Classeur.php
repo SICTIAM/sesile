@@ -412,6 +412,13 @@ class Classeur {
         return $curr_validant;
     }
 
+    public function getLastValidant() {
+        $circuit = explode(",", $this->getCircuit());
+        $idLastUser = end($circuit);
+
+        return $idLastUser;
+    }
+
 
     public function isAtLastValidant(){
         $ordreCircuit = $this->getOrdreEtape();

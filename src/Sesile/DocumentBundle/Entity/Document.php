@@ -4,7 +4,7 @@ namespace Sesile\DocumentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Sesile\ClasseurBundle\Entity\Classeur;
-
+use Imagick;
 
 /**
  * Document
@@ -235,5 +235,24 @@ class Document
     public function getClasseur()
     {
         return $this->classeur;
+    }
+
+    public function getPDFImage($page = 0) {
+        if($this->getType() == "application/pdf") {
+
+
+            $imagick = new Imagick();
+//            $imagick->readImage('mytest.pdf');
+
+            $imagick->readImage('uploads/docs/' . $this->getRepourl() . '[' . $page . ']');
+            $imagick->thumbnailImage(210,297,true,true);
+            $imagick->setFormat('jpg');
+//          $thumb = $imagick->getImageBlob();
+//          header("Content-Type: image/jpg");
+            return base64_encode($imagick->getImageBlob());
+
+            /*$imagick->writeImage('uploads/docs/' . $doc->getRepourl() . '.output.jpg');
+            $thumbail = 'uploads/docs/' . $doc->getRepourl() . '.output.jpg';*/
+        } else return true;
     }
 }
