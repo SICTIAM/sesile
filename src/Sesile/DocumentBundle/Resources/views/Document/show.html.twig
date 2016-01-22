@@ -68,23 +68,27 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                     <li><a href="{{ path('download_doc', {'id':doc.id}) }}">Télécharger l'original</a></li>
-                                    <li><a href="{{ path('download_doc_visa', {'id':doc.id}) }}/{{ city.AbscissesVisa }}/{{ city.OrdonneesVisa }}" target="_blank" id="visaLink">Télécharger visa</a></li>
-                                    <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_sign', {'id':doc.id}) }}/{{ city.AbscissesSignature }}/{{ city.OrdonneesSignature }}" target="_blank" id="signLink">Télécharger signature</a></li>
-                                    <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_all', {'id':doc.id}) }}/{{ city.AbscissesVisa }}/{{ city.OrdonneesVisa }}/{{ city.AbscissesSignature }}/{{ city.OrdonneesSignature }}" target="_blank" id="visaSignLink">Télécharger visa + signature</a></li>
+                                    {# Si le classeur est validé seuelement on peut accéder aux options de téléchargements du visa et de la signature #}
+                                    {% if doc.classeur.status == 2 %}
+                                        <li><a href="{{ path('download_doc_visa', {'id':doc.id}) }}/{{ abscissesVisa }}/{{ ordonneesVisa }}" target="_blank" id="visaLink">Télécharger visa</a></li>
+                                        <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_sign', {'id':doc.id}) }}/{{ abscissesSignature }}/{{ ordonneesSignature }}" target="_blank" id="signLink">Télécharger signature</a></li>
+                                        <li {% if signature is null %}class="disabled"{% endif %}><a href="{{ path('download_doc_all', {'id':doc.id}) }}/{{ abscissesVisa }}/{{ ordonneesVisa }}/{{ abscissesSignature }}/{{ ordonneesSignature }}" target="_blank" id="visaSignLink">Télécharger visa + signature</a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>
                     </div>
 
+                {# Si le classeur est validé seuelement on peut accéder aux options de téléchargements du visa et de la signature #}
+                {% if doc.classeur.status == 2 %}
                     <div class="row">
                         <div class="col-md-6 text-left">
                             <label>Emplacement du visa</label>
-                            {#<embed src="pdfFiles/interfaces.pdf" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html" type="application/pdf">#}
-                            {#<object type="application/pdf" height="297" data="{{ path('download_doc_visa', {'id':doc.id}) }}/{{ city.AbscissesVisa }}/{{ city.OrdonneesVisa }}"></object>#}
-                            <input type="hidden" id="absVisa" value="{{ city.AbscissesVisa }}" />
-                            <input type="hidden" id="ordVisa" value="{{ city.OrdonneesVisa }}" />
-                            <input type="hidden" id="absSign" value="{{ city.AbscissesSignature }}" />
-                            <input type="hidden" id="ordSign" value="{{ city.OrdonneesSignature }}" />
+                            {#<img src="data:image/jpg;base64,{{ doc.getPDFImage }}">#}
+                            <input type="hidden" id="absVisa" value="{{ abscissesVisa }}" />
+                            <input type="hidden" id="ordVisa" value="{{ ordonneesVisa }}" />
+                            <input type="hidden" id="absSign" value="{{ abscissesSignature }}" />
+                            <input type="hidden" id="ordSign" value="{{ ordonneesSignature }}" />
                             <div id="containment"></div>
                         </div>
 
@@ -95,6 +99,7 @@
                         </div>
                         {% endif %}
                     </div>
+                {% endif %}
 
                 <script src="{{ asset("/js/drag.js") }}" type="text/javascript"></script>
                 <script>
@@ -111,8 +116,9 @@
                         cVerticalPadding:cVerticalPadding + "px",
                         cHorizontalPadding:cHorizontalPadding + "px",
                         dText: "VISA",
-                        posX:{% if city.AbscissesVisa is null %}10{% else %}{{ city.AbscissesVisa }}{% endif %},
-                        posY:{% if city.OrdonneesVisa is null %}10{% else %}{{ city.OrdonneesVisa }}{% endif %}
+                        posX:{{ abscissesVisa }},
+                        posY:{{ ordonneesVisa }},
+                        dBgCol: "none"
                     });
 
                     $('#containmentSignature').drag('initSign',{
@@ -122,8 +128,9 @@
                         cVerticalPadding:cVerticalPadding + "px",
                         cHorizontalPadding:cHorizontalPadding + "px",
                         dText: "SIGNATURE",
-                        posX:{% if city.AbscissesSignature is null %}10{% else %}{{ city.AbscissesSignature }}{% endif %},
-                        posY:{% if city.OrdonneesSignature is null %}10{% else %}{{ city.OrdonneesSignature }}{% endif %}
+                        posX:{{ abscissesSignature }},
+                        posY:{{ ordonneesSignature }},
+                        dBgCol: "none"
                     });
 
                     $("#containment .draggable").on('dragstop', function(event, ui) {
@@ -164,6 +171,16 @@
                     });
 
                 </script>
+                <style type="text/css">
+                    #containment{
+                        background-image: url("data:image/jpg;base64,{{ imagePDFFirst }}");
+                        background-repeat: no-repeat;
+                    }
+                    #containmentSignature{
+                        background-image: url("data:image/jpg;base64,{{ imagePDFLast }}");
+                        background-repeat: no-repeat;
+                    }
+                </style>
 
 
                 {% endif %}

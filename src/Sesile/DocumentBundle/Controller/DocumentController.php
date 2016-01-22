@@ -131,6 +131,36 @@ class DocumentController extends Controller
             $signature = $this->get('security.context')->getToken()->getUser()->getPathSignature();
             $city = $this->get('security.context')->getToken()->getUser()->getCollectivite();
 
+            // Recup des thumbs
+            if ($doc->getClasseur()->getStatus() == 2) {
+
+                $imagePDFFirst = $doc->getPDFImage(0);
+
+                if (!$city->getPageSignature()){
+                    require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+                    $filename = 'uploads/docs/' . $doc->getRepourl();
+
+                    $document = \SetaPDF_Core_Document::loadByFilename($filename);
+
+                    $pages = $document->getCatalog()->getPages();
+                    $pageCount = $pages->count();
+                    $imagePDFLast = $doc->getPDFImage($pageCount-1);
+                }
+                else {
+                    $imagePDFLast = $doc->getPDFImage(0);
+                }
+            } else {
+                $imagePDFFirst = "";
+                $imagePDFLast = "";
+            }
+
+            // coordonnées visa et signature
+            if (!$city->getAbscissesVisa()) { $abscissesVisa = 10; } else { $abscissesVisa = $city->getAbscissesVisa(); }
+            if (!$city->getOrdonneesVisa()) { $ordonneesVisa = 10; } else { $ordonneesVisa = $city->getOrdonneesVisa(); }
+            if (!$city->getAbscissesSignature()) { $abscissesSignature = 10; } else { $abscissesSignature = $city->getAbscissesSignature(); }
+            if (!$city->getOrdonneesSignature()) { $ordonneesSignature = 10; } else { $ordonneesSignature = $city->getOrdonneesSignature(); }
+
+
 
         } else {
             $doc = null;
@@ -143,7 +173,21 @@ class DocumentController extends Controller
         }
 
 
-        return array('doc' => $doc, 'name' => $name, 'servername' => $servername, 'historyinverse' => $historyinverse, 'isvalidant' => $isValidant, 'signature' => $signature, 'city' => $city);
+        return array(
+            'doc' => $doc,
+            'name' => $name,
+            'servername' => $servername,
+            'historyinverse' => $historyinverse,
+            'isvalidant' => $isValidant,
+            'signature' => $signature,
+            'city' => $city,
+            'imagePDFFirst' => $imagePDFFirst,
+            'imagePDFLast' => $imagePDFLast,
+            'abscissesVisa' => $abscissesVisa,
+            'ordonneesVisa' => $ordonneesVisa,
+            'abscissesSignature' => $abscissesSignature,
+            'ordonneesSignature' => $ordonneesSignature
+        );
 
     }
 
@@ -254,7 +298,12 @@ class DocumentController extends Controller
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
+        // On recupère la collectivité pour ses paramètres
         $city = $user->getCollectivite();
+
+        // On recupere le dernier utilisateur ayant validé le classeur
+        $lastUserId = $doc->getClasseur()->getLastValidant();
+        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($lastUserId);
 
         /* SetaPDF */
 
@@ -268,7 +317,7 @@ class DocumentController extends Controller
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $user->getPathSignature();
 
 //        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, false, $imageSignature);
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $translateX, $translateY, $firstPage, $imageSignature, $user);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $translateX, $translateY, $firstPage, $imageSignature, $lastUser);
         /* FIN SetaPDF */
     }
 
