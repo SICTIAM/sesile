@@ -3,10 +3,12 @@
     <br>
     {#{% if classeur.type.nom == 'Helios' %}#}
     {% if classeur.type.id == 2 %}
+        {% if classeur.documents|length %}
         <a href="{{ path('visu', {'id':classeur.documents[0].id}) }}" class="btn btn-warning" role="button">
             <span class="glyphicon glyphicon-eye-open"></span>
             &nbsp;Visualiser
         </a>
+        {% endif %}
     {% endif %}
     <div id="filedescription" style="display:none"></div>
 
@@ -75,6 +77,8 @@ var dropzone = new Dropzone("div#fichiers", {
     createThumbnail: false{% if classeur.type.id == 2 %},
     maxFiles: 1,
     dictMaxFilesExceeded: "Dans le cas d'un classeur de type Hélios le dépôt d'un seul fichier par classeur est autorisé.",
+    maxFilesize: 20,
+    dictFileTooBig: "Dans le cas d'un classeur de type Hélios le fichier ne peut dépasser les 20 Mo.",
     acceptedFiles: ".xml",
     dictInvalidFileType: "Attention, seuls les fichiers xml sont acceptés"
     {% endif %}
