@@ -337,6 +337,10 @@ class DocumentController extends Controller
 
         $city = $user->getCollectivite();
 
+        // On recupere le dernier utilisateur ayant validé le classeur
+        $lastUserId = $doc->getClasseur()->getLastValidant();
+        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($lastUserId);
+
         /* SetaPDF */
 
         // Params Visa
@@ -357,7 +361,7 @@ class DocumentController extends Controller
         $classeurId = $doc->getClasseur()->getId();
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $user->getPathSignature();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $translateXVisa, $translateYVisa, $translateXSign, $translateYSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $user);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $translateXVisa, $translateYVisa, $translateXSign, $translateYSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser);
         /* FIN SetaPDF */
     }
 
