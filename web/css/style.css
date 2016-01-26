@@ -928,3 +928,12 @@ select [name=user] {
     margin-left: -15px;
     margin-right: -15px;
 }
+
+
+.dropzone .dz-preview, .dropzone-previews .dz-preview {
+    cursor: pointer;
+}
+
+#containment, #containmentSignature {
+    margin: 0 auto;
+}

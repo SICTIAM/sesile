@@ -127,9 +127,15 @@ class DocumentController extends Controller
             $id_classeur = $doc->getClasseur()->getId();
             $isValidant = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id_classeur)->isValidable($this->getUser()->getId(), $validantsId);
 
+            // On recupere le dernier utilisateur ayant validé le classeur
+            $lastUserId = $doc->getClasseur()->getLastValidant();
+            $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($lastUserId);
+
             // Recup infos users
-            $signature = $this->get('security.context')->getToken()->getUser()->getPathSignature();
+            $signature = $lastUser->getPathSignature();
             $city = $this->get('security.context')->getToken()->getUser()->getCollectivite();
+
+
 
             // Recup des thumbs
             if ($doc->getClasseur()->getStatus() == 2) {
@@ -268,10 +274,8 @@ class DocumentController extends Controller
         /* SetaPDF */
 
         // Params
-        /*$translateX = $city->getAbscissesVisa() * 3;
-        $translateY = $city->getOrdonneesVisa() * -3;*/
-        $translateX = $absVisa * 3;
-        $translateY = $ordVisa * -3;
+        $translateX = $this->calcXVisa($absVisa);
+        $translateY = $this->calcYVisa($ordVisa);
         $firstPage = true;
 //        $texteVisa = 'VISE PAR';
         $texteVisa = $city->getTitreVisa();
@@ -308,13 +312,11 @@ class DocumentController extends Controller
         /* SetaPDF */
 
         // Params
-        /*$translateX = ($city->getAbscissesSignature()+ 14) * 3;
-        $translateY = $city->getOrdonneesSignature() * -3;*/
-        $translateX = ($absSign + 14) * 3;
-        $translateY = $ordSign * -3;
+        $translateX = $this->calcXSign($absSign);
+        $translateY = $this->calcYSign($ordSign);
         $firstPage = $city->getPageSignature();
 
-        $imageSignature = $this->container->getParameter('upload')['signatures'] . $user->getPathSignature();
+        $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
 //        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, false, $imageSignature);
         $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $translateX, $translateY, $firstPage, $imageSignature, $lastUser);
@@ -344,22 +346,19 @@ class DocumentController extends Controller
         /* SetaPDF */
 
         // Params Visa
-        /*$translateXVisa = $city->getAbscissesVisa() * 3;
-        $translateYVisa = $city->getOrdonneesVisa() * -3;*/
-        $translateXVisa = $absVisa * 3;
-        $translateYVisa = $ordVisa * -3;
+        $translateXVisa = $this->calcXVisa($absVisa);
+        $translateYVisa = $this->calcYVisa($ordVisa);
         $texteVisa = $city->getTitreVisa();
         $color = $city->getCouleurVisa();
         $firstVisa = true;
 
         // Params Signature
-        /*$translateXSign = ($city->getAbscissesSignature() + 14) * 3;
-        $translateYSign = $city->getOrdonneesSignature() * -3;*/
-        $translateXSign = ($absSign + 14) * 3;
-        $translateYSign = $ordSign * -3;
+        $translateXSign = $this->calcXSign($absSign);
+        $translateYSign = $this->calcYSign($ordSign);
+
         $firstSign = $city->getPageSignature();
         $classeurId = $doc->getClasseur()->getId();
-        $imageSignature = $this->container->getParameter('upload')['signatures'] . $user->getPathSignature();
+        $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
         $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $translateXVisa, $translateYVisa, $translateXSign, $translateYSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser);
         /* FIN SetaPDF */
@@ -748,5 +747,19 @@ class DocumentController extends Controller
 
         $response->setContent($PJ);
         return $response;
+    }
+
+
+    private function calcXSign($absSign) {
+        return $translateXSign = ($absSign + 2) * 3.2;
+    }
+    private function calcYSign($ordSign) {
+        return $translateYSign = ($ordSign + 8) * -2.9;
+    }
+    private function calcXVisa($absVisa) {
+        return $translateXVisa = $absVisa * 2.9;
+    }
+    private function calcYVisa($ordVisa) {
+        return $translateYVisa = $ordVisa * -2.9;
     }
 }

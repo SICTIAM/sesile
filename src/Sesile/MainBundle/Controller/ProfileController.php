@@ -46,7 +46,12 @@ class ProfileController extends ContainerAware
 
         $user = $this->container->get('security.context')->getToken()->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
+            $this->container->get('session')->getFlashBag()->add(
+                "error",
+                "Vous ne pouvez pas vous conneter à Sésile avec ce compte."
+            );
+            return new RedirectResponse($this->container->get('router')->generate('index'));
+//            throw new AccessDeniedException('This user does not have access to this section.');
         }
 
         return $this->container->get('templating')->renderResponse('SesileMainBundle:Profile:show.html.twig', array('user' => $user));
