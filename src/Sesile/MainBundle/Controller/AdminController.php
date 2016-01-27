@@ -128,14 +128,18 @@ class AdminController extends Controller
             if($ovh->environnement == "")
             {
                 $post->subDomain = $form->get('domain')->getData();
+                $environnement = "SICTIAM";
             }
             else{
                 $post->subDomain = $form->get('domain')->getData().'.'.$ovh->environnement;
+                $environnement = $ovh->environnement;
             }
 
             $post->target = $ovh->target;
             $post->ttl = 60;
             $api->post('/domain/zone/'.$ovh->zone.'/record',$post);
+
+            $user = $this->container->get('security.context')->getToken()->getUser();
 
             /**
              * on prévient les devs
@@ -144,7 +148,8 @@ class AdminController extends Controller
                 ->setSubject('Nouvelle Collectivité créée')
                 ->setFrom('sesile@sictiam.fr')
                 ->setTo('internet@sictiam.fr')
-                ->setBody("La collectivité ".$form->get('nom')->getData()." vient d'être créée dans SESILE merci d'ajouter l'adresse ".$post->subDomain.".".$ovh->zone." dans vProxymus")
+                ->setBody("La collectivité ".$form->get('nom')->getData()." vient d'être créée dans SESILE merci d'ajouter l'adresse ".$post->subDomain.".".$ovh->zone." dans vProxymus. \n\n\n" .
+                        "La collectivité a été créée par " . $user->getPrenom() . " " . $user->getNom(). " " . $user->getEmail() . " pour l'envirronement : " . $environnement)
                 ->setContentType('text/html');
             $this->get('mailer')->send($message);
             return $this->redirect($this->generateUrl('index_collectivite'));

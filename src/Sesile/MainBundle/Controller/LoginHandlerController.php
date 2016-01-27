@@ -77,7 +77,7 @@ class LoginHandlerController extends Controller
                 //binding au serveur LDAP
                 if (@ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
                     echo "LDAP bind successful...";
-                    $sr = ldap_search($ldapconn, $dn, $filter, $justthese);
+                    /*$sr = ldap_search($ldapconn, $dn, $filter, $justthese);
                     $info = ldap_get_entries($ldapconn, $sr);
 
                     $nom = $prenom = '';
@@ -95,7 +95,7 @@ class LoginHandlerController extends Controller
                     $entity->setEnabled(true);
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($entity);
-                    $em->flush();
+                    $em->flush();*/
 
                 } else {
                     echo "LDAP bind failed...";
