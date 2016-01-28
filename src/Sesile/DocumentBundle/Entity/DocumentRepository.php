@@ -80,7 +80,7 @@ class DocumentRepository extends EntityRepository
         ));
 
         foreach ($actions as $action) {
-            $texteStamp .= "\n" . $action->getUsername() . ' le ' . $action->getDate()->format('d/m/Y à h:i');
+            $texteStamp .= "\n" . $action->getUsername() . ' le ' . $action->getDate()->format('d/m/Y à H:i');
         }
 
         // Color convert
