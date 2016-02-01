@@ -132,7 +132,11 @@ class DocumentController extends Controller
             $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($lastUserId);
 
             // Recup infos users
-            $signature = $lastUser->getPathSignature();
+            if ($lastUser) {
+                $signature = $lastUser->getPathSignature();
+            } else{
+                $signature = null;
+            }
             $city = $this->get('security.context')->getToken()->getUser()->getCollectivite();
 
 
