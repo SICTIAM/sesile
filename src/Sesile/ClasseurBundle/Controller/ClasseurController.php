@@ -1781,12 +1781,8 @@ class ClasseurController extends Controller {
     private function sendMail($sujet, $to, $body)
     {
         $message = \Swift_Message::newInstance();
-        $htmlBody = '<table>
-                        <tr>
-                            <td><img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '"></td>
-                            <td>' . $body . '</td>
-                        </tr>
-                    </table>';
+        $html = explode("**logo_coll**", $body);
+        $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="150">' . $html[1];
         $message->setSubject($sujet)
             ->setFrom($this->container->getParameter('email_sender_address'))
             ->setTo($to)
@@ -1810,6 +1806,7 @@ class ClasseurController extends Controller {
             array(
                 'deposant' => $validant_obj->getPrenom() . " " . $validant_obj->getNom(),
                 'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
+                'ordre_validant' => $c_user->getRole(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>'
@@ -1832,12 +1829,15 @@ class ClasseurController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
 //        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
-
+        $d_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
+        $currentvalidant = $this->getUser();
+        $c_user = $em->getRepository("SesileUserBundle:User")->findOneById($currentvalidant);
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextmailnew(),
             array(
-                'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
+                'deposant' => $d_user->getPrenom() . " " . $d_user->getNom(),
+                'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
+                'ordre_validant' => $c_user->getRole(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">valider le classeur</a>'
@@ -1865,6 +1865,7 @@ class ClasseurController extends Controller {
         $body = $env->render($coll->getTextmailrefuse(),
             array(
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
+                'ordre_validant' => $c_user->getRole(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>',
