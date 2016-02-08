@@ -1,135 +1,172 @@
 {% extends "SesileMainBundle:Default:index.html.twig" %}
 
 {% block content %}
-    <div class="bloc_page">
-        <div class="titre_page">
-            <span class="glyphicon glyphicon-folder-open"></span>
-            &nbsp;&nbsp;&nbsp;Editer une collectivité
+    <div class="bloc_page row">
+        <div class="row row-paddingx">
+            <div class="col-lg-12">
+                <div class="titre_page">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                    &nbsp;&nbsp;&nbsp;Editer une collectivité
+                </div>
+            </div>
         </div>
-        <br>
+
         {{ form_start(edit_form) }}
-        <div class="row">
-            <div class="col-md-3">{{ form_label(edit_form.nom) }}</div>
-            <div class="col-md-9">{{ form_widget(edit_form.nom) }}</div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">{{ form_label(edit_form.domain) }}</div>
-            <div class="col-md-9">{{ form_widget(edit_form.domain) }}</div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">{{ form_label(edit_form.active) }}</div>
-            <div class="col-md-9">{{ form_widget(edit_form.active) }}</div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">{{ form_label(edit_form.file) }}</div>
-            <div class="col-md-9">{{ form_widget(edit_form.file) }}</div>
-        </div>
-        <br>
-        <ul class="nav nav-tabs">
-            <li class="active"><a aria-expanded="true" href="#mail" data-toggle="tab">Mails</a></li>
-            <li class=""><a aria-expanded="false" href="#visa" data-toggle="tab">Visa</a></li>
-            <li class=""><a aria-expanded="false" href="#signature" data-toggle="tab">Signature</a></li>
-        </ul>
-        <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade active in" id="mail">
-                <br>
-                {{ form_label(edit_form.textmailnew) }}
-                {{ form_widget(edit_form.textmailnew) }}
+        <div class="row row-paddingx">
 
-                <br><br><br>
+            <div class="col-lg-12">
 
                 <div class="row">
-                    <div class="col-md-2"></div>
-                    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
-                    <div class="col-md-2"></div>
+                    <div class="col-md-3">{{ form_label(edit_form.nom) }}</div>
+                    <div class="col-md-9">{{ form_widget(edit_form.nom) }}</div>
                 </div>
-                {{ form_label(edit_form.textmailrefuse) }}
-                {{ form_widget(edit_form.textmailrefuse) }}
-                <br><br><br>
                 <div class="row">
-                    <div class="col-md-2"></div>
-                    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
-                    <div class="col-md-2"></div>
+                    <div class="col-md-3">{{ form_label(edit_form.domain) }}</div>
+                    <div class="col-md-9">{{ form_widget(edit_form.domain) }}</div>
                 </div>
-                {{ form_label(edit_form.textmailwalid) }}
-                {{ form_widget(edit_form.textmailwalid) }}
-                <br><br><br>
-
                 <div class="row">
-                    <div class="col-md-2"></div>
-                    <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
-                    <div class="col-md-2"></div>
+                    <div class="col-md-3">{{ form_label(edit_form.active) }}</div>
+                    <div class="col-md-9">{{ form_widget(edit_form.active) }}</div>
                 </div>
-                {{ form_label(edit_form.message) }}
-                {{ form_widget(edit_form.message) }}
-                <br>
-                <br>
-            </div>
-
-
-            <!-- Visa -->
-            <div class="tab-pane fade" id="visa">
-
-                <div class="row row-padding">
-                    <div class="col-md-12">
-                        <label>Disposition du cartouche visa</label>
-                    </div>
-                </div>
-
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="row row-padding">
-                            <div class="col-md-3">
-                                <label for="colorPicker">{{ form_label(edit_form.couleurVisa) }}</label>
-                            </div>
-                            <div class="col-md-9">
-                                {{ form_widget(edit_form.couleurVisa) }}
-                                <div class="bfh-colorpicker col-md-6" id="colorPicker" data-name="colorpicker1" data-color="{{ edit_form.couleurVisa.vars.value }}"></div>
-                            </div>
-                        </div>
-                        <div class="row row-padding">
-                            <div class="col-md-3">{{ form_label(edit_form.titreVisa) }}</div>
-                            <div class="col-md-9">{{ form_widget(edit_form.titreVisa, {'attr': {'class': 'col-md-6'} }) }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row row-padding">
-                            <div class="col-md-12">
-                                <label>Emplacement du visa</label>
-                                <div id="containment"></div>
-                                {# Input hidden #}
-                                {{ form_widget(edit_form.abscissesVisa) }}
-                                {{ form_widget(edit_form.ordonneesVisa) }}
-                            </div>
-                        </div>
-                    </div>
+                    <div class="col-md-3">{{ form_label(edit_form.file) }}</div>
+                    <div class="col-md-9">{{ form_widget(edit_form.file) }}</div>
                 </div>
 
             </div>
+        </div>
 
-            <!-- Signature -->
-            <div class="tab-pane fade" id="signature">
-                <div class="row row-padding">
-                    <div class="col-md-12"><label>Disposition de la signature</label></div>
-                </div>
+        <div class="row row-paddingx">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a aria-expanded="true" href="#mail" data-toggle="tab">Mails</a></li>
+                    <li class=""><a aria-expanded="false" href="#visa" data-toggle="tab">Visa</a></li>
+                    <li class=""><a aria-expanded="false" href="#signature" data-toggle="tab">Signature</a></li>
+                </ul>
+            </div>
+        </div>
 
-                <div class="row row-padding">
-                    <div class="col-md-6">
-                        <div class="row row-padding">
-                            <div class="col-md-3">{{ form_label(edit_form.pageSignature) }}</div>
-                            <div class="col-md-3">{{ form_widget(edit_form.pageSignature, {'attr': {'class': 'col-md-12'} }) }}</div>
+        <div class="row row-paddingx">
+
+
+            <div id="myTabContent" class="tab-content col-lg-12">
+                <div class="tab-pane fade active in" id="mail">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {{ form_label(edit_form.textmailnew) }}
+                            {{ form_widget(edit_form.textmailnew) }}
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="row row-padding">
-                            <div class="col-md-12">
-                                <label>Emplacement de la signature</label>
-                                <div id="containmentSignature"></div>
-                                {# Input hidden #}
-                                {{ form_widget(edit_form.abscissesSignature) }}
-                                {{ form_widget(edit_form.ordonneesSignature) }}
+
+
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+                        <div class="col-md-2"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {{ form_label(edit_form.textmailrefuse) }}
+                            {{ form_widget(edit_form.textmailrefuse) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+                        <div class="col-md-2"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {{ form_label(edit_form.textmailwalid) }}
+                            {{ form_widget(edit_form.textmailwalid) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <img class="gradientawesome col-md-8" src="{{ asset("/images/bg-module-top-shadow.png") }}"/>
+                        <div class="col-md-2"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {{ form_label(edit_form.message) }}
+                            {{ form_widget(edit_form.message) }}
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- Visa -->
+                <div class="tab-pane fade" id="visa">
+
+                    <div class="row row-padding">
+                        <div class="col-md-12">
+                            <label>Disposition du cartouche visa</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row row-padding">
+                                <div class="col-md-3">
+                                    <label for="colorPicker">{{ form_label(edit_form.couleurVisa) }}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form_widget(edit_form.couleurVisa) }}
+                                    <div class="bfh-colorpicker col-md-6" id="colorPicker" data-name="colorpicker1" data-color="{{ edit_form.couleurVisa.vars.value }}"></div>
+                                </div>
+                            </div>
+                            <div class="row row-padding">
+                                <div class="col-md-3">{{ form_label(edit_form.titreVisa) }}</div>
+                                <div class="col-md-9">{{ form_widget(edit_form.titreVisa, {'attr': {'class': 'col-md-6'} }) }}</div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="row row-padding">
+                                <div class="col-md-12">
+                                    <label>Emplacement du visa</label>
+                                    <div id="containment"></div>
+                                    {# Input hidden #}
+                                    {{ form_widget(edit_form.abscissesVisa) }}
+                                    {{ form_widget(edit_form.ordonneesVisa) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Signature -->
+                <div class="tab-pane fade" id="signature">
+                    <div class="row row-padding">
+                        <div class="col-md-12"><label>Disposition de la signature</label></div>
+                    </div>
+
+                    <div class="row row-padding">
+                        <div class="col-md-6">
+                            <div class="row row-padding">
+                                <div class="col-md-3">{{ form_label(edit_form.pageSignature) }}</div>
+                                <div class="col-md-3">{{ form_widget(edit_form.pageSignature, {'attr': {'class': 'col-md-12'} }) }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row row-padding">
+                                <div class="col-md-12">
+                                    <label>Emplacement de la signature</label>
+                                    <div id="containmentSignature"></div>
+                                    {# Input hidden #}
+                                    {{ form_widget(edit_form.abscissesSignature) }}
+                                    {{ form_widget(edit_form.ordonneesSignature) }}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
@@ -155,18 +192,43 @@
         {#{{ form_start(delete_form) }}{{ form_end(delete_form) }}#}
     </div>
 
-    <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}" />
+
+    {#<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>#}
+    {#<script src="//cdnjs.cloudflare.com/ajax/libs/tinymce/4.3.0/jquery.tinymce.min.js"></script>#}
+    <script src="{{ asset("js/tinymce/tinymce.min.js") }}"></script>
+    {# Pour le color picker #}
+
     <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap/css/bootstrap-formhelpers.min.css") }}"/>
-    <script src="{{ asset("/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js") }}" type="text/javascript"></script>
-    <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
-    <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
     <script src="{{ asset("/js/bootstrap-formhelpers.js") }}" type="text/javascript"></script>
+    {#<link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}" />
+    {#<script src="{{ asset("/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>#}
     <script src="{{ asset("/js/drag.js") }}" type="text/javascript"></script>
     <script type="text/javascript">
-        $('textarea').wysihtml5({
+        tinymce.init({
+//            selector:'#sesile_mainbundle_collectivite_textmailnew',
+            selector:'textarea',
+            plugins: "template table",
+            templates: [
+                {title: 'Validant', description: 'Intègre le validant', content: '&#123;&#123; validant &#125;&#125;'},
+                {title: 'Rôle Validant', description: 'Intègre le rôle du validant', content: '&#123;&#123; ordre_validant &#125;&#125;'},
+                {title: 'Titre classeur', description: 'Intègre le titre du classeur', content: '&#123;&#123; titre_classeur &#125;&#125;'},
+                {title: 'Déposant', description: 'Intègre le déposant', content: '&#123;&#123; deposant &#125;&#125;'},
+                {title: 'Date', description: 'Intègre la date de validation', content: '&#123;&#123; date_limite | date(\'d/m/Y\') &#125;&#125;'},
+                {title: 'Lien du classeur', description: 'Intègre le lien vers le classeur', content: '&#123;&#123; lien|raw &#125;&#125;'},
+                {title: 'Logo collectivité', description: 'Intègre le logo de la collectivité', content: '**logo_coll**'}
+            ]
+        });
+
+        $(window).scroll(function() {
+
+        });
+
+        /*$('textarea').wysihtml5({
             "image": false,
             locale: "fr-FR"
-        });
+        });*/
         $(document).ready(function(){
             $('#colorPicker').val($('#sesile_mainbundle_collectivite_couleurVisa').val());
             $('#colorPicker').on('change.bfhcolorpicker',function(){
