@@ -89,6 +89,7 @@
             $(this).parent().remove();
             scrollFrisque();
             creerFleches();
+            isEnoughEtapes();
         });
 
         $(document).on('click', '#addetape', function (e) {
@@ -158,8 +159,23 @@
             });
 
             e.stopImmediatePropagation();
-            creerFleches()
+            creerFleches();
+
+            isEnoughEtapes();
         });
+
+        /**
+         * Fonction permettant de desactiver le bouton envoyer si il n y a pas d etapes dans le formulaire
+         */
+        function isEnoughEtapes() {
+            if ($('.etapes-circuit').length == 0) {
+                $('#Mybutton').addClass('disabled');
+            } else {
+                $('#Mybutton').removeClass('disabled');
+            }
+        }
+
+
 
 
         /*
