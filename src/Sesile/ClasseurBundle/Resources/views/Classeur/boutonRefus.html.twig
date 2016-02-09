@@ -43,10 +43,15 @@
                 &nbsp;Valider
             </button>
 
-            <button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
+            <button type="submit" class="btn btn-success btn-valider btn-valider-signer" data-action="{{ path("classeur_valider") }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Valider le classeur
+            </button>
+
+            {#<button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
                 <span class="glyphicon glyphicon-ok"></span>
                 &nbsp;Valider et Signer
-            </button>
+            </button>#}
             {#<button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
                 <span class="glyphicon glyphicon-ok"></span>
                 &nbsp;Valider et Signer
