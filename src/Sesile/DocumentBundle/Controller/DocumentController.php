@@ -142,10 +142,11 @@ class DocumentController extends Controller
 
 
             // Recup des thumbs
-            if ($doc->getClasseur()->getStatus() == 2) {
+            if ($doc->getClasseur()->getStatus() == 2 && $doc->getType() == "application/pdf") {
 
                 $imagePDFFirst = $doc->getPDFImage(0);
 
+                // Si c est la derniere page
                 if (!$city->getPageSignature()){
                     require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
                     $filename = 'uploads/docs/' . $doc->getRepourl();
