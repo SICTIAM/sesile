@@ -206,20 +206,6 @@
     <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>#}
     <script src="{{ asset("/js/drag.js") }}" type="text/javascript"></script>
     <script type="text/javascript">
-        tinymce.init({
-//            selector:'#sesile_mainbundle_collectivite_textmailnew',
-            selector:'textarea',
-            plugins: "template table",
-            templates: [
-                {title: 'Validant', description: 'Intègre le validant', content: '&#123;&#123; validant &#125;&#125;'},
-                {title: 'Rôle Validant', description: 'Intègre le rôle du validant', content: '&#123;&#123; ordre_validant &#125;&#125;'},
-                {title: 'Titre classeur', description: 'Intègre le titre du classeur', content: '&#123;&#123; titre_classeur &#125;&#125;'},
-                {title: 'Déposant', description: 'Intègre le déposant', content: '&#123;&#123; deposant &#125;&#125;'},
-                {title: 'Date', description: 'Intègre la date de validation', content: '&#123;&#123; date_limite | date(\'d/m/Y\') &#125;&#125;'},
-                {title: 'Lien du classeur', description: 'Intègre le lien vers le classeur', content: '&#123;&#123; lien|raw &#125;&#125;'},
-                {title: 'Logo collectivité', description: 'Intègre le logo de la collectivité', content: '**logo_coll**'}
-            ]
-        });
 
         $(window).scroll(function() {
 
