@@ -1781,13 +1781,18 @@ class ClasseurController extends Controller {
     private function sendMail($sujet, $to, $body)
     {
         $message = \Swift_Message::newInstance();
+        // Pour l integration de l image du logo dans le mail
         $html = explode("**logo_coll**", $body);
-        $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="150">' . $html[1];
+        $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75">' . $html[1];
+
+        // Constitution du mail
         $message->setSubject($sujet)
             ->setFrom($this->container->getParameter('email_sender_address'))
             ->setTo($to)
             ->setBody($htmlBody)
             ->setContentType('text/html');
+
+        // Envoie de l email
         $this->get('mailer')->send($message);
     }
 
@@ -1806,9 +1811,10 @@ class ClasseurController extends Controller {
             array(
                 'deposant' => $validant_obj->getPrenom() . " " . $validant_obj->getNom(),
                 'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
-                'ordre_validant' => $c_user->getRole(),
+                'role' => $c_user->getRole(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
+                'type' => strtolower($classeur->getType()->getNom()),
                 "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>'
             )
         );
@@ -1837,9 +1843,10 @@ class ClasseurController extends Controller {
             array(
                 'deposant' => $d_user->getPrenom() . " " . $d_user->getNom(),
                 'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
-                'ordre_validant' => $c_user->getRole(),
+                'role' => $c_user->getRole(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
+                'type' => strtolower($classeur->getType()->getNom()),
                 "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">valider le classeur</a>'
             )
         );
@@ -1865,9 +1872,10 @@ class ClasseurController extends Controller {
         $body = $env->render($coll->getTextmailrefuse(),
             array(
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
-                'ordre_validant' => $c_user->getRole(),
+                'role' => $c_user->getRole(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
+                'type' => strtolower($classeur->getType()->getNom()),
                 "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>',
                 "motif" => $motif
             )
