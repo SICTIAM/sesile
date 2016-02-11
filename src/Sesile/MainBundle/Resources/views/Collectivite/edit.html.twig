@@ -17,21 +17,32 @@
             <div class="col-lg-12">
 
                 <div class="row">
-                    <div class="col-md-3">{{ form_label(edit_form.nom) }}</div>
-                    <div class="col-md-9">{{ form_widget(edit_form.nom) }}</div>
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-4">{{ form_label(edit_form.nom) }}</div>
+                            <div class="col-md-8">{{ form_widget(edit_form.nom) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">{{ form_label(edit_form.domain) }}</div>
+                            <div class="col-md-8">{{ form_widget(edit_form.domain) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">{{ form_label(edit_form.active) }}</div>
+                            <div class="col-md-8">{{ form_widget(edit_form.active) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">{{ form_label(edit_form.file) }}</div>
+                            <div class="col-md-8">{{ form_widget(edit_form.file) }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-4"><img src="{{ asset("/uploads/logo_coll/" ~ app.session.get('logo')) }}" width="100%" /></div>
+                            {#<div class="col-md-6"></div>#}
+                        </div>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3">{{ form_label(edit_form.domain) }}</div>
-                    <div class="col-md-9">{{ form_widget(edit_form.domain) }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">{{ form_label(edit_form.active) }}</div>
-                    <div class="col-md-9">{{ form_widget(edit_form.active) }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">{{ form_label(edit_form.file) }}</div>
-                    <div class="col-md-9">{{ form_widget(edit_form.file) }}</div>
-                </div>
+
 
             </div>
         </div>
