@@ -30,9 +30,11 @@ class DocumentRepository extends EntityRepository
         $writer = new \SetaPDF_Core_Writer_Http('VISA_' . $doc, true);
 
         // get a document instance
-        return $document = \SetaPDF_Core_Document::loadByFilename(
+        $document = \SetaPDF_Core_Document::loadByFilename(
             $reader, $writer
         );
+
+        return $document;
     }
 
     /**
@@ -47,6 +49,79 @@ class DocumentRepository extends EntityRepository
 
         // save and send it to the client
         $document->save()->finish();
+    }
+
+    /**
+     * @param $doc
+     * @param $first
+     * @return string
+     *
+     * Retourne si la page est au format portrait ou paysage
+     */
+    protected function getFormatPdf($doc, $first = true) {
+
+        $pages = $doc->getCatalog()->getPages();
+        // as wee need to access all pages, ensure that they were resolved
+        // ne peut pas etre appelé 2 fois
+        //$pages->ensureAllPageObjects();
+
+        // On détermine si c est la premiere ou la derniere page et on en recupere le format
+        if($first) {
+            $page = $pages->getPage(1);
+        } else {
+            $page = $pages->getLastPage();
+        }
+        $format = $page->getWidthAndHeight();
+        if($format[0] < $format[1]) {
+            $orientation = "portrait";
+        } else {
+            $orientation = "paysage";
+        }
+//        var_dump('orientation ', $orientation);
+        return $orientation;
+
+//        var_dump("============ Last Page  : ", $page->getWidthAndHeight(), '<br>');
+
+    }
+
+    /**
+     * @param $absSign
+     * @return mixed
+     *
+     * Fonctions permettant le calcul des valeurs x et y pour la signature et le visa
+     */
+    private function calcXSign($absSign, $format = 'portrait') {
+        if ($format == 'portrait') {
+            $translateXSign = ($absSign + 2) * 3.2;
+        } else {
+            $translateXSign = ($absSign + 2) * 5.3;
+        }
+        return $translateXSign;
+    }
+    private function calcYSign($ordSign, $format = 'portrait') {
+        if ($format == 'portrait') {
+            $translateYSign = ($ordSign + 8) * -2.9;
+        } else {
+            $translateYSign = ($ordSign + 12) * -2;
+        }
+        return $translateYSign;
+
+    }
+    private function calcXVisa($absVisa, $format = 'portrait') {
+        if($format == 'portrait') {
+            $translateXVisa = $absVisa * 2.9;
+        } else {
+            $translateXVisa = $absVisa * 4.8;
+        }
+        return $translateXVisa;
+    }
+    private function calcYVisa($ordVisa, $format = 'portrait') {
+        if($format == 'portrait') {
+            $translateYVisa = $ordVisa * -2.9;
+        } else {
+            $translateYVisa = $ordVisa * -2.1;
+        }
+        return $translateYVisa;
     }
 
     /**
@@ -72,6 +147,13 @@ class DocumentRepository extends EntityRepository
         } else {
             $pagePosition = 'last';
         }
+//var_dump($document);
+        // On recupere l orientation de la page portrait ou paysage
+        $format = $this->getFormatPdf($document, $first);
+
+        // Params
+        $translateX = $this->calcXVisa($translateX, $format);
+        $translateY = $this->calcYVisa($translateY, $format);
 
         $em = $this->getEntityManager();
         $actions = $em->getRepository('SesileClasseurBundle:Action')->findBy(array(
@@ -158,6 +240,12 @@ class DocumentRepository extends EntityRepository
 //            $pagePosition = \SetaPDF_Stamper::PAGES_LAST;
             $pagePosition = 'last';
         }
+
+        // On recupere l orientation de la page portrait ou paysage
+        $format = $this->getFormatPdf($document, $first);
+        // Params
+        $translateX = $this->calcXSign($translateX, $format);
+        $translateY = $this->calcYSign($translateY, $format);
 
         $texteVisa = $user->getPrenom(). " " . $user->getNom() . "\n" . $user->getRole();
         $fontSize = 12;

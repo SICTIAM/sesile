@@ -278,9 +278,6 @@ class DocumentController extends Controller
 
         /* SetaPDF */
 
-        // Params
-        $translateX = $this->calcXVisa($absVisa);
-        $translateY = $this->calcYVisa($ordVisa);
         $firstPage = true;
 //        $texteVisa = 'VISE PAR';
         $texteVisa = $city->getTitreVisa();
@@ -288,7 +285,7 @@ class DocumentController extends Controller
 //        $color = '#454545';
         $color = $city->getCouleurVisa();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponVisa($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, $color);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponVisa($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $firstPage, $texteVisa, $color);
         /* FIN SetaPDF */
 
     }
@@ -316,15 +313,12 @@ class DocumentController extends Controller
 
         /* SetaPDF */
 
-        // Params
-        $translateX = $this->calcXSign($absSign);
-        $translateY = $this->calcYSign($ordSign);
         $firstPage = $city->getPageSignature();
 
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
 //        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, false, $imageSignature);
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $translateX, $translateY, $firstPage, $imageSignature, $lastUser);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $absSign, $ordSign, $firstPage, $imageSignature, $lastUser);
         /* FIN SetaPDF */
     }
 
@@ -350,22 +344,15 @@ class DocumentController extends Controller
 
         /* SetaPDF */
 
-        // Params Visa
-        $translateXVisa = $this->calcXVisa($absVisa);
-        $translateYVisa = $this->calcYVisa($ordVisa);
         $texteVisa = $city->getTitreVisa();
         $color = $city->getCouleurVisa();
         $firstVisa = true;
-
-        // Params Signature
-        $translateXSign = $this->calcXSign($absSign);
-        $translateYSign = $this->calcYSign($ordSign);
 
         $firstSign = $city->getPageSignature();
         $classeurId = $doc->getClasseur()->getId();
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $translateXVisa, $translateYVisa, $translateXSign, $translateYSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $absSign, $ordSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser);
         /* FIN SetaPDF */
     }
 
@@ -755,16 +742,4 @@ class DocumentController extends Controller
     }
 
 
-    private function calcXSign($absSign) {
-        return $translateXSign = ($absSign + 2) * 3.2;
-    }
-    private function calcYSign($ordSign) {
-        return $translateYSign = ($ordSign + 8) * -2.9;
-    }
-    private function calcXVisa($absVisa) {
-        return $translateXVisa = $absVisa * 2.9;
-    }
-    private function calcYVisa($ordVisa) {
-        return $translateYVisa = $ordVisa * -2.9;
-    }
 }
