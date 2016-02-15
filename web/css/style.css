@@ -934,6 +934,6 @@ select [name=user] {
     cursor: pointer;
 }
 
-#containment, #containmentSignature {
+.text-center #containment, .text-center #containmentSignature {
     margin: 0 auto;
 }
