@@ -129,23 +129,27 @@
                                     <label for="colorPicker">{{ form_label(edit_form.couleurVisa) }}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    {{ form_widget(edit_form.couleurVisa) }}
                                     <div class="bfh-colorpicker col-md-6" id="colorPicker" data-name="colorpicker1" data-color="{{ edit_form.couleurVisa.vars.value }}"></div>
                                 </div>
                             </div>
                             <div class="row row-padding">
-                                <div class="col-md-3">{{ form_label(edit_form.titreVisa) }}</div>
+                                <div class="col-md-3">
+                                    {{ form_label(edit_form.titreVisa) }}
+                                    <br>
+                                    <small><i>250 caractères maximum</i></small>
+                                </div>
                                 <div class="col-md-9">{{ form_widget(edit_form.titreVisa, {'attr': {'class': 'col-md-6'} }) }}</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="row row-padding">
                                 <div class="col-md-12">
-                                    <label>Emplacement du visa</label>
+                                    <label>Emplacement du visa</label><br>
                                     <div id="containment"></div>
                                     {# Input hidden #}
                                     {{ form_widget(edit_form.abscissesVisa) }}
                                     {{ form_widget(edit_form.ordonneesVisa) }}
+                                    <small><i>Déplacer manuellement le tampon pour simuler son emplacement</i></small>
                                 </div>
                             </div>
                         </div>
@@ -174,6 +178,7 @@
                                     {# Input hidden #}
                                     {{ form_widget(edit_form.abscissesSignature) }}
                                     {{ form_widget(edit_form.ordonneesSignature) }}
+                                    <small><i>Déplacer manuellement la signature pour simuler son emplacement</i></small>
                                 </div>
                             </div>
                         </div>
@@ -227,7 +232,13 @@
             locale: "fr-FR"
         });*/
         $(document).ready(function(){
-            $('#colorPicker').val($('#sesile_mainbundle_collectivite_couleurVisa').val());
+            couleurVisa = $('#sesile_mainbundle_collectivite_couleurVisa').val();
+            if (couleurVisa.length == 0) {
+                $('#colorPicker').val("#454545");
+            }
+            else {
+                $('#colorPicker').val(couleurVisa);
+            }
             $('#colorPicker').on('change.bfhcolorpicker',function(){
                 $('#sesile_mainbundle_collectivite_couleurVisa').val($(this).val())
             });

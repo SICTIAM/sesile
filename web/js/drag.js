@@ -121,14 +121,14 @@ tinymce.init({
     selector:'#sesile_mainbundle_collectivite_textmailnew, #sesile_mainbundle_collectivite_textmailwalid',
     plugins: "template table",
     templates: [
-        {title: 'Validant', description: 'Intègre le validant', content: '&#123;&#123; validant &#125;&#125;'},
-        {title: 'Rôle', description: 'Intègre le rôle du validant', content: '&#123;&#123; role &#125;&#125;'},
-        {title: 'Titre classeur', description: 'Intègre le titre du classeur', content: '&#123;&#123; titre_classeur &#125;&#125;'},
-        {title: 'Déposant', description: 'Intègre le déposant', content: '&#123;&#123; deposant &#125;&#125;'},
-        {title: 'Date', description: 'Intègre la date de validation', content: '&#123;&#123; date_limite | date(\'d/m/Y\') &#125;&#125;'},
-        {title: 'Lien du classeur', description: 'Intègre le lien vers le classeur', content: '&#123;&#123; lien|raw &#125;&#125;'},
-        {title: 'Type de classeur', description: 'Intègre le type du classeur', content: '&#123;&#123; type &#125;&#125;'},
-        {title: 'Logo collectivité', description: 'Intègre le logo de la collectivité', content: '**logo_coll**'}
+        {title: 'Validant', description: 'IntÃ¨gre le validant', content: '&#123;&#123; validant &#125;&#125;'},
+        {title: 'RÃ´le', description: 'IntÃ¨gre le rÃ´le du validant', content: '&#123;&#123; role &#125;&#125;'},
+        {title: 'Titre classeur', description: 'IntÃ¨gre le titre du classeur', content: '&#123;&#123; titre_classeur &#125;&#125;'},
+        {title: 'DÃ©posant', description: 'IntÃ¨gre le dÃ©posant', content: '&#123;&#123; deposant &#125;&#125;'},
+        {title: 'Date', description: 'IntÃ¨gre la date de validation', content: '&#123;&#123; date_limite | date(\'d/m/Y\') &#125;&#125;'},
+        {title: 'Lien du classeur', description: 'IntÃ¨gre le lien vers le classeur', content: '&#123;&#123; lien|raw &#125;&#125;'},
+        {title: 'Type de classeur', description: 'IntÃ¨gre le type du classeur', content: '&#123;&#123; type &#125;&#125;'},
+        {title: 'Logo collectivitÃ©', description: 'IntÃ¨gre le logo de la collectivitÃ©', content: '**logo_coll**'}
     ]
 });
 
@@ -136,17 +136,17 @@ tinymce.init({
     selector:'#sesile_mainbundle_collectivite_textmailrefuse',
     plugins: "template table",
     templates: [
-        {title: 'Validant', description: 'Intègre le validant', content: '&#123;&#123; validant &#125;&#125;'},
-        {title: 'Rôle', description: 'Intègre le rôle du validant', content: '&#123;&#123; role &#125;&#125;'},
-        {title: 'Titre classeur', description: 'Intègre le titre du classeur', content: '&#123;&#123; titre_classeur &#125;&#125;'},
-        {title: 'Motif du refus', description: 'Intègre le motif du refus', content: '&#123;&#123; motif &#125;&#125;'},
-        {title: 'Date', description: 'Intègre la date de validation', content: '&#123;&#123; date_limite | date(\'d/m/Y\') &#125;&#125;'},
-        {title: 'Lien du classeur', description: 'Intègre le lien vers le classeur', content: '&#123;&#123; lien|raw &#125;&#125;'},
-        {title: 'Type de classeur', description: 'Intègre le type du classeur', content: '&#123;&#123; type &#125;&#125;'},
-        {title: 'Logo collectivité', description: 'Intègre le logo de la collectivité', content: '**logo_coll**'}
+        {title: 'Validant', description: 'IntÃ¨gre le validant', content: '&#123;&#123; validant &#125;&#125;'},
+        {title: 'RÃ´le', description: 'IntÃ¨gre le rÃ´le du validant', content: '&#123;&#123; role &#125;&#125;'},
+        {title: 'Titre classeur', description: 'IntÃ¨gre le titre du classeur', content: '&#123;&#123; titre_classeur &#125;&#125;'},
+        {title: 'Motif du refus', description: 'IntÃ¨gre le motif du refus', content: '&#123;&#123; motif &#125;&#125;'},
+        {title: 'Date', description: 'IntÃ¨gre la date de validation', content: '&#123;&#123; date_limite | date(\'d/m/Y\') &#125;&#125;'},
+        {title: 'Lien du classeur', description: 'IntÃ¨gre le lien vers le classeur', content: '&#123;&#123; lien|raw &#125;&#125;'},
+        {title: 'Type de classeur', description: 'IntÃ¨gre le type du classeur', content: '&#123;&#123; type &#125;&#125;'},
+        {title: 'Logo collectivitÃ©', description: 'IntÃ¨gre le logo de la collectivitÃ©', content: '**logo_coll**'}
     ]
 });
 
 tinymce.init({
-    selector:'#sesile_mainbundle_collectivite_message'
+        selector:'#sesile_mainbundle_collectivite_message'
 });
