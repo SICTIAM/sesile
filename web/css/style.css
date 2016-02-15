@@ -937,3 +937,8 @@ select [name=user] {
 .text-center #containment, .text-center #containmentSignature {
     margin: 0 auto;
 }
+
+.upload_image {
+	padding: 0 !important;
+	border: solid 1px rgb(204,204,204);
+}

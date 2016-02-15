@@ -20,21 +20,39 @@
 </div>
 <br/>
 
-<div class="label_form label-form-input">
+{#<div class="label_form label-form-input">
     {{ form_label(form.qualite, 'Qualité') }}
     {{ form_widget(form.qualite) }}
+</div>#}
+<br/>
+
+<div class="label_form parcou row">
+    <div class="col-md-4">
+        {{ form_label(form.file) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_widget(form.file, {'attr': { 'class' : 'upload_image', 'placeholder': ''} } ) }}
+    </div>
+
+    {% if user.path is defined and user.path is not null %}
+        <img class="col-md-4" src="{{ asset(upload_path ~ user.path) }}"/>
+    {% else %}
+        <img class="col-md-4" src="{{ asset('/images/imghomme.png') }}"/>
+    {% endif %}
+
 </div>
 <br/>
 
-<div class="label_form parcou">
-    {{ form_label(form.file) }}
-    {{ form_widget(form.file) }}
-</div>
-<br/>
-
-<div class="label_form parcou">
-    {{ form_label(form.fileSignature) }}
-    {{ form_widget(form.fileSignature) }}
+<div class="label_form parcou row">
+    <div class="col-md-4">
+        {{ form_label(form.fileSignature) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_widget(form.fileSignature, {'attr': { 'class' : 'upload_image', 'placeholder': ''} } ) }}
+    </div>
+    {% if user.pathSignature is defined and user.pathSignature is not null %}
+        <img class="col-md-4" src="{{ asset(upload_path_signatures ~ user.pathSignature) }}"/>
+    {% endif %}
 </div>
 <br/>
 
