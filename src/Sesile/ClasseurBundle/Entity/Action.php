@@ -37,6 +37,15 @@ class Action
      */
     private $classeur;
 
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_action", referencedColumnName="id", onDelete="CASCADE")
+     *
+     */
+    private $user_action;
+
 
 
     /**
@@ -167,6 +176,7 @@ class Action
     {
         $this->user = $user;
         $this->username = $user->getPrenom() . ' ' . $user->getNom();
+        $this->user_action = $user;
 
         return $this;
     }
@@ -266,4 +276,27 @@ class Action
         return $this->username;
     }
 
+
+    /**
+     * Set user_action
+     *
+     * @param \Sesile\UserBundle\Entity\User $userAction
+     * @return Action
+     */
+    public function setUserAction(\Sesile\UserBundle\Entity\User $userAction = null)
+    {
+        $this->user_action = $userAction;
+    
+        return $this;
+    }
+
+    /**
+     * Get user_action
+     *
+     * @return \Sesile\UserBundle\Entity\User 
+     */
+    public function getUserAction()
+    {
+        return $this->user_action;
+    }
 }

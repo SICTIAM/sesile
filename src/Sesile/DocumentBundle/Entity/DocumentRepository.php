@@ -162,7 +162,15 @@ class DocumentRepository extends EntityRepository
         ));
 
         foreach ($actions as $action) {
-            $texteStamp .= "\n" . $action->getUsername() . ' le ' . $action->getDate()->format('d/m/Y à H:i');
+            // Trouver le bon utilisateur et recuperer son role
+            if($action->getUserAction() && $action->getUserAction()->getRole()) {
+                $role = ', ' . $action->getUserAction()->getRole() . ',';
+            }
+            else {
+                $role = '';
+            }
+
+            $texteStamp .= "\n" . $action->getUsername() . $role . ' le ' . $action->getDate()->format('d/m/Y à H:i');
         }
 
         // Color convert
