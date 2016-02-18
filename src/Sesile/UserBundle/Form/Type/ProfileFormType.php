@@ -51,7 +51,7 @@ class ProfileFormType extends BaseType
             ->add('Prenom', null, array('label' => 'Prénom', 'attr' => array('class' => 'pouet')))
             ->add('Nom', null, array('label' => ' Nom', 'attr' => array('class' => 'pouet')))
             ->add('username', 'email', array('label' => 'Adresse E-mail', 'attr' => array('class' => 'pouet')))
-//            ->add('qualite', null, array('label' => 'Qualité', 'attr' => array('class' => 'pouet')))
+            ->add('qualite', null, array('label' => 'Qualité', 'attr' => array('class' => 'pouet')))
 
             ->add('file', 'file', array('label' => 'Avatar',
                 'data_class' => null,

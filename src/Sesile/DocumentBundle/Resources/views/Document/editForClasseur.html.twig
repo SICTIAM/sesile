@@ -38,6 +38,19 @@ var uploadingfiles = 0;
 var uploadedfiles = {};
 
 
+$(document)
+    .ajaxStart(function () {
+//                    $loading.show();
+        console.log('Ajax start');
+        $('body, .dropzone .dz-preview').css('cursor', 'wait');
+    })
+    .ajaxStop(function () {
+//                    $loading.hide();
+        console.log('Ajax stop');
+        $('body').css('cursor', 'default');
+        $('.dropzone .dz-preview').css('cursor', 'pointer');
+    });
+
 function tim() {
     $.ajax(Routing.generate('show_document', {id: filetocheck}), {
         method: 'POST',
@@ -51,15 +64,13 @@ function tim() {
 
             buttonModifRoutine();
 
-            if (launchtim) {
+            /*if (launchtim) {
                 setTimeout(function () {
                     tim()
                 }, 40000);
-            }
-
+            }*/
 
         }
-
     });
 }
 
