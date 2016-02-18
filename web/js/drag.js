@@ -123,6 +123,7 @@ tinymce.init({
     templates: [
         {title: 'Validant', description: 'Intègre le validant', content: '&#123;&#123; validant &#125;&#125;'},
         {title: 'Rôle', description: 'Intègre le rôle du validant', content: '&#123;&#123; role &#125;&#125;'},
+        {title: 'Qualité', description: 'Intègre la qualité du validant', content: '&#123;&#123; qualite &#125;&#125;'},
         {title: 'Titre classeur', description: 'Intègre le titre du classeur', content: '&#123;&#123; titre_classeur &#125;&#125;'},
         {title: 'Déposant', description: 'Intègre le déposant', content: '&#123;&#123; deposant &#125;&#125;'},
         {title: 'Date', description: 'Intègre la date de validation', content: '&#123;&#123; date_limite | date(\'d/m/Y\') &#125;&#125;'},
@@ -138,6 +139,7 @@ tinymce.init({
     templates: [
         {title: 'Validant', description: 'Intègre le validant', content: '&#123;&#123; validant &#125;&#125;'},
         {title: 'Rôle', description: 'Intègre le rôle du validant', content: '&#123;&#123; role &#125;&#125;'},
+        {title: 'Qualité', description: 'Intègre la qualité du validant', content: '&#123;&#123; qualite &#125;&#125;'},
         {title: 'Titre classeur', description: 'Intègre le titre du classeur', content: '&#123;&#123; titre_classeur &#125;&#125;'},
         {title: 'Motif du refus', description: 'Intègre le motif du refus', content: '&#123;&#123; motif &#125;&#125;'},
         {title: 'Date', description: 'Intègre la date de validation', content: '&#123;&#123; date_limite | date(\'d/m/Y\') &#125;&#125;'},

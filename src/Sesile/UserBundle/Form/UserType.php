@@ -26,7 +26,7 @@ class UserType extends AbstractType
             ->add('departement', 'text', array('label' => 'Département', 'required' => false,))
             ->add('pays', 'text', array('required' => false,))
             ->add('role', 'text', array('label' => 'Rôle', 'required' => true))
-//            ->add('qualite', 'text', array('label' => 'Qualité', 'required' => false))
+            ->add('qualite', 'text', array('label' => 'Qualité', 'required' => false))
             ->add('enabled', null, array('label' => 'Activé', 'required' => false))
             ->add('apiactivated', 'checkbox', array('label' => 'API', 'required' => false))
             ->add('apitoken', 'text', array('read_only' => true))

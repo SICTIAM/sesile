@@ -1812,6 +1812,7 @@ class ClasseurController extends Controller {
                 'deposant' => $validant_obj->getPrenom() . " " . $validant_obj->getNom(),
                 'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
                 'role' => $c_user->getRole(),
+                'qualite' => $c_user->getQualite(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 'type' => strtolower($classeur->getType()->getNom()),
@@ -1844,6 +1845,7 @@ class ClasseurController extends Controller {
                 'deposant' => $d_user->getPrenom() . " " . $d_user->getNom(),
                 'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
                 'role' => $c_user->getRole(),
+                'qualite' => $c_user->getQualite(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 'type' => strtolower($classeur->getType()->getNom()),
@@ -1873,6 +1875,7 @@ class ClasseurController extends Controller {
             array(
                 'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
                 'role' => $c_user->getRole(),
+                'qualite' => $c_user->getQualite(),
                 'titre_classeur' => $classeur->getNom(),
                 'date_limite' => $classeur->getValidation(),
                 'type' => strtolower($classeur->getType()->getNom()),

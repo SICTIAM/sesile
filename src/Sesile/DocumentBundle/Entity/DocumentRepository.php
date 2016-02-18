@@ -163,8 +163,8 @@ class DocumentRepository extends EntityRepository
 
         foreach ($actions as $action) {
             // Trouver le bon utilisateur et recuperer son role
-            if($action->getUserAction() && $action->getUserAction()->getRole()) {
-                $role = ', ' . $action->getUserAction()->getRole() . ',';
+            if($action->getUserAction() && $action->getUserAction()->getQualite()) {
+                $role = ', ' . $action->getUserAction()->getQualite() . ',';
             }
             else {
                 $role = '';
