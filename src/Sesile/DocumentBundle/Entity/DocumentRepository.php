@@ -162,7 +162,7 @@ class DocumentRepository extends EntityRepository
         ));
 
         foreach ($actions as $action) {
-            // Trouver le bon utilisateur et recuperer son role
+            // Trouver le bon utilisateur et recuperer sa qualite
             if($action->getUserAction() && $action->getUserAction()->getQualite()) {
                 $role = ', ' . $action->getUserAction()->getQualite() . ',';
             }
@@ -255,7 +255,7 @@ class DocumentRepository extends EntityRepository
         $translateX = $this->calcXSign($translateX, $format);
         $translateY = $this->calcYSign($translateY, $format);
 
-        $texteVisa = $user->getPrenom(). " " . $user->getNom() . "\n" . $user->getRole();
+        $texteVisa = $user->getPrenom(). " " . $user->getNom() . "\n" . $user->getQualite();
         $fontSize = 12;
         // Color convert
         $colorRGB = $this->hex2rgb("#454545");
