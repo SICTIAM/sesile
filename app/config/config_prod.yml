@@ -44,6 +44,7 @@ parameters:
         fics: %kernel.root_dir%/../web/uploads/docs/
         logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
         msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
+        signatures: %kernel.root_dir%/../web/uploads/signatures/
     majorversion: 2
     ovh_credential:
         application: ***REMOVED***

@@ -649,9 +649,18 @@ select [name=user] {
 }
 
 .label_form input {
-	width: 100%;
-	height: 1.8em;
-	padding-left: 15em;
+    width: 100%;
+    height: 1.8em;
+    padding-left: 15em;
+}
+.label_form textarea {
+    width: 100%;
+    height: 4em; /* Modifier le line-height en dessous, ça va avec */
+    padding-left: 15em;
+    resize: none;
+}
+.label_form .label_form_textarea {
+    line-height: 4em;
 }
 
 .ui-autocomplete {
