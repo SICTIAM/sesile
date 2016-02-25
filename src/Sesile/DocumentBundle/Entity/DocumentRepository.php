@@ -269,7 +269,7 @@ class DocumentRepository extends EntityRepository
 //        var_dump($translateYQuality); die();
 
 
-        $fontSize = 12;
+        $fontSize = 10;
         // Color convert
         $colorRGB = $this->hex2rgb("#454545");
         $colorVisa = new \SetaPDF_Core_DataStructure_Color_Rgb($colorRGB[0] / 255, $colorRGB[1] / 255, $colorRGB[2] / 255);
