@@ -92,7 +92,7 @@ class DocumentRepository extends EntityRepository
      */
     private function calcXSign($absSign, $format = 'portrait') {
         if ($format == 'portrait') {
-            $translateXSign = ($absSign + 2) * 3.2;
+            $translateXSign = ($absSign + 2) * 3.1;
         } else {
             $translateXSign = ($absSign + 2) * 5.3;
         }
@@ -164,7 +164,12 @@ class DocumentRepository extends EntityRepository
         foreach ($actions as $action) {
             // Trouver le bon utilisateur et recuperer sa qualite
             if($action->getUserAction() && $action->getUserAction()->getQualite()) {
-                $role = ', ' . $action->getUserAction()->getQualite() . ',';
+                // Si la qualite + le nom de l utilisateur fait plus de 40 caractères on rajoute des sauts de ligne
+                if(strlen($action->getUsername() . $action->getUserAction()->getQualite()) >= 40) {
+                    $role = ",\n" . $action->getUserAction()->getQualite() . ",\n";
+                } else {
+                    $role = ", " . $action->getUserAction()->getQualite() . ", ";
+                }
             }
             else {
                 $role = '';
@@ -256,6 +261,14 @@ class DocumentRepository extends EntityRepository
         $translateY = $this->calcYSign($translateY, $format);
 
         $texteVisa = $user->getPrenom(). " " . $user->getNom() . "\n" . $user->getQualite();
+        // calcul du decalage en Y a cause de la qualite
+        $translateYQuality = $translateY + 30 + 12 * substr_count($texteVisa, "\n");
+
+//        $translateYQuality = ($translateYQuality >= -600) ? $translateYQuality : -600;
+
+//        var_dump($translateYQuality); die();
+
+
         $fontSize = 12;
         // Color convert
         $colorRGB = $this->hex2rgb("#454545");
@@ -279,7 +292,7 @@ class DocumentRepository extends EntityRepository
             'showOnPage' => $pagePosition,
             'position' => \SetaPDF_Stamper::POSITION_LEFT_TOP,
             'translateX' => $translateX,
-            'translateY' => $translateY + 30
+            'translateY' => $translateYQuality
         ));
 
         // stamp the document
@@ -393,76 +406,6 @@ class DocumentRepository extends EntityRepository
         $rgb = array($r, $g, $b);
         //return implode(",", $rgb); // returns the rgb values separated by commas
         return $rgb; // returns an array with the rgb values
-    }
-
-
-    public function tamponAlamano($historique, $color){
-
-        //On récupère les informations nécessaires pour le tampon
-        $date								= date("d/m/Y",$historique['date']);
-        $numActe							= $historique['numActe'];
-
-        // Taille du tampon
-        $widthIMG = 226;
-        $heightIMG = 50;
-
-        // On crée une image
-        $im = imagecreatetruecolor($widthIMG, $heightIMG);
-
-        //On récupèré la couleur et le transparent
-        $color 								= imagecolorallocate($im, $color[0], $color[1], $color[2]);
-        $trans_colour                       = imagecolorallocatealpha($im, 0, 0, 0, 127);
-
-        // On active la transparence et on rempli de transparent parce que pourquoi pas
-        imagesavealpha($im, true);
-        imagefill($im, 0, 0, $trans_colour);
-
-        // On dessigne le petit cadre à l'interieur
-        imageline($im, 6, 18, 218, 18, $color);
-        imageline($im, 6, 18, 6, 41, $color);
-        imageline($im, 218, 18, 218, 41, $color);
-        imageline($im, 6, 41, 218, 41, $color);
-
-        // On dessigne le gros cadre (bordure)
-        imagesetthickness($im, 5);
-        imageline($im, 0, 0, $widthIMG-1, 0, $color);
-        imageline($im, 0, 0, 0, $heightIMG-1, $color);
-        imageline($im, $widthIMG-1, 0, $widthIMG-1, $heightIMG-1, $color);
-        imageline($im, 0, $heightIMG-1, $widthIMG-1, $heightIMG-1, $color);
-
-        // On récupère le bon message comme type de tampon
-        switch ($historique['image']) {
-            case "AN.gif":
-                $typeTampon = "ANOMALIE";
-                break;
-            case "AR.gif":
-                $typeTampon = "AR PREFECTURE";
-                break;
-            case "ARN.gif":
-                $typeTampon = "AR ANNULATION PREFECTURE";
-                break;
-            default:
-                $typeTampon = "ANOMALIE";
-        }
-
-        // On calcule le centrage du texte
-        $fw = imagefontwidth(2); // width of a character
-        $l = strlen($typeTampon); // number of characters
-        $tw = $l * $fw;              // text width
-        $iw = imagesx($im);          // image width
-
-        $xpos = ($iw - $tw)/2;
-        $ypos = 4;
-
-        // On écrit le type de tampon
-        imagestring($im, 2, $xpos, $ypos, $typeTampon, $color);
-
-
-        //On écrit dedans les informations souhaitées
-        imagestring($im, 1, 10, 21, $numActe, $color);
-        imagestring($im, 1, 10, 31, utf8_decode("Reçu le ".$date), $color);
-
-        return $im;
     }
 
 }
