@@ -87,6 +87,7 @@
     dropzone.on("maxfilesexceeded", function(file) {
         this.removeFile(file);
         alert ('Dans le cas d\'un classeur de type Hélios le dépôt d\'un seul fichier par classeur est autorisé.');
+        $('#Mybutton').attr('disabled', false);
     });
 
 
