@@ -648,6 +648,13 @@ select [name=user] {
 
 }
 
+.label_form .bootstrap-filestyle input {
+	padding-left: 0;
+}
+
+.label_form textarea.qualite {
+	width: auto;
+}
 .label_form input {
     width: 100%;
     height: 1.8em;
