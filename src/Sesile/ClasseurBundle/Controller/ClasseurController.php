@@ -1785,6 +1785,8 @@ class ClasseurController extends Controller {
         $html = explode("**logo_coll**", $body);
         if($this->get('session')->get('logo') !== null) {
             $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75">' . $html[1];
+        } else {
+            $htmlBody = $body;
         }
 
         // Constitution du mail
