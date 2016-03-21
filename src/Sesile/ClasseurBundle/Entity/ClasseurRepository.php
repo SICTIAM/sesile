@@ -34,6 +34,20 @@ class ClasseurRepository extends EntityRepository {
     }
 
     /*
+     * Return number of classeurs visible for super admin
+     *
+     * @param integer user id
+     * @return integer
+     */
+    public function countClasseursVisiblesForDTablesV3SuperAdmin() {
+        return $this
+            ->createQueryBuilder('c')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /*
      * Get current classeurs visible for Data Tables
      *
      * @param integer user id
@@ -107,6 +121,62 @@ class ClasseurRepository extends EntityRepository {
                 ->setMaxResults($length)
             ;
         }*/
+
+        // on retourne la requete
+        return $qb
+            ->getQuery()
+            ->getResult()
+        ;
+
+    }
+
+    /*
+     * Get current classeurs visible for Data Tables for super admin
+     *
+     * @param integer user id
+     * @param array get values of Data Tables
+     */
+    public function getClasseursVisiblesForDTablesV3SuperAdmin($get) {
+
+        $qb = $this
+            ->createQueryBuilder('c')
+            ->join('c.type', 't')
+            ->addSelect('t')
+        ;
+
+        // Pour changer l ordre du tableau
+        $colonnes = array('nom', 'creation', 'validation', 'intervenants', 'type', 'status');
+
+        if($get->get('order') !== null) {
+            // Condition spéciale pour trier par type par ordre alphabétique
+            if ($colonnes[$get->get('order')[0]["column"]] == "type") {
+                $order = 't.nom';
+            } else {
+                $order = 'c.' . $colonnes[$get->get('order')[0]["column"]];
+            }
+            $qb->orderBy($order, $get->get('order')[0]["dir"]);
+        }
+
+        // Pour la recherche dans le tableau
+        if (isset($get->get('search')["value"]) && $get->get('search')['value'] != '') {
+            $str = $get->get('search')['value'];
+
+            $qb
+                ->where('c.nom LIKE :str')
+                ->orWhere('t.nom LIKE :str')
+                ->setParameter('str', '%'.$str.'%')
+            ;
+        }
+
+        // Pour l affichage parcellaire
+        if ($get->get('start') != '' && $get->get('length') != '-1') {
+            $start = (int)$get->get('start');
+            $length = (int)$get->get('length');
+            $qb
+                ->setFirstResult($start)
+                ->setMaxResults($length)
+            ;
+        }
 
         // on retourne la requete
         return $qb

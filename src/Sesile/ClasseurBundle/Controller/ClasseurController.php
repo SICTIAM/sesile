@@ -51,12 +51,23 @@ class ClasseurController extends Controller {
 
         $get = $request->query;
 //        $entities = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser()->getId())->getClasseurs();
-        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3($this->getUser()->getId(), $get);
+
+
+        // Si on est super admin, on peut voir tous les classeurs
+        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3SuperAdmin($get);
+            $recordsFiltered = count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3SuperAdmin());
+        }
+        // Sinon on ne peut voir que les classeurs qui nous sont attribués
+        else {
+            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3($this->getUser()->getId(), $get);
+            $recordsFiltered = count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3($this->getUser()->getId()));
+        }
 
         $output = array(
             "draw" => $get->get("draw"),
             "recordsTotal" => count($entities),
-            "recordsFiltered" => count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3($this->getUser()->getId())),
+            "recordsFiltered" => $recordsFiltered,
             "data" => array()
         );
 
