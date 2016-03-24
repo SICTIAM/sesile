@@ -1,3 +1,5 @@
+<div class="container-alert">
+
 {% for flashMessage in app.session.flashbag.get('notice') %}
     <div class="alert alert-info alert-dismissable" style="display:none">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -25,6 +27,8 @@
         {{ flashMessage }}
     </div>
 {% endfor %}
+
+</div>
 <script type="text/javascript">
     $('.alert-dismissable').each(function () {
         $(this).delay(300).show("slow").delay(3000).hide("slow");

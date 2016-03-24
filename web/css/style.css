@@ -596,10 +596,15 @@ select [name=user] {
 }
 
 /*FLASHBAG*/
-.alert {
+.container-alert {
 	position: absolute;
 	width: 45%;
 	left: 35%;
+    top: 5px;
+    z-index: 1000;
+}
+.alert {
+	position: relative;
     top: 5px;
     z-index: 1000;
 }

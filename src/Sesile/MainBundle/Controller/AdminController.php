@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Yaml\Yaml;
 use Sesile\MainBundle\Classe\OvhApi;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 class AdminController extends Controller
 {
@@ -349,17 +350,49 @@ class AdminController extends Controller
             // Création du mail
             $message = \Swift_Message::newInstance()
                 ->setSubject($data['sujet'])
-                ->setFrom('sesile@sictiam.fr')
-                ->setBody($data['mailMessage'], "text/html");
+                //->setFrom('sesile@sictiam.fr')
+                ->setFrom($this->container->getParameter('email_sender_address'))
+                ->setBody($data['mailMessage'])
+                ->setContentType('text/html');
 
+            // Init du message d info
+            $errorsString = "";
             // Envoie du mail pour chaque utilisateur
             foreach ($users as $key => $user) {
-                $message->setTo($user->getEmail());
-                $this->get('mailer')->send($message);
+
+                // On recupere l email de l utilisateur
+                $email = $user->getEmail();
+                $emailConstraint = new EmailConstraint();
+                $emailConstraint->message = "L'adresse email " . $email . " n'est pas valide.";
+
+                // On teste si l email est valide
+                $errors = $this->get('validator')->validateValue(
+                    $email,
+                    $emailConstraint
+                );
+
+                // Si on a des erreurs paf le chien !
+                if (count($errors) > 0) {
+                    /*
+                     * Uses a __toString method on the $errors variable which is a
+                     * ConstraintViolationList object. This gives us a nice string
+                     * for debugging
+                     */
+                    $errorsString .= (string) $errors;
+                    // Message d info pour l'utilisateur
+                    $request->getSession()->getFlashBag()->add('error',$errorsString);
+
+                }
+                // Sinon on envoie le mail
+                else {
+                    $message->setTo($email);
+                    var_dump($email);
+                    $this->get('mailer')->send($message);
+                }
             }
 
             // Message de confirmation pour l'utilisateur
-            $request->getSession()->getFlashBag()->add('success',"L'emailing a été envoyé avec succès");
+            $request->getSession()->getFlashBag()->add('success', "L'emailing a été envoyé avec succès.");
 
         }
 
