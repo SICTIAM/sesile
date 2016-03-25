@@ -272,22 +272,31 @@ class DefaultController extends Controller
                         }
                         //echo "false";exit;
                         $em->flush();
+                        $this->get('session')->getFlashBag()->add(
+                            'success',
+                            "L'utilisateur a bien été modifié"
+                        );
                     } else {
                         ldap_close($ldapconn);
-                        echo "pb rename ldap";
-                        exit;
+//                        echo "pb rename ldap 2";
+                        $this->get('session')->getFlashBag()->add(
+                            'error',
+                            "Problème de CAS avec l'utilisateur"
+                        );
+//                        exit;
                     }
-                    $this->get('session')->getFlashBag()->add(
-                        'success',
-                        "L'utilisateur a bien été modifié"
-                    );
+
                     return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
                     ldap_close($ldapconn);
-                    exit("Authentification au serveur LDAP impossible");
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        "Authentification au serveur LDAP impossible"
+                    );
+//                    exit("Authentification au serveur LDAP impossible");
+                    return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 }
 
-                return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
             }
         }
         return array(
