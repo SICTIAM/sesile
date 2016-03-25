@@ -963,3 +963,9 @@ select [name=user] {
 	padding: 0 !important;
 	border: solid 1px rgb(204,204,204);
 }
+
+/* Bootstrap perso*/
+.nopadding {
+	padding: 0 !important;
+	margin: 0 !important;
+}
