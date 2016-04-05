@@ -1795,16 +1795,21 @@ class ClasseurController extends Controller {
         // Pour l integration de l image du logo dans le mail
         $html = explode("**logo_coll**", $body);
         if($this->get('session')->get('logo') !== null) {
-            $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75">' . $html[1];
+            $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75" alt="Sesile">' . $html[1];
         } else {
             $htmlBody = $body;
         }
+
+        // On rajoute les balises manquantes
+        $html_brkts_start = "<html><head></head><body>";
+        $html_brkts_end = "</body></html>";
+        $htmlBodyFinish = $html_brkts_start . $htmlBody . $html_brkts_end;
 
         // Constitution du mail
         $message->setSubject($sujet)
             ->setFrom($this->container->getParameter('email_sender_address'))
             ->setTo($to)
-            ->setBody($htmlBody)
+            ->setBody($htmlBodyFinish)
             ->setContentType('text/html');
 
         // Envoie de l email
