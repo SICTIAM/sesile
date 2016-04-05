@@ -969,3 +969,11 @@ select [name=user] {
 	padding: 0 !important;
 	margin: 0 !important;
 }
+
+#sesile_userbundle_user_userRole select, #sesile_userbundle_user_userRole>div>label, #sesile_userbundle_user_userRole>div>div>div:last-child{
+	display: none;
+}
+
+.btn-supRoles {
+	margin: -6px 0 10px 0 !important;
+}

@@ -122,6 +122,11 @@ class User extends BaseUser {
      */
     protected $role;
 
+    /**
+     * @var
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserRole", mappedBy="user", cascade={"persist"})
+     */
+    private $userRole;
 
     /**
      * @var string
@@ -938,5 +943,38 @@ class User extends BaseUser {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
         // le document/image dans la vue.
         return 'uploads/signatures/';
+    }
+
+    /**
+     * Add userRole
+     *
+     * @param \Sesile\UserBundle\Entity\UserRole $userRole
+     * @return User
+     */
+    public function addUserRole(\Sesile\UserBundle\Entity\UserRole $userRole)
+    {
+        $this->userRole[] = $userRole;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userRole
+     *
+     * @param \Sesile\UserBundle\Entity\UserRole $userRole
+     */
+    public function removeUserRole(\Sesile\UserBundle\Entity\UserRole $userRole)
+    {
+        $this->userRole->removeElement($userRole);
+    }
+
+    /**
+     * Get userRole
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserRole()
+    {
+        return $this->userRole;
     }
 }

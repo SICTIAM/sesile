@@ -4,6 +4,8 @@ namespace Sesile\UserBundle\Controller;
 
 use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\UserPack;
+use Sesile\UserBundle\Entity\UserRole;
+use Sesile\UserBundle\Form\UserRoleType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -124,6 +126,16 @@ class DefaultController extends Controller
                     ldap_close($ldapconn);
 
                     $em->flush();
+
+                    // modification des roles
+                    // C est moche mais ca marche : je ne sais pas pouquoi le user n est pas prise lors de l insertion en BDD
+                    $rolesUsers = $em->getRepository('SesileUserBundle:UserRole')->findByUser(null);
+                    foreach ($rolesUsers as $rolesUser) {
+                        $rolesUser->setUser($entity);
+                    }
+                    $em->flush();
+                    // fin de la modification des roles
+
                     //envoi d'un mail à l'utilisateur nouvellement créé
                     $message = \Swift_Message::newInstance()
                         ->setContentType('text/html')
@@ -194,6 +206,7 @@ class DefaultController extends Controller
      * @Template("SesileUserBundle:Default:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
+        //var_dump($request->request->get('sesile_userbundle_user')['userRole']); die();
         $upload = $this->container->getParameter('upload');
 
         $DirPath = $upload['path'];
@@ -217,6 +230,13 @@ class DefaultController extends Controller
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
+
+        // Suppression de tous les roles avant de les rajouter
+        $userRoles = $em->getRepository('SesileUserBundle:UserRole')->findByUser($entity);
+        foreach ($userRoles as $userRole) {
+            $em->remove($userRole);
+        }
+        $em->flush();
 
         $editForm->handleRequest($request);
 
@@ -271,6 +291,7 @@ class DefaultController extends Controller
 
                         }
                         //echo "false";exit;
+                        $em->persist($entity);
                         $em->flush();
                         $this->get('session')->getFlashBag()->add(
                             'success',
