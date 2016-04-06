@@ -977,3 +977,7 @@ select [name=user] {
 .btn-supRoles {
 	margin: -6px 0 10px 0 !important;
 }
+
+.dropdown-menu .btn-valider-signer {
+	display: block !important;
+}
