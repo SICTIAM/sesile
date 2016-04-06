@@ -1559,11 +1559,11 @@ class ClasseurController extends Controller {
     /**
      * Valider_et_signer an existing Classeur entity.
      *
-     * @Route("/signform/{id}", name="signform")
+     * @Route("/signform/{id}/{role}", name="signform")
      * @Template()
      *
      */
-    public function signAction(Request $request, $id)
+    public function signAction(Request $request, $id, $role = null)
     {
         //var_dump($request->get("moncul"));exit;
         $user = $this->get('security.context')->getToken()->getUser();
@@ -1608,10 +1608,35 @@ class ClasseurController extends Controller {
             $currentvalidant = $request->request->get('curentValidant');
 
         }
+
+        // Gestion du role de l utilisateur
+        // Dans le cas l utilisateur a plusieurs roles
+        if(null !== $role) {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
+            $role = $roleUser->getUserRoles();
+        }
+        // Dans le cas l utilisateur a un seul role
+        else {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findByUser($user);
+            if (!empty($roleUser)) {
+                $role = $roleUser[0]->getUserRoles();
+            } else {
+                $role = '';
+            }
+        }
+
         $servername = $_SERVER['HTTP_HOST'];
         $url_applet = $this->container->getParameter('url_applet');
 
-        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername' => $servername, "url_applet" => $url_applet);
+        return array(
+            'user'      => $user,
+            'role'      => $role,
+            'classeur'  => $classeur,
+            'session_id' => $session->getId(),
+            'docstosign' => $docstosign,
+            'servername' => $servername,
+            "url_applet" => $url_applet
+        );
 
     }
 

@@ -8,18 +8,34 @@
             </button>
 
         {% else %}
-            <button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
-                <span class="glyphicon glyphicon-ok"></span>
-                &nbsp;Valider et Signer
-            </button>
+
+            {# Signer le classeur avec multi roles #}
+            {% if uservalidant.UserRole | length > 1 %}
+                <div class="btn-group btn-group-valider-signer">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Valider et Signer avec le rôle <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for role in uservalidant.UserRole %}
+                            <li><a href="#" class="btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id, 'role':role.id,}) }}">{{ role.userRoles }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {# Signer le classeur sans multi roles #}
+            {% else %}
+                <button type="submit" class="btn btn-success btn-valider-signer" data-action="{{ path('signform',{'id':classeur.id}) }}">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    &nbsp;Valider et Signer
+                </button>
+            {% endif %}
+
 
             <button type="submit" class="btn btn-success btn-valider-non-signer" data-action="{{ path("classeur_valider") }}">
                 <span class="glyphicon glyphicon-ok"></span>
                 &nbsp;Valider
             </button>
 
-            <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal"
-                    data-whatever="@mdo" {#class=".bs-example-modal-lg"#}>
+            <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#fenetreModal" data-whatever="@mdo" {#class=".bs-example-modal-lg"#}>
                 <span class="glyphicon glyphicon-remove"></span>
                 &nbsp;Refuser
             </button>

@@ -22,7 +22,7 @@
                 <input type="hidden" name="moncul" value="1">
 
                 <div class="col-md-4"><strong>Role : </strong></div>
-                <div class="col-md-8">{{ user.role }}</div>
+                <div class="col-md-8">{{ role }}</div>
 
                 <div class="col-md-4"><strong>Ville : </strong></div>
                 <div class="col-md-8">{{ user.ville }}</div>
@@ -280,9 +280,9 @@
         $('#lacommode').submit();
 
     }
-    //Fonction qui va envoyer le rol
+    //Fonction qui va envoyer le role
     function envoiChaineRole() {
-        document.javaapplet.recevoirChaineRole("{{ user.role }}");
+        document.javaapplet.recevoirChaineRole("{{ role }}");
     }
     //Fonction qui va envoyer la ville
     function envoiChaineVille() {
