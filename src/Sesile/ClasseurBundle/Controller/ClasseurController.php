@@ -53,16 +53,10 @@ class ClasseurController extends Controller {
 //        $entities = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser()->getId())->getClasseurs();
 
 
-        // Si on est super admin, on peut voir tous les classeurs
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3SuperAdmin($get);
-            $recordsFiltered = count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3SuperAdmin());
-        }
-        // Sinon on ne peut voir que les classeurs qui nous sont attribués
-        else {
-            $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3($this->getUser()->getId(), $get);
-            $recordsFiltered = count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3($this->getUser()->getId()));
-        }
+        // Liste des classeurs visible pour l'utilisateur
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3($this->getUser()->getId(), $get);
+        $recordsFiltered = count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3($this->getUser()->getId()));
+
 
         $output = array(
             "draw" => $get->get("draw"),
@@ -124,6 +118,53 @@ class ClasseurController extends Controller {
         return new Response(json_encode($output));
     }
 
+
+    /**
+     * Page qui affiche la liste des classeurs à valider pour le user connecté
+     *
+     * @Route("/liste-classeurs-admin", name="classeur_admin")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:a_valider.html.twig")
+     */
+    public function indexListeAdminAction()
+    {
+        return $this->listeAdminAction();
+    }
+
+
+    /**
+     * Liste des classeurs à valider
+     *
+     * @Route("/liste_admin", name="liste_classeur_admin")
+     * @Method("GET")
+     */
+    public function listeAdminAction() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
+
+        $tabClasseurs = array();
+        foreach($entities as $classeur)
+        {
+            $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+
+                $tabClasseurs[] = array(
+                    'id'        => $classeur->getId(),
+                    'nom'       => $classeur->getNom(),
+                    'creation'  => $classeur->getCreation(),
+                    'validation'=> $classeur->getValidation(),
+                    'type'      => $classeur->getType(),
+                    'status'    => $classeur->getStatus(),
+                    'document'  => $classeur->getDocuments(),
+                    'validants' => $validants
+                );
+
+        }
+
+        return array(
+            'classeurs' => $tabClasseurs,
+            "menu_color" => "bleu"
+        );
+    }
 
     /**
      * Liste des classeurs retiré
