@@ -331,35 +331,66 @@ class DefaultController extends Controller
     /**
      * Deletes a User entity.
      *
-     * @Route("/{id}", name="user_delete")
-     * @Method("DELETE")
+     * @Route("/delete/{id}", name="user_delete")
+     * @Method("GET")
      */
     public function deleteAction(Request $request, $id)
     {
+        // On vérifie si l'utitilateur est bien admin
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            // Sinon on déclenche une exception « Accès interdit »
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
+        // On vérifie si l'utilisateur qui doit etre supprimé ne soit pas l'utilisateur courant
+        if($this->getUser()->getId() == $id) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Suppression impossible : vous ne pouvez pas vous supprimer vous-même'
+            );
+            // Si oui, on redirige et on ne supprime pas l'user
+            return $this->redirect($this->generateUrl('liste_users'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        // On vérifie si le user est dans des classeurs
+        if ($em->getRepository('SesileUserBundle:User')->isUserInClasseurs($id)) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Suppression impossible : utilisateur présent dans un ou plusieurs classeurs'
+            );
+            // Si oui, on redirige et on ne supprime pas l'user
+            return $this->redirect($this->generateUrl('liste_users'));
+        }
+
+        // On récupère le dossier des avatar
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
 
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
-            if ($entity->getPath()) {
-                $entity->removeUpload($DirPath);
-            }
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find User entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-
+        // On récupère l'entity utilisateur à supprimer
+        $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity.');
         }
-        return $this->redirect($this->generateUrl('liste_users')); // rediriger vers liste_user non?
-    }
 
+        // Si elle a bien un répertoire pour son avatar
+        if ($entity->getPath()) {
+            $entity->removeUpload($DirPath);
+        }
+
+        // On supprime l'user et on flush
+        $em->remove($entity);
+        $em->flush();
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'L\'utilisateur a bien été supprimé'
+        );
+
+        // On redirige vers liste_user
+        return $this->redirect($this->generateUrl('liste_users'));
+    }
 
 
 

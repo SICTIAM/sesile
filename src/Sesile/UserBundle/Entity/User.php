@@ -917,7 +917,7 @@ class User extends BaseUser {
     }
 
     /**
-     * @ORM\PostRemove()
+     * @param $Dirpath
      */
     public function removeUploadSignature($Dirpath) {
 
