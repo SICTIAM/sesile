@@ -71,4 +71,29 @@ class EtapeGroupeRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }*/
+
+    /**
+     * deleteUserFromEtapeGroupes
+     * Fonction qui supprime un user de tous les EtapeGroupes de l'univers
+     *
+     * @param $id
+     */
+    public function deleteUserFromEtapeGroupes($id){
+        $em = $this->getEntityManager();
+
+        // On récupère l'entity utilisateur à supprimer
+        $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        // On récupère tous les EtapeGroupes
+        $etapeGroupes = $em->getRepository('SesileUserBundle:EtapeGroupe')->findAll();
+
+        // Pour chaque EtapeGroupe
+        foreach($etapeGroupes as $etapeGroupe) {
+            // On supprime l'utilisateur du EtapeClasseur (s'il y est)
+            $etapeGroupe->removeUser($entity);
+        }
+    }
 }
