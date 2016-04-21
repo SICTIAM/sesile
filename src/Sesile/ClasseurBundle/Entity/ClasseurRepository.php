@@ -92,6 +92,8 @@ class ClasseurRepository extends EntityRepository {
             $qb
                 ->where('c.nom LIKE :str')
                 ->orWhere('t.nom LIKE :str')
+                ->orWhere('c.creation LIKE :str')
+                ->orWhere('c.validation LIKE :str')
                 ->setParameter('str', '%'.$str.'%')
             ;
         }
