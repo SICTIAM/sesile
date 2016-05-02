@@ -125,9 +125,11 @@ class Bordereau
                     }
                     $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePce->MtHT->attributes()[0]);
                     $tmpTVA = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->TVAIntraCom->attributes()[0]);
-                    if(isset($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA))
+//                    if(isset($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA))
+                    if(isset($LignePiece->BlocLignePiece->InfoLignePce->MtTVA))
                     {
-                        $tmpTVA += doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA->attributes()[0]);
+//                        $tmpTVA += doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA->attributes()[0]);
+                        $tmpTVA += doubleval($LignePiece->BlocLignePiece->InfoLignePce->MtTVA->attributes()[0]);
                     }
                 } else {
                     $imputation = $LignePiece->BlocLignePiece->InfoLignePiece->Nature->attributes()[0];
