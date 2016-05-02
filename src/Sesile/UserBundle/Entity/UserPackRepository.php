@@ -12,4 +12,30 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserPackRepository extends EntityRepository
 {
+
+    /**
+     * deleteUserFromUserPacks
+     * Fonction qui supprime un user de tous les UserPacks de l'univers
+     *
+     * @param $id
+     */
+    public function deleteUserFromUserPacks($id) {
+        $em = $this->getEntityManager();
+
+        // On récupère l'entity utilisateur à supprimer
+        $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        // On récupère tous les UserPacks
+        $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findAll();
+
+        // Pour chaque UserPack
+        foreach($userPacks as $userPack) {
+            // On supprime l'utilisateur du UserPack (s'il y est)
+            $userPack->removeUser($entity);
+        }
+    }
+
 }

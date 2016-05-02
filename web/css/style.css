@@ -596,10 +596,15 @@ select [name=user] {
 }
 
 /*FLASHBAG*/
-.alert {
+.container-alert {
 	position: absolute;
 	width: 45%;
 	left: 35%;
+    top: 5px;
+    z-index: 1000;
+}
+.alert {
+	position: relative;
     top: 5px;
     z-index: 1000;
 }
@@ -957,4 +962,22 @@ select [name=user] {
 .upload_image {
 	padding: 0 !important;
 	border: solid 1px rgb(204,204,204);
+}
+
+/* Bootstrap perso*/
+.nopadding {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+#sesile_userbundle_user_userRole select, #sesile_userbundle_user_userRole>div>label, #sesile_userbundle_user_userRole>div>div>div:last-child{
+	display: none;
+}
+
+.btn-supRoles {
+	margin: -6px 0 10px 0 !important;
+}
+
+.dropdown-menu .btn-valider-signer {
+	display: block !important;
 }

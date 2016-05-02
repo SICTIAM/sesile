@@ -51,12 +51,17 @@ class ClasseurController extends Controller {
 
         $get = $request->query;
 //        $entities = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser()->getId())->getClasseurs();
+
+
+        // Liste des classeurs visible pour l'utilisateur
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3($this->getUser()->getId(), $get);
+        $recordsFiltered = count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3($this->getUser()->getId()));
+
 
         $output = array(
             "draw" => $get->get("draw"),
             "recordsTotal" => count($entities),
-            "recordsFiltered" => count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3($this->getUser()->getId())),
+            "recordsFiltered" => $recordsFiltered,
             "data" => array()
         );
 
@@ -113,6 +118,53 @@ class ClasseurController extends Controller {
         return new Response(json_encode($output));
     }
 
+
+    /**
+     * Page qui affiche la liste des classeurs à valider pour le user connecté
+     *
+     * @Route("/liste-classeurs-admin", name="classeur_admin")
+     * @Method("GET")
+     * @Template("SesileClasseurBundle:Classeur:a_valider.html.twig")
+     */
+    public function indexListeAdminAction()
+    {
+        return $this->listeAdminAction();
+    }
+
+
+    /**
+     * Liste des classeurs à valider
+     *
+     * @Route("/liste_admin", name="liste_classeur_admin")
+     * @Method("GET")
+     */
+    public function listeAdminAction() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
+
+        $tabClasseurs = array();
+        foreach($entities as $classeur)
+        {
+            $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+
+                $tabClasseurs[] = array(
+                    'id'        => $classeur->getId(),
+                    'nom'       => $classeur->getNom(),
+                    'creation'  => $classeur->getCreation(),
+                    'validation'=> $classeur->getValidation(),
+                    'type'      => $classeur->getType(),
+                    'status'    => $classeur->getStatus(),
+                    'document'  => $classeur->getDocuments(),
+                    'validants' => $validants
+                );
+
+        }
+
+        return array(
+            'classeurs' => $tabClasseurs,
+            "menu_color" => "bleu"
+        );
+    }
 
     /**
      * Liste des classeurs retiré
@@ -1548,11 +1600,11 @@ class ClasseurController extends Controller {
     /**
      * Valider_et_signer an existing Classeur entity.
      *
-     * @Route("/signform/{id}", name="signform")
+     * @Route("/signform/{id}/{role}", name="signform")
      * @Template()
      *
      */
-    public function signAction(Request $request, $id)
+    public function signAction(Request $request, $id, $role = null)
     {
         //var_dump($request->get("moncul"));exit;
         $user = $this->get('security.context')->getToken()->getUser();
@@ -1597,10 +1649,35 @@ class ClasseurController extends Controller {
             $currentvalidant = $request->request->get('curentValidant');
 
         }
+
+        // Gestion du role de l utilisateur
+        // Dans le cas l utilisateur a plusieurs roles
+        if(null !== $role) {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
+            $role = $roleUser->getUserRoles();
+        }
+        // Dans le cas l utilisateur a un seul role
+        else {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findByUser($user);
+            if (!empty($roleUser)) {
+                $role = $roleUser[0]->getUserRoles();
+            } else {
+                $role = '';
+            }
+        }
+
         $servername = $_SERVER['HTTP_HOST'];
         $url_applet = $this->container->getParameter('url_applet');
 
-        return array('user' => $user, 'classeur' => $classeur, 'session_id' => $session->getId(), 'docstosign' => $docstosign, 'servername' => $servername, "url_applet" => $url_applet);
+        return array(
+            'user'      => $user,
+            'role'      => $role,
+            'classeur'  => $classeur,
+            'session_id' => $session->getId(),
+            'docstosign' => $docstosign,
+            'servername' => $servername,
+            "url_applet" => $url_applet
+        );
 
     }
 
@@ -1784,16 +1861,21 @@ class ClasseurController extends Controller {
         // Pour l integration de l image du logo dans le mail
         $html = explode("**logo_coll**", $body);
         if($this->get('session')->get('logo') !== null) {
-            $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75">' . $html[1];
+            $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75" alt="Sesile">' . $html[1];
         } else {
             $htmlBody = $body;
         }
+
+        // On rajoute les balises manquantes
+        $html_brkts_start = "<html><head></head><body>";
+        $html_brkts_end = "</body></html>";
+        $htmlBodyFinish = $html_brkts_start . $htmlBody . $html_brkts_end;
 
         // Constitution du mail
         $message->setSubject($sujet)
             ->setFrom($this->container->getParameter('email_sender_address'))
             ->setTo($to)
-            ->setBody($htmlBody)
+            ->setBody($htmlBodyFinish)
             ->setContentType('text/html');
 
         // Envoie de l email
@@ -1841,26 +1923,27 @@ class ClasseurController extends Controller {
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
 //        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
         $d_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
-        $currentvalidant = $this->getUser();
-        $c_user = $em->getRepository("SesileUserBundle:User")->findOneById($currentvalidant);
+//        $currentvalidant = $this->getUser();
+//        $c_user = $em->getRepository("SesileUserBundle:User")->findOneById($currentvalidant);
         $env = new \Twig_Environment(new \Twig_Loader_String());
-        $body = $env->render($coll->getTextmailnew(),
-            array(
-                'deposant' => $d_user->getPrenom() . " " . $d_user->getNom(),
-                'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
-                'role' => $c_user->getRole(),
-                'qualite' => $c_user->getQualite(),
-                'titre_classeur' => $classeur->getNom(),
-                'date_limite' => $classeur->getValidation(),
-                'type' => strtolower($classeur->getType()->getNom()),
-                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">valider le classeur</a>'
-            )
-        );
+
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
 //        foreach($classeur->getValidant() as $validant) {
         foreach($validants as $validant) {
 
             if ($validant != null) {
+                $body = $env->render($coll->getTextmailnew(),
+                    array(
+                        'deposant' => $d_user->getPrenom() . " " . $d_user->getNom(),
+                        'validant' => $validant->getPrenom() . " " . $validant->getNom(),
+                        'role' => $d_user->getRole(),
+                        'qualite' => $d_user->getQualite(),
+                        'titre_classeur' => $classeur->getNom(),
+                        'date_limite' => $classeur->getValidation(),
+                        'type' => strtolower($classeur->getType()->getNom()),
+                        "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">valider le classeur</a>'
+                    )
+                );
                 $this->sendMail("SESILE - Nouveau classeur à valider", $validant->getEmail(), $body);
             }
         }

@@ -49,7 +49,7 @@
                 <div class='pull-right' id="bouttons" style="display:none">
                     <br/>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                    <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le classeur</button>
+                    <button type="button" id="signatureDocument" class="btn btn-success">Signer et valider le classeur</button>
                 </div>
             </div>
 
@@ -164,7 +164,8 @@
 
     var docstosign = {{ docstosign|json_encode|raw }};
     var attributes = {width: 1, height: 1, id: "javaapplet"};
-    var parameters = {jnlp_href: 'http://{{ url_applet }}/launch.jnlp'}; // url : signature DEMO
+    var parameters = {jnlp_href: 'http://dss.dave.fred/launch.jnlp'};
+    // var parameters = {jnlp_href: 'http://{{ url_applet }}/launchpdf.jnlp'}; // url : signature DEMO
 
     var version = '1.7';
     deployJava.runApplet(attributes, parameters, version);
@@ -177,11 +178,31 @@
 
     function appletReady() {
 
+        // Envoie du lien pour l upload
         {#document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod*/#}
         document.javaapplet.setUploadUrl('http://' + window.location.hostname + '{{ path('upload_doc') }}'); // Prod*/
 
-//        var divmethod = document.getElementById('listemethod');
+        // Envoie de la variable de session
+        document.javaapplet.setsessionid("{{ session_id }}");
+        // Envoie de la variable document id
+        document.javaapplet.setdocumentid(docstosign[0].id);
 
+        // Envoie de l id
+        var divcertif = document.getElementById('listecertif');
+        var selectcertif = document.createElement('select');
+        divcertif.appendChild(selectcertif);
+
+        //document.javaapplet.getCertificates("http://dss.dave.fred/hello-world.pdf");
+        document.javaapplet.getCertificates('http://{{ servername }}/uploads/docs/' + docstosign[0].repourl);
+
+        $('#bouttons').show('slow');
+
+        selectcertif.setAttribute('name', 'selectcertif');
+        selectcertif.setAttribute('id', 'selectcertif');
+        $('<option selected="selected">Choisir un certificat</option>').appendTo("#selectcertif");
+
+//        var divmethod = document.getElementById('listemethod');
+/*
         var divcertif = document.getElementById('listecertif');
         var selectcertif = document.createElement('select');
         selectcertif.setAttribute('name', 'selectcertif');
@@ -197,16 +218,33 @@
             element.text = nomcertif;
             selectcertif.appendChild(element);
             i = i + 1;
-
         }
         divcertif.appendChild(selectcertif);
+        */
         timeoutIdHide = false;
         $('#help').hide();
         $('#bouttons').show('slow');
+
 //        setStatusText('Pret à signer');
 
     }
+    function encode_utf8(s) {
+        return unescape(encodeURIComponent(s));
+    }
 
+    function decode_utf8(s) {
+        return decodeURIComponent(escape(s));
+    }
+
+    function setCertificate (value, nom) {
+
+        nom = decode_utf8(nom);
+        $('#selectcertif').append($('<option>', {
+            value: value,
+            text: nom
+        }));
+
+    }
 
     function msieversion() {
 
@@ -215,15 +253,6 @@
 
         // If Internet Explorer, else return false
         return (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./));
-        /*
-        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {      // If Internet Explorer, return version number
-//                    alert(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))));
-            return true;
-        }
-        else {                 // If another browser, return 0
-//                    alert('otherbrowser');
-            return false;
-        }*/
 
     }
 
@@ -246,17 +275,13 @@
     //function donnant le nombre de fichier
     function getNumberFiles() {
 
-
         document.javaapplet.setNumberFiles({{ docstosign|length }});
-
 
     }
 
     //function donnant le chemin du fichier
     function getFileLinkFromNumber(i) {
 
-        //alert('http://
-        //console.log();
         document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/' + docstosign[i].repourl, docstosign[i].repourl, docstosign[i].id);
 
     }
@@ -277,9 +302,9 @@
 
     //function permettant de signifier la fin de la signature d'un classeur
     function signingProcessEnded(i, errormessage) {
-        $('#lacommode').submit();
-
+        //$('#lacommode').submit();
     }
+
     //Fonction qui va envoyer le role
     function envoiChaineRole() {
         document.javaapplet.recevoirChaineRole("{{ role }}");
@@ -300,7 +325,6 @@
     function envoiChainePays() {
         document.javaapplet.recevoirChainePays("{{ user.pays }}");
     }
-
     //Fonction qui va envoyer le sessionid
     function getsessionid() {
         document.javaapplet.setsessionid("{{ session_id }}");
@@ -333,25 +357,14 @@
         $('#progressbar').removeClass('progress-bar-success progress-bar-info progress-bar-warning progress-bar-danger').addClass('progress-bar-' + col);
     }
 
-    //function permettant de signifier la fin du téléchargement d'un fichier
-    function signature() {
-
+    //function permettant de lancer la signature du fichier
+    $("#signatureDocument").on('click', function signature() {
 
         $('#bouttons').hide('slow');
-        var certif = document.getElementById('selectcertif');
-        //alert('lancement signature '+method.value+'  '+certif.value);
+        document.javaapplet.signDocument($('#selectcertif').val());
 
-        nbfic =
-        {{docstosign|length  }}
+    });
 
-        if (nbfic > 0) {
-            document.javaapplet.launchSigningWithCertificate(certif.value);
-        }
-        else {
-            $('#lacommode').submit();
-        }
-
-    }
 
 </script>
 

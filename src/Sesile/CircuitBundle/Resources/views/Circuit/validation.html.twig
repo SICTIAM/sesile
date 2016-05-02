@@ -392,9 +392,11 @@
             //if(valid_sign == 0) {
             if(nbEtapes <= 1) {
                 $(".btn-valider-signer").css('display', 'inline-block');
+                $(".btn-group-valider-signer").css('display', 'inline-block');
                 $(".btn-valider-non-signer").css('display', 'none');
             } else {
                 $(".btn-valider-signer").css('display', 'none');
+                $(".btn-group-valider-signer").css('display', 'none');
                 $(".btn-valider-non-signer").css('display', 'inline-block');
             }
         }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{% block title %}SESILE 2.0 - Système Electronique de SIgnature LEgale{% endblock %}</title>
+    <title>{% block title %}SESILE - Système Electronique de SIgnature LEgale{% endblock %}</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}"/>
     <link rel="stylesheet" href="{{ asset('/bootstrap/css/bootstrap.css') }}"/>
@@ -38,7 +38,7 @@
 {% include 'SesileMainBundle:Default:flashbag.html.twig' %}
 <div id="maman">
 
-    <div id="gauche">
+    <div id="gauche" class="hidden-xs">
         <a href="{{ path('index') }}">
         <div id="logo">
                 <img src="{{ asset("/images/logos.svg") }}"/>
@@ -59,8 +59,31 @@
 
     <div id="droite">
 
+        <div class="navbar-toggle">
 
-        <div id="header">
+            <nav class="navbar navbar-fixed-top nav-mobile">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <a class="navbar-brand" href="#"><img src="{{ asset("/images/logos.svg") }}" class="col-xs-2"/></a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        {% include 'SesileMainBundle:Default:menu-mobile.html.twig' %}
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div id="header" class="hidden-xs">
 
             {% if app.user != null %}
                 <div class="btn-group">
@@ -114,10 +137,8 @@
                     {% endif %}
                     <div class="bloc_accueil">
                         {% if app.user %}
-                            <script type="application/javascript"
-                                    src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
-                            <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}"
-                                  rel="stylesheet"/>
+                            <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+                            <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
 
                             {% render url("delegations_all_list") %}
                             <object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0"
@@ -163,13 +184,13 @@
                         <span class="lettersmove">CONTACT</span>
                     </a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="sesiletooltip mentionlegales" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode" target="_blank"><!-- data-toggle="tooltip"
+                    <a class="sesiletooltip mentionlegales" href="https://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode" target="_blank"><!-- data-toggle="tooltip"
                     title="Parapheur Sesile - 2013" -->
                         <span class="lettersmove">MENTIONS L&Eacute;GALES</span>
 
                     </a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="sesiletooltip creativecommons" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank"> <!--data-toggle="tooltip"
+                    <a class="sesiletooltip creativecommons" href="https://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank"> <!--data-toggle="tooltip"
                     title="Creative Commons Attributions : <br /> Pas d'utilisation commerciale <br /> Pas de modification - 3.0 France"-->
                         <span class="lettersmove">CREATIVE COMMONS</span>
                     </a>

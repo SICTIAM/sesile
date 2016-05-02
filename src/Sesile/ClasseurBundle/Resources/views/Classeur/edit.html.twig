@@ -88,36 +88,38 @@
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="titre_form_element">
-                        <span class="glyphicon glyphicon-play"></span>
-                        &nbsp;&nbsp;&nbsp;Visibilit&eacute;
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="titre_form_element">
-                        <span class="glyphicon glyphicon-play"></span>
-                        &nbsp;&nbsp;&nbsp;Type du classeur
-                    </div>
-                </div>
-            </div>
-        
 
-            <div class="row">
-                <div class="col-lg-6">
-                    <select class="fuckingvisibility form-control" id="visibilite" name="visibilite">
-                        <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
-                        <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
-                        <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
-                        {% if classeur.visibilite == 3 %}
-                            <option value="3" selected="selected">Pour le service organisationnel</option>
-                        {% endif %}
-                    </select>
+                <div class="col-lg-6 nopadding">
+                    <div class="col-lg-12">
+                        <div class="titre_form_element">
+                            <span class="glyphicon glyphicon-play"></span>
+                            &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <select class="fuckingvisibility form-control" id="visibilite" name="visibilite">
+                            <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
+                            <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
+                            <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
+                            {% if classeur.visibilite == 3 %}
+                                <option value="3" selected="selected">Pour le service organisationnel</option>
+                            {% endif %}
+                        </select>
+                    </div>
                 </div>
-                <div class="col-lg-6 disabled">
-                    <select class="form-control" disabled>
-                        <option>{{ classeur.type.nom }}</option>
-                    </select>
+
+                <div class="col-lg-6 nopadding">
+                    <div class="col-lg-12">
+                        <div class="titre_form_element">
+                            <span class="glyphicon glyphicon-play"></span>
+                            &nbsp;&nbsp;&nbsp;Type du classeur
+                        </div>
+                    </div>
+                    <div class="col-lg-12 disabled">
+                        <select class="form-control" disabled>
+                            <option>{{ classeur.type.nom }}</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -254,38 +256,41 @@
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="titre_form_element">
-                        <span class="glyphicon glyphicon-play"></span>
-                        &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+                <div class="col-lg-6 nopadding">
+                    <div class="col-lg-12">
+                        <div class="titre_form_element">
+                            <span class="glyphicon glyphicon-play"></span>
+                            &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <select class="fuckingvisibility form-control" id="visibilite" name="visibilite" disabled>
+                            <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
+                            <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
+                            <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
+                            {% if classeur.visibilite == 3 %}
+                                <option value="3" selected="selected">Pour le service organisationnel</option>
+                            {% endif %}
+                        </select>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="titre_form_element">
-                        <span class="glyphicon glyphicon-play"></span>
-                        &nbsp;&nbsp;&nbsp;Type du classeur
+
+                <div class="col-lg-6 nopadding">
+                    <div class="col-lg-12">
+                        <div class="titre_form_element">
+                            <span class="glyphicon glyphicon-play"></span>
+                            &nbsp;&nbsp;&nbsp;Type du classeur
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <select class="form-control" disabled>
+                            <option>{{ classeur.type.nom }}</option>
+                        </select>
                     </div>
                 </div>
+
             </div>
 
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <select class="fuckingvisibility form-control" id="visibilite" name="visibilite" disabled>
-                        <option value="2" {% if classeur.visibilite == 2 %} selected="selected" {% endif %}>Privé à partir de moi</option>
-                        <option value="0" {% if classeur.visibilite == 0 %} selected="selected" {% endif %}>Privé</option>
-                        <option value="1" {% if classeur.visibilite == 1 %} selected="selected" {% endif %}>Public</option>
-                        {% if classeur.visibilite == 3 %}
-                            <option value="3" selected="selected">Pour le service organisationnel</option>
-                        {% endif %}
-                    </select>
-                </div>
-                <div class="col-lg-6 disabled">
-                    <select class="form-control" disabled>
-                        <option>{{ classeur.type.nom }}</option>
-                    </select>
-                </div>
-            </div>
 
         <div class="titre_form_element" disabled>
             <span class="glyphicon glyphicon-play"></span>
@@ -561,7 +566,7 @@
                 $(".perso_circuit").css("cursor", "-moz-grab");
                 {% endif %}
 
-                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer").click(function () {
+                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer, .btn-valider-signer-pdf").click(function () {
                     if($(this).hasClass("btn-modifs") || $(this).hasClass("btn-valider-signer") || $(this).hasClass("btn-valider-non-signer") || $(this).hasClass("btn-valider")) {
                         // ?? est ce nécessaire
                     }

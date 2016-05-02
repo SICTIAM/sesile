@@ -336,31 +336,28 @@ class Collectivite
 
 
         if ($this->getTextmailnew() == null) {
-            $this->setTextmailnew("Un nouveau classeur {{ titre_classeur }} vient d'être déposé par {{ deposant }}
-<br>
-Il convient de le valider avant le {{ date_limite | date('d/m/Y') }}.
-<br>
-Vous pouvez visionner le classeur {{lien|raw}}");
+            $this->setTextmailnew("<p>Bonjour {{ validant }},<br /><br />Un nouveau classeur <strong>{{ titre_classeur }}</strong> vient d'&ecirc;tre d&eacute;pos&eacute; par {{ deposant }}<br /><br />Il convient de le valider avant le <strong>{{ date_limite | date('d/m/Y') }}</strong>.<br /><br />Vous pouvez visionner le classeur {{lien|raw}}</p><table><tbody><tr><td>**logo_coll**</td><td>{{ qualite }}<br />{{ validant }}</td></tr></tbody></table>");
         }
 
         if ($this->getTextmailrefuse() == null) {
-            $this->setTextmailrefuse("Bonjour {{ deposant }},
-
-Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }} pour le motif suivant:
-<br>
-{{ motif }}
-<br>
-Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
-<br>
-Vous pouvez visionner le classeur {{lien|raw}}");
+            $this->setTextmailrefuse("<p>Bonjour {{ deposant }}, <br /><br />Le classeur {{ titre_classeur }} vient d'&ecirc;tre refus&eacute; par {{ validant }} pour le motif suivant: <br />{{ motif }} <br /><br />Vous devez y apporter les modifications n&eacute;cessaires avant de le soumettre &agrave; nouveau <br />Vous pouvez visionner le classeur <strong>{{lien|raw}}</strong></p><table><tbody><tr><td>**logo_coll**</td><td>{{ qualite }}<br />{{ validant }}</td></tr></tbody></table>");
         }
 
         if ($this->getTextmailwalid() == null) {
-            $this->setTextmailwalid("Bonjour {{ deposant }},
-<br>
-Le classeur {{ titre_classeur }} vient d'être validé par {{ validant }}
-<br>
-Vous pouvez visionner le classeur {{lien|raw}}");
+            $this->setTextmailwalid("<p>Bonjour {{ deposant }},<br /><br />Le classeur \"{{ titre_classeur }}\" vient d'&ecirc;tre <strong>valid&eacute;</strong> par {{ validant }}<br /><br />Vous pouvez visionner le classeur {{lien|raw}}<br /><br /></p><table><tbody><tr><td>**logo_coll**</td><td>{{ qualite }}<br />{{ validant }}</td></tr></tbody></table>");
+        }
+
+        if ($this->getMessage() == null) {
+            $this->setMessage("<p>Le parapheur &eacute;lectronique S.E.SI.LE, <strong>Syst&egrave;me Electronique de SIgnature LEgale</strong>, vous offre l&rsquo;opportunit&eacute; de d&eacute;poser vos fichiers afin de proc&eacute;der &agrave; leur validation selon des circuits d&eacute;finis mais &eacute;galement de les <strong>signer &eacute;lectroniquement</strong>.</p><p>SESILE comporte g&eacute;n&eacute;ralement les fonctionnalit&eacute;s suivantes (par ordre d'utilisation dans un flux documentaire)</p><ul>
+<li>cr&eacute;ation d'un objet \"document\", soit par import manuel, soit en sortie d'un logiciel produisant ce document</li>
+<li>d&eacute;finition de <a href='https://fr.wikipedia.org/wiki/M%C3%A9tadonn%C3%A9e'>m&eacute;tadonn&eacute;es</a> pour cet objet</li>
+<li>choix (et param&eacute;trage) d'un circuit de validation/visas et de signature(s)</li>
+<li>envoi dans ce circuit, notification des intervenants dans le circuit</li>
+<li>validations ou refus</li>
+<li>suivi permanent de l'&eacute;tat d'avancement et acc&egrave;s &agrave; l'historique de traitement</li>
+<li><a href='https://fr.wikipedia.org/wiki/Signature_num%C3%A9rique'>signature &eacute;lectronique</a>, gr&acirc;ce &agrave; un <a href='https://fr.wikipedia.org/wiki/Certificat_%C3%A9lectronique'>certificat &eacute;lectronique</a></li>
+<li>stockage de l'objet (document, preuve de signature, m&eacute;tadonn&eacute;es et historique de traitement) ou export vers un logiciel tiers</li>
+</ul>");
         }
     }
 
@@ -464,33 +461,28 @@ Vous pouvez visionner le classeur {{lien|raw}}");
     {
 
         if ($this->getTextmailnew() == null) {
-            $this->setTextmailnew('Bonjour {{ validant }},
-<br><br>
-Un nouveau classeur {{ titre_classeur }} vient d\'être déposé par {{ deposant }}
-<br><br>
-Il convient de le valider avant le {{ date_limite | date("d/m/Y") }}.
-<br><br>
-Vous pouvez visionner le classeur {{lien|raw}}');
+            $this->setTextmailnew("<p>Bonjour {{ validant }},<br /><br />Un nouveau classeur <strong>{{ titre_classeur }}</strong> vient d'&ecirc;tre d&eacute;pos&eacute; par {{ deposant }}<br /><br />Il convient de le valider avant le <strong>{{ date_limite | date('d/m/Y') }}</strong>.<br /><br />Vous pouvez visionner le classeur {{lien|raw}}</p><table><tbody><tr><td>**logo_coll**</td><td>{{ qualite }}<br />{{ validant }}</td></tr></tbody></table>");
         }
 
         if ($this->getTextmailrefuse() == null) {
-            $this->setTextmailrefuse("Bonjour {{ deposant }},
-
-Le classeur {{ titre_classeur }} vient d'être refusé par {{ validant }} pour le motif suivant:
-<br>
-{{ motif }}
-<br>
-Vous devez y apporter les modifications nécessaires avant de le soumettre à nouveau
-<br>
-Vous pouvez visionner le classeur {{lien|raw}}");
+            $this->setTextmailrefuse("<p>Bonjour {{ deposant }}, <br /><br />Le classeur {{ titre_classeur }} vient d'&ecirc;tre refus&eacute; par {{ validant }} pour le motif suivant: <br />{{ motif }} <br /><br />Vous devez y apporter les modifications n&eacute;cessaires avant de le soumettre &agrave; nouveau <br />Vous pouvez visionner le classeur <strong>{{lien|raw}}</strong></p><table><tbody><tr><td>**logo_coll**</td><td>{{ qualite }}<br />{{ validant }}</td></tr></tbody></table>");
         }
 
         if ($this->getTextmailwalid() == null) {
-            $this->setTextmailwalid("Bonjour {{ deposant }},
-<br><br>
-Le classeur {{ titre_classeur }} vient d'être validé par {{ validant }}
-<br><br>
-Vous pouvez visionner le classeur {{lien|raw}}");
+            $this->setTextmailwalid("<p>Bonjour {{ deposant }},<br /><br />Le classeur \"{{ titre_classeur }}\" vient d'&ecirc;tre <strong>valid&eacute;</strong> par {{ validant }}<br /><br />Vous pouvez visionner le classeur {{lien|raw}}<br /><br /></p><table><tbody><tr><td>**logo_coll**</td><td>{{ qualite }}<br />{{ validant }}</td></tr></tbody></table>");
+        }
+
+        if ($this->getMessage() == null) {
+            $this->setMessage("<p>Le parapheur &eacute;lectronique S.E.SI.LE, <strong>Syst&egrave;me Electronique de SIgnature LEgale</strong>, vous offre l&rsquo;opportunit&eacute; de d&eacute;poser vos fichiers afin de proc&eacute;der &agrave; leur validation selon des circuits d&eacute;finis mais &eacute;galement de les <strong>signer &eacute;lectroniquement</strong>.</p><p>SESILE comporte g&eacute;n&eacute;ralement les fonctionnalit&eacute;s suivantes (par ordre d'utilisation dans un flux documentaire)</p><ul>
+<li>cr&eacute;ation d'un objet \"document\", soit par import manuel, soit en sortie d'un logiciel produisant ce document</li>
+<li>d&eacute;finition de <a href='https://fr.wikipedia.org/wiki/M%C3%A9tadonn%C3%A9e'>m&eacute;tadonn&eacute;es</a> pour cet objet</li>
+<li>choix (et param&eacute;trage) d'un circuit de validation/visas et de signature(s)</li>
+<li>envoi dans ce circuit, notification des intervenants dans le circuit</li>
+<li>validations ou refus</li>
+<li>suivi permanent de l'&eacute;tat d'avancement et acc&egrave;s &agrave; l'historique de traitement</li>
+<li><a href='https://fr.wikipedia.org/wiki/Signature_num%C3%A9rique'>signature &eacute;lectronique</a>, gr&acirc;ce &agrave; un <a href='https://fr.wikipedia.org/wiki/Certificat_%C3%A9lectronique'>certificat &eacute;lectronique</a></li>
+<li>stockage de l'objet (document, preuve de signature, m&eacute;tadonn&eacute;es et historique de traitement) ou export vers un logiciel tiers</li>
+</ul>");
         }
     }
 

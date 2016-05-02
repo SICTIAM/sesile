@@ -4,6 +4,8 @@ namespace Sesile\UserBundle\Controller;
 
 use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\UserPack;
+use Sesile\UserBundle\Entity\UserRole;
+use Sesile\UserBundle\Form\UserRoleType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -124,6 +126,16 @@ class DefaultController extends Controller
                     ldap_close($ldapconn);
 
                     $em->flush();
+
+                    // modification des roles
+                    // C est moche mais ca marche : je ne sais pas pouquoi le user n est pas prise lors de l insertion en BDD
+                    $rolesUsers = $em->getRepository('SesileUserBundle:UserRole')->findByUser(null);
+                    foreach ($rolesUsers as $rolesUser) {
+                        $rolesUser->setUser($entity);
+                    }
+                    $em->flush();
+                    // fin de la modification des roles
+
                     //envoi d'un mail à l'utilisateur nouvellement créé
                     $message = \Swift_Message::newInstance()
                         ->setContentType('text/html')
@@ -194,6 +206,7 @@ class DefaultController extends Controller
      * @Template("SesileUserBundle:Default:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
+        //var_dump($request->request->get('sesile_userbundle_user')['userRole']); die();
         $upload = $this->container->getParameter('upload');
 
         $DirPath = $upload['path'];
@@ -217,6 +230,13 @@ class DefaultController extends Controller
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
+
+        // Suppression de tous les roles avant de les rajouter
+        $userRoles = $em->getRepository('SesileUserBundle:UserRole')->findByUser($entity);
+        foreach ($userRoles as $userRole) {
+            $em->remove($userRole);
+        }
+        $em->flush();
 
         $editForm->handleRequest($request);
 
@@ -271,23 +291,33 @@ class DefaultController extends Controller
 
                         }
                         //echo "false";exit;
+                        $em->persist($entity);
                         $em->flush();
+                        $this->get('session')->getFlashBag()->add(
+                            'success',
+                            "L'utilisateur a bien été modifié"
+                        );
                     } else {
                         ldap_close($ldapconn);
-                        echo "pb rename ldap";
-                        exit;
+//                        echo "pb rename ldap 2";
+                        $this->get('session')->getFlashBag()->add(
+                            'error',
+                            "Problème de CAS avec l'utilisateur"
+                        );
+//                        exit;
                     }
-                    $this->get('session')->getFlashBag()->add(
-                        'success',
-                        "L'utilisateur a bien été modifié"
-                    );
+
                     return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 } else {
                     ldap_close($ldapconn);
-                    exit("Authentification au serveur LDAP impossible");
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        "Authentification au serveur LDAP impossible"
+                    );
+//                    exit("Authentification au serveur LDAP impossible");
+                    return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
                 }
 
-                return $this->redirect($this->generateUrl('liste_users', array('id' => $id)));
             }
         }
         return array(
@@ -301,35 +331,72 @@ class DefaultController extends Controller
     /**
      * Deletes a User entity.
      *
-     * @Route("/{id}", name="user_delete")
-     * @Method("DELETE")
+     * @Route("/delete/{id}", name="user_delete")
+     * @Method("GET")
      */
     public function deleteAction(Request $request, $id)
     {
+        // On vérifie si l'utitilateur est bien admin
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            // Sinon on déclenche une exception « Accès interdit »
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
+        // On vérifie si l'utilisateur qui doit etre supprimé ne soit pas l'utilisateur courant
+        if($this->getUser()->getId() == $id) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Suppression impossible : vous ne pouvez pas vous supprimer vous-même'
+            );
+            // Si oui, on redirige et on ne supprime pas l'user
+            return $this->redirect($this->generateUrl('liste_users'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        // On vérifie si le user est dans des classeurs
+        if ($em->getRepository('SesileUserBundle:User')->isUserInClasseurs($id)) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Suppression impossible : utilisateur présent dans un ou plusieurs classeurs'
+            );
+            // Si oui, on redirige et on ne supprime pas l'user
+            return $this->redirect($this->generateUrl('liste_users'));
+        }
+
+        // On Supprime l'utilisateur de tous les UserPacks
+        $em->getRepository('SesileUserBundle:UserPack')->deleteUserFromUserPacks($id);
+
+        // On supprime l'utilisateur de tous les Service organisationnel (EtapeGroupe)
+        $em->getRepository('SesileUserBundle:EtapeGroupe')->deleteUserFromEtapeGroupes($id);
+
+        // On récupère le dossier des avatar
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
 
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
-            if ($entity->getPath()) {
-                $entity->removeUpload($DirPath);
-            }
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find User entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-
+        // On récupère l'entity utilisateur à supprimer
+        $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity.');
         }
-        return $this->redirect($this->generateUrl('liste_users')); // rediriger vers liste_user non?
-    }
 
+        // Si elle a bien un répertoire pour son avatar
+        if ($entity->getPath()) {
+            $entity->removeUpload($DirPath);
+        }
+
+        // On supprime l'user et on flush
+        $em->remove($entity);
+        $em->flush();
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'L\'utilisateur a bien été supprimé'
+        );
+
+        // On redirige vers liste_user
+        return $this->redirect($this->generateUrl('liste_users'));
+    }
 
 
 
@@ -366,7 +433,8 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
-        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+//        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(array('collectivite' => $collectivite), array('Nom' => 'ASC'));
         return array('users'=>$users, "menu_color" => "vert");
 
     }

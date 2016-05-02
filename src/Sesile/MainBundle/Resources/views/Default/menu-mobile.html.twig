@@ -1,0 +1,67 @@
+{% block menuMobile %}
+    <ul class="nav navbar-nav mobile-menu">
+        <li class="dropdown dropdown-delegations">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Délégations <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path("delegations_list") }}">Délégations données</a></li>
+                <li><a href="{{ path("delegations_recues") }}">Délégations reçues</a></li>
+            </ul>
+        </li>
+        <li class="dropdown dropdown-classeurs">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Classeurs <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path("classeur_new") }}">Ajout d'un classeur</a></li>
+                <li><a href="{{ path("index_valider") }}">Classeur(s) à valider</a></li>
+                <li><a href="{{ path("classeur") }}">Liste des classeurs</a></li>
+                <li><a href="{{ path("index_retractables") }}">Droit de retractation</a></li>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}<li><a href="{{ path("liste_classeurs_retired") }}">Classeurs à supprimer</a></li>{% endif %}
+            </ul>
+        </li>
+        <li class="dropdown dropdown-documentations">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Documentation <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                {% if is_granted('ROLE_SUPER_ADMIN') %}<li><a href="{{ path("indexDoc") }}">Gestion de la documentation</a></li>{% endif %}
+                <li><a href="{{ path("patchs") }}">Documentation des évolutions</a></li>
+                <li><a href="{{ path("aides") }}">Aide en ligne</a></li>
+            </ul>
+        </li>
+        {% if is_granted('ROLE_ADMIN') %}
+        <li class="dropdown dropdown-administration">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                {% if not is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path("notifications") }}">Notifications</a></li>
+                    <li><a href="{{ path("message_accueil") }}">Message d'accueil</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path("liste_type_classeur") }}">Types de classeurs</a></li>
+                {% endif %}
+                <li><a href="{{ path("liste_users") }}">Gestion des utilisateurs</a></li>
+                <li><a href="{{ path("userpacks") }}">Groupes d'utilisateurs</a></li>
+                <li><a href="{{ path("servicesorg") }}">Services organisationnels</a></li>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path("index_collectivite") }}">Collectivités</a></li>
+                    <li><a href="{{ path("index_emailing") }}">Emailing</a></li>
+                {% endif %}
+            </ul>
+        </li>
+        {% endif %}
+        <li class="dropdown dropdown-compte">
+            {% if app.user != null %}
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <img class="userpicture" src="{% if app.user.path %}{{ asset(upload_path ~ app.user.path) }}{% else %}{{ asset("/images/imghomme.png") }}{% endif %}"/>
+                &nbsp;{{ app.user.prenom }} {{ app.user.nom }}&nbsp;&nbsp;&nbsp;<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path("fos_user_profile_edit") }}" class="toggle-compte"><span class="glyphicon glyphicon-user"></span> Compte</a></li>
+                <li><a href="{{ path("logout") }}"><span class="glyphicon glyphicon-off"></span> Déconnexion</a></li>
+            </ul>
+            {% else %}
+                <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
+            {% endif %}
+        </li>
+
+    </ul>
+
+
+{% endblock %}
