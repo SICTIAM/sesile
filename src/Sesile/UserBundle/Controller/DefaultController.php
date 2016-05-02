@@ -364,6 +364,12 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('liste_users'));
         }
 
+        // On Supprime l'utilisateur de tous les UserPacks
+        $em->getRepository('SesileUserBundle:UserPack')->deleteUserFromUserPacks($id);
+
+        // On supprime l'utilisateur de tous les Service organisationnel (EtapeGroupe)
+        $em->getRepository('SesileUserBundle:EtapeGroupe')->deleteUserFromEtapeGroupes($id);
+
         // On récupère le dossier des avatar
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
