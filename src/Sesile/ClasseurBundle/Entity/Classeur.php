@@ -589,6 +589,22 @@ class Classeur {
         return false;
     }
 
+    /**
+     * Function pour tester si le classeur est PDF signable
+     * @return bool
+     */
+    public function isSignablePDF() {
+        if($this->isAtLastValidant()){
+            $docs = $this->getDocuments();
+            foreach($docs as $doc){
+                if($doc->getType() == 'application/pdf'){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public function getXmlDocuments()
     {
         $docs = $this->getDocuments();
@@ -599,6 +615,18 @@ class Classeur {
             }
         }
         return $xmldocuments;
+    }
+
+    public function getPdfDocuments()
+    {
+        $docs = $this->getDocuments();
+        $pdfdocuments = new \Doctrine\Common\Collections\ArrayCollection();
+        foreach ($docs as $doc) {
+            if ($doc->getType() == 'application/pdf') {
+                $pdfdocuments->add($doc);
+            }
+        }
+        return $pdfdocuments;
     }
 
     /**

@@ -99,6 +99,48 @@ class DocumentController extends Controller
 
 
     /**
+     * @Route("/uploadpdffile", name="upload_pdf_doc",  options={"expose"=true})
+     *
+     */
+    public function uploadPdfAction(Request $request) {
+
+//        error_log(" - upload PDF" . print_r($request->files->all(),true));
+        $repourl = $request->files->get('formpdf')->getClientOriginalName();
+        error_log(" - form PDF" . $request->files->get('formpdf')->getClientOriginalName());
+        $em = $this->getDoctrine()->getManager();
+        $uploadedfile = $request->files->get('formpdf');
+//        $id = $request->request->get('id');
+        if (empty($uploadedfile)) {
+            error_log(" - Upload empty ");
+            return new JsonResponse(array("error" => "nothinguploaded"));
+        }
+
+//        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneByRepourl($repourl);
+        if (empty($doc)) {
+            error_log(" - No document");
+            return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
+        }
+
+        if (file_exists('uploads/docs/' . $doc->getRepourl())) {
+            unlink('uploads/docs/' . $doc->getRepourl());
+            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+            $doc->setSigned(true);
+            $em->flush();
+            error_log(" - Uploaded !");
+            return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
+
+        } else {
+            unlink($uploadedfile->getRealPath());
+
+            return new JsonResponse(array("error" => "nodocumentwiththisname"));
+
+        }
+
+    }
+
+
+    /**
      * @Route("/{id}", name="show_document",  options={"expose"=true})
      * @Template()
      */
