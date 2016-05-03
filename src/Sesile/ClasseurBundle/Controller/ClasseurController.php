@@ -946,10 +946,8 @@ class ClasseurController extends Controller {
     public function editAction($id) {
 
         $em = $this->getDoctrine()->getManager();
-//        $entity = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
 
         $user = $this->getUser();
-
 
         $entity = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
 
@@ -978,15 +976,7 @@ class ClasseurController extends Controller {
             "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
         ), array("Nom" => "ASC"));
 
-//        $repositorydelegates = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
-//        $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
-//        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
-
-
-
         // Definition des users pour le bouton retractable
-
-
         $usersdelegated[] = $this->getUser();
         $delegants[] = $this->getUser()->getId();
 
@@ -1001,24 +991,6 @@ class ClasseurController extends Controller {
         // Definition si rétractation
         $isRetractableByDelegates = $entity->isRetractableByDelegates($delegants, $validantsId, $prevValidantRetract);
 
-
-//        if (($entity->getValidant() == $delegants[0] || ($isRetractableByDelegates && $entity->getPrevValidant() == $delegants[0])) && $this->getUser()->getId() != $delegants[0]) {
-//        if ((in_array($validantsId, $delegants) || ($isRetractableByDelegates && in_array($prevValidantsId, $delegants))) && $this->getUser()->getId() != $delegants  && !$entity->isAtLastValidant()) {
-//        if ($isRetractableByDelegates && $this->getUser()->getId() != $delegants  && !$entity->isAtLastValidant()) {
-        /*if ($isRetractableByDelegates && !$entity->isAtLastValidant()) {
-            $isDelegatedToMe = true;
-            $uservalidant = $usersdelegated[0];
-            $currentValidant = array("id" => $usersdelegated[0]->getId(), "nom" => $usersdelegated[0]->getPrenom() . " " . $usersdelegated[0]->getNom(), "path" => $usersdelegated[0]->getPath());
-        } else {
-            $isDelegatedToMe = false;
-            $uservalidant = "";
-            if (in_array($this->getUser(), $validants) && !$entity->isAtLastValidant()) {
-                $currentValidant = array("id" => $this->getUser()->getId(), "nom" => $this->getUser()->getPrenom() . " " . $this->getUser()->getNom(), "path" => $this->getUser()->getPath());
-            }
-            else {
-                $currentValidant = array();
-            }
-        }*/
 
         // Test pour le validant courant
         if ($entity->isValidableByDelegates($usersdelegated, $validants)) {
@@ -1038,22 +1010,20 @@ class ClasseurController extends Controller {
         }
 
 
-
+        // Test pour savoir si le classeur est signable
         $isSignable = $entity->isSignable();
 
+        // Test pour savoir si on peut signer le PDF
+        $isSignablePDF = $entity->isSignablePDF();
 
-//        $d = $em->getRepository('SesileUserBundle:User')->find($entity->getUser());
-//        $deposant = array("id" => $d->getId(), "nom" => $d->getPrenom() . " " . $d->getNom(), "path" => $d->getPath());
 
-//        $validant = $entity->getvalidant();
-//var_dump($isSignable);exit;
         return array(
-//            'deposant'      => $deposant,
             'validant'      => $validants,
             'currentValidant' => $currentValidant,
             'classeur'      => $entity,
             'retractable'   => $isRetractableByDelegates,
             'signable'      => $isSignable,
+            'signablePDF'   => $isSignablePDF,
             'usersdelegated'=> $usersdelegated,
             'isDelegatedToMe' => $isDelegatedToMe,
             'uservalidant'  => $uservalidant,
@@ -1253,6 +1223,27 @@ class ClasseurController extends Controller {
 
     }
 
+
+    /**
+     * Edits an existing Classeur entity.
+     *
+     * @Route("/sign_pdf", name="classeur_valider_pdf")
+     * @Method("POST")
+     *
+     */
+    public function signPDFAction(Request $request)
+    {
+
+        var_dump("Welcome");
+        var_dump($request);
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
+
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+
+    }
 
 
     /**
@@ -1623,6 +1614,89 @@ class ClasseurController extends Controller {
         $session->start();
 
         $tmpdocs = $classeur->getXmlDocuments();
+
+        $docstosign = array();
+
+        foreach ($tmpdocs as $key => $value) {
+            $tmpdo = array();
+            $tmpdo['name'] = $value->getName();
+            $tmpdo['id'] = $value->getId();
+            $tmpdo['repourl'] = $value->getRepourl();
+            $docstosign[$key] = $tmpdo;
+        }
+        if($request->get("moncul") != 1) {
+
+            // Met a jour les etapes de validations
+            $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
+            $em->flush();
+
+            $visibilite = $request->get("visibilite");
+            $classeur->setVisibilite($visibilite);
+            $classeur->setNom($request->get("name"));
+            $classeur->setDescription($request->get("desc"));
+            list($d, $m, $a) = explode("/", $request->request->get('validation'));
+            $valid = new \DateTime($m . "/" . $d . "/" . $a);
+            $classeur->setValidation($valid);
+            $currentvalidant = $request->request->get('curentValidant');
+
+        }
+
+        // Gestion du role de l utilisateur
+        // Dans le cas l utilisateur a plusieurs roles
+        if(null !== $role) {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
+            $role = $roleUser->getUserRoles();
+        }
+        // Dans le cas l utilisateur a un seul role
+        else {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findByUser($user);
+            if (!empty($roleUser)) {
+                $role = $roleUser[0]->getUserRoles();
+            } else {
+                $role = '';
+            }
+        }
+
+        $servername = $_SERVER['HTTP_HOST'];
+        $url_applet = $this->container->getParameter('url_applet');
+
+        return array(
+            'user'      => $user,
+            'role'      => $role,
+            'classeur'  => $classeur,
+            'session_id' => $session->getId(),
+            'docstosign' => $docstosign,
+            'servername' => $servername,
+            "url_applet" => $url_applet
+        );
+
+    }
+
+    /**
+     * Valider_et_signer an existing Classeur entity.
+     *
+     * @Route("/signPdfForm/{id}/{role}", name="signPdfDocAction")
+     * @Template()
+     *
+     */
+    public function signPdfDocAction(Request $request, $id, $role = null)
+    {
+        //var_dump($request->get("moncul"));exit;
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        if($request->request->get('circuit')) {
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+            $classeur->setCircuit($user->getId());
+            $em->flush();
+        }
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+
+
+        $session = $this->get('session');
+        $session->start();
+
+        $tmpdocs = $classeur->getPdfDocuments();
 
         $docstosign = array();
 

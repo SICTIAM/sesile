@@ -1,8 +1,6 @@
 {% extends 'SesileMainBundle:Default:index.html.twig' %}
 
 {% block content %}
-{#<div class="container">#}
-
 
 <div class="bloc_page">
 
@@ -21,7 +19,7 @@
                 <input type="hidden" name="id" value="{{ classeur.id }}">
                 <input type="hidden" name="moncul" value="1">
 
-                <div class="col-md-4"><strong>Role : </strong></div>
+                {#<div class="col-md-4"><strong>Role : </strong></div>
                 <div class="col-md-8">{{ role }}</div>
 
                 <div class="col-md-4"><strong>Ville : </strong></div>
@@ -34,7 +32,7 @@
                 <div class="col-md-8">{{ user.departement }}</div>
 
                 <div class="col-md-4"><strong>Pays : </strong></div>
-                <div class="col-md-8">{{ user.pays }}</div>
+                <div class="col-md-8">{{ user.pays }}</div>#}
 
                 <div class="col-md-4"><strong>Choix du certificat : </strong></div>
                 <div class="col-md-8"><div id='listecertif' name='listecertif'></div></div>
@@ -106,27 +104,27 @@
             <ul class="etape_progress">
                 <li>
                     <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
-                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 1 :</strong> Chargement...
+                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 1 :</strong> Chargement de l'applet...
                 </li>
                 <li>
                     <span class="glyphicon glyphicon-arrow-right"> </span>
-                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 2 :</strong> Prêt à signer
+                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 2 :</strong> Chargement des certificats...
                 </li>
                 <li>
                     <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
-                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 3 :</strong> Chargement du fichier...
+                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 3 :</strong> Sélection du certificat
                 </li>
                 <li>
                     <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
-                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 4 :</strong> Fichier téléchargé !
+                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 4 :</strong> Téléchargement du document
                 </li>
                 <li>
                     <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
-                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 5 :</strong> Signature du fichier
+                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 5 :</strong> Document téléchargé
                 </li>
                 <li>
                     <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
-                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 6 :</strong> Fichier Signé
+                    <span class="glyphicon glyphicon-ok"> </span> <strong>Etape 6 :</strong> Document signé
                 </li>
                 <li>
                     <img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
@@ -144,12 +142,12 @@
 
     <div class="row">&nbsp;</div>
 
-    <!--<div class="row"><small>URL Aplet : {{ url_applet }}</small></div>-->
+    <div class="row"><small>URL Aplet : {{ url_applet }}</small></div>
 </div>
-{#</div>#}
-<script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 
+<script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 <script type="text/javascript">
+
     // Permet l'affichage a retardement du helper
     $("#help").hide();
     timeoutId = window.setTimeout(showHelp, 20000);
@@ -164,8 +162,8 @@
 
     var docstosign = {{ docstosign|json_encode|raw }};
     var attributes = {width: 1, height: 1, id: "javaapplet"};
-    var parameters = {jnlp_href: 'http://dss.dave.fred/launch.jnlp'};
-    // var parameters = {jnlp_href: 'http://{{ url_applet }}/launchpdf.jnlp'}; // url : signature DEMO
+//     var parameters = {jnlp_href: 'http://dss.dave.fred/launch.jnlp'};
+    var parameters = {jnlp_href: 'http://{{ url_applet }}/pdf/launch.jnlp'}; // url : signature DEMO
 
     var version = '1.7';
     deployJava.runApplet(attributes, parameters, version);
@@ -179,13 +177,11 @@
     function appletReady() {
 
         // Envoie du lien pour l upload
-        {#document.javaapplet.setUploadUrl('http://' + window.location.hostname + '/doc/uploadfile') // Prod*/#}
-        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '{{ path('upload_doc') }}'); // Prod*/
-
+        document.javaapplet.setUploadUrl('http://' + window.location.hostname + '{{ path('upload_pdf_doc') }}');
         // Envoie de la variable de session
-        document.javaapplet.setsessionid("{{ session_id }}");
+        {#document.javaapplet.setsessionid("{{ session_id }}");#}
         // Envoie de la variable document id
-        document.javaapplet.setdocumentid(docstosign[0].id);
+//        document.javaapplet.setdocumentid(docstosign[0].id);
 
         // Envoie de l id
         var divcertif = document.getElementById('listecertif');
@@ -201,31 +197,10 @@
         selectcertif.setAttribute('id', 'selectcertif');
         $('<option selected="selected">Choisir un certificat</option>').appendTo("#selectcertif");
 
-//        var divmethod = document.getElementById('listemethod');
-/*
-        var divcertif = document.getElementById('listecertif');
-        var selectcertif = document.createElement('select');
-        selectcertif.setAttribute('name', 'selectcertif');
-        selectcertif.setAttribute('id', 'selectcertif');
-        var nbcertif = document.javaapplet.getNumberSigningCertificates();
-        var i = 0;
-        while (i < nbcertif) {
-            var nomcertif = document.javaapplet.getSigningCertificateName(i);
-            console.log('nomcertif : ' + nomcertif);
-            var element = document.createElement('option');
-            element.setAttribute('value', i);
-            nomcertif = nomcertif.substring(nomcertif.lastIndexOf('-'), -1);
-            element.text = nomcertif;
-            selectcertif.appendChild(element);
-            i = i + 1;
-        }
-        divcertif.appendChild(selectcertif);
-        */
         timeoutIdHide = false;
         $('#help').hide();
         $('#bouttons').show('slow');
 
-//        setStatusText('Pret à signer');
 
     }
     function encode_utf8(s) {
@@ -256,6 +231,7 @@
 
     }
 
+    // Affiche la modal d aide
     $('#help').click(function(){
         if(msieversion())
         {
@@ -302,35 +278,10 @@
 
     //function permettant de signifier la fin de la signature d'un classeur
     function signingProcessEnded(i, errormessage) {
-        //$('#lacommode').submit();
+        $('#lacommode').submit();
     }
 
-    //Fonction qui va envoyer le role
-    function envoiChaineRole() {
-        document.javaapplet.recevoirChaineRole("{{ role }}");
-    }
-    //Fonction qui va envoyer la ville
-    function envoiChaineVille() {
-        document.javaapplet.recevoirChaineVille("{{ user.ville }}");
-    }
-    //Fonction qui va envoyer le code postal
-    function envoiChaineCP() {
-        document.javaapplet.recevoirChaineCP("{{ user.cp }}");
-    }
-    //Fonction qui va envoyer le département
-    function envoiChaineDepartement() {
-        document.javaapplet.recevoirChaineDepartement("{{ user.departement }}");
-    }
-    //Fonction qui va envoyer le pays
-    function envoiChainePays() {
-        document.javaapplet.recevoirChainePays("{{ user.pays }}");
-    }
-    //Fonction qui va envoyer le sessionid
-    function getsessionid() {
-        document.javaapplet.setsessionid("{{ session_id }}");
-    }
-
-
+    // Affiche le status en cours pour le fichier
     function setStatusText(txt) {
         //$('#avancement').html(txt);
         $('.etape_progress li:nth-child(' + nbEtape + ')').addClass('alert-success');
@@ -345,17 +296,6 @@
 
     }
 
-    function setProgress(permil) {
-
-        /*$('#progressbar').attr('aria-valuenow', permil / 10 + '%');
-        $('#progressbar').attr('style', 'width: ' + permil / 10 + '%');*/
-        console.log("Permil : " + permil);
-    }
-
-    function setColor(col) {
-
-        $('#progressbar').removeClass('progress-bar-success progress-bar-info progress-bar-warning progress-bar-danger').addClass('progress-bar-' + col);
-    }
 
     //function permettant de lancer la signature du fichier
     $("#signatureDocument").on('click', function signature() {
