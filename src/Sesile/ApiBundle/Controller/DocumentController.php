@@ -251,7 +251,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
 
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $document->getRepourl()));
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getName() . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . str_replace("-sign", "", $document->getName()) . '"');
         $response->headers->set('Content-Length', filesize('uploads/docs/' . $document->getRepourl()));
 
 
@@ -274,7 +274,8 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
             $cleanTabHisto[] = $this->histoToArray($histo);
         }
         return array('id' => $doc->getId(),
-            'name' => $doc->getName(),
+//            'name' => $doc->getName(),
+            'name' => str_replace("-sign", "", $doc->getName()),
             'repourl' => $doc->getrepourl(),
             'type' => $doc->getType(),
             'signed' => false,
