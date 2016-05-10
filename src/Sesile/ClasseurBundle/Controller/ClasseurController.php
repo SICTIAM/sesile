@@ -86,7 +86,7 @@ class ClasseurController extends Controller {
 
             $tabClasseurs = array(
 
-                $classeur->getNom(),
+                $classeur->getShortNom(),
                 $classeur->getCreation()->format('d/m/Y H:i'),
                 $classeur->getValidation()->format('d/m/Y'),
                 implode($val),
@@ -149,7 +149,7 @@ class ClasseurController extends Controller {
 
                 $tabClasseurs[] = array(
                     'id'        => $classeur->getId(),
-                    'nom'       => $classeur->getNom(),
+                    'nom'       => $classeur->getShortNom(),
                     'creation'  => $classeur->getCreation(),
                     'validation'=> $classeur->getValidation(),
                     'type'      => $classeur->getType(),
@@ -189,7 +189,7 @@ class ClasseurController extends Controller {
 
             $tabClasseurs[] = array(
                 'id'=>$classeur->getId(),
-                'nom'=>$classeur->getNom(),
+                'nom'=>$classeur->getShortNom(),
                 'creation'=>$classeur->getCreation(),
                 'validation'=>$classeur->getValidation(),
                 'type'=>$classeur->getType(),
@@ -446,7 +446,7 @@ class ClasseurController extends Controller {
             {
                 $tabClasseurs[] = array(
                     'id'        => $classeur->getId(),
-                    'nom'       => $classeur->getNom(),
+                    'nom'       => $classeur->getShortNom(),
                     'creation'  => $classeur->getCreation(),
                     'validation'=> $classeur->getValidation(),
                     'type'      => $classeur->getType(),
@@ -739,6 +739,7 @@ class ClasseurController extends Controller {
             if ($entity->isRetractableByDelegates($users, $validantId, $prevValidant)) {
 
                 $entity->validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($entity);
+                $entity->setNom($entity->getShortNom());
 
 //                $user = $em->getRepository('SesileUserBundle:User')->findOneById($entity->getValidant());
 //                $user = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser());
