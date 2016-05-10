@@ -772,6 +772,7 @@ class DefaultController extends Controller
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
                     return $repository->createQueryBuilder('p')
+                        ->where('p.active = 1')
                         ->orderBy('p.nom', 'asc');
                 },
                 'property' => 'Nom',
@@ -832,6 +833,7 @@ class DefaultController extends Controller
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
                     return $repository->createQueryBuilder('p')
+                        ->where('p.active = 1')
                         ->orderBy('p.nom', 'asc');
                 },
                 'property' => 'Nom',
