@@ -68,8 +68,8 @@ class LoginHandlerController extends Controller
             $filter = "(|(mail=" . $user . "))";
             $justthese = array("cn", "mail", "userPassword");
 
-            $ldapconn = ldap_connect($cas["cas_server"])
-            or die("Could not connect to LDAP server."); //security
+            // Connexion au CAS
+            $ldapconn = ldap_connect($cas["cas_server"]) or die("Could not connect to LDAP server."); //security
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 
             if ($ldapconn) {
