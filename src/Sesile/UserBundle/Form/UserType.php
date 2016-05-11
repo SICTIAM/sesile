@@ -31,7 +31,8 @@ class UserType extends AbstractType
                 'type' => new UserRoleType(),
                 'allow_add'    => true,
                 'allow_delete' => true,
-                'options' => array('attr' => array('class' => 'col-md-4'))))
+                'options' => array('attr' => array('class' => 'col-md-12'))))
+//                ))
             ->add('qualite', 'textarea', array('label' => 'Qualité', 'required' => false, 'max_length' => 250, 'attr' => array('cols' => '37', 'class' => 'qualite'), 'label_attr' => array('class' => 'label_form_textarea')))
             ->add('enabled', null, array('label' => 'Activé', 'required' => false))
             ->add('apiactivated', 'checkbox', array('label' => 'API', 'required' => false))
