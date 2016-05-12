@@ -991,3 +991,9 @@ select [name=user] {
 	line-height: 1.8;
 	border-radius: 30px;
 }
+
+
+/* DataTable */
+#fulltable tr td, #validTable tr td {
+	vertical-align: middle;
+}
