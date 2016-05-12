@@ -120,50 +120,105 @@ class ClasseurController extends Controller {
 
 
     /**
-     * Page qui affiche la liste des classeurs à valider pour le user connecté
+     * Page qui affiche la liste des classeurs pour le user id
      *
-     * @Route("/liste-classeurs-admin", name="classeur_admin")
+     * @Route("/liste-classeurs-admin/{id}", name="classeur_admin")
      * @Method("GET")
-     * @Template("SesileClasseurBundle:Classeur:a_valider.html.twig")
+     * @Template("SesileClasseurBundle:Classeur:liste_admin.html.twig")
      */
-    public function indexListeAdminAction()
+    public function indexListeAdminAction($id)
     {
-        return $this->listeAdminAction();
+
+        // verification qu il s git bien d un super admin
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
+        // On se connecte a la BDD
+        $em = $this->getDoctrine()->getManager();
+
+        // On recupere le user
+        $user = $em->getRepository('SesileUserBundle:User')->findOneById($id);
+
+        // On renvoit les infos du user et le menu admin a deplier
+        return array(
+            "user"    => $user,
+            "menu_color" => "vert"
+        );
     }
 
 
     /**
-     * Liste des classeurs à valider
+     * Liste des classeurs pour le user id
      *
-     * @Route("/liste_admin", name="liste_classeur_admin")
+     * @Route("/liste_admin/{id}", name="liste_classeurs_admin", options={"expose"=true})
      * @Method("GET")
      */
-    public function listeAdminAction() {
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
+    public function listeAdminAction($id, Request $request) {
 
-        $tabClasseurs = array();
+        // verification qu il s git bien d un super admin
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
+        // On se connecte a la BDD
+        $em = $this->getDoctrine()->getManager();
+
+        // On recupere les infos du tri et celle du user
+        $get = $request->query;
+        $user = $em->getRepository('SesileUserBundle:User')->findOneById($id);
+
+
+        // Liste des classeurs visible pour l'utilisateur
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3($user->getId(), $get);
+        $recordsFiltered = count($em->getRepository('SesileClasseurBundle:Classeur')->countClasseursVisiblesForDTablesV3($user->getId()));
+
+        // Constructions des infos du dataTable
+        $output = array(
+            "draw" => $get->get("draw"),
+            "recordsTotal" => count($entities),
+            "recordsFiltered" => $recordsFiltered,
+            "data" => array()
+        );
+
+        // Construction des classeurs pour le dataTable
         foreach($entities as $classeur)
         {
             $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+            $doc = array();
+            foreach ($classeur->getDocuments() as $document) {
+                $doc[] = $document->getId();
+            }
 
-                $tabClasseurs[] = array(
-                    'id'        => $classeur->getId(),
-                    'nom'       => $classeur->getShortNom(),
-                    'creation'  => $classeur->getCreation(),
-                    'validation'=> $classeur->getValidation(),
-                    'type'      => $classeur->getType(),
-                    'status'    => $classeur->getStatus(),
-                    'document'  => $classeur->getDocuments(),
-                    'validants' => $validants
-                );
+            $val = array();
+            foreach ($validants as $validant) {
+                if(count($val))
+                {
+                    $val[] = " / ".$validant->getPrenom() . " " . $validant->getNom();
+                }
+                else{
+                    $val[] = $validant->getPrenom() . " " . $validant->getNom();
+                }
+            }
 
+            $tabClasseurs = array(
+
+                $classeur->getShortNom(),
+                $classeur->getCreation()->format('d/m/Y H:i'),
+                $classeur->getValidation()->format('d/m/Y'),
+                implode($val),
+                $classeur->getType()->getNom(),
+                $classeur->getStatus(),
+                $classeur->getId(),
+                implode($doc),
+                $classeur->getType()->getId(),
+
+            );
+            $output['data'][] = $tabClasseurs;
         }
 
-        return array(
-            'classeurs' => $tabClasseurs,
-            "menu_color" => "bleu"
-        );
+        return new Response(json_encode($output));
+
     }
 
     /**
@@ -203,57 +258,6 @@ class ClasseurController extends Controller {
             "menu_color" => "bleu"
         );
     }
-
-    /**
-     * @Route("/ajax/listRetired", name="ajax_classeurs_list_retired")
-     * @Template()
-     */
-    /*public function listAjaxRetiredAction(Request $request)
-    {
-
-        $get = $request->query->all();
-//        $columns = array('Nom', 'Creation', 'Validation', 'Validant', 'Type', 'Status', 'Id');
-        $columns = array('Nom', 'Creation', 'Validation', 'Visibilite', 'Type', 'Status', 'Id');
-        $get['colonnes'] = &$columns;
-
-        $em = $this->getDoctrine()->getManager();
-        $rResult = $em->getRepository('SesileClasseurBundle:Classeur')->findByStatus(3);
-
-        // $em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId())
-        $output = array(
-            "draw" => $get["draw"],
-            "recordsTotal" => 0,//$em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId()),
-            "recordsFiltered" => count($rResult),
-            "data" => array()
-        );
-
-        foreach ($rResult as $aRow) {
-            $row = array();
-            for ($i = 0; $i < count($columns); $i++) {
-                if ($columns[$i] == "Creation") {
-                    $row[] = $aRow->{"get" . $columns[$i]}()->format('d/m/Y H:i');
-                } elseif ($columns[$i] == "Validation") {
-                    $row[] = $aRow->{"get" . $columns[$i]}()->format('d/m/Y');
-                } elseif ($columns[$i] == "Visibilite") {
-                    $intervenant = $aRow->{"get" . $columns[$i]}();
-
-                    $row[] = ($intervenant == 0) ? "" : $em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
-                } elseif ($columns[$i] == 'Type') {
-//                    var_dump($aRow->getType()->getNom());
-                    $row[] = $aRow->getType()->getNom();
-                } elseif ($columns[$i] != ' ') {
-                    $row[] = $aRow->{"get" . $columns[$i]}();
-                }
-            }
-            $output['data'][] = $row;
-        }
-
-        unset($rResult);
-
-        return new Response(
-            json_encode($output)
-        );
-    }*/
 
     // SUPPRIMER UN CLASSEUR
 
@@ -318,88 +322,6 @@ class ClasseurController extends Controller {
         );
         return new JsonResponse(array('ret' => true));
     }
-
-
-    /**
-     * @Route("/ajax/list", name="ajax_classeurs_list")
-     * @Template()
-     */
-    /*
-    public function listAjaxAction(Request $request) {
-        $get = $request->query->all();
-        $columns = array( 'Nom', 'Creation', 'Validation', 'Validant', 'Type', 'Status', 'Id' );
-        $get['colonnes'] = &$columns;
-
-        $em = $this->getDoctrine()->getManager();
-        $rResult = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesForDTablesV3($this->getUser()->getId(), $get);
-
-        $recordsFiltered = count($em->getRepository('SesileUserBundle:User')->findOneById($this->getUser()->getId())->getClasseurs());
-
-        $output = array(
-            "draw" => $get["draw"],
-//            "recordsTotal" => $em->getRepository('SesileClasseurBundle:ClasseursUsers')->countClasseursVisiblesForDTables($this->getUser()->getId()),
-            "recordsTotal" => count($rResult),
-//            "recordsFiltered" => $rResult["count"],
-            "recordsFiltered" => $recordsFiltered,
-            "data" => array()
-        );
-
-//        foreach($rResult["data"] as $aRow) {
-        foreach($rResult as $aRow) {
-            $row = array();
-            for ($i = 0 ; $i < count($columns) ; $i++) {
-                if ($columns[$i] == "Creation") {
-                    $row[] = $aRow->{"get".$columns[$i]}()->format('d/m/Y H:i');
-                } elseif ($columns[$i] == "Validation") {
-                    $row[] = $aRow->{"get".$columns[$i]}()->format('d/m/Y');
-//                } elseif ($columns[$i] == "Validant") {
-                } elseif ($columns[$i] == "etapeDeposante") {
-//                    $intervenants = $aRow->{"get".$columns[$i]."->getId"}();
-//                    $intervenant = $aRow->getEtapeValidante()->getId();
-                    $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($aRow);
-                    $userValidant = '';
-                    foreach ($validants as $k => $validant) {
-                        $userValidant .= $validant->getNom() . ' ' . $validant->getPrenom();
-                        if (count($validants) != $k) {
-                            $userValidant .= ' / ';
-                        }
-                    }
-
-                    $row[] = $userValidant;
-//                    $row[] = ($intervenant == 0)?"":$em->getRepository('SesileUserBundle:User')->find($intervenant)->getNom();
-                } elseif ($columns[$i] == "Id") {
-                    if ($aRow->getType()->getNom() == 'Helios') {
-                        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($aRow->{"get" . $columns[$i]}());
-
-                        if (count($classeur->getDocuments())) {
-                            $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($classeur->getDocuments()[0]);
-                            $row[] = array('id' => $aRow->{"get" . $columns[$i]}(), 'idDoc' => $doc->getId());
-                        } else {
-                            $row[] = array('id' => $aRow->{"get" . $columns[$i]}(), 'idDoc' => 0);
-                        }
-                    } else {
-                        $row[] = array('id' => $aRow->{"get" . $columns[$i]}(), 'idDoc' => 0);
-                    }
-
-                } elseif ($columns[$i] == "Type") {
-                    $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($aRow->{"get" . $columns[6]}());
-                    $Type = $classeur->getType()->getNom();
-                    $row[] = $Type;
-                } elseif ($columns[$i] != ' ') {
-                    $row[] = $aRow->{"get".$columns[$i]}();
-                }
-            }
-            $output['data'][] = $row;
-        }
-
-        unset($rResult);
-
-        return new Response(
-            json_encode($output)
-        );
-    }
-    */
-
 
 
     /**
@@ -962,7 +884,8 @@ class ClasseurController extends Controller {
             }
         }
 
-        if (!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants) {
+        // Si le user n est pas un super admin ou un user avec des droits de delgations ou un user du circuit
+        if ((!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants) && !$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $this->get('session')->getFlashBag()->add(
                 'error',
                 "Vous n'avez pas accès à ce classeur"

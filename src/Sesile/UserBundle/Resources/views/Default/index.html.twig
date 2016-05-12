@@ -35,6 +35,9 @@
                         <a href="{{ path("user_edit", {'id' : user.id }) }}" title="Editer l'utilisateur">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <a href="{{ path("classeur_admin", {'id' : user.id }) }}" title="Voir les classeurs de l'utilisateur"><span class="glyphicon glyphicon-eye-open"></span></a>
+                        {% endif %}
                         <a class="" href="{{ path("user_delete", {'id' : user.id }) }}" title="Supprimer l'utilisateur">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
