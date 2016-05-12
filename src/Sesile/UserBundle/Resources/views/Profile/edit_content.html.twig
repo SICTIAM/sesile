@@ -16,7 +16,7 @@
 
 <div class="label_form label-form-input">
     {{ form_label(form.username, 'E-mail') }}
-    {{ form_widget(form.username) }}
+    {{ form_widget(form.username, { 'attr':{'disabled':'disabled'} }) }}
 </div>
 <br/>
 

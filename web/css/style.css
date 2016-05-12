@@ -975,9 +975,25 @@ select [name=user] {
 }
 
 .btn-supRoles {
-	margin: -6px 0 10px 0 !important;
+	margin: -6px 0 10px 10px !important;
 }
 
 .dropdown-menu .btn-valider-signer {
 	display: block !important;
+}
+
+.btn-circle-md {
+	width: 35px;
+	height: 35px;
+	text-align: center;
+	padding: 0;
+	font-size: 20px;
+	line-height: 1.8;
+	border-radius: 30px;
+}
+
+
+/* DataTable */
+#fulltable tr td, #validTable tr td {
+	vertical-align: middle;
 }

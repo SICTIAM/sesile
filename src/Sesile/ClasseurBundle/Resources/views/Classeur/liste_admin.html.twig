@@ -1,18 +1,28 @@
-<table class="table tableau dtables" id="fulltable">
-    <thead>
-    <tr>
-        <th>Titre du classeur</th>
-        <th>Date de création</th>
-        <th>Date limite de validation</th>
-        <th>Intervenant</th>
-        <th>Type de classeur</th>
-        <th>Statut actuel</th>
-        <th>Actions</th>
-        <th>document</th>
-        <th>Id Type de classeur</th>
-    </tr>
-    </thead>
-</table>
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-list"></span>
+            &nbsp;&nbsp;&nbsp;Liste des classeurs pour : {{ user.prenom }} {{ user.nom }} - {{ user.collectivite.nom }}
+        </div>
+
+        <table class="table tableau dtables" id="fulltable">
+            <thead>
+            <tr>
+                <th>Titre du classeur</th>
+                <th>Date de création</th>
+                <th>Date limite de validation</th>
+                <th>Intervenant</th>
+                <th>Type de classeur</th>
+                <th>Statut actuel</th>
+                <th>Actions</th>
+                <th>document</th>
+                <th>Id Type de classeur</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
     <script type="application/javascript" src="//cdn.datatables.net/plug-ins/1.10.7/sorting/datetime-moment.js"></script>
@@ -30,7 +40,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url": Routing.generate('liste_classeurs')
+                    "url": Routing.generate('liste_classeurs_admin',{id:{{ user.id }}})
                 },
                 oLanguage: {
                     sSearch: "Rechercher&nbsp;",
@@ -111,3 +121,5 @@
         });
     </script>
 {% endif %}
+
+{% endblock %}

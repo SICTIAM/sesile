@@ -7,6 +7,7 @@ use Sesile\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -47,6 +48,17 @@ class RouteListener {
                 if (!$this->context->isGranted('ROLE_SUPER_ADMIN')) {
                     $user = $this->context->getToken()->getUser();
                     if($user->getCollectivite() != $collectivite) {
+
+                        // Construction de la nouvelle URL
+                        $new_url = 'http://' . $user->getCollectivite()->getDomain();
+                        foreach ($sousdom as $key => $sousdo) {
+                            if ($key != 0) { $new_url .=  "." . $sousdo; }
+                        }
+
+                        // redirection vers la nouvelle URL
+                        $response =  new RedirectResponse($new_url);
+                        $event->setResponse($response);
+
                         $session->set('nocoll', true);
                         /*   $session->getFlashBag()->add(
                                'success',

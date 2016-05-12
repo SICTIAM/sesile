@@ -12,7 +12,7 @@
 
         <div class="label_form label-form-input">
             {{ form_label(edit_form.username) }}
-            {{ form_widget(edit_form.username) }}
+            {{ form_widget(edit_form.username, { 'attr':{'disabled':'disabled'} }) }}
         </div>
 
         <br/>
@@ -74,8 +74,10 @@
         </div>
         <br/>#}
 
-        <div class="">
-            {{ form_widget(edit_form.userRole) }}
+        <div class="row">
+            <div class="col-lg-6">
+                {{ form_widget(edit_form.userRole) }}
+            </div>
         </div>
 
         <div class="label_form label-form-input">
@@ -205,9 +207,10 @@
             var $container = $('div#sesile_userbundle_user_userRole');
 
             // On ajoute un lien pour ajouter une nouvelle catégorie
-            var $addLink = $('<a href="#" id="add_category" class="btn btn-default">Ajouter un rôle</a>');
+            var $addLink = $('<div class="row"><div class="col-md-3 col-md-push-7 text-center"> <a href="#" id="add_category" class="btn btn-circle-md btn-info first"><span class="glyphicon glyphicon-plus"></span></a> </div></div> <div class="row">&nbsp;</div>');
 
-            $container.prepend($addLink);
+//            $container.prepend($addLink);
+            $container.append($addLink);
 
 
             // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
@@ -219,14 +222,14 @@
 
             // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
             var index = $container.find(':input').length / 2;
-            console.log('inex : ' + index);
+            //console.log('inex : ' + index);
 
             // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
             if (index == 0) {
                 addCategory($container);
             } else {
                 // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
-                $container.children('div').each(function() {
+                $container.children('div:not(.row)').each(function() {
                     addDeleteLink($(this));
                 });
             }
@@ -249,6 +252,9 @@
                 $("select#sesile_userbundle_user_userRole_" + index + "_user").val("{{ entity.id }}");
                 //$("select#sesile_userbundle_user_userRole_" + index + "_user").hide();
 
+                // On ajoute le bouton d ajout de formulaire en fin
+                $container.append($addLink);
+
                 // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
                 index++;
             }
@@ -256,7 +262,7 @@
             // La fonction qui ajoute un lien de suppression d'un role
             function addDeleteLink($prototype) {
                 // Création du lien
-                $deleteLink = $('<a href="#" class="btn btn-danger btn-supRoles"><span class="glyphicon glyphicon-remove"></span></a>');
+                $deleteLink = $('<a href="#" class="btn btn-circle-md btn-danger btn-supRoles"><span class="glyphicon glyphicon-remove"></span></a>');
 
                 // Ajout du lien
                 $prototype.append($deleteLink);

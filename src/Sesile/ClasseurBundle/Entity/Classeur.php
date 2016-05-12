@@ -971,4 +971,20 @@ class Classeur {
         return $this->ordreValidant;
     }
 
+
+    /**
+     * Get short nom
+     *
+     * @return string
+     */
+    public function getShortNom()
+    {
+        if (strlen($this->nom) > 100) {
+            return substr($this->nom, 0, 100) . '...';
+        }
+        else {
+            return $this->nom;
+        }
+    }
+
 }
