@@ -50,7 +50,7 @@ class ProfileFormType extends BaseType
         $builder
             ->add('Prenom', null, array('label' => 'Prénom', 'attr' => array('class' => 'pouet')))
             ->add('Nom', null, array('label' => ' Nom', 'attr' => array('class' => 'pouet')))
-            ->add('username', 'email', array('label' => 'Adresse E-mail', 'attr' => array('class' => 'pouet')))
+//            ->add('username', 'email', array('label' => 'Adresse E-mail', 'attr' => array('class' => 'pouet')))
             ->add('qualite', 'textarea', array('label' => 'Qualité', 'attr' => array('class' => 'pouet qualite', 'cols' => '37'), 'max_length' => 250, 'label_attr' => array('class' => 'label_form_textarea')))
 
             ->add('file', 'file', array('label' => 'Avatar',

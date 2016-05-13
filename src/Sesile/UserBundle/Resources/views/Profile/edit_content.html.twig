@@ -15,8 +15,11 @@
 <br/>
 
 <div class="label_form label-form-input">
-    {{ form_label(form.username, 'E-mail') }}
-    {{ form_widget(form.username, { 'attr':{'disabled':'disabled'} }) }}
+    <label for="email_block">Email</label>
+    <input id="email_block" name="email_block" type="email" value="{{ user.username }}" disabled="disabled">
+
+    {#{{ form_label(form.username, 'E-mail') }}
+    {{ form_widget(form.username, { 'attr':{'disabled':'disabled'} }) }}#}
 </div>
 <br/>
 

@@ -69,6 +69,8 @@ class ProfileController extends ContainerAware
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 //var_dump($user->getRoles()[0]);
+        // On recuper l email dans le username pour le bloquer
+        $userName = $user->getUsername();
         $upload = $this->container->getParameter('upload');
         $DirPath = $upload['path'];
 
@@ -92,7 +94,7 @@ class ProfileController extends ContainerAware
 
         $form->setData($user);
         //ancien
-        $ExValues = array("mail" => $user->getUsername(),
+        $ExValues = array("mail" => $userName,
             "Nom" => $user->getNom(),
             "Prenom" => $user->getPrenom()
         );
@@ -107,7 +109,7 @@ class ProfileController extends ContainerAware
 
                 $event = new FormEvent($form, $request);
                 $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
-                $user->setEmail($form->get('username')->getData());
+                // $user->setEmail($form->get('username')->getData());
                 if ($form->get('file')->getData()) {
 
                     if ($user->getPath()) {
@@ -146,7 +148,7 @@ class ProfileController extends ContainerAware
                         // Generation
                         // Requete sur le LDAP pour le user
                         $justthese = array("userpassword");
-                        $filter = "(|(mail=" . $user->getUsername() . "*))";
+                        $filter = "(|(mail=" . $userName . "*))";
                         $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], $filter, $justthese);
                         $info = ldap_get_entries($ldapconn, $sr);
 
@@ -156,10 +158,10 @@ class ProfileController extends ContainerAware
                         // $person est un nom ou une partie de nom (par exemple, "Jean")
 
                         // On entre la meme valeur dans cn et sn pour eviter les problemes entre dev et demo
-                        $entry["cn"] = $user->getUsername();
+                        $entry["cn"] = $userName;
 //                        $entry["sn"] = $user->getNom() . ' ' . $user->getPrenom();
-                        $entry["sn"] = $user->getUsername();
-                        $entry["givenName"] = $user->getUsername();
+                        $entry["sn"] = $userName;
+                        $entry["givenName"] = $userName;
                         $entry["displayName"] = $user->getNom() . ' ' . $user->getPrenom();
 
                         $pwd = trim($form->get('plainPassword')->getData());
@@ -184,7 +186,7 @@ class ProfileController extends ContainerAware
                         $parent = $LdapInfo["dn_user"];
                         $dn = "mail=" . $ExValues["mail"] . "," . $parent;
 
-                        if (ldap_rename($ldapconn, $dn, "mail=" . $user->getUsername(), $parent, true) && ldap_modify($ldapconn, "mail=" . $user->getUsername() . "," . $parent, $entry)) {
+                        if (ldap_rename($ldapconn, $dn, "mail=" . $userName, $parent, true) && ldap_modify($ldapconn, "mail=" . $userName . "," . $parent, $entry)) {
 
 
                             ldap_close($ldapconn);
