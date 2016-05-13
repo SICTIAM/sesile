@@ -220,10 +220,13 @@ class DefaultController extends Controller
 
         $entity = $em->getRepository('SesileUserBundle:User')->find($id);
 
+        // On recupere le username car il ne doit pas etre modifié -> il est bloqué en front
+        $userName = $entity->getUsername();
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
-        $ExValues = array("mail" => $entity->getUsername(),
+        $ExValues = array("mail" => $userName,
             "Nom" => $entity->getNom(),
             "Prenom" => $entity->getPrenom()
         );
@@ -248,7 +251,7 @@ class DefaultController extends Controller
                 //binding au serveur LDAP
 
                 if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
-                    $entry["cn"] = $entity->getUsername();
+                    $entry["cn"] = $userName;
                     $pwd = trim($editForm->get('plainPassword')->getData());
 
                     if ($pwd) {
@@ -262,15 +265,17 @@ class DefaultController extends Controller
                     }
 
 
-                    $entity->setEmail($editForm->get('username')->getData());
-                    $entry["givenName"] = $entity->getUsername();
+//                    $entity->setEmail($editForm->get('username')->getData());
+                    $entry["givenName"] = $userName;
                     $entry["displayName"] = $entity->getNom() . ' ' . $entity->getPrenom();
 
                     //création du Distinguished Name
                     $parent = $LdapInfo["dn_user"];
                     $dn = "mail=" . $ExValues["mail"] . "," . $parent;
 
-                    if (ldap_rename($ldapconn, $dn, "mail=" . $entity->getUsername(), $parent, true) && ldap_modify($ldapconn, "mail=" . $entity->getUsername() . "," . $parent, $entry)) {
+//                    var_dump("Username : " . $userName); die();
+
+                    if (ldap_rename($ldapconn, $dn, "mail=" . $userName, $parent, true) && ldap_modify($ldapconn, "mail=" . $userName . "," . $parent, $entry)) {
                         ldap_close($ldapconn);
                         if ($editForm->get('file')->getData()) {
                             // echo "true";exit;
