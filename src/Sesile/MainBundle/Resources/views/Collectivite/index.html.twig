@@ -22,9 +22,9 @@
 			<td>{{ coll.domain }}</td>
 			<td>{% if  coll.active == 1 %}<div class="glyphicon glyphicon-ok" style="color: #5CB85C"></div>{% else %}<div class="glyphicon glyphicon-remove" style="color: #D9534F"></div>{% endif %}</td>
 			<td class="boutons_action">
-			    <a href="{{ path("edit_collectivite", {'id' : coll.id }) }}" title="Editer la collectivité">
-				<span class="glyphicon glyphicon-pencil"></span>
-			    </a>
+			    <a href="{{ path("edit_collectivite", {'id' : coll.id }) }}" title="Editer la collectivité"><span class="glyphicon glyphicon-pencil"></span></a>
+				{#<a href="{{ path("edit_collectivite", {'id' : coll.id }) }}" title="Supprimer la collectivité" data-toggle="modal" data-target="#deleteColl"><span class="glyphicon glyphicon-trash"></span></a>#}
+				<span title="Supprimer la collectivité" data-toggle="modal" data-target="#deleteColl" data-collectivite="{{ coll.nom }}" data-whatever="{{ path("delete_collectivite", {'id' : coll.id }) }}" class="glyphicon glyphicon-trash"></span>
 			</td>
 		    </tr>
 		{% endfor %}
@@ -38,6 +38,28 @@
 	    </button>
 	</a>
     </div>
+
+
+	<!-- Pour la modal -->
+	<div class="modal fade" tabindex="-1" role="dialog" id="deleteColl">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Supprimer la collectivité</h4>
+				</div>
+				<div class="modal-body">
+					<p>&Ecirc;tes vous sur de supprimer cette collectivité ?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+					{#<a href="#" title="Supprimer la collectivité" class="btn btn-danger">Supprimer</a>#}
+					<a type="button" class="btn btn-danger">Supprimer</a>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<!-- Fin de la modal -->
 
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
@@ -67,11 +89,26 @@
 		],
 		"sPaginationType": "full_numbers"
 	    });
+
+		$('#deleteColl').on('shown.bs.modal', function () {})
 	});
     </script>
     <script type="text/javascript">
-	$(".coll-row").click(function () {
+	/*$(".coll-row").click(function () {
 	    document.location.href = Routing.generate('edit_collectivite', { id: $(this).data("id") });
-	});
+	});*/
+
+	$('#deleteColl').on('show.bs.modal', function (event) {
+		console.log('coucou');
+		var button = $(event.relatedTarget); // Button that triggered the modal
+		var recipient = button.data('whatever'); // Extract info from data-* attributes
+		var collectivite = button.data('collectivite'); // Extract info from data-* attributes
+		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+		var modal = $(this);
+		modal.find('.modal-title').text('Supprimer la collectivité ' + collectivite);
+		modal.find('.modal-body input').val(recipient);
+		modal.find('.btn-danger').attr('href', recipient);
+	})
     </script>
 {% endblock %}
