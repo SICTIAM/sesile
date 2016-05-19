@@ -247,31 +247,54 @@ class AdminController extends Controller
     }
 
     /**
-     * Deletes a Collectivite entity.
+     * Delete a Collectivite entity.
      *
      * @Route("/collectivite/{id}", name="delete_collectivite")
-     * @Method("DELETE")
+     * @Method("GET")
      */
-    public function deleteCollectiviteAction(Request $request, $id)
+    public function deleteCollectiviteAction($id)
     {
+
+        // Test pour savoir si le user c est pas égaré...
+        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+        /*
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($id);
+        */
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($id);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Collectivite entity.');
-            }
-
-            if ($entity->getImage()) {
-                $entity->removeUpload();
-            }
-
-            $em->remove($entity);
-            $em->flush();
+        // Si la collectivité n existe pas
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Collectivite entity.');
         }
+
+        // Si il y a des utilisateurs dans la collectivité alors on retourne les utilisateurs
+        if (count($entity->getUsers()) != 0) {
+
+            $this->get('session')->getFlashBag()->add('error', 'Suppression impossible : des utilisateurs sont liés à la colectivité');
+            foreach ($entity->getUsers() as $user) {
+                $this->get('session')->getFlashBag()->add('warning', "L'utilisateur " . $user->getPrenom() . $user->getNom() . " est présent dans la colectivité");
+            }
+            return $this->redirect($this->generateUrl('index_collectivite'));
+        }
+
+        if ($entity->getImage()) {
+            $entity->removeUpload();
+        }
+
+        $em->remove($entity);
+        $em->flush();
+        //}
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            'La collectivité a bien été supprimée'
+        );
+
         return $this->redirect($this->generateUrl('index_collectivite'));
     }
 

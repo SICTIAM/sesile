@@ -17,7 +17,7 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-//            ->add('username', 'email', array('label' => 'Email'))
+            ->add('username', 'email', array('label' => 'Email', 'label_attr' => array('class' => 'sesile_userbundle_user_username_label')))
             ->add('email', 'hidden')
             ->add('Nom', 'text')
             ->add('Prenom', 'text', array('label' => 'Prénom'))
@@ -31,7 +31,7 @@ class UserType extends AbstractType
                 'type' => new UserRoleType(),
                 'allow_add'    => true,
                 'allow_delete' => true,
-                'options' => array('attr' => array('class' => 'col-md-12'))))
+                'options' => array('attr' => array('class' => ''))))
 //                ))
             ->add('qualite', 'textarea', array('label' => 'Qualité', 'required' => false, 'max_length' => 250, 'attr' => array('cols' => '37', 'class' => 'qualite'), 'label_attr' => array('class' => 'label_form_textarea')))
             ->add('enabled', null, array('label' => 'Activé', 'required' => false))
