@@ -872,8 +872,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $cleanTabHisto[] = $this->histoToArray($histo);
         }
         return array('id' => $doc->getId(),
-            'name' => str_replace("-sign", "", $doc->getName()),
-//            'name' => $doc->getName(),
+            'name' => $doc->getName(),
             'repourl' => $doc->getrepourl(),
             'type' => $doc->getType(),
 //            'signed' => false,
