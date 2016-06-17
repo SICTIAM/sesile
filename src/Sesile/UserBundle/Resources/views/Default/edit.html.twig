@@ -221,6 +221,11 @@
         $('#sesile_userbundle_user_username').attr('type', 'hidden');
         $('.sesile_userbundle_user_username_label').hide();
 
+        $(document).ready(function() {
+
+            setUserRole ({{ entity.id }});
+
+        });
 
     </script>
 {% endblock %}
