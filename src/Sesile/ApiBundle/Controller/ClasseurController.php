@@ -688,13 +688,40 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
        /*                MAILS DE NOTIFICATION                      */
 
-    private function sendMail($sujet, $to, $body)
+    /*private function sendMail($sujet, $to, $body)
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($sujet)
             ->setFrom($this->container->getParameter('email_sender_address'))
             ->setTo($to)
             ->setBody($body, "text/html");
+        $this->get('mailer')->send($message);
+    }*/
+
+    private function sendMail($sujet, $to, $body)
+    {
+        $message = \Swift_Message::newInstance();
+        // Pour l integration de l image du logo dans le mail
+        $html = explode("**logo_coll**", $body);
+        if($this->get('session')->get('logo') !== null) {
+            $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75" alt="Sesile">' . $html[1];
+        } else {
+            $htmlBody = $body;
+        }
+
+        // On rajoute les balises manquantes
+        $html_brkts_start = "<html><head></head><body>";
+        $html_brkts_end = "</body></html>";
+        $htmlBodyFinish = $html_brkts_start . $htmlBody . $html_brkts_end;
+
+        // Constitution du mail
+        $message->setSubject($sujet)
+            ->setFrom($this->container->getParameter('email_sender_address'))
+            ->setTo($to)
+            ->setBody($htmlBodyFinish)
+            ->setContentType('text/html');
+
+        // Envoie de l email
         $this->get('mailer')->send($message);
     }
 
@@ -747,19 +774,18 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $env = new \Twig_Environment(new \Twig_Loader_String());
 
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
-//        foreach($classeur->getValidant() as $validant) {
         foreach($validants as $validant) {
-//            var_dump($validant->getId());
-//            die();
-//            $validant_obj = $em->getRepository('SesileUserBundle:User')->findOneById($validant->getId());
 
             if ($validant != null) {
                 $body = $env->render($coll->getTextmailnew(),
                     array(
                         'validant' => $validant->getPrenom()." ".$validant->getNom(),
                         'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
+                        'role' => $c_user->getRole(),
+                        'qualite' => $c_user->getQualite(),
                         'titre_classeur' => $classeur->getNom(),
                         'date_limite' => $classeur->getValidation(),
+                        'type' => strtolower($classeur->getType()->getNom()),
                         "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
                     )
                 );
@@ -872,8 +898,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $cleanTabHisto[] = $this->histoToArray($histo);
         }
         return array('id' => $doc->getId(),
-            'name' => str_replace("-sign", "", $doc->getName()),
-//            'name' => $doc->getName(),
+            'name' => $doc->getName(),
             'repourl' => $doc->getrepourl(),
             'type' => $doc->getType(),
 //            'signed' => false,
