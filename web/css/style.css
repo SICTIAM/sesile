@@ -714,6 +714,12 @@ select [name=user] {
 	border: 1px solid #cccccc;
 }
 
+.label-form-input2 {
+	border: 2px solid #cccccc;
+	margin: 0 0 1.5em 1em;
+	padding-top: 1em;
+}
+
 .glyphicon-search-blue {
 	color: rgb(50, 133, 171) !important;
 }

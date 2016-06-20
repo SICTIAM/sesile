@@ -385,6 +385,9 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
+        // On supprime tous les roles de l'utilisateur (UserRole)
+        $entity->removeAllUserRole();
+
         // Si elle a bien un répertoire pour son avatar
         if ($entity->getPath()) {
             $entity->removeUpload($DirPath);
