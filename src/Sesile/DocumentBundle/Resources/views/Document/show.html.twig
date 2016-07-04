@@ -5,7 +5,14 @@
         <img id="fileimgpreview" style="width: 180px; height: 180px">
 
         <div class="caption">
-            <h3 class="h3break">{{ name }}</h3>
+            <h3 class="h3break">
+                {# Si le nom du fichier est trop long on le raccourcis avant de l afficher #}
+                {% if (name | length ) > 100 %}
+                    {{ name[:100] }}...
+                {% else %}
+                    {{ name }}
+                {% endif %}
+            </h3>
 
             {% if doc is not null %}
                 {% if (doc.type  == "application/vnd.ms-excel" ) or
@@ -47,8 +54,7 @@
 
                 {% if doc.type != 'application/pdf' %}
                 {#{% if doc.type != 'application/pdf' and signature %}#}
-                    <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}"
-                       class="btn btn-default" role="button">
+                    <a id='download' href="{{ path('download_doc', {'id':doc.id}) }}" class="btn btn-default" role="button">
                         <span class="glyphicon glyphicon-download-alt"></span>
                         Télécharger {#Original#}
                     </a>&nbsp;
@@ -234,7 +240,13 @@
                 {% endif %}
 
                 <td><strong>{{ histo.date|date('d.m.Y H:i:s') }} </strong></td>
-                <td> {{ histo.comment }} </td>
+                <td>
+                    {% if (histo.comment | length) > 90 %}
+                        {{ histo.comment[:90] }}...
+                    {% else %}
+                        {{ histo.comment }}
+                    {% endif %}
+                </td>
                 </tr>
             {% endfor %}
 
