@@ -12,7 +12,15 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12"><h3>{{ classeur.nom }}</h3></div>
+        <div class="col-md-12">
+            <h3>
+                {% if ( classeur.nom | length ) > 75 %}
+                    {{ classeur.nom[:75] }}...
+                {% else %}
+                    {{ classeur.nom }}
+                {% endif %}
+            </h3>
+        </div>
     </div>
     <div class="row">
         <form id="lacommode" action="{{ path("classeur_valider") }}" method="post">
@@ -48,7 +56,7 @@
                 </div>
                 <div class='pull-right' id="bouttons" style="display:none">
                     <br/>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    {#<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>#}
                     <button type="button" onclick="javascript:signature(); return false;" class="btn btn-success">Signer et valider le classeur</button>
                 </div>
             </div>

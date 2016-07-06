@@ -10,7 +10,15 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12"><h3>{{ classeur.nom }}</h3></div>
+        <div class="col-md-12">
+            <h3>
+                {% if ( classeur.nom | length ) > 75 %}
+                    {{ classeur.nom[:75] }}...
+                {% else %}
+                    {{ classeur.nom }}
+                {% endif %}
+            </h3>
+        </div>
     </div>
     <div class="row">
         <form id="lacommode" action="{{ path("classeur_valider") }}" method="post">
@@ -46,7 +54,7 @@
                 </div>
                 <div class='pull-right' id="bouttons" style="display:none">
                     <br/>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    {#<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>#}
                     <button type="button" id="signatureDocument" class="btn btn-success">Signer et valider le classeur</button>
                 </div>
             </div>
@@ -162,7 +170,6 @@
 
     var docstosign = {{ docstosign|json_encode|raw }};
     var attributes = {width: 1, height: 1, id: "javaapplet"};
-//     var parameters = {jnlp_href: 'http://dss.dave.fred/launch.jnlp'};
     var parameters = {jnlp_href: 'http://{{ url_applet }}/pdf/launch.jnlp'}; // url : signature DEMO
 
     var version = '1.7';
@@ -178,10 +185,6 @@
 
         // Envoie du lien pour l upload
         document.javaapplet.setUploadUrl('http://' + window.location.hostname + '{{ path('upload_pdf_doc') }}');
-        // Envoie de la variable de session
-        {#document.javaapplet.setsessionid("{{ session_id }}");#}
-        // Envoie de la variable document id
-//        document.javaapplet.setdocumentid(docstosign[0].id);
 
         // Envoie de l id
         var divcertif = document.getElementById('listecertif');

@@ -546,7 +546,8 @@ class DefaultController extends Controller
         $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
 
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
-        $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        // $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(array('collectivite' => $collectivite), array('Nom' => 'ASC'));
 
         return array('userPack'=>$userPack,'users'=>$users, "menu_color" => "vert");
 

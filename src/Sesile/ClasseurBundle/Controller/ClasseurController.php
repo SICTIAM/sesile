@@ -1599,11 +1599,11 @@ class ClasseurController extends Controller {
     /**
      * Valider_et_signer an existing Classeur entity.
      *
-     * @Route("/signPdfForm/{id}/{role}", name="signPdfDocAction")
+     * @Route("/signPdfForm/{id}", name="signPdfDocAction")
      * @Template()
      *
      */
-    public function signPdfDocAction(Request $request, $id, $role = null)
+    public function signPdfDocAction(Request $request, $id)
     {
         //var_dump($request->get("moncul"));exit;
         $user = $this->get('security.context')->getToken()->getUser();
@@ -1648,28 +1648,12 @@ class ClasseurController extends Controller {
 
         }
 
-        // Gestion du role de l utilisateur
-        // Dans le cas l utilisateur a plusieurs roles
-        if(null !== $role) {
-            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
-            $role = $roleUser->getUserRoles();
-        }
-        // Dans le cas l utilisateur a un seul role
-        else {
-            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findByUser($user);
-            if (!empty($roleUser)) {
-                $role = $roleUser[0]->getUserRoles();
-            } else {
-                $role = '';
-            }
-        }
 
         $servername = $_SERVER['HTTP_HOST'];
         $url_applet = $this->container->getParameter('url_applet');
 
         return array(
             'user'      => $user,
-            'role'      => $role,
             'classeur'  => $classeur,
             'session_id' => $session->getId(),
             'docstosign' => $docstosign,
