@@ -170,7 +170,6 @@
 
     var docstosign = {{ docstosign|json_encode|raw }};
     var attributes = {width: 1, height: 1, id: "javaapplet"};
-//     var parameters = {jnlp_href: 'http://dss.dave.fred/launch.jnlp'};
     var parameters = {jnlp_href: 'http://{{ url_applet }}/pdf/launch.jnlp'}; // url : signature DEMO
 
     var version = '1.7';
@@ -186,10 +185,6 @@
 
         // Envoie du lien pour l upload
         document.javaapplet.setUploadUrl('http://' + window.location.hostname + '{{ path('upload_pdf_doc') }}');
-        // Envoie de la variable de session
-        {#document.javaapplet.setsessionid("{{ session_id }}");#}
-        // Envoie de la variable document id
-//        document.javaapplet.setdocumentid(docstosign[0].id);
 
         // Envoie de l id
         var divcertif = document.getElementById('listecertif');
