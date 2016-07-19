@@ -189,13 +189,14 @@
             {% endif %}
             // 42 c est la solution... et la taille de la flèche
             var widthScroll = $('.etapes-circuit').length * 292 + btn;
-            console.log(widthScroll);
+            console.log("Yo : " + widthScroll);
             $('#circuit_with_js').css('width', widthScroll);
         }
 
         // Sans bootstrap c'est la galère. Faut se gérer le rediementsionnement de la fenêtre à la mano...
         window.onresize = function(event) {
             scrollFrisque();
+            scrollActive();
         };
 
         // Pour le bouton de suppression de l etape
@@ -204,6 +205,7 @@
             creerFleches();
             scrollFrisque();
             aff_button_valider();
+            scrollActive();
         });
 
 
@@ -278,7 +280,7 @@
                     return '<span data-toggle="popover" style="display: block" data-id="'+tabType[1]+'"><i class="fa fa-group"></i>&nbsp;&nbsp;'+ state.text+'</span>';
                 }
 
-            };
+            }
 
 
             $("select.selusers").select2({
@@ -316,6 +318,8 @@
             scrollFrisque();
             // Pour savoir si on valide ou si on signe
             aff_button_valider();
+
+            scrollActive();
 
             //$('.list-validants').hide();
 
@@ -383,7 +387,7 @@
                 }).disableSelection();
         {% endif %}
 
-        // Fonction pour afficher les bouton valider et signer
+        // Fonction pour afficher les bouton valider et signer ou cacher les boutons selon le nb etapes restantes
         function aff_button_valider () {
             //var c = document.getElementById("#contetapes").childNodes.length;
             var nbEtapes = $('#contetapes').children('.etapes-circuit').length;
@@ -392,17 +396,37 @@
             //if(valid_sign == 0) {
             if(nbEtapes <= 1) {
                 $(".btn-valider-signer").css('display', 'inline-block');
+                $(".btn-valider-signer-pdf").css('display', 'inline-block');
                 $(".btn-group-valider-signer").css('display', 'inline-block');
                 $(".btn-valider-non-signer").css('display', 'none');
             } else {
                 $(".btn-valider-signer").css('display', 'none');
+                $(".btn-valider-signer-pdf").css('display', 'none');
                 $(".btn-group-valider-signer").css('display', 'none');
                 $(".btn-valider-non-signer").css('display', 'inline-block');
             }
         }
-//$('#circuit_etapes').scrollLeft = 10
-       // $('#circuit_etapes').scrollLeft(0);
-//        $("#circuit_etapes").scrollWidth($("#circuit_etapes").scrollLeft())
+
+
+        // Pour le scroll à la molette de la souris
+        // Si le scroll est présent on active le scroll horizontal de la souris
+        function scrollActive() {
+
+            if ($('#circuit_etapes').hasScrollBar().horizontal) {
+                $("#circuit_etapes").mousewheel(function(event, delta) {
+                    this.scrollLeft -= (delta * 100);
+                    event.preventDefault();
+                });
+            }
+            else {
+                $("#circuit_etapes").unmousewheel();
+            }
+        }
+        scrollActive();
+
+        //$('#circuit_etapes').scrollLeft = 10
+        // $('#circuit_etapes').scrollLeft(0);
+        // $("#circuit_etapes").scrollWidth($("#circuit_etapes").scrollLeft())
     });
 
 </script>

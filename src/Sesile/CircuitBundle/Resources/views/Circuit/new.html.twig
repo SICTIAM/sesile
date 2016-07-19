@@ -76,6 +76,7 @@
         // Sans bootstrap c'est la galère. Faut se gérer le rediemensionnement de la fenêtre à la mano...
         window.onresize = function(event) {
             scrollFrisque();
+            scrollActive();
         };
 
         // Bug pourquoi devoir remmettre la fonction et la relancer dans l ajout d etape ?
@@ -90,6 +91,7 @@
             scrollFrisque();
             creerFleches();
             isEnoughEtapes();
+            scrollActive();
         });
 
         $(document).on('click', '#addetape', function (e) {
@@ -162,6 +164,8 @@
             creerFleches();
 
             isEnoughEtapes();
+
+            scrollActive();
         });
 
         /**
@@ -227,6 +231,22 @@
                 }
             }).disableSelection();
         });
+
+        // Pour le scroll à la molette de la souris
+        // Si le scroll est présent on active le scroll horizontal de la souris
+        function scrollActive() {
+
+            if ($('#circuit_etapes').hasScrollBar().horizontal) {
+                $("#circuit_etapes").mousewheel(function(event, delta) {
+                    this.scrollLeft -= (delta * 100);
+                    event.preventDefault();
+                });
+            }
+            else {
+                $("#circuit_etapes").unmousewheel();
+            }
+        }
+        scrollActive();
 
 /*
         $(document).on("click",$(".react"), function(e) {

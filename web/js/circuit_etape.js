@@ -34,6 +34,19 @@ function initPopover(){
 
 $(document).ready(function() {
 
+    // Fonction permettant de determinier si le scroll est présent sur un élément
+    // Returns { vertical: true/false, horizontal: true/false }
+    (function($) {
+        $.fn.hasScrollBar = function() {
+            var e = this.get(0);
+            return {
+                vertical: e.scrollHeight > e.clientHeight,
+                horizontal: e.scrollWidth > e.clientWidth
+            };
+
+        }
+    })(jQuery);
+
     $('.first').popover({
         trigger: 'hover',
         container: 'body',
@@ -55,7 +68,7 @@ $(document).ready(function() {
             return '<span data-toggle="popover" data-id="'+tabType[1]+'" style="display: block"><i class="fa fa-group"></i>&nbsp;&nbsp;'+ state.text+'</span>';
         }
 
-    };
+    }
 
 
     $("select.selusers").select2({
@@ -101,11 +114,6 @@ $(document).ready(function() {
         $('#circuit_etapes').scrollLeft(scroll);
         console.log(scroll);
     }
-    // Pour le scroll à la molette de la souris
-    $("#circuit_etapes").mousewheel(function(event, delta) {
-        this.scrollLeft -= (delta * 100);
-        event.preventDefault();
-    });
 
 
     // Fonction pour calculer la hauteur max des etapes
