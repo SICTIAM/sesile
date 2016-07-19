@@ -979,11 +979,21 @@ class Classeur {
      */
     public function getShortNom()
     {
-        if (strlen($this->nom) > 100) {
-            return substr($this->nom, 0, 100) . '...';
+        // Le nombre maximum de caractere a afficher
+        $nbMaxCharacters = 100;
+        $findme = " ";
+        $nom = $this->nom;
+
+        // Test si le nom est trop long, on affiche 100 caracteres
+        if (strlen($nom) > $nbMaxCharacters && strpos($nom, $findme)) {
+            return substr($nom, 0, $nbMaxCharacters) . '...';
+        }
+        // Test si le nom est trop long qu il n y a pas d espace on affiche que 50 caractères
+        elseif (strlen($nom) > $nbMaxCharacters) {
+            return substr($nom, 0, $nbMaxCharacters/2) . '...';
         }
         else {
-            return $this->nom;
+            return $nom;
         }
     }
 
