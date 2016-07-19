@@ -566,7 +566,9 @@
                 $(".perso_circuit").css("cursor", "-moz-grab");
                 {% endif %}
 
-                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer, .btn-valider-signer-pdf").click(function () {
+//                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer, .btn-valider-signer-pdf").click(function () {
+                // Permet de soumettre les données une seule fois, évite les doubles soumissions
+                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer, .btn-valider-signer-pdf").one('click', function () {
                     if($(this).hasClass("btn-modifs") || $(this).hasClass("btn-valider-signer") || $(this).hasClass("btn-valider-non-signer") || $(this).hasClass("btn-valider")) {
                         // ?? est ce nécessaire
                     }
