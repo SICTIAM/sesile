@@ -32,6 +32,8 @@ security:
     access_control:
         - { path: ^/doc/uploadfile, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/notifymodif, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/delegation, roles: ROLE_USER }
+        - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/circuit, roles: ROLE_USER }
         - { path: ^/classeur, roles: ROLE_USER }
