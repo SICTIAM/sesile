@@ -12,11 +12,7 @@
     <div class="row">
         <div class="col-md-12">
             <h3>
-                {% if ( classeur.nom | length ) > 75 %}
-                    {{ classeur.nom[:75] }}...
-                {% else %}
-                    {{ classeur.nom }}
-                {% endif %}
+                {{ classeur.shortNom }}
             </h3>
         </div>
     </div>
@@ -27,23 +23,8 @@
                 <input type="hidden" name="id" value="{{ classeur.id }}">
                 <input type="hidden" name="moncul" value="1">
 
-                {#<div class="col-md-4"><strong>Role : </strong></div>
-                <div class="col-md-8">{{ role }}</div>
-
-                <div class="col-md-4"><strong>Ville : </strong></div>
-                <div class="col-md-8">{{ user.ville }}</div>
-
-                <div class="col-md-4"><strong>Code postal : </strong></div>
-                <div class="col-md-8">{{ user.cp }}</div>
-
-                <div class="col-md-4"><strong>D&eacute;partement : </strong></div>
-                <div class="col-md-8">{{ user.departement }}</div>
-
-                <div class="col-md-4"><strong>Pays : </strong></div>
-                <div class="col-md-8">{{ user.pays }}</div>#}
-
                 <div class="col-md-4"><strong>Choix du certificat : </strong></div>
-                <div class="col-md-8"><div id='listecertif' name='listecertif'></div></div>
+                <div class="col-md-8"><div id="listecertif"></div></div>
 
 
             </div>
@@ -180,6 +161,10 @@
     $('.etape_progress li .glyphicon-arrow-right').css('display', 'none');
     $('.etape_progress li .glyphicon-ok').css('display', 'none');
     $('.etape_progress li .loadinggif').css('display', 'none');
+    $('.etape_progress li:nth-child(0) .loadinggif').css('display', 'inline-block');
+
+    // Par défaut, on désactive le bouton pour signer
+    $("#signatureDocument").prop("disabled", true);
 
     function appletReady() {
 
@@ -198,7 +183,7 @@
 
         selectcertif.setAttribute('name', 'selectcertif');
         selectcertif.setAttribute('id', 'selectcertif');
-        $('<option selected="selected">Choisir un certificat</option>').appendTo("#selectcertif");
+//        $('<option selected="selected">Choisir un certificat</option>').appendTo("#selectcertif");
 
         timeoutIdHide = false;
         $('#help').hide();
@@ -216,11 +201,25 @@
 
     function setCertificate (value, nom) {
 
+        // On active le bouton pour signer le document
+        $("#signatureDocument").prop("disabled", false);
+
         nom = decode_utf8(nom);
-        $('#selectcertif').append($('<option>', {
+
+        // Méthode 1
+        $('#selectcertif').append($('<option></option>', {
             value: value,
             text: nom
         }));
+
+        // Méthode 2
+        /*$('#selectcertif').append(new Option(nom,value));*/
+
+        // Méthode 3
+        /*$('#selectcertif')
+                .append($("<option></option>")
+                        .attr("value",value)
+                        .text(nom));*/
 
     }
 
@@ -246,23 +245,14 @@
 
     });
 
-    //function pour faire apparaître le bouton signer
-    function test() {
-        alert('applet est active');
-    }
-
     //function donnant le nombre de fichier
     function getNumberFiles() {
-
         document.javaapplet.setNumberFiles({{ docstosign|length }});
-
     }
 
     //function donnant le chemin du fichier
     function getFileLinkFromNumber(i) {
-
         document.javaapplet.setFileLinkFromNumber(i, 'http://{{ servername }}/uploads/docs/' + docstosign[i].repourl, docstosign[i].repourl, docstosign[i].id);
-
     }
 
 
@@ -270,11 +260,8 @@
     function fileUploaded(i, nameficsigne, indicembraquee, errormessage) {
 
         if (errormessage == 'ok') {
-
-
         }
         else {
-
         }
     }
 
