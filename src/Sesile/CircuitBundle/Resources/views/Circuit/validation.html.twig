@@ -164,6 +164,17 @@
 <script>
     $(document).ready(function() {
 
+        // Fonction permettant de determinier si le scroll est présent sur un élément
+        // Returns { vertical: true/false, horizontal: true/false }
+        $.fn.hasScrollBar = function() {
+            var e = this.get(0);
+            return {
+                vertical: e.scrollHeight > e.clientHeight,
+                horizontal: e.scrollWidth > e.clientWidth
+            };
+
+        };
+
 //        $(".selusers").select2();
         /*
          * Initialisations
