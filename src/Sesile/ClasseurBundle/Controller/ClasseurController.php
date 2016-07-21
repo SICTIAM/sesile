@@ -1105,6 +1105,9 @@ class ClasseurController extends Controller {
         // Et on met le bon status
         $classeur->setStatus(1);
 
+        // MAJ de la visibilite
+        $this->set_user_visible ($classeur, $request->get("visibilite"));
+
         $em->flush();
 
         if ($request->get("moncul") == 1) {
@@ -1228,52 +1231,11 @@ class ClasseurController extends Controller {
 //        $delegator = $repositoryusers->find($currentvalidant);
         $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
 
-        // Pour la visibilite
-        // recuperation des users du circuit
-//        $users = explode(',', $circuit);
-        $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
-        $users[] = $classeur->getUser();
 
-        if ($visibilite != 2 && $visibilite != 3) {
-            $usersCV = $this->classeur_visible($visibilite, $users);
-            // On vide la table many to many
-            $classeur->getVisible()->clear();
-            foreach ($usersCV as $userCV) {
-                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
-                $classeur->addVisible($userVisible);
-            }
+        // MAJ de la visibilite
+        $this->set_user_visible ($classeur, $visibilite);
 
-        } elseif ($visibilite == 2) {
-//            $usersCV = $classeur->getPrivateAfterMeVisible();
-            $usersCV = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
-            $usersCV = array_unique($usersCV);
-            // On vide la table many to many
-            $classeur->getVisible()->clear();
-            foreach ($usersCV as $userCV) {
-                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
-                $classeur->addVisible($userVisible);
-            }
-        } elseif ($visibilite == 3) {
-//            $usersCV = $classeur->getPrivateAfterMeVisible();
 
-            $usersVisible = $classeur->getVisible();
-            $usersAlreadyVisible = array();
-            foreach ($usersVisible as $userV) {
-                $usersAlreadyVisible[] = $userV->getId();
-            }
-            $usersCV = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
-            $usersCV = array_unique($usersCV);
-
-            $usersCV = array_diff($usersCV, $usersAlreadyVisible);
-            // On vide la table many to many
-//            $classeur->getVisible()->clear();
-            foreach ($usersCV as $userCV) {
-                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
-                $classeur->addVisible($userVisible);
-            }
-        }
-
-        // FIN Pour la visibilite
 //        $classeur->valider($em);
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur);
 
@@ -2053,6 +2015,62 @@ class ClasseurController extends Controller {
                 $request->getSession()->getFlashBag()->add('notice', 'Merci de choisir une visibilité.');
                 return $this->redirect($this->generateUrl('classeur_create'));
                 break;
+        }
+    }
+
+    /**
+     * Fonction permettant la mise a jour de la visibilite
+     *
+     * @param $classeur
+     * @param $visibilite
+     */
+    public function set_user_visible ($classeur, $visibilite) {
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
+        $users[] = $classeur->getUser();
+
+        if ($visibilite != 2 && $visibilite != 3) {
+            $usersCV = $this->classeur_visible($visibilite, $users);
+            // On vide la table many to many
+            $classeur->getVisible()->clear();
+            foreach ($usersCV as $userCV) {
+                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
+                $classeur->addVisible($userVisible);
+            }
+
+        }
+
+        // Si la visibilite du classeur est prive a partir de moi
+        elseif ($visibilite == 2) {
+            $usersCV = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
+            $usersCV = array_unique($usersCV);
+
+            // On vide la table many to many
+            $classeur->getVisible()->clear();
+            foreach ($usersCV as $userCV) {
+                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
+                $classeur->addVisible($userVisible);
+            }
+        }
+
+        // Si la visibilite du classeur est service organisationnel (et le circuit)
+        elseif ($visibilite == 3) {
+
+            $usersVisible = $classeur->getVisible();
+            $usersAlreadyVisible = array();
+            foreach ($usersVisible as $userV) {
+                $usersAlreadyVisible[] = $userV->getId();
+            }
+            $usersCV = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
+            $usersCV = array_unique($usersCV);
+
+            $usersCV = array_diff($usersCV, $usersAlreadyVisible);
+            // On vide la table many to many
+            // $classeur->getVisible()->clear();
+            foreach ($usersCV as $userCV) {
+                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
+                $classeur->addVisible($userVisible);
+            }
         }
     }
 }

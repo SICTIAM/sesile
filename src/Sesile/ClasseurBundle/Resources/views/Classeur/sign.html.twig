@@ -41,7 +41,7 @@
                 <div class="col-md-8">{{ user.pays }}</div>
 
                 <div class="col-md-4"><strong>Choix du certificat : </strong></div>
-                <div class="col-md-8"><div id='listecertif' name='listecertif'></div></div>
+                <div class="col-md-8"><div id="listecertif"></div></div>
 
 
             </div>
@@ -190,20 +190,34 @@
         var selectcertif = document.createElement('select');
         selectcertif.setAttribute('name', 'selectcertif');
         selectcertif.setAttribute('id', 'selectcertif');
+        divcertif.appendChild(selectcertif);
         var nbcertif = document.javaapplet.getNumberSigningCertificates();
         var i = 0;
         while (i < nbcertif) {
+            // On recupere le nom du certificat
             var nomcertif = document.javaapplet.getSigningCertificateName(i);
-            console.log('nomcertif : ' + nomcertif);
-            var element = document.createElement('option');
+
+            // Les MAJ de JAVA...
+            // Test si dans la string retourné on a un - et avec l id ; si oui on raccourcis le nom pour ne pas pertuber l utilisateur
+            if (nomcertif.indexOf("-") !== -1) {
+                var nomcertif = nomcertif.substring(nomcertif.lastIndexOf('-'), -1);
+            }
+
+            // On incrémente la select avec le nom du certificat
+            $('#selectcertif').append(new Option(nomcertif,i));
+
+            console.log('i : ' + i + ' nomcertif : ' + nomcertif);
+
+            /*var element = document.createElement('option');
             element.setAttribute('value', i);
-            nomcertif = nomcertif.substring(nomcertif.lastIndexOf('-'), -1);
+
             element.text = nomcertif;
-            selectcertif.appendChild(element);
+            selectcertif.appendChild(element);*/
             i = i + 1;
 
         }
-        divcertif.appendChild(selectcertif);
+
+        // On affiche pas les boutons d aide
         timeoutIdHide = false;
         $('#help').hide();
         $('#bouttons').show('slow');
@@ -219,15 +233,6 @@
 
         // If Internet Explorer, else return false
         return (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./));
-        /*
-        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {      // If Internet Explorer, return version number
-//                    alert(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))));
-            return true;
-        }
-        else {                 // If another browser, return 0
-//                    alert('otherbrowser');
-            return false;
-        }*/
 
     }
 
