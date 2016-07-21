@@ -2066,7 +2066,7 @@ class ClasseurController extends Controller {
 
             $usersCV = array_diff($usersCV, $usersAlreadyVisible);
             // On vide la table many to many
-            $classeur->getVisible()->clear();
+            // $classeur->getVisible()->clear();
             foreach ($usersCV as $userCV) {
                 $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
                 $classeur->addVisible($userVisible);
