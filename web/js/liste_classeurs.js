@@ -24,6 +24,9 @@ $.fn.dataTable.moment( 'DD/MM/YYYY' );
         }
     );
 
+    // Permet de supprimer le message d erreur de la datatable lors du chargement de la 2° table
+    $.fn.dataTable.ext.errMode = 'none';
+
     var oldStart = 0;
     var tab = $("#validTable").DataTable({
         oLanguage: {
