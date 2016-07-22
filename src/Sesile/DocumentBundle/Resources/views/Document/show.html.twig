@@ -102,7 +102,7 @@
                 {# Si le classeur est validé seuelement on peut accéder aux options de téléchargements du visa et de la signature #}
                 {% if doc.classeur.status == 2 %}
                     <div class="row">
-                        <div class="col-lg-6 col-md-12 text-center">
+                        <div class="{% if orientationPDFFirst == 270 %}col-lg-6{% else %}col-lg-12{% endif %} col-md-12 text-center">
                             <label>Emplacement du visa</label>
                             {#<img src="data:image/jpg;base64,{{ doc.getPDFImage }}">#}
                             <input type="hidden" id="absVisa" value="{{ abscissesVisa }}" />
@@ -113,7 +113,7 @@
                         </div>
 
                         {% if signature is not null %}
-                        <div class="col-lg-6 col-md-12 text-center">
+                        <div class="{% if orientationPDFFirst == 270 %}col-lg-6{% else %}col-lg-12{% endif %} col-md-12 text-center">
                             <label>Emplacement de la signature</label>
                             <div id="containmentSignature"></div>
                         </div>
@@ -131,8 +131,13 @@
                     cHorizontalPadding = 10;
 
                     $('#containment').drag('init',{
-                        cWidth:"210px",
-                        cHeight:"297px",
+                        {% if orientationPDFFirst == 270 %}
+                            cWidth:"210px",
+                            cHeight:"297px",
+                        {% else %}
+                            cWidth:"297px",
+                            cHeight:"210px",
+                        {% endif %}
                         cVerticalPadding:cVerticalPadding + "px",
                         cHorizontalPadding:cHorizontalPadding + "px",
                         dText: "VISA",
@@ -142,8 +147,13 @@
                     });
 
                     $('#containmentSignature').drag('initSign',{
-                        cWidth:"210px",
-                        cHeight:"297px",
+                        {% if orientationPDFLast == 270 %}
+                            cWidth:"210px",
+                            cHeight:"297px",
+                        {% else %}
+                            cWidth:"297px",
+                            cHeight:"210px",
+                        {% endif %}
                         dWidth:"75px",
                         cVerticalPadding:cVerticalPadding + "px",
                         cHorizontalPadding:cHorizontalPadding + "px",

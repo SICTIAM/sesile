@@ -90,38 +90,28 @@ class DocumentRepository extends EntityRepository
      *
      * Fonctions permettant le calcul des valeurs x et y pour la signature et le visa
      */
-    private function calcXSign($absSign, $format = 'portrait') {
-        if ($format == 'portrait') {
-            $translateXSign = ($absSign + 2) * 3.1;
-        } else {
-            $translateXSign = ($absSign + 2) * 5.3;
-        }
-        return $translateXSign;
-    }
-    private function calcYSign($ordSign, $format = 'portrait') {
-        if ($format == 'portrait') {
-            $translateYSign = ($ordSign + 8) * -2.9;
-        } else {
-            $translateYSign = ($ordSign + 12) * -2;
-        }
-        return $translateYSign;
+    private function calcXSign($absSign) {
+
+        return $translateXSign = ($absSign + 2) * 3.1;
 
     }
-    private function calcXVisa($absVisa, $format = 'portrait') {
-        if($format == 'portrait') {
-            $translateXVisa = $absVisa * 2.9;
-        } else {
-            $translateXVisa = $absVisa * 4.8;
-        }
-        return $translateXVisa;
+
+    private function calcYSign($ordSign) {
+
+        return $translateYSign = ($ordSign + 10) * -2.9;
+
     }
-    private function calcYVisa($ordVisa, $format = 'portrait') {
-        if($format == 'portrait') {
-            $translateYVisa = $ordVisa * -2.9;
-        } else {
-            $translateYVisa = $ordVisa * -2.1;
-        }
-        return $translateYVisa;
+
+    private function calcXVisa($absVisa) {
+
+        return $translateXVisa = $absVisa * 2.9;
+
+    }
+
+    private function calcYVisa($ordVisa) {
+
+        return $translateYVisa = $ordVisa* -2.9;
+
     }
 
     /**
@@ -149,11 +139,11 @@ class DocumentRepository extends EntityRepository
         }
 //var_dump($document);
         // On recupere l orientation de la page portrait ou paysage
-        $format = $this->getFormatPdf($document, $first);
+        // $format = $this->getFormatPdf($document, $first);
 
         // Params
-        $translateX = $this->calcXVisa($translateX, $format);
-        $translateY = $this->calcYVisa($translateY, $format);
+        $translateX = $this->calcXVisa($translateX);
+        $translateY = $this->calcYVisa($translateY);
 
         $em = $this->getEntityManager();
         $actions = $em->getRepository('SesileClasseurBundle:Action')->findBy(array(
@@ -255,10 +245,10 @@ class DocumentRepository extends EntityRepository
         }
 
         // On recupere l orientation de la page portrait ou paysage
-        $format = $this->getFormatPdf($document, $first);
+        // $format = $this->getFormatPdf($document, $first);
         // Params
-        $translateX = $this->calcXSign($translateX, $format);
-        $translateY = $this->calcYSign($translateY, $format);
+        $translateX = $this->calcXSign($translateX);
+        $translateY = $this->calcYSign($translateY);
 
         $texteVisa = $user->getPrenom(). " " . $user->getNom() . "\n" . $user->getQualite();
         // calcul du decalage en Y a cause de la qualite
@@ -391,6 +381,12 @@ class DocumentRepository extends EntityRepository
 
     }
 
+    /**
+     * @param $hex
+     * @return array
+     *
+     * Convertit une couleur #001122 en RGB
+     */
     private function hex2rgb($hex) {
         $hex = str_replace("#", "", $hex);
 

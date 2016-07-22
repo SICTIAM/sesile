@@ -237,7 +237,12 @@ class Document
         return $this->classeur;
     }
 
-    public function getPDFImage($page = 0) {
+    /**
+     * @param int $page
+     * @param string $format
+     * @return bool|string
+     */
+    public function getPDFImage($page = 0, $orientation = 270) {
         if($this->getType() == "application/pdf") {
 
 
@@ -245,7 +250,13 @@ class Document
 //            $imagick->readImage('mytest.pdf');
 
             $imagick->readImage('uploads/docs/' . $this->getRepourl() . '[' . $page . ']');
-            $imagick->thumbnailImage(210,297,true,true);
+
+            // Si le PDF est au format portrait
+            if ($orientation == 270) {
+                $imagick->thumbnailImage(210,297,true,true);
+            } else {
+                $imagick->thumbnailImage(297,210,true,true);
+            }
             $imagick->setFormat('jpg');
 //          $thumb = $imagick->getImageBlob();
 //          header("Content-Type: image/jpg");

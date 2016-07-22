@@ -146,7 +146,6 @@ class DocumentController extends Controller
      */
     public function showAction(Request $request, $id)
     {
-//var_dump($id);exit;
 
 //        $servername = $this->getRequest()->getHost();
         $servername = $this->get('router')->getContext()->getHost();
@@ -186,21 +185,29 @@ class DocumentController extends Controller
             // Recup des thumbs
             if ($doc->getClasseur()->getStatus() == 2 && $doc->getType() == "application/pdf") {
 
-                $imagePDFFirst = $doc->getPDFImage(0);
+                // Recup du doc pour utiliser SetaPDF
+                require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+                $filename = 'uploads/docs/' . $doc->getRepourl();
+                $document = \SetaPDF_Core_Document::loadByFilename($filename);
+
+                // Pour la première page
+                $orientationPDFFirst = $document->getCatalog()->getPages()->getPage(1)->getRotation();
+                $imagePDFFirst = $doc->getPDFImage(0, $orientationPDFFirst);
+
 
                 // Si c est la derniere page
                 if (!$city->getPageSignature()){
-                    require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
-                    $filename = 'uploads/docs/' . $doc->getRepourl();
 
-                    $document = \SetaPDF_Core_Document::loadByFilename($filename);
 
                     $pages = $document->getCatalog()->getPages();
                     $pageCount = $pages->count();
-                    $imagePDFLast = $doc->getPDFImage($pageCount-1);
+                    $orientationPDFLast = $document->getCatalog()->getPages()->getLastPage()->getRotation();
+                    $imagePDFLast = $doc->getPDFImage($pageCount-1, $orientationPDFLast);
                 }
                 else {
-                    $imagePDFLast = $doc->getPDFImage(0);
+                    $orientationPDFLast = $orientationPDFFirst;
+                    $imagePDFLast = $imagePDFFirst;
+                    // $imagePDFLast = $doc->getPDFImage(0, $orientationPDFLast);
                 }
             } else {
                 $imagePDFFirst = "";
@@ -239,7 +246,9 @@ class DocumentController extends Controller
             'abscissesVisa' => $abscissesVisa,
             'ordonneesVisa' => $ordonneesVisa,
             'abscissesSignature' => $abscissesSignature,
-            'ordonneesSignature' => $ordonneesSignature
+            'ordonneesSignature' => $ordonneesSignature,
+            'orientationPDFFirst' => $orientationPDFLast,
+            'orientationPDFLast' => $orientationPDFLast
         );
 
     }
