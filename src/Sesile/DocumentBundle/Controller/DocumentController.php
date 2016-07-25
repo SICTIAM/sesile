@@ -212,6 +212,8 @@ class DocumentController extends Controller
             } else {
                 $imagePDFFirst = "";
                 $imagePDFLast = "";
+                $orientationPDFFirst = "";
+                $orientationPDFLast = "";
             }
 
             // coordonnées visa et signature
@@ -247,7 +249,7 @@ class DocumentController extends Controller
             'ordonneesVisa' => $ordonneesVisa,
             'abscissesSignature' => $abscissesSignature,
             'ordonneesSignature' => $ordonneesSignature,
-            'orientationPDFFirst' => $orientationPDFLast,
+            'orientationPDFFirst' => $orientationPDFFirst,
             'orientationPDFLast' => $orientationPDFLast
         );
 
@@ -772,6 +774,12 @@ class DocumentController extends Controller
 
 
         $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $Signataire, $date, $arrayBord, $arrayPJ);
+        $PJName = $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0];
+
+        // On recupere l extension de la PJ
+        $extension = explode('.', $PJName);
+        $PJextension = end($extension);
+
         $response = new Response();
         /*$PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
         return new JsonResponse($PJ);*/
@@ -783,9 +791,17 @@ class DocumentController extends Controller
         $response->headers->set('Content-Type', 'mime/type');
         $response->headers->set('Content-Disposition', 'attachment;filename=' . $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0]);
         */
+
         // Affichage du PDF dans un onglet
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition', 'inline;filename=' . $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0]);
+        if ($PJextension != "zip") {
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', 'inline;filename=' . $PJName);
+        }
+        // Download des zip
+        else {
+            $response->headers->set('Content-Type', 'application/zip');
+            $response->headers->set('Content-disposition', 'inline;filename=' . $PJName);
+        }
 
 
         $response->setContent($PJ);
