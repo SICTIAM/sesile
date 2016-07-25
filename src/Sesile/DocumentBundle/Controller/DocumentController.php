@@ -146,7 +146,6 @@ class DocumentController extends Controller
      */
     public function showAction(Request $request, $id)
     {
-//var_dump($id);exit;
 
 //        $servername = $this->getRequest()->getHost();
         $servername = $this->get('router')->getContext()->getHost();
@@ -186,25 +185,35 @@ class DocumentController extends Controller
             // Recup des thumbs
             if ($doc->getClasseur()->getStatus() == 2 && $doc->getType() == "application/pdf") {
 
-                $imagePDFFirst = $doc->getPDFImage(0);
+                // Recup du doc pour utiliser SetaPDF
+                require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+                $filename = 'uploads/docs/' . $doc->getRepourl();
+                $document = \SetaPDF_Core_Document::loadByFilename($filename);
+
+                // Pour la première page
+                $orientationPDFFirst = $document->getCatalog()->getPages()->getPage(1)->getRotation();
+                $imagePDFFirst = $doc->getPDFImage(0, $orientationPDFFirst);
+
 
                 // Si c est la derniere page
                 if (!$city->getPageSignature()){
-                    require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
-                    $filename = 'uploads/docs/' . $doc->getRepourl();
 
-                    $document = \SetaPDF_Core_Document::loadByFilename($filename);
 
                     $pages = $document->getCatalog()->getPages();
                     $pageCount = $pages->count();
-                    $imagePDFLast = $doc->getPDFImage($pageCount-1);
+                    $orientationPDFLast = $document->getCatalog()->getPages()->getLastPage()->getRotation();
+                    $imagePDFLast = $doc->getPDFImage($pageCount-1, $orientationPDFLast);
                 }
                 else {
-                    $imagePDFLast = $doc->getPDFImage(0);
+                    $orientationPDFLast = $orientationPDFFirst;
+                    $imagePDFLast = $imagePDFFirst;
+                    // $imagePDFLast = $doc->getPDFImage(0, $orientationPDFLast);
                 }
             } else {
                 $imagePDFFirst = "";
                 $imagePDFLast = "";
+                $orientationPDFFirst = "";
+                $orientationPDFLast = "";
             }
 
             // coordonnées visa et signature
@@ -239,7 +248,9 @@ class DocumentController extends Controller
             'abscissesVisa' => $abscissesVisa,
             'ordonneesVisa' => $ordonneesVisa,
             'abscissesSignature' => $abscissesSignature,
-            'ordonneesSignature' => $ordonneesSignature
+            'ordonneesSignature' => $ordonneesSignature,
+            'orientationPDFFirst' => $orientationPDFFirst,
+            'orientationPDFLast' => $orientationPDFLast
         );
 
     }
@@ -763,6 +774,12 @@ class DocumentController extends Controller
 
 
         $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $Signataire, $date, $arrayBord, $arrayPJ);
+        $PJName = $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0];
+
+        // On recupere l extension de la PJ
+        $extension = explode('.', $PJName);
+        $PJextension = end($extension);
+
         $response = new Response();
         /*$PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
         return new JsonResponse($PJ);*/
@@ -774,9 +791,17 @@ class DocumentController extends Controller
         $response->headers->set('Content-Type', 'mime/type');
         $response->headers->set('Content-Disposition', 'attachment;filename=' . $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0]);
         */
+
         // Affichage du PDF dans un onglet
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition', 'inline;filename=' . $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0]);
+        if ($PJextension != "zip") {
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', 'inline;filename=' . $PJName);
+        }
+        // Download des zip
+        else {
+            $response->headers->set('Content-Type', 'application/zip');
+            $response->headers->set('Content-disposition', 'inline;filename=' . $PJName);
+        }
 
 
         $response->setContent($PJ);

@@ -25,6 +25,9 @@
 
             var oldStart = 0;
 
+            // Permet de supprimer le message d erreur de la datatable lors du chargement de la 2° table
+            $.fn.dataTable.ext.errMode = 'none';
+
             $.fn.dataTable.moment( 'DD/MM/YYYY' );
             var tab = $("#fulltable").DataTable({
                 "processing": true,
