@@ -137,6 +137,7 @@ class DefaultController extends Controller
                     // fin de la modification des roles
 
                     //envoi d'un mail à l'utilisateur nouvellement créé
+                    // Fonction mis en commentaire suite a la demande de CB
                     /*$message = \Swift_Message::newInstance()
                         ->setContentType('text/html')
                         ->setSubject('Nouvel utilisateur')
