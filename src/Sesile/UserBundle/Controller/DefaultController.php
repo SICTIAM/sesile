@@ -137,13 +137,13 @@ class DefaultController extends Controller
                     // fin de la modification des roles
 
                     //envoi d'un mail à l'utilisateur nouvellement créé
-                    $message = \Swift_Message::newInstance()
+                    /*$message = \Swift_Message::newInstance()
                         ->setContentType('text/html')
                         ->setSubject('Nouvel utilisateur')
                         ->setFrom("sesile@sictiam.fr")
                         ->setTo($entity->getUsername())
                         ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
-                    $this->get('mailer')->send($message);
+                    $this->get('mailer')->send($message);*/
                 } else {
                     $this->get('session')->getFlashBag()->add(
                         'error',
