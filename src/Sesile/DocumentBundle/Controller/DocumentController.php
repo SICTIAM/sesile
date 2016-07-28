@@ -216,11 +216,49 @@ class DocumentController extends Controller
                 $orientationPDFLast = "";
             }
 
-            // coordonnées visa et signature
-            if (!$city->getAbscissesVisa()) { $abscissesVisa = 10; } else { $abscissesVisa = $city->getAbscissesVisa(); }
-            if (!$city->getOrdonneesVisa()) { $ordonneesVisa = 10; } else { $ordonneesVisa = $city->getOrdonneesVisa(); }
-            if (!$city->getAbscissesSignature()) { $abscissesSignature = 10; } else { $abscissesSignature = $city->getAbscissesSignature(); }
-            if (!$city->getOrdonneesSignature()) { $ordonneesSignature = 10; } else { $ordonneesSignature = $city->getOrdonneesSignature(); }
+            // coordonnées visa
+            if (!$city->getAbscissesVisa()) {
+                $abscissesVisa = 10;
+            } else {
+                // Si on est au format portrait
+                if($orientationPDFFirst == 270) {
+                    $abscissesVisa = $city->getAbscissesVisa();
+                } else {
+                    $abscissesVisa = $city->getAbscissesVisa() * 1.63;
+                }
+            }
+            if (!$city->getOrdonneesVisa()) {
+                $ordonneesVisa = 10;
+            } else {
+                // Si on est au format portrait
+                if($orientationPDFFirst == 270) {
+                    $ordonneesVisa = $city->getOrdonneesVisa();
+                } else {
+                    $ordonneesVisa = $city->getOrdonneesVisa() * 0.67;
+                }
+            }
+
+            // coordonnées signature
+            if (!$city->getAbscissesSignature()) {
+                $abscissesSignature = 10;
+            } else {
+                // Si on est au format portrait
+                if ($orientationPDFLast == 270) {
+                    $abscissesSignature = $city->getAbscissesSignature();
+                } else {
+                    $abscissesSignature = $city->getAbscissesSignature() * 1.65;
+                }
+            }
+            if (!$city->getOrdonneesSignature()) {
+                $ordonneesSignature = 10;
+            } else {
+                // Si on est au format portrait
+                if ($orientationPDFLast == 270) {
+                    $ordonneesSignature = $city->getOrdonneesSignature();
+                } else {
+                    $ordonneesSignature = $city->getOrdonneesSignature() * 0.67;
+                }
+            }
 
 
 
