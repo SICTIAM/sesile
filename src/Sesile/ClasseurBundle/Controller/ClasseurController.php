@@ -1804,7 +1804,7 @@ class ClasseurController extends Controller {
         $message = \Swift_Message::newInstance();
         // Pour l integration de l image du logo dans le mail
         $html = explode("**logo_coll**", $body);
-        if($this->get('session')->get('logo') !== null) {
+        if($this->get('session')->get('logo') !== null && $this->container->getParameter('upload')['logo_coll'] !== null && !empty($html)) {
             $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75" alt="Sesile">' . $html[1];
         } else {
             $htmlBody = $body;

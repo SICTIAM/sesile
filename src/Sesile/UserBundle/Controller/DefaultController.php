@@ -370,38 +370,43 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('liste_users'));
         }
 
-        // On Supprime l'utilisateur de tous les UserPacks
-        $em->getRepository('SesileUserBundle:UserPack')->deleteUserFromUserPacks($id);
+        // On recupere le user
+        $user = $em->getRepository('SesileUserBundle:User')->findOneById($id);
 
-        // On supprime l'utilisateur de tous les Service organisationnel (EtapeGroupe)
-        $em->getRepository('SesileUserBundle:EtapeGroupe')->deleteUserFromEtapeGroupes($id);
+        // Si l utilisateur existe bien
+        if($user !== null) {
+            // On Supprime l'utilisateur de tous les UserPacks
+//        $em->getRepository('SesileUserBundle:UserPack')->deleteUserFromUserPacks($id);
 
-        // On récupère le dossier des avatar
-        $upload = $this->container->getParameter('upload');
-        $DirPath = $upload['path'];
+            // On supprime l'utilisateur de tous les Service organisationnel (EtapeGroupe)
+//            $em->getRepository('SesileUserBundle:EtapeGroupe')->deleteUserFromEtapeGroupes($id);
 
-        // On récupère l'entity utilisateur à supprimer
-        $entity = $em->getRepository('SesileUserBundle:User')->findOneById($id);
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
+            // On récupère le dossier des avatar
+            $upload = $this->container->getParameter('upload');
+            $DirPath = $upload['path'];
+
+
+            // Si elle a bien un répertoire pour son avatar
+            if ($user->getPath()) {
+                $user->removeUpload($DirPath);
+            }
+
+            // On supprime l'user et on flush
+            $em->remove($user);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'L\'utilisateur a bien été supprimé'
+            );
+        }
+        else {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'L\'utilisateur n\'existe pas.'
+            );
         }
 
-        // On supprime tous les roles de l'utilisateur (UserRole)
-        $entity->removeAllUserRole();
-
-        // Si elle a bien un répertoire pour son avatar
-        if ($entity->getPath()) {
-            $entity->removeUpload($DirPath);
-        }
-
-        // On supprime l'user et on flush
-        $em->remove($entity);
-        $em->flush();
-
-        $this->get('session')->getFlashBag()->add(
-            'success',
-            'L\'utilisateur a bien été supprimé'
-        );
 
         // On redirige vers liste_user
         return $this->redirect($this->generateUrl('liste_users'));
