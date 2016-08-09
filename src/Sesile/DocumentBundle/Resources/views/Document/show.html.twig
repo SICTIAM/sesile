@@ -102,7 +102,7 @@
                 {# Si le classeur est validé seuelement on peut accéder aux options de téléchargements du visa et de la signature #}
                 {% if doc.classeur.status == 2 %}
                     <div class="row">
-                        <div class="{% if orientationPDFFirst == 270 %}col-lg-6{% else %}col-lg-12{% endif %} col-md-12 text-center">
+                        <div class="{% if orientationPDFFirst == "PORTRAIT" %}col-lg-6{% else %}col-lg-12{% endif %} col-md-12 text-center">
                             <label>Emplacement du visa</label>
                             {#<img src="data:image/jpg;base64,{{ doc.getPDFImage }}">#}
                             <input type="hidden" id="absVisa" value="{{ abscissesVisa }}" />
@@ -113,7 +113,7 @@
                         </div>
 
                         {% if signature is not null %}
-                        <div class="{% if orientationPDFFirst == 270 %}col-lg-6{% else %}col-lg-12{% endif %} col-md-12 text-center">
+                        <div class="{% if orientationPDFFirst == "PORTRAIT" %}col-lg-6{% else %}col-lg-12{% endif %} col-md-12 text-center">
                             <label>Emplacement de la signature</label>
                             <div id="containmentSignature"></div>
                         </div>
@@ -131,7 +131,7 @@
                     cHorizontalPadding = 10;
 
                     $('#containment').drag('init',{
-                        {% if orientationPDFFirst == 270 %}
+                        {% if orientationPDFFirst == "PORTRAIT" %}
                             cWidth:"210px",
                             cHeight:"297px",
                         {% else %}
@@ -147,7 +147,7 @@
                     });
 
                     $('#containmentSignature').drag('initSign',{
-                        {% if orientationPDFLast == 270 %}
+                        {% if orientationPDFLast == "PORTRAIT" %}
                             cWidth:"210px",
                             cHeight:"297px",
                         {% else %}

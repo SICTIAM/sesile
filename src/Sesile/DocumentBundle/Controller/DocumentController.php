@@ -191,7 +191,9 @@ class DocumentController extends Controller
                 $document = \SetaPDF_Core_Document::loadByFilename($filename);
 
                 // Pour la première page
-                $orientationPDFFirst = $document->getCatalog()->getPages()->getPage(1)->getRotation();
+//                $orientationPDFFirst = $document->getCatalog()->getPages()->getPage(1)->getRotation();
+                $orientationPDFFirst = $this->getDocumentOrientation($document->getCatalog()->getPages()->getPage(1)->getWidthAndHeight());
+
                 $imagePDFFirst = $doc->getPDFImage(0, $orientationPDFFirst);
 
 
@@ -201,7 +203,7 @@ class DocumentController extends Controller
 
                     $pages = $document->getCatalog()->getPages();
                     $pageCount = $pages->count();
-                    $orientationPDFLast = $document->getCatalog()->getPages()->getLastPage()->getRotation();
+                    $orientationPDFLast = $this->getDocumentOrientation($document->getCatalog()->getPages()->getLastPage()->getWidthAndHeight());
                     $imagePDFLast = $doc->getPDFImage($pageCount-1, $orientationPDFLast);
                 }
                 else {
@@ -221,7 +223,7 @@ class DocumentController extends Controller
                 $abscissesVisa = 10;
             } else {
                 // Si on est au format portrait
-                if($orientationPDFFirst == 270) {
+                if($orientationPDFFirst == "PORTRAIT") {
                     $abscissesVisa = $city->getAbscissesVisa();
                 } else {
                     $abscissesVisa = $city->getAbscissesVisa() * 1.63;
@@ -231,7 +233,7 @@ class DocumentController extends Controller
                 $ordonneesVisa = 10;
             } else {
                 // Si on est au format portrait
-                if($orientationPDFFirst == 270) {
+                if($orientationPDFFirst == "PORTRAIT") {
                     $ordonneesVisa = $city->getOrdonneesVisa();
                 } else {
                     $ordonneesVisa = $city->getOrdonneesVisa() * 0.67;
@@ -243,7 +245,7 @@ class DocumentController extends Controller
                 $abscissesSignature = 10;
             } else {
                 // Si on est au format portrait
-                if ($orientationPDFLast == 270) {
+                if ($orientationPDFLast == "PORTRAIT") {
                     $abscissesSignature = $city->getAbscissesSignature();
                 } else {
                     $abscissesSignature = $city->getAbscissesSignature() * 1.65;
@@ -253,7 +255,7 @@ class DocumentController extends Controller
                 $ordonneesSignature = 10;
             } else {
                 // Si on est au format portrait
-                if ($orientationPDFLast == 270) {
+                if ($orientationPDFLast == "PORTRAIT") {
                     $ordonneesSignature = $city->getOrdonneesSignature();
                 } else {
                     $ordonneesSignature = $city->getOrdonneesSignature() * 0.67;
@@ -846,5 +848,22 @@ class DocumentController extends Controller
         return $response;
     }
 
+    /**
+     * @param $widthAndHeight
+     * @return string PORTRAIT|PAYSAGE
+     *
+     * Fonction permettant de déterminer si la page est au format paysage ou portrait
+     */
+    private function getDocumentOrientation(array $widthAndHeight) {
+        $width = $widthAndHeight[0];
+        $height = $widthAndHeight[1];
 
+        if ($width < $height) {
+            return "PORTRAIT";
+        }
+        else {
+            return "PAYSAGE";
+        }
+
+    }
 }

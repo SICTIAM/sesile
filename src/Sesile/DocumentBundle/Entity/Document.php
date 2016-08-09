@@ -242,7 +242,7 @@ class Document
      * @param string $format
      * @return bool|string
      */
-    public function getPDFImage($page = 0, $orientation = 270) {
+    public function getPDFImage($page = 0, $orientation = "PORTRAIT") {
         if($this->getType() == "application/pdf") {
 
 
@@ -252,7 +252,7 @@ class Document
             $imagick->readImage('uploads/docs/' . $this->getRepourl() . '[' . $page . ']');
 
             // Si le PDF est au format portrait
-            if ($orientation == 270) {
+            if ($orientation == "PORTRAIT") {
                 $imagick->thumbnailImage(210,297,true,true);
             } else {
                 $imagick->thumbnailImage(297,210,true,true);
