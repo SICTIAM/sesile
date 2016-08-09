@@ -518,7 +518,7 @@ class DocumentController extends Controller
             }
         }
 
-        if (!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants) {
+        if (!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants && !$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $this->get('session')->getFlashBag()->add(
                 'error',
                 "Vous n'avez pas accès à ce classeur"
