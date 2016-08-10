@@ -30,7 +30,7 @@ class UserPack
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="userPacks", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="userPacks", cascade={"remove", "persist"})
      */
     private $users;
 

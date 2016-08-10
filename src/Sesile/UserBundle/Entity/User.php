@@ -124,7 +124,7 @@ class User extends BaseUser {
 
     /**
      * @var
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserRole", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserRole", mappedBy="user", cascade={"remove", "persist"}, orphanRemoval=true)
      */
     private $userRole;
 
@@ -978,14 +978,4 @@ class User extends BaseUser {
         return $this->userRole;
     }
 
-    /**
-     *  Remove All user Role
-     *
-     * Fonction permettant de supprimer tous les roles pour un utilisateur
-     */
-    public function removeAllUserRole() {
-        foreach ($this->getUserRole() as $userRoleToRemove) {
-            $this->removeUserRole($userRoleToRemove);
-        }
-    }
 }

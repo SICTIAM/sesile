@@ -22,7 +22,7 @@ class EtapeGroupe
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeGroupes", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeGroupes", cascade={"remove", "persist"})
      */
     private $users;
 

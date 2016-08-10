@@ -88,7 +88,7 @@ var dropzone = new Dropzone("div#fichiers", {
     createThumbnail: false{% if classeur.type.id == 2 %},
     maxFiles: 1,
     dictMaxFilesExceeded: "Dans le cas d'un classeur de type Hélios le dépôt d'un seul fichier par classeur est autorisé.",
-    maxFilesize: 20,
+    maxFilesize: 100,
     dictFileTooBig: "Dans le cas d'un classeur de type Hélios le fichier ne peut dépasser les 20 Mo.",
     acceptedFiles: ".xml",
     dictInvalidFileType: "Attention, seuls les fichiers xml sont acceptés"
