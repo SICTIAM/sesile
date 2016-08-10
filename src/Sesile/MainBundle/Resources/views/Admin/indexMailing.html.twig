@@ -25,7 +25,7 @@
         </div>
         <div class="row row-padding">
             <div class="col-md-3">{{ form_label(form.mailMessage) }}</div>
-            <div class="col-md-9">{{ form_widget(form.mailMessage, {'attr': {'class': 'form-control textarea'}} ) }}</div>
+            <div class="col-md-9">{{ form_widget(form.mailMessage) }}</div>
         </div>
         <div class="row row-padding">
             <div class="col-md-3">&nbsp;</div>
@@ -34,14 +34,13 @@
         {{ form_end(form) }}
     </div>
 
-    <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap3-wysihtml5/src/bootstrap-wysihtml5.css") }}"/>
-    <script src="{{ asset("/bootstrap3-wysihtml5/lib/js/wysihtml5-0.3.0.js") }}" type="text/javascript"></script>
-    <script src="{{ asset("/bootstrap3-wysihtml5/src/bootstrap3-wysihtml5.js") }}" type="text/javascript"></script>
-    <script src="{{ asset("/bootstrap3-wysihtml5/src/locales/bootstrap-wysihtml5.fr-FR.js") }}"></script>
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script type="text/javascript">
-        $('textarea').wysihtml5({
-            "image": false,
-            locale: "fr-FR"
+
+        // Configuration TinyMce
+        tinymce.init({
+            selector:'#form_mailMessage',
+            menubar: "false"
         });
 
         //var textarea = $(".textarea").data("wysihtml5").el;
@@ -50,29 +49,6 @@
             that = $("button[type=submit]");
             $(this).val() ? that.removeClass("disabled") : that.addClass("disabled");
         });
-
-
-        //$('.textarea').keyup(console.log('testdfsf'));
-
-        /*
-        $('.textarea').change(function() {
-            console.log($('.textarea').val());
-        });
-
-        $('.textarea').keyup(function() {
-            console.log($('.textarea').val());
-        });
-        */
-
-        /*$('.someLink').live('click', function () {
-            $('.textarea').wysihtml5();
-            var wysihtml5Editor = $(".textarea").data("wysihtml5").editor;
-            console.log('wysihtml5Editor: '+wysihtml5Editor);
-            // The following is important since wysihtml5 is initialized asynchronously
-            wysihtml5Editor.observe("load", function() {
-            wysihtml5Editor.composer.commands.exec("bold");
-            });
-        });*/
 
 
 
