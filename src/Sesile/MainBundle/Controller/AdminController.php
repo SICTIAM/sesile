@@ -356,7 +356,7 @@ class AdminController extends Controller
         $defaultData = array('message' => 'Taper votre message');
         $form = $this->createFormBuilder($defaultData)
             ->add('sujet', 'text')
-            ->add('mailMessage', 'textarea', array('label' => 'Corps du message'))
+            ->add('mailMessage', 'textarea', array('label' => "Corps du message", 'required' => true))
             ->add('submit', 'submit', array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
             ->getForm();
 
