@@ -408,7 +408,7 @@ class AdminController extends Controller
                 // Sinon on envoie le mail
                 else {
                     $message->setTo($email);
-//                    $this->get('mailer')->send($message);
+                    $this->get('mailer')->send($message);
                 }
             }
 
