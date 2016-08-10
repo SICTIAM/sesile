@@ -356,7 +356,7 @@ class AdminController extends Controller
         $defaultData = array('message' => 'Taper votre message');
         $form = $this->createFormBuilder($defaultData)
             ->add('sujet', 'text')
-            ->add('mailMessage', 'textarea', array('label' => "Corps du message", 'required' => true))
+            ->add('mailMessage', 'textarea', array('label' => "Corps du message"))
             ->add('submit', 'submit', array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
             ->getForm();
 
@@ -373,7 +373,6 @@ class AdminController extends Controller
             // Création du mail
             $message = \Swift_Message::newInstance()
                 ->setSubject($data['sujet'])
-                //->setFrom('sesile@sictiam.fr')
                 ->setFrom($this->container->getParameter('email_sender_address'))
                 ->setBody($data['mailMessage'])
                 ->setContentType('text/html');
@@ -409,9 +408,16 @@ class AdminController extends Controller
                 // Sinon on envoie le mail
                 else {
                     $message->setTo($email);
-                    $this->get('mailer')->send($message);
+//                    $this->get('mailer')->send($message);
                 }
             }
+
+            // remise à zéro du formulaire
+            $form = $this->createFormBuilder($defaultData)
+                ->add('sujet', 'text')
+                ->add('mailMessage', 'textarea', array('label' => "Corps du message"))
+                ->add('submit', 'submit', array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
+                ->getForm();
 
             // Message de confirmation pour l'utilisateur
             $request->getSession()->getFlashBag()->add('success', "L'emailing a été envoyé avec succès.");
