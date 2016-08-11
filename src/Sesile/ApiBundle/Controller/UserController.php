@@ -69,7 +69,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
 
 
     /**
-     * ACTUELLEMENT INDISPONNIBLE - Cette méthode permet de récupérer la liste des utilisateurs de la collectivité de l'utilisateur courant
+     * Cette méthode permet de récupérer la liste des utilisateurs de la collectivité de l'utilisateur courant
      *
      *
      * @var Request $request
@@ -83,7 +83,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="ACTUELLEMENT INDISPONNIBLE - Permet de récupérer la liste des utilisateurs de la collectivité de l'utilisateur courant. "
+     *  description="Permet de récupérer la liste des utilisateurs de la collectivité de l'utilisateur courant. "
      * )
      */
     public function indexAction(Request $request)
@@ -92,16 +92,19 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
 
         $em = $this->getDoctrine()->getManager();
 
+        $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
 
-        $entity = $em->getRepository('SesileUserBundle:User')->findAll();
+
+        //$entity = $em->getRepository('SesileUserBundle:User')->findAll();
+        $entity = $em->getRepository('SesileUserBundle:User')->findByCollectivite($user->getCollectivite());
         $users = array();
         foreach ($entity as $e) {
             $array = array();
-            $array['id'] = $entity->getId();
-            $array['username'] = $entity->getUsername();
-            $array['email'] = $entity->getEmail();
-            $array['prenom'] = $entity->getPrenom();
-            $array['nom'] = $entity->getNom();
+            $array['id'] = $e->getId();
+            $array['username'] = $e->getUsername();
+            $array['email'] = $e->getEmail();
+            $array['prenom'] = $e->getPrenom();
+            $array['nom'] = $e->getNom();
             $users[] = $array;
 
         }
@@ -126,7 +129,10 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet de récupérer la liste des services organisationnels ayant accès à un type de classeur"
+     *  description="Permet de récupérer la liste des services organisationnels ayant accès à un type de classeur",
+     *  requirements={
+     *      {"name"="type", "dataType"="integer", "description"="id du type de classeur"}
+     *  }
      * )
      */
     public function getServicesOrganisationnelsAction(Request $request, $type)
@@ -160,7 +166,10 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet de récupérer ma liste des services organisationnels ayant accès à un type de classeur"
+     *  description="Permet de récupérer ma liste des services organisationnels ayant accès à un type de classeur",
+     *  requirements={
+     *      {"name"="email", "dataType"="string", "description"="email de l'utilisateur"}
+     *  }
      * )
      */
     public function getServicesOrganisationnelsForUserAction(Request $request, $email)

@@ -31,6 +31,7 @@ class CircuitController extends FOSRestController implements TokenAuthenticatedC
     /**
      * Cette méthode permet de récupérer la liste des circuits de l'utilisateur déterminé par le token et le secret passés en headers
      *
+     * Cette méthode est bosolète depuis la version 3.0 de SESILE
      *
      *
      * @var Request $request
@@ -41,7 +42,7 @@ class CircuitController extends FOSRestController implements TokenAuthenticatedC
      *
      * @ApiDoc(
      *  resource=true,
-     *  description="Permet de récupérer la liste des circuits de l'utilisateur"
+     *  description="Permet de récupérer la liste des circuits de l'utilisateur. Méthode obsolète"
      *
      * )
      */
