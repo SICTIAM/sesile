@@ -32,6 +32,9 @@ security:
     access_control:
         - { path: ^/doc/uploadfile, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/notifymodif, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/doc/downloadJWS, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/doc/uploaddocument, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/classeur/valider_classeur_jws, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/delegation, roles: ROLE_USER }
         - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }
         - { path: ^/user, roles: ROLE_USER }

@@ -1,0 +1,249 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+
+<div class="bloc_page">
+
+    <div class="titre_page">
+        <span class="glyphicon glyphicon-edit"></span>
+        &nbsp;&nbsp;&nbsp;Signer le classeur
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <h3>
+                {{ classeur.shortNom }}
+            </h3>
+        </div>
+        <div class="col-md-2 text-right infos-classeur">
+            {# Affichage du statut du classeur #}
+                {#<p class="status_classeur statut_refuse"><span class="glyphicon statut_0"> </span> Classeur refusé</p>#}
+                <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
+                <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
+                {#<p class="status_classeur statut_retire"><span class="glyphicon statut_3"> </span> Classeur retiré</p>#}
+                {#<p class="status_classeur statut_retracte"><span class="glyphicon statut_4"> </span> Classeur rétracté</p>#}
+            {# FIN Affichage du statut du classeur #}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12"><h3>Informations utilisateurs</h3></div>
+    </div>
+    <div class="row">
+        <form id="lacommode" action="{{ path("classeur_valider") }}" method="post">
+            <div class="col-md-8">
+
+                {% if role is not null %}
+                    <div class="col-md-4"><strong>Role : </strong></div>
+                    <div class="col-md-8">{{ role.userRoles }}</div>
+                {% endif %}
+
+                <div class="col-md-4"><strong>Ville : </strong></div>
+                <div class="col-md-8">{{ user.ville }}</div>
+
+                <div class="col-md-4"><strong>Code postal : </strong></div>
+                <div class="col-md-8">{{ user.cp }}</div>
+
+                <div class="col-md-4"><strong>D&eacute;partement : </strong></div>
+                <div class="col-md-8">{{ user.departement }}</div>
+
+                <div class="col-md-4"><strong>Pays : </strong></div>
+                <div class="col-md-8">{{ user.pays }}</div>
+
+
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right" id="help">
+                    <br/>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-warning-sign"></span>&nbsp;&nbsp;Si JAVA n'est pas installé sur votre poste… cliquez ici</button>
+                </div>
+            </div>
+
+        </form>
+
+
+        {# Modal aide pour IE #}
+        <div class="modal fade col-lg-12" id="IEModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg col-lg-12" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Aide</h4>
+                    </div>
+                    <div class="modal-body">
+                        Le problème est probablement dû à un blocage des composants JAVA du navigateur, voici comment le résoudre:<br><br>
+                        <img src="{{ asset("/images/iesc.jpg") }}" width="100%"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {# Modal aide pour FireFox #}
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Aide</h4>
+                    </div>
+                    <div class="modal-body">
+                        Le problème est probablement dû à un blocage des composants JAVA du navigateur, voici comment le résoudre:<br><br>
+                        <img src="{{ asset("/images/ffsc.jpg") }}"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+<div class="bloc_page">
+    <div class="row">
+        <div class="col-md-12"><h3>Documents à signer</h3></div>
+        <div class="col-md-12">
+            <ul class="etape_progress">
+                {% for doctosign in docstosign %}
+                    <li class="document-{{ doctosign.id }}">
+                        <p class="status_classeur statut_refuse"><span class="glyphicon glyphicon-remove"> </span> document non signé</p>
+                        {#<span class="glyphicon glyphicon-remove label label-danger" > </span>#}
+                        {#<img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>#}
+                        <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> document signé</p>
+                        {#<span class="glyphicon glyphicon-ok label label-success"> </span>#}
+                        <strong>{{ doctosign.name }}</strong>
+                    </li>
+                {% endfor %}
+            </ul>
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            {% if role is null %}
+                <a class="btn btn-success" href="{{ path('jnlpSignerFiles',{'id':classeur.id}) }}">Signer les documents</a>
+            {% else %}
+                <a class="btn btn-success" href="{{ path('jnlpSignerFiles',{'id':classeur.id,'role':role.id}) }}">Signer les documents</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+
+</div>
+
+<script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        // Délai de relance de la fonction ajax
+        var my_delay = 500;
+
+
+        // A l initialisation, on cache l icone doc signé et classeur validé
+        $(".statut_finalise").hide();
+        $(".status_classeur.statut_finalise").hide();
+
+        // Fonction permettan de recup le status d un document
+        function callAjax(id_document) {
+            $.ajax({
+                url: Routing.generate('status_document', {id: id_document}),
+                async: true,
+                method: "GET",
+                success: function (resp) {
+                    if (resp) {
+                        $(".document-" + id_document + " .statut_refuse").hide();
+                        $(".document-" + id_document + " .statut_finalise").show();
+                    } else {
+                        $(".document-" + id_document + " .statut_refuse").show();
+                        $(".document-" + id_document + " .statut_finalise").hide();
+                    }
+
+                    // Fonction permettant de relancer la fonction de test du status du document
+                    setTimeout(callAjax(id_document), my_delay);
+                }
+            });
+        }
+
+        // Fonction permettan de recup le status d un classeur
+        function callClasseurSatus(id_classeur) {
+            $.ajax({
+                url: Routing.generate('status_classeur', {id: id_classeur}),
+                async: true,
+                method: "GET",
+                success: function (resp) {
+                    if (resp == 2) {
+                        $(".infos-classeur .status_classeur.statut_cours").hide();
+                        $(".infos-classeur .status_classeur.statut_finalise").show();
+                    } else {
+                        $(".infos-classeur .status_classeur.statut_cours").show();
+                        $(".infos-classeur .status_classeur.statut_finalise").hide();
+
+                    }
+
+                    // Fonction permettant de relancer la fonction de test du status du document
+                    setTimeout(callClasseurSatus(id_classeur), my_delay);
+                }
+            });
+        }
+
+
+        // On exécute la fonction pour tous les documents
+        {% for doctosign in docstosign %}
+            // Appel de la fonction qui va verifier si le document est signé avec son id
+            $(function() {
+                callAjax({{ doctosign.id }});
+            });
+        {% endfor %}
+
+        // On exécute la fonction pour le classeur
+        callClasseurSatus({{ classeur.id }});
+
+
+    });
+
+    // Permet l'affichage a retardement du helper
+    $("#help").hide();
+    timeoutId = window.setTimeout(showHelp, 20000);
+    timeoutIdHide = true;
+
+    function showHelp () {
+        if (timeoutIdHide) {
+            $("#help").show(400);
+        }
+    }
+    // FIN de l'affichage a retardement du helper
+
+    function msieversion() {
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        // If Internet Explorer, else return false
+        return (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./));
+
+    }
+
+    // Affiche la modal d aide
+    $('#help').click(function(){
+        if(msieversion()) {
+            $('#IEModal').modal('show');
+        }
+        else {
+            $('#myModal').modal('show')
+        }
+    });
+
+
+</script>
+
+
+{% endblock %}

@@ -50,6 +50,14 @@ class Document
     private $type;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=255, nullable=true)
+     *
+     */
+    private $token;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="signed", type="boolean")
@@ -265,5 +273,28 @@ class Document
             /*$imagick->writeImage('uploads/docs/' . $doc->getRepourl() . '.output.jpg');
             $thumbail = 'uploads/docs/' . $doc->getRepourl() . '.output.jpg';*/
         } else return true;
+    }
+
+    /**
+     * Set token
+     *
+     * @param string $token
+     * @return Document
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    
+        return $this;
+    }
+
+    /**
+     * Get token
+     *
+     * @return string 
+     */
+    public function getToken()
+    {
+        return $this->token;
     }
 }

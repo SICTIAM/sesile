@@ -17,6 +17,7 @@ use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\DelegationsBundle\Entity\Delegations;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
@@ -1474,6 +1475,86 @@ class ClasseurController extends Controller {
         return $this->redirect($this->generateUrl('index_valider'));
     }
 
+
+    /**
+     * Valider_et_signer an existing Classeur entity from JWS.
+     *
+     * @Route("/valider_classeur_jws/{id}/{user_id}/{valid}", name="valider_classeur_jws")
+     * @Method("GET")
+     *
+     */
+    public function valider_classeur_jws(Request $request, $id, $user_id, $valid = -1)
+    {
+
+        if($valid == 1) {
+
+            // Connexion BDD
+            $em = $this->getDoctrine()->getManager();
+
+            // Récup de l entité classeur et user
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+            $user = $em->getRepository('SesileUserBundle:User')->findOneById($user_id);
+
+            // Test si le classeur exite
+            if (!$classeur) {
+                throw $this->createNotFoundException('Unable to find Classeur entity.');
+            }
+
+            // Test si le classeur est délégué
+            $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $user);
+
+
+            // Validation du classeur
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur);
+            $classeur->setCircuit($user->getId());
+            $em->flush();
+
+            // Ajout d'une action pour le classeur
+            $action = new Action();
+
+            $commentaire = "Classeur signé.";
+            $action->setCommentaire($commentaire);
+
+            $action->setClasseur($classeur);
+            $action->setUser($user);
+            $action_libelle = "Signature";
+
+            // Si le user est un délégué alors on rajoute un de qui il a reçue sa délégation
+            if ($isvalidator) {
+                $delegators = $em->getRepository('SesileDelegationsBundle:Delegations')->getDelegantsForUser($user);
+                foreach ($delegators as $delegator) {
+                    $action_libelle .= " (Délégation reçue de " . $delegator->getDelegant()->getPrenom() . " " . $delegator->getDelegant()->getNom() . ")";
+                }
+            }
+            $action->setAction($action_libelle);
+            $em->persist($action);
+            $em->flush();
+
+            return new JsonResponse(array("classeur_valid" => "1"));
+        }
+        elseif ($valid == 0) {
+            return new JsonResponse(array("classeur_valid" => "0"));
+        }
+        else {
+            return new JsonResponse(array("classeur_valid" => "-1"));
+        }
+    }
+
+
+    /**
+     * @Route("/statusclasseur/{id}", name="status_classeur",  options={"expose"=true})
+     *
+     */
+    public function statusClasseurAction(Request $request, $id) {
+
+        $em = $this->getDoctrine()->getManager();
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+
+
+        return new JsonResponse($classeur->getStatus());
+    }
+
+
     /**
      * Valider_et_signer an existing Classeur entity.
      *
@@ -1558,6 +1639,56 @@ class ClasseurController extends Controller {
 
     }
 
+
+    /**
+     * Valider_et_signer an existing Classeur entity.
+     *
+     * @Route("/signdocjws/{id}/{role}", name="signdocjws")
+     * @Template()
+     *
+     */
+    public function signDocJwsAction(Request $request, $id, $role = null)
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        // Connexion a la BDD
+        $em = $this->getDoctrine()->getManager();
+
+        // Récupération du classeur
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+        // Récupération des documents liés au classeur
+        $docstosign = $classeur->getDocuments();
+        // Récupération du role
+        $userRole = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
+
+        // Vérification que le classeur existe bien
+        if (!$classeur) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+
+        // MAJ des infos du classeur
+        $visibilite = $request->get("visibilite");
+        $classeur->setVisibilite($visibilite);
+        $classeur->setNom($request->get("name"));
+        $classeur->setDescription($request->get("desc"));
+        list($d, $m, $a) = explode("/", $request->request->get('validation'));
+        $valid = new \DateTime($m . "/" . $d . "/" . $a);
+        $classeur->setValidation($valid);
+
+        // MAJ de la visibilite
+        $this->set_user_visible ($classeur, $visibilite);
+
+        $em->flush();
+
+        return array(
+            'user'      => $user,
+            'role'      => $userRole,
+            'classeur'  => $classeur,
+            'docstosign' => $docstosign
+        );
+
+    }
+
     /**
      * Valider_et_signer an existing Classeur entity.
      *
@@ -1624,6 +1755,142 @@ class ClasseurController extends Controller {
         );
 
     }
+
+    /**
+     * Génération du fichier JNLP permettant l exécution de l application de signature
+     *
+     * @Route("/jnlpsignerfiles/{id}/{role}", name="jnlpSignerFiles")
+     *
+     */
+    public function jnlpSignerFilesAction($id, $role = null) {
+
+        $arguments = array();
+
+        // Connexion BDD
+        $em = $this->getDoctrine()->getManager();
+
+        // User courant
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        // Infos JSON liste des fichiers
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+
+        // Gestion du role de l utilisateur
+        // Dans le cas l utilisateur a plusieurs roles
+        if(null !== $role) {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
+            $roleArg = $roleUser->getUserRoles();
+        }
+        // Dans le cas l utilisateur a un seul role
+        else {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findByUser($user);
+            if (!empty($roleUser)) {
+                $roleArg = $roleUser[0]->getUserRoles();
+            } else {
+                $roleArg = '';
+            }
+        }
+        $documents = $classeur->getDocuments();
+        $cleanTabDocs = array();
+
+        // Generation du token pour le document
+        $token = uniqid();
+
+        foreach ($documents as $document) {
+
+            if(!$document->getSigned()) {
+
+                $document->setToken($token);
+
+                $typeDocument = $document->getType();
+
+                // Definition du type de document a transmettre au JWS
+                if($typeDocument == "application/xml" && $classeur->getType()->getId() == 2) {
+                    $typeJWS = "xades-pes";
+                } else if($typeDocument == "application/xml") {
+                    $typeJWS = "xades";
+                } else if($typeDocument == "application/pdf") {
+                    $typeJWS = "pades";
+                } else if($typeDocument == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                        $typeDocument == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+                        $typeDocument == "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
+                        $typeDocument == "application/vnd.openxmlformats-officedocument.presentationml.slideshow" ||
+                        $typeDocument == "application/vnd.openxmlformats-officedocument.spreadsheetml.template" ) {
+                    $typeJWS = "ms-xml";
+                } else {
+                    $typeJWS = "cades";
+                }
+
+                $cleanTabDocs[] = array(
+                    'name'          => $document->getName(),
+                    'type'          => $typeJWS,
+                    'description'   => $classeur->getDescription(),
+                    'url_file'      => $this->generateUrl('download_jws_doc', array('name' => $document->getrepourl()), UrlGeneratorInterface::ABSOLUTE_URL),
+                    'url_upload'    => $this->generateUrl('upload_document_fron_jws', array('id' => $document->getId()), UrlGeneratorInterface::ABSOLUTE_URL)
+                );
+            }
+
+        }
+
+        // On enregistre les modifications du document en bas
+        $em->flush();
+
+        // On incrémente les arguments passés
+        $arguments[] = json_encode($cleanTabDocs);
+
+
+        // Récupération des infos du user
+        $user = $this->get('security.context')->getToken()->getUser();
+        $arguments[] = $user->getPays();
+        $arguments[] = $user->getVille();
+        $arguments[] = $user->getCp();
+        $arguments[] = $roleArg;
+
+        // Recuperation url de retour pour la validation du classeur
+        $url_valid_classeur = $this->generateUrl('valider_classeur_jws', array('id' => $classeur->getId(), 'user_id' => $user->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+        $arguments[] = $url_valid_classeur;
+
+        // On passse le token
+        $arguments[] = $token;
+
+
+        // Création de la réponse pour envoyer le fichier JNLP générer automatiquement
+        $response = new Response();
+        // Envoie des bonnes headers pour le JNLP
+        $response->headers->set('Content-type', 'application/x-java-jnlp-file');
+        $response->headers->set('Content-disposition', 'filename="signer.jnlp"');
+
+        $url_applet = 'http://' . $this->container->getParameter('url_applet') . '/jws/sesile-jws-signer.jar';
+
+        $contentSigner = '<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="' . $this->generateUrl('jnlpSignerFiles', array('id' => $id, 'role' => $role), UrlGeneratorInterface::ABSOLUTE_URL) . '">
+  <information>
+    <title>SESILE JWS Signer</title>
+    <vendor>SICTIAM</vendor>
+    <homepage href="' . $url_applet . '"/>
+    <description>Application de test d’un fichier JNLP</description>
+    <description kind="short">une application de test</description>
+    <offline-allowed/>
+  </information>
+<security><all-permissions /></security>
+  <resources>
+    <j2se version="1.8"/>
+    <jar href="' . $url_applet . '"/>
+  </resources>
+  <application-desc >';
+
+        foreach ($arguments as $argument) {
+            $contentSigner .= '<argument>' . $argument . '</argument>';
+        }
+
+        $contentSigner .= '</application-desc>
+</jnlp>';
+        $response->setContent($contentSigner);
+
+        return $response;
+
+    }
+
 
     /**
      * retracter an existing Classeur entity.

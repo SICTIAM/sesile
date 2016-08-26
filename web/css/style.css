@@ -1003,3 +1003,15 @@ select [name=user] {
 #fulltable tr td, #validTable tr td {
 	vertical-align: middle;
 }
+
+/* Sign document */
+.etape_progress .label {
+	padding: 4px 0 4px 5px;
+	font-size: 100%;
+	margin-right: 10px;
+}
+
+.etape_progress .status_classeur {
+	margin-top: 0;
+	padding: 8px 8px 11px;
+}

@@ -99,6 +99,77 @@ class DocumentController extends Controller
 
 
     /**
+     * @Route("/statusdocument/{id}", name="status_document",  options={"expose"=true})
+     *
+     */
+    public function statusDocumentAction(Request $request, $id) {
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+
+        return new JsonResponse($doc->getSigned());
+    }
+
+    /**
+     * @Route("/uploaddocument/{id}/{token}", name="upload_document_fron_jws")
+     *
+     */
+    public function uploadDocumentAction(Request $request, $id, $token = null) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        // Récupération des variables
+        $uploadedfile = $request->files->get('upload-file');
+
+
+        // Verification des paramètres
+        if (empty($uploadedfile)) {
+            return new JsonResponse(array("error" => "nothinguploaded"));
+        }
+
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+        // Vérification que le document existe
+        if (empty($doc)) {
+            return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
+        }
+
+        // Vérification du token
+        if($doc->getToken() !== null && $doc->getToken() != $token) {
+            return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
+        }
+        else if (file_exists('uploads/docs/' . $doc->getRepourl())) {
+            unlink('uploads/docs/' . $doc->getRepourl());
+            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+
+            // On valide la singature
+            $doc->setSigned(true);
+
+            // On renomme le document pour indiquer qu il est signé
+            $ancienNom = $doc->getName();
+            $path_parts = pathinfo($ancienNom);
+            $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
+            $doc->setName($nouveauNom);
+
+            // On supprime le token pour plus que le doc soit DL
+            $doc->setToken(null);
+
+            // On enregistre les données
+            $em->flush();
+            return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
+
+        } else {
+            unlink($uploadedfile->getRealPath());
+
+            return new JsonResponse(array("error" => "nodocumentwiththisname"));
+
+        }
+
+    }
+
+
+    /**
      * @Route("/uploadpdffile", name="upload_pdf_doc",  options={"expose"=true})
      *
      */
@@ -106,12 +177,12 @@ class DocumentController extends Controller
 
 //        error_log(" - upload PDF" . print_r($request->files->all(),true));
         $repourl = $request->files->get('formpdf')->getClientOriginalName();
-        error_log(" - form PDF" . $request->files->get('formpdf')->getClientOriginalName());
+//        error_log(" - form PDF" . $request->files->get('formpdf')->getClientOriginalName());
         $em = $this->getDoctrine()->getManager();
         $uploadedfile = $request->files->get('formpdf');
 //        $id = $request->request->get('id');
         if (empty($uploadedfile)) {
-            error_log(" - Upload empty ");
+//            error_log(" - Upload empty ");
             return new JsonResponse(array("error" => "nothinguploaded"));
         }
 
@@ -127,7 +198,7 @@ class DocumentController extends Controller
             $uploadedfile->move('uploads/docs/', $doc->getRepourl());
             $doc->setSigned(true);
             $em->flush();
-            error_log(" - Uploaded !");
+//            error_log(" - Uploaded !");
             return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
 
         } else {
@@ -349,6 +420,39 @@ class DocumentController extends Controller
 
         //  var_dump($response);
         return $response;
+    }
+
+    /**
+     * @Route("/downloadJWS/{name}/{token}", name="download_jws_doc",  options={"expose"=true})
+     *
+     */
+    public function downloadJWSAction(Request $request, $name, $token = null)
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $name));
+
+
+        if($doc->getToken() !== null && $doc->getToken() == $token) {
+            $response = new Response();
+
+            $response->headers->set('Cache-Control', 'private');
+            $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
+            $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getName() . '"');
+            $response->headers->set('Content-Length', filesize('uploads/docs/' . $doc->getRepourl()));
+
+            // $response->sendHeaders();
+
+            $response->setContent(file_get_contents('uploads/docs/' . $doc->getRepourl()));
+
+            //  var_dump($response);
+            return $response;
+        } else {
+            return new JsonResponse(array("Requete invalide" => "0"));
+        }
+
+
     }
 
     /**
