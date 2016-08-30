@@ -199,7 +199,13 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
             }
             $usersId = array_unique($usersId);
             if (in_array($theUser->getId(), $usersId)) {
-                $tabGroupes[] = array('id' => $groupe->getId(), 'nom' => $groupe->getNom());
+                // Ajout des types de classeur associés au SO
+                $typeClasseur = array();
+                foreach ($groupe->getTypes() as $type) {
+                    $typeClasseur[] = $type->getId();
+                }
+
+                $tabGroupes[] = array('id' => $groupe->getId(), 'nom' => $groupe->getNom(), 'type_classeur' => $typeClasseur);
             }
         }
 
