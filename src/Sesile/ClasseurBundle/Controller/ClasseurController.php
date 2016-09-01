@@ -1811,12 +1811,6 @@ class ClasseurController extends Controller {
                     $typeJWS = "xades";
                 } else if($typeDocument == "application/pdf") {
                     $typeJWS = "pades";
-                } else if($typeDocument == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-                        $typeDocument == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-                        $typeDocument == "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
-                        $typeDocument == "application/vnd.openxmlformats-officedocument.presentationml.slideshow" ||
-                        $typeDocument == "application/vnd.openxmlformats-officedocument.spreadsheetml.template" ) {
-                    $typeJWS = "ms-xml";
                 } else {
                     $typeJWS = "cades";
                 }

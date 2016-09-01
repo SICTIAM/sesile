@@ -590,7 +590,7 @@ class Classeur {
     }
 
     /**
-     * Function pour tester si le classeur est PDF signable
+     * Function pour tester si le classeur est signable
      * @return bool
      */
     public function isSignablePDF() {
@@ -602,7 +602,8 @@ class Classeur {
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.template'
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+                'text/plain'
             );
 
             $docs = $this->getDocuments();

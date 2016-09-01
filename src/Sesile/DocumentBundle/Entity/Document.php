@@ -66,11 +66,24 @@ class Document
     private $signed;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="display", type="boolean", nullable=true)
+     *
+     */
+    private $display = true;
+
+    /**
      * @ORM\OneToMany(targetEntity="DocumentHistory", mappedBy="document")
      *  
      */
     protected $histories;
 
+    /**
+     * @ORM\OneToMany(targetEntity="DocumentDetachedSign", mappedBy="document")
+     *
+     */
+    protected $detachedsign;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="documents")
@@ -296,5 +309,61 @@ class Document
     public function getToken()
     {
         return $this->token;
+    }
+
+    /**
+     * Set display
+     *
+     * @param boolean $display
+     * @return Document
+     */
+    public function setDisplay($display)
+    {
+        $this->display = $display;
+    
+        return $this;
+    }
+
+    /**
+     * Get display
+     *
+     * @return boolean 
+     */
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
+    /**
+     * Add detachedsign
+     *
+     * @param \Sesile\DocumentBundle\Entity\DocumentDetachedSign $detachedsign
+     * @return Document
+     */
+    public function addDetachedsign(\Sesile\DocumentBundle\Entity\DocumentDetachedSign $detachedsign)
+    {
+        $this->detachedsign[] = $detachedsign;
+    
+        return $this;
+    }
+
+    /**
+     * Remove detachedsign
+     *
+     * @param \Sesile\DocumentBundle\Entity\DocumentDetachedSign $detachedsign
+     */
+    public function removeDetachedsign(\Sesile\DocumentBundle\Entity\DocumentDetachedSign $detachedsign)
+    {
+        $this->detachedsign->removeElement($detachedsign);
+    }
+
+    /**
+     * Get detachedsign
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDetachedsign()
+    {
+        return $this->detachedsign;
     }
 }

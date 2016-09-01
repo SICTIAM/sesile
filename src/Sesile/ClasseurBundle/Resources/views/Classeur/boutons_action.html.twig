@@ -34,11 +34,28 @@
             &nbsp;Valider le classeur
         </button>
 
+        {# Si le document est signable #}
         {% if signablePDF %}
-            <button type="submit" class="btn btn-success btn-valider-signer-pdf" data-action="{{ path('signdocjws',{'id':classeur.id}) }}">
-                <span class="glyphicon glyphicon-ok"></span>
-                &nbsp;Valider et Signer le document
-            </button>
+            {# Signer le classeur avec multi roles #}
+            {% if uservalidant.UserRole | length > 1 %}
+                <div class="btn-group btn-group-valider-signer">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        &nbsp;Valider et Signer le document <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for role in uservalidant.UserRole %}
+                            <li><a href="#" class="btn-valider-signer" data-action="{{ path('signdocjws',{'id':classeur.id, 'role':role.id,}) }}">{{ role.userRoles }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {# Signer le classeur sans multi roles #}
+            {% else %}
+                <button type="submit" class="btn btn-success btn-valider-signer-pdf" data-action="{{ path('signdocjws',{'id':classeur.id}) }}">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    &nbsp;Valider et Signer le document
+                </button>
+            {% endif %}
         {% endif %}
 
 

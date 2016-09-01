@@ -2,6 +2,8 @@
 
 namespace Sesile\DocumentBundle\Controller;
 
+use Sabre\VObject\Property\DateTime;
+use Sesile\DocumentBundle\Entity\DocumentDetachedSign;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -136,21 +138,45 @@ class DocumentController extends Controller
         }
 
         // Vérification du token
-        if($doc->getToken() !== null && $doc->getToken() != $token) {
-            return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
-        }
-        else if (file_exists('uploads/docs/' . $doc->getRepourl())) {
-            unlink('uploads/docs/' . $doc->getRepourl());
-            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+        if ($doc->getToken() !== null && $doc->getToken() == $token && file_exists('uploads/docs/' . $doc->getRepourl())) {
 
-            // On valide la singature
-            $doc->setSigned(true);
-
-            // On renomme le document pour indiquer qu il est signé
+            // On renomme le document pour indiquer qu il est signéz
             $ancienNom = $doc->getName();
             $path_parts = pathinfo($ancienNom);
             $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
-            $doc->setName($nouveauNom);
+
+            $typeDocument = $doc->getType();
+
+            // Si le document renvoyé est signature détachée
+            // Dans le cas d un CADES
+            if ($typeDocument != "application/xml" && $typeDocument != "application/pdf") {
+
+                $dateToday = new \DateTime();
+
+                $docSignNom = $path_parts['filename'] . '-sign';
+                $path_doc = pathinfo($doc->getRepourl());
+                $documentSignedURL = $path_doc['filename'] . '-sign-' . $dateToday->format('YmdHis');
+                // Upload du nouveau fichier
+                $uploadedfile->move('uploads/docs/', $documentSignedURL);
+                $documentSign = new DocumentDetachedSign();
+                $documentSign->setName($docSignNom);
+                $documentSign->setRepourl($documentSignedURL);
+                $documentSign->setDocument($doc);
+                $em->persist($documentSign);
+
+            }
+            // Dans les autres cas : pades, xades, xades-pes
+            else {
+                unlink('uploads/docs/' . $doc->getRepourl());
+
+                // Upload du nouveau fichier
+                $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+                // On enregistre le nouveau nom
+                $doc->setName($nouveauNom);
+            }
+
+            // On valide la singature
+            $doc->setSigned(true);
 
             // On supprime le token pour plus que le doc soit DL
             $doc->setToken(null);
@@ -419,6 +445,59 @@ class DocumentController extends Controller
         $response->setContent(file_get_contents('uploads/docs/' . $doc->getRepourl()));
 
         //  var_dump($response);
+        return $response;
+    }
+
+    /**
+     * @Route("/download_zip/{id}", name="download_doc_zip",  options={"expose"=true})
+     *
+     */
+    public function downloadZipAction($id)
+    {
+
+        // Recuperation du classeur
+        $em = $this->getDoctrine()->getManager();
+        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+        // Ecriture de l'hitorique du document
+        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+
+        // On créé le fichier ZIP
+        $zip = new \ZipArchive();
+        $zipRepoUrl = 'uploads/docs/' . $doc->getRepourl() . '.zip';
+        if($zip->open($zipRepoUrl, \ZipArchive::CREATE) === true) {
+
+            // On ajoute le fichier original
+            $zip->addFile('uploads/docs/' . $doc->getRepourl(), $doc->getName());
+
+            // On ajoute tous les fichiers signés
+            foreach ($doc->getDetachedsign() as $detachedFile) {
+                $zip->addFile('uploads/docs/' . $detachedFile->getRepourl(), $detachedFile->getName());
+            }
+
+
+            // On finalise le zip
+            $zip->close();
+        } else {
+            die('Impossible de créer une archive.');
+        }
+
+        // On créé la réponse pour télécharger le fichier zip
+        $response = new Response();
+
+
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', 'application/zip');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getName() . '.zip"');
+        $response->headers->set('Content-Length', filesize($zipRepoUrl));
+
+        $response->setContent(file_get_contents($zipRepoUrl));
+
+        // Suppression du zip
+        unlink($zipRepoUrl);
+
         return $response;
     }
 

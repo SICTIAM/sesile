@@ -127,9 +127,9 @@
     <div class="row">
         <div class="col-md-6">
             {% if role is null %}
-                <a class="btn btn-success" href="{{ path('jnlpSignerFiles',{'id':classeur.id}) }}">Signer les documents</a>
+                <a class="btn btn-success btn-signature" href="#">Signer les documents</a>
             {% else %}
-                <a class="btn btn-success" href="{{ path('jnlpSignerFiles',{'id':classeur.id,'role':role.id}) }}">Signer les documents</a>
+                <a class="btn btn-success btn-signature" href="#">Signer les documents</a>
             {% endif %}
         </div>
     </div>
@@ -142,70 +142,90 @@
 <script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 <script type="text/javascript">
 
+    // Délai de relance de la fonction ajax
+    var my_delay = 2 * 1000;
+
+    // Fonction permettan de recup le status d un document
+    function callDocumentAjax() {
+        {% for doctosign in docstosign %}
+
+            $.ajax({
+                url: Routing.generate('status_document', {id: {{ doctosign.id }} }),
+                async: true,
+                method: "GET",
+                success: function (resp) {
+                    if (resp) {
+                        $(".document-" + {{ doctosign.id }} + " .statut_refuse").hide();
+                        $(".document-" + {{ doctosign.id }} + " .statut_finalise").show();
+                    } else {
+                        $(".document-" + {{ doctosign.id }} + " .statut_refuse").show();
+                        $(".document-" + {{ doctosign.id }} + " .statut_finalise").hide();
+                    }
+                }
+            });
+
+        {% endfor %}
+        // Fonction permettant de relancer la fonction de test du status du document
+        setTimeout(callDocumentAjax, my_delay);
+    }
+
+    // Fonction permettan de recup le status d un classeur
+    function callClasseurSatus() {
+        $.ajax({
+            url: Routing.generate('status_classeur', {id: {{ classeur.id }}}),
+            async: true,
+            method: "GET",
+            success: function (resp) {
+                if (resp == 2) {
+                    $(".infos-classeur .status_classeur.statut_cours").hide();
+                    $(".infos-classeur .status_classeur.statut_finalise").show();
+                } else {
+                    $(".infos-classeur .status_classeur.statut_cours").show();
+                    $(".infos-classeur .status_classeur.statut_finalise").hide();
+                }
+
+            }
+        });
+
+        // Fonction permettant de relancer la fonction de test du status du document
+        setTimeout(callClasseurSatus, my_delay);
+    }
+
     $(document).ready(function() {
-
-        // Délai de relance de la fonction ajax
-        var my_delay = 500;
-
 
         // A l initialisation, on cache l icone doc signé et classeur validé
         $(".statut_finalise").hide();
         $(".status_classeur.statut_finalise").hide();
 
-        // Fonction permettan de recup le status d un document
-        function callAjax(id_document) {
-            $.ajax({
-                url: Routing.generate('status_document', {id: id_document}),
-                async: true,
-                method: "GET",
-                success: function (resp) {
-                    if (resp) {
-                        $(".document-" + id_document + " .statut_refuse").hide();
-                        $(".document-" + id_document + " .statut_finalise").show();
-                    } else {
-                        $(".document-" + id_document + " .statut_refuse").show();
-                        $(".document-" + id_document + " .statut_finalise").hide();
-                    }
-
-                    // Fonction permettant de relancer la fonction de test du status du document
-                    setTimeout(callAjax(id_document), my_delay);
-                }
-            });
-        }
-
-        // Fonction permettan de recup le status d un classeur
-        function callClasseurSatus(id_classeur) {
-            $.ajax({
-                url: Routing.generate('status_classeur', {id: id_classeur}),
-                async: true,
-                method: "GET",
-                success: function (resp) {
-                    if (resp == 2) {
-                        $(".infos-classeur .status_classeur.statut_cours").hide();
-                        $(".infos-classeur .status_classeur.statut_finalise").show();
-                    } else {
-                        $(".infos-classeur .status_classeur.statut_cours").show();
-                        $(".infos-classeur .status_classeur.statut_finalise").hide();
-
-                    }
-
-                    // Fonction permettant de relancer la fonction de test du status du document
-                    setTimeout(callClasseurSatus(id_classeur), my_delay);
-                }
-            });
-        }
-
 
         // On exécute la fonction pour tous les documents
-        {% for doctosign in docstosign %}
-            // Appel de la fonction qui va verifier si le document est signé avec son id
-            $(function() {
-                callAjax({{ doctosign.id }});
-            });
-        {% endfor %}
+        callDocumentAjax();
 
-        // On exécute la fonction pour le classeur
-        callClasseurSatus({{ classeur.id }});
+        // On ré-exécute la fonction pour le classeur
+        callClasseurSatus();
+
+
+        $(".btn-signature").on('click', function (e) {
+            //e.preventDefault();
+
+
+            {% if role is null %}
+                window.location = "{{ path('jnlpSignerFiles',{'id':classeur.id}) }}";
+            {% else %}
+                window.location = "{{ path('jnlpSignerFiles',{'id':classeur.id,'role':role.id}) }}";
+            {% endif %}
+
+            // On exécute la fonction pour tous les documents (bug FF)
+            callDocumentAjax();
+
+            // On ré-exécute la fonction pour le classeur (bug FF)
+            callClasseurSatus();
+
+            // On cache le bouton pour ne pas reclicker dessus
+            $(".btn-signature").hide();
+
+        });
+
 
 
     });

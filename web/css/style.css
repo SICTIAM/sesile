@@ -988,6 +988,10 @@ select [name=user] {
 	display: block !important;
 }
 
+.dropdown-detached-file {
+	right: 2.5em;
+}
+
 .btn-circle-md {
 	width: 35px;
 	height: 35px;
