@@ -91,6 +91,10 @@ class Bordereau
                     foreach ($piece->BlocPiece->PJRef as $pj) {
                         $tabPJs[] = $pj;
                     }
+                } else if (isset($piece->LigneDePiece->BlocLignePiece->InfoLignePiece->PJRef)) {
+                    foreach ($piece->LigneDePiece->BlocLignePiece->InfoLignePiece->PJRef as $pj) {
+                        $tabPJs[] = $pj;
+                    }
                 }
             }
 
