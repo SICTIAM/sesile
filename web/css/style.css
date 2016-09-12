@@ -988,6 +988,10 @@ select [name=user] {
 	display: block !important;
 }
 
+.dropdown-detached-file {
+	right: 2.5em;
+}
+
 .btn-circle-md {
 	width: 35px;
 	height: 35px;
@@ -1002,4 +1006,16 @@ select [name=user] {
 /* DataTable */
 #fulltable tr td, #validTable tr td {
 	vertical-align: middle;
+}
+
+/* Sign document */
+.etape_progress .label {
+	padding: 4px 0 4px 5px;
+	font-size: 100%;
+	margin-right: 10px;
+}
+
+.etape_progress .status_classeur {
+	margin-top: 0;
+	padding: 8px 8px 11px;
 }

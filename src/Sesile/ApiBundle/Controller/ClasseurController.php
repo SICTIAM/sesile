@@ -72,47 +72,66 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
                 case 'a_valider':
 
-                    $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                    $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
                         array(
-                            "validant" => $user ? $user->getId() : 0,
-                            "status" => 1
+                            //"validant" => $user ? $user->getId() : 0,
+                            "status" => array(0,1,4)
                         ));
 
                     break;
 
                 case 'a_signer':
 
-                    $classeurtosort = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                    $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
                         array(
-                            "validant" => $user ? $user->getId() : 0,
+                            //"validant" => $user ? $user->getId() : 0,
                             "status" => 1
                         ));
 
-                    $classeur = array();
+                    /*$classeur = array();
 
                     foreach ($classeurtosort as $class) {
                         if ($class->isSignable($em)) {
                             $classeur[] = $class;
                         }
-                    }
+                    }*/
 
                     break;
 
                 case 'finalise':
 
-                    $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                    /*$classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
                         array(
                             "status" => 2
-                        ));
+                        ));*/
+                    $classeurs = $user->getClasseurs();
+                    foreach ($classeurs as $classeurRep) {
+                        if($classeurRep->getStatus() == "2") {
+                            $classeur[] = array(
+                                'id'        => $classeurRep->getId(),
+                                'nom'       => $classeurRep->getShortNom()
+                            );
+                        }
+                    }
+
 
                     break;
 
                 case 'retire':
 
-                    $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+                    /*$classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
                         array(
                             "status" => 3
-                        ));
+                        ));*/
+                    $classeurs = $user->getClasseurs();
+                    foreach ($classeurs as $classeurRep) {
+                        if($classeurRep->getStatus() == "3") {
+                            $classeur[] = array(
+                                'id'        => $classeurRep->getId(),
+                                'nom'       => $classeurRep->getShortNom()
+                            );
+                        }
+                    }
 
                     break;
 
@@ -124,6 +143,22 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
             }
+
+            if ($request->query->get('filtre') == "a_valider" || $request->query->get('filtre') == "a_signer") {
+                $users[] = $this->getUser();
+
+                foreach ($classeurs as $classeurRep) {
+                    $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeurRep);
+                    if(array_intersect($users, $validants))
+                    {
+                        $classeur[] = array(
+                            'id'        => $classeurRep->getId(),
+                            'nom'       => $classeurRep->getShortNom()
+                        );
+                    }
+                }
+            }
+
 
 
         } else {
@@ -193,13 +228,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *  resource=false,
      *  description="Permet de créer un nouveau classeur",
      *  parameters={
-     *          {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
-     *          {"name"="desc", "dataType"="string", "required"=false, "description"="Description du classeur"},
+     *          {"name"="name", "dataType"="string", "format"="Maximum de 250 caractères", "required"=true, "description"="Nom du classeur"},
+     *          {"name"="desc", "dataType"="string", "format"="Maximum de 250 caractères", "required"=false, "description"="Description du classeur"},
      *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
      *          {"name"="type", "dataType"="integer", "format"="", "required"=true, "description"="id du type du classeur"},
      *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"},
-     *          {"name"="email", "dataType"="string", "required"=false, "description"="email du déposant"},
+     *          {"name"="email", "dataType"="string", "format"="Email valide", "required"=false, "description"="email du déposant"},
      *
      *
      *
@@ -432,15 +467,15 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * @ApiDoc(
      *  resource=false,
      *  description="Permet d'editer un classeur",
+     *  requirements={
+     *      {"name"="id", "dataType"="integer", "description"="id du classeur"}
+     *  },
      *  parameters={
-     *  {"name"="name", "dataType"="string", "required"=true, "description"="Nom du classeur"},
-     *          {"name"="desc", "dataType"="string", "required"=false, "description"="Description du classeur"},
+     *          {"name"="name", "dataType"="string", "format"="Maximum de 250 caractères", "required"=true, "description"="Nom du classeur"},
+     *          {"name"="desc", "dataType"="string", "format"="Maximum de 250 caractères", "required"=false, "description"="Description du classeur"},
      *          {"name"="validation", "dataType"="string", "format"="dd/mm/aaaa", "required"=true, "description"="Date limite de validation classeur"},
      *          {"name"="circuit", "dataType"="string", "format"="userid,userid,userid...   Par exemple : 1,2,3", "required"=true, "description"="Circuit de validation du classeur"},
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
-     *
-     *
-     *
      *  }
      * )
      **/
@@ -543,7 +578,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *  resource=false,
      *  description="Permet de retirer un classeur",
      *  requirements={
-     *
+     *      {"name"="id", "dataType"="integer", "description"="id du classeur"}
      *  }
      * )
      */
@@ -591,7 +626,10 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet d'ajouter des documents à un classeur"
+     *  description="Permet d'ajouter des documents à un classeur",
+     *  requirements={
+     *      {"name"="id", "dataType"="integer", "description"="id du classeur"}
+     *  }
      *
      * )
      */

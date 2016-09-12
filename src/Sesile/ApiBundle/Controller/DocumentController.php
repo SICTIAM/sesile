@@ -97,6 +97,9 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      *          {"name"="signed", "dataType"="integer", "format"="1 si le fichier transmis à été signé numériquement, 0 sinon", "required"=false, "description"="Etat de signature du fichier"},
      *
      *          {"name"="attachment : file", "dataType"="file", "required"=false, "description"="Fichier associé, passé en attachment à la manière d'un formulaire web (récupérable en php par $_FILE['file'])"}
+     *  },
+     *  requirements={
+     *      {"name"="id", "dataType"="integer", "description"="id du document"}
      *  }
      * )
      **/
@@ -170,7 +173,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      *  resource=false,
      *  description="Permet de supprimer un document",
      *  requirements={
-     *
+     *      {"name"="id", "dataType"="integer", "description"="id du document"}
      *  }
      * )
      */
@@ -224,7 +227,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
      *  resource=false,
      *  description="Permet de récupérer le contenu d'un document",
      *  requirements={
-     *
+     *      {"name"="id", "dataType"="integer", "description"="id du document"}
      *  }
      * )
      */

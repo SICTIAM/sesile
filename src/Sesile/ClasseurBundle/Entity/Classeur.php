@@ -590,14 +590,27 @@ class Classeur {
     }
 
     /**
-     * Function pour tester si le classeur est PDF signable
+     * Function pour tester si le classeur est signable
      * @return bool
      */
     public function isSignablePDF() {
         if($this->isAtLastValidant()){
+            // Type de fichier signable
+            $typeSignable = array(
+                'application/pdf',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+                'text/plain'
+            );
+
             $docs = $this->getDocuments();
+
             foreach($docs as $doc){
-                if($doc->getType() == 'application/pdf'){
+                //if($doc->getType() == 'application/pdf'){
+                if(in_array($doc->getType(), $typeSignable)){
                     return true;
                 }
             }

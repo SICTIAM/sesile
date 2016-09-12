@@ -50,6 +50,14 @@ class Document
     private $type;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=255, nullable=true)
+     *
+     */
+    private $token;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="signed", type="boolean")
@@ -58,11 +66,24 @@ class Document
     private $signed;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="display", type="boolean", nullable=true)
+     *
+     */
+    private $display = true;
+
+    /**
      * @ORM\OneToMany(targetEntity="DocumentHistory", mappedBy="document")
      *  
      */
     protected $histories;
 
+    /**
+     * @ORM\OneToMany(targetEntity="DocumentDetachedSign", mappedBy="document")
+     *
+     */
+    protected $detachedsign;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", inversedBy="documents")
@@ -265,5 +286,84 @@ class Document
             /*$imagick->writeImage('uploads/docs/' . $doc->getRepourl() . '.output.jpg');
             $thumbail = 'uploads/docs/' . $doc->getRepourl() . '.output.jpg';*/
         } else return true;
+    }
+
+    /**
+     * Set token
+     *
+     * @param string $token
+     * @return Document
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    
+        return $this;
+    }
+
+    /**
+     * Get token
+     *
+     * @return string 
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Set display
+     *
+     * @param boolean $display
+     * @return Document
+     */
+    public function setDisplay($display)
+    {
+        $this->display = $display;
+    
+        return $this;
+    }
+
+    /**
+     * Get display
+     *
+     * @return boolean 
+     */
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
+    /**
+     * Add detachedsign
+     *
+     * @param \Sesile\DocumentBundle\Entity\DocumentDetachedSign $detachedsign
+     * @return Document
+     */
+    public function addDetachedsign(\Sesile\DocumentBundle\Entity\DocumentDetachedSign $detachedsign)
+    {
+        $this->detachedsign[] = $detachedsign;
+    
+        return $this;
+    }
+
+    /**
+     * Remove detachedsign
+     *
+     * @param \Sesile\DocumentBundle\Entity\DocumentDetachedSign $detachedsign
+     */
+    public function removeDetachedsign(\Sesile\DocumentBundle\Entity\DocumentDetachedSign $detachedsign)
+    {
+        $this->detachedsign->removeElement($detachedsign);
+    }
+
+    /**
+     * Get detachedsign
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDetachedsign()
+    {
+        return $this->detachedsign;
     }
 }
