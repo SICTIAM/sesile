@@ -1791,7 +1791,11 @@ class ClasseurController extends Controller {
             }
         }
         $documents = $classeur->getDocuments();
-        $cleanTabDocs = array();
+        $classeursJSON = array();
+        $documentsJSON = array();
+
+        // Recuperation url de retour pour la validation du classeur
+        $url_valid_classeur = $this->generateUrl('valider_classeur_jws', array('id' => $classeur->getId(), 'user_id' => $user->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
 
         // Generation du token pour le document
         $token = uniqid();
@@ -1815,7 +1819,7 @@ class ClasseurController extends Controller {
                     $typeJWS = "cades";
                 }
 
-                $cleanTabDocs[] = array(
+                $documentsJSON[] = array(
                     'name'          => $document->getName(),
                     'type'          => $typeJWS,
                     'description'   => $classeur->getDescription(),
@@ -1830,7 +1834,13 @@ class ClasseurController extends Controller {
         $em->flush();
 
         // On incrémente les arguments passés
-        $arguments[] = json_encode($cleanTabDocs);
+        $classeursJSON[] = array(
+            'name' => $classeur->getNom(),
+            'url_valid_classeur' => $url_valid_classeur,
+            'documents' => $documentsJSON
+        );
+//        $classeursJSON[] = $documentsJSON;
+        $arguments[] = json_encode($classeursJSON);
 
 
         // Récupération des infos du user
@@ -1839,10 +1849,6 @@ class ClasseurController extends Controller {
         $arguments[] = $user->getVille();
         $arguments[] = $user->getCp();
         $arguments[] = $roleArg;
-
-        // Recuperation url de retour pour la validation du classeur
-        $url_valid_classeur = $this->generateUrl('valider_classeur_jws', array('id' => $classeur->getId(), 'user_id' => $user->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
-        $arguments[] = $url_valid_classeur;
 
         // On passse le token
         $arguments[] = $token;
@@ -1862,8 +1868,8 @@ class ClasseurController extends Controller {
     <title>SESILE JWS Signer</title>
     <vendor>SICTIAM</vendor>
     <homepage href="' . $url_applet . '"/>
-    <description>Application de test d’un fichier JNLP</description>
-    <description kind="short">une application de test</description>
+    <description>Application de de signature de documents</description>
+    <description kind="short">Application de signatures</description>
     <offline-allowed/>
   </information>
 <security><all-permissions /></security>
