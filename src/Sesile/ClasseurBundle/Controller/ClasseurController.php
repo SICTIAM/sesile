@@ -1787,7 +1787,7 @@ class ClasseurController extends Controller {
             if (!empty($roleUser)) {
                 $roleArg = $roleUser[0]->getUserRoles();
             } else {
-                $roleArg = '';
+                $roleArg = 'Non renseigné';
             }
         }
         $documents = $classeur->getDocuments();
@@ -1845,9 +1845,9 @@ class ClasseurController extends Controller {
 
         // Récupération des infos du user
         $user = $this->get('security.context')->getToken()->getUser();
-        $arguments[] = $user->getPays();
-        $arguments[] = $user->getVille();
-        $arguments[] = $user->getCp();
+        $arguments[] = ($user->getPays() === null) ? "Non renseigné" : $user->getPays();
+        $arguments[] = ($user->getVille() === null) ? "Non renseigné" : $user->getVille();
+        $arguments[] = ($user->getCp() === null) ? "Non renseigné" : $user->getCp();
         $arguments[] = $roleArg;
 
         // On passse le token
