@@ -1868,8 +1868,8 @@ class ClasseurController extends Controller {
     <title>SESILE JWS Signer</title>
     <vendor>SICTIAM</vendor>
     <homepage href="' . $url_applet . '"/>
-    <description>Application de test d’un fichier JNLP</description>
-    <description kind="short">une application de test</description>
+    <description>Application de de signature de documents</description>
+    <description kind="short">Application de signatures</description>
     <offline-allowed/>
   </information>
 <security><all-permissions /></security>
