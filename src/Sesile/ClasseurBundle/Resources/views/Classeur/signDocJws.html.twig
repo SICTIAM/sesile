@@ -33,21 +33,31 @@
             <div class="col-md-8">
 
                 {% if role is not null %}
-                    <div class="col-md-4"><strong>Role : </strong></div>
-                    <div class="col-md-8">{{ role.userRoles }}</div>
+                    <div class="row">
+                        <div class="col-md-4"><strong>Role : </strong></div>
+                        <div class="col-md-8">{{ role.userRoles }}</div>
+                    </div>
                 {% endif %}
 
-                <div class="col-md-4"><strong>Ville : </strong></div>
-                <div class="col-md-8">{{ user.ville }}</div>
+                <div class="row">
+                    <div class="col-md-4"><strong>Ville : </strong></div>
+                    <div class="col-md-8">{{ user.ville }}</div>
+                </div>
 
-                <div class="col-md-4"><strong>Code postal : </strong></div>
-                <div class="col-md-8">{{ user.cp }}</div>
+                <div class="row">
+                    <div class="col-md-4"><strong>Code postal : </strong></div>
+                    <div class="col-md-8">{{ user.cp }}</div>
+                </div>
 
-                <div class="col-md-4"><strong>D&eacute;partement : </strong></div>
-                <div class="col-md-8">{{ user.departement }}</div>
+                <div class="row">
+                    <div class="col-md-4"><strong>D&eacute;partement : </strong></div>
+                    <div class="col-md-8">{{ user.departement }}</div>
+                </div>
 
-                <div class="col-md-4"><strong>Pays : </strong></div>
-                <div class="col-md-8">{{ user.pays }}</div>
+                <div class="row">
+                    <div class="col-md-4"><strong>Pays : </strong></div>
+                    <div class="col-md-8">{{ user.pays }}</div>
+                </div>
 
 
             </div>
