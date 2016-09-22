@@ -1667,6 +1667,11 @@ class ClasseurController extends Controller {
         }
 
         // MAJ des infos du classeur
+        // Met a jour les etapes de validations
+        $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
+        $em->flush();
+
+        // MAJ de l etat de la visibilité, nom, description, date de validation
         $visibilite = $request->get("visibilite");
         $classeur->setVisibilite($visibilite);
         $classeur->setNom($request->get("name"));
@@ -1846,7 +1851,7 @@ class ClasseurController extends Controller {
         // Récupération des infos du user
         $user = $this->get('security.context')->getToken()->getUser();
         $arguments[] = ($user->getPays() === null) ? "Non renseigné" : $user->getPays();
-        $arguments[] = ($user->getVille() === null) ? "Non renseigné" : $user->getVille();
+        $arguments[] = ($user->getVille() === null) ? "Non renseignée" : $user->getVille();
         $arguments[] = ($user->getCp() === null) ? "Non renseigné" : $user->getCp();
         $arguments[] = $roleArg;
 
