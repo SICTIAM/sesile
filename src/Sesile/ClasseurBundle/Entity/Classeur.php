@@ -603,11 +603,13 @@ class Classeur {
                 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+                'application/xml',
                 'text/plain'
             );
 
             $docs = $this->getDocuments();
 
+            // Si au moins un document est signable alors le classeur peut etre signé
             foreach($docs as $doc){
                 //if($doc->getType() == 'application/pdf'){
                 if(in_array($doc->getType(), $typeSignable)){

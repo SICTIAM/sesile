@@ -120,9 +120,9 @@
             <ul class="etape_progress">
                 {% for doctosign in docstosign %}
                     <li class="document-{{ doctosign.id }}">
-                        <p class="status_classeur statut_refuse"><span class="glyphicon glyphicon-remove"> </span> document non signé</p>
+                        {#<p class="status_classeur label-warning statut_refuse"><span class="glyphicon glyphicon-remove"> </span> document non signé</p>#}
                         {#<span class="glyphicon glyphicon-remove label label-danger" > </span>#}
-                        {#<img class="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>#}
+                        <img class="loadinggif statut_refuse" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
                         <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> document signé</p>
                         {#<span class="glyphicon glyphicon-ok label label-success"> </span>#}
                         <strong>{{ doctosign.name }}</strong>
@@ -189,6 +189,7 @@
                 if (resp == 2) {
                     $(".infos-classeur .status_classeur.statut_cours").hide();
                     $(".infos-classeur .status_classeur.statut_finalise").show();
+                    window.location.assign("{{ url('index_valider') }}");
                 } else {
                     $(".infos-classeur .status_classeur.statut_cours").show();
                     $(".infos-classeur .status_classeur.statut_finalise").hide();
