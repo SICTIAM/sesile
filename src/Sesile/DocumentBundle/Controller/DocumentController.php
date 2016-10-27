@@ -724,7 +724,8 @@ class DocumentController extends Controller
         // on enleve tout les putains de préfixes de mes 2
 
         $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
-        $xml = simplexml_load_string($str);
+        //$xml = simplexml_load_string($str);
+        $xml = simplexml_load_string($str, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
 
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {
@@ -822,7 +823,8 @@ class DocumentController extends Controller
         $path = $dir . $doc->getRepourl();
 
         $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
-        $xml = simplexml_load_string($str);
+        //$xml = simplexml_load_string($str);
+        $xml = simplexml_load_string($str, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
 
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {
