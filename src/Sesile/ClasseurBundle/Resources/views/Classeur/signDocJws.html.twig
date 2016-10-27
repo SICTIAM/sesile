@@ -122,10 +122,17 @@
                     <li class="document-{{ doctosign.id }}">
                         {#<p class="status_classeur label-warning statut_refuse"><span class="glyphicon glyphicon-remove"> </span> document non signé</p>#}
                         {#<span class="glyphicon glyphicon-remove label label-danger" > </span>#}
-                        <img class="loadinggif statut_refuse" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                        <span class="label label-warning statut_attente"></span>
+                        {#<img class="loadinggif statut_refuse" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>#}
                         <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> document signé</p>
                         {#<span class="glyphicon glyphicon-ok label label-success"> </span>#}
-                        <strong>{{ doctosign.name }}</strong>
+                        <strong>
+                            {% if (doctosign.name | length ) > 100 %}
+                                {{ doctosign.name[:50] }}....xml
+                            {% else %}
+                                {{ doctosign.name }}
+                            {% endif %}
+                        </strong>
                     </li>
                 {% endfor %}
             </ul>
@@ -165,10 +172,10 @@
                 method: "GET",
                 success: function (resp) {
                     if (resp) {
-                        $(".document-" + {{ doctosign.id }} + " .statut_refuse").hide();
+                        $(".document-" + {{ doctosign.id }} + " .statut_attente").hide();
                         $(".document-" + {{ doctosign.id }} + " .statut_finalise").show();
                     } else {
-                        $(".document-" + {{ doctosign.id }} + " .statut_refuse").show();
+                        $(".document-" + {{ doctosign.id }} + " .statut_attente").show();
                         $(".document-" + {{ doctosign.id }} + " .statut_finalise").hide();
                     }
                 }
