@@ -575,12 +575,11 @@ class Classeur {
 //    public function isSignable(\Doctrine\ORM\EntityManager $em)
     public function isSignable()
     {
-//var_dump($this->isAtLastValidant());exit;
-        if($this->getType()->getId() == 2 && $this->isAtLastValidant()){
+        if($this->getType()->getId() == 2){
+        //if($this->getType()->getId() == 2 && $this->isAtLastValidant()){
             $docs=$this->getDocuments();
             foreach($docs as $doc){
                 if($doc->getType() == 'application/xml'){
-                    //var_dump('test');exit;
                     return true;
                 }
             }
@@ -594,7 +593,7 @@ class Classeur {
      * @return bool
      */
     public function isSignablePDF() {
-        if($this->isAtLastValidant()){
+        //if($this->isAtLastValidant()){
             // Type de fichier signable
             $typeSignable = array(
                 'application/pdf',
@@ -616,7 +615,7 @@ class Classeur {
                     return true;
                 }
             }
-        }
+        //}
         return false;
     }
 

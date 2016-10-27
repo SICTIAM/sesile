@@ -41,12 +41,12 @@ var uploadedfiles = {};
 $(document)
     .ajaxStart(function () {
 //                    $loading.show();
-        console.log('Ajax start');
+        //console.log('Ajax start');
         $('body, .dropzone .dz-preview').css('cursor', 'wait');
     })
     .ajaxStop(function () {
 //                    $loading.hide();
-        console.log('Ajax stop');
+        //console.log('Ajax stop');
         $('body').css('cursor', 'default');
         $('.dropzone .dz-preview').css('cursor', 'pointer');
     });
@@ -136,9 +136,9 @@ function removeFile(file) {
 
 function enableUploads() {
     {% if classeur.type.id == 2 %}
-        console.log('ok enable: ' + {{ classeur.type.id }});
+        //console.log('ok enable: ' + {{ classeur.type.id }});
     {% else %}
-        console.log('Nok enable : ' + {{ classeur.type.id }});
+        //console.log('Nok enable : ' + {{ classeur.type.id }});
         dropzone.options.maxFiles = null;
     {% endif %}
     allowmodif = true;
