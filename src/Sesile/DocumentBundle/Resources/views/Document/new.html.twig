@@ -101,7 +101,7 @@
 //            myDropzone.removeFile(file);
             dropzone.removeFile(file);
             $("#documentcontent").children("#" + file.idfilename).remove();
-            console.log("#" + file.idfilename);
+            //console.log("#" + file.idfilename);
             $('#Mybutton').attr('disabled', false);
             if (dropzone.getAcceptedFiles().length == 0) {
                 $('#Mybutton').attr('disabled', true);
@@ -116,7 +116,7 @@
     dropzone.on('success', function (file, response) {
         $.each(response, function (serverfilename, originalname) {
             file.idfilename = serverfilename.split('.')[0];
-            console.log(file);
+            //console.log(file);
             $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' id='" + file.idfilename + "' value='" + originalname + "'> ");
         });
 
