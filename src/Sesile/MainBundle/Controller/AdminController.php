@@ -356,7 +356,7 @@ class AdminController extends Controller
         $defaultData = array('message' => 'Taper votre message');
         $form = $this->createFormBuilder($defaultData)
             ->add('sujet', 'text')
-            ->add('mailMessage', 'textarea', array('label' => "Corps du message"))
+            ->add('mailMessage', 'textarea', array('label' => "Corps du message", 'required' => false))
             ->add('submit', 'submit', array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
             ->getForm();
 
@@ -398,7 +398,6 @@ class AdminController extends Controller
                     /*
                      * Uses a __toString method on the $errors variable which is a
                      * ConstraintViolationList object. This gives us a nice string
-                     * for debugging
                      */
                     $errorsString .= (string) $errors;
                     // Message d info pour l'utilisateur
