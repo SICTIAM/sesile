@@ -45,7 +45,7 @@ parameters:
         logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
         msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
         signatures: %kernel.root_dir%/../web/uploads/signatures/
-    majorversion: 2
+    majorversion: 3
     ovh_credential:
         application: ***REMOVED***
         secret: ***REMOVED***

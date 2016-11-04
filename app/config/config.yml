@@ -118,8 +118,8 @@ parameters:
         repository: "git@gitlab.sictiam.fr:sesile/sesile.git"
         branch: master
         commit: 994e6f7902355e6bf62dde14804e0bd9863d5662
-        buildnumber: 1
-    majorversion: 2
+        buildnumber: 3
+    majorversion: 3
 #    url_applet: signature.sesile.fr
     url_applet: signature.dev.sesile.fr
     ovh_credential:
