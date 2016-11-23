@@ -1191,15 +1191,6 @@ class ClasseurController extends Controller {
         }
 
 
-//        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
-//        $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
-//        $currentvalidant = $classeur->getValidant();
-
-
-        // mise a jour des données soumises
-
-//        if(!$classeur->isSignable()) {
-
         if($request->get("moncul") != 1) {
             // Met a jour les etapes de validations
             $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
@@ -1228,8 +1219,6 @@ class ClasseurController extends Controller {
 
         $classeur->setCircuit($currentvalidant);
 
-//        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
-//        $delegator = $repositoryusers->find($currentvalidant);
         $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
 
 
@@ -1264,10 +1253,8 @@ class ClasseurController extends Controller {
 
         $action->setClasseur($classeur);
         $action->setUser($this->getUser());
-//        $action_libelle = ($classeur->getValidant() == 0) ? "Classeur finalisé" : "Validation";
         $action_libelle = ($classeur->getStatus() == 2) ? "Classeur finalisé" : "Validation";
 
-//        if($isvalidator) $action_libelle .= " (Délégation recue de " . $delegator->getPrenom() . " " . $delegator->getNom() . ")";
         if($isvalidator) {
             $delegators = $em->getRepository('SesileDelegationsBundle:Delegations')->getDelegantsForUser($this->getUser());
             foreach ($delegators as $delegator) {
@@ -1285,7 +1272,6 @@ class ClasseurController extends Controller {
 //            $this->sendValidationMail($classeur, $currentvalidant);
             $this->sendValidationMail($classeur);
         }
-//        $this->sendValidationMail($classeur, $currentvalidant);
 
         $request->getSession()->getFlashBag()->add(
             'success',
@@ -1314,11 +1300,7 @@ class ClasseurController extends Controller {
         }
 
 
-//        $isvalidator = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->isDelegatedToUser($classeur, $this->getUser());
         $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $this->getUser());
-//        $currentvalidant = $classeur->getValidant();
-//        $repositoryusers = $this->getDoctrine()->getRepository('SesileUserBundle:user');
-//        $delegator=$repositoryusers->find($currentvalidant);
 
         // envoi d'un mail validant suivant
         $this->sendRefusMail($classeur,$request->request->get('text-message'));
@@ -1529,6 +1511,9 @@ class ClasseurController extends Controller {
             $action->setAction($action_libelle);
             $em->persist($action);
             $em->flush();
+
+            // Envoie du mail de confirmation
+            $this->sendValidationMail($classeur, $user);
 
             return new JsonResponse(array("classeur_valid" => "1"));
         }
