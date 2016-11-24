@@ -27,7 +27,6 @@
                 <label for="nom" class="col-lg-2 control-label">Types de classeur</label>
                 <div class="col-lg-8">
                     {% for type in types %}
-                        {#<input type="checkbox" name="types[]" value="{{ type.id }}"/>&nbsp;&nbsp;{{ type.nom }}<br>#}
                         <div class="col-lg-1 text-right">
                             <input type="checkbox" name="types[]" value="{{ type.id }}" id="types_classeur_{{ type.id }}" class="checkType" />
                         </div>
@@ -43,7 +42,7 @@
                     <div id="circuit_with_js">
                         <div id="contetapes" class="ui-sortable">
                             <div class="col-lg-2 well etapes-circuit">
-                                <div class="text-center"><h4>Etape de validation</h4></div>
+                                <div class="text-center"><h4>Étape déposante</h4></div>
                                 <select class="selusers required" multiple="multiple" required="required" style="width: 100%">
                                     <optgroup label="Groupes d'utilisateurs">
                                         {% for userPack in userPacks %}
@@ -63,18 +62,10 @@
                             <div class="text-center div-btn-ajout-etape">
                                 <button type="button" class="btn btn-circle-lg btn-info first" id="addetape"><span class="glyphicon glyphicon-plus"></span> </button>
                             </div>
-                            {#<div class="text-center  div-btn-ajout-etape">
-                                <button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button>
-                            </div>#}
                         </div>
                     </div>
                 </div>
             </div>
-            {#<div class="form-group">
-                <div class="col-lg-6">
-                    <button type="button" class="btn btn-info" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;Ajouter une etape de validation</button>
-                </div>
-            </div>#}
             <br><br>
             <div class="form-group">
                 <div class="col-lg-6">
@@ -183,7 +174,7 @@
                 $('.popover').remove();
 
                 $('#contetapes').append('' +
-                '<div class="well etapes-circuit"><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
+                '<div class="well etapes-circuit"><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button><div class="text-center"><h4>Étape de validation</h4></div><select class="selusers" multiple="multiple" required="required" title="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l\'étape vide ou de la supprimer" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button><button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button></div>' +
                 '<div class="text-center div-btn-ajout-etape"><button type="button" class="btn btn-circle-lg btn-info dyn" id="addetape"><span class="glyphicon glyphicon-plus"></span></button></div>');
 //                '<div class="text-center div-btn-ajout-etape"><button type="button" class="btn btn-info btn-ajout-etape" id="addetape"><span class="glyphicon glyphicon-plus-sign"></span><br>Ajouter une étape</button></div>');
 
@@ -251,21 +242,6 @@
                     creerFleches();
                 }
             }).disableSelection();
-
-            /*$(".selusers").select2();
-            $(document).on('click','#addetape',function(){
-                *//*
-                A chaque fois qu'on clicque sur le bouton bleu une nouvelle etape de validation se crée
-                 *//*
-                $('#contetapes').append('' +
-                '<div class="col-lg-2 well etapes-circuit"><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers " multiple="multiple" style="width: 100%"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option  value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option  value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button></div>');
-                $("select.selusers").select2();
-
-            });
-            $(document).on('click','#suppetape',function() {
-                $(this).parent().remove();
-            });*/
-
 
 
 
