@@ -177,6 +177,6 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }
     sesile.fos_user.user_enabled:
         class: Sesile\UserBundle\EventListener\TokenListener
-        arguments: ["@router", "@security.context", "@session"]
+        arguments: ["@router", "@security.context", "@service_container"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

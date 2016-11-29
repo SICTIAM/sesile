@@ -7,6 +7,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class TokenListener
 {
@@ -15,11 +17,11 @@ class TokenListener
     private $sc = null;
 
 
-    public function __construct(Router $oRouter, SecurityContext $oSecurityContext, Session $oSession)
+    public function __construct(Router $oRouter, SecurityContext $oSecurityContext, ContainerInterface $oContainer)
     {
         $this->route = $oRouter;
         $this->sc = $oSecurityContext;
-        $this->session = $oSession;
+        $this->container = $oContainer;
 
     }
 
@@ -36,6 +38,21 @@ class TokenListener
         if (!is_array($controller)) {
             return;
         }
+
+        // On recupere la liste des access_control dans le fichier security.yml
+        $security_file = sprintf("%s/config/security.yml", $this->container->get('kernel')->getRootDir());
+        $parsed = Yaml::parse(file_get_contents($security_file));
+        $security_access_control = $parsed['security']["access_control"];
+
+        // on liste les access_control
+        foreach ($security_access_control as $access_control) {
+
+            // Si l URL n a pas bessoin d authentification on laisse l utilisateur continuer
+            if ($access_control["roles"] == "IS_AUTHENTICATED_ANONYMOUSLY" && strpos($this->route->getContext()->getPathInfo(), substr($access_control["path"], 2))) {
+                return;
+            }
+        }
+
 
         // Si l'utilisateur n est pas authentifié et en se trouve pas sur la home alors on le degage
         if(null !== $this->sc->getToken() && $this->route->getContext()->getPathInfo() != "/") {
