@@ -43,39 +43,11 @@
                 Ajouter un service organisationnel
             </button>
         </a>
-        <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
-        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
-        <script type="text/javascript">
-            $(".dtables").dataTable({
-                "oLanguage": {
-                    "sSearch": "Rechercher&nbsp;:",
-                    "sInfo": "Services organisationnels _START_ &agrave; _END_ sur _TOTAL_",
-                    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-                    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                    "sLengthMenu": "Afficher _MENU_ groupes par page",
-                    "oPaginate": {
-                        "sFirst": "",
-                        "sPrevious": "",
-                        "sNext": "",
-                        "sLast": ""
-                    },
-                    "sZeroRecords": "Aucun service organisationnel &agrave; afficher",
-                    "sEmptyTable": "Aucun service organisationnel &agrave; afficher"
-                },
-                "iDisplayLength": 15,
-                "aLengthMenu": [15, 30, 50, 100],
-                "sDom": 'lft<"footer_datatables"ip>',
-                "aoColumnDefs": [
-                    { "aTargets": [ 1 ], sClass: "center" },
-                    { "aTargets": [ 2 ], sClass: "center" },
-                    { "bSortable": false, "aTargets": [ -1 ] }
-                ],
-                "sPaginationType": "full_numbers"
-            });
+        <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet" />
 
-        </script>
     </div>
 
+    <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <script>
         $('.deleter').confirm({
             text: "Etes-vous sur de vouloir supprimer ce service organisationnel?",
@@ -83,6 +55,33 @@
             cancelButton: "Annuler",
             confirmButtonClass: "btn btn-danger pull-right"
 
+        });
+
+        $(".dtables").dataTable({
+            "oLanguage": {
+                "sSearch": "Rechercher&nbsp;:",
+                "sInfo": "Services organisationnels _START_ &agrave; _END_ sur _TOTAL_",
+                "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "sLengthMenu": "Afficher _MENU_ groupes par page",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sPrevious": "",
+                    "sNext": "",
+                    "sLast": ""
+                },
+                "sZeroRecords": "Aucun service organisationnel &agrave; afficher",
+                "sEmptyTable": "Aucun service organisationnel &agrave; afficher"
+            },
+            "iDisplayLength": 15,
+            "aLengthMenu": [15, 30, 50, 100],
+            "sDom": 'lft<"footer_datatables"ip>',
+            "aoColumnDefs": [
+                { "aTargets": [ 1 ], sClass: "center" },
+                { "aTargets": [ 2 ], sClass: "center" },
+                { "bSortable": false, "aTargets": [ -1 ] }
+            ],
+            "sPaginationType": "full_numbers"
         });
     </script>
 {% endblock %}
