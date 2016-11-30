@@ -7,8 +7,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TokenListener
 {
@@ -22,6 +22,7 @@ class TokenListener
         $this->route = $oRouter;
         $this->sc = $oSecurityContext;
         $this->container = $oContainer;
+
 
     }
 
