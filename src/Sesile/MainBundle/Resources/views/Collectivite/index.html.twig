@@ -64,51 +64,51 @@
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
     <script type="application/javascript">
-	$(document).ready(function () {
-	    $(".table").dataTable({
-		"oLanguage": {
-		    "sSearch": "Rechercher&nbsp;:",
-		    "sInfo": "Collectivités _START_ &agrave; _END_ sur _TOTAL_",
-		    "sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-		    "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-		    "sZeroRecords": "Aucun enregistrement &agrave; afficher",
-		    "sLengthMenu": "Afficher _MENU_ collectivités par page",
-		    "oPaginate": {
-			"sFirst": "",
-			"sPrevious": "",
-			"sNext": "",
-			"sLast": ""
-		    }
-		},
-		"iDisplayLength": 15,
-		"aLengthMenu": [15, 30, 50, 100],
-		"sDom": 'lft<"footer_datatables"ip>',
-		"aoColumnDefs": [
-		    { "aTargets": [ 2 ], sClass: "center" },
-		    { "bSortable": false, "aTargets": [ 2,3 ], sClass: "center" }
-		],
-		"sPaginationType": "full_numbers"
-	    });
+		$(document).ready(function () {
+			$(".table").dataTable({
+			"oLanguage": {
+				"sSearch": "Rechercher&nbsp;:",
+				"sInfo": "Collectivités _START_ &agrave; _END_ sur _TOTAL_",
+				"sInfoEmpty": "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+				"sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+				"sZeroRecords": "Aucun enregistrement &agrave; afficher",
+				"sLengthMenu": "Afficher _MENU_ collectivités par page",
+				"oPaginate": {
+				"sFirst": "",
+				"sPrevious": "",
+				"sNext": "",
+				"sLast": ""
+				}
+			},
+			"iDisplayLength": 15,
+			"aLengthMenu": [15, 30, 50, 100],
+			"sDom": 'lft<"footer_datatables"ip>',
+			"aoColumnDefs": [
+				{ "aTargets": [ 2 ], sClass: "center" },
+				{ "bSortable": false, "aTargets": [ 2,3 ], sClass: "center" }
+			],
+			"sPaginationType": "full_numbers"
+			});
 
-		$('#deleteColl').on('shown.bs.modal', function () {})
-	});
-    </script>
-    <script type="text/javascript">
-	$(".coll-row").click(function () {
-	    document.location.href = Routing.generate('edit_collectivite', { id: $(this).data("id") });
-	});
+			$('#deleteColl').on('shown.bs.modal', function () {})
+		});
 
-	$('#deleteColl').on('show.bs.modal', function (event) {
-		console.log('coucou');
-		var button = $(event.relatedTarget); // Button that triggered the modal
-		var recipient = button.data('whatever'); // Extract info from data-* attributes
-		var collectivite = button.data('collectivite'); // Extract info from data-* attributes
-		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-		var modal = $(this);
-		modal.find('.modal-title').text('Supprimer la collectivité ' + collectivite);
-		modal.find('.modal-body input').val(recipient);
-		modal.find('.btn-danger').attr('href', recipient);
-	})
+		$(".coll-row").click(function () {
+			document.location.href = Routing.generate('edit_collectivite', { id: $(this).data("id") });
+		});
+
+
+		$('#deleteColl').on('show.bs.modal', function (event) {
+			console.log('coucou');
+			var button = $(event.relatedTarget); // Button that triggered the modal
+			var recipient = button.data('whatever'); // Extract info from data-* attributes
+			var collectivite = button.data('collectivite'); // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var modal = $(this);
+			modal.find('.modal-title').text('Supprimer la collectivité ' + collectivite);
+			modal.find('.modal-body input').val(recipient);
+			modal.find('.btn-danger').attr('href', recipient);
+		})
     </script>
 {% endblock %}
