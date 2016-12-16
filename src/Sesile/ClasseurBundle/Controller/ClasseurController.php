@@ -1864,7 +1864,7 @@ class ClasseurController extends Controller {
   </information>
 <security><all-permissions /></security>
   <resources>
-    <j2se version="1.8"/>
+    <j2se version="1.8" initial-heap-size="128m" max-heap-size="1024m"/>
     <jar href="' . $url_applet . '"/>
   </resources>
   <application-desc >';
