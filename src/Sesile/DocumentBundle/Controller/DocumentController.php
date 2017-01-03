@@ -677,11 +677,11 @@ class DocumentController extends Controller
 
 
     /**
-     * @Route("/visu/{id}", name="visu",  options={"expose"=true})
+     * @Route("/visu/{id}/{ajax}", name="visu",  options={"expose"=true})
      * @Method("GET")
      * @Template()
      */
-    public function visuAction($id)
+    public function visuAction($id, $ajax = false)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -803,7 +803,14 @@ class DocumentController extends Controller
             $tabIdBord[] = $bordereau->id;
         }
 
-        return array('budget' => $PES->budget, 'signataire' => utf8_decode($PES->signataire), 'dateSign' => $PES->dateSign, 'bords' => $tabIdBord, 'idDoc' => $doc->getId());
+        return array(
+            'budget' => $PES->budget,
+            'signataire' => utf8_decode($PES->signataire),
+            'dateSign' => $PES->dateSign,
+            'bords' => $tabIdBord,
+            'idDoc' => $doc->getId(),
+            'ajax' => $ajax
+        );
     }
 
     /**

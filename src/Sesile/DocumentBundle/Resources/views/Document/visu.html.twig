@@ -1,19 +1,28 @@
-{% extends 'SesileMainBundle:Default:index.html.twig' %}
+{#{% extends 'SesileMainBundle:Default:index.html.twig' %}#}
+{% extends ajax != 'true'
+    ? 'SesileMainBundle:Default:index.html.twig'
+    : 'SesileMainBundle:Default:indexFrame.html.twig'
+ %}
 
 {% block content %}
-    <div class="bloc_page">
 
+    {% if ajax == 'false' %}
+        <div class="bloc_page">
         <div class="titre_page">
             <span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;Visualiseur de fichier PES
         </div>
-        {% if isPJ is defined %}
-        <div class="col-lg-12">
-            <label>Ce fichier est un PES PJ ou un autre fichier non soumis à signature</label>
-            <a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary pull-right">
-            <span class="glyphicon glyphicon-share-alt"></span>&nbsp;&nbsp; Retour à la page précédente</a>
-        </div>
+    {% endif %}
 
-    </div>
+    {% if isPJ is defined %}
+        {% if ajax == 'false' %}
+            <div class="col-lg-12">
+                <label>Ce fichier est un PES PJ ou un autre fichier non soumis à signature</label>
+                <a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary pull-right">
+                <span class="glyphicon glyphicon-share-alt"></span>&nbsp;&nbsp; Retour à la page précédente</a>
+            </div>
+        {% endif %}
+
+    {#</div>#}
     {% else %}
         <div class="col-lg-12">
 
@@ -29,11 +38,14 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-lg-6">
-                    <a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary pull-right"><span
-                                class="glyphicon glyphicon-share-alt"></span>&nbsp;&nbsp; Retour à la page
-                        précédente</a>
-                </div>
+                {% if ajax == 'false' %}
+                    <div class="col-lg-6">
+                        <a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary pull-right">
+                            <span class="glyphicon glyphicon-share-alt"></span>
+                            &nbsp;&nbsp; Retour à la page précédente
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <br><br>
@@ -75,6 +87,7 @@
 
         </div>
     </div>
+
     <script>
         $(document).ready(function () {
             var idDoc = '{{ idDoc }}';

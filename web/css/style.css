@@ -299,6 +299,10 @@ label{
 	padding-left: 0.214em;
 }
 
+#form_edit label {
+	color: #ffffff;
+	font-weight: normal;
+}
 /*BOUTON VISI CLASSEUR*/
 .visi_button_actif {
 	color: #ffffff !important;

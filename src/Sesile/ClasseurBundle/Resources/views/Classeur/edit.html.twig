@@ -84,6 +84,10 @@
         {% endif %}
         <br/>
 
+        <div class="row">
+            <div id="documentvisu"></div>
+        </div>
+
         <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
 
@@ -93,7 +97,7 @@
                     <div class="col-lg-12">
                         <div class="titre_form_element">
                             <span class="glyphicon glyphicon-play"></span>
-                            &nbsp;&nbsp;&nbsp;Visibilit&eacute;
+                            <label for="visibilite">&nbsp;&nbsp;&nbsp;Visibilit&eacute;</label>
                         </div>
                     </div>
                     <div class="col-lg-12">
@@ -112,11 +116,11 @@
                     <div class="col-lg-12">
                         <div class="titre_form_element">
                             <span class="glyphicon glyphicon-play"></span>
-                            &nbsp;&nbsp;&nbsp;Type du classeur
+                            <label for="type_classeur"></label>&nbsp;&nbsp;&nbsp;Type du classeur
                         </div>
                     </div>
                     <div class="col-lg-12 disabled">
-                        <select class="form-control" disabled>
+                        <select class="form-control" id="type_classeur" disabled>
                             <option>{{ classeur.type.nom }}</option>
                         </select>
                     </div>
@@ -128,8 +132,7 @@
                 <span class="glyphicon glyphicon-play"></span>
                 &nbsp;&nbsp;&nbsp;Titre
             </div>
-        <input class="form-control" name="name" placeholder="Nom" required="required"
-               value="{{ classeur.nom }}">
+        <input class="form-control" name="name" placeholder="Nom" required="required" value="{{ classeur.nom }}">
             <br>
 
             <div class="titre_form_element">
@@ -522,7 +525,7 @@
     </div>
 
 
-    <style>
+    <style scoped>
         .modal-dialog {
             width: 90%;
             height: 50px;
@@ -533,58 +536,70 @@
     <script type="application/javascript">
 
         function loadDocuments() {
-                $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
-                    //enableUploads();
-                });
-            }
+            $('#documentcontent').load(Routing.generate('edit_document_for_classeur', {id: {{ classeur.id }}}), function () {
+                //enableUploads();
+            });
+        }
+        function AffDocuments() {
+            $('#documentvisu').load(Routing.generate('visu', {id: {{ classeur.id }}, ajax: "true"}), function () {
 
-            function addDocToCurrentClasseur(data) {
-                $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
-                data['id'] = {{ classeur.id }};
-                $.ajax(Routing.generate('add_document_to_classeur'), {
-                            method: 'POST',
-                            data: data,
-                            success: function (html) {
-                                loadDocuments();
-                            }
-                        });
-            }
+            });
+        }
 
-            $(document).ready(function () {
-                $(".selects_circuit:nth-child(2)").hide();
-                loadDocuments();
+        function addDocToCurrentClasseur(data) {
+            $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
+            data['id'] = {{ classeur.id }};
+            $.ajax(Routing.generate('add_document_to_classeur'), {
+                        method: 'POST',
+                        data: data,
+                        success: function (html) {
+                            loadDocuments();
+                        }
+                    });
+        }
+
+        $(document).ready(function () {
+            $(".selects_circuit:nth-child(2)").hide();
+
+            // Si c est un fichier Helios, on affiche le contenu
+            {% if classeur.type.id == 2 %}
+                AffDocuments();
+            {% endif %}
+
+
+            loadDocuments();
 
 //                $(".top_selects_circuits, .suppr_perso").hide();
-                $(".perso_circuit").css("cursor", "Default");
+            $(".perso_circuit").css("cursor", "Default");
 
 
-                {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
-                $("#name, #desc, #validation").removeAttr("disabled");
-                $("#enregistrer_modif").show();
+            {% if classeur.isModifiableByDelegates(usersdelegated, validant) %}
+            $("#name, #desc, #validation").removeAttr("disabled");
+            $("#enregistrer_modif").show();
 //                $(".top_selects_circuits, .suppr_perso").show();
-                $("#circuit").sortable("enable");
-                $(".perso_circuit").css("cursor", "-moz-grab");
-                {% endif %}
+            $("#circuit").sortable("enable");
+            $(".perso_circuit").css("cursor", "-moz-grab");
+            {% endif %}
 
 //                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer, .btn-valider-signer-pdf").click(function () {
-                // Permet de soumettre les données une seule fois, évite les doubles soumissions
-                $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer, .btn-valider-signer-pdf").one('click', function () {
-                    if($(this).hasClass("btn-modifs") || $(this).hasClass("btn-valider-signer") || $(this).hasClass("btn-valider-non-signer") || $(this).hasClass("btn-valider")) {
-                        // ?? est ce nécessaire
-                    }
+            // Permet de soumettre les données une seule fois, évite les doubles soumissions
+            $(".btn-modifs, .btn-valider, .btn-refuser, .btn-valider-signer, .btn-valider-non-signer, .btn-valider-signer-pdf").one('click', function () {
+                if($(this).hasClass("btn-modifs") || $(this).hasClass("btn-valider-signer") || $(this).hasClass("btn-valider-non-signer") || $(this).hasClass("btn-valider")) {
+                    // ?? est ce nécessaire
+                }
 
-                    if(typeof(dropzone) != 'undefined') {
-                        if( ( typeof(mockFile) != 'object' && dropzone.getAcceptedFiles().length == 0) || ( typeof(mockFile) == 'object' && mockFile == {} ) || (dropzone.element.childElementCount < 2)) {
-                            alert("Vous devez au moins déposer un document dans le classeur.");
-                        } else {
-                            $("#form_edit").attr("action", $(this).attr("data-action")).submit();
-                        }
+                if(typeof(dropzone) != 'undefined') {
+                    if( ( typeof(mockFile) != 'object' && dropzone.getAcceptedFiles().length == 0) || ( typeof(mockFile) == 'object' && mockFile == {} ) || (dropzone.element.childElementCount < 2)) {
+                        alert("Vous devez au moins déposer un document dans le classeur.");
                     } else {
-                        alert("Le type du fichier déposé n'est pas bon.");
+                        $("#form_edit").attr("action", $(this).attr("data-action")).submit();
                     }
+                } else {
+                    alert("Le type du fichier déposé n'est pas bon.");
+                }
 
-                });
             });
+        });
 
         $('.deleter').confirm({
             text: "Etes-vous sur de vouloir retirer ce classeur?",
