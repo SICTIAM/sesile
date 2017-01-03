@@ -148,7 +148,7 @@ class DocumentRepository extends EntityRepository
         $em = $this->getEntityManager();
         $actions = $em->getRepository('SesileClasseurBundle:Action')->findBy(array(
             'classeur' => $classeurId,
-            'action' => array('Validation', 'Classeur finalisé')
+            'action' => array('Validation', 'Classeur finalisé', 'Signature')
         ));
 
         foreach ($actions as $action) {

@@ -303,6 +303,10 @@ label{
 	color: #ffffff;
 	font-weight: normal;
 }
+#form_edit label.pdf-label {
+	color: #333333;
+	font-weight: bold;
+}
 /*BOUTON VISI CLASSEUR*/
 .visi_button_actif {
 	color: #ffffff !important;
