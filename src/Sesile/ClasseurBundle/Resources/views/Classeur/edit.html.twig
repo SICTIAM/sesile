@@ -84,6 +84,7 @@
         {% endif %}
         <br/>
 
+        {# Affichage du document Helios #}
         <div class="row">
             <div id="documentvisu"></div>
         </div>
@@ -254,6 +255,11 @@
             </div>
         {% endif %}
         <br/>
+
+        {# Affichage du document Helios #}
+        <div class="row">
+            <div id="documentvisu"></div>
+        </div>
 
         <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
