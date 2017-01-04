@@ -546,11 +546,7 @@
                 //enableUploads();
             });
         }
-        function AffDocuments() {
-            $('#documentvisu').load(Routing.generate('visu', {id: {{ classeur.id }}, ajax: "true"}), function () {
 
-            });
-        }
 
         function addDocToCurrentClasseur(data) {
             $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
@@ -564,11 +560,19 @@
                     });
         }
 
+        // Fonction permettant l affichage de la previsualisation du fichier PES
+        {% if classeur.type.id == 2 and classeur.documents|length > 0 %}
+        function AffDocuments() {
+            $('#documentvisu').load(Routing.generate('visu', {id: {{ classeur.documents[0].id }}, ajax: "true"}), function () {
+            });
+        }
+        {% endif %}
+
         $(document).ready(function () {
             $(".selects_circuit:nth-child(2)").hide();
 
-            // Si c est un fichier Helios, on affiche le contenu
-            {% if classeur.type.id == 2 %}
+            // Si c est un fichier Helios, on affiche la visu
+            {% if classeur.type.id == 2 and classeur.documents|length > 0 %}
                 AffDocuments();
             {% endif %}
 
