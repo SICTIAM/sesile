@@ -1,34 +1,63 @@
 <div id="sioux">
-<table class="table tableau dtables" id="validTable">
-    <thead>
-    <tr>
-        <th>Titre du classeur</th>
-        <th>Date de création</th>
-        <th>Date limite de validation</th>
-        <th>Intervenant</th>
-        <th>Type de classeur</th>
-        <th>Statut actuel</th>
-        <th>Actions</th>
-        <th>document</th>
-        <th>Type de classeur</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for classeur in classeurs %}
-        <tr>
-            <td>{{ classeur.nom }}</td>
-            <td>{{ classeur.creation|date("d/m/Y") }}</td>
-            <td>{{ classeur.validation|date("d/m/Y") }}</td>
-            <td>{% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %}</td>
-            <td>{{ classeur.type.nom }}</td>
-            <td>{{ classeur.status }}</td>
-            <td>{{ classeur.id }}</td>
-            <td>{% for document in classeur.document %}{{ document.id }}{% endfor %}</td>
-            <td>{{ classeur.type.id }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+    <form method="post" id="form_a_valider">
+
+        <table class="table tableau dtables" id="validTable">
+            <thead>
+            <tr>
+                <th>Titre du classeur</th>
+                <th>Date de création</th>
+                <th>Date limite de validation</th>
+                <th>Intervenant</th>
+                <th>Type de classeur</th>
+                <th>Statut actuel</th>
+                <th>Actions</th>
+                <th>document</th>
+                <th>Type de classeur</th>
+                <th>Valider</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for classeur in classeurs %}
+                <tr>
+                    <td><a href="{{ path('classeur_edit', {'id': classeur.id} ) }}">{{ classeur.nom }}</a>
+                    </td>
+                    <td>{{ classeur.creation|date("d/m/Y") }}</td>
+                    <td>{{ classeur.validation|date("d/m/Y") }}</td>
+                    <td>{% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %}</td>
+                    <td>{{ classeur.type.nom }}</td>
+                    <td>{{ classeur.status }}</td>
+                    <td>{{ classeur.id }}</td>
+                    <td>{% for document in classeur.document %}{{ document.id }}{% endfor %}</td>
+                    <td>{{ classeur.type.id }}</td>
+                    <td data-id="{{ classeur.id }}">
+                        {% if classeur.signable %}
+                            <input type="checkbox" name="classeurs[]" class="chk" value="{{ classeur.id }}">
+                        {% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# Signer le classeur avec multi roles #}
+        {% if uservalidant.UserRole | length > 1 %}
+            <div class="btn-group btn-group-valider-signer btn-sign-select">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Signer les classeurs sélectionnés avec le rôle <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    {% for role in uservalidant.UserRole %}
+                        <li><a href="#" class="btn-valider-signer" data-action="{{ path('signdocsjws',{'role':role.id}) }}">{{ role.userRoles }}</a></li>
+                        {#<li><a href="#" class="btn-valider-signer" data-action="coucou">{{ role.userRoles }}</a></li>#}
+                    {% endfor %}
+                </ul>
+            </div>
+            {# Signer le classeur sans multi roles #}
+        {% else %}
+            <button type="button" class="btn btn-success btn-valider-signer btn-sign-select" data-action="{{ path('signdocsjws') }}">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Signer les classeurs sélectionnés
+            </button>
+        {% endif %}
+    </form>
 </div>
 
 <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
@@ -37,5 +66,3 @@
 <script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 <script type="application/javascript" src="//cdn.datatables.net/plug-ins/1.10.7/sorting/datetime-moment.js"></script>
 <script type="application/javascript" src="{{ asset("/js/liste_classeurs.js") }}"></script>
-
-

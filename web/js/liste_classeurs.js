@@ -2,6 +2,18 @@
  * Created by f.laussinot on 12/06/2015.
  * script utilisé pour la configuration des datables : affichage liste_a_valider et liste_retired
  */
+
+// Gestion de l affichage du bouton de signature par lot
+console.log(".chk : " + $("chk").length);
+if ($(".chk").length == 0) {
+    $(".btn-sign-select").hide();
+}
+
+// Action au click du bouton de signature par lot
+$(".btn-valider-signer").one('click', function () {
+    $("#form_a_valider").attr("action", $(this).attr("data-action")).submit();
+});
+
 $.fn.dataTable.moment( 'DD/MM/YYYY' );
 
     // Fonction permettant le retour en haut de page lors du chargement d une nouvelle page
@@ -80,15 +92,20 @@ $.fn.dataTable.moment( 'DD/MM/YYYY' );
             {
                 aTargets: [7,8],
                 visible:false
+            },
+            {
+                aTargets: [9],
+                sClass: "center",
+                bSortable: false
             }
         ],
         sPaginationType: "full_numbers",
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
             $(nRow).addClass("classeur-row statut_"+aData[5]+"_line");
-            $(nRow).click(function (e) {
+            /*$(nRow).click(function (e) {
                 document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
-            });
+            });*/
             return nRow;
         },
         "fnDrawCallback": function (o) {
@@ -164,14 +181,12 @@ $.fn.dataTable.moment( 'DD/MM/YYYY' );
                     $(nRow).addClass("text-danger statut_"+aData[5]+"-line");
                     } */
                    $(nRow).addClass("classeur-row statut_"+aData[5]+"_line");
-                   $(nRow).click(function (e) {
+                   /*$(nRow).click(function (e) {
                        document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
-                   });
+                   });*/
                    return nRow;
                }
            });
        }
 
     });
-
-

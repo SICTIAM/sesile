@@ -375,6 +375,7 @@ class ClasseurController extends Controller {
                     'type'      => $classeur->getType(),
                     'status'    => $classeur->getStatus(),
                     'document'  => $classeur->getDocuments(),
+                    'signable'  => $classeur->isSignableAndLastValidant(),
                     'validants' => $validants
                 );
             }
@@ -382,8 +383,9 @@ class ClasseurController extends Controller {
         }
 
         return array(
-            'classeurs' => $tabClasseurs,
-            "menu_color" => "bleu"
+            "classeurs"     => $tabClasseurs,
+            "uservalidant"  => $this->getUser(),
+            "menu_color"    => "bleu"
         );
     }
 
@@ -1642,7 +1644,7 @@ class ClasseurController extends Controller {
         // Récupération du classeur
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
         // Récupération des documents liés au classeur
-        $docstosign = $classeur->getDocuments();
+//        $docstosign = $classeur->getDocuments();
         // Récupération du role
         $userRole = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
 
@@ -1670,13 +1672,63 @@ class ClasseurController extends Controller {
 
         $em->flush();
 
+        $classeurs[] = $classeur;
+
+        $classeurId = array();
+        foreach ($classeurs as $classeur) {
+            $classeurId[] = $classeur->getId();
+        }
+
+
         return array(
             'user'      => $user,
             'role'      => $userRole,
-            'classeur'  => $classeur,
-            'docstosign' => $docstosign
+            'classeurs'  => $classeurs,
+            'classeursId'  => urlencode(serialize($classeurId))
         );
 
+    }
+
+
+    /**
+     * Valider_et_signer an existing Classeur entity.
+     *
+     * @Route("/signdocsjws/{role}", name="signdocsjws")
+     * @Template("SesileClasseurBundle:Classeur:signDocJws.html.twig")
+     *
+     */
+    public function signDocsJwsAction(Request $request, $role = null)
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        // Connexion a la BDD
+        $em = $this->getDoctrine()->getManager();
+
+        // Récupération du classeur
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findById(
+            $request->get("classeurs")
+        );
+        // Récupération du role
+        $userRole = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
+
+        // Vérification que le classeur existe bien
+        if (!$classeurs) {
+            throw $this->createNotFoundException('Unable to find Classeur entity.');
+        }
+
+
+        $classeurId = array();
+        foreach ($classeurs as $classeur) {
+            $classeurId[] = $classeur->getId();
+        }
+
+
+        return array(
+            'user'      => $user,
+            'role'      => $userRole,
+            'classeurs'  => $classeurs,
+            'classeursId'  => urlencode(serialize($classeurId))
+        );
     }
 
     /**
@@ -1754,6 +1806,9 @@ class ClasseurController extends Controller {
      */
     public function jnlpSignerFilesAction($id, $role = null) {
 
+        // On recupere les ids des classeurs a signer
+        $ids = unserialize(urldecode($id));
+
         $arguments = array();
 
         // Connexion BDD
@@ -1763,7 +1818,8 @@ class ClasseurController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         // Infos JSON liste des fichiers
-        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+//        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findById($ids);
 
         // Gestion du role de l utilisateur
         // Dans le cas l utilisateur a plusieurs roles
@@ -1780,56 +1836,66 @@ class ClasseurController extends Controller {
                 $roleArg = 'Non renseigné';
             }
         }
-        $documents = $classeur->getDocuments();
+//        $documents = $classeur->getDocuments();
         $classeursJSON = array();
-        $documentsJSON = array();
+//        $documentsJSON = array();
 
-        // Recuperation url de retour pour la validation du classeur
-        $url_valid_classeur = $this->generateUrl('valider_classeur_jws', array('id' => $classeur->getId(), 'user_id' => $user->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
-
-        // Generation du token pour le document
+        // Generation du token pour les documents
         $token = uniqid();
 
-        foreach ($documents as $document) {
+        // Pour chaque classeurs
+        foreach ($classeurs as $classeur) {
+//            var_dump("Classeur : " . $classeur->getId() . " " . $classeur->getNom() . "<br>");
 
-            if(!$document->getSigned()) {
+            // Recuperation url de retour pour la validation du classeur
+            $url_valid_classeur = $this->generateUrl('valider_classeur_jws', array('id' => $classeur->getId(), 'user_id' => $user->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
 
-                $document->setToken($token);
+            $documentsJSON = array();
 
-                $typeDocument = $document->getType();
 
-                // Definition du type de document a transmettre au JWS
-                if($typeDocument == "application/xml" && $classeur->getType()->getId() == 2) {
-                    $typeJWS = "xades-pes";
-                } else if($typeDocument == "application/xml") {
-                    $typeJWS = "xades";
-                } else if($typeDocument == "application/pdf") {
-                    $typeJWS = "pades";
-                } else {
-                    $typeJWS = "cades";
+            foreach ($classeur->getDocuments() as $document) {
+
+                if(!$document->getSigned()) {
+//                    var_dump("Document : " . $document->getName() . "<br>");
+
+                    $document->setToken($token);
+
+                    $typeDocument = $document->getType();
+
+                    // Definition du type de document a transmettre au JWS
+                    if($typeDocument == "application/xml" && $classeur->getType()->getId() == 2) {
+                        $typeJWS = "xades-pes";
+                    } else if($typeDocument == "application/xml") {
+                        $typeJWS = "xades";
+                    } else if($typeDocument == "application/pdf") {
+                        $typeJWS = "pades";
+                    } else {
+                        $typeJWS = "cades";
+                    }
+
+                    $documentsJSON[] = array(
+                        'name'          => $document->getName(),
+                        'type'          => $typeJWS,
+                        'description'   => $classeur->getDescription(),
+                        'url_file'      => $this->generateUrl('download_jws_doc', array('name' => $document->getrepourl()), UrlGeneratorInterface::ABSOLUTE_URL),
+                        'url_upload'    => $this->generateUrl('upload_document_fron_jws', array('id' => $document->getId()), UrlGeneratorInterface::ABSOLUTE_URL)
+                    );
                 }
 
-                $documentsJSON[] = array(
-                    'name'          => $document->getName(),
-                    'type'          => $typeJWS,
-                    'description'   => $classeur->getDescription(),
-                    'url_file'      => $this->generateUrl('download_jws_doc', array('name' => $document->getrepourl()), UrlGeneratorInterface::ABSOLUTE_URL),
-                    'url_upload'    => $this->generateUrl('upload_document_fron_jws', array('id' => $document->getId()), UrlGeneratorInterface::ABSOLUTE_URL)
-                );
             }
 
+            // On enregistre les modifications du document en bas
+            $em->flush();
+
+            // On incrémente les arguments passés
+            $classeursJSON[] = array(
+                'name' => $classeur->getNom(),
+                'url_valid_classeur' => $url_valid_classeur,
+                'documents' => $documentsJSON
+            );
         }
-
-        // On enregistre les modifications du document en bas
-        $em->flush();
-
-        // On incrémente les arguments passés
-        $classeursJSON[] = array(
-            'name' => $classeur->getNom(),
-            'url_valid_classeur' => $url_valid_classeur,
-            'documents' => $documentsJSON
-        );
 //        $classeursJSON[] = $documentsJSON;
+//        var_dump($classeursJSON); die();
         $arguments[] = json_encode($classeursJSON);
 
 

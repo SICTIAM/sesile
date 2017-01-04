@@ -264,7 +264,7 @@ html, body {
 
 .user-row:hover, .classeur-row:hover, .delegation_row:hover, .coll-row:hover {
 	background-color: rgba(50, 133, 171, 0.5);
-	cursor: pointer;
+	/*cursor: pointer;*/
 }
 
 .row-padding {
@@ -1014,6 +1014,12 @@ select [name=user] {
 /* DataTable */
 #fulltable tr td, #validTable tr td {
 	vertical-align: middle;
+}
+
+#validTable a {
+	display: block;
+	color: #428bca;
+	text-decoration: none;
 }
 
 /* Sign document */
