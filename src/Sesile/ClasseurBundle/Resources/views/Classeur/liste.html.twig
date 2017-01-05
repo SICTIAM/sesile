@@ -55,6 +55,12 @@
                 sDom: 'lft<"footer_datatables"ip>',
                 aoColumnDefs: [
                     {
+                        aTargets: [0],
+                        "mRender": function ( data, type, full ) {
+                            return retour = '<a class="" href="' + Routing.generate('classeur_edit', {id: full[6]}) + '">' + data + '</a>';
+                        }
+                    },
+                    {
                         aTargets: [1,2,3,4],
                         sClass: "center"
                     },

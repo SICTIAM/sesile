@@ -423,24 +423,24 @@ label{
 .tl0 {
 	color: rgb(213, 0, 25);
 }
-.statut_0_line{
+.statut_0_line, .statut_0_line a {
     /*font-weight: bold;*/
     color: rgb(213, 0, 25);
 }
 
-.statut_1_line{
+.statut_1_line, .statut_1_line a {
     /*font-weight: bold;*/
     color: rgb(0, 131, 201);
 
 }
 
-.statut_2_line{
+.statut_2_line, .statut_2_line a {
     /*font-weight: bold;*/
     color: rgb(48, 52, 54);
 
 }
 
-.statut_3_line{
+.statut_3_line, .statut_3_line a {
     text-decoration: line-through
 }
 
@@ -1016,9 +1016,9 @@ select [name=user] {
 	vertical-align: middle;
 }
 
-#validTable a {
+#fulltable  a, #validTable a {
 	display: block;
-	color: #428bca;
+/*	color: #428bca;*/
 	text-decoration: none;
 }
 
