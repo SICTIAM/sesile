@@ -6,7 +6,11 @@
 
     <div class="titre_page">
         <span class="glyphicon glyphicon-edit"></span>
-        &nbsp;&nbsp;&nbsp;Signer le classeur
+        {% if classeurs | length == 1 %}
+            &nbsp;&nbsp;&nbsp;Signer le classeur
+        {% else %}
+            &nbsp;&nbsp;&nbsp;Signer les classeurs
+        {% endif %}
     </div>
 
     <div class="row">
@@ -66,48 +70,56 @@
 
 
     {% for classeur in classeurs %}
-        <div class="row">
-            <div class="col-md-10">
-                <h3>
-                    Classeur : {{ classeur.shortNom }}
-                </h3>
-            </div>
-            <div class="col-md-2 text-right infos-classeur-{{ classeur.id }}">
-                {# Affichage du statut du classeur #}
-                <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
-                <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
-                {# FIN Affichage du statut du classeur #}
-            </div>
-        </div>
+        <div class="infos-classeur-{{ classeur.id }}">
 
-        <div class="row">
-            <div class="col-md-12"><h4>Documents à signer</h4></div>
-            <div class="col-md-12">
-                <ul class="etape_progress">
-                    {% for doctosign in classeur.documents %}
-                        <li class="document-{{ doctosign.id }}">
-                            {#<p class="status_classeur label-warning statut_refuse"><span class="glyphicon glyphicon-remove"> </span> document non signé</p>#}
-                            {#<span class="glyphicon glyphicon-remove label label-danger" > </span>#}
-                            <span class="label label-warning statut_attente"></span>
-                            {#<img class="loadinggif statut_refuse" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>#}
-                            <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> document signé</p>
-                            {#<span class="glyphicon glyphicon-ok label label-success"> </span>#}
-                            <strong>
-                                {% if (doctosign.name | length ) > 100 %}
-                                    {{ doctosign.name[:50] }}....xml
-                                {% else %}
-                                    {{ doctosign.name }}
+            <div class="row">
+                <div class="col-md-10">
+                    <h3>
+                        Classeur : {{ classeur.shortNom }}
+                    </h3>
+                </div>
+                <div class="col-md-2 text-right">
+                    {# Affichage du statut du classeur #}
+                    <p class="status_classeur statut_cours"><span class="glyphicon statut_1"> </span> Classeur en cours</p>
+                    <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> Classeur finalisé</p>
+                    {# FIN Affichage du statut du classeur #}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12"><h4>Documents à signer</h4></div>
+                <div class="col-md-12">
+                    <ul class="etape_progress">
+                        {% for doctosign in classeur.documents %}
+                            <li class="document-{{ doctosign.id }}">
+                                {#<p class="status_classeur label-warning statut_refuse"><span class="glyphicon glyphicon-remove"> </span> document non signé</p>#}
+                                {#<span class="glyphicon glyphicon-remove label label-danger" > </span>#}
+                                <span class="label label-warning statut_attente"></span>
+                                {#<img class="loadinggif statut_refuse" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>#}
+                                <p class="status_classeur statut_finalise"><span class="glyphicon statut_2"> </span> document signé</p>
+                                {#<span class="glyphicon glyphicon-ok label label-success"> </span>#}
+                                <strong>
+                                    {% if (doctosign.name | length ) > 100 %}
+                                        {{ doctosign.name[:50] }}....xml
+                                    {% else %}
+                                        {{ doctosign.name }}
+                                    {% endif %}
+                                </strong>
+                                {% if classeur.type.id != 2 %}
+                                    <a href="{{ asset(upload_path_docs ~ doctosign.repourl) }}" target="_blank"><span class="glyphicon glyphicon-eye-open" title="Voir le document"></span></a>
                                 {% endif %}
-                            </strong>
-                        </li>
-                    {% endfor %}
-                </ul>
-
-
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <hr class="col-md-10 col-md-push-1">
+
+            <div class="row">
+                <div class="documentvisu"></div>
+            </div>
+            <div class="row">
+                <hr class="col-md-10 col-md-push-1">
+            </div>
         </div>
     {% endfor %}
 
@@ -257,6 +269,22 @@
             $('#myModal').modal('show')
         }
     });
+
+
+    // Fonction permettant l affichage de la previsualisation du fichier PES
+    {% for classeur in classeurs %}
+
+        {% for document in classeur.documents %}
+
+            {% if classeur.type.id == 2 and document|length > 0 %}
+
+                $('.infos-classeur-{{ classeur.id }} .documentvisu').load(Routing.generate('visu', {id: {{ classeur.documents[0].id }}, ajax: "true"}), function () {});
+
+            {% endif %}
+
+        {% endfor %}
+
+    {% endfor %}
 
 
 </script>
