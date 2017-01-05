@@ -106,7 +106,11 @@
                                     {% endif %}
                                 </strong>
                                 {% if classeur.type.id != 2 %}
-                                    <a href="{{ asset(upload_path_docs ~ doctosign.repourl) }}" target="_blank"><span class="glyphicon glyphicon-eye-open" title="Voir le document"></span></a>
+                                    {% if doctosign.type == "application/pdf" %}
+                                        <a href="{{ asset(upload_path_docs ~ doctosign.repourl) }}" target="_blank"><span class="glyphicon glyphicon-eye-open" title="Voir le document"></span></a>
+                                    {% else %}
+                                        <a href="{{ asset(upload_path_docs ~ doctosign.repourl) }}" download="{{ doctosign.name }}"><span class="glyphicon glyphicon-eye-open" title="Télécharger le document"></span></a>
+                                    {% endif %}
                                 {% endif %}
                             </li>
                         {% endfor %}
