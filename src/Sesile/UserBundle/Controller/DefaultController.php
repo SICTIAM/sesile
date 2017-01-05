@@ -20,7 +20,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
-use vendor\symfony\src\Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
+use Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
+//use vendor\symfony\src\Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DefaultController extends Controller
