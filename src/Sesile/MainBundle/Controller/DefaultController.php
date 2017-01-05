@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DefaultController extends Controller
 {
@@ -15,13 +16,21 @@ class DefaultController extends Controller
      * @Template()
      */
     public function indexAction() {
+        //throw $this->createNotFoundException('Bienvenue les Men In Black');
         $em = $this->getDoctrine()->getManager();
         $CollecEntity = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $msg_accueil = $CollecEntity->getMessage();
-        $msg_err = 'vous n\'êtes pas connecté à l\'interface SESILE de votre collectivité de rattachement';
+
+        // Si l utilisateur n es pas sur ca collectivite
         if (is_object($this->getUser()) && $this->get('session')->get('nocoll')) {
             //var_dump($this->get('session')->get('nocoll'));
+            $msg_err = 'vous n\'êtes pas connecté à l\'interface SESILE de votre collectivité de rattachement';
             return array('msg_err' => $msg_err);
+        }
+
+        // Si l utlisateur n est pas actif
+        if (is_object($this->getUser()) && !$this->getUser()->isEnabled()) {
+            throw new AccessDeniedHttpException("Votre compte n'a pas été validé dans SESILE.");
         }
 
 
