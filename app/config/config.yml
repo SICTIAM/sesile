@@ -16,7 +16,7 @@ framework:
         engines: ['twig']
         #assets_version: SomeVersionScheme
     default_locale:  fr
-    trusted_proxies: ~
+    trusted_proxies: ['***REMOVED***', '***REMOVED***']
     session:         ~
     fragments:       ~
     http_method_override: true
