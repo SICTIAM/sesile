@@ -34,7 +34,6 @@ class ClasseurController extends Controller {
      */
     public function indexAction()
     {
-//        return $this->listeAction();
         return array(
             "menu_color" => "bleu"
         );
@@ -100,10 +99,6 @@ class ClasseurController extends Controller {
             $output['data'][] = $tabClasseurs;
         }
 
-        /*return array(
-            'classeurs'  => $tabClasseurs,
-            "menu_color" => "bleu"
-        );*/
         return new Response(json_encode($output));
     }
 
@@ -322,7 +317,43 @@ class ClasseurController extends Controller {
      */
     public function indexAValiderAction()
     {
-        return $this->aValiderAction();
+        $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+        $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
+        $usersdelegated[] = $this->getUser();
+
+        $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(
+            array(
+                "status" => array(0,1,4)
+            ));
+
+        $tabClasseurs = array();
+        foreach($entities as $classeur)
+        {
+            $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+
+            if(array_intersect($usersdelegated, $validants))
+            {
+                $tabClasseurs[] = array(
+                    'id'        => $classeur->getId(),
+                    'nom'       => $classeur->getShortNom(),
+                    'creation'  => $classeur->getCreation(),
+                    'validation'=> $classeur->getValidation(),
+                    'type'      => $classeur->getType(),
+                    'status'    => $classeur->getStatus(),
+                    'document'  => $classeur->getDocuments(),
+                    'signable'  => $classeur->isSignableAndLastValidant(),
+                    'validants' => $validants
+                );
+            }
+
+        }
+
+        return array(
+            "classeurs"     => $tabClasseurs,
+            "uservalidant"  => $this->getUser(),
+            "menu_color"    => "bleu"
+        );
     }
 
 
@@ -375,16 +406,6 @@ class ClasseurController extends Controller {
 
 
     /**
-     * Liste des classeurs à valider pour datatables
-     *
-     * @Route("/ajax/a_valider", name="ajax_a_valider")
-     * @Method("GET")
-     * @Template()
-     */
-    public function aValiderAjaxAction(Request $request) {
-    }
-
-    /**
      * Page qui affiche la liste des classeurs retractables pour le user connecté.
      *
      * @Route("/liste-retractables", name="index_retractables")
@@ -393,20 +414,7 @@ class ClasseurController extends Controller {
      */
     public function indexARetracterAction()
     {
-        return $this->retractationAction();
-    }
-
-    /**
-     * Liste des classeurs retractables
-     *
-     * @Route("/a_retracter", name="classeur_a_retracter")
-     * @Method("GET")
-     * @Template("SesileClasseurBundle:Classeur:liste.html.twig")
-     */
-    public function retractationAction()
-    {
         $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseursRetractables($this->getUser()->getId());
         $entities = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
         $delegants = $em->getRepository('SesileDelegationsBundle:Delegations')->getUsersWhoHasMeAsDelegate($this->getUser()->getId());
         foreach ($delegants as $delegant) {
@@ -422,15 +430,11 @@ class ClasseurController extends Controller {
             }
 
             $prevValidant = $em->getRepository('SesileClasseurBundle:Classeur')->getPrevValidantForRetract($entity);
-//            var_dump($prevValidant);
             if ($entity->isRetractableByDelegates($users, $validantId, $prevValidant)) {
 
                 $entity->validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($entity);
                 $entity->setNom($entity->getShortNom());
 
-//                $user = $em->getRepository('SesileUserBundle:User')->findOneById($entity->getValidant());
-//                $user = $em->getRepository('SesileUserBundle:User')->findOneById($this->getUser());
-//                $entity->validantName = $user ? $user->getPrenom() . " " . $user->getNom() : " ";
             } else {
                 unset($entities[$k]);
             }
