@@ -284,7 +284,9 @@ class DocumentController extends Controller
 
                 // Recup du doc pour utiliser SetaPDF
                 require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
-                $filename = 'uploads/docs/' . $doc->getRepourl();
+                //var_dump($this->container->getParameter('upload')['fics']);
+                //$filename = 'uploads/docs/' . $doc->getRepourl();
+                $filename = $this->container->getParameter('upload')['fics'] . $doc->getRepourl();
                 $document = \SetaPDF_Core_Document::loadByFilename($filename);
 
                 // Pour la première page
@@ -592,9 +594,10 @@ class DocumentController extends Controller
         $firstPage = $city->getPageSignature();
 
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
+        $classeurId = $doc->getClasseur()->getId();
 
 //        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, false, $imageSignature);
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $absSign, $ordSign, $firstPage, $imageSignature, $lastUser);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $absSign, $ordSign, $firstPage, $imageSignature, $lastUser, $classeurId);
         /* FIN SetaPDF */
     }
 
@@ -628,7 +631,7 @@ class DocumentController extends Controller
         $classeurId = $doc->getClasseur()->getId();
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $absSign, $ordSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $absSign, $ordSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser, $doc->getSigned());
         /* FIN SetaPDF */
     }
 

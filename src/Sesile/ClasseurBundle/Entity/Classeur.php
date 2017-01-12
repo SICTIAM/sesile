@@ -588,7 +588,6 @@ class Classeur {
 
     }
 
-//    public function isSignable(\Doctrine\ORM\EntityManager $em)
     public function isSignable()
     {
         if($this->getType()->getId() == 2){
@@ -609,16 +608,14 @@ class Classeur {
      * @return bool
      */
     public function isSignablePDF() {
-        //if($this->isAtLastValidant()){
-            $docs = $this->getDocuments();
+        $docs = $this->getDocuments();
 
-            // Si au moins un document est signable alors le classeur peut etre signé
-            foreach($docs as $doc){
-                if(in_array($doc->getType(), $this->typeSignable)){
-                    return true;
-                }
+        // Si au moins un document est signable alors le classeur peut etre signé
+        foreach($docs as $doc){
+            if(in_array($doc->getType(), $this->typeSignable)){
+                return true;
             }
-        //}
+        }
         return false;
     }
 

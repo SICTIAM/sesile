@@ -1410,7 +1410,7 @@ class ClasseurController extends Controller {
 
 
     /**
-     * Valider_et_signer an existing Classeur entity.
+     * Valider_et_signer existing Classeurs entities.
      *
      * @Route("/signdocsjws/{role}", name="signdocsjws")
      * @Template("SesileClasseurBundle:Classeur:signDocJws.html.twig")

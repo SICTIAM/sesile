@@ -235,7 +235,7 @@ class DocumentRepository extends EntityRepository
      *
      * Creation d une signature a apposer au document
      */
-    protected function createSignature($document, $translateX, $translateY, $first, $imageSignature, $user) {
+    protected function createSignature($document, $translateX, $translateY, $first, $imageSignature, $user, $classeurId) {
         if ($first) {
 //            $pagePosition = \SetaPDF_Stamper::PAGES_FIRST;
             $pagePosition = 'first';
@@ -244,13 +244,30 @@ class DocumentRepository extends EntityRepository
             $pagePosition = 'last';
         }
 
+        // On recup les infos de la signature
+        $em = $this->getEntityManager();
+        $actions = $em->getRepository('SesileClasseurBundle:Action')->findBy(array(
+            'classeur' => $classeurId,
+            'action' => array('Signature')
+        ));
+
+        if ($actions) {
+            $texteVisa = "";
+            foreach ($actions as $action) {
+                $texteVisa = "Signé électroniquement par " . $action->getUsername() . ' le ' . $action->getDate()->format('d/m/Y à H:i') . "\n";
+            }
+        }
+        else {
+            $texteVisa = "";
+        }
+
         // On recupere l orientation de la page portrait ou paysage
         // $format = $this->getFormatPdf($document, $first);
         // Params
         $translateX = $this->calcXSign($translateX);
         $translateY = $this->calcYSign($translateY);
 
-        $texteVisa = $user->getPrenom(). " " . $user->getNom() . "\n" . $user->getQualite();
+        $texteVisa .= $user->getPrenom(). " " . $user->getNom() . "\n" . $user->getQualite();
         // calcul du decalage en Y a cause de la qualite
         $translateYQuality = $translateY + 30 + 12 * substr_count($texteVisa, "\n");
 
@@ -292,12 +309,10 @@ class DocumentRepository extends EntityRepository
         $stamper = new \SetaPDF_Stamper($document);
 
         // get an image instance
-//            $image = \SetaPDF_Core_Image::getByPath('/home/sesile/web/uploads/avatars/af3a9b46ddeea18a0f4108fac421e46aa52a6c44.jpeg');
         $image = \SetaPDF_Core_Image::getByPath($imageSignature);
         // initiate the stamp
         $stamp = new \SetaPDF_Stamper_Stamp_Image($image);
         // set height (and width until no setWidth is set the ratio will retain)
-//        $stamp->setHeight(50);
         $stamp->setWidth(150);
 
         // add stamp to stamper on position left top for all pages with a specific translation
@@ -344,11 +359,11 @@ class DocumentRepository extends EntityRepository
      *
      * Affiche le fichier PDF avec la signature directement dans le navigateur
      */
-    public function setaPDFTamponSignature($doc, $translateX = 30, $translateY = -30, $first = true, $imageSignature = '', $user) {
+    public function setaPDFTamponSignature($doc, $translateX = 30, $translateY = -30, $first = true, $imageSignature = '', $user, $classeurId) {
 
         $document = $this->init_setaPDF($doc);
 
-        $this->createSignature($document, $translateX, $translateY, $first, $imageSignature, $user);
+        $this->createSignature($document, $translateX, $translateY, $first, $imageSignature, $user, $classeurId);
 
         $this->finish_setaPDF($document);
     }
@@ -367,11 +382,11 @@ class DocumentRepository extends EntityRepository
      *
      * Affiche le fichier PDF avec la signature et le visa directement dans le navigateur
      */
-    public function setaPDFTamponALL($doc, $classeurId, $translateXVisa = 30, $translateYVisa = -30, $translateXSign = 30, $translateYSign = -30, $firstSign = true, $firstVisa = true, $imageSignature = '', $texteVisa, $color = false, $user) {
+    public function setaPDFTamponALL($doc, $classeurId, $translateXVisa = 30, $translateYVisa = -30, $translateXSign = 30, $translateYSign = -30, $firstSign = true, $firstVisa = true, $imageSignature = '', $texteVisa, $color = false, $user, $signed) {
 
         $document = $this->init_setaPDF($doc);
 
-        $this->createSignature($document, $translateXSign, $translateYSign, $firstSign, $imageSignature, $user);
+        $this->createSignature($document, $translateXSign, $translateYSign, $firstSign, $imageSignature, $user, $classeurId);
         $this->createVisa($document, $classeurId, $translateXVisa, $translateYVisa, $firstVisa, $texteVisa, $color);
 
         $this->finish_setaPDF($document);
