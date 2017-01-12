@@ -157,8 +157,8 @@
         $('.pj').click(function () {
             var idDoc = '{{ idDoc }}';
 
-            // Si l utilisateur est sur IE ou si cest un fichier zip alors on propose le téléchargement du document
-            if ( msieversion() || $('.pj').text().split('.').pop() == "zip") {
+            // Si l utilisateur est sur IE ou si ce n est pas un pdf alors on propose le téléchargement du document
+            if ( msieversion() || $('.pj').text().split('.').pop() != "pdf") {
                 window.open(Routing.generate('getpjie', {
                     'id': idDoc,
                     'bord': $('#bordx').val(),
