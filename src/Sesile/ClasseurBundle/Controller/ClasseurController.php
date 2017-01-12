@@ -112,12 +112,6 @@ class ClasseurController extends Controller {
      */
     public function indexListeAdminAction($id)
     {
-
-        // verification qu il s git bien d un super admin
-        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
-
         // On se connecte a la BDD
         $em = $this->getDoctrine()->getManager();
 
@@ -139,11 +133,6 @@ class ClasseurController extends Controller {
      * @Method("GET")
      */
     public function listeAdminAction($id, Request $request) {
-
-        // verification qu il s git bien d un super admin
-        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
 
         // On se connecte a la BDD
         $em = $this->getDoctrine()->getManager();
@@ -569,8 +558,6 @@ class ClasseurController extends Controller {
         $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findBy(array(), array('nom' => 'ASC'));
 
         // Nouveau code pour afficher l ordre des groupes
-//        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
-//        $groupes_du_user = $em->getRepository('SesileUserBundle:UserGroupe')->findByUser($this->getUser());
         $serviceOrgs = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($this->getUser()->getId());
 
         if(!count($serviceOrgs)) {
@@ -1275,7 +1262,6 @@ class ClasseurController extends Controller {
      */
     public function signAction(Request $request, $id, $role = null)
     {
-        //var_dump($request->get("moncul"));exit;
         $user = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();

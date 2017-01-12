@@ -36,6 +36,8 @@ security:
         - { path: ^/doc/downloadJWS, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/doc/uploaddocument, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/classeur/valider_classeur_jws, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/classeur/liste-classeurs-admin, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/classeur/liste_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/delegation, roles: ROLE_USER }
         - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }
         - { path: ^/user, roles: ROLE_USER }
