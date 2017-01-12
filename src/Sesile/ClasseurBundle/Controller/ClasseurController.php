@@ -781,7 +781,7 @@ class ClasseurController extends Controller {
 
 
     /**
-     * Edits an existing Classeur entity.
+     * Submit an existing Classeur entity.
      *
      * @Route("/soumettre", name="classeur_soumis")
      * @Method("POST")
@@ -1408,6 +1408,14 @@ class ClasseurController extends Controller {
      */
     public function signDocsJwsAction(Request $request, $role = null)
     {
+        // on verifie qu un classeur a bien ete soumis
+        if (!$request->get("classeurs")) {
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                "Aucun classeur n'a été séléctionné pour la signature"
+            );
+            return $this->redirect($this->generateUrl('index_valider'));
+        }
         $user = $this->get('security.context')->getToken()->getUser();
 
         // Connexion a la BDD
