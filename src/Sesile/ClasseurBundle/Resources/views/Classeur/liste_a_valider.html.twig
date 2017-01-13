@@ -4,6 +4,7 @@
         <table class="table tableau dtables" id="validTable">
             <thead>
             <tr>
+                <th>Valider</th>
                 <th>Titre du classeur</th>
                 <th>Date de création</th>
                 <th>Date limite de validation</th>
@@ -13,14 +14,17 @@
                 <th>Actions</th>
                 <th>document</th>
                 <th>Type de classeur</th>
-                <th>Valider</th>
             </tr>
             </thead>
             <tbody>
             {% for classeur in classeurs %}
                 <tr>
-                    <td><a href="{{ path('classeur_edit', {'id': classeur.id} ) }}">{{ classeur.nom }}</a>
+                    <td data-id="{{ classeur.id }}">
+                        {% if classeur.signable %}
+                            <input type="checkbox" name="classeurs[]" class="chk" value="{{ classeur.id }}">
+                        {% endif %}
                     </td>
+                    <td><a href="{{ path('classeur_edit', {'id': classeur.id} ) }}">{{ classeur.nom }}</a></td>
                     <td>{{ classeur.creation|date("d/m/Y") }}</td>
                     <td>{{ classeur.validation|date("d/m/Y") }}</td>
                     <td>{% for validant in classeur.validants %} {{ validant.prenom }} {{ validant.nom }} {% if loop.index != classeur.validants|length %}/{% endif %} {% endfor %}</td>
@@ -29,10 +33,6 @@
                     <td>{{ classeur.id }}</td>
                     <td>{% for document in classeur.document %}{{ document.id }}{% endfor %}</td>
                     <td>{{ classeur.type.id }}</td>
-                    <td data-id="{{ classeur.id }}">
-                        {% if classeur.signable %}
-                            <input type="checkbox" name="classeurs[]" class="chk" value="{{ classeur.id }}">
-                        {% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>
