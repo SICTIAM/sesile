@@ -156,9 +156,10 @@
 
         $('.pj').click(function () {
             var idDoc = '{{ idDoc }}';
+            var pj_ext = $('.pj').text().split('.').pop().toUpperCase();
 
             // Si l utilisateur est sur IE ou si ce n est pas un pdf alors on propose le téléchargement du document
-            if ( msieversion() || $('.pj').text().split('.').pop() != "pdf") {
+            if ( msieversion() || pj_ext != "PDF") {
                 window.open(Routing.generate('getpjie', {
                     'id': idDoc,
                     'bord': $('#bordx').val(),
