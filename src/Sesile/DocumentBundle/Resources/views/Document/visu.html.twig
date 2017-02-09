@@ -30,11 +30,12 @@
                 <label for="bordx" class="col-lg-2 ">Bordereau</label>
 
                 <div class="col-lg-4">
-                    <select id="bordx" class="col-lg-4">
+                    <select id="bordx" class="col-lg-4 bordx-{{ idDoc }}">
                         <option value="empty" selected></option>
                         {% for b in bords %}
                             <option value="{{ loop.index-1 }}"
-                                    {% if loop.index == 1 %}selected{% endif %}>{{ b }}</option>
+                                {% if loop.index == 1 %}selected{% endif %}>{{ b }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -83,7 +84,7 @@
             </div>
             <br><br>
         {% endif %}
-        <div id="bordcontent" class="col-lg-12">
+        <div id="bordcontent" class="col-lg-12 bordcontent-{{ idDoc }}">
 
         </div>
     </div>
@@ -95,19 +96,19 @@
                 url: Routing.generate('visubord', {'id': idDoc, 'bord': 0}),
                 method: "GET",
                 success: function (retourbak) {
-                    $('#bordcontent').empty();
-                    $('#bordcontent').append(retourbak);
+                    $('.bordcontent-{{ idDoc }}').empty();
+                    $('.bordcontent-{{ idDoc }}').append(retourbak);
                 }
             });
 
-            $('#bordx').change(function () {
-                if ($('#bordx').val() != 'empty') {
+            $('.bordx-{{ idDoc }}').change(function () {
+                if ($('.bordx-{{ idDoc }}').val() != 'empty') {
                     $.ajax({
-                        url: Routing.generate('visubord', {'id': idDoc, 'bord': $('#bordx').val()}),
+                        url: Routing.generate('visubord', {'id': idDoc, 'bord': $('.bordx-{{ idDoc }}').val()}),
                         method: "GET",
                         success: function (retourbak) {
-                            $('#bordcontent').empty();
-                            $('#bordcontent').append(retourbak);
+                            $('.bordcontent-{{ idDoc }}').empty();
+                            $('.bordcontent-{{ idDoc }}').append(retourbak);
                         }
                     });
                 }
