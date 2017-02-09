@@ -128,6 +128,7 @@ class DocumentRepository extends EntityRepository
     protected function createVisa($document, $classeurId, $translateX, $translateY, $first, $texteVisa, $color) {
         // Params
         $borderWidth = 1;
+        $borderWidthVisa = $borderWidth + 2;
         $padding = 7;
         $fontSize = 12;
         $texteStamp = '';
@@ -181,7 +182,7 @@ class DocumentRepository extends EntityRepository
         $stamp_visa = new \SetaPDF_Stamper_Stamp_Text($font, $fontSize);
         $stamp_visa->setText($texteVisa);
         $stamp_visa->setAlign("center");
-        $stamp_visa->setBorderWidth($borderWidth + 2);
+        $stamp_visa->setBorderWidth($borderWidthVisa);
         $stamp_visa->setBorderColor($colorVisa);
         $stamp_visa->setPadding($padding);
         $stamp_visa->setPaddingTop($padding + 3);
@@ -210,7 +211,7 @@ class DocumentRepository extends EntityRepository
             'translateY' => $translateY
         ));
 
-        $stamp_visa->setWidth($stamp->getWidth());
+        //$stamp_visa->setWidth($stamp->getWidth());
         $stamp_visa->setPaddingBottom($stamp->getHeight() - $fontSize + 3);
 
         $stamper->addStamp($stamp_visa, array(
@@ -220,6 +221,16 @@ class DocumentRepository extends EntityRepository
             'translateX' => $translateX + $padding,
             'translateY' => $translateY + $padding
         ));
+
+        // On defini lequel des stamp est le plus large
+        $stampWidth = $stamp->getWidth();
+        $stamp_visaWidth = $stamp_visa->getWidth();
+        if ($stampWidth >> $stamp_visaWidth) {
+            $stamp_visa->setWidth($stampWidth);
+        } else {
+            $stamp_visa->setWidth($stamp_visaWidth + $padding);
+            $stamp->setWidth($stamp_visaWidth - ($borderWidthVisa) * 2);
+        }
 
         // stamp the document
         $stamper->stamp();
