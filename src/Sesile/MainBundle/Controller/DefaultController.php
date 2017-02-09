@@ -30,13 +30,19 @@ class DefaultController extends Controller
 
         // Si l utlisateur n est pas actif
         if (is_object($this->getUser()) && !$this->getUser()->isEnabled()) {
-            throw new AccessDeniedHttpException("Votre compte n'a pas été validé dans SESILE.");
+
+            $this->get('security.context')->setToken(null);
+            $this->get('request')->getSession()->invalidate();
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Votre compte n\'a pas été validé dans SESILE.'
+            );
+            return $this->redirect($this->generateUrl('_default'));
+            //$this->get('security.logout.handler.session')->logout($reque‌​st, $response, $token);
+            //throw new AccessDeniedHttpException("Votre compte n'a pas été validé dans SESILE.");
         }
 
-
-        #TODO tester en prod acces autre collec user
         return array('msg_acc' => $msg_accueil);
-        //test
 
     }
 
