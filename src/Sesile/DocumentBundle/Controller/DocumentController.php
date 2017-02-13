@@ -812,7 +812,11 @@ class DocumentController extends Controller
             'dateSign' => $PES->dateSign,
             'bords' => $tabIdBord,
             'idDoc' => $doc->getId(),
-            'ajax' => $ajax
+            'ajax' => $ajax,
+            'user' => $user,
+            'classeur' => $entity,
+            'signable'  => $entity->isSignableAndLastValidant(),
+            'classeursId'  => urlencode(serialize($entity->getId()))
         );
     }
 

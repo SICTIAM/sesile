@@ -679,7 +679,8 @@ class ClasseurController extends Controller {
             'isDelegatedToMe' => $isDelegatedToMe,
             'uservalidant'  => $uservalidant,
             "menu_color"    => "bleu",
-            'users'         => $users
+            'users'         => $users,
+            'classeursId'  => urlencode(serialize($entity->getId()))
         );
 
 
@@ -825,7 +826,8 @@ class ClasseurController extends Controller {
         $classeur->setStatus(1);
 
         // MAJ de la visibilite
-        $this->set_user_visible ($classeur, $request->get("visibilite"));
+//        $this->set_user_visible ($classeur, $request->get("visibilite"));
+        $em->getRepository('SesileClasseurBundle:Classeur')->set_user_visible($classeur, $request->get("visibilite"));
 
         $em->flush();
 
@@ -941,7 +943,8 @@ class ClasseurController extends Controller {
 
 
         // MAJ de la visibilite
-        $this->set_user_visible ($classeur, $visibilite);
+//        $this->set_user_visible ($classeur, $visibilite);
+        $em->getRepository('SesileClasseurBundle:Classeur')->set_user_visible($classeur, $visibilite);
 
 
 //        $classeur->valider($em);
@@ -1368,18 +1371,21 @@ class ClasseurController extends Controller {
         $em->flush();
 
         // MAJ de l etat de la visibilité, nom, description, date de validation
-        $visibilite = $request->get("visibilite");
-        $classeur->setVisibilite($visibilite);
-        $classeur->setNom($request->get("name"));
-        $classeur->setDescription($request->get("desc"));
-        list($d, $m, $a) = explode("/", $request->request->get('validation'));
-        $valid = new \DateTime($m . "/" . $d . "/" . $a);
-        $classeur->setValidation($valid);
+        $em->getRepository('SesileClasseurBundle:Classeur')->updateInfosClasseurs($request, $id);
+        /*if ($request->isMethod('post')) {
+            $visibilite = $request->get("visibilite");
+            $classeur->setVisibilite($visibilite);
+            $classeur->setNom($request->get("name"));
+            $classeur->setDescription($request->get("desc"));
+            list($d, $m, $a) = explode("/", $request->request->get('validation'));
+            $valid = new \DateTime($m . "/" . $d . "/" . $a);
+            $classeur->setValidation($valid);
 
-        // MAJ de la visibilite
-        $this->set_user_visible ($classeur, $visibilite);
+            // MAJ de la visibilite
+            $this->set_user_visible($classeur, $visibilite);
 
-        $em->flush();
+            $em->flush();
+        }*/
 
         $classeurs[] = $classeur;
 
@@ -1521,7 +1527,7 @@ class ClasseurController extends Controller {
      * @Route("/jnlpsignerfiles/{id}/{role}", name="jnlpSignerFiles")
      *
      */
-    public function jnlpSignerFilesAction($id, $role = null) {
+    public function jnlpSignerFilesAction(Request $request, $id, $role = null) {
 
         // On recupere les ids des classeurs a signer
         $ids = unserialize(urldecode($id));
@@ -1533,6 +1539,9 @@ class ClasseurController extends Controller {
 
         // User courant
         $user = $this->get('security.context')->getToken()->getUser();
+
+        // MAJ de l etat de la visibilité, nom, description, date de validation
+        $em->getRepository('SesileClasseurBundle:Classeur')->updateInfosClasseurs($request, $ids);
 
         // Infos JSON liste des fichiers
 //        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
@@ -2053,59 +2062,5 @@ class ClasseurController extends Controller {
         }
     }
 
-    /**
-     * Fonction permettant la mise a jour de la visibilite
-     *
-     * @param $classeur
-     * @param $visibilite
-     */
-    public function set_user_visible ($classeur, $visibilite) {
-        $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
-        $users[] = $classeur->getUser();
 
-        if ($visibilite != 2 && $visibilite != 3) {
-            $usersCV = $this->classeur_visible($visibilite, $users);
-            // On vide la table many to many
-            $classeur->getVisible()->clear();
-            foreach ($usersCV as $userCV) {
-                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
-                $classeur->addVisible($userVisible);
-            }
-
-        }
-
-        // Si la visibilite du classeur est prive a partir de moi
-        elseif ($visibilite == 2) {
-            $usersCV = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
-            $usersCV = array_unique($usersCV);
-
-            // On vide la table many to many
-            $classeur->getVisible()->clear();
-            foreach ($usersCV as $userCV) {
-                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
-                $classeur->addVisible($userVisible);
-            }
-        }
-
-        // Si la visibilite du classeur est service organisationnel (et le circuit)
-        elseif ($visibilite == 3) {
-
-            $usersVisible = $classeur->getVisible();
-            $usersAlreadyVisible = array();
-            foreach ($usersVisible as $userV) {
-                $usersAlreadyVisible[] = $userV->getId();
-            }
-            $usersCV = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
-            $usersCV = array_unique($usersCV);
-
-            $usersCV = array_diff($usersCV, $usersAlreadyVisible);
-            // On vide la table many to many
-            // $classeur->getVisible()->clear();
-            foreach ($usersCV as $userCV) {
-                $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV);
-                $classeur->addVisible($userVisible);
-            }
-        }
-    }
 }

@@ -2952,8 +2952,7 @@ input[type="button"].btn-block {
     content: "\e022";
 }
 
-.glyphicon-time:before,
-.statut_1:before {
+.glyphicon-time:before {
     content: "\e023";
 }
 
@@ -3189,8 +3188,7 @@ input[type="button"].btn-block {
     content: "\e082";
 }
 
-.glyphicon-remove-sign:before,
-.statut_3:before {
+.glyphicon-remove-sign:before {
     content: "\e083";
 }
 
@@ -3274,9 +3272,7 @@ input[type="button"].btn-block {
     content: "\e106";
 }
 
-.glyphicon-warning-sign:before,
-.statut_4:before,
-.statut_0:before {
+.glyphicon-warning-sign:before {
     content: "\e107";
 }
 
@@ -3516,8 +3512,7 @@ input[type="button"].btn-block {
     content: "\e167";
 }
 
-.glyphicon-saved:before,
-.statut_2:before {
+.glyphicon-saved:before {
     content: "\e168";
 }
 

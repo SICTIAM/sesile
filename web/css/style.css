@@ -116,7 +116,7 @@ html, body {
 }
 
 #header {
-	min-height: 5%;
+	/*min-height: 5%;*/
 	text-align: right;
 	margin: auto;
 	padding: .5em 0em 1em 0em;
@@ -809,7 +809,7 @@ select [name=user] {
 	display: none;
 }
 
-.status_classeur {
+.status_classeur, .status_document {
     display: inline-block;
     padding: 5px 10px;
     margin-bottom: 0;

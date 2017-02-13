@@ -1,4 +1,3 @@
-{#{% extends 'SesileMainBundle:Default:index.html.twig' %}#}
 {% extends ajax != 'true'
     ? 'SesileMainBundle:Default:index.html.twig'
     : 'SesileMainBundle:Default:indexFrame.html.twig'
@@ -8,9 +7,15 @@
 
     {% if ajax != 'true' %}
         <div class="bloc_page">
-        <div class="titre_page">
-            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;Visualiseur de fichier PES
-        </div>
+            <div class="titre_page row">
+                <div class="col-lg-10">
+                    <span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;Visualiseur de fichier PES
+                </div>
+                <div class="col-lg-2 text-right">
+                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id} %}
+                </div>
+            </div>
+
     {% endif %}
 
     {% if isPJ is defined %}
@@ -22,8 +27,8 @@
             </div>
         {% endif %}
 
-    {#</div>#}
     {% else %}
+
         <div class="col-lg-12">
 
             <div class="form-group">
@@ -40,7 +45,32 @@
                     </select>
                 </div>
                 {% if ajax != 'true' %}
-                    <div class="col-lg-6">
+
+                    <div class="col-lg-3">
+                        {% if signable %}
+                            {# Signer le classeur avec multi roles #}
+                            {% if user.UserRole | length > 1 %}
+                                <div class="btn-group btn-group-valider-signer">
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Valider et Signer avec le rôle <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        {% for role in user.UserRole %}
+                                            <li><a href="{{ path('jnlpSignerFiles',{'id':classeursId,'role':role.id}) }}" class="btn-valider-signer">{{ role.userRoles }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {# Signer le classeur sans multi roles #}
+                            {% else %}
+                                <a type="submit" class="btn btn-success btn-valider-signer" href="{{ path('jnlpSignerFiles',{'id':classeursId}) }}">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    &nbsp;Valider et Signer
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-lg-3">
                         <a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary pull-right">
                             <span class="glyphicon glyphicon-share-alt"></span>
                             &nbsp;&nbsp; Retour à la page précédente

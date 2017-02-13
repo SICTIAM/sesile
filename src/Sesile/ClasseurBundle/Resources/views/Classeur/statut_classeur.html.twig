@@ -1,0 +1,44 @@
+<div class="infos-classeur-{{ classeur_id }}">
+    <p class="status_classeur statut_refuse statut_0"><span class="glyphicon glyphicon-warning-sign"> </span> Classeur refusé</p>
+    <p class="status_classeur statut_cours statut_1"><span class="glyphicon glyphicon-time"> </span> Classeur en cours</p>
+    <p class="status_classeur statut_finalise statut_2"><span class="glyphicon glyphicon-saved"> </span> Classeur finalisé</p>
+    <p class="status_classeur statut_retire statut_3"><span class="glyphicon glyphicon-remove-sign"> </span> Classeur retiré</p>
+    <p class="status_classeur statut_retracte statut_4"><span class="glyphicon glyphicon-warning-sign"> </span> Classeur rétracté</p>
+</div>
+
+<script>
+
+    // Délai de relance de la fonction ajax
+    var my_delay = 2 * 1000;
+
+    // Fonction permettan de recup le status d un classeur
+    function callClasseurSatus_{{ classeur_id }}() {
+        $.ajax({
+            url: Routing.generate('status_classeur', {id: {{ classeur_id }}}),
+            async: true,
+            method: "GET",
+            success: function (resp) {
+
+                // On cache tous les stats du classeur
+                $(".infos-classeur-{{ classeur_id }} .status_classeur").hide();
+                // On affiche le statut courant
+                $(".infos-classeur-{{ classeur_id }} .statut_" + resp).show();
+
+
+                if ($(".status_classeur.statut_finalise").filter(":hidden").length == 0) {
+                    window.location.assign("{{ url('index_valider') }}");
+                }
+
+            }
+        });
+
+        // Fonction permettant de relancer la fonction de test du status du document
+        setTimeout(callClasseurSatus_{{ classeur_id }}, my_delay);
+    }
+
+//    $(document).ready(function() {
+        // On ré-exécute la fonction pour le classeur
+        callClasseurSatus_{{ classeur_id }}();
+//    });
+
+</script>

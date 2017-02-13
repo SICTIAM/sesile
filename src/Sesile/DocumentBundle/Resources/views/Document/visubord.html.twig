@@ -48,7 +48,7 @@
 </div>
 
 <div id="pliste">
-    <table id="ptable" class="table tableau">
+    <table id="ptable-{{ idDoc }}" class="table tableau">
         <thead>
         <tr>
             <th>N°Piece</th>
@@ -189,7 +189,7 @@
 
 
         $(document).ready(function () {
-            oTable = $('#ptable').dataTable({
+            oTable = $('#ptable-{{ idDoc }}').dataTable({
                 "oLanguage": {
                     "sSearch": "Rechercher&nbsp;:",
                     "sInfo": "  _START_ &agrave; _END_ sur _TOTAL_",
