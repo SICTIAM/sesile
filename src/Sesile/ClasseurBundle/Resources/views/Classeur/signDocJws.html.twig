@@ -80,7 +80,7 @@
                 </div>
                 <div class="col-md-2 text-right">
                     {# Affichage du statut du classeur #}
-                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id} %}
+                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id, 'status_init':classeur.status} %}
                     {# FIN Affichage du statut du classeur #}
                 </div>
             </div>
@@ -166,38 +166,6 @@
         setTimeout(callDocumentAjax, my_delay);
     }
 
-    // Fonction permettan de recup le status d un classeur
-    /*function callClasseurSatus() {
-        {% for classeur in classeurs %}
-            $.ajax({
-                url: Routing.generate('status_classeur', {id: {{ classeur.id }}}),
-                async: true,
-                method: "GET",
-                success: function (resp) {
-
-                    if (resp == 2) {
-                        $(".infos-classeur-{{ classeur.id }} .status_classeur.statut_cours").hide();
-                        $(".infos-classeur-{{ classeur.id }} .status_classeur.statut_finalise").show();
-                        {#window.location.assign("{{ url('index_valider') }}");#}
-                    } else {
-                        $(".infos-classeur-{{ classeur.id }} .status_classeur.statut_cours").show();
-                        $(".infos-classeur-{{ classeur.id }} .status_classeur.statut_finalise").hide();
-                    }
-
-//                    console.log($(".status_classeur.statut_finalise").filter(":hidden").length);
-                    if ($(".status_classeur.statut_finalise").filter(":hidden").length == 0) {
-                        window.location.assign("{{ url('index_valider') }}");
-                    }
-
-                }
-            });
-        {% endfor %}
-
-
-        // Fonction permettant de relancer la fonction de test du status du document
-        setTimeout(callClasseurSatus, my_delay);
-    }*/
-
     $(document).ready(function() {
 
         // A l initialisation, on cache l icone doc signé et classeur validé
@@ -224,14 +192,10 @@
             // On exécute la fonction pour tous les documents (bug FF)
             callDocumentAjax();
 
-            // On ré-exécute la fonction pour le classeur (bug FF)
-//            callClasseurSatus();
-
             // On cache le bouton pour ne pas reclicker dessus
             $(".btn-signature").hide();
 
         });
-
 
 
     });

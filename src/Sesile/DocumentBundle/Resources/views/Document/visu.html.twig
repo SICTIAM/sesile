@@ -12,7 +12,7 @@
                     <span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;Visualiseur de fichier PES
                 </div>
                 <div class="col-lg-2 text-right">
-                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id} %}
+                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id, 'status_init':classeur.status} %}
                 </div>
             </div>
 

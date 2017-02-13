@@ -10,6 +10,7 @@
 
     // Délai de relance de la fonction ajax
     var my_delay = 2 * 1000;
+    var status_init = {{ status_init }};
 
     // Fonction permettan de recup le status d un classeur
     function callClasseurSatus_{{ classeur_id }}() {
@@ -25,7 +26,7 @@
                 $(".infos-classeur-{{ classeur_id }} .statut_" + resp).show();
 
 
-                if ($(".status_classeur.statut_finalise").filter(":hidden").length == 0) {
+                if ($(".status_classeur.statut_finalise").filter(":hidden").length == 0 && status_init != 2) {
                     window.location.assign("{{ url('index_valider') }}");
                 }
 

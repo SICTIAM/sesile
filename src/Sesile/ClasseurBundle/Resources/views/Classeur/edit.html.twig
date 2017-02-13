@@ -19,7 +19,7 @@
 
                 <div class="col-lg-2 text-right">
                     {# Affichage du statut du classeur #}
-                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id} %}
+                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id, 'status_init':classeur.status} %}
                     {# FIN Affichage du statut du classeur #}
                 </div>
             </div>
@@ -170,18 +170,7 @@
                 </div>
                 <div class="col-lg-2 text-right">
                     {# Affichage du statut du classeur #}
-                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id} %}
-                    {#{% if classeur.status == 0 %}
-                        <p class="status_classeur statut_refuse"><span class="glyphicon glyphicon-warning-sign"> </span> Classeur refusé</p>
-                    {% elseif classeur.status == 1 %}
-                        <p class="status_classeur statut_cours"><span class="glyphicon glyphicon-time"> </span> Classeur en cours</p>
-                    {% elseif classeur.status == 2 %}
-                        <p class="status_classeur statut_finalise"><span class="glyphicon glyphicon-saved"> </span> Classeur finalisé</p>
-                    {% elseif classeur.status == 3 %}
-                        <p class="status_classeur statut_retire"><span class="glyphicon glyphicon-remove-sign"> </span> Classeur retiré</p>
-                    {% elseif classeur.status == 4 %}
-                        <p class="status_classeur statut_retracte"><span class="glyphicon glyphicon-warning-sign"> </span> Classeur rétracté</p>
-                    {% endif %}#}
+                    {% include "SesileClasseurBundle:Classeur:statut_classeur.html.twig" with { 'classeur_id':classeur.id, 'status_init':classeur.status} %}
                     {# FIN Affichage du statut du classeur #}
                 </div>
             </div>
