@@ -116,7 +116,7 @@ html, body {
 }
 
 #header {
-	min-height: 5%;
+	/*min-height: 5%;*/
 	text-align: right;
 	margin: auto;
 	padding: .5em 0em 1em 0em;
@@ -264,7 +264,7 @@ html, body {
 
 .user-row:hover, .classeur-row:hover, .delegation_row:hover, .coll-row:hover {
 	background-color: rgba(50, 133, 171, 0.5);
-	cursor: pointer;
+	/*cursor: pointer;*/
 }
 
 .row-padding {
@@ -299,6 +299,14 @@ label{
 	padding-left: 0.214em;
 }
 
+#form_edit label {
+	color: #ffffff;
+	font-weight: normal;
+}
+#form_edit label.pdf-label {
+	color: #333333;
+	font-weight: bold;
+}
 /*BOUTON VISI CLASSEUR*/
 .visi_button_actif {
 	color: #ffffff !important;
@@ -415,24 +423,24 @@ label{
 .tl0 {
 	color: rgb(213, 0, 25);
 }
-.statut_0_line{
+.statut_0_line, .statut_0_line a {
     /*font-weight: bold;*/
     color: rgb(213, 0, 25);
 }
 
-.statut_1_line{
+.statut_1_line, .statut_1_line a {
     /*font-weight: bold;*/
     color: rgb(0, 131, 201);
 
 }
 
-.statut_2_line{
+.statut_2_line, .statut_2_line a {
     /*font-weight: bold;*/
     color: rgb(48, 52, 54);
 
 }
 
-.statut_3_line{
+.statut_3_line, .statut_3_line a {
     text-decoration: line-through
 }
 
@@ -801,7 +809,7 @@ select [name=user] {
 	display: none;
 }
 
-.status_classeur {
+.status_classeur, .status_document {
     display: inline-block;
     padding: 5px 10px;
     margin-bottom: 0;
@@ -1006,6 +1014,12 @@ select [name=user] {
 /* DataTable */
 #fulltable tr td, #validTable tr td {
 	vertical-align: middle;
+}
+
+#fulltable  a, #validTable a {
+	display: block;
+/*	color: #428bca;*/
+	text-decoration: none;
 }
 
 /* Sign document */

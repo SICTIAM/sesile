@@ -38,7 +38,11 @@
                         {% if is_granted('ROLE_SUPER_ADMIN') %}
                         <a href="{{ path("classeur_admin", {'id' : user.id }) }}" title="Voir les classeurs de l'utilisateur"><span class="glyphicon glyphicon-eye-open"></span></a>
                         {% endif %}
-                        <a class="" href="{{ path("user_delete", {'id' : user.id }) }}" title="Supprimer l'utilisateur">
+                        {#<a class="" href="{{ path("user_delete", {'id' : user.id }) }}" title="Supprimer l'utilisateur">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>#}
+
+                        <a href="#" title="Supprimer l'utilisateur" data-toggle="modal" data-target="#deleteUser" data-name="{{ user.prenom }} {{ user.nom }}" data-whatever="{{ path("user_delete", {'id' : user.id }) }}" >
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>
@@ -46,11 +50,34 @@
             {% endfor %}
             </tbody>
         </table>
+
         <a href="{{ path("ajout_user") }}">
             <button type="button" class="btn btn-default navbar-btn">
                 Ajouter un utilisateur
             </button>
         </a>
+
+        <!-- Pour la modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="deleteUser">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Supprimer l'utlisateur</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>&Ecirc;tes vous sur de supprimer cette utilisateur ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        <a type="button" class="btn btn-danger">Supprimer</a>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <!-- Fin de la modal -->
+
+
         <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
         <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
         <script type="text/javascript">
@@ -81,9 +108,23 @@
                 "sPaginationType": "full_numbers"
             });
 
-            $(".user-row").click(function () {
-                document.location.href = Routing.generate('user_edit', { id: $(this).data("id") });
+            $(".user-row td:not(.boutons_action)").click(function () {
+                document.location.href = Routing.generate('user_edit', { id: $(this).parent().data("id") });
             });
+
+
+            $('#deleteUser').on('show.bs.modal', function (event) {
+                console.log('coucou');
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var recipient = button.data('whatever'); // Extract info from data-* attributes
+                var collectivite = button.data('name'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                modal.find('.modal-title').text('Supprimer l\'utilisateur ' + collectivite);
+                modal.find('.modal-body input').val(recipient);
+                modal.find('.btn-danger').attr('href', recipient);
+            })
         </script>
     </div>
 {% endblock %}

@@ -38,10 +38,10 @@ class SOController extends Controller {
     }
 
     /**
- * @Route("/services-org/new", name="new_serviceorg")
- * @Method("GET")
- * @Template("SesileUserBundle:SO:new.html.twig")
- */
+     * @Route("/services-org/new", name="new_serviceorg")
+     * @Method("GET")
+     * @Template("SesileUserBundle:SO:new.html.twig")
+     */
     public function newAction()
     {
         // fonction pour la securite

@@ -2,22 +2,23 @@
  * Created by f.laussinot on 12/06/2015.
  * script utilisé pour la configuration des datables : affichage liste_a_valider et liste_retired
  */
+
+// Gestion de l affichage du bouton de signature par lot
+//console.log(".chk : " + $("chk").length);
+if ($(".chk").length == 0) {
+    $(".btn-sign-select").hide();
+}
+
+// Action au click du bouton de signature par lot
+$(".btn-valider-signer").one('click', function () {
+    $("#form_a_valider").attr("action", $(this).attr("data-action")).submit();
+});
+
 $.fn.dataTable.moment( 'DD/MM/YYYY' );
 
     // Fonction permettant le retour en haut de page lors du chargement d une nouvelle page
-    /*$(document).on('click', '#classeur-a-valider .paginate_button', function() {
-            console.log("OK Coral 4");
-            //console.log($("#liste_classeurs").position().top);
-            console.log("Scroll ValidTable : " + $("#liste_classeurs").position().top);
-            $("html, body").animate({ scrollTop: 0 }, "slow");
-            //$("html, body").animate({ scrollTop: $("#liste_classeurs").position().top }, "slow");
-            return false;
-        }
-    );*/
-
-    // Fonction permettant le retour en haut de page lors du chargement d une nouvelle page
     $(document).on('click', '#liste_classeurs .paginate_button', function() {
-            console.log("Scoll liste_classeurs de valid : " + $("#liste_classeurs").position().top);
+            // console.log("Scoll liste_classeurs de valid : " + $("#liste_classeurs").position().top);
             $("html, body").animate({ scrollTop: $("#liste_classeurs").position().top }, "slow");
             //$("html, body").scrollTop("#liste_classeurs");
             return false;
@@ -43,52 +44,57 @@ $.fn.dataTable.moment( 'DD/MM/YYYY' );
                 sLast: ""
             }
         },
-        order: [[ 1, "desc" ]],
+        order: [[ 2, "desc" ]],
         iDisplayLength: 15,
         aLengthMenu: [15, 30, 50, 100],
         sDom: 'lft<"footer_datatables"ip>',
         aoColumnDefs: [
             {
-                aTargets: [1,2,3,4],
+                aTargets: [2,3,4,5],
                 sClass: "center"
             },
             {
-                aTargets: [3],
+                aTargets: [4],
                 bSortable: false
-            },
-            {
-                aTargets: [5],
-                sClass: "center",
-                bSortable: true,
-                "mRender": function ( data, type, full ) {
-                    console.log('Full  : ' + data);
-                    return '<span class="glyphicon statut_' + data + '"><span class="hidden">' + data + '</span></span>';
-                }
             },
             {
                 aTargets: [6],
                 sClass: "center",
+                bSortable: true,
+                "mRender": function ( data, type, full ) {
+                    //console.log('Full  : ' + data);
+                    return '<span class="glyphicon statut_' + data + '"><span class="hidden">' + data + '</span></span>';
+                }
+            },
+            {
+                aTargets: [7],
+                sClass: "center",
                 bSortable: false,
                 "mRender": function ( data, type, full ) {
                     var retour = '<a class="col-sm-6" href="' + Routing.generate('classeur_edit', {id: data}) + '"><span class="glyphicon glyphicon-pencil" title="Editer le document"></span></a>';
-                    if (full[8] == 2) {
-                        retour += '<a class="col-sm-6"href="' + Routing.generate('visu', {id: full[7]}) + '"><span class="glyphicon glyphicon-eye-open" title="Voir le document"></span></a>';
+                    if (full[9] == 2) {
+                        retour += '<a class="col-sm-6"href="' + Routing.generate('visu', {id: full[8]}) + '"><span class="glyphicon glyphicon-eye-open" title="Voir le document"></span></a>';
                     }
                     return retour;
                 }
             },
             {
-                aTargets: [7,8],
+                aTargets: [8,9],
                 visible:false
+            },
+            {
+                aTargets: [0],
+                sClass: "center",
+                bSortable: false
             }
         ],
         sPaginationType: "full_numbers",
         fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
             $(nRow).addClass("classeur-row statut_"+aData[5]+"_line");
-            $(nRow).click(function (e) {
+            /*$(nRow).click(function (e) {
                 document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
-            });
+            });*/
             return nRow;
         },
         "fnDrawCallback": function (o) {
@@ -164,14 +170,12 @@ $.fn.dataTable.moment( 'DD/MM/YYYY' );
                     $(nRow).addClass("text-danger statut_"+aData[5]+"-line");
                     } */
                    $(nRow).addClass("classeur-row statut_"+aData[5]+"_line");
-                   $(nRow).click(function (e) {
+                   /*$(nRow).click(function (e) {
                        document.location.href = Routing.generate('classeur_edit', {id: aData[6]});
-                   });
+                   });*/
                    return nRow;
                }
            });
        }
 
     });
-
-

@@ -284,7 +284,9 @@ class DocumentController extends Controller
 
                 // Recup du doc pour utiliser SetaPDF
                 require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
-                $filename = 'uploads/docs/' . $doc->getRepourl();
+                //var_dump($this->container->getParameter('upload')['fics']);
+                //$filename = 'uploads/docs/' . $doc->getRepourl();
+                $filename = $this->container->getParameter('upload')['fics'] . $doc->getRepourl();
                 $document = \SetaPDF_Core_Document::loadByFilename($filename);
 
                 // Pour la première page
@@ -592,9 +594,10 @@ class DocumentController extends Controller
         $firstPage = $city->getPageSignature();
 
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
+        $classeurId = $doc->getClasseur()->getId();
 
 //        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, false, $imageSignature);
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $absSign, $ordSign, $firstPage, $imageSignature, $lastUser);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $absSign, $ordSign, $firstPage, $imageSignature, $lastUser, $classeurId);
         /* FIN SetaPDF */
     }
 
@@ -628,7 +631,7 @@ class DocumentController extends Controller
         $classeurId = $doc->getClasseur()->getId();
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $absSign, $ordSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $absSign, $ordSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser, $doc->getSigned());
         /* FIN SetaPDF */
     }
 
@@ -677,11 +680,11 @@ class DocumentController extends Controller
 
 
     /**
-     * @Route("/visu/{id}", name="visu",  options={"expose"=true})
+     * @Route("/visu/{id}/{ajax}", name="visu",  options={"expose"=true})
      * @Method("GET")
      * @Template()
      */
-    public function visuAction($id)
+    public function visuAction($id, $ajax = false)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -803,7 +806,18 @@ class DocumentController extends Controller
             $tabIdBord[] = $bordereau->id;
         }
 
-        return array('budget' => $PES->budget, 'signataire' => utf8_decode($PES->signataire), 'dateSign' => $PES->dateSign, 'bords' => $tabIdBord, 'idDoc' => $doc->getId());
+        return array(
+            'budget' => $PES->budget,
+            'signataire' => utf8_decode($PES->signataire),
+            'dateSign' => $PES->dateSign,
+            'bords' => $tabIdBord,
+            'idDoc' => $doc->getId(),
+            'ajax' => $ajax,
+            'user' => $user,
+            'classeur' => $entity,
+            'signable'  => $entity->isSignableAndLastValidant(),
+            'classeursId'  => urlencode(serialize($entity->getId()))
+        );
     }
 
     /**
@@ -916,7 +930,7 @@ class DocumentController extends Controller
         $dir = $param['fics'];
         $path = $dir . $doc->getRepourl();
         $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
-        $xml = simplexml_load_string($str);
+        $xml = simplexml_load_string($str, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
 
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {
@@ -967,7 +981,7 @@ class DocumentController extends Controller
         $dir = $param['fics'];
         $path = $dir . $doc->getRepourl();
         $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
-        $xml = simplexml_load_string($str);
+        $xml = simplexml_load_string($str, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
 
         $arrayPJ = array();
         if (isset($xml->PES_PJ)) {

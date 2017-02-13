@@ -144,6 +144,22 @@ class Classeur {
     private $ordreValidant;
 
     /**
+     * @var array
+     *
+     * Liste des types signables
+     */
+    private $typeSignable = array(
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+            'application/xml',
+            'text/plain'
+    );
+
+    /**
      * Get id
      *
      * @return integer
@@ -572,7 +588,6 @@ class Classeur {
 
     }
 
-//    public function isSignable(\Doctrine\ORM\EntityManager $em)
     public function isSignable()
     {
         if($this->getType()->getId() == 2){
@@ -593,29 +608,33 @@ class Classeur {
      * @return bool
      */
     public function isSignablePDF() {
-        //if($this->isAtLastValidant()){
-            // Type de fichier signable
-            $typeSignable = array(
-                'application/pdf',
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-                'application/xml',
-                'text/plain'
-            );
+        $docs = $this->getDocuments();
+
+        // Si au moins un document est signable alors le classeur peut etre signé
+        foreach($docs as $doc){
+            if(in_array($doc->getType(), $this->typeSignable)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Function pour tester si le classeur est signable
+     * @return bool
+     */
+    public function isSignableAndLastValidant() {
+        if($this->isAtLastValidant()){
 
             $docs = $this->getDocuments();
 
             // Si au moins un document est signable alors le classeur peut etre signé
             foreach($docs as $doc){
-                //if($doc->getType() == 'application/pdf'){
-                if(in_array($doc->getType(), $typeSignable)){
+                if(in_array($doc->getType(), $this->typeSignable)){
                     return true;
                 }
             }
-        //}
+        }
         return false;
     }
 

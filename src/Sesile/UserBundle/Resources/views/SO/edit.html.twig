@@ -38,10 +38,16 @@
                 <div id="circuit_etapes">
                     <div id="circuit_with_js">
                         <div id="contetapes">
-                            {% for etape in service.etapeGroupes %}
+                            {% for key, etape in service.etapeGroupes %}
 
                             <div class="well etapes-circuit">
-                                <div class="text-center"><h4>Etape de validation</h4></div>
+                                <div class="text-center"><h4>
+                                        {% if key == 0 %}
+                                            Étape déposante
+                                        {% else %}
+                                            Étape validante
+                                        {% endif %}
+                                    </h4></div>
                                 {#<input type="hidden" name="etape_id" value="{{ etape.id }}">#}
                                 <select class="selusers" multiple="multiple" style="width: 100%" data-etape="{{ etape.id }}" required="required">
                                     <optgroup label="Groupes d'utilisateurs">
@@ -111,8 +117,14 @@
                 $('#circuit_etapes').css('width', widthLine);
                 var widthScroll = $('.etapes-circuit').length * 292 + 143;
                 $('#circuit_with_js').css('width', widthScroll);
-//            console.log($('.etapes-circuit').length + ' ' + 'widthScroll : ' + widthScroll);
             }
+
+            // Fonction pour renommer les etapes
+            function renameEtape () {
+                $(".etapes-circuit h4").text("Étape validante");
+                $(".etapes-circuit h4:first").text("Étape déposante");
+            }
+            renameEtape ();
 
             // Sans bootstrap c'est la galère. Faut se gérer le rediementsionnement de la fenêtre à la mano...
             window.onresize = function(event) {
@@ -123,6 +135,7 @@
             $(document).on('click','#suppetape',function() {
                 $(this).parent().remove();
                 creerFleches();
+                renameEtape();
             });
 
 
@@ -188,6 +201,7 @@
 //                $("select.selusers").select2();
 
                 scrollFrisque();
+                renameEtape ();
                 function formatState (state) {
 
                     if (!state.id) { return state.text; }
@@ -201,7 +215,7 @@
                         return '<span data-toggle="popover" style="display: block" data-id="'+tabType[1]+'"><i class="fa fa-group"></i>&nbsp;&nbsp;'+ state.text+'</span>';
                     }
 
-                };
+                }
 
 
                 $("select.selusers").select2({
@@ -240,26 +254,11 @@
                 tolerance: "pointer",
                 stop: function (e, ui) {
                     creerFleches();
+                    renameEtape();
                 }
             }).disableSelection();
 
-            /*$(".selusers").select2();
 
-            // Pour le bouton de suppression de l etape
-            $(document).on('click','#suppetape',function() {
-                $(this).parent().remove();
-            });
-
-
-            $(document).on('click','#addetape',function(){
-                *//*
-                 A chaque fois qu'on clicque sur le bouton bleu une nouvelle etape de validation se crée
-                 *//*
-                $('#contetapes').append('' +
-                '<div class="col-lg-2 well etapes-circuit"><div class="text-center"><h4>Etape de validation</h4></div><select class="selusers" multiple="multiple" style="width: 100%" data-etape="0"><optgroup label="Groupes d\'utilisateurs">{% for userPack in userPacks %}<option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>{% endfor %}</optgroup><optgroup label="utilisateurs">{% for user in users %}<option value="user-{{ user.id }}" data-type="user">{{ user.prenom }} {{ user.nom }}</option>{% endfor %}</optgroup></select><button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-minus-sign"></span> Supprimer cette étape</button></div>');
-                $("select.selusers").select2();
-
-            });*/
             var tabGeneral = [];
             $('#form').submit(function(){
                 /*
@@ -295,12 +294,6 @@
                 $('#valeurs').val(JSON.stringify(tabGeneral));
 //                tabGeneral = [];
             });
-
-            /*$(function() {
-                $( "#contetapes" ).sortable({
-                    tolerance: "pointer"
-                }).disableSelection();
-            });*/
 
 
 

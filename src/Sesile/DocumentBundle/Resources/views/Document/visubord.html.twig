@@ -48,7 +48,7 @@
 </div>
 
 <div id="pliste">
-    <table id="ptable" class="table tableau">
+    <table id="ptable-{{ idDoc }}" class="table tableau">
         <thead>
         <tr>
             <th>N°Piece</th>
@@ -156,9 +156,10 @@
 
         $('.pj').click(function () {
             var idDoc = '{{ idDoc }}';
+            var pj_ext = $('.pj').text().split('.').pop().toUpperCase();
 
-            // Si l utilisateur est sur IE ou si cest un fichier zip alors on propose le téléchargement du document
-            if ( msieversion() || $('.pj').text().split('.').pop() == "zip") {
+            // Si l utilisateur est sur IE ou si ce n est pas un pdf alors on propose le téléchargement du document
+            if ( msieversion() || pj_ext != "PDF") {
                 window.open(Routing.generate('getpjie', {
                     'id': idDoc,
                     'bord': $('#bordx').val(),
@@ -188,7 +189,7 @@
 
 
         $(document).ready(function () {
-            oTable = $('#ptable').dataTable({
+            oTable = $('#ptable-{{ idDoc }}').dataTable({
                 "oLanguage": {
                     "sSearch": "Rechercher&nbsp;:",
                     "sInfo": "  _START_ &agrave; _END_ sur _TOTAL_",

@@ -118,7 +118,7 @@
                 {% if doc.classeur.status == 2 %}
                     <div class="row">
                         <div class="{% if orientationPDFFirst == "PORTRAIT" %}col-lg-6{% else %}col-lg-12{% endif %} col-md-12 text-center">
-                            <label>Emplacement du visa</label>
+                            <label class="pdf-label">Emplacement du visa</label>
                             {#<img src="data:image/jpg;base64,{{ doc.getPDFImage }}">#}
                             <input type="hidden" id="absVisa" value="{{ abscissesVisa }}" />
                             <input type="hidden" id="ordVisa" value="{{ ordonneesVisa }}" />
@@ -129,7 +129,7 @@
 
                         {% if signature is not null %}
                         <div class="{% if orientationPDFFirst == "PORTRAIT" %}col-lg-6{% else %}col-lg-12{% endif %} col-md-12 text-center">
-                            <label>Emplacement de la signature</label>
+                            <label class="pdf-label">Emplacement de la signature</label>
                             <div id="containmentSignature"></div>
                         </div>
                         {% endif %}
