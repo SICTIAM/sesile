@@ -1035,3 +1035,16 @@ select [name=user] {
 	margin-top: 0;
 	padding: 8px 8px 11px;
 }
+
+.btn-video-maj {
+	background-image: url("/images/btn_video_maj.jpg");
+	width: 140px;
+	height: 70px;
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 15px;
+}
+
+.btn-video-maj:hover {
+	background-position: bottom;
+}
