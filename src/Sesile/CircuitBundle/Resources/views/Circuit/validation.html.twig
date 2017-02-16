@@ -200,7 +200,7 @@
             {% endif %}
             // 42 c est la solution... et la taille de la flèche
             var widthScroll = $('.etapes-circuit').length * 292 + btn;
-            console.log("Yo : " + widthScroll);
+            //console.log("Yo : " + widthScroll);
             $('#circuit_with_js').css('width', widthScroll);
         }
 
@@ -401,9 +401,12 @@
         // Fonction pour afficher les bouton valider et signer ou cacher les boutons selon le nb etapes restantes
         function aff_button_valider () {
             //var c = document.getElementById("#contetapes").childNodes.length;
-            var nbEtapes = $('#contetapes').children('.etapes-circuit').length;
-//            console.log('nbEtapes : ' + nbEtapes);
-            //alert(nbEtapes);
+            {% if edit and classeur_status != 0 and classeur_status != 4 %}
+                var nbEtapes = $('#contetapes').children('.etapes-circuit').length;
+            {% else %}
+                var nbEtapes = $('#contetapes').children('.etapes-circuit').length + 1;
+            {% endif %}
+            //console.log('nbEtapes : ' + nbEtapes);
             //if(valid_sign == 0) {
             if(nbEtapes <= 1) {
                 $(".btn-valider-signer").css('display', 'inline-block');

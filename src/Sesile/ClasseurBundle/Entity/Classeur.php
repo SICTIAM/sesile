@@ -438,13 +438,13 @@ class Classeur {
 
     public function isAtLastValidant(){
         $ordreCircuit = $this->getOrdreEtape();
-        if($this->getStatus() != 0)
+        if($this->getStatus() != 0 && $this->getStatus() != 4)
         {
             $ordreCircuit++;
         }
-//        $ordreCircuit++;
         $nbEtapes = count($this->getEtapeClasseurs());
-        //var_dump($ordreCircuit,$nbEtapes);
+        //var_dump($ordreCircuit,$nbEtapes,"<br>");
+        //var_dump("Etape status : " . $this->getStatus() . "<br>");
         if ($ordreCircuit == $nbEtapes){
             return true;
         }
