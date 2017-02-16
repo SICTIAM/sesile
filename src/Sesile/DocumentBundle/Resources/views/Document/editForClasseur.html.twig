@@ -1,15 +1,14 @@
 <div id="doc">
     <div id="fichiers" class="dropzone"></div>
     <br>
-    {#{% if classeur.type.nom == 'Helios' %}#}
-    {% if classeur.type.id == 2 %}
+    {#{% if classeur.type.id == 2 %}
         {% if classeur.documents|length %}
         <a href="{{ path('visu', {'id':classeur.documents[0].id}) }}" class="btn btn-warning" role="button">
             <span class="glyphicon glyphicon-eye-open"></span>
             &nbsp;Visualiser
         </a>
         {% endif %}
-    {% endif %}
+    {% endif %}#}
     <div id="filedescription" style="display:none"></div>
 
 </div>
