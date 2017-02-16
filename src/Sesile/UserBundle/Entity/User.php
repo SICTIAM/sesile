@@ -4,6 +4,7 @@ namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
+use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -182,7 +183,7 @@ class User extends BaseUser {
 
     /**
      * @var
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="user", cascade={"remove"})
      */
     private $hierarchie;
 
@@ -978,4 +979,17 @@ class User extends BaseUser {
         return $this->userRole;
     }
 
+    /**
+     * Tells if the the given user is this user.
+     *
+     * Useful when not hydrating all fields.
+     *
+     * @param null|UserInterface $user
+     *
+     * @return boolean
+     */
+    public function isUser(UserInterface $user = null)
+    {
+        return null !== $user && $this->getId() === $user->getId();
+    }
 }

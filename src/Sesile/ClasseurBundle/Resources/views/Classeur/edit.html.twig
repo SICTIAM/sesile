@@ -75,9 +75,16 @@
         <br/>
 
         {# Affichage du document Helios #}
-        <div class="row">
-            <div id="documentvisu"></div>
-        </div>
+        {% if classeur.type.id == 2 and classeur.documents|length > 0 %}
+            <div class="row">
+                <div id="documentvisu"></div>
+            </div>
+
+            <div class="row">
+                <hr class="col-md-10 col-md-push-1">
+            </div>
+            <div class="row">&nbsp;</div>
+        {% endif %}
 
         <form id="form_edit" action="{{ path("classeur_update") }}" method="post">
             <input type="hidden" name="id" value="{{ classeur.id }}"/>
@@ -324,10 +331,6 @@
                 opacity: .5;
                 pointer-events: none;
             }
-
-             /*.top_selects_circuits {
-                 display: none !important;
-             }*/
 
         </style>
 
