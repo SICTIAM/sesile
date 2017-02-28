@@ -426,12 +426,26 @@ class DocumentController extends Controller
     public function downloadAction(Request $request, $id)
     {
 
-
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
-        // Ecriture de l'hitorique du document
+
+        // user courant
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+        $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
+        $usersdelegated[] = $this->getUser();
+
+        // Verification que l utilisateur a bien les droits
+        $usersForClasseur = $doc->getClasseur()->getVisible();
+
+        // Si l'utilisateur n a pas les droits, on l eject
+        if(!array_intersect($usersdelegated, $usersForClasseur->toArray())) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
         $id_user = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+
+        // Ecriture de l'hitorique du document
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
         $response = new Response();
