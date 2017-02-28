@@ -37,7 +37,8 @@ class DefaultController extends Controller
         }
         else if($this->get('security.context')->isGranted('ROLE_ADMIN')) {
             $em = $this->getDoctrine()->getManager();
-            $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->getRequest()->getSession()->get("collectivite"));
+//            $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->getRequest()->getSession()->get("collectivite"));
+            $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->get('session')->get("collectivite"));
             $users = $collectivite->getUsers();
         }
         else {

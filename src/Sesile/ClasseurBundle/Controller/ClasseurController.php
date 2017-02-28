@@ -531,8 +531,6 @@ class ClasseurController extends Controller {
         // envoi d'un mail au premier validant
         $this->sendCreationMail($classeur);
 
-        // TODO envoi du mail au déposant et aux autres personnes du circuit ?
-
 
         $error = false;
         if (!$error) {
