@@ -115,7 +115,15 @@
             </div>
 
             <div class="row">
-                <div class="documentvisu"></div>
+                <div class="documentvisu">
+                    {% if classeur.type.id == 2 %}
+                    <div class="row loadinggif">
+                        <div class="col-lg-3 col-lg-push-1">
+                            <img src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             <div class="row">
                 <hr class="col-md-10 col-md-push-1">
@@ -240,7 +248,20 @@
 
             {% if classeur.type.id == 2 and document|length > 0 %}
 
-                $('.infos-classeur-{{ classeur.id }} .documentvisu').load(Routing.generate('visu', {id: {{ classeur.documents[0].id }}, ajax: "true"}), function () {});
+                /*$('.infos-classeur-{{ classeur.id }} .documentvisu').load(
+                        Routing.generate('visu', {id: {{ classeur.documents[0].id }}, ajax: "true"}), function () {}
+                );*/
+
+                $.ajax({
+                    url: Routing.generate('visu', {id: {{ classeur.documents[0].id }}, ajax: "true"}),
+                    method: "GET",
+                    success: function (retourbak) {
+                        $('.infos-classeur-{{ classeur.id }} .documentvisu .loadinggif').hide();
+                        $('.infos-classeur-{{ classeur.id }} .documentvisu').empty();
+                        $('.infos-classeur-{{ classeur.id }} .documentvisu').append(retourbak);
+
+                    }
+                });
 
             {% endif %}
 

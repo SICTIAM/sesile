@@ -813,7 +813,7 @@ select [name=user] {
     display: inline-block;
     padding: 5px 10px;
     margin-bottom: 0;
-    margin-top: -15px;
+    margin-top: -8px;
     font-size: 12px;
     font-weight: normal;
     line-height: 1;
@@ -1047,4 +1047,8 @@ select [name=user] {
 
 .btn-video-maj:hover {
 	background-position: bottom;
+}
+
+.statut_refuse, .statut_cours, .statut_finalise, .statut_retire, .statut_retracte {
+	display: none;
 }

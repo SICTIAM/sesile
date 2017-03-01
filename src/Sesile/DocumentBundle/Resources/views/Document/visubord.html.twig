@@ -94,9 +94,9 @@
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuDivider"
                                 data-pieceselected="{{ loop.index-1 }}">
                                 {% for pj in p.listePJs %}
-                                    <li role="presentation"><a role="menuitem" class="pj"
-                                                               data-pjselected="{{ loop.index-1 }}" tabindex="-1"
-                                                               href="#">{{ pj.nom }}</a></li>
+                                    <li role="presentation" id="classeur-{{ idDoc }}">
+                                        <a role="menuitem" class="pj" data-pjselected="{{ loop.index-1 }}" tabindex="-1" href="#" data-classeur-id="{{ idDoc }}">{{ pj.nom }}</a>
+                                    </li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -154,15 +154,15 @@
             }
         }
 
-        $('.pj').click(function () {
-            var idDoc = '{{ idDoc }}';
+        $('#classeur-{{ idDoc }} .pj').click(function () {
+            var idDoc = $(this).data('classeur-id');
             var pj_ext = $('.pj').text().split('.').pop().toUpperCase();
 
             // Si l utilisateur est sur IE ou si ce n est pas un pdf alors on propose le téléchargement du document
             if ( msieversion() || pj_ext != "PDF") {
                 window.open(Routing.generate('getpjie', {
                     'id': idDoc,
-                    'bord': $('#bordx').val(),
+                    'bord': $('.bordx-' + idDoc).val(),
                     'piece': $(this).parent().parent().attr('data-pieceselected'),
                     'peji': $(this).attr('data-pjselected')
                 }));
@@ -174,7 +174,7 @@
                 $.ajax({
                     url: Routing.generate('getpj', {
                         'id': idDoc,
-                        'bord': $('#bordx').val(),
+                        'bord': $('.bordx-' + idDoc).val(),
                         'piece': $(this).parent().parent().attr('data-pieceselected'),
                         'peji': $(this).attr('data-pjselected')
                     }),
