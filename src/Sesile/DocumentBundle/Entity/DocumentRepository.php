@@ -265,7 +265,7 @@ class DocumentRepository extends EntityRepository
         if ($actions) {
             $texteVisa = "";
             foreach ($actions as $action) {
-                $texteVisa = "Signé électroniquement par " . $action->getUsername() . ' le ' . $action->getDate()->format('d/m/Y à H:i') . "\n";
+                $texteVisa = "Signé électroniquement  le " . $action->getDate()->format('d/m/Y à H:i') . "\npar ";
             }
         }
         else {
