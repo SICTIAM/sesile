@@ -156,7 +156,7 @@
 
         $('#classeur-{{ idDoc }} .pj').click(function () {
             var idDoc = $(this).data('classeur-id');
-            var pj_ext = $('.pj').text().split('.').pop().toUpperCase();
+            var pj_ext = $(this).text().split('.').pop().toUpperCase();
 
             // Si l utilisateur est sur IE ou si ce n est pas un pdf alors on propose le téléchargement du document
             if ( msieversion() || pj_ext != "PDF") {

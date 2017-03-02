@@ -1031,7 +1031,7 @@ class DocumentController extends Controller
 
         // On recupere l extension de la PJ
         $extension = explode('.', $PJName);
-        $PJextension = end($extension);
+        $PJextension = strtolower(end($extension));
 
         $response = new Response();
         /*$PJ = base64_encode(gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content)));
@@ -1040,21 +1040,22 @@ class DocumentController extends Controller
         $PJ = gzdecode(base64_decode($PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->content));
         //set headers
 
-        /* Download du PDF
-        $response->headers->set('Content-Type', 'mime/type');
-        $response->headers->set('Content-Disposition', 'attachment;filename=' . $PES->listBord[$bord]->listPieces[$piece]->listePJs[$peji]->nom[0]);
-        */
 
-        // Affichage du PDF dans un onglet
-        if ($PJextension != "zip") {
+        // Affichage du bordereau dans un onglet
+        if ($PJextension == "pdf") {
             $response->headers->set('Content-Type', 'application/pdf');
-            $response->headers->set('Content-Disposition', 'inline;filename=' . $PJName);
         }
         // Download des zip
+        else if ($PJextension == "zip") {
+            $response->headers->set('Content-Type', 'application/zip');
+        }
+        else if ($PJextension == "xhl") {
+            $response->headers->set('Content-Type', 'application/xhl');
+        }
         else {
             $response->headers->set('Content-Type', 'application/zip');
-            $response->headers->set('Content-disposition', 'inline;filename=' . $PJName);
         }
+        $response->headers->set('Content-disposition', 'inline;filename=' . $PJName);
 
 
         $response->setContent($PJ);
