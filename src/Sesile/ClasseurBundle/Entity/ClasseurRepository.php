@@ -497,7 +497,7 @@ class ClasseurRepository extends EntityRepository {
      * @param $request
      * @param $classeur
      */
-    public function updateInfosClasseurs($request, $id) {
+    /*public function updateInfosClasseurs($request, $id) {
         if (null !== $request && $request->isMethod('post')) {
             $em = $this->getEntityManager();
             $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
@@ -514,7 +514,7 @@ class ClasseurRepository extends EntityRepository {
 
             $em->flush();
         }
-    }
+    }*/
 
     /**
      * Fonction permettant la mise a jour de la visibilite
@@ -522,7 +522,7 @@ class ClasseurRepository extends EntityRepository {
      * @param $classeur
      * @param $visibilite
      */
-    public function set_user_visible ($classeur, $visibilite) {
+    /*public function set_user_visible($classeur, $visibilite) {
 //        $em = $this->getDoctrine()->getManager();
         $em = $this->getEntityManager();
         $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
@@ -571,6 +571,6 @@ class ClasseurRepository extends EntityRepository {
                 $classeur->addVisible($userVisible);
             }
         }
-    }
+    }*/
 
 }
