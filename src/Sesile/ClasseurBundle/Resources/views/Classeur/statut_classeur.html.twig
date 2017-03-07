@@ -16,7 +16,7 @@
     function callClasseurSatus_{{ classeur_id }}() {
         $.ajax({
             url: Routing.generate('status_classeur', {id: {{ classeur_id }}}),
-            async: true,
+            async: false,
             method: "GET",
             success: function (resp) {
 
