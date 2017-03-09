@@ -858,6 +858,19 @@ select [name=user] {
 
 
 
+.statut_1:before {
+	content: "\e023";
+}
+.statut_3:before {
+	content: "\e083";
+}
+.statut_4:before,
+.statut_0:before {
+	content: "\e107";
+}
+.statut_2:before {
+	content: "\e168";
+}
 
 
 
