@@ -1,9 +1,9 @@
 <div class="infos-classeur-{{ classeur_id }}">
-    <p class="status_classeur statut_refuse statut_0"><span class="glyphicon glyphicon-warning-sign"> </span> Classeur refusé</p>
-    <p class="status_classeur statut_cours statut_1"><span class="glyphicon glyphicon-time"> </span> Classeur en cours</p>
-    <p class="status_classeur statut_finalise statut_2"><span class="glyphicon glyphicon-saved"> </span> Classeur finalisé</p>
-    <p class="status_classeur statut_retire statut_3"><span class="glyphicon glyphicon-remove-sign"> </span> Classeur retiré</p>
-    <p class="status_classeur statut_retracte statut_4"><span class="glyphicon glyphicon-warning-sign"> </span> Classeur rétracté</p>
+    <p class="status_classeur statut_refuse status_classeur_0"><span class="glyphicon glyphicon-warning-sign"> </span> Classeur refusé</p>
+    <p class="status_classeur statut_cours status_classeur_1"><span class="glyphicon glyphicon-time"> </span> Classeur en cours</p>
+    <p class="status_classeur statut_finalise status_classeur_2"><span class="glyphicon glyphicon-saved"> </span> Classeur finalisé</p>
+    <p class="status_classeur statut_retire status_classeur_3"><span class="glyphicon glyphicon-remove-sign"> </span> Classeur retiré</p>
+    <p class="status_classeur statut_retracte status_classeur_4"><span class="glyphicon glyphicon-warning-sign"> </span> Classeur rétracté</p>
 </div>
 
 <script>
@@ -23,7 +23,7 @@
                 // On cache tous les stats du classeur
                 $(".infos-classeur-{{ classeur_id }} .status_classeur").hide();
                 // On affiche le statut courant
-                $(".infos-classeur-{{ classeur_id }} .statut_" + resp).show();
+                $(".infos-classeur-{{ classeur_id }} .status_classeur_" + resp).show();
 
 
                 if ($(".status_classeur.statut_finalise").filter(":hidden").length == 0 && status_init != 2) {
