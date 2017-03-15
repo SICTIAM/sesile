@@ -1,5 +1,6 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {{ form_start(form) }}
+
 <div class="label_form label-form-input">
     {{ form_label(form.Prenom, 'Prénom') }}
     {{ form_widget(form.Prenom) }}
@@ -102,7 +103,8 @@
 </div>
 <br/>
 
-<button class="btn btn-success" type="submit">Mettre à jour</button>
+{#<button class="btn btn-success" type="submit">Mettre à jour</button>#}
+{{ form_widget(form.submit, {'attr': {'class': 'btn btn-success'}}) }}
 
 {{ form_end(form) }}
 

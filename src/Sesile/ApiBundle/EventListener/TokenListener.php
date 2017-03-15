@@ -5,6 +5,8 @@ namespace Sesile\ApiBundle\EventListener;
 use Sesile\ApiBundle\Controller\TokenAuthenticatedController;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Doctrine\ORM\EntityManager;
 
 class TokenListener
 {
@@ -13,7 +15,7 @@ class TokenListener
     private $sc = null;
 
 
-    public function __construct(\Doctrine\ORM\EntityManager $oEntityManager, \Symfony\Component\Security\Core\SecurityContext $oSecurityContext)
+    public function __construct(EntityManager $oEntityManager, TokenStorage $oSecurityContext)
     {
         $this->em = $oEntityManager;
         $this->sc = $oSecurityContext;

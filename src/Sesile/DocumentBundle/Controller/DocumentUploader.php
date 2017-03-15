@@ -201,7 +201,7 @@ class DocumentUploader extends AbstractController
      *
      * @return JsonResponse
      */
-    protected function createSupportedJsonResponse($data)
+    protected function createSupportedJsonResponse($data, $statusCode = 200)
     {
         $request = $this->container->get('request');
         $response = new JsonResponse($data);

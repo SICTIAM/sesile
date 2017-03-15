@@ -16,10 +16,12 @@ use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Model\UserInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
+//use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -34,7 +36,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ProfileController extends ContainerAware
+class ProfileController extends Controller
 {
 
     /**
@@ -44,7 +46,7 @@ class ProfileController extends ContainerAware
     public function showAction()
     {
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             $this->container->get('session')->getFlashBag()->add(
                 "error",
@@ -65,6 +67,7 @@ class ProfileController extends ContainerAware
     {
         $user = new User();
         $user = $this->container->get('security.context')->getToken()->getUser();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
@@ -141,7 +144,7 @@ class ProfileController extends ContainerAware
 
                     //binding au serveur LDAP
                     if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
-                    //@ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
+                        //@ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"]);
 
                         $oldPass = base64_encode(pack('H*', md5(trim($form->get('password')->getData()))));
 
@@ -195,7 +198,7 @@ class ProfileController extends ContainerAware
                             echo "pb rename ldap";
                             exit;
                         }
-                    /* FIN Test sur LDAP */
+                        /* FIN Test sur LDAP */
                     } else {
                         echo "LDAP bind failed...";
                         exit;
@@ -217,7 +220,7 @@ class ProfileController extends ContainerAware
         }
 
         return $this->container->get('templating')->renderResponse(
-            'FOSUserBundle:Profile:edit.html.' . $this->container->getParameter('fos_user.template.engine'),
+            'FOSUserBundle:Profile:edit.html.twig',
             array('form' => $form->createView(), 'user' => $user)
         );
     }

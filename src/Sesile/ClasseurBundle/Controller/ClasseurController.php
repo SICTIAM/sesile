@@ -610,7 +610,7 @@ class ClasseurController extends Controller {
         }
 
         // Si le user n est pas un super admin ou un user avec des droits de delgations ou un user du circuit
-        if ((!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants) && !$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        if ((!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants) && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $this->get('session')->getFlashBag()->add(
                 'error',
                 "Vous n'avez pas accès à ce classeur"
@@ -1264,7 +1264,7 @@ class ClasseurController extends Controller {
      */
     public function signAction(Request $request, $id, $role = null)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         if($request->request->get('circuit')) {
@@ -1348,7 +1348,7 @@ class ClasseurController extends Controller {
      */
     public function signDocJwsAction(Request $request, $id, $role = null)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         // Connexion a la BDD
         $em = $this->getDoctrine()->getManager();
@@ -1422,7 +1422,7 @@ class ClasseurController extends Controller {
             );
             return $this->redirect($this->generateUrl('index_valider'));
         }
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         // Connexion a la BDD
         $em = $this->getDoctrine()->getManager();
@@ -1464,7 +1464,7 @@ class ClasseurController extends Controller {
     public function signPdfDocAction(Request $request, $id)
     {
         //var_dump($request->get("moncul"));exit;
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         if($request->request->get('circuit')) {
@@ -1538,7 +1538,7 @@ class ClasseurController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         // User courant
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         // MAJ de l etat de la visibilité, nom, description, date de validation
 //        $em->getRepository('SesileClasseurBundle:Classeur')->updateInfosClasseurs($request, $ids);
@@ -1627,7 +1627,7 @@ class ClasseurController extends Controller {
 
 
         // Récupération des infos du user
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $arguments[] = ($user->getPays() === null) ? "Non renseigné" : $user->getPays();
         $arguments[] = ($user->getVille() === null) ? "Non renseignée" : $user->getVille();
         $arguments[] = ($user->getCp() === null) ? "Non renseigné" : $user->getCp();
