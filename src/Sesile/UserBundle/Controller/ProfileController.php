@@ -169,7 +169,7 @@ class ProfileController extends Controller
 
                 if (($passwordLDAP == $oldPass) && $pwd) {
 
-                    $user->setPlainPassword($pwd);
+                    //$user->setPlainPassword($pwd);
                     $entry["userPassword"] = "{MD5}" . base64_encode(pack('H*', md5($pwd)));
                     $this->get('session')->getFlashBag()->add('notice', 'Votre mot de passe a été modifié.');
 
