@@ -9,16 +9,19 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Doctrine\ORM\EntityManager;
 
 class RouteListener {
     private $em = null;
     private $context = null;
     private $container = null;
 
-    public function __construct(\Doctrine\ORM\EntityManager $em, SecurityContext $context, ContainerInterface $container) {
+    public function __construct(EntityManager $em, TokenStorage $context, ContainerInterface $container, AuthorizationChecker $authorization) {
         $this->em = $em;
         $this->context = $context;
+        $this->authorization = $authorization;
         $this->container = $container;
     }
 
@@ -43,9 +46,9 @@ class RouteListener {
             $session->set('logo', $collectivite->getImage());
 
             // check si le user est connecté, si oui il faut vérif s'il appartient à la collectivité (sinon on le dégage à coups de pied au cul)
-            if ($this->context->isGranted('ROLE_USER')) {
+            if ($this->authorization->isGranted('ROLE_USER')) {
                 // la restriction ne concerne pas les super_admin
-                if (!$this->context->isGranted('ROLE_SUPER_ADMIN')) {
+                if (!$this->authorization->isGranted('ROLE_SUPER_ADMIN')) {
                     $user = $this->context->getToken()->getUser();
                     if($user->getCollectivite() != $collectivite) {
 

@@ -20,7 +20,6 @@ class classeurMigrateV2Command extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        $em = $this->getDoctrine()->getManager();
         $em = $this->getContainer()->get('doctrine')->getManager();
         $types = $em->getRepository("SesileClasseurBundle:Classeur")->findAll();
         if($types !== null)
@@ -47,25 +46,6 @@ class classeurMigrateV2Command extends ContainerAwareCommand
         else {
             $output->writeln('Visibilité non modifiable');
         }
-
-        // Attribution des groupes
-        /*$groupes = $em->getRepository("SesileUserBundle:Groupe")->findAll();
-
-        if($groupes !== null) {
-            $type = $em->getRepository("SesileClasseurBundle:TypeClasseur")->findOneById('2');
-            foreach($groupes as $groupe) {
-                $groupe->addType($type);
-                $type->addGroupe($groupe);
-            }
-            $em->persist($groupe);
-            $em->persist($type);
-            $em->flush();
-
-            $output->writeln('Les types de groupes ont été modifiées');
-        }
-        else {
-            $output->writeln('Les types de groupes sont non modifiable');
-        }*/
 
 
     }

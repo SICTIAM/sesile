@@ -31,7 +31,7 @@ class DefaultController extends Controller
         // Si l utlisateur n est pas actif
         if (is_object($this->getUser()) && !$this->getUser()->isEnabled()) {
 
-            $this->get('security.context')->setToken(null);
+            $this->get('security.token_storage')->setToken(null);
             $this->get('request')->getSession()->invalidate();
             $this->get('session')->getFlashBag()->add(
                 'warning',

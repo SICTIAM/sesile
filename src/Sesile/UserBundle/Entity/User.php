@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\ContainerAware;
+//use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
  * User
@@ -324,7 +324,8 @@ class User extends BaseUser {
      */
     public function removeUpload($Dirpath) {
 
-        if ($file = $Dirpath . $this->path) {
+        $file = $Dirpath . $this->path;
+        if (is_file($file)) {
             unlink($file);
         }
     }
@@ -922,7 +923,8 @@ class User extends BaseUser {
      */
     public function removeUploadSignature($Dirpath) {
 
-        if ($file = $Dirpath . $this->pathSignature) {
+        $file = $Dirpath . $this->pathSignature;
+        if (is_file($file)) {
             unlink($file);
         }
     }

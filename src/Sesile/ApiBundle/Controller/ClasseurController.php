@@ -785,24 +785,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         }
     }
 
-    /*private function sendCreationMail($classeur)
-    {
-        $body = $this->renderView('SesileClasseurBundle:Mail:nouveau.html.twig',
-            array(
-                'deposant' => $classeur->getUser(),
-                'titre_classeur' => $classeur->getNom(),
-                'date_limite' => $classeur->getValidation(),
-                "lien" => $this->generateUrl('classeur_edit', array('id' => $classeur->getId()))
-            )
-        );
-
-        $em = $this->getDoctrine()->getManager();
-        $validant_obj = $em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
-
-        if ($validant_obj != null) {
-            $this->sendMail("SESILE - Nouveau classeur à valider", $validant_obj->getEmail(), $body);
-        }
-    }*/
 
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();

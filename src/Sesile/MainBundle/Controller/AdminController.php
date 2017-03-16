@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Yaml\Yaml;
@@ -23,10 +26,7 @@ class AdminController extends Controller
      *
      */
     public function messageAccueilAction(Request $request) {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            // Sinon on déclenche une exception « Accès interdit »
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
+
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $msg_accueil = $coll->getMessage();
@@ -46,10 +46,7 @@ class AdminController extends Controller
      * @Template("SesileMainBundle:Preferences:notifications.html.twig")
      */
     public function notificationsAction(Request $request) {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            // Sinon on déclenche une exception « Accès interdit »
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
+
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $txtrefuse = $coll->getTextmailrefuse();
@@ -97,11 +94,6 @@ class AdminController extends Controller
         $DirPath = $upload['logo_coll'];
 
 
-        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
-
-
         $entity = new Collectivite();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -140,7 +132,7 @@ class AdminController extends Controller
             $post->ttl = 60;
             $api->post('/domain/zone/'.$ovh->zone.'/record',$post);
 
-            $user = $this->container->get('security.context')->getToken()->getUser();
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
             /**
              * on prévient les devs
@@ -175,10 +167,6 @@ class AdminController extends Controller
      */
     public function editCollectiviteAction($id)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            // Sinon on déclenche une exception « Accès interdit »
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SesileMainBundle:Collectivite')->find($id);
@@ -255,10 +243,6 @@ class AdminController extends Controller
     public function deleteCollectiviteAction($id)
     {
 
-        // Test pour savoir si le user c est pas égaré...
-        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
         /*
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
@@ -301,12 +285,12 @@ class AdminController extends Controller
 
     private function createCreateForm(Collectivite $entity)
     {
-        $form = $this->createForm(new CollectiviteType(), $entity, array(
+        $form = $this->createForm(CollectiviteType::class, $entity, array(
             'action' => $this->generateUrl('new_collectivite'),
             'method' => 'POST',
         ));
-        $form->add('domain', 'text', array("label" => "Domaine"));
-        $form->add('submit', 'submit', array('label' => 'Enregistrer'));
+        $form->add('domain', TextType::class, array("label" => "Domaine"));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         return $form;
     }
 
@@ -317,12 +301,12 @@ class AdminController extends Controller
      * @return \Symfony\Component\Form\Form The form
      */
     private function createEditForm(Collectivite $entity) {
-        $form = $this->createForm(new CollectiviteType(), $entity, array(
+        $form = $this->createForm(CollectiviteType::class, $entity, array(
             'action' => $this->generateUrl('update_collectivite', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-        $form->add('domain', 'text', array("label" => "Domaine","disabled"=>true));
-        $form->add('submit', 'submit', array('label' => 'Enregistrer'));
+        $form->add('domain', TextType::class, array("label" => "Domaine","disabled"=>true));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         return $form;
     }
 
@@ -335,7 +319,7 @@ class AdminController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('delete_collectivite', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Supprimer'))
+            ->add('submit', SubmitType::class, array('label' => 'Supprimer'))
             ->getForm();
     }
 
@@ -344,20 +328,16 @@ class AdminController extends Controller
      * Liste des collectivités
      *
      * @Route("/mailing", name="index_emailing")
-     * @Template("")
+     * @Template("SesileMainBundle:Admin:indexMailing.html.twig")
      */
     public function indexMailingAction(Request $request) {
-
-        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
 
         // Creation du formulaire pour la saisie des informations
         $defaultData = array('message' => 'Taper votre message');
         $form = $this->createFormBuilder($defaultData)
-            ->add('sujet', 'text')
-            ->add('mailMessage', 'textarea', array('label' => "Corps du message", 'required' => false))
-            ->add('submit', 'submit', array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
+            ->add('sujet', TextType::class)
+            ->add('mailMessage', TextareaType::class, array('label' => "Corps du message", 'required' => false))
+            ->add('submit', SubmitType::class, array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
             ->getForm();
 
         $form->handleRequest($request);
