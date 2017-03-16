@@ -115,7 +115,7 @@
 
 
             {% else %}
-                <a class="btn btn-success" href="{{ path("login_check") }}">Connexion</a>
+                <a class="btn btn-success" href="{{ path("classeur") }}">Connexion</a>
             {% endif %}
         </div>
 
@@ -141,9 +141,7 @@
                             <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
                             <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
 
-                            {% render url("delegations_all_list") %}
-                            <object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0"
-                                    style="display: none;"></object>
+                            {#<object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0" style="display: none;"></object>#}
                             <div id="classeurs_a_valider">
                                 <div class="titre_bloc_accueil">
                                     <span class="glyphicon glyphicon-edit"></span>
@@ -153,7 +151,6 @@
                                 <div id="classeur-a-valider">
                                     <img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
                                 </div>
-                                {#{% render url("classeur_a_valider") %}#}
 
                             </div>
                             <div id="liste_classeurs">
@@ -226,7 +223,6 @@
 
         /*$('#liste-classeurs').load("{{ path("liste_classeurs") }}");*/
         $('#classeur-a-valider').load("{{ path("classeur_a_valider") }}");
-        {#{% render url("liste_classeurs") %}#}
     });
 
 

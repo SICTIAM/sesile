@@ -55,10 +55,10 @@ security:
 
     firewalls:
         dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            path:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
         secured_area:
-            pattern:    ^/
+            path:    ^/
             anonymous: true
             provider: webservice
             logout:

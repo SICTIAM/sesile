@@ -16,16 +16,30 @@ security:
             pattern:    ^/
             anonymous: true
             provider: webservice
+            trusted_sso:
+                manager: admin_sso
+                provider: webservice
+                login_action: false #BeSimpleSsoAuthBundle:TrustedSso:login
+                logout_action: false #BeSimpleSsoAuthBundle:TrustedSso:logout
+                create_users: false
+                created_users_roles: [ROLE_USER, ROLE_ADMIN]
+#                default_target_path: index
+                always_use_default_target_path: false
+                login_path: /login
+                check_path: /
             logout:
-                success_handler: security.logout.success_handler
-            cas:
-                cas_server: sso.dev.sictiam.fr
-                cas_port: 443
-                cas_path: /
-                ca_cert_path: ~
-                cas_protocol: '2.0'
-                cas_mapping_attribute:
-                check_path: /login_check
+                path: /logout
+
+        #            logout:
+        #                success_handler: security.logout.success_handler
+        #            cas:
+        #                cas_server: sso.dev.sictiam.fr
+        #                cas_port: 443
+        #                cas_path: /
+        #                ca_cert_path: ~
+        #                cas_protocol: '2.0'
+        #                cas_mapping_attribute:
+        #                check_path: /login_check
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN]
@@ -39,8 +53,12 @@ security:
         - { path: ^/classeur/liste-classeurs-admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/classeur/liste_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/delegation, roles: ROLE_USER }
+        - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/mailing, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/user, roles: ROLE_ADMIN }
         - { path: ^/circuit, roles: ROLE_USER }
         - { path: ^/classeur, roles: ROLE_USER }
         - { path: ^/doc, roles: ROLE_USER }
+        - { path: ^/preferences/message, roles: ROLE_ADMIN }
+        - { path: ^/preferences/notifications, roles: ROLE_ADMIN }

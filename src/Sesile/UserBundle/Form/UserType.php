@@ -3,8 +3,16 @@
 namespace Sesile\UserBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 
 
@@ -17,32 +25,36 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', 'email', array('label' => 'Email', 'label_attr' => array('class' => 'sesile_userbundle_user_username_label')))
-            ->add('email', 'hidden')
-            ->add('Nom', 'text')
-            ->add('Prenom', 'text', array('label' => 'Prénom'))
-            ->add('ville', 'text', array('required' => false,))
-            ->add('cp', 'text', array('label' => 'Code Postal', 'required' => false,))
-            ->add('departement', 'text', array('label' => 'Département', 'required' => false,))
-            ->add('pays', 'text', array('required' => false,))
-            //->add('role', 'text', array('label' => 'Rôle', 'required' => true))
-            ->add('userRole', 'collection', array(
+            ->add('username', EmailType::class, array('label' => 'Email', 'label_attr' => array('class' => 'sesile_userbundle_user_username_label')))
+            ->add('email', HiddenType::class)
+            ->add('Nom', TextType::class)
+            ->add('Prenom', TextType::class, array('label' => 'Prénom'))
+            ->add('ville', TextType::class, array('required' => false,))
+            ->add('cp', TextType::class, array('label' => 'Code Postal', 'required' => false,))
+            ->add('departement', TextType::class, array('label' => 'Département', 'required' => false,))
+            ->add('pays', TextType::class, array('required' => false,))
+            ->add('userRole', CollectionType::class, array(
                 'label' => '',
-                'type' => new UserRoleType(),
+                'entry_type' => UserRoleType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
-                'options' => array('attr' => array('class' => ''))))
+                'entry_options' => array('attr' => array('class' => ''))))
 //                ))
-            ->add('qualite', 'textarea', array('label' => 'Qualité', 'required' => false, 'max_length' => 250, 'attr' => array('cols' => '37', 'class' => 'qualite'), 'label_attr' => array('class' => 'label_form_textarea')))
-            ->add('enabled', null, array('label' => 'Activé', 'required' => false))
-            ->add('apiactivated', 'checkbox', array('label' => 'API', 'required' => false))
-            ->add('apitoken', 'text', array('read_only' => true))
-            ->add('apisecret', 'text', array('read_only' => true))
-            ->add('file', 'file', array('label' => 'Avatar',
+            ->add('qualite', TextareaType::class, array('label' => 'Qualité', 'required' => false, 'max_length' => 250, 'attr' => array('cols' => '37', 'class' => 'qualite'), 'label_attr' => array('class' => 'label_form_textarea')))
+//            ->add('enabled', null, array('label' => 'Activé', 'required' => false))
+            ->add('enabled', CheckboxType::class, array('label' => 'Activé', 'required' => false))
+            /*->add('enabled', ChoiceType::class, array(
+                'choices' => array(true => 'Activé', false => 'Désactivé'),
+                'choices_as_values' => false
+                ))*/
+            ->add('apiactivated', CheckboxType::class, array('label' => 'API', 'required' => false))
+            ->add('apitoken', TextType::class, array('attr' => array('readonly')))
+            ->add('apisecret', TextType::class, array('attr' => array('readonly')))
+            ->add('file', FileType::class, array('label' => 'Avatar',
                 'data_class' => null,
                 'required' => false,
             ))
-            ->add('fileSignature', 'file', array('label' => 'Signature',
+            ->add('fileSignature', FileType::class, array('label' => 'Signature',
                 'data_class' => null,
                 'required' => false,
             ));
@@ -50,9 +62,9 @@ class UserType extends AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Sesile\UserBundle\Entity\User'
@@ -62,7 +74,7 @@ class UserType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sesile_userbundle_user';
     }

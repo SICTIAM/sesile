@@ -3,8 +3,9 @@
 namespace Sesile\UserBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserRoleType extends AbstractType
 {
@@ -15,15 +16,15 @@ class UserRoleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('userRoles', 'text', array('label' => 'Rôle utilisateur', 'attr' => array('class' => 'col-md-5 col-sm-5 col-xs-5'), 'label_attr' => array('class' => 'col-md-5 col-sm-5 col-xs-5')))
+            ->add('userRoles', TextType::class, array('label' => 'Rôle utilisateur', 'attr' => array('class' => 'col-md-5 col-sm-5 col-xs-5'), 'label_attr' => array('class' => 'col-md-5 col-sm-5 col-xs-5')))
             ->add('user')
         ;
     }
     
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Sesile\UserBundle\Entity\UserRole'
@@ -33,7 +34,7 @@ class UserRoleType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sesile_userbundle_userrole';
     }

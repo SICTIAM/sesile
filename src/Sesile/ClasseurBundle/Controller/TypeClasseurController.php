@@ -44,20 +44,10 @@ class TypeClasseurController extends Controller
      *
      */
     public function newAction(Request $request) {
-        /*$em = $this->getDoctrine()->getManager();
-        $groupes = $em->getRepository('SesileUserBundle:Groupe')->findByType(0);
-        $templates = array(
-            array("id" => 1, "nom" => "elclassico")
-        );
-        return array(
-            'groupes' => $groupes,
-            'templates' => $templates,
-            "menu_color" => "vert"
-        );*/
 
         $typeClasseur = new TypeClasseur();
 
-        $form = $this->createForm(new TypeClasseurType(), $typeClasseur);
+        $form = $this->createForm(TypeClasseurType::class, $typeClasseur);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();

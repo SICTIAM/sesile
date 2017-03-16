@@ -15,7 +15,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -28,9 +27,6 @@ class SOController extends Controller {
      */
     public function indexAction()
     {
-        // fonction pour la securite
-        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
-
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $servOrg = $em->getRepository('SesileUserBundle:Groupe')->findByCollectivite($collectivite);
@@ -44,8 +40,6 @@ class SOController extends Controller {
      */
     public function newAction()
     {
-        // fonction pour la securite
-        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
 
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
@@ -213,8 +207,6 @@ class SOController extends Controller {
      */
     public function editAction($id)
     {
-        // fonction pour la securite
-        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -421,8 +413,6 @@ class SOController extends Controller {
      * @Template()
      */
     public function deleteAction($id) {
-        // fonction pour la securite
-        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
 
         // On recupere l enregistrement a supprimer
         $em = $this->getDoctrine()->getManager();
@@ -441,15 +431,6 @@ class SOController extends Controller {
         $this->get('session')->getFlashBag()->add('success', 'Le service organisationnel a bien été supprimé');
         return $this->redirect($this->generateUrl('servicesorg'));
 
-    }
-
-    private function securityContext() {
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
 }

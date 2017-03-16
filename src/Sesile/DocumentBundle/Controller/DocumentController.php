@@ -2,7 +2,7 @@
 
 namespace Sesile\DocumentBundle\Controller;
 
-use Sabre\VObject\Property\DateTime;
+//use Sabre\VObject\Property\DateTime;
 use Sesile\DocumentBundle\Entity\DocumentDetachedSign;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -275,7 +275,7 @@ class DocumentController extends Controller
             } else{
                 $signature = null;
             }
-            $city = $this->get('security.context')->getToken()->getUser()->getCollectivite();
+            $city = $this->get('security.token_storage')->getToken()->getUser()->getCollectivite();
 
 
 
@@ -283,7 +283,7 @@ class DocumentController extends Controller
             if ($doc->getClasseur()->getStatus() == 2 && $doc->getType() == "application/pdf") {
 
                 // Recup du doc pour utiliser SetaPDF
-                require($this->container->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+//                require($this->get('kernel')->getRootDir() . '/../vendor/setasign/setapdf-stamper/library/SetaPDF/Autoload.php');
                 //var_dump($this->container->getParameter('upload')['fics']);
                 //$filename = 'uploads/docs/' . $doc->getRepourl();
                 $filename = $this->container->getParameter('upload')['fics'] . $doc->getRepourl();
@@ -442,7 +442,7 @@ class DocumentController extends Controller
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
 
-        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
 
         // Ecriture de l'hitorique du document
@@ -476,7 +476,7 @@ class DocumentController extends Controller
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
@@ -557,12 +557,13 @@ class DocumentController extends Controller
     public function downloadVisaAction($id, $absVisa = 10, $ordVisa = 10)
     {
 
-        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+//        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+//        require($this->get('kernel')->getRootDir() . '/../vendor/setasign/setapdf-stamper/library/SetaPDF/Autoload.php');
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
@@ -587,12 +588,13 @@ class DocumentController extends Controller
      *
      */
     public function downloadSignAction($id, $absSign = 10, $ordSign = 10) {
-        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+//        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+//        require($this->get('kernel')->getRootDir() . '/../vendor/setasign/setapdf-stamper/library/SetaPDF/Autoload.php');
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
@@ -620,12 +622,13 @@ class DocumentController extends Controller
      *
      */
     public function downloadAllAction($id, $absVisa = 10, $ordVisa = 10, $absSign = 10, $ordSign = 10) {
-        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+//        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
+//        require($this->get('kernel')->getRootDir() . '/../vendor/setasign/setapdf-stamper/library/SetaPDF/Autoload.php');
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
@@ -685,7 +688,7 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Edition du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
@@ -718,7 +721,7 @@ class DocumentController extends Controller
             }
         }
 
-        if (!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants && !$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        if (!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $this->get('session')->getFlashBag()->add(
                 'error',
                 "Vous n'avez pas accès à ce classeur"
@@ -729,7 +732,7 @@ class DocumentController extends Controller
 
 
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.context')->getToken()->getUser()->getId();
+        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Visualisation du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 

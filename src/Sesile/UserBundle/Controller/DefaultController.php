@@ -6,10 +6,15 @@ use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\UserPack;
 use Sesile\UserBundle\Entity\UserRole;
 use Sesile\UserBundle\Form\UserRoleType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +25,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
-//use vendor\symfony\src\Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
+//use Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
+//use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DefaultController extends Controller
@@ -31,11 +36,11 @@ class DefaultController extends Controller
      * @Template("SesileUserBundle:Default:index.html.twig")
      */
     public function listAction() {
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $userManager = $this->get('fos_user.user_manager');
             $users = $userManager->findUsers();
         }
-        else if($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        else if($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             $em = $this->getDoctrine()->getManager();
 //            $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->getRequest()->getSession()->get("collectivite"));
             $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->get('session')->get("collectivite"));
@@ -61,10 +66,6 @@ class DefaultController extends Controller
 
         $LdapInfo = $this->container->getParameter('ldap');
 
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            // Sinon on déclenche une exception « Accès interdit »
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
         $entity = new User();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -88,7 +89,7 @@ class DefaultController extends Controller
 
                 if (empty($userObj)) {
                     $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
-                    if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+                    if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
                         $entity->setCollectivite($collectivite);
                     }
                     $entity->setEmail($form->get('username')->getData());
@@ -177,10 +178,7 @@ class DefaultController extends Controller
      */
     public function editAction($id)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            // Sinon on déclenche une exception « Accès interdit »
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
-        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SesileUserBundle:User')->find($id);
@@ -263,7 +261,7 @@ class DefaultController extends Controller
                     }
                     $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
 
-                    if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+                    if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
                         $entity->setCollectivite($collectivite);
                     }
 
@@ -345,7 +343,7 @@ class DefaultController extends Controller
     public function deleteAction(Request $request, $id)
     {
         // On vérifie si l'utitilateur est bien admin
-        if (!$this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             // Sinon on déclenche une exception « Accès interdit »
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
@@ -426,8 +424,6 @@ class DefaultController extends Controller
     public function userPackIndexAction()
     {
 
-        // fonction pour la securite
-        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
 
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
@@ -444,9 +440,6 @@ class DefaultController extends Controller
      */
     public function userPackNewAction()
     {
-        // fonction pour la securite
-        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
-
         $em = $this->getDoctrine()->getManager();
         $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
         $users = $em->getRepository('SesileUserBundle:User')->findBy(array('collectivite' => $collectivite), array('Nom' => 'ASC'));
@@ -545,9 +538,6 @@ class DefaultController extends Controller
      */
     public function userPackEditAction($id)
     {
-
-        // fonction pour la securite
-        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
 
         $em = $this->getDoctrine()->getManager();
         $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
@@ -689,9 +679,6 @@ class DefaultController extends Controller
      */
     public function deleteUserPackAction($id) {
 
-        // fonction pour la securite
-        if(!$this->securityContext()) { return new RedirectResponse($this->container->get('router')->generate('index')); }
-
         // On recupere l enregistrement a supprimer
         $em = $this->getDoctrine()->getManager();
         $userPack = $em->getRepository('SesileUserBundle:UserPack')->findOneById($id);
@@ -731,15 +718,6 @@ class DefaultController extends Controller
     }
 
 
-    private function securityContext() {
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
 
 
     /**
@@ -751,51 +729,61 @@ class DefaultController extends Controller
      */
     private function createCreateForm(User $entity)
     {
-        $form = $this->createForm(new UserType(), $entity, array(
+        $form = $this->createForm(UserType::class, $entity, array(
             'action' => $this->generateUrl('ajout_user'),
             'method' => 'POST',
         ));
-        $form->add('plainPassword', 'repeated', array(
-            'type' => 'password',
+        $form->add('plainPassword', RepeatedType::class, array(
+            'type' => PasswordType::class,
             'required' => true,
             'options' => array('translation_domain' => 'FOSUserBundle', 'always_empty' => 'true'),
             'first_options' => array('label' => 'form.password'),
             'second_options' => array('label' => 'form.password_confirmation'),
             'invalid_message' => 'fos_user.password.mismatch',
         ));
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            $form->add('roles', 'choice', array(
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            /*$form->add('roles', ChoiceType::class, array(
                 'choices' => array(
                     'ROLE_USER' => 'Utilisateurs',
                     'ROLE_ADMIN' => 'Admin',
                     'ROLE_SUPER_ADMIN' => 'Super admin'
                 ),
                 'multiple' => true
+            ));*/
+            $form->add('roles', ChoiceType::class, array(
+                'choices' => array(
+                    'Utilisateurs' => 'ROLE_USER',
+                    'Admin'=> 'ROLE_ADMIN',
+                    'Super admin' => 'ROLE_SUPER_ADMIN'
+                ),
+                'choices_as_values' => true,
+                'multiple' => true
             ));
         } else {
-            $form->add('roles', 'choice', array(
+            $form->add('roles', ChoiceType::class, array(
                 'choices' => array(
-                    'ROLE_USER' => 'Utilisateurs',
-                    'ROLE_ADMIN' => 'Admin',
+                    'Utilisateurs' => 'ROLE_USER',
+                    'Admin' => 'ROLE_ADMIN',
                 ),
+                'choices_as_values' => true,
                 'multiple' => true
             ));
         }
 
         // liste des collectivités
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            $form->add('collectivite', 'entity', array(
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('collectivite', EntityType::class, array(
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
                     return $repository->createQueryBuilder('p')
                         ->where('p.active = 1')
                         ->orderBy('p.nom', 'asc');
                 },
-                'property' => 'Nom',
+                'choice_label' => 'Nom',
             ));
         }
 
-        $form->add('submit', 'submit', array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
 
 
         return $form;
@@ -812,53 +800,61 @@ class DefaultController extends Controller
     {
 
 
-        $form = $this->createForm(new UserType(), $entity, array(
+        $form = $this->createForm(UserType::class, $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-        $form->add('plainPassword', 'repeated', array(
-            'type' => 'password',
+        $form->add('plainPassword', RepeatedType::class, array(
+            'type' => PasswordType::class,
             'required' => false,
             'options' => array('translation_domain' => 'FOSUserBundle', 'always_empty' => 'true'),
             'first_options' => array('label' => 'form.password'),
             'second_options' => array('label' => 'form.password_confirmation'),
             'invalid_message' => 'fos_user.password.mismatch',
         ));
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            $form->add('roles', 'choice', array(
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('roles', ChoiceType::class, array(
                 'choices' => array(
-                    'ROLE_USER' => 'Utilisateurs',
-                    'ROLE_ADMIN' => 'Admin',
-                    'ROLE_SUPER_ADMIN' => 'Super admin'
+                    'Utilisateurs' => 'ROLE_USER',
+                    'Admin'=> 'ROLE_ADMIN',
+                    'Super admin' => 'ROLE_SUPER_ADMIN'
                 ),
+                'choices_as_values' => true,
+                'choice_label' => function ($value, $key, $index) {
+                    return $key;
+                },
                 'multiple' => true
             ));
         } else {
-            $form->add('roles', 'choice', array(
+            $form->add('roles', ChoiceType::class, array(
                 'choices' => array(
-                    'ROLE_USER' => 'Utilisateurs',
-                    'ROLE_ADMIN' => 'Admin',
+                    'Utilisateurs' => 'ROLE_USER',
+                    'Admin'=> 'ROLE_ADMIN',
                 ),
+                'choices_as_values' => true,
+                'choice_label' => function ($value, $key, $index) {
+                    return $key;
+                },
                 'multiple' => true
             ));
         }
 
         // liste des collectivités
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            $form->add('collectivite', 'entity', array(
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('collectivite', EntityType::class, array(
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
                     return $repository->createQueryBuilder('p')
                         ->where('p.active = 1')
                         ->orderBy('p.nom', 'asc');
                 },
-                'property' => 'Nom',
+                'choice_label' => 'Nom',
             ));
         }
 
 
 
-        $form->add('submit', 'submit', array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
 
         return $form;
     }
@@ -873,7 +869,7 @@ class DefaultController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('user_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Supprimer'))
+            ->add('submit', SubmitType::class, array('label' => 'Supprimer'))
             ->getForm();
     }
 

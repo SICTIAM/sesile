@@ -1,5 +1,12 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {{ form_start(form) }}
+{% if form_errors(form.plainPassword.first) %}
+<div class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    {{ form_errors(form.plainPassword.first) }}
+</div>
+{% endif %}
+
 <div class="label_form label-form-input">
     {{ form_label(form.Prenom, 'Prénom') }}
     {{ form_widget(form.Prenom) }}
@@ -85,7 +92,7 @@
 {% endfor %}
 <br/>
 
-<div style="display:none">
+{#<div style="display:none">
     {{ form_widget(form.apiactivated, {'attr': {'class': 'checkbox' }}) }}
 </div>
 
@@ -100,9 +107,10 @@
     </div>
     <br/>
 </div>
-<br/>
+<br/>#}
 
-<button class="btn btn-success" type="submit">Mettre à jour</button>
+{#<button class="btn btn-success" type="submit">Mettre à jour</button>#}
+{{ form_widget(form.submit, {'attr': {'class': 'btn btn-success'}}) }}
 
 {{ form_end(form) }}
 
