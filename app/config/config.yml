@@ -91,7 +91,6 @@ fos_user:
     user_class:    Sesile\UserBundle\Entity\User
     profile:
         form:
-#            type: sesile_user_profile
             type: Sesile\UserBundle\Form\Type\ProfileFormType
 
 be_simple_sso_auth:

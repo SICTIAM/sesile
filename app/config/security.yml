@@ -24,7 +24,7 @@ security:
                 create_users: false
                 created_users_roles: [ROLE_USER, ROLE_ADMIN]
 #                default_target_path: index
-                always_use_default_target_path: true
+                always_use_default_target_path: false
                 login_path: /login
                 check_path: /
             logout:
@@ -53,6 +53,7 @@ security:
         - { path: ^/classeur/liste-classeurs-admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/classeur/liste_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/delegation, roles: ROLE_USER }
+        - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }
         - { path: ^/mailing, roles: ROLE_SUPER_ADMIN }
         - { path: ^/user, roles: ROLE_ADMIN }

@@ -10,8 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
-//use Symfony\Component\Security\Core\Validator\Constraint\UserPassword as OldUserPassword;
-//use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 
 class ProfileFormType extends BaseType
@@ -34,9 +32,9 @@ class ProfileFormType extends BaseType
             'second_options' => array('label' => 'Confirmation'),
             'invalid_message' => 'fos_user.password.mismatch',
         ));
-        $builder->add('apiactivated', CheckboxType::class, array('label' => 'API', 'required' => false,))
-            ->add('apitoken', TextType::class, array('attr' => array('read_only')))
-            ->add('apisecret', TextType::class, array('attr' => array('read_only')));
+        //$builder->add('apiactivated', CheckboxType::class, array('label' => 'API', 'required' => false,))
+        //    ->add('apitoken', TextType::class, array('attr' => array('read_only')))
+        //    ->add('apisecret', TextType::class, array('attr' => array('read_only')));
 
         $builder->add('password', PasswordType::class, array('label' => 'Mot de passe actuel', 'required' => false));
     }
@@ -60,16 +58,18 @@ class ProfileFormType extends BaseType
 //            ->add('username', 'email', array('label' => 'Adresse E-mail', 'attr' => array('class' => 'pouet')))
             ->add('qualite', TextareaType::class, array('label' => 'Qualité', 'attr' => array('class' => 'pouet qualite', 'cols' => '37'), 'max_length' => 250, 'label_attr' => array('class' => 'label_form_textarea')))
 
-            ->add('file', FileType::class, array('label' => 'Avatar',
+            ->add('file', FileType::class, array(
+                'label' => 'Avatar',
                 'data_class' => null,
                 'required' => false,
                 'attr' => array('class' => 'pouet')
             ))
-            ->add('fileSignature', FileType::class, array('label' => 'Signature',
-            'data_class' => null,
-            'required' => false,
-            'attr' => array('class' => 'pouet')
-        ))
+            ->add('fileSignature', FileType::class, array(
+                'label' => 'Signature',
+                'data_class' => null,
+                'required' => false,
+                'attr' => array('class' => 'pouet')
+            ))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'))
         ;
 
