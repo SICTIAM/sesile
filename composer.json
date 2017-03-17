@@ -32,7 +32,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://internet@sictiam.fr:***REMOVED***@www.setasign.com/downloads/"
+            "url": "https://www.setasign.com/downloads/"
         }
     ],
     "require-dev": {
@@ -73,6 +73,12 @@
         },
         "branch-alias": {
             "dev-master": "2.8-dev"
+        }
+    },
+    "http-basic": {
+        "www.setasign.com/downloads/": {
+            "username": "internet@sictiam.fr",
+            "password": "***REMOVED***"
         }
     }
 }
