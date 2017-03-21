@@ -67,20 +67,21 @@
                     <div class="text-center"><h4>Etape en cours</h4></div>
                     <div class="row">
                         <div class="col-lg-6">
-                            {% if app.security.getToken().getUser().getPath() is empty %}
+                            {#{% if app.security.getToken().getUser().getPath() is empty %}#}
+                            {% if app.user.path is empty %}
                                 <img src="{{ asset('/images/imghomme.png') }}" alt="{{ app.security.getToken().getUser().getPrenom() }} {{ app.security.getToken().getUser().getNom() }}">
                             {% else %}
-                                <img src="{{ asset(upload_path ~ app.security.getToken().getUser().getPath()) }}" alt="{{ app.security.getToken().getUser().getPrenom() }} {{ app.security.getToken().getUser().getNom() }}">
+                                <img src="{{ asset(upload_path ~ app.user.path) }}" alt="{{ app.user.prenom }} {{ app.user.nom }}">
                             {% endif %}
                         </div>
                         <div class="col-lg-6">
-                            <span class="circuit-user">{{ app.security.getToken().getUser().getPrenom() }}<br>{{ app.security.getToken().getUser().getNom() }}</span>
+                            <span class="circuit-user">{{ app.user.prenom }}<br>{{ app.user.nom }}</span>
                         </div>
                     </div>
                     <div class="col-lg-12 list-validants">
                         <ul class="select2-choices">
                             {% for validant in validants %}
-                                {% if app.security.getToken().getUser() != validant %}
+                                {% if app.user != validant %}
                                     <li class="select2-search-choice">{{ validant.nom }} {{ validant.prenom }}</li>
                                 {% endif %}
                             {% endfor %}

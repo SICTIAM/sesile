@@ -533,6 +533,7 @@
         function addDocToCurrentClasseur(data) {
             $('#documentcontent').html('<img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>');
             data['id'] = {{ classeur.id }};
+            console.log(data);
             $.ajax(Routing.generate('add_document_to_classeur'), {
                         method: 'POST',
                         data: data,

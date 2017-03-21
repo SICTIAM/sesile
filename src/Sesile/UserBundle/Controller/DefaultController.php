@@ -756,7 +756,7 @@ class DefaultController extends Controller
                     'Admin'=> 'ROLE_ADMIN',
                     'Super admin' => 'ROLE_SUPER_ADMIN'
                 ),
-                'choices_as_values' => true,
+//                'choices_as_values' => true,
                 'multiple' => true
             ));
         } else {
@@ -765,7 +765,7 @@ class DefaultController extends Controller
                     'Utilisateurs' => 'ROLE_USER',
                     'Admin' => 'ROLE_ADMIN',
                 ),
-                'choices_as_values' => true,
+//                'choices_as_values' => true,
                 'multiple' => true
             ));
         }
@@ -819,7 +819,7 @@ class DefaultController extends Controller
                     'Admin'=> 'ROLE_ADMIN',
                     'Super admin' => 'ROLE_SUPER_ADMIN'
                 ),
-                'choices_as_values' => true,
+//                'choices_as_values' => true,
                 'choice_label' => function ($value, $key, $index) {
                     return $key;
                 },
@@ -831,7 +831,7 @@ class DefaultController extends Controller
                     'Utilisateurs' => 'ROLE_USER',
                     'Admin'=> 'ROLE_ADMIN',
                 ),
-                'choices_as_values' => true,
+//                'choices_as_values' => true,
                 'choice_label' => function ($value, $key, $index) {
                     return $key;
                 },

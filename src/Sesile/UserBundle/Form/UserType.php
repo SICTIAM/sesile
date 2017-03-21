@@ -39,14 +39,8 @@ class UserType extends AbstractType
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'entry_options' => array('attr' => array('class' => ''))))
-//                ))
-            ->add('qualite', TextareaType::class, array('label' => 'Qualité', 'required' => false, 'max_length' => 250, 'attr' => array('cols' => '37', 'class' => 'qualite'), 'label_attr' => array('class' => 'label_form_textarea')))
-//            ->add('enabled', null, array('label' => 'Activé', 'required' => false))
+            ->add('qualite', TextareaType::class, array('label' => 'Qualité', 'required' => false, 'attr' => array('cols' => '37', 'class' => 'qualite', 'max_length' => 250), 'label_attr' => array('class' => 'label_form_textarea')))
             ->add('enabled', CheckboxType::class, array('label' => 'Activé', 'required' => false))
-            /*->add('enabled', ChoiceType::class, array(
-                'choices' => array(true => 'Activé', false => 'Désactivé'),
-                'choices_as_values' => false
-                ))*/
             ->add('apiactivated', CheckboxType::class, array('label' => 'API', 'required' => false))
             ->add('apitoken', TextType::class, array('attr' => array('readonly')))
             ->add('apisecret', TextType::class, array('attr' => array('readonly')))

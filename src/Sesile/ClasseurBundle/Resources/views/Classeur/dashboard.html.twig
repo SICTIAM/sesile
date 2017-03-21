@@ -1,0 +1,42 @@
+{% extends 'SesileMainBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div id="contenu_acceuil">
+        <div class="bloc_accueil">
+            {% if app.user %}
+                <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
+                <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet"/>
+
+                {#<object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0" style="display: none;"></object>#}
+                <div id="classeurs_a_valider">
+                    <div class="titre_bloc_accueil">
+                        <span class="glyphicon glyphicon-edit"></span>
+                        Classeurs à valider
+                    </div>
+
+                    <div id="classeur-a-valider">
+                        <img id="loadinggif" src="{{ asset("/bundles/sesilemain/img/load.gif") }}"/>
+                    </div>
+
+                </div>
+                <div id="liste_classeurs">
+                    <div class="titre_bloc_accueil">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        Liste des classeurs
+                    </div>
+                    {% include "SesileClasseurBundle:Classeur:liste.html.twig" %}
+                </div>
+                {% include 'SesileClasseurBundle:Classeur:legende.html.twig' %}
+
+            {% else %}
+                <div class="titre_bloc_accueil">
+                    <span class="glyphicon glyphicon-home"></span>
+                    Informations
+                </div>
+                <div id="img_accueil">
+                    <img src="{{ asset("/images/paraph_img_accueil.jpg") }}"/>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

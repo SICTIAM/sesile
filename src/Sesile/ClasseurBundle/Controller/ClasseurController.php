@@ -25,6 +25,22 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  *
  */
 class ClasseurController extends Controller {
+
+
+    /**
+     * Page qui affiche le dashboard.
+     *
+     * @Route("/dashborad", name="classeur_dashboard")
+     * @Method("GET")
+     * @Template()
+     */
+    public function dashboardAction() {
+        return array(
+            "menu_color" => "bleu"
+        );
+    }
+
+
     /**
      * Page qui affiche la liste des classeurs visibles pour le user connecté.
      *
@@ -445,7 +461,6 @@ class ClasseurController extends Controller {
      */
     public function createAction(Request $request)
     {
-
         $em = $this->getDoctrine()->getManager();
         $classeur = new Classeur();
         $classeur->setNom($request->request->get('name'));
@@ -495,37 +510,32 @@ class ClasseurController extends Controller {
         $em->flush();
 
         //Sauvegarde des enregistrements
-        $manager = $this->container->get('oneup_uploader.orphanage_manager')->get('docs');
+        $manager = $this->get('oneup_uploader.orphanage_manager')->get('docs');
         $files = $manager->uploadFiles();
 
-        foreach ($files as $file) {
+        foreach ($files as $k => $file) {
 
-            //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
-            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
-                unlink($file->getPathname());
-            } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
-                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
-                $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
-                $document->setType($file->getMimeType());
-                $document->setSigned(false);
-                $document->setClasseur($classeur);
-                $em->persist($document);
 
-                $action = new Action();
-                $action->setClasseur($classeur);
-                $action->setUser($this->getUser());
+            $document->setName($request->request->get('serverfilename')[$k]);
+            $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
+            $document->setType($file->getMimeType());
+            $document->setSigned(false);
+            $document->setClasseur($classeur);
+            $em->persist($document);
 
-
-                $action->setAction("Ajout du document " . $document->getName());
-                $em->persist($action);
+            $action = new Action();
+            $action->setClasseur($classeur);
+            $action->setUser($this->getUser());
 
 
-                $em->flush();
-                $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
+            $action->setAction("Ajout du document " . $document->getName());
+            $em->persist($action);
 
 
-            }
+            $em->flush();
+            $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
+
         }
 
         // envoi d'un mail au premier validant
@@ -1796,6 +1806,7 @@ class ClasseurController extends Controller {
     {
 
         $reqid = $request->request->get('id');
+//        var_dump($request->request->get('serverfilename'));
         if (empty($reqid)) {
             return new JsonResponse(array('error' => 'Parameters missing'));
         }
@@ -1807,16 +1818,22 @@ class ClasseurController extends Controller {
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
 
         //Sauvegarde des enregistrements
-        $manager = $this->container->get('oneup_uploader.orphanage_manager')->get('docs');
+        $manager = $this->get('oneup_uploader.orphanage_manager')->get('docs');
+
+
+
+        // upload all files to the configured storage
         $files = $manager->uploadFiles();
 
-        foreach ($files as $file) {
+        foreach ($files as $k => $file) {
             //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
-            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
+            /*if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
+                var_dump('ok 2');
                 unlink($file->getPathname());
-            } else { // Pas d'erreur, on crée un document correspondant
+            } else {*/ // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
-                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
+//                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
+                $document->setName($request->request->get('serverfilename')[$k]);
                 $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
                 $document->setType($file->getMimeType());
                 $document->setSigned(false);
@@ -1834,7 +1851,7 @@ class ClasseurController extends Controller {
                 $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
 
 
-            }
+//            }
         }
 
         return new JsonResponse(array('error' => 'ok'));
