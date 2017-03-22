@@ -106,7 +106,7 @@ be_simple_sso_auth:
 
 
 parameters:
-    cas_server: sso.dev.sictiam.fr
+#    cas_server: sso.dev.sictiam.fr
 #    cas_port: 389
 #    cas_path: /
 #    cas_protocol: '2.0'
