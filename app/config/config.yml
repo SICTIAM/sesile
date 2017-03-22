@@ -104,6 +104,9 @@ be_simple_sso_auth:
             logout_url: https://sso.dev.sictiam.fr/logout
             validation_url: https://sso.dev.sictiam.fr/serviceValidate
 
+be_simple.sso_auth.client.option.curlopt_ssl_version.value: 1
+be_simple.sso_auth.client.option.curlopt_ssl_verifypeer.value: false
+
 parameters:
     cas_server: sso.dev.sictiam.fr
 #    cas_port: 389
