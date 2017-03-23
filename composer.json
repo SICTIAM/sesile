@@ -7,18 +7,18 @@
         "psr-4": { "": "src/", "SymfonyStandard\\": "app/SymfonyStandard/" }
     },
     "require": {
-        "php": ">=5.3.9",
-        "symfony/symfony": "2.8.*",
+        "php": ">=5.5.9",
+        "symfony/symfony": "3.2.*",
         "doctrine/orm": "^2.4.8",
         "doctrine/doctrine-bundle": "~1.4",
         "doctrine/doctrine-fixtures-bundle": "2.3",
         "doctrine/doctrine-migrations-bundle": "1.2.1",
         "twig/extensions": "~1.0",
-        "symfony/assetic-bundle": "~2.3",
+        "symfony/assetic-bundle": "~2.7",
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
         "symfony/polyfill-iconv": "~1.0",
-        "sensio/distribution-bundle": "~4.0",
+        "sensio/distribution-bundle": "5.0.*",
         "sensio/framework-extra-bundle": "3.0.*",
         "incenteev/composer-parameter-handler": "~2.0",
         "friendsofsymfony/user-bundle": "2.0.*@dev",
@@ -33,12 +33,12 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://internet@sictiam.fr:***REMOVED***@www.setasign.com/downloads/"
+            "url": "https://www.setasign.com/downloads/"
         }
     ],
     "require-dev": {
-        "sensio/generator-bundle": "~2.3",
-        "symfony/phpunit-bridge": "~2.7"
+        "sensio/generator-bundle": "~3.1",
+        "symfony/phpunit-bridge": "~3.2"
     },
     "scripts": {
         "post-install-cmd": [
@@ -73,7 +73,13 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": {
-            "dev-master": "2.8-dev"
+            "dev-master": "3.2-dev"
+        }
+    },
+    "http-basic": {
+        "www.setasign.com/downloads/": {
+            "username": "internet@sictiam.fr",
+            "password": "***REMOVED***"
         }
     }
 }

@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Classeur controller.
@@ -57,9 +58,6 @@ class TypeClasseurController extends Controller
             // Un petit message pour prévenir que tout va bien
             $request->getSession()->getFlashBag()->add('success', 'Le nouveau type de classeur a bien été enregistré.');
 
-            // On vide le formulaire
-            $typeClasseur = new TypeClasseur();
-            $form = $this->createForm(new TypeClasseurType(), $typeClasseur);
             return $this->redirect($this->generateUrl('liste_type_classeur'));
         }
 
@@ -74,22 +72,18 @@ class TypeClasseurController extends Controller
      * Form de modification d'un type de classeur
      *
      * @Route("/update/{id}", name="update_type_classeur")
+     * @ParamConverter("TypeClasseur", options={"mapping": {"id": "id"}})
      * @Template("SesileClasseurBundle:TypeClasseur:newType.html.twig")
      *
      */
-    public function updateTypeAction(Request $request, $id) {
+    public function updateTypeAction(Request $request, TypeClasseur $typeClasseur) {
 
         $em = $this->getDoctrine()->getManager();
-        $typeClasseur = $em->getRepository('SesileClasseurBundle:TypeClasseur')->find($id);
 
-        if (null === $typeClasseur) {
-            throw new NotFoundHttpException('Le type de classeur n\'existe pas');
-        }
-
-        $form = $this->createForm(new TypeClasseurType(), $typeClasseur);
+        $form = $this->createForm(\Sesile\ClasseurBundle\Form\TypeClasseurType::class, $typeClasseur);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            //$em->persist($typeClasseur);
+
             $em->flush();
 
             // Un petit message pour prévenir que tout va bien
@@ -111,15 +105,12 @@ class TypeClasseurController extends Controller
      *
      * @Route("/del/{id}", name="delete_classeur_type")
      * @Method("GET")
+     * @ParamConverter("TypeClasseur", options={"mapping": {"id": "id"}})
      * @Template("SesileClasseurBundle:TypeClasseur:index.html.twig")
      */
-    public function deleteTypeAction($id) {
+    public function deleteTypeAction(TypeClasseur $typeClasseur) {
 
         $em = $this->getDoctrine()->getManager();
-        $typeClasseur = $em->getRepository('SesileClasseurBundle:TypeClasseur')->find($id);
-        if (null === $typeClasseur) {
-            throw new NotFoundHttpException('Le type de classeur n\'existe pas');
-        }
         $em->remove($typeClasseur);
         $em->flush();
 
@@ -135,7 +126,7 @@ class TypeClasseurController extends Controller
      * @Method("POST")
      *
      */
-    public function createAction(Request $request) {
+    public function createAction() {
         return array();
     }
 

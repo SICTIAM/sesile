@@ -41,10 +41,9 @@ class CollectiviteType extends AbstractType
             ->add('titreVisa', TextType::class, array("label" => "Titre"))
             ->add('pageSignature', ChoiceType::class, array(
                 'choices' => array(
-                    0 =>    'Dernière page',
-                    1 =>    'Première page'
+                    'Dernière page' =>  0,
+                    'Première page' =>  1
                 ),
-                'choices_as_values' => true,
                 "label" => "Page",
             ));
 

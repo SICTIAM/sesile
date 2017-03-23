@@ -60,39 +60,38 @@
 
             <div id="contetapes">
 
-                {% if edit and classeur_status != 0 and classeur_status != 4 %}
-                    {# Etape en cours #}
-                    <div class="well etapes-circuit etape-validante">
-                        <span class="valid_perso glyphicon glyphicon-pencil"></span>
-                        <div class="text-center"><h4>Etape en cours</h4></div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                {% if app.security.getToken().getUser().getPath() is empty %}
-                                    <img src="{{ asset('/images/imghomme.png') }}" alt="{{ app.security.getToken().getUser().getPrenom() }} {{ app.security.getToken().getUser().getNom() }}">
-                                {% else %}
-                                    <img src="{{ asset(upload_path ~ app.security.getToken().getUser().getPath()) }}" alt="{{ app.security.getToken().getUser().getPrenom() }} {{ app.security.getToken().getUser().getNom() }}">
-                                {% endif %}
-                            </div>
-                            <div class="col-lg-6">
-                                <span class="circuit-user">{{ app.security.getToken().getUser().getPrenom() }}<br>{{ app.security.getToken().getUser().getNom() }}</span>
-                            </div>
+            {% if edit and classeur_status != 0 and classeur_status != 4 %}
+                {# Etape en cours #}
+                <div class="well etapes-circuit etape-validante">
+                    <span class="valid_perso glyphicon glyphicon-pencil"></span>
+                    <div class="text-center"><h4>Etape en cours</h4></div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {#{% if app.security.getToken().getUser().getPath() is empty %}#}
+                            {% if app.user.path is empty %}
+                                <img src="{{ asset('/images/imghomme.png') }}" alt="{{ app.security.getToken().getUser().getPrenom() }} {{ app.security.getToken().getUser().getNom() }}">
+                            {% else %}
+                                <img src="{{ asset(upload_path ~ app.user.path) }}" alt="{{ app.user.prenom }} {{ app.user.nom }}">
+                            {% endif %}
                         </div>
-                        <div class="col-lg-12 list-validants">
-                            <ul class="select2-choices">
-                                {% for validant in validants %}
-                                    {% if app.security.getToken().getUser() != validant %}
-                                        <li class="select2-search-choice">{{ validant.nom }} {{ validant.prenom }}</li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
+                        <div class="col-lg-6">
+                            <span class="circuit-user">{{ app.user.prenom }}<br>{{ app.user.nom }}</span>
                         </div>
-                        <button type="button" class="btn btn-info btn-block btn-voirInter seeValidants" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
-                        <button type="button" class="btn btn-info btn-block btn-voirInter hideValidants" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
-
                     </div>
-                {% endif %}
+                    <div class="col-lg-12 list-validants">
+                        <ul class="select2-choices">
+                            {% for validant in validants %}
+                                {% if app.user != validant %}
+                                    <li class="select2-search-choice">{{ validant.nom }} {{ validant.prenom }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-info btn-block btn-voirInter seeValidants" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
+                    <button type="button" class="btn btn-info btn-block btn-voirInter hideValidants" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
 
-
+                </div>
+            {% endif %}
                 {% for etape in etapesGroupe %}
 
                     {# Etapes restantes a valider #}
@@ -100,39 +99,44 @@
                         {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>{% endif %}
                         <div class="text-center"><h4 title="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer">Etape à venir</h4></div>
 
-                        {% if etape.countUserPacksUsers() > 3 %}
-                            <span class="glyphicon glyphicon-user etape-groupe" title="Cliquez pour voir les utilisateurs de l'étape"></span>
-                        {% endif %}
+                {# Etapes restantes a valider #}
+                <div class="well etapes-circuit">
+                    {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>{% endif %}
+                    <div class="text-center"><h4 title="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer">Etape à venir</h4></div>
 
-                        <select class="selusers {% if etape.countUserPacksUsers() > 3 %} etape-groupe-users{% endif %}" required="required" multiple="multiple" style="width: 100%;{% if etape.countUserPacksUsers() > 3 %} display: none;{% endif %}" data-etape="{{ etape.id }}" {% if edit != true %}disabled="disabled"{% endif %}>
-                            <optgroup label="Groupes d'utilisateurs">
-                                {% for userPack in userPacks %}
-                                    <option value="userpack-{{ userPack.id }}" {% if userPack in etape.userPacks %} selected{% endif %} data-type="groupe" title="Voir les utilisateurs du groupe">
-                                        {{ userPack.nom }}
-                                    </option>
-                                {% endfor %}
-                            </optgroup>
-                            <optgroup label="utilisateurs">
-                                {% for user in users %}
-                                    <option value="user-{{ user.id }}" data-etape="{{ etape.id }}" data-type="user" {% if user in etape.users %} selected{% endif %}>{{ user.nom }} {{ user.prenom }}</option>
-                                {% endfor %}
-                            </optgroup>
-                        </select>
+                    {% if etape.countUserPacksUsers() > 3 %}
+                        <span class="glyphicon glyphicon-user etape-groupe" title="Cliquez pour voir les utilisateurs de l'étape"></span>
+                    {% endif %}
 
-                        <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
-                        <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
+                    <select class="selusers {% if etape.countUserPacksUsers() > 3 %} etape-groupe-users{% endif %}" required="required" multiple="multiple" style="width: 100%;{% if etape.countUserPacksUsers() > 3 %} display: none;{% endif %}" data-etape="{{ etape.id }}" {% if edit != true %}disabled="disabled"{% endif %}>
+                        <optgroup label="Groupes d'utilisateurs">
+                            {% for userPack in userPacks %}
+                                <option value="userpack-{{ userPack.id }}" {% if userPack in etape.userPacks %} selected{% endif %} data-type="groupe" title="Voir les utilisateurs du groupe">
+                                    {{ userPack.nom }}
+                                </option>
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="utilisateurs">
+                            {% for user in users %}
+                                <option value="user-{{ user.id }}" data-etape="{{ etape.id }}" data-type="user" {% if user in etape.users %} selected{% endif %}>{{ user.nom }} {{ user.prenom }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    </select>
 
-                    </div>
-                {% endfor %}
+                    <button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
+                    <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>
 
-                {# Bouton ajouter une étape #}
-                {% if edit %}
-                    <input type="hidden" name="valeurs" id="valeurs">
-                    <div class="text-center div-btn-ajout-etape">
-                        <button type="button" class="btn btn-circle-lg btn-info first" id="addetape"><span class="glyphicon glyphicon-plus"></span> </button>
-                    </div>
-                {% endif %}
-            </div>
+                </div>
+            {% endfor %}
+
+            {# Bouton ajouter une étape #}
+            {% if edit %}
+                <input type="hidden" name="valeurs" id="valeurs">
+                <div class="text-center div-btn-ajout-etape">
+                    <button type="button" class="btn btn-circle-lg btn-info first" id="addetape"><span class="glyphicon glyphicon-plus"></span> </button>
+                </div>
+            {% endif %}
+        </div>
 
         </div>
     </div>
@@ -188,9 +192,9 @@
             var widthLine = $('#circuit_main').css('width');
             $('#circuit_etapes').css('width', widthLine);
             {% if edit %}
-            var btn = 143;
+                var btn = 143;
             {% else %}
-            var btn = 0;
+                var btn = 0;
             {% endif %}
             // 42 c est la solution... et la taille de la flèche
             var widthScroll = $('.etapes-circuit').length * 292 + btn;
@@ -236,8 +240,8 @@
 
 
         /*
-         * Surcharge des boutons cacher et voir tous les utilisateurs par rapport au commun
-         * */
+        * Surcharge des boutons cacher et voir tous les utilisateurs par rapport au commun
+        * */
         // Evenement du bouton voir tous les utilisateurs
         $(document).on('click','#seeAllUsers',function(event) {
             $('.list-validants').show();
@@ -249,7 +253,7 @@
         });
         /*
          * Fin de la surcharge
-         */
+        */
 
         // Ajouter une nouvelle étape
         $(document).on('click','#addetape',function(){

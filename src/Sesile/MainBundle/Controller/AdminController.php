@@ -8,6 +8,7 @@ use Sesile\MainBundle\Form\CollectiviteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -163,23 +164,17 @@ class AdminController extends Controller
      *
      * @Route("/collectivite/edit/{id}/", name="edit_collectivite", options={"expose"=true})
      * @Method("GET")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @Template("SesileMainBundle:Collectivite:edit.html.twig")
      */
-    public function editCollectiviteAction($id)
+    public function editCollectiviteAction(Collectivite $collectivite)
     {
 
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('SesileMainBundle:Collectivite')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Collectivite entity');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($collectivite);
+        $deleteForm = $this->createDeleteForm($collectivite->getId());
 
         return array(
-            'entity' => $entity,
+            'entity' => $collectivite,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
             "menu_color" => "vert"
@@ -191,43 +186,39 @@ class AdminController extends Controller
      *
      * @Route("/collectivite/{id}", name="update_collectivite")
      * @Method("PUT")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @Template("SesileUserBundle:Default:edit.html.twig")
      */
-    public function updateCollectiviteAction(Request $request, $id)
+    public function updateCollectiviteAction(Request $request, Collectivite $collectivite)
     {
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('SesileMainBundle:Collectivite')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Collectivite entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($collectivite);
+        $deleteForm = $this->createDeleteForm($collectivite->getId());
 
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $entity->setNom($editForm->get('nom')->getData());
-            $entity->setDomain($editForm->get('domain')->getData());
-            $entity->setActive($editForm->get('active')->getData());
-            $entity->setTextmailrefuse($editForm->get('textmailrefuse')->getData());
-            $entity->setTextmailwalid($editForm->get('textmailwalid')->getData());
-            $entity->setTextmailnew($editForm->get('textmailnew')->getData());
-            $entity->setMessage($editForm->get('message')->getData());
+            $collectivite->setNom($editForm->get('nom')->getData());
+            $collectivite->setDomain($editForm->get('domain')->getData());
+            $collectivite->setActive($editForm->get('active')->getData());
+            $collectivite->setTextmailrefuse($editForm->get('textmailrefuse')->getData());
+            $collectivite->setTextmailwalid($editForm->get('textmailwalid')->getData());
+            $collectivite->setTextmailnew($editForm->get('textmailnew')->getData());
+            $collectivite->setMessage($editForm->get('message')->getData());
 
             if ($editForm->get('file')->getData()) {
-                if ($entity->getFile()) {
-                    $entity->removeUpload();
+                if ($collectivite->getFile()) {
+                    $collectivite->removeUpload();
                 }
-                $entity->preUpload();
+                $collectivite->preUpload();
             }
             $em->flush();
 
-            return $this->redirect($this->generateUrl('index_collectivite', array('id' => $id)));
+            return $this->redirect($this->generateUrl('index_collectivite', array('id' => $collectivite->getId())));
         }
         return array(
-            'entity' => $entity,
+            'entity' => $collectivite,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
             "menu_color" => "vert"
@@ -283,17 +274,79 @@ class AdminController extends Controller
     }
 
 
-    private function createCreateForm(Collectivite $entity)
-    {
-        $form = $this->createForm(CollectiviteType::class, $entity, array(
-            'action' => $this->generateUrl('new_collectivite'),
-            'method' => 'POST',
-        ));
-        $form->add('domain', TextType::class, array("label" => "Domaine"));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
-        return $form;
-    }
+    /**
+     * Liste des collectivités
+     *
+     * @Route("/mailing", name="index_emailing")
+     * @Template("SesileMainBundle:Admin:indexMailing.html.twig")
+     */
+    public function indexMailingAction(Request $request) {
 
+        // Creation du formulaire pour la saisie des informations
+        $form = $this->emailingForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // Les données sont un tableau avec les clés "sujet", et "mailMessage"
+            $em = $this->getDoctrine()->getManager();
+            // On recupere tous les utilisateurs
+            $users = $em->getRepository('SesileUserBundle:User')->findByEnabled(true);
+            // On recupère les données du formulaire
+            $data = $form->getData();
+
+            // Création du mail
+            $message = \Swift_Message::newInstance()
+                ->setSubject($data['sujet'])
+                ->setFrom($this->container->getParameter('email_sender_address'))
+                ->setBody($data['mailMessage'])
+                ->setContentType('text/html');
+
+            // Init du message d info
+            $errorsString = "";
+            // Envoie du mail pour chaque utilisateur
+            foreach ($users as $key => $user) {
+
+                // On recupere l email de l utilisateur
+                $email = $user->getEmail();
+                $emailConstraint = new EmailConstraint();
+                $emailConstraint->message = "L'adresse email " . $email . " n'est pas valide.";
+
+                // On teste si l email est valide
+                $errors = $this->get('validator')->validate(
+                    $email,
+                    $emailConstraint
+                );
+
+                // Si on a des erreurs paf le chien !
+                if (count($errors) > 0) {
+                    /*
+                     * Uses a __toString method on the $errors variable which is a
+                     * ConstraintViolationList object. This gives us a nice string
+                     */
+                    $errorsString .= (string) $errors;
+                    // Message d info pour l'utilisateur
+                    $request->getSession()->getFlashBag()->add('error',$errorsString);
+
+                }
+                // Sinon on envoie le mail
+                else {
+                    $message->setTo($email);
+                    $this->get('mailer')->send($message);
+                }
+            }
+
+            // remise à zéro du formulaire
+            $form = $this->emailingForm();
+
+            // Message de confirmation pour l'utilisateur
+            $request->getSession()->getFlashBag()->add('success', "L'emailing a été envoyé avec succès.");
+        }
+
+        return array('form' => $form, "menu_color" => "vert");
+
+    }
 
     /**
      * Creates a form to edit a Collectivite entity.
@@ -323,88 +376,34 @@ class AdminController extends Controller
             ->getForm();
     }
 
+    /**
+     * Forumlaire de creation de collectivite
+     *
+     * @param Collectivite $entity
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createCreateForm(Collectivite $entity)
+    {
+        $form = $this->createForm(CollectiviteType::class, $entity, array(
+            'action' => $this->generateUrl('new_collectivite'),
+            'method' => 'POST',
+        ));
+        $form->add('domain', TextType::class, array("label" => "Domaine"));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        return $form;
+    }
 
     /**
-     * Liste des collectivités
+     * Formulaire d envoie d emailing
      *
-     * @Route("/mailing", name="index_emailing")
-     * @Template("SesileMainBundle:Admin:indexMailing.html.twig")
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
-    public function indexMailingAction(Request $request) {
-
-        // Creation du formulaire pour la saisie des informations
+    private function emailingForm() {
         $defaultData = array('message' => 'Taper votre message');
-        $form = $this->createFormBuilder($defaultData)
+        return $this->createFormBuilder($defaultData)
             ->add('sujet', TextType::class)
             ->add('mailMessage', TextareaType::class, array('label' => "Corps du message", 'required' => false))
             ->add('submit', SubmitType::class, array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
             ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            // Les données sont un tableau avec les clés "sujet", et "mailMessage"
-            $em = $this->getDoctrine()->getManager();
-            // On recupere tous les utilisateurs
-            $users = $em->getRepository('SesileUserBundle:User')->findByEnabled(true);
-            // On recupère les données du formulaire
-            $data = $form->getData();
-
-            // Création du mail
-            $message = \Swift_Message::newInstance()
-                ->setSubject($data['sujet'])
-                ->setFrom($this->container->getParameter('email_sender_address'))
-                ->setBody($data['mailMessage'])
-                ->setContentType('text/html');
-
-            // Init du message d info
-            $errorsString = "";
-            // Envoie du mail pour chaque utilisateur
-            foreach ($users as $key => $user) {
-
-                // On recupere l email de l utilisateur
-                $email = $user->getEmail();
-                $emailConstraint = new EmailConstraint();
-                $emailConstraint->message = "L'adresse email " . $email . " n'est pas valide.";
-
-                // On teste si l email est valide
-                $errors = $this->get('validator')->validateValue(
-                    $email,
-                    $emailConstraint
-                );
-
-                // Si on a des erreurs paf le chien !
-                if (count($errors) > 0) {
-                    /*
-                     * Uses a __toString method on the $errors variable which is a
-                     * ConstraintViolationList object. This gives us a nice string
-                     */
-                    $errorsString .= (string) $errors;
-                    // Message d info pour l'utilisateur
-                    $request->getSession()->getFlashBag()->add('error',$errorsString);
-
-                }
-                // Sinon on envoie le mail
-                else {
-                    $message->setTo($email);
-                    $this->get('mailer')->send($message);
-                }
-            }
-
-            // remise à zéro du formulaire
-            $form = $this->createFormBuilder($defaultData)
-                ->add('sujet', 'text')
-                ->add('mailMessage', 'textarea', array('label' => "Corps du message"))
-                ->add('submit', 'submit', array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
-                ->getForm();
-
-            // Message de confirmation pour l'utilisateur
-            $request->getSession()->getFlashBag()->add('success', "L'emailing a été envoyé avec succès.");
-
-        }
-
-        return array('form' => $form, "menu_color" => "vert");
-
-
     }
 }

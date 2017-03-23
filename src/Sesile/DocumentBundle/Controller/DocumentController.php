@@ -244,7 +244,6 @@ class DocumentController extends Controller
     public function showAction(Request $request, $id)
     {
 
-//        $servername = $this->getRequest()->getHost();
         $servername = $this->get('router')->getContext()->getHost();
 
         if (ctype_digit($id)) {
@@ -283,9 +282,6 @@ class DocumentController extends Controller
             if ($doc->getClasseur()->getStatus() == 2 && $doc->getType() == "application/pdf") {
 
                 // Recup du doc pour utiliser SetaPDF
-//                require($this->get('kernel')->getRootDir() . '/../vendor/setasign/setapdf-stamper/library/SetaPDF/Autoload.php');
-                //var_dump($this->container->getParameter('upload')['fics']);
-                //$filename = 'uploads/docs/' . $doc->getRepourl();
                 $filename = $this->container->getParameter('upload')['fics'] . $doc->getRepourl();
                 $document = \SetaPDF_Core_Document::loadByFilename($filename);
 

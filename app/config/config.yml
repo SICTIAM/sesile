@@ -27,9 +27,9 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-    form:
-        resources:
-            - 'SesileMainBundle:Form:fields.html.twig'
+#    form:
+#        resources:
+#            - 'SesileMainBundle:Form:fields.html.twig'
     globals:
         upload_path: uploads/avatars/
         upload_path_logo: uploads/logo_coll/
@@ -79,11 +79,15 @@ swiftmailer:
 oneup_uploader:
     mappings:
         docs:
-            frontend: custom
-            custom_frontend:
-                class: Sesile\DocumentBundle\Controller\DocumentUploader
-                name: DocumentUploader
+            frontend: dropzone
             use_orphanage: true
+#    mappings:
+#        docs:
+#            frontend: custom
+#            custom_frontend:
+#                class: Sesile\DocumentBundle\Controller\DocumentUploader
+#                name: DocumentUploader
+#            use_orphanage: true
 
 fos_user:
     db_driver:     orm

@@ -316,7 +316,7 @@ class Collectivite
     {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
         // le document/image dans la vue.
-        $controller = new Controller();
+        // $controller = new Controller();
         /*$upload = $controller->setContainer()getParameter('upload');*/
         return "uploads/logo_coll/";
     }
