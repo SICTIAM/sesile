@@ -42,28 +42,28 @@ if (typeof deposant != 'undefined') {
     $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
 /*if ( typeof validant != 'undefined') {
-    var new_perso = $('<div/>').addClass('no_sort perso_circuit curr_user').appendTo("#circuit");
-    perso_src = validant.path ? path+validant.path : perso_src;
-    $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);
-    $('<img />').attr("src", perso_src).appendTo(new_perso);
-    $('<span class="nom_perso" />').text(validant.nom).appendTo(new_perso);
-    //$("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(.deposant)");
-}*/
+ var new_perso = $('<div/>').addClass('no_sort perso_circuit curr_user').appendTo("#circuit");
+ perso_src = validant.path ? path+validant.path : perso_src;
+ $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);
+ $('<img />').attr("src", perso_src).appendTo(new_perso);
+ $('<span class="nom_perso" />').text(validant.nom).appendTo(new_perso);
+ //$("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(.deposant)");
+ }*/
 // Fonction pour afficher les bouton valider et signer
 function aff_button_valider () {
     //var c = document.getElementById("#contetapes").childNodes.length;
     var nbEtapes = $('.etapes-circuit').length;
     //console.log(nbEtapes);
     //if(valid_sign == 0) {
-    if(nbEtapes == 0) {
-        $(".btn-valider-signer").css('display', 'inline-block');
-        $(".btn-valider-non-signer").css('display', 'none');
-        //console.log("valider ok : " + valid_sign);
-    } else {
-        $(".btn-valider-signer").css('display', 'none');
-        $(".btn-valider-non-signer").css('display', 'inline-block');
-        //console.log("valider : " + valid_sign);
-    }
+    /*if(nbEtapes == 0) {
+     $(".btn-valider-signer").css('display', 'inline-block');
+     $(".btn-valider-non-signer").css('display', 'none');
+     //console.log("valider ok : " + valid_sign);
+     } else {
+     $(".btn-valider-signer").css('display', 'none');
+     $(".btn-valider-non-signer").css('display', 'inline-block');
+     //console.log("valider : " + valid_sign);
+     }*/
 }
 
 /* Ajoute un utilisateur dans le cadre "circuits" */
@@ -120,11 +120,11 @@ function ajoutUser(id, k) {
             });
             // pour les boutons valider et signer
             /*valid_sign = valid_sign -1;
-            aff_button_valider (valid_sign)*/
+             aff_button_valider (valid_sign)*/
         });
         // pour les boutons valider et signer
         /*this.valid_sign ++;
-        aff_button_valider(valid_sign);*/
+         aff_button_valider(valid_sign);*/
     }
 
     perso_src = sel_user.data("img") ? path + sel_user.data("img") : perso_src_init;
@@ -303,5 +303,5 @@ $(document).ready(function () {
     });
     // FIN de la recherche dans les utilisateurs
     //aff_button_valider (valid_sign);
-    aff_button_valider();
+    //aff_button_valider();
 });
