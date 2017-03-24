@@ -1,6 +1,17 @@
 imports:
     - { resource: config_dev.yml }
 
+be_simple_sso_auth:
+    admin_sso:
+        protocol:
+            id: cas
+            version: 2
+        server:
+            id: cas
+            login_url: https://demosso.sictiam.fr/login
+            logout_url: https://demosso.sictiam.fr/logout
+            validation_url: https://demosso.sictiam.fr/serviceValidate
+
 framework:
     test: ~
     session:
