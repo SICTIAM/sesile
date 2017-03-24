@@ -26,7 +26,7 @@
         "oneup/uploader-bundle": "~1.0",
         "friendsofsymfony/rest-bundle": "2.0.*",
         "nelmio/api-doc-bundle": "@stable",
-        "jms/serializer-bundle": "^1.1",
+        "jms-serializer/serializer-bundle": "^1.1",
         "besimple/sso-auth-bundle": "@dev",
         "setasign/setapdf-stamper": "2.x"
     },

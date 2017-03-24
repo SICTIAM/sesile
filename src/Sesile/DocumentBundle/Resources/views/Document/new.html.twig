@@ -58,7 +58,7 @@
                 $(this).remove();
             } //do something with
         });
-
+console.log('coucou');
         dropzone.removeFile(selectedFile);
 
 
@@ -72,11 +72,10 @@
         $('#Mybutton').attr('disabled', true);
 
         $('.dz-remove').on("click", function () {
-
-//            myDropzone.removeFile(file);
             dropzone.removeFile(file);
-            $("#documentcontent").children("#" + file.idfilename).remove();
-            console.log(file);
+//            $("#documentcontent").children("#" + file.name).remove();
+            $('input[type="hidden"][value="'+ file.name +'"]').remove();
+
             $('#Mybutton').attr('disabled', false);
             if (dropzone.getAcceptedFiles().length == 0) {
                 $('#Mybutton').attr('disabled', true);
@@ -102,8 +101,8 @@
 
 //            myDropzone.removeFile(file);
             dropzone.removeFile(file);
-            $("#documentcontent").children("#" + file.idfilename).remove();
-            console.log(file);
+            $("#documentcontent").children("#" + file.name).remove();
+
             $('#Mybutton').attr('disabled', false);
             if (dropzone.getAcceptedFiles().length == 0) {
                 $('#Mybutton').attr('disabled', true);
@@ -116,11 +115,9 @@
     /*Fonction pour ajouter fichier dans le dropzone "classeur à valider"*/
 
     dropzone.on('success', function (file, response) {
-        /*console.log(file);
-        console.log("Name : " + file.name);*/
 
         idfilename = file.name.split('.')[0];
-        $('#documentcontent').append("<input type='hidden' name='serverfilename[]' id='" + idfilename + "' value='" + file.name + "'> ");
+        $('#documentcontent').append("<input type='hidden' name='serverfilename[]' id='" + file.name + "' value='" + file.name + "'> ");
 
     });
 
