@@ -67,9 +67,8 @@
                     <div class="text-center"><h4>Etape en cours</h4></div>
                     <div class="row">
                         <div class="col-lg-6">
-                            {#{% if app.security.getToken().getUser().getPath() is empty %}#}
                             {% if app.user.path is empty %}
-                                <img src="{{ asset('/images/imghomme.png') }}" alt="{{ app.security.getToken().getUser().getPrenom() }} {{ app.security.getToken().getUser().getNom() }}">
+                                <img src="{{ asset('/images/imghomme.png') }}" alt="{{ app.user.prenom }} {{ app.user.nom }}">
                             {% else %}
                                 <img src="{{ asset(upload_path ~ app.user.path) }}" alt="{{ app.user.prenom }} {{ app.user.nom }}">
                             {% endif %}
@@ -180,14 +179,8 @@
         /*
          * Initialisations
          */
-        /*$('.first').popover({
-            trigger: 'hover',
-            container: 'body',
-            content: 'Ajouter une étape',
-            placement: 'bottom'
-        });*/
+
         aff_button_valider();
-//        $('.list-validants').hide();
         scrollFrisque();
 
         // Fonction permettant d agrandir la frise dynamiquement.
@@ -201,7 +194,6 @@
             {% endif %}
             // 42 c est la solution... et la taille de la flèche
             var widthScroll = $('.etapes-circuit').length * 292 + btn;
-            //console.log("Yo : " + widthScroll);
             $('#circuit_with_js').css('width', widthScroll);
         }
 
@@ -333,7 +325,6 @@
 
             scrollActive();
 
-            //$('.list-validants').hide();
 
         });
 
@@ -342,14 +333,12 @@
          * La fonction recupère toutes les informations des selects et les stringify pour les passer dans un champs hidden
          */
         var tabGeneral = [];
-//        $("#form_edit").submit(function(){
         $(".btn-valider, .btn-valider-non-signer, .btn-valider-signer").on('click',function(){
             /*
              * Pour chaque etape de validation créé on récupère les options sélectionnées
              *
              * */
             $('select.selusers').each(function(){
-//alert('fr')
 
                 var Etapes = {};
                 Etapes.etape_id = $(this).data('etape');
@@ -367,15 +356,12 @@
                         });
                     });
                 } else {
-//alert($(this).parent().find('h4').attr('title'))
                     var moncul = $(this).parent().find('h4');
                     $(this).parent().find('h4').tooltip({placement:'bottom'});
                     $(this).parent().find('h4').tooltip('show');
 
                     setTimeout(function(){moncul.tooltip('hide');},3000);
-                  //  $('[data-toggle="tooltip"]').tooltip();
-                   // $('[data-toggle="tooltip"]').tooltip('show');
-                    //alert($(this).parent().attr('class'))
+
                     e.preventDefault();
 
                 }
@@ -402,6 +388,7 @@
         // Fonction pour afficher les bouton valider et signer ou cacher les boutons selon le nb etapes restantes
         function aff_button_valider () {
             //var c = document.getElementById("#contetapes").childNodes.length;
+            var classeur_type = {{ classeur_type }};
             {% if edit and classeur_status != 0 and classeur_status != 4 %}
                 var nbEtapes = $('#contetapes').children('.etapes-circuit').length;
             {% else %}
@@ -413,7 +400,11 @@
                 $(".btn-valider-signer").css('display', 'inline-block');
                 $(".btn-valider-signer-pdf").css('display', 'inline-block');
                 $(".btn-group-valider-signer").css('display', 'inline-block');
-                $(".btn-valider-non-signer").css('display', 'none');
+                if (classeur_type == 2) {
+                    $(".btn-valider-non-signer").css('display', 'none');
+                } else {
+                    $(".btn-valider-non-signer").css('display', 'inline-block');
+                }
             } else {
                 $(".btn-valider-signer").css('display', 'none');
                 $(".btn-valider-signer-pdf").css('display', 'none');

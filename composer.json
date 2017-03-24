@@ -12,6 +12,8 @@
         "doctrine/orm": "^2.4.8",
         "doctrine/doctrine-bundle": "~1.4",
         "doctrine/doctrine-fixtures-bundle": "2.3",
+        "doctrine/doctrine-migrations-bundle": "dev-master",
+        "doctrine/migrations" : "dev-master",
         "twig/extensions": "~1.0",
         "symfony/assetic-bundle": "~2.7",
         "symfony/swiftmailer-bundle": "~2.3",
@@ -25,7 +27,7 @@
         "oneup/uploader-bundle": "~1.0",
         "friendsofsymfony/rest-bundle": "2.0.*",
         "nelmio/api-doc-bundle": "@stable",
-        "jms/serializer-bundle": "^1.1",
+        "jms-serializer/serializer-bundle": "^1.1",
         "besimple/sso-auth-bundle": "@dev",
         "setasign/setapdf-stamper": "2.x"
     },
