@@ -31,7 +31,6 @@ parameters:
     domain_parse:
         default: sesile
         dbname: sictiam
-    url_applet: signature.sesile.fr
     ovh:
         environnement: ""
         zone: sesile.fr
