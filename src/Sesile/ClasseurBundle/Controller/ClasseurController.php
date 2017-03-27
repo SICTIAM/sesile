@@ -515,26 +515,31 @@ class ClasseurController extends Controller {
 
         foreach ($files as $k => $file) {
 
+            //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
+            if (!isset($request->request->get('serverfilename')[$k])) {
+                unlink($file->getPathname());
+            } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
 
-            $document->setName($request->request->get('serverfilename')[$k]);
-            $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
-            $document->setType($file->getMimeType());
-            $document->setSigned(false);
-            $document->setClasseur($classeur);
-            $em->persist($document);
+                $document->setName($request->request->get('serverfilename')[$k]);
+                $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
+                $document->setType($file->getMimeType());
+                $document->setSigned(false);
+                $document->setClasseur($classeur);
+                $em->persist($document);
 
-            $action = new Action();
-            $action->setClasseur($classeur);
-            $action->setUser($this->getUser());
-
-
-            $action->setAction("Ajout du document " . $document->getName());
-            $em->persist($action);
+                $action = new Action();
+                $action->setClasseur($classeur);
+                $action->setUser($this->getUser());
 
 
-            $em->flush();
-            $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
+                $action->setAction("Ajout du document " . $document->getName());
+                $em->persist($action);
+
+
+                $em->flush();
+                $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
+            }
 
         }
 
@@ -1827,10 +1832,9 @@ class ClasseurController extends Controller {
 
         foreach ($files as $k => $file) {
             //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
-            /*if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
-                var_dump('ok 2');
+            if (!isset($request->request->get('serverfilename')[$k])) {
                 unlink($file->getPathname());
-            } else {*/ // Pas d'erreur, on crée un document correspondant
+            } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
 //                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
                 $document->setName($request->request->get('serverfilename')[$k]);
@@ -1851,7 +1855,7 @@ class ClasseurController extends Controller {
                 $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
 
 
-//            }
+            }
         }
 
         return new JsonResponse(array('error' => 'ok'));

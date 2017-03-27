@@ -99,9 +99,9 @@ console.log('coucou');
 
         $('.dz-remove').on("click", function () {
 
-//            myDropzone.removeFile(file);
             dropzone.removeFile(file);
-            $("#documentcontent").children("#" + file.name).remove();
+//            $("#documentcontent").children("#" + file.name).remove();
+            $('input[type="hidden"][value="'+ file.name +'"]').remove();
 
             $('#Mybutton').attr('disabled', false);
             if (dropzone.getAcceptedFiles().length == 0) {
