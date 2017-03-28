@@ -516,12 +516,12 @@ class ClasseurController extends Controller {
         foreach ($files as $k => $file) {
 
             //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
-            if (!isset($request->request->get('serverfilename')[$k])) {
+            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
                 unlink($file->getPathname());
             } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
 
-                $document->setName($request->request->get('serverfilename')[$k]);
+                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
                 $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
                 $document->setType($file->getMimeType());
                 $document->setSigned(false);
@@ -1832,12 +1832,12 @@ class ClasseurController extends Controller {
 
         foreach ($files as $k => $file) {
             //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
-            if (!isset($request->request->get('serverfilename')[$k])) {
+            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
                 unlink($file->getPathname());
             } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
-//                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
-                $document->setName($request->request->get('serverfilename')[$k]);
+
+                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
                 $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
                 $document->setType($file->getMimeType());
                 $document->setSigned(false);

@@ -153,12 +153,13 @@ function buttonModifRoutine() {
 
 }
 
-uploadedfiles['serverfilename'] = [];
 dropzone.on('success', function (file, response) {
+    $.each(response, function (serverfilename, originalname) {
+        $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + originalname + "'> ");
 
-//    $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' value='" + file.name + "'> ");
+        uploadedfiles[serverfilename] = originalname;
 
-    uploadedfiles['serverfilename'].push(file.name);
+    });
 
 });
 
