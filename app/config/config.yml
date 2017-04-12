@@ -88,9 +88,6 @@ fos_user:
     profile:
         form:
             type: Sesile\UserBundle\Form\Type\ProfileFormType
-    from_email:
-        address: sesile@sictiam.fr
-        sender_name: SESILE
 
 be_simple_sso_auth:
     admin_sso:

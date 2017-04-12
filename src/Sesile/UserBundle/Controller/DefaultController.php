@@ -25,8 +25,9 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
+//use Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
+//use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class DefaultController extends Controller
 {
@@ -194,32 +195,6 @@ class DefaultController extends Controller
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            "menu_color" => "vert"
-        );
-    }
-
-    /**
-     * Displays a form to edit an existing user entity.
-     * @Route("/certificate/{id}/", name="user_certificate")
-     * @ParamConverter("User", options={"mapping": {"id": "id"}})
-     * @Template()
-     * @param User $user
-     * @return array
-     */
-    public function certificateAction(User $user)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $request = Request::createFromGlobals();
-        $http = $request->server->get('SSL_CLIENT_V_END');
-        var_dump($_SERVER);
-        var_dump($_SERVER['SSL_CLIENT_V_END']);
-
-
-        return array(
-            'entity' => $user,
-            'http' => $http,
             "menu_color" => "vert"
         );
     }
