@@ -55,4 +55,4 @@ parameters:
         environnement: demo.sesile
         zone: sictiam.fr
         target: dmzproxy.sictiam.fr.
-    email_sender_address: sictiam.dev@sesile.fr
+    email_sender_address: sesile@sictiam.fr
