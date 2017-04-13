@@ -675,12 +675,12 @@ class DocumentController extends Controller
         return new JsonResponse(array("error" => "ok"));
 
     }
-
+/*
     /**
      * @Route("/edit-history/{id}/document", name="edit_history_document",  options={"expose"=true})
      * @Method("POST")
      */
-    public function editHistoryFactory($id) {
+    /*public function editHistoryFactory($id) {
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
         // Ecriture de l'hitorique du document
@@ -689,7 +689,7 @@ class DocumentController extends Controller
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Edition du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
         return new Response();
-    }
+    }*/
 
 
     /**

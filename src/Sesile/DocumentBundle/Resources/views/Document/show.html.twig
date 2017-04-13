@@ -298,7 +298,7 @@
     $('.dropdown-toggle').dropdown();
 
     {# Script pour l edition de document #}
-    var fNewDoc = false;
+    /*var fNewDoc = false;
     var EditDocumentButton = null;
     try {
         EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3');
@@ -324,9 +324,9 @@
         } else {
             hownowPlugin.EditDocument(strDocument, version);
         }
-    }
+    }*/
 
-
+/*
     $('#visubutton').click(function(e) {
         e.preventDefault();
         editDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');
@@ -335,19 +335,13 @@
         $.ajax({
             url: Routing.generate('edit_history_document', {id:idDoc}),
             type: "post"
-//            success: function () {
-//                console.log('historique ok')
-//            },
-//            error: function () {
-//                console.log('historique pas ok !!')
-//            }
         });
     });
 
     // On supprime le bouton pour le plugin MS Ofice 2013
     if(version == 15) {
         $('#visubutton').css('display', 'none');
-    }
+    }*/
     {# FIN du Script pour l edition de document #}
 
     $("#deleteconfirm").click(function (e) {
