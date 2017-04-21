@@ -904,10 +904,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
     private function actionToArray($action)
     {
-        return array('id' => $action->getId(),
+        return array(
+            'id' => $action->getId(),
             'username' => $action->getUsername(),
             'date' => $action->getDate(),
-            'action' => $action->getAction());
+            'action' => $action->getAction(),
+            'observation' => $action->getObservation()
+        );
     }
 
     private function docToArray($doc)
