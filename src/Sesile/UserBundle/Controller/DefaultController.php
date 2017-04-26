@@ -25,9 +25,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
-//use Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
-//use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class DefaultController extends Controller
 {
@@ -197,6 +196,49 @@ class DefaultController extends Controller
             'delete_form' => $deleteForm->createView(),
             "menu_color" => "vert"
         );
+    }
+
+    /**
+     * Displays a form to edit an existing user entity.
+     * @Route("/certificate/{id}/", name="user_certificate")
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @Template()
+     * @param User $user
+     * @return array
+     */
+    public function certificateAction(User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $request = Request::createFromGlobals();
+        $http = $request->server->get('SSL_CLIENT_V_END');
+        //var_dump($_SERVER);
+        //var_dump($_SERVER['SSL_CLIENT_V_END']);
+
+        return array(
+            'user' => $user,
+            'http' => $http,
+            "menu_color" => "vert"
+        );
+    }
+
+    /**
+     * Update an existing User entity.
+     * @Route("/certificate_delete/{id}", name="certificate_delete")
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @Template("SesileUserBundle:Default:certificate.html.twig")
+     * @param User $user
+     * @return array
+     */
+    public function removeCertificateAction(User $user) {
+
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            "Certificat désappairé pour " . $user->getPrenom() . " " . $user->getNom()
+        );
+
+        return $this->redirect($this->generateUrl('user_certificate', array('id' => $user->getId())));
+
     }
 
 

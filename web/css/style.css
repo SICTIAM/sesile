@@ -755,6 +755,12 @@ select [name=user] {
 	font-weight: bold;
 }
 
+
+.cert_attr {
+	color: #6e6e6e;
+	font-weight: bold;
+	font-size: 1.1em;
+}
 .parc_avatar {
 	display: none !important;
 }
