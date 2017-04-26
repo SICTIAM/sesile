@@ -160,6 +160,19 @@ class AdminController extends Controller
             $post->ttl = 60;
             $api->post('/domain/zone/'.$ovh->zone.'/record',$post);
 
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+            /**
+             * on prévient les devs
+             */
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Nouvelle Collectivité créée')
+                ->setFrom('sesile@sictiam.fr')
+                ->setTo('internet@sictiam.fr')
+                ->setBody("La collectivité ".$form->get('nom')->getData()." vient d'être créée dans SESILE merci d'ajouter l'adresse ".$post->subDomain.".".$ovh->zone." dans vProxymus. \n\n\n" .
+                        "La collectivité a été créée par " . $user->getPrenom() . " " . $user->getNom(). " " . $user->getEmail() . " pour l'envirronement : " . $environnement)
+                ->setContentType('text/html');
+            $this->get('mailer')->send($message);
             return $this->redirect($this->generateUrl('index_collectivite'));
         }
 
