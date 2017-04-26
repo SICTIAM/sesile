@@ -99,12 +99,12 @@ be_simple_sso_auth:
             version: 2
         server:
             id: cas
-            login_url: https://sso.dev.sictiam.fr/login
-            logout_url: https://sso.dev.sictiam.fr/logout
-            validation_url: https://sso.dev.sictiam.fr/serviceValidate
+            login_url: https://devsso.sictiam.fr/login
+            logout_url: https://devsso.sictiam.fr/logout
+            validation_url: https://devsso.sictiam.fr/serviceValidate
 
 parameters:
-    cas_server: sso.dev.sictiam.fr
+    cas_server: devsso.sictiam.fr
 #    cas_port: 389
 #    cas_path: /
 #    cas_protocol: '2.0'
