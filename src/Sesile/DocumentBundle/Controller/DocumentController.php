@@ -415,6 +415,25 @@ class DocumentController extends Controller
         return array('name' => $name);
     }
 
+    private function authorizeToDownloadDocument($doc, $user) {
+        // user courant
+        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
+        $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($user);
+        $usersdelegated[] = $user;
+
+        // Verification que l utilisateur a bien les droits
+        $usersForClasseur = $doc->getClasseur()->getVisible();
+        // Si l'utilisateur n a pas les droits, on l eject
+        if(!array_intersect($usersdelegated, $usersForClasseur->toArray())
+            && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+            && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
+        ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     /**
      * @Route("/download/{id}", name="download_doc",  options={"expose"=true})
      *
@@ -425,27 +444,17 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
-        // user courant
-        $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
-        $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($this->getUser());
-        $usersdelegated[] = $this->getUser();
-
-        // Verification que l utilisateur a bien les droits
-        $usersForClasseur = $doc->getClasseur()->getVisible();
-
-        // Si l'utilisateur n a pas les droits, on l eject
-        if(!array_intersect($usersdelegated, $usersForClasseur->toArray())) {
+        // Verif des autorisations
+        if(!$this->authorizeToDownloadDocument($doc, $this->getUser())) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
 
-        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($this->getUser()->getId());
 
         // Ecriture de l'hitorique du document
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
         $response = new Response();
-
 
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
@@ -470,6 +479,11 @@ class DocumentController extends Controller
         // Recuperation du classeur
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+        // Verif des autorisations
+        if(!$this->authorizeToDownloadDocument($doc, $this->getUser())) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
 
         // Ecriture de l'hitorique du document
         $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
@@ -558,6 +572,12 @@ class DocumentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+        // Verif des autorisations
+        if(!$this->authorizeToDownloadDocument($doc, $this->getUser())) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
         // Ecriture de l'hitorique du document
         $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
@@ -584,11 +604,15 @@ class DocumentController extends Controller
      *
      */
     public function downloadSignAction($id, $absSign = 10, $ordSign = 10) {
-//        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
-//        require($this->get('kernel')->getRootDir() . '/../vendor/setasign/setapdf-stamper/library/SetaPDF/Autoload.php');
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
+        // Verif des autorisations
+        if(!$this->authorizeToDownloadDocument($doc, $this->getUser())) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
         // Ecriture de l'hitorique du document
         $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
