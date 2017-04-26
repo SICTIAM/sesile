@@ -673,7 +673,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $action = new Action();
             $action->setClasseur($elclasseur);
             $action->setUser($user);
-            $action->setAction("Modification du document " . $document->getName());
+            $action->setAction("Ajout du document au classeur " . $elclasseur->getNom());
             $em->persist($action);
 
 
