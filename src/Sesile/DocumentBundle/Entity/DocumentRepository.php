@@ -138,7 +138,6 @@ class DocumentRepository extends EntityRepository
         } else {
             $pagePosition = 'last';
         }
-//var_dump($document);
         // On recupere l orientation de la page portrait ou paysage
         // $format = $this->getFormatPdf($document, $first);
 
@@ -225,7 +224,7 @@ class DocumentRepository extends EntityRepository
         // On defini lequel des stamp est le plus large
         $stampWidth = $stamp->getWidth();
         $stamp_visaWidth = $stamp_visa->getWidth();
-        if ($stampWidth >> $stamp_visaWidth) {
+        if ($stampWidth >= $stamp_visaWidth) {
             $stamp_visa->setWidth($stampWidth);
         } else {
             $stamp_visa->setWidth($stamp_visaWidth + $padding);

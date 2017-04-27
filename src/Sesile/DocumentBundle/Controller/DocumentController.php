@@ -197,22 +197,18 @@ class DocumentController extends Controller
 
     /**
      * @Route("/uploadpdffile", name="upload_pdf_doc",  options={"expose"=true})
-     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function uploadPdfAction(Request $request) {
 
-//        error_log(" - upload PDF" . print_r($request->files->all(),true));
         $repourl = $request->files->get('formpdf')->getClientOriginalName();
-//        error_log(" - form PDF" . $request->files->get('formpdf')->getClientOriginalName());
         $em = $this->getDoctrine()->getManager();
         $uploadedfile = $request->files->get('formpdf');
-//        $id = $request->request->get('id');
         if (empty($uploadedfile)) {
-//            error_log(" - Upload empty ");
             return new JsonResponse(array("error" => "nothinguploaded"));
         }
 
-//        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneByRepourl($repourl);
         if (empty($doc)) {
             error_log(" - No document");
@@ -224,7 +220,6 @@ class DocumentController extends Controller
             $uploadedfile->move('uploads/docs/', $doc->getRepourl());
             $doc->setSigned(true);
             $em->flush();
-//            error_log(" - Uploaded !");
             return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
 
         } else {
@@ -567,9 +562,6 @@ class DocumentController extends Controller
     public function downloadVisaAction($id, $absVisa = 10, $ordVisa = 10)
     {
 
-//        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
-//        require($this->get('kernel')->getRootDir() . '/../vendor/setasign/setapdf-stamper/library/SetaPDF/Autoload.php');
-
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
@@ -586,12 +578,9 @@ class DocumentController extends Controller
         $city = $user->getCollectivite();
 
         /* SetaPDF */
-
         $firstPage = true;
-//        $texteVisa = 'VISE PAR';
         $texteVisa = $city->getTitreVisa();
         $classeurId = $doc->getClasseur()->getId();
-//        $color = '#454545';
         $color = $city->getCouleurVisa();
 
         $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponVisa($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $firstPage, $texteVisa, $color);
