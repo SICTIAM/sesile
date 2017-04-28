@@ -1556,11 +1556,9 @@ class ClasseurController extends Controller {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         // MAJ de l etat de la visibilité, nom, description, date de validation
-//        $em->getRepository('SesileClasseurBundle:Classeur')->updateInfosClasseurs($request, $ids);
         $this->updateInfosClasseurs($request, $ids, $em);
 
         // Infos JSON liste des fichiers
-//        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findById($ids);
 
         // Gestion du role de l utilisateur
@@ -1578,16 +1576,13 @@ class ClasseurController extends Controller {
                 $roleArg = 'Non renseigné';
             }
         }
-//        $documents = $classeur->getDocuments();
         $classeursJSON = array();
-//        $documentsJSON = array();
 
         // Generation du token pour les documents
         $token = uniqid();
 
         // Pour chaque classeurs
         foreach ($classeurs as $classeur) {
-//            var_dump("Classeur : " . $classeur->getId() . " " . $classeur->getNom() . "<br>");
 
             // Recuperation url de retour pour la validation du classeur
             $url_valid_classeur = $this->generateUrl('valider_classeur_jws', array('id' => $classeur->getId(), 'user_id' => $user->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
@@ -1598,7 +1593,6 @@ class ClasseurController extends Controller {
             foreach ($classeur->getDocuments() as $document) {
 
                 if(!$document->getSigned()) {
-//                    var_dump("Document : " . $document->getName() . "<br>");
 
                     $document->setToken($token);
 
@@ -1636,8 +1630,6 @@ class ClasseurController extends Controller {
                 'documents' => $documentsJSON
             );
         }
-//        $classeursJSON[] = $documentsJSON;
-//        var_dump($classeursJSON); die();
         $arguments[] = json_encode($classeursJSON);
 
 

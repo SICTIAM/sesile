@@ -798,11 +798,7 @@ class DocumentController extends Controller
 
             //on récupère la date de signature (il y a surement plus simple)
 
-            $dateMoche = $xml->PES_DepenseAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
-            list($jourMoche, $heureMoche) = explode('T', $dateMoche);
-            list($annee, $jour, $mois) = explode('-', $jourMoche);
-            list($heure, $minute, $reste) = explode(':', $heureMoche);
-            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure) . ':' . $minute;
+            $date = $xml->PES_DepenseAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
 
         } elseif(isset($xml->PES_RecetteAller) && count($xml->PES_RecetteAller->Bordereau->Signature)) {
             //si on a une signature  on récupère le certificat
@@ -815,11 +811,8 @@ class DocumentController extends Controller
 
             //on récupère la date de signature (il y a surement plus simple)
 
-            $dateMoche = $xml->PES_RecetteAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
-            list($jourMoche, $heureMoche) = explode('T', $dateMoche);
-            list($annee, $jour, $mois) = explode('-', $jourMoche);
-            list($heure, $minute, $reste) = explode(':', $heureMoche);
-            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure) . ':' . $minute;
+            $date = $xml->PES_RecetteAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
+
         }
         else{
             $Signataire = '';
@@ -907,11 +900,7 @@ class DocumentController extends Controller
 
             //on récupère la date de signature (il y a surement plus simple)
 
-            $dateMoche = $xml->PES_DepenseAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
-            list($jourMoche, $heureMoche) = explode('T', $dateMoche);
-            list($annee, $jour, $mois) = explode('-', $jourMoche);
-            list($heure, $minute, $reste) = explode(':', $heureMoche);
-            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure + 2) . ':' . $minute;
+            $date = $xml->PES_DepenseAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
 
         } elseif(isset($xml->PES_RecetteAller) && count($xml->PES_RecetteAller->Bordereau->Signature)) {
             //si on a une signature  on récupère le certificat
@@ -924,11 +913,8 @@ class DocumentController extends Controller
 
             //on récupère la date de signature (il y a surement plus simple)
 
-            $dateMoche = $xml->PES_RecetteAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
-            list($jourMoche, $heureMoche) = explode('T', $dateMoche);
-            list($annee, $jour, $mois) = explode('-', $jourMoche);
-            list($heure, $minute, $reste) = explode(':', $heureMoche);
-            $date = $jour . '/' . $mois . '/' . $annee . ' ' . intval($heure + 2) . ':' . $minute;
+            $date = $xml->PES_RecetteAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
+
         }
         else{
             $Signataire = '';
