@@ -32,6 +32,7 @@ twig:
         upload_path_logo: uploads/logo_coll/
         upload_path_docs: /uploads/docs/
         upload_path_signatures: /uploads/signatures/
+        sesile_version: 3.5
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 # Assetic Configuration
