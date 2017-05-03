@@ -15,42 +15,6 @@
             </h3>
 
             {% if doc is not null %}
-                {% if (doc.type  == "application/vnd.ms-excel" ) or
-                (doc.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") or
-                (doc.type == "application/msword") or
-                (doc.type  == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") %}
-
-                    <!--Bouton Editer Visualiseur PES -->
-
-                    {#<a id='modifbutton' style="display: none" class="btn btn-primary" role="button" data-toggle="modal" data-target="#modifbutton"
-                       data-whatever="@mdo" class=".bs-example-modal-lg"
-                       onclick="javascript:fireDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');return false;"
-                       href="#"
-                       class="btn btn-primary" role="button">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                        Editer
-                    </a>#}
-
-                    {% if isvalidant %}
-                        <a href="#" class="btn btn-primary" id="visubutton">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                            Editer
-                        </a>
-                    {%  endif %}
-
-
-
-                    {#<a type="submit" class="btn btn-primary" role="button" data-toggle="modal" id='modifbutton'
-                       data-whatever="@mdo" class=".bs-example-modal-lg">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                        &nbsp;Editer
-                    </a>#}
-
-
-
-
-                {% endif %}
-
 
                 {% if doc.type != 'application/pdf' %}
                 {#{% if doc.type != 'application/pdf' and signature %}#}
@@ -278,71 +242,11 @@
     {% endif %}
 </div>
 
-{#
-    <div class="col-md-2 pull-right">
-    <div class="btn-group pull-right">
-                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-trash"> </span>
-                      Supprimer <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a id="deleteconfirm" href="#">Je confirme !</a></li>
-
-                </ul>
-            </div>
-        </div>
-    </div> #}
 </div>
 
 <script type="text/javascript">
     // Dropdown init
     $('.dropdown-toggle').dropdown();
-
-    {# Script pour l edition de document #}
-    /*var fNewDoc = false;
-    var EditDocumentButton = null;
-    try {
-        EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3');
-        if (EditDocumentButton != null) {
-            fNewDoc = true;
-        }
-    } catch (e) {}
-
-    var L_EditDocumentError_Text = "Editing not supported.";
-    var L_EditDocumentRuntimeError_Text = "Sorry, couldn't open the document.";
-    var hownowPlugin = document.getElementById("winFirefoxPlugin");
-    try {
-       var version = hownowPlugin.GetOfficeVersion();
-    } catch (err) {
-        var version = 15;
-    }
-
-    function editDocument(strDocument) {
-        if (fNewDoc) {
-            if (!EditDocumentButton.EditDocument(strDocument)) {
-                alert(L_EditDocumentRuntimeError_Text);
-            }
-        } else {
-            hownowPlugin.EditDocument(strDocument, version);
-        }
-    }*/
-
-/*
-    $('#visubutton').click(function(e) {
-        e.preventDefault();
-        editDocument('http://{{ servername }}/server.php/{{ doc.repourl }}');
-
-        idDoc = {{ doc.id}};
-        $.ajax({
-            url: Routing.generate('edit_history_document', {id:idDoc}),
-            type: "post"
-        });
-    });
-
-    // On supprime le bouton pour le plugin MS Ofice 2013
-    if(version == 15) {
-        $('#visubutton').css('display', 'none');
-    }*/
-    {# FIN du Script pour l edition de document #}
 
     $("#deleteconfirm").click(function (e) {
 
@@ -408,8 +312,3 @@
     {% endif %}
 
 </script>
-
-
-
-
-
