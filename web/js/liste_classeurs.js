@@ -4,7 +4,6 @@
  */
 
 // Gestion de l affichage du bouton de signature par lot
-//console.log(".chk : " + $("chk").length);
 if ($(".chk").length == 0) {
     $(".btn-sign-select").hide();
 }
