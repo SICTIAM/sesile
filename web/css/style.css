@@ -1071,3 +1071,8 @@ select [name=user] {
 .statut_refuse, .statut_cours, .statut_finalise, .statut_retire, .statut_retracte {
 	display: none;
 }
+
+#form_a_valider label {
+	color: #000000;
+	font-weight: normal;
+}
