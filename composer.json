@@ -21,7 +21,7 @@
         "sensio/distribution-bundle": "5.0.*",
         "sensio/framework-extra-bundle": "3.0.*",
         "incenteev/composer-parameter-handler": "~2.0",
-        "friendsofsymfony/user-bundle": "2.0.*@dev",
+        "friendsofsymfony/user-bundle": "2.0.*",
         "friendsofsymfony/jsrouting-bundle": "~1.1",
         "oneup/uploader-bundle": "~1.0",
         "friendsofsymfony/rest-bundle": "2.0.*",
@@ -78,7 +78,7 @@
     },
     "http-basic": {
         "www.setasign.com/downloads/": {
-            "username": "internet@sictiam.fr",
+            "username": "***REMOVED***",
             "password": "***REMOVED***"
         }
     }
