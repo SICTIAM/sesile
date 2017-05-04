@@ -263,14 +263,14 @@ class Document
      * @param string $format
      * @return bool|string
      */
-    public function getPDFImage($page = 0, $orientation = "PORTRAIT") {
+    public function getPDFImage($page = 0, $orientation = "PORTRAIT", $path) {
         if($this->getType() == "application/pdf") {
 
 
             $imagick = new Imagick();
 //            $imagick->readImage('mytest.pdf');
 
-            $imagick->readImage('uploads/docs/' . $this->getRepourl() . '[' . $page . ']');
+            $imagick->readImage($path . $this->getRepourl() . '[' . $page . ']');
 
             // Si le PDF est au format portrait
             if ($orientation == "PORTRAIT") {
@@ -283,8 +283,6 @@ class Document
 //          header("Content-Type: image/jpg");
             return base64_encode($imagick->getImageBlob());
 
-            /*$imagick->writeImage('uploads/docs/' . $doc->getRepourl() . '.output.jpg');
-            $thumbail = 'uploads/docs/' . $doc->getRepourl() . '.output.jpg';*/
         } else return true;
     }
 

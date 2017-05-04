@@ -1,16 +1,39 @@
-<div id="doc">
-    <div id="fichiers" class="dropzone"></div>
-    <br>
-    {#{% if classeur.type.id == 2 %}
-        {% if classeur.documents|length %}
-        <a href="{{ path('visu', {'id':classeur.documents[0].id}) }}" class="btn btn-warning" role="button">
-            <span class="glyphicon glyphicon-eye-open"></span>
-            &nbsp;Visualiser
-        </a>
-        {% endif %}
-    {% endif %}#}
-    <div id="filedescription" style="display:none"></div>
+<div class="row">
+    <div class="col-lg-9">
+        <div id="doc">
+            <div id="fichiers" class="dropzone"></div>
+            <br>
+            <div id="filedescription" style="display:none"></div>
+        </div></div>
+    <div class="col-lg-3 text-right">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Télécharger tous les fichiers <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <li><a href="{{ path('download_doc_all_files', {'id':classeur.id}) }}">Télécharger les originaux</a></li>
+                {# Si le classeur est validé seuelement on peut accéder aux options de téléchargements du visa et de la signature #}
+                {% if classeur.status == 2 %}
+                    <li><a href="{{ path('download_doc_visa_all_files', {'id':classeur.id}) }}" target="_blank">Télécharger visa</a></li>
+                    <li {% if signature is null %}class="disabled"{% endif %}>
+                        {% if signature is null %}
+                            <a href="#">Télécharger signature</a>
+                        {% else %}
+                            <a href="{{ path('download_doc_sign_all_files', {'id':classeur.id}) }}" target="_blank">Télécharger signature</a>
+                        {% endif %}
+                    </li>
+                    <li {% if signature is null %}class="disabled"{% endif %}>
+                        {% if signature is null %}
+                            <a href="#">Télécharger visa + signature</a>
+                        {% else %}
+                            <a href="{{ path('download_doc_all_all_files', {'id':classeur.id}) }}" target="_blank">Télécharger visa + signature</a>
+                        {% endif %}
 
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
 </div>
 
 <script src="{{ asset('js/dropzone.js') }}"></script>

@@ -18,6 +18,7 @@ use Sesile\DocumentBundle\Classe\Piece;
 use Sesile\DocumentBundle\Classe\Bordereau;
 use Sesile\DocumentBundle\Classe\PJ;
 use Sesile\DocumentBundle\Entity\Document;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class DocumentController extends Controller
 {
@@ -39,6 +40,7 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
+        $path = $this->container->getParameter('upload')['fics'];
         $validantsId = array();
         foreach ($validants as $validant) {
             $validantsId[] =$validant->getId();
@@ -53,13 +55,27 @@ class DocumentController extends Controller
         $names = array();
         foreach ($docs as $doc) {
             $names[$doc->getId()] = addslashes($doc->getName());
-            $tailles[$doc->getId()] = filesize('uploads/docs/' . $doc->getRepoUrl());
+            $tailles[$doc->getId()] = filesize($path . $doc->getRepoUrl());
             $types[$doc->getName()] = $doc->getType();
             $ids[$doc->getId()] = $doc->getName();
         }
 
+        // On recupere le dernier utilisateur ayant validé le classeur
+        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($doc->getClasseur()->getLastValidant());
 
-        return array('names'=>$names,'docs' => $docs, 'classeur' => $classeur, 'tailles' => $tailles, 'types' => $types, 'ids' => $ids, 'isvalidable' => $isvalidable);
+        // Recup infos users
+        $lastUser ? $signature = $lastUser->getPathSignature() : $signature = null;
+
+        return array(
+            'names'     => $names,
+            'docs'      => $docs,
+            'classeur'  => $classeur,
+            'tailles'   => $tailles,
+            'types'     => $types,
+            'ids'       => $ids,
+            'isvalidable' => $isvalidable,
+            'signature' => $signature
+        );
 
     }
 
@@ -73,6 +89,8 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $uploadedfile = $request->files->get('signedFile');
         $id = $request->request->get('id');
+        $path = $this->container->getParameter('upload')['fics'];
+
         if (empty($uploadedfile)) {
             return new JsonResponse(array("error" => "nothinguploaded"));
         }
@@ -82,12 +100,12 @@ class DocumentController extends Controller
             return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
         }
 
-        if (file_exists('uploads/docs/' . $doc->getRepourl())) {
-            unlink('uploads/docs/' . $doc->getRepourl());
-            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+        if (file_exists($path . $doc->getRepourl())) {
+            unlink($path . $doc->getRepourl());
+            $uploadedfile->move($path, $doc->getRepourl());
             $doc->setSigned(true);
             $em->flush();
-            return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
+            return new JsonResponse(array("error" => "ok", "url" => $path . $doc->getRepourl()));
 
         } else {
             unlink($uploadedfile->getRealPath());
@@ -123,6 +141,7 @@ class DocumentController extends Controller
 
         // Récupération des variables
         $uploadedfile = $request->files->get('upload-file');
+        $path = $this->container->getParameter('upload')['fics'];
 
 
         // Verification des paramètres
@@ -138,7 +157,7 @@ class DocumentController extends Controller
         }
 
         // Vérification du token
-        if ($doc->getToken() !== null && $doc->getToken() == $token && file_exists('uploads/docs/' . $doc->getRepourl())) {
+        if ($doc->getToken() !== null && $doc->getToken() == $token && file_exists($path . $doc->getRepourl())) {
 
             // On renomme le document pour indiquer qu il est signéz
             $ancienNom = $doc->getName();
@@ -157,7 +176,7 @@ class DocumentController extends Controller
                 $path_doc = pathinfo($doc->getRepourl());
                 $documentSignedURL = $path_doc['filename'] . '-sign-' . $dateToday->format('YmdHis');
                 // Upload du nouveau fichier
-                $uploadedfile->move('uploads/docs/', $documentSignedURL);
+                $uploadedfile->move($path, $documentSignedURL);
                 $documentSign = new DocumentDetachedSign();
                 $documentSign->setName($docSignNom);
                 $documentSign->setRepourl($documentSignedURL);
@@ -167,10 +186,10 @@ class DocumentController extends Controller
             }
             // Dans les autres cas : pades, xades, xades-pes
             else {
-                unlink('uploads/docs/' . $doc->getRepourl());
+                unlink($path . $doc->getRepourl());
 
                 // Upload du nouveau fichier
-                $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+                $uploadedfile->move($path, $doc->getRepourl());
                 // On enregistre le nouveau nom
                 $doc->setName($nouveauNom);
             }
@@ -183,7 +202,7 @@ class DocumentController extends Controller
 
             // On enregistre les données
             $em->flush();
-            return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
+            return new JsonResponse(array("error" => "ok", "url" => $path . $doc->getRepourl()));
 
         } else {
             unlink($uploadedfile->getRealPath());
@@ -205,6 +224,8 @@ class DocumentController extends Controller
         $repourl = $request->files->get('formpdf')->getClientOriginalName();
         $em = $this->getDoctrine()->getManager();
         $uploadedfile = $request->files->get('formpdf');
+        $path = $this->container->getParameter('upload')['fics'];
+
         if (empty($uploadedfile)) {
             return new JsonResponse(array("error" => "nothinguploaded"));
         }
@@ -215,12 +236,12 @@ class DocumentController extends Controller
             return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
         }
 
-        if (file_exists('uploads/docs/' . $doc->getRepourl())) {
-            unlink('uploads/docs/' . $doc->getRepourl());
-            $uploadedfile->move('uploads/docs/', $doc->getRepourl());
+        if (file_exists($path . $doc->getRepourl())) {
+            unlink($path . $doc->getRepourl());
+            $uploadedfile->move($path, $doc->getRepourl());
             $doc->setSigned(true);
             $em->flush();
-            return new JsonResponse(array("error" => "ok", "url" => 'uploads/docs/' . $doc->getRepourl()));
+            return new JsonResponse(array("error" => "ok", "url" => $path . $doc->getRepourl()));
 
         } else {
             unlink($uploadedfile->getRealPath());
@@ -284,7 +305,8 @@ class DocumentController extends Controller
 //                $orientationPDFFirst = $document->getCatalog()->getPages()->getPage(1)->getRotation();
                 $orientationPDFFirst = $this->getDocumentOrientation($document->getCatalog()->getPages()->getPage(1)->getWidthAndHeight());
 
-                $imagePDFFirst = $doc->getPDFImage(0, $orientationPDFFirst);
+                $path = $this->container->getParameter('upload')['fics'];
+                $imagePDFFirst = $doc->getPDFImage(0, $orientationPDFFirst, $path);
 
 
                 // Si c est la derniere page
@@ -294,12 +316,11 @@ class DocumentController extends Controller
                     $pages = $document->getCatalog()->getPages();
                     $pageCount = $pages->count();
                     $orientationPDFLast = $this->getDocumentOrientation($document->getCatalog()->getPages()->getLastPage()->getWidthAndHeight());
-                    $imagePDFLast = $doc->getPDFImage($pageCount-1, $orientationPDFLast);
+                    $imagePDFLast = $doc->getPDFImage($pageCount-1, $orientationPDFLast, $path);
                 }
                 else {
                     $orientationPDFLast = $orientationPDFFirst;
                     $imagePDFLast = $imagePDFFirst;
-                    // $imagePDFLast = $doc->getPDFImage(0, $orientationPDFLast);
                 }
             } else {
                 $imagePDFFirst = "";
@@ -410,14 +431,14 @@ class DocumentController extends Controller
         return array('name' => $name);
     }
 
-    private function authorizeToDownloadDocument($doc, $user) {
+    private function authorizeToDownloadDocument($visible, $user) {
         // user courant
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($user);
         $usersdelegated[] = $user;
 
         // Verification que l utilisateur a bien les droits
-        $usersForClasseur = $doc->getClasseur()->getVisible();
+        $usersForClasseur = $visible;
         // Si l'utilisateur n a pas les droits, on l eject
         if(!array_intersect($usersdelegated, $usersForClasseur->toArray())
             && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
@@ -440,10 +461,11 @@ class DocumentController extends Controller
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
-        if(!$this->authorizeToDownloadDocument($doc, $this->getUser())) {
+        if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
 
+        $path = $this->container->getParameter('upload')['fics'];
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($this->getUser()->getId());
 
         // Ecriture de l'hitorique du document
@@ -452,15 +474,12 @@ class DocumentController extends Controller
         $response = new Response();
 
         $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
+        $response->headers->set('Content-type', mime_content_type($path . $doc->getRepourl()));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getName() . '"');
-        $response->headers->set('Content-Length', filesize('uploads/docs/' . $doc->getRepourl()));
+        $response->headers->set('Content-Length', filesize($path . $doc->getRepourl()));
 
-        // $response->sendHeaders();
+        $response->setContent(file_get_contents($path . $doc->getRepourl()));
 
-        $response->setContent(file_get_contents('uploads/docs/' . $doc->getRepourl()));
-
-        //  var_dump($response);
         return $response;
     }
 
@@ -476,9 +495,11 @@ class DocumentController extends Controller
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
-        if(!$this->authorizeToDownloadDocument($doc, $this->getUser())) {
+        if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
+
+        $path = $this->container->getParameter('upload')['fics'];
 
         // Ecriture de l'hitorique du document
         $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
@@ -487,15 +508,15 @@ class DocumentController extends Controller
 
         // On créé le fichier ZIP
         $zip = new \ZipArchive();
-        $zipRepoUrl = 'uploads/docs/' . $doc->getRepourl() . '.zip';
+        $zipRepoUrl = $path . $doc->getRepourl() . '.zip';
         if($zip->open($zipRepoUrl, \ZipArchive::CREATE) === true) {
 
             // On ajoute le fichier original
-            $zip->addFile('uploads/docs/' . $doc->getRepourl(), $doc->getName());
+            $zip->addFile($path . $doc->getRepourl(), $doc->getName());
 
             // On ajoute tous les fichiers signés
             foreach ($doc->getDetachedsign() as $detachedFile) {
-                $zip->addFile('uploads/docs/' . $detachedFile->getRepourl(), $detachedFile->getName());
+                $zip->addFile($path . $detachedFile->getRepourl(), $detachedFile->getName());
             }
 
 
@@ -507,7 +528,6 @@ class DocumentController extends Controller
 
         // On créé la réponse pour télécharger le fichier zip
         $response = new Response();
-
 
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'application/zip');
@@ -528,45 +548,42 @@ class DocumentController extends Controller
      */
     public function downloadJWSAction(Request $request, $name, $token = null)
     {
-
-
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $name));
 
+        $path = $this->container->getParameter('upload')['fics'];
 
         if($doc->getToken() !== null && $doc->getToken() == $token) {
             $response = new Response();
 
             $response->headers->set('Cache-Control', 'private');
-            $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $doc->getRepourl()));
+            $response->headers->set('Content-type', mime_content_type($path . $doc->getRepourl()));
             $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getName() . '"');
-            $response->headers->set('Content-Length', filesize('uploads/docs/' . $doc->getRepourl()));
+            $response->headers->set('Content-Length', filesize($path . $doc->getRepourl()));
 
-            // $response->sendHeaders();
+            $response->setContent(file_get_contents($path . $doc->getRepourl()));
 
-            $response->setContent(file_get_contents('uploads/docs/' . $doc->getRepourl()));
-
-            //  var_dump($response);
             return $response;
         } else {
             return new JsonResponse(array("Requete invalide" => "0"));
         }
 
-
     }
 
     /**
      * @Route("/download_visa/{id}/{absVisa}/{ordVisa}", name="download_doc_visa",  options={"expose"=true})
-     *
+     * @param $id
+     * @param int $absVisa
+     * @param int $ordVisa
+     * @return Response
      */
     public function downloadVisaAction($id, $absVisa = 10, $ordVisa = 10)
     {
-
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
-        if(!$this->authorizeToDownloadDocument($doc, $this->getUser())) {
+        if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
 
@@ -576,14 +593,18 @@ class DocumentController extends Controller
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
         $city = $user->getCollectivite();
+        $path = $this->container->getParameter('upload')['fics'];
 
         /* SetaPDF */
-        $firstPage = true;
-        $texteVisa = $city->getTitreVisa();
-        $classeurId = $doc->getClasseur()->getId();
-        $color = $city->getCouleurVisa();
-
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponVisa($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $firstPage, $texteVisa, $color);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponVisa($doc->getRepourl(),
+            $doc->getClasseur()->getId(),
+            $absVisa,
+            $ordVisa,
+            true,
+            $city->getTitreVisa(),
+            $city->getCouleurVisa(),
+            $path
+        );
         /* FIN SetaPDF */
 
     }
@@ -598,7 +619,7 @@ class DocumentController extends Controller
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
-        if(!$this->authorizeToDownloadDocument($doc, $this->getUser())) {
+        if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
             return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
         }
 
@@ -609,20 +630,23 @@ class DocumentController extends Controller
 
         // On recupère la collectivité pour ses paramètres
         $city = $user->getCollectivite();
+        $path = $this->container->getParameter('upload')['fics'];
 
         // On recupere le dernier utilisateur ayant validé le classeur
-        $lastUserId = $doc->getClasseur()->getLastValidant();
-        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($lastUserId);
+        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($doc->getClasseur()->getLastValidant());
 
         /* SetaPDF */
-
-        $firstPage = $city->getPageSignature();
-
         $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
-        $classeurId = $doc->getClasseur()->getId();
 
-//        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTampon($doc->getRepourl(), $classeurId, $translateX, $translateY, $firstPage, $texteVisa, false, $imageSignature);
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(), $absSign, $ordSign, $firstPage, $imageSignature, $lastUser, $classeurId);
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(),
+            $absSign,
+            $ordSign,
+            $city->getPageSignature(),
+            $imageSignature,
+            $lastUser,
+            $doc->getClasseur()->getId(),
+            $path
+        );
         /* FIN SetaPDF */
     }
 
@@ -631,8 +655,6 @@ class DocumentController extends Controller
      *
      */
     public function downloadAllAction($id, $absVisa = 10, $ordVisa = 10, $absSign = 10, $ordSign = 10) {
-//        require($this->get('kernel')->getRootDir() . '/../vendor/setapdf/SetaPDF/Autoload.php');
-//        require($this->get('kernel')->getRootDir() . '/../vendor/setasign/setapdf-stamper/library/SetaPDF/Autoload.php');
 
         $em = $this->getDoctrine()->getManager();
         $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
@@ -642,22 +664,28 @@ class DocumentController extends Controller
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
 
         $city = $user->getCollectivite();
+        $path = $this->container->getParameter('upload')['fics'];
 
         // On recupere le dernier utilisateur ayant validé le classeur
-        $lastUserId = $doc->getClasseur()->getLastValidant();
-        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($lastUserId);
-
+        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($doc->getClasseur()->getLastValidant());
+        $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
         /* SetaPDF */
 
-        $texteVisa = $city->getTitreVisa();
-        $color = $city->getCouleurVisa();
-        $firstVisa = true;
-
-        $firstSign = $city->getPageSignature();
-        $classeurId = $doc->getClasseur()->getId();
-        $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
-
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL($doc->getRepourl(), $classeurId, $absVisa, $ordVisa, $absSign, $ordSign, $firstSign, $firstVisa, $imageSignature, $texteVisa, $color, $lastUser, $doc->getSigned());
+        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL(
+            $doc->getRepourl(),
+            $doc->getClasseur()->getId(),
+            $absVisa,
+            $ordVisa,
+            $absSign,
+            $ordSign,
+            $city->getPageSignature(),
+            true,
+            $imageSignature,
+            $city->getTitreVisa(),
+            $city->getCouleurVisa(),
+            $lastUser,
+            $path
+        );
         /* FIN SetaPDF */
     }
 
@@ -688,6 +716,179 @@ class DocumentController extends Controller
         return new JsonResponse(array("error" => "ok"));
 
     }
+
+
+    /**
+     * @Route("/download_doc_all_files/{id}", name="download_doc_all_files")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return Response
+     */
+    public function downloadDocAllFilesAction(Classeur $classeur)
+    {
+        return $this->zipFileDownload($classeur, "NONE");
+    }
+
+    /**
+     * @Route("/download_doc_visa_all_files/{id}", name="download_doc_visa_all_files")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return Response
+     */
+    public function downloadDocVisaAllFilesAction(Classeur $classeur)
+    {
+        return $this->zipFileDownload($classeur, "VISA");
+    }
+
+    /**
+     * @Route("/download_doc_sign_all_files/{id}", name="download_doc_sign_all_files")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return Response
+     */
+    public function downloadDocSignAllFilesAction(Classeur $classeur)
+    {
+        return $this->zipFileDownload($classeur, "SIGN");
+
+    }
+    /**
+     * @Route("/download_doc_all_all_files/{id}", name="download_doc_all_all_files")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return Response
+     */
+    public function downloadDocAllAllFilesAction(Classeur $classeur)
+    {
+        return $this->zipFileDownload($classeur, "ALL");
+    }
+
+    /**
+     * @param $classeur
+     * @param $type
+     * @return Response
+     */
+    private function zipFileDownload ($classeur, $type) {
+
+        // Verif des autorisations
+        if(!$this->authorizeToDownloadDocument($classeur->getVisible(), $this->getUser())) {
+            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        }
+
+        // Ecriture de l'historique du document
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $docs = $classeur->getDocuments();
+
+        $path = $this->container->getParameter('upload')['fics'];
+
+        // On créé le fichier ZIP
+        $zip = new \ZipArchive();
+        $zipRepoUrl = $path . 'classeur_' . $classeur->getId() . '.zip';
+
+        $em = $this->getDoctrine()->getManager();
+
+        foreach ($docs as $doc) {
+            $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+            if($zip->open($zipRepoUrl, \ZipArchive::CREATE) === true) {
+
+                $files_to_delete = array();
+
+                if ($doc->getType() != "application/pdf" || $type == "NONE") {
+                    // On ajoute le fichier original
+                    $zip->addFile($path . $doc->getRepourl(), $doc->getName());
+
+                    // On ajoute tous les fichiers signés
+                    foreach ($doc->getDetachedsign() as $detachedFile) {
+                        $zip->addFile($path . $detachedFile->getRepourl(), $detachedFile->getName());
+                    }
+                }
+                else {
+                    $city = $user->getCollectivite();
+                    $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($doc->getClasseur()->getLastValidant());
+                    $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
+
+
+                    /* SetaPDF */
+                    // on créé le fichier avec le visa
+                    switch ($type) {
+                        case "VISA" :
+                            $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponVisaAll(
+                                $doc->getRepourl(),
+                                $doc->getClasseur()->getId(),
+                                $city->getAbscissesVisa(),
+                                $city->getOrdonneesVisa(),
+                                true,
+                                $city->getTitreVisa(),
+                                $city->getCouleurVisa(),
+                                $path
+                            );
+                            break;
+                        case "SIGN" :
+                            $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignatureAll(
+                                $doc->getRepourl(),
+                                $city->getAbscissesSignature(),
+                                $city->getOrdonneesSignature(),
+                                $city->getPageSignature(),
+                                $imageSignature,
+                                $lastUser,
+                                $doc->getClasseur()->getId(),
+                                $path
+                            );
+                            break;
+                        case "ALL" :
+                            $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALLFiles(
+                                $doc->getRepourl(),
+                                $doc->getClasseur()->getId(),
+                                $city->getAbscissesVisa(),
+                                $city->getOrdonneesVisa(),
+                                $city->getAbscissesSignature(),
+                                $city->getOrdonneesSignature(),
+                                $city->getPageSignature(),
+                                true,
+                                $imageSignature,
+                                $city->getTitreVisa(),
+                                $city->getCouleurVisa(),
+                                $lastUser,
+                                $path
+                            );
+                            break;
+                    }
+
+                    /* FIN SetaPDF */
+
+                    // on ajoute le fichier
+                    $zip->addFile($path . 'visa-' . $doc->getRepourl(), $doc->getName());
+
+                    // on supprime le fichier
+                    $files_to_delete[] = $path . 'visa-' . $doc->getRepourl();
+
+                }
+
+                // On finalise le zip
+                $zip->close();
+
+                foreach ($files_to_delete as $file_to_delete) {
+                    @unlink($file_to_delete);
+                }
+            } else {
+                die('Impossible de créer une archive.');
+            }
+        }
+
+        // On créé la réponse pour télécharger le fichier zip
+        $response = new Response();
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', 'application/zip');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $classeur->getId() . '.zip"');
+        $response->headers->set('Content-Length', filesize($zipRepoUrl));
+        $response->setContent(file_get_contents($zipRepoUrl));
+
+        // Suppression du zip
+        unlink($zipRepoUrl);
+
+        return $response;
+
+    }
+
 /*
     /**
      * @Route("/edit-history/{id}/document", name="edit_history_document",  options={"expose"=true})
