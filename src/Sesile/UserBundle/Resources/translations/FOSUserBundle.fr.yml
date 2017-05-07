@@ -1,0 +1,23 @@
+profile:
+    first_name: 'Prénom'
+    last_name: 'Nom'
+    grade: 'Qualité'
+    avatar: 'Avatar'
+    signature: 'Signature'
+    city: 'Ville'
+    cp: 'Code Postal'
+    department: 'Département'
+    country: 'Pays'
+    roles: 'Rôles'
+    user_roles: 'Rôle utilisateur'
+    local_authoritie: 'Collectivités'
+    roles_choice:
+        user: 'Utilisateur'
+        admin: 'Admin'
+        super_admin: 'Super admin'
+label:
+    disabled: 'Désactivé'
+    enabled: 'Activé'
+    api_token: "Clé d'API"
+    api_secret: 'Secret API'
+    save: 'Enregistrer'
