@@ -19,9 +19,9 @@
         {% for passwordField in form.plainPassword %}
             <div class="label_form label-form-input">
                 {% if loop.index  != 1 %}
-                    {{ form_label(passwordField, 'Confirmation') }}
+                    {{ form_label(passwordField) }}
                 {% else %}
-                    {{ form_label(passwordField, 'Mot de passe') }}
+                    {{ form_label(passwordField) }}
                 {% endif %}
                 {{ form_widget(passwordField) }}
             </div>
@@ -167,14 +167,14 @@
         <br/>
 
         <div class="label_form pickuser">
-            {{ form_label(form.roles, 'Rôles') }}
+            {{ form_label(form.roles) }}
             {{ form_widget(form.roles) }}
         </div>
 
         <br/>
         {% if is_granted('ROLE_SUPER_ADMIN') %}
             <div class="label_form pickuser">
-                {{ form_label(form.collectivite, 'Collectivités') }}
+                {{ form_label(form.collectivite) }}
                 {{ form_widget(form.collectivite) }}
             </div>
         {% endif %}

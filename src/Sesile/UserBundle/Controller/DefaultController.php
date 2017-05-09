@@ -793,19 +793,23 @@ class DefaultController extends Controller
                 'multiple' => true
             ));*/
             $form->add('roles', ChoiceType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'choices' => array(
-                    'Utilisateurs' => 'ROLE_USER',
-                    'Admin'=> 'ROLE_ADMIN',
-                    'Super admin' => 'ROLE_SUPER_ADMIN'
+                    'profile.roles_choice.user' => 'ROLE_USER',
+                    'profile.roles_choice.admin'=> 'ROLE_ADMIN',
+                    'profile.roles_choice.super_admin' => 'ROLE_SUPER_ADMIN'
                 ),
 //                'choices_as_values' => true,
                 'multiple' => true
             ));
         } else {
             $form->add('roles', ChoiceType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'choices' => array(
-                    'Utilisateurs' => 'ROLE_USER',
-                    'Admin' => 'ROLE_ADMIN',
+                    'profile.roles_choice.user' => 'ROLE_USER',
+                    'profile.roles_choice.admin'=> 'ROLE_ADMIN',
                 ),
 //                'choices_as_values' => true,
                 'multiple' => true
@@ -815,6 +819,8 @@ class DefaultController extends Controller
         // liste des collectivités
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('collectivite', EntityType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.local_authoritie',
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
                     return $repository->createQueryBuilder('p')
@@ -825,7 +831,10 @@ class DefaultController extends Controller
             ));
         }
 
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array(
+            'translation_domain' => 'FOSUserBundle',
+            'label' => 'label.save',
+        ));
 
 
         return $form;
@@ -856,10 +865,12 @@ class DefaultController extends Controller
         ));
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('roles', ChoiceType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'choices' => array(
-                    'Utilisateurs' => 'ROLE_USER',
-                    'Admin'=> 'ROLE_ADMIN',
-                    'Super admin' => 'ROLE_SUPER_ADMIN'
+                    'profile.roles_choice.user' => 'ROLE_USER',
+                    'profile.roles_choice.admin'=> 'ROLE_ADMIN',
+                    'profile.roles_choice.super_admin' => 'ROLE_SUPER_ADMIN'
                 ),
 //                'choices_as_values' => true,
                 'choice_label' => function ($value, $key, $index) {
@@ -869,9 +880,11 @@ class DefaultController extends Controller
             ));
         } else {
             $form->add('roles', ChoiceType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'choices' => array(
-                    'Utilisateurs' => 'ROLE_USER',
-                    'Admin'=> 'ROLE_ADMIN',
+                    'profile.roles_choice.user' => 'ROLE_USER',
+                    'profile.roles_choice.admin'=> 'ROLE_ADMIN'
                 ),
 //                'choices_as_values' => true,
                 'choice_label' => function ($value, $key, $index) {
@@ -884,6 +897,8 @@ class DefaultController extends Controller
         // liste des collectivités
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('collectivite', EntityType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.local_authoritie',
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
                     return $repository->createQueryBuilder('p')
@@ -896,7 +911,10 @@ class DefaultController extends Controller
 
 
 
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array(
+            'translation_domain' => 'FOSUserBundle',
+            'label' => 'profile.edit.submit'
+        ));
 
         return $form;
     }
