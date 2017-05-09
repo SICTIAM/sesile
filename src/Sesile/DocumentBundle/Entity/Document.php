@@ -68,6 +68,14 @@ class Document
     /**
      * @var boolean
      *
+     * @ORM\Column(name="downloaded", type="boolean")
+     *
+     */
+    private $downloaded;
+
+    /**
+     * @var boolean
+     *
      * @ORM\Column(name="display", type="boolean", nullable=true)
      *
      */
@@ -363,5 +371,33 @@ class Document
     public function getDetachedsign()
     {
         return $this->detachedsign;
+    }
+
+    /**
+     * Set downloaded
+     *
+     * @param boolean $downloaded
+     *
+     * @return Document
+     */
+    public function setDownloaded($downloaded)
+    {
+        if ($this->getClasseur()->getStatus() == 2 && $downloaded == true) {
+            $this->downloaded = true;
+        } else {
+            $this->downloaded = false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get downloaded
+     *
+     * @return boolean
+     */
+    public function getDownloaded()
+    {
+        return $this->downloaded;
     }
 }

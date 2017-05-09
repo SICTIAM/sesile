@@ -452,13 +452,15 @@ class DocumentController extends Controller
 
     /**
      * @Route("/download/{id}", name="download_doc",  options={"expose"=true})
-     *
+     * @ParamConverter("Document", options={"mapping": {"id": "id"}})
+     * @param Document $doc
+     * @return Response
      */
-    public function downloadAction(Request $request, $id)
+    public function downloadAction(Document $doc)
     {
 
         $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+//        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
         if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
@@ -470,6 +472,8 @@ class DocumentController extends Controller
 
         // Ecriture de l'hitorique du document
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+        $doc->setDownloaded(true);
+        $em->flush();
 
         $response = new Response();
 
@@ -505,6 +509,8 @@ class DocumentController extends Controller
         $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+        $doc->setDownloaded(true);
+        $em->flush();
 
         // On créé le fichier ZIP
         $zip = new \ZipArchive();
@@ -591,6 +597,8 @@ class DocumentController extends Controller
         $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+        $doc->setDownloaded(true);
+        $em->flush();
 
         $city = $user->getCollectivite();
         $path = $this->container->getParameter('upload')['fics'];
@@ -627,6 +635,8 @@ class DocumentController extends Controller
         $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+        $doc->setDownloaded(true);
+        $em->flush();
 
         // On recupère la collectivité pour ses paramètres
         $city = $user->getCollectivite();
@@ -662,6 +672,8 @@ class DocumentController extends Controller
         $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+        $doc->setDownloaded(true);
+        $em->flush();
 
         $city = $user->getCollectivite();
         $path = $this->container->getParameter('upload')['fics'];
@@ -788,6 +800,9 @@ class DocumentController extends Controller
 
         foreach ($docs as $doc) {
             $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+            $doc->setDownloaded(true);
+            $em->flush();
+
             if($zip->open($zipRepoUrl, \ZipArchive::CREATE) === true) {
 
                 $files_to_delete = array();
