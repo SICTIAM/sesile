@@ -11,6 +11,7 @@
             </div>
         </div>
 
+        {% trans_default_domain 'Collectivite' %}
         {{ form_start(edit_form) }}
         <div class="row row-paddingx">
 
@@ -29,6 +30,15 @@
                         <div class="row">
                             <div class="col-md-4 col-sm-6">{{ form_label(edit_form.active) }}</div>
                             <div class="col-md-8 col-sm-4">{{ form_widget(edit_form.active) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6">{{ form_label(edit_form.deleteClasseurAfter) }}</div>
+                            <div class="col-md-8 col-sm-4">
+                                {{ form_widget(edit_form.deleteClasseurAfter) }}
+                                {% if form_errors(edit_form.deleteClasseurAfter) %}
+                                    <div class="alert alert-danger" role="alert">{{form_errors(edit_form.deleteClasseurAfter) }}</div>
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">{{ form_label(edit_form.file) }}</div>
@@ -209,7 +219,6 @@
 
 
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-    {#<script src="{{ asset("js/tinymce/tinymce.min.js") }}"></script>#}
 
     {# Pour le color picker #}
     <link rel="stylesheet" type="text/css" href="{{ asset("/bootstrap/css/bootstrap-formhelpers.min.css") }}"/>
@@ -265,8 +274,6 @@
             cVerticalPadding:cVerticalPadding + "px",
             cHorizontalPadding:cHorizontalPadding + "px",
             dText: "SIGNATURE",
-            /*posX:{{ edit_form.abscissesSignature.vars.value }},
-            posY:{{ edit_form.ordonneesSignature.vars.value }}*/
         {% if edit_form.abscissesSignature.vars.value %}
             posX:{{ edit_form.abscissesSignature.vars.value }},
         {% else %}
@@ -284,8 +291,6 @@
             $('#sesile_mainbundle_collectivite_abscissesVisa').val(ui.position.left + cHorizontalPadding);
             $('#sesile_mainbundle_collectivite_ordonneesVisa').val(ui.position.top + cVerticalPadding);
 
-            /*$('#sesile_mainbundle_collectivite_abscissesVisa').val($('#container').drag('getPosX'));
-             $('#sesile_mainbundle_collectivite_ordonneesVisa').val($('#container').drag('getPosY'));*/
         });
 
         $("#containmentSignature .draggable").on('dragstop', function(event, ui) {

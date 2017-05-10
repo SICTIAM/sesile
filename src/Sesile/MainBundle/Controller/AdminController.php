@@ -5,6 +5,7 @@ namespace Sesile\MainBundle\Controller;
 use Sesile\CircuitBundle\Controller\CircuitController;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Form\CollectiviteType;
+use Sesile\MainBundle\Form\CollectiviteAdminType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -40,6 +41,32 @@ class AdminController extends Controller
         }
 
         return array('message' => $msg_accueil, "menu_color" => "vert");
+    }
+
+    /**
+     * @Route("/preferences/valid_classeur", name="valid_classeur")
+     * @Template("SesileMainBundle:Preferences:valid_classeur.html.twig")
+     *
+     */
+    public function validClasseurAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+
+        $form = $this->createForm(CollectiviteAdminType::class, $coll, array(
+            'action' => $this->generateUrl('valid_classeur'),
+            'method' => 'POST',
+        ));
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+        }
+
+        return array(
+            'form' => $form->createView(),
+            "menu_color" => "vert"
+        );
     }
 
     /**
@@ -100,7 +127,7 @@ class AdminController extends Controller
         $form->handleRequest($request);
 
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -153,6 +180,8 @@ class AdminController extends Controller
      * @Method("GET")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @Template("SesileMainBundle:Collectivite:edit.html.twig")
+     * @param Collectivite $collectivite
+     * @return array
      */
     public function editCollectiviteAction(Collectivite $collectivite)
     {
@@ -174,7 +203,7 @@ class AdminController extends Controller
      * @Route("/collectivite/{id}", name="update_collectivite")
      * @Method("PUT")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
-     * @Template("SesileUserBundle:Default:edit.html.twig")
+     * @Template("SesileMainBundle:Collectivite:edit.html.twig")
      */
     public function updateCollectiviteAction(Request $request, Collectivite $collectivite)
     {
@@ -184,7 +213,6 @@ class AdminController extends Controller
         $deleteForm = $this->createDeleteForm($collectivite->getId());
 
         $editForm->handleRequest($request);
-
         if ($editForm->isValid()) {
             $collectivite->setNom($editForm->get('nom')->getData());
             $collectivite->setDomain($editForm->get('domain')->getData());
@@ -202,7 +230,11 @@ class AdminController extends Controller
             }
             $em->flush();
 
-            return $this->redirect($this->generateUrl('index_collectivite', array('id' => $collectivite->getId())));
+            $this->addFlash('success', 'Les modifications ont bien été enregistrées');
+
+            return $this->redirect(
+                $this->generateUrl('index_collectivite', array('id' => $collectivite->getId()))
+            );
         }
         return array(
             'entity' => $collectivite,
@@ -345,8 +377,8 @@ class AdminController extends Controller
             'action' => $this->generateUrl('update_collectivite', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-        $form->add('domain', TextType::class, array("label" => "Domaine","disabled"=>true));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('domain', TextType::class, array("label" => 'label.domain',"disabled"=>true));
+//        $form->add('submit', SubmitType::class, array('label' => 'button.submit'));
         return $form;
     }
 
@@ -375,8 +407,8 @@ class AdminController extends Controller
             'action' => $this->generateUrl('new_collectivite'),
             'method' => 'POST',
         ));
-        $form->add('domain', TextType::class, array("label" => "Domaine"));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('domain', TextType::class, array("label" => 'label.domain'));
+//        $form->add('submit', SubmitType::class, array('label' => 'button.submit'));
         return $form;
     }
 

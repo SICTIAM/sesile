@@ -32,6 +32,7 @@
                 {% if not is_granted('ROLE_SUPER_ADMIN') %}
                     <li><a href="{{ path("notifications") }}">Notifications</a></li>
                     <li><a href="{{ path("message_accueil") }}">Message d'accueil</a></li>
+                    <li><a href="{{ path("valid_classeur") }}">Validité des classeurs</a></li>
                 {% endif %}
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                     <li><a href="{{ path("liste_type_classeur") }}">Types de classeurs</a></li>
