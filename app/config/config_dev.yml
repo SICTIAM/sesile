@@ -31,7 +31,7 @@ assetic:
 #    delivery_address: me@example.com
 
 parameters:
-    cas_server: sso.dev.sictiam.fr
+    cas_server: devsso.sictiam.fr
     cas_port: 389
     cas_path: /
     cas_protocol: '2.0'
