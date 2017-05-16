@@ -195,7 +195,7 @@ class DefaultController extends Controller
         $certificateValue = $this->cas_ssl_infos($request->server->get('HTTP_X_SSL_CLIENT_M_SERIAL'),$request->server->get('HTTP_X_SSL_CLIENT_I_DN'));
         $startDate = $this->convert_date_certificate($request->server->get('HTTP_X_SSL_CLIENT_NOT_BEFORE'));
         $endDate = $this->convert_date_certificate($request->server->get('HTTP_X_SSL_CLIENT_NOT_AFTER'));
-        $physicaldeliveryofficename = $this->getUserInfosFromCas($user, "physicaldeliveryofficename");
+        $physicaldeliveryofficename = $this->getUserInfosFromCas($user->getUsername(), "physicaldeliveryofficename");
 
         $saveForm = $this->certificateAppairForm($user->getId());
         $removeForm = $this->certificateDeleteForm($user->getId());
@@ -229,7 +229,14 @@ class DefaultController extends Controller
             $request = Request::createFromGlobals();
             $certificateValue = $this->cas_ssl_infos($request->server->get('HTTP_X_SSL_CLIENT_M_SERIAL'),$request->server->get('HTTP_X_SSL_CLIENT_I_DN'));
 
-            if($this->setUserInfosInCas($user, "physicaldeliveryofficename", $certificateValue)) {
+            if ($user_cas = $this->getUserInfosFromCas($certificateValue, "mail", "physicalDeliveryOfficeName")) {
+
+                $this->addFlash(
+                    'warning',
+                    "Ce certificat est déjà appairé pour l'utilisateur : " . $user_cas
+                );
+            }
+            else if($this->setUserInfosInCas($user, "physicaldeliveryofficename", $certificateValue)) {
                 $this->addFlash(
                     'success',
                     "Certificat appairé pour " . $user->getPrenom() . " " . $user->getNom()
@@ -1101,17 +1108,18 @@ class DefaultController extends Controller
 
     /**
      * @Route("/cas/infos", name="user_infos_cas")
-     * @param User $user
+     * @param $filter_value
      * @param string $attribute
+     * @param string $filter
      * @return array
      */
-    private function getUserInfosFromCas(User $user, $attribute = "mail") {
+    private function getUserInfosFromCas($filter_value, $attribute = "mail", $filter = "mail") {
         $LdapInfo = $this->container->getParameter('ldap');
-        $userName = $user->getUsername();
+//        $userName = $user->getUsername();
         $ldapconn = $this->connexionLdap();
         $justthese = array($attribute);
 
-        $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], "(mail=".$userName.")", $justthese);
+        $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], "(" . $filter . "=" . $filter_value . ")", $justthese);
         $data = ldap_get_entries($ldapconn, $sr);
 
         if($data["count"] > 0 && isset($data[0][$attribute][0])) {
