@@ -93,8 +93,6 @@ class Collectivite
      */
     private $textmailwalid;
 
-
-
     /**
      * @var int
      *
@@ -158,6 +156,20 @@ class Collectivite
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\Groupe", mappedBy="collectivite")
      */
     private $groupes;
+
+    /**
+     * @var int
+     *
+     * @Assert\Range(
+     *     min = 10,
+     *     max = 365,
+     *     minMessage = "Le minimum est {{ limit }} jours",
+     *     maxMessage = "le maximum est {{ limit }} jours",
+     *     payload = {"severity" = "error"}
+     * )
+     * @ORM\Column(name="deleteClasseurAfter", type="integer", options={"default"=180})
+     */
+    private $deleteClasseurAfter = 180;
 
     /**
      * Get id
@@ -316,7 +328,7 @@ class Collectivite
     {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
         // le document/image dans la vue.
-        $controller = new Controller();
+        // $controller = new Controller();
         /*$upload = $controller->setContainer()getParameter('upload');*/
         return "uploads/logo_coll/";
     }
@@ -744,5 +756,29 @@ class Collectivite
     public function getPageSignature()
     {
         return $this->pageSignature;
+    }
+
+    /**
+     * Set deleteClasseurAfter
+     *
+     * @param integer $deleteClasseurAfter
+     *
+     * @return Collectivite
+     */
+    public function setDeleteClasseurAfter($deleteClasseurAfter)
+    {
+        $this->deleteClasseurAfter = $deleteClasseurAfter;
+
+        return $this;
+    }
+
+    /**
+     * Get deleteClasseurAfter
+     *
+     * @return integer
+     */
+    public function getDeleteClasseurAfter()
+    {
+        return $this->deleteClasseurAfter;
     }
 }

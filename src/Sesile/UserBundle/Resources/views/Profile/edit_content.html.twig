@@ -8,14 +8,14 @@
 {% endif %}
 
 <div class="label_form label-form-input">
-    {{ form_label(form.Prenom, 'Prénom') }}
+    {{ form_label(form.Prenom) }}
     {{ form_widget(form.Prenom) }}
 </div>
 
 <br/>
 
 <div class="label_form label-form-input">
-    {{ form_label(form.Nom, 'Nom') }}
+    {{ form_label(form.Nom) }}
     {{ form_widget(form.Nom) }}
 </div>
 
@@ -31,7 +31,7 @@
 <br/>
 
 <div class="label_form label-form-input">
-    {{ form_label(form.qualite, 'Qualité') }}
+    {{ form_label(form.qualite) }}
     {{ form_widget(form.qualite, {'attr': {'wrap': 'hard'}}) }}
 </div>
 <br/>
@@ -82,9 +82,9 @@
 {% for passwordField in form.plainPassword %}
     <div class="label_form label-form-input">
         {% if loop.index  != 1 %}
-            {{ form_label(passwordField, 'Confirmation') }}
+            {{ form_label(passwordField) }}
         {% else %}
-            {{ form_label(passwordField, 'Mot de passe') }}
+            {{ form_label(passwordField) }}
         {% endif %}
         {{ form_widget(passwordField) }}
     </div>

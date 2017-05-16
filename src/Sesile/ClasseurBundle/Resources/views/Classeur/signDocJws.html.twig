@@ -37,7 +37,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-4"><strong>D&eacute;partement : </strong></div>
+                <div class="col-md-4"><strong>Département : </strong></div>
                 <div class="col-md-8">{{ user.departement }}</div>
             </div>
 
@@ -62,12 +62,20 @@
 {#<div class="bloc_page">#}
 
 
+    <form method="post" id="form_a_valider">
     <div class="row">
         <div class="col-md-6">
-            <a class="btn btn-success btn-signature" href="#">Signer les documents</a>
+            {#<a class="btn btn-success btn-signature" href="#">Signer les documents</a>#}
+            <button class="btn btn-success btn-signature"
+                    {% if role is null %}
+                        data-action="{{ path('jnlpSignerFilesFromPreview') }}";
+                    {% else %}
+                        data-action="{{ path('jnlpSignerFilesFromPreview',{'role':role.id}) }}";
+                    {% endif %}>
+                Signer les documents
+            </button>
         </div>
     </div>
-
 
     {% for classeur in classeurs %}
         <div class="infos-classeur-{{ classeur.id }}">
@@ -75,7 +83,10 @@
             <div class="row">
                 <div class="col-md-10">
                     <h3>
-                        Classeur : {{ classeur.shortNom }}
+                        <label>
+                            <input type="checkbox" name="classeurs[]" class="chk" value="{{ classeur.id }}" checked>
+                            Classeur : {{ classeur.shortNom }}
+                        </label>
                     </h3>
                 </div>
                 <div class="col-md-2 text-right">
@@ -91,7 +102,6 @@
                     <ul class="etape_progress">
                         {% for doctosign in classeur.documents %}
                             <li class="document-{{ doctosign.id }}">
-                                {#<p class="status_classeur label-warning statut_refuse"><span class="glyphicon glyphicon-remove"> </span> document non signé</p>#}
                                 <span class="label label-warning statut_attente"></span>
                                 <p class="status_document statut_finalise"><span class="glyphicon statut_2"> </span> document signé</p>
                                 <strong>
@@ -133,16 +143,23 @@
 
     <div class="row">
         <div class="col-md-6">
-            <a class="btn btn-success btn-signature" href="#">Signer les documents</a>
+            <button class="btn btn-success btn-signature"
+                    {% if role is null %}
+                data-action="{{ path('jnlpSignerFilesFromPreview') }}";
+            {% else %}
+                data-action="{{ path('jnlpSignerFilesFromPreview',{'role':role.id}) }}";
+                    {% endif %}>
+                Signer les documents
+            </button>
         </div>
     </div>
+    </form>
 
     <div class="row">&nbsp;</div>
 
 
 </div>
 
-{#<script type="text/javascript" src="https://www.java.com/js/deployJava.js"></script>#}
 <script type="text/javascript">
 
     // Délai de relance de la fonction ajax
@@ -176,26 +193,12 @@
 
     $(document).ready(function() {
 
-        // A l initialisation, on cache l icone doc signé et classeur validé
-//        $(".statut_finalise").hide();
-//        $(".status_classeur.statut_finalise").hide();
-
-
         // On exécute la fonction pour tous les documents
         callDocumentAjax();
 
-        // On ré-exécute la fonction pour le classeur
-//        callClasseurSatus();
+        $(".btn-signature").one('click', function (e) {
 
-
-        $(".btn-signature").on('click', function (e) {
-
-            {#window.location = "{{ path('jnlpSignerFiles', {id:classeursId,'role':role.id}) }}";#}
-            {% if role is null %}
-                window.location = "{{ path('jnlpSignerFiles',{'id':classeursId}) }}";
-            {% else %}
-                window.location = "{{ path('jnlpSignerFiles',{'id':classeursId,'role':role.id}) }}";
-            {% endif %}
+            $("#form_a_valider").attr("action", $(this).attr("data-action")).submit();
 
             // On exécute la fonction pour tous les documents (bug FF)
             callDocumentAjax();
@@ -247,10 +250,6 @@
         {% for document in classeur.documents %}
 
             {% if classeur.type.id == 2 and document|length > 0 %}
-
-                /*$('.infos-classeur-{{ classeur.id }} .documentvisu').load(
-                        Routing.generate('visu', {id: {{ classeur.documents[0].id }}, ajax: "true"}), function () {}
-                );*/
 
                 $.ajax({
                     url: Routing.generate('visu', {id: {{ classeur.documents[0].id }}, ajax: "true"}),

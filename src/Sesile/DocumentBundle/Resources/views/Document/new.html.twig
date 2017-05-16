@@ -18,6 +18,7 @@
     if ($("#type").val() == 2) {
         var dropzone = new Dropzone("div#fichiers", {
             url: "{{ oneup_uploader_endpoint('docs') }}",
+            paramName: "fileName",
             previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
             '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
             ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
@@ -27,7 +28,7 @@
             maxFiles: 1,
             dictMaxFilesExceeded: "Dans le cas d'un classeur de type Hélios le dépôt d'un seul fichier par classeur est autorisé.",
             maxFilesize: 128,
-            dictFileTooBig: "Dans le cas d'un classeur de type Hélios le fichier ne peut dépasser les 80 Mo.",
+            dictFileTooBig: "Dans le cas d'un classeur de type Hélios le fichier ne peut dépasser les 128 Mo.",
             acceptedFiles: ".xml",
             dictInvalidFileType: "Attention, seuls les fichiers xml sont acceptés"
 
@@ -36,6 +37,7 @@
     else {
         var dropzone = new Dropzone("div#fichiers", {
             url: "{{ oneup_uploader_endpoint('docs') }}",
+            paramName: "fileName",
             previewTemplate: '<div   class="dz-preview dz-file-preview" ><img class="dropzonefileicon" style="width: 5em; height: 5em; " /><div class="" style="width: 130px;" ><div  class="dz-filename"><span class="dropzonereducedfilename" data-dz-name></span> </div>' +
             '<div class="dz-size" data-dz-size></div></div> <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>' +
             ' <div class="dz-success-mark"><span>✔</span></div> <div class="dz-error-mark"><span>✘</span></div>' +
@@ -56,7 +58,7 @@
                 $(this).remove();
             } //do something with
         });
-
+console.log('coucou');
         dropzone.removeFile(selectedFile);
 
 
@@ -70,11 +72,12 @@
         $('#Mybutton').attr('disabled', true);
 
         $('.dz-remove').on("click", function () {
-
-//            myDropzone.removeFile(file);
             dropzone.removeFile(file);
-            $("#documentcontent").children("#" + file.idfilename).remove();
-//            console.log("#" + file.idfilename);
+            console.log(file);
+//            $("#documentcontent").children("#" + file.name).remove();
+            $('input[type="hidden"][id="'+ file.idfilename +'"]').remove();
+//            $('input[type="hidden"][value="'+ file.name +'"]').remove();
+
             $('#Mybutton').attr('disabled', false);
             if (dropzone.getAcceptedFiles().length == 0) {
                 $('#Mybutton').attr('disabled', true);
@@ -98,10 +101,11 @@
 
         $('.dz-remove').on("click", function () {
 
-//            myDropzone.removeFile(file);
             dropzone.removeFile(file);
-            $("#documentcontent").children("#" + file.idfilename).remove();
-            //console.log("#" + file.idfilename);
+//            $("#documentcontent").children("#" + file.name).remove();
+            $('input[type="hidden"][id="'+ file.idfilename +'"]').remove();
+//            $('input[type="hidden"][value="'+ file.name +'"]').remove();
+
             $('#Mybutton').attr('disabled', false);
             if (dropzone.getAcceptedFiles().length == 0) {
                 $('#Mybutton').attr('disabled', true);
@@ -114,12 +118,17 @@
     /*Fonction pour ajouter fichier dans le dropzone "classeur à valider"*/
 
     dropzone.on('success', function (file, response) {
+
+//        idfilename = file.name.split('.')[0];
+//        $('#documentcontent').append("<input type='hidden' name='serverfilename[]' id='" + file.name + "' value='" + file.name + "'> ");
+
+        console.log(file, response);
         $.each(response, function (serverfilename, originalname) {
             file.idfilename = serverfilename.split('.')[0];
-            //console.log(file);
+
+
             $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' id='" + file.idfilename + "' value='" + originalname + "'> ");
         });
-
     });
 
 

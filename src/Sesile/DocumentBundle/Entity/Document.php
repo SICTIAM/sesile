@@ -68,6 +68,14 @@ class Document
     /**
      * @var boolean
      *
+     * @ORM\Column(name="downloaded", type="boolean")
+     *
+     */
+    private $downloaded;
+
+    /**
+     * @var boolean
+     *
      * @ORM\Column(name="display", type="boolean", nullable=true)
      *
      */
@@ -263,14 +271,14 @@ class Document
      * @param string $format
      * @return bool|string
      */
-    public function getPDFImage($page = 0, $orientation = "PORTRAIT") {
+    public function getPDFImage($page = 0, $orientation = "PORTRAIT", $path) {
         if($this->getType() == "application/pdf") {
 
 
             $imagick = new Imagick();
 //            $imagick->readImage('mytest.pdf');
 
-            $imagick->readImage('uploads/docs/' . $this->getRepourl() . '[' . $page . ']');
+            $imagick->readImage($path . $this->getRepourl() . '[' . $page . ']');
 
             // Si le PDF est au format portrait
             if ($orientation == "PORTRAIT") {
@@ -283,8 +291,6 @@ class Document
 //          header("Content-Type: image/jpg");
             return base64_encode($imagick->getImageBlob());
 
-            /*$imagick->writeImage('uploads/docs/' . $doc->getRepourl() . '.output.jpg');
-            $thumbail = 'uploads/docs/' . $doc->getRepourl() . '.output.jpg';*/
         } else return true;
     }
 
@@ -365,5 +371,33 @@ class Document
     public function getDetachedsign()
     {
         return $this->detachedsign;
+    }
+
+    /**
+     * Set downloaded
+     *
+     * @param boolean $downloaded
+     *
+     * @return Document
+     */
+    public function setDownloaded($downloaded)
+    {
+        if ($this->getClasseur()->getStatus() == 2 && $downloaded == true) {
+            $this->downloaded = true;
+        } else {
+            $this->downloaded = false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get downloaded
+     *
+     * @return boolean
+     */
+    public function getDownloaded()
+    {
+        return $this->downloaded;
     }
 }

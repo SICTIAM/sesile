@@ -26,17 +26,22 @@ class ProfileFormType extends BaseType
         $this->buildUserForm($builder, $options);
 
         $builder->add('plainPassword', RepeatedType::class, array(
+            'translation_domain' => 'FOSUserBundle',
             'type' => PasswordType::class,
             'required' => false,
-            'first_options' => array('label' => 'Mot de passe'),
-            'second_options' => array('label' => 'Confirmation'),
+            'first_options' => array('label' => 'form.password'),
+            'second_options' => array('label' => 'form.password_confirmation'),
             'invalid_message' => 'fos_user.password.mismatch',
         ));
         //$builder->add('apiactivated', CheckboxType::class, array('label' => 'API', 'required' => false,))
         //    ->add('apitoken', TextType::class, array('attr' => array('read_only')))
         //    ->add('apisecret', TextType::class, array('attr' => array('read_only')));
 
-        $builder->add('password', PasswordType::class, array('label' => 'Mot de passe actuel', 'required' => false));
+        $builder->add('password', PasswordType::class, array(
+            'translation_domain' => 'FOSUserBundle',
+            'label' => 'form.current_password',
+            'required' => false
+        ));
     }
 
     public function getName()
@@ -53,25 +58,40 @@ class ProfileFormType extends BaseType
     protected function buildUserForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('Prenom', TextType::class, array('label' => 'Prénom', 'attr' => array('class' => 'pouet')))
-            ->add('Nom', TextType::class, array('label' => ' Nom', 'attr' => array('class' => 'pouet')))
-//            ->add('username', 'email', array('label' => 'Adresse E-mail', 'attr' => array('class' => 'pouet')))
-            ->add('qualite', TextareaType::class, array('label' => 'Qualité', 'attr' => array('class' => 'pouet qualite', 'cols' => '37'), 'max_length' => 250, 'label_attr' => array('class' => 'label_form_textarea')))
-
+            ->add('Prenom', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.first_name',
+                'attr' => array('class' => 'pouet')
+            ))
+            ->add('Nom', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.last_name',
+                'attr' => array('class' => 'pouet')
+            ))
+            ->add('qualite', TextareaType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.grade',
+                'attr' => array('class' => 'pouet qualite', 'cols' => '37', 'max_length' => 250),
+                'label_attr' => array('class' => 'label_form_textarea')
+            ))
             ->add('file', FileType::class, array(
-                'label' => 'Avatar',
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.avatar',
                 'data_class' => null,
                 'required' => false,
                 'attr' => array('class' => 'pouet')
             ))
             ->add('fileSignature', FileType::class, array(
-                'label' => 'Signature',
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.signature',
                 'data_class' => null,
                 'required' => false,
                 'attr' => array('class' => 'pouet')
             ))
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'))
-        ;
+            ->add('submit', SubmitType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.edit.submit')
+            );
 
     }
 

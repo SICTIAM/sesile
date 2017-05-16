@@ -1,0 +1,19 @@
+label:
+    name: 'Nom'
+    active: 'Active'
+    logo: 'Logo de la collectivité'
+    newClasseur: "Texte du mail d'un nouveau classeur"
+    rejectClasseur: "Texte du mail d'un classeur refusé"
+    validClasseur: "Texte du mail d'un classeur validé"
+    homeNotification: "Message d'accueil"
+    abscissa: "Abscisses"
+    ordinates: "Ordonnees"
+    color: "Couleur"
+    title: "Titre"
+    page: "Page"
+    lastPage: "Dernière page"
+    firstPage: "Première page"
+    daysClasseur: "Durée de vie des classeurs (10 - 365 jours)"
+    domain: 'Domaine'
+button:
+    submit: 'Enregistrer'

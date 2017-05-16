@@ -41,30 +41,11 @@ if (typeof deposant != 'undefined') {
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
-/*if ( typeof validant != 'undefined') {
-    var new_perso = $('<div/>').addClass('no_sort perso_circuit curr_user').appendTo("#circuit");
-    perso_src = validant.path ? path+validant.path : perso_src;
-    $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);
-    $('<img />').attr("src", perso_src).appendTo(new_perso);
-    $('<span class="nom_perso" />').text(validant.nom).appendTo(new_perso);
-    //$("<span/>").addClass("fleche_circuit glyphicon glyphicon-arrow-right").insertAfter(".perso_circuit:not(.deposant)");
-}*/
 // Fonction pour afficher les bouton valider et signer
-function aff_button_valider () {
+/*function aff_button_valider () {
     //var c = document.getElementById("#contetapes").childNodes.length;
     var nbEtapes = $('.etapes-circuit').length;
-    //console.log(nbEtapes);
-    //if(valid_sign == 0) {
-    if(nbEtapes == 0) {
-        $(".btn-valider-signer").css('display', 'inline-block');
-        $(".btn-valider-non-signer").css('display', 'none');
-        //console.log("valider ok : " + valid_sign);
-    } else {
-        $(".btn-valider-signer").css('display', 'none');
-        $(".btn-valider-non-signer").css('display', 'inline-block');
-        //console.log("valider : " + valid_sign);
-    }
-}
+}*/
 
 /* Ajoute un utilisateur dans le cadre "circuits" */
 function ajoutUser(id, k) {
@@ -75,22 +56,9 @@ function ajoutUser(id, k) {
     }
     var new_perso = $('<div/>').data('id', id).addClass('perso_circuit').appendTo("#circuit");
 
-    //if (typeof validant != 'undefined' && validant == id) { // pourquoi j'avais mis validant > 0 ????? ça merde plus mais à vérifier si y'avait pas une raison
-    //    new_perso.addClass("curr_user");
-    //    $("<span/>").addClass("valid_perso glyphicon glyphicon-pencil").appendTo(new_perso);
-    //}
-
-    //if (!sort || k < ordre_circuit) {
-    //    console.log("L2 Variable k : " + k + " < Ordre : " + ordre_circuit);
-    //    new_perso.addClass("no_sort");
-    //    if (typeof validant != 'undefined' && validant != id) {
-    //        $("<span/>").addClass("ok_perso glyphicon glyphicon-ok").appendTo(new_perso);
-    //    }
-    //}
 
     // Ajout du glyphicon validé
     if (typeof validant != 'undefined' && k < ordre_circuit) {
-        //console.log("L2 Variable k : " + k + " < Ordre : " + ordre_circuit);
         new_perso.addClass("no_sort");
         $("<span/>").addClass("ok_perso glyphicon glyphicon-ok").appendTo(new_perso);
     }
@@ -119,12 +87,8 @@ function ajoutUser(id, k) {
                 creerFleches();
             });
             // pour les boutons valider et signer
-            /*valid_sign = valid_sign -1;
-            aff_button_valider (valid_sign)*/
         });
         // pour les boutons valider et signer
-        /*this.valid_sign ++;
-        aff_button_valider(valid_sign);*/
     }
 
     perso_src = sel_user.data("img") ? path + sel_user.data("img") : perso_src_init;
@@ -133,7 +97,6 @@ function ajoutUser(id, k) {
     $('<span class="nom_perso" />').text(sel_user.text()).appendTo(new_perso);
 
     // Cela permet de suppirmer l utilisateur selectionné de #users_list
-    //sel_user.remove();
 
     if ($(".perso_circuit").length > 1) {
         creerFleches();
@@ -195,22 +158,6 @@ $("#circuit").sortable({
 $("#circuitadd_btn").click(function () {
     var sel_circuit = $('#circuits_list .list_selected_element');
     ajoutGroupe(sel_circuit);
-    //var ordre = sel_circuit.attr("data-ordre").split(",");
-    //if (ordre.length > 0) {
-    //    $.each($("#circuit .perso_circuit"), function (k, v) {
-    //        var elem = $(this);
-    //        $("<p/>").attr("data-id", elem.data("id")).text(elem.find(".nom_perso").text()).appendTo("#users_list");
-    //        elem.remove();
-    //    });
-    //    creerFleches();
-    //
-    //    $.each(ordre, function (k, v) {
-    //        ajoutUser(v, true);
-    //    });
-    //}
-    //$('#users_list p:first').addClass("list_selected_element");
-    //$("#circuit_name").val(sel_circuit.text());
-    //$("#circuit_modifier, #btn-group-supp").css("display", "inline-block");
 });
 
 //// Sur le select du groupe
@@ -298,10 +245,7 @@ $(document).ready(function () {
             } else {
                 $(this).css('display', 'block');
             }
-//                            console.log($(this).html().toLowerCase().indexOf(search));
         });
     });
     // FIN de la recherche dans les utilisateurs
-    //aff_button_valider (valid_sign);
-    aff_button_valider();
 });

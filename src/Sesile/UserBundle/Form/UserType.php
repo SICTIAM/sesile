@@ -25,36 +25,83 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', EmailType::class, array('label' => 'Email', 'label_attr' => array('class' => 'sesile_userbundle_user_username_label')))
+            ->add('username', EmailType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.show.email',
+                'label_attr' => array('class' => 'sesile_userbundle_user_username_label')
+            ))
             ->add('email', HiddenType::class)
-            ->add('Nom', TextType::class)
-            ->add('Prenom', TextType::class, array('label' => 'Prénom'))
-            ->add('ville', TextType::class, array('required' => false,))
-            ->add('cp', TextType::class, array('label' => 'Code Postal', 'required' => false,))
-            ->add('departement', TextType::class, array('label' => 'Département', 'required' => false,))
-            ->add('pays', TextType::class, array('required' => false,))
+            ->add('Nom', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.last_name'
+            ))
+            ->add('Prenom', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.first_name'
+            ))
+            ->add('ville', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.city',
+                'required' => false
+            ))
+            ->add('cp', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.cp',
+                'required' => false
+            ))
+            ->add('departement', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.department',
+                'required' => false
+            ))
+            ->add('pays', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.country',
+                'required' => false
+            ))
             ->add('userRole', CollectionType::class, array(
-                'label' => '',
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'entry_type' => UserRoleType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
-                'entry_options' => array('attr' => array('class' => ''))))
-//                ))
-            ->add('qualite', TextareaType::class, array('label' => 'Qualité', 'required' => false, 'max_length' => 250, 'attr' => array('cols' => '37', 'class' => 'qualite'), 'label_attr' => array('class' => 'label_form_textarea')))
-//            ->add('enabled', null, array('label' => 'Activé', 'required' => false))
-            ->add('enabled', CheckboxType::class, array('label' => 'Activé', 'required' => false))
-            /*->add('enabled', ChoiceType::class, array(
-                'choices' => array(true => 'Activé', false => 'Désactivé'),
-                'choices_as_values' => false
-                ))*/
-            ->add('apiactivated', CheckboxType::class, array('label' => 'API', 'required' => false))
-            ->add('apitoken', TextType::class, array('attr' => array('readonly')))
-            ->add('apisecret', TextType::class, array('attr' => array('readonly')))
-            ->add('file', FileType::class, array('label' => 'Avatar',
+                'entry_options' => array('attr' => array('class' => ''))
+            ))
+            ->add('qualite', TextareaType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.grade',
+                'required' => false,
+                'attr' => array('cols' => '37', 'class' => 'qualite', 'max_length' => 250),
+                'label_attr' => array('class' => 'label_form_textarea')
+            ))
+            ->add('enabled', CheckboxType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'label.enabled',
+                'required' => false
+            ))
+            ->add('apiactivated', CheckboxType::class, array(
+                'label' => 'API',
+                'required' => false
+            ))
+            ->add('apitoken', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'label.api_token',
+                'attr' => array('readonly')
+            ))
+            ->add('apisecret', TextType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'label.api_secret',
+                'attr' => array('readonly')
+            ))
+            ->add('file', FileType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.avatar',
                 'data_class' => null,
                 'required' => false,
             ))
-            ->add('fileSignature', FileType::class, array('label' => 'Signature',
+            ->add('fileSignature', FileType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.signature',
                 'data_class' => null,
                 'required' => false,
             ));

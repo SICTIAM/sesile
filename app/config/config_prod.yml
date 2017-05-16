@@ -1,17 +1,16 @@
 imports:
     - { resource: config.yml }
 
-#framework:
-#    validation:
-#        cache: apc
-
-#doctrine:
-#    orm:
-#        metadata_cache_driver: apc
-#        result_cache_driver: apc
-#        query_cache_driver: apc
-
-
+be_simple_sso_auth:
+    admin_sso:
+        protocol:
+            id: cas
+            version: 2
+        server:
+            id: cas
+            login_url: https://sso.sictiam.fr/login
+            logout_url: https://sso.sictiam.fr/logout
+            validation_url: https://sso.sictiam.fr/serviceValidate
 
 parameters:
     database_driver: pdo_mysql
@@ -32,12 +31,11 @@ parameters:
     domain_parse:
         default: sesile
         dbname: sictiam
-    url_applet: signature.sesile.fr
     ovh:
         environnement: ""
         zone: sesile.fr
         target: sesile.fr.
-    email_sender_address: sictiam@sesile.fr
+    email_sender_address: sesile@sictiam.fr
     url_applet: signature.sesile.fr
     upload:
         path: %kernel.root_dir%/../web/uploads/avatars/
@@ -50,24 +48,3 @@ parameters:
         application: ***REMOVED***
         secret: ***REMOVED***
         consumer_key: ***REMOVED***
-
-security:
-
-    firewalls:
-        dev:
-            path:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        secured_area:
-            path:    ^/
-            anonymous: true
-            provider: webservice
-            logout:
-                success_handler: security.logout.success_handler
-            cas:
-                cas_server: sso.sictiam.fr
-                cas_port: 443
-                cas_path: /
-                ca_cert_path: ~
-                cas_protocol: '2.0'
-                cas_mapping_attribute:
-                check_path: /login_check

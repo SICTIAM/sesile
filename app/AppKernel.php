@@ -17,11 +17,11 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-//            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new Sesile\MainBundle\SesileMainBundle(),
-            new Sesile\UserBundle\SesileUserBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new Sesile\UserBundle\SesileUserBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle(),
             new FOS\RestBundle\FOSRestBundle(),
@@ -34,7 +34,7 @@ class AppKernel extends Kernel
             new Sesile\ApiBundle\SesileApiBundle(),
         );
 
-        if (in_array($this->getEnvironment(), array('dev', 'test', 'demo'))) {
+        if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();

@@ -105,7 +105,7 @@ class Classeur {
     protected $documents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Action", mappedBy="classeur")
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Action", mappedBy="classeur", cascade={"remove"})
      */
     protected $actions;
 

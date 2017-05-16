@@ -31,12 +31,12 @@ assetic:
 #    delivery_address: me@example.com
 
 parameters:
-    cas_server: sso.dev.sictiam.fr
+    cas_server: devsso.sictiam.fr
     cas_port: 389
     cas_path: /
     cas_protocol: '2.0'
-    gorg:
-        path: %kernel.root_dir%/../vendor/gorg/phpcas/
+#    gorg:
+#        path: %kernel.root_dir%/../vendor/gorg/phpcas/
     upload:
         path: %kernel.root_dir%/../web/uploads/avatars/
         signatures: %kernel.root_dir%/../web/uploads/signatures/
@@ -55,4 +55,4 @@ parameters:
         environnement: demo.sesile
         zone: sictiam.fr
         target: dmzproxy.sictiam.fr.
-    email_sender_address: sictiam.dev@sesile.fr
+    email_sender_address: sesile@sictiam.fr

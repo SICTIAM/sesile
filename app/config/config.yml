@@ -27,14 +27,12 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-    form:
-        resources:
-            - 'SesileMainBundle:Form:fields.html.twig'
     globals:
         upload_path: uploads/avatars/
         upload_path_logo: uploads/logo_coll/
         upload_path_docs: /uploads/docs/
         upload_path_signatures: /uploads/signatures/
+        sesile_version: 3.5
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 # Assetic Configuration
@@ -42,13 +40,8 @@ assetic:
     debug:          %kernel.debug%
     use_controller: false
     bundles:        [ SesileMainBundle ]
-    #java: /usr/bin/java
     filters:
         cssrewrite: ~
-        #closure:
-        #    jar: %kernel.root_dir%/Resources/java/compiler.jar
-        #yui_css:
-        #    jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
 
 # Doctrine Configuration
 doctrine:
@@ -77,6 +70,10 @@ swiftmailer:
 #    host:      localhost
 
 oneup_uploader:
+#    mappings:
+#        docs:
+#            frontend: dropzone
+#            use_orphanage: true
     mappings:
         docs:
             frontend: custom
@@ -92,6 +89,9 @@ fos_user:
     profile:
         form:
             type: Sesile\UserBundle\Form\Type\ProfileFormType
+    from_email:
+        address: sesile@sictiam.fr
+        sender_name: SESILE
 
 be_simple_sso_auth:
     admin_sso:
@@ -100,12 +100,12 @@ be_simple_sso_auth:
             version: 2
         server:
             id: cas
-            login_url: https://sso.dev.sictiam.fr/login
-            logout_url: https://sso.dev.sictiam.fr/logout
-            validation_url: https://sso.dev.sictiam.fr/serviceValidate
+            login_url: https://devsso.sictiam.fr/login
+            logout_url: https://devsso.sictiam.fr/logout
+            validation_url: https://devsso.sictiam.fr/serviceValidate
 
 parameters:
-    cas_server: sso.dev.sictiam.fr
+    cas_server: devsso.sictiam.fr
 #    cas_port: 389
 #    cas_path: /
 #    cas_protocol: '2.0'

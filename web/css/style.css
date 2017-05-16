@@ -755,6 +755,12 @@ select [name=user] {
 	font-weight: bold;
 }
 
+
+.cert_attr {
+	color: #6e6e6e;
+	font-weight: bold;
+	font-size: 1.1em;
+}
 .parc_avatar {
 	display: none !important;
 }
@@ -1064,4 +1070,9 @@ select [name=user] {
 
 .statut_refuse, .statut_cours, .statut_finalise, .statut_retire, .statut_retracte {
 	display: none;
+}
+
+#form_a_valider label {
+	color: #000000;
+	font-weight: normal;
 }

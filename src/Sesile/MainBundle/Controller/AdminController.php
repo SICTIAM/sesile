@@ -5,9 +5,11 @@ namespace Sesile\MainBundle\Controller;
 use Sesile\CircuitBundle\Controller\CircuitController;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Form\CollectiviteType;
+use Sesile\MainBundle\Form\CollectiviteAdminType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -39,6 +41,32 @@ class AdminController extends Controller
         }
 
         return array('message' => $msg_accueil, "menu_color" => "vert");
+    }
+
+    /**
+     * @Route("/preferences/valid_classeur", name="valid_classeur")
+     * @Template("SesileMainBundle:Preferences:valid_classeur.html.twig")
+     *
+     */
+    public function validClasseurAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $coll = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+
+        $form = $this->createForm(CollectiviteAdminType::class, $coll, array(
+            'action' => $this->generateUrl('valid_classeur'),
+            'method' => 'POST',
+        ));
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+        }
+
+        return array(
+            'form' => $form->createView(),
+            "menu_color" => "vert"
+        );
     }
 
     /**
@@ -99,7 +127,7 @@ class AdminController extends Controller
         $form->handleRequest($request);
 
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -132,19 +160,6 @@ class AdminController extends Controller
             $post->ttl = 60;
             $api->post('/domain/zone/'.$ovh->zone.'/record',$post);
 
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-
-            /**
-             * on prévient les devs
-             */
-            $message = \Swift_Message::newInstance()
-                ->setSubject('Nouvelle Collectivité créée')
-                ->setFrom('sesile@sictiam.fr')
-                ->setTo('internet@sictiam.fr')
-                ->setBody("La collectivité ".$form->get('nom')->getData()." vient d'être créée dans SESILE merci d'ajouter l'adresse ".$post->subDomain.".".$ovh->zone." dans vProxymus. \n\n\n" .
-                        "La collectivité a été créée par " . $user->getPrenom() . " " . $user->getNom(). " " . $user->getEmail() . " pour l'envirronement : " . $environnement)
-                ->setContentType('text/html');
-            $this->get('mailer')->send($message);
             return $this->redirect($this->generateUrl('index_collectivite'));
         }
 
@@ -163,23 +178,19 @@ class AdminController extends Controller
      *
      * @Route("/collectivite/edit/{id}/", name="edit_collectivite", options={"expose"=true})
      * @Method("GET")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @Template("SesileMainBundle:Collectivite:edit.html.twig")
+     * @param Collectivite $collectivite
+     * @return array
      */
-    public function editCollectiviteAction($id)
+    public function editCollectiviteAction(Collectivite $collectivite)
     {
 
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('SesileMainBundle:Collectivite')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Collectivite entity');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($collectivite);
+        $deleteForm = $this->createDeleteForm($collectivite->getId());
 
         return array(
-            'entity' => $entity,
+            'entity' => $collectivite,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
             "menu_color" => "vert"
@@ -191,43 +202,42 @@ class AdminController extends Controller
      *
      * @Route("/collectivite/{id}", name="update_collectivite")
      * @Method("PUT")
-     * @Template("SesileUserBundle:Default:edit.html.twig")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @Template("SesileMainBundle:Collectivite:edit.html.twig")
      */
-    public function updateCollectiviteAction(Request $request, $id)
+    public function updateCollectiviteAction(Request $request, Collectivite $collectivite)
     {
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('SesileMainBundle:Collectivite')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Collectivite entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($collectivite);
+        $deleteForm = $this->createDeleteForm($collectivite->getId());
 
         $editForm->handleRequest($request);
-
         if ($editForm->isValid()) {
-            $entity->setNom($editForm->get('nom')->getData());
-            $entity->setDomain($editForm->get('domain')->getData());
-            $entity->setActive($editForm->get('active')->getData());
-            $entity->setTextmailrefuse($editForm->get('textmailrefuse')->getData());
-            $entity->setTextmailwalid($editForm->get('textmailwalid')->getData());
-            $entity->setTextmailnew($editForm->get('textmailnew')->getData());
-            $entity->setMessage($editForm->get('message')->getData());
+            $collectivite->setNom($editForm->get('nom')->getData());
+            $collectivite->setDomain($editForm->get('domain')->getData());
+            $collectivite->setActive($editForm->get('active')->getData());
+            $collectivite->setTextmailrefuse($editForm->get('textmailrefuse')->getData());
+            $collectivite->setTextmailwalid($editForm->get('textmailwalid')->getData());
+            $collectivite->setTextmailnew($editForm->get('textmailnew')->getData());
+            $collectivite->setMessage($editForm->get('message')->getData());
 
             if ($editForm->get('file')->getData()) {
-                if ($entity->getFile()) {
-                    $entity->removeUpload();
+                if ($collectivite->getFile()) {
+                    $collectivite->removeUpload();
                 }
-                $entity->preUpload();
+                $collectivite->preUpload();
             }
             $em->flush();
 
-            return $this->redirect($this->generateUrl('index_collectivite', array('id' => $id)));
+            $this->addFlash('success', 'Les modifications ont bien été enregistrées');
+
+            return $this->redirect(
+                $this->generateUrl('index_collectivite', array('id' => $collectivite->getId()))
+            );
         }
         return array(
-            'entity' => $entity,
+            'entity' => $collectivite,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
             "menu_color" => "vert"
@@ -283,47 +293,6 @@ class AdminController extends Controller
     }
 
 
-    private function createCreateForm(Collectivite $entity)
-    {
-        $form = $this->createForm(CollectiviteType::class, $entity, array(
-            'action' => $this->generateUrl('new_collectivite'),
-            'method' => 'POST',
-        ));
-        $form->add('domain', TextType::class, array("label" => "Domaine"));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
-        return $form;
-    }
-
-
-    /**
-     * Creates a form to edit a Collectivite entity.
-     * @param Collectivite $entity The entity
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createEditForm(Collectivite $entity) {
-        $form = $this->createForm(CollectiviteType::class, $entity, array(
-            'action' => $this->generateUrl('update_collectivite', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-        $form->add('domain', TextType::class, array("label" => "Domaine","disabled"=>true));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
-        return $form;
-    }
-
-    /**
-     * Creates a form to delete a Collectivite entity by id.
-     * @param mixed $id The entity id
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('delete_collectivite', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', SubmitType::class, array('label' => 'Supprimer'))
-            ->getForm();
-    }
-
-
     /**
      * Liste des collectivités
      *
@@ -333,16 +302,12 @@ class AdminController extends Controller
     public function indexMailingAction(Request $request) {
 
         // Creation du formulaire pour la saisie des informations
-        $defaultData = array('message' => 'Taper votre message');
-        $form = $this->createFormBuilder($defaultData)
-            ->add('sujet', TextType::class)
-            ->add('mailMessage', TextareaType::class, array('label' => "Corps du message", 'required' => false))
-            ->add('submit', SubmitType::class, array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
-            ->getForm();
+        $form = $this->emailingForm();
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+
             // Les données sont un tableau avec les clés "sujet", et "mailMessage"
             $em = $this->getDoctrine()->getManager();
             // On recupere tous les utilisateurs
@@ -368,7 +333,7 @@ class AdminController extends Controller
                 $emailConstraint->message = "L'adresse email " . $email . " n'est pas valide.";
 
                 // On teste si l email est valide
-                $errors = $this->get('validator')->validateValue(
+                $errors = $this->get('validator')->validate(
                     $email,
                     $emailConstraint
                 );
@@ -392,19 +357,72 @@ class AdminController extends Controller
             }
 
             // remise à zéro du formulaire
-            $form = $this->createFormBuilder($defaultData)
-                ->add('sujet', 'text')
-                ->add('mailMessage', 'textarea', array('label' => "Corps du message"))
-                ->add('submit', 'submit', array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
-                ->getForm();
+            $form = $this->emailingForm();
 
             // Message de confirmation pour l'utilisateur
             $request->getSession()->getFlashBag()->add('success', "L'emailing a été envoyé avec succès.");
-
         }
 
         return array('form' => $form, "menu_color" => "vert");
 
+    }
 
+    /**
+     * Creates a form to edit a Collectivite entity.
+     * @param Collectivite $entity The entity
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(Collectivite $entity) {
+        $form = $this->createForm(CollectiviteType::class, $entity, array(
+            'action' => $this->generateUrl('update_collectivite', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+        $form->add('domain', TextType::class, array("label" => 'label.domain',"disabled"=>true));
+//        $form->add('submit', SubmitType::class, array('label' => 'button.submit'));
+        return $form;
+    }
+
+    /**
+     * Creates a form to delete a Collectivite entity by id.
+     * @param mixed $id The entity id
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id) {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('delete_collectivite', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', SubmitType::class, array('label' => 'Supprimer'))
+            ->getForm();
+    }
+
+    /**
+     * Forumlaire de creation de collectivite
+     *
+     * @param Collectivite $entity
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createCreateForm(Collectivite $entity)
+    {
+        $form = $this->createForm(CollectiviteType::class, $entity, array(
+            'action' => $this->generateUrl('new_collectivite'),
+            'method' => 'POST',
+        ));
+        $form->add('domain', TextType::class, array("label" => 'label.domain'));
+//        $form->add('submit', SubmitType::class, array('label' => 'button.submit'));
+        return $form;
+    }
+
+    /**
+     * Formulaire d envoie d emailing
+     *
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
+     */
+    private function emailingForm() {
+        $defaultData = array('message' => 'Taper votre message');
+        return $this->createFormBuilder($defaultData)
+            ->add('sujet', TextType::class)
+            ->add('mailMessage', TextareaType::class, array('label' => "Corps du message", 'required' => false))
+            ->add('submit', SubmitType::class, array('label' => 'Envoyer à tous les utilisateurs de l\'instance'))
+            ->getForm();
     }
 }
