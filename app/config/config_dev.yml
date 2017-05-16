@@ -35,8 +35,8 @@ parameters:
     cas_port: 389
     cas_path: /
     cas_protocol: '2.0'
-    gorg:
-        path: %kernel.root_dir%/../vendor/gorg/phpcas/
+#    gorg:
+#        path: %kernel.root_dir%/../vendor/gorg/phpcas/
     upload:
         path: %kernel.root_dir%/../web/uploads/avatars/
         signatures: %kernel.root_dir%/../web/uploads/signatures/

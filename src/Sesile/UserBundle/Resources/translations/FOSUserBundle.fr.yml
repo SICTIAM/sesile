@@ -21,3 +21,6 @@ label:
     api_token: "Clé d'API"
     api_secret: 'Secret API'
     save: 'Enregistrer'
+certificate:
+    submit: 'Enregistrer ce certificat'
+    delete: 'Désappairer ce compte'

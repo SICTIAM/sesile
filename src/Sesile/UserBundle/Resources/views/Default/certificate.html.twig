@@ -6,6 +6,7 @@
             <span class="glyphicon glyphicon-folder-open"></span>
             &nbsp;&nbsp;&nbsp;Gestion du certificat d'un utilisateur
         </div>
+        {% if app.request.server.get('HTTP_X_SSL') %}
         <div class="row row-padding">
             <div class="col-lg-12">
                 <div class="row row-padding">
@@ -13,11 +14,13 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-3 text-right cert_attr">N° de série</div>
-                    <div class="col-lg-9">2A841CF28C8DB0C294EF7B55C7B3390BC6A1F8E1</div>
+                    <div class="col-lg-9">
+                        {{ app.request.server.get('HTTP_X_SSL_CLIENT_M_SERIAL') }}
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-3 text-right cert_attr">Emetteur</div>
-                    <div class="col-lg-9">/C=FR/ST=Alpes-Maritimes/L=Vallauris/O=SICTIAM/CN=Certificats SICTIAM/emailAddress=internet@sictiam.fr</div>
+                    <div class="col-lg-9">{{ app.request.server.get('HTTP_X_SSL_CLIENT_I_DN') }}</div>
                 </div>
             </div>
         </div>
@@ -29,19 +32,19 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">Nom commun</div>
-                    <div class="col-lg-6 text-left">Frédéric Laussinot</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_S_DN_CN') }}</div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">Organisation</div>
-                    <div class="col-lg-6 text-left">SICTIAM</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_S_DN_O') }}</div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">Unité d'organisation</div>
-                    <div class="col-lg-6 text-left">SICTIAM</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_S_DN_OU') }}</div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">E Mail</div>
-                    <div class="col-lg-6 text-left">f.laussinot@sictiam.fr</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_S_DN_EMAIL') }}</div>
                 </div>
             </div>
 
@@ -51,15 +54,15 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">Nom commun</div>
-                    <div class="col-lg-6 text-left">Certificats SICTIAM</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_I_DN_CN') }}</div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">Organisation</div>
-                    <div class="col-lg-6 text-left">SICTIAM</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_I_DN_O') }}</div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">E-Mail</div>
-                    <div class="col-lg-6 text-left">sesile@sictiam.fr</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_I_DN_EMAIL') }}</div>
                 </div>
             </div>
 
@@ -69,11 +72,11 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">Emis le</div>
-                    <div class="col-lg-6 text-left">25 Aout 2016 - 13:14:34</div>
+                    <div class="col-lg-6 text-left">{{ startDate | date('d/m/Y à H:i:s') }}</div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-right cert_attr">Expire le</div>
-                    <div class="col-lg-6 text-left">11 Février 2019 - 13:14:34</div>
+                    <div class="col-lg-6 text-left">{{ endDate | date('d/m/Y à H:i:s') }}</div>
                 </div>
             </div>
         </div>
@@ -82,20 +85,30 @@
 
         <div class="row row-padding">
             <div class="col-lg-3 col-lg-push-3">
-                <button type="button" class="btn btn-success btn-lg btn-block">Enregistrer ce certificat</button>
+                {% if certifCAS != certificatevalue %}
+                    {{ form(save_form) }}
+                {% endif %}
             </div>
 
             <div class="col-lg-3 col-lg-push-3">
-                <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#deleteCert"
-                        data-name="{{ user.prenom }} {{ user.nom }}" data-whatever="{{ path("certificate_delete", {'id' : user.id }) }}">
-                    Désappairer ce compte
-                </button>
+                {% if certifCAS %}
+                    <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#deleteCert"
+                            data-name="{{ user.prenom }} {{ user.nom }}" data-whatever="{{ path("certificate_delete", {'id' : user.id }) }}">
+                        Désappairer ce compte
+                    </button>
+                {% endif %}
             </div>
         </div>
-
-        <div class="row row-padding">
+        {% else %}
+        <div class="row">
+            <h2>Vous ne pouvez pas accéder à ces fonctionnalités</h2>
         </div>
-{{ user.nom }} - {{ http }}
+        <div class="row">
+            <p>
+                Votre application doit supporter le HTTPS pour supporter cette fonctionnalité
+            </p>
+        </div>
+        {% endif %}
     </div>
 
     <!-- Pour la modal -->
@@ -110,8 +123,14 @@
                     <p>&Ecirc;tes vous sur de désappairer ce compte ?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                    <a type="button" class="btn btn-danger">Supprimer</a>
+                    <div class="row">
+                        <div class="col-lg-6 text-left">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        </div>
+                        <div class="col-lg-6">
+                            {{ form(remove_form) }}
+                        </div>
+                    </div>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

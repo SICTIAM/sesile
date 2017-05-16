@@ -35,8 +35,7 @@ class deleteClasseursCollectivitesCommand extends ContainerAwareCommand
             $dateToDelete = $date->sub(new \DateInterval($nbValidDays));
 
 
-            $output->writeln('===== ' . $collectivite->getNom() . ' =====');
-            $output->writeln('===== ' . $nbValidDays . ' =====');
+            $output->writeln('===== ' . $collectivite->getNom() . ' : ' . $date->format('d-m-Y') . ' =====');
 
             $users = $collectivite->getUsers();
             $i = 0;
