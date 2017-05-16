@@ -9,14 +9,14 @@
 <script>
 
     // Délai de relance de la fonction ajax
-    var my_delay = 2 * 1000;
+    var my_delay = 4 * 1000;
     var status_init = {{ status_init }};
 
     // Fonction permettan de recup le status d un classeur
     function callClasseurSatus_{{ classeur_id }}() {
         $.ajax({
             url: Routing.generate('status_classeur', {id: {{ classeur_id }}}),
-            async: false,
+//            async: false,
             method: "GET",
             success: function (resp) {
 

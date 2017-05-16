@@ -21,14 +21,31 @@ class DocumentRepository extends EntityRepository
      *
      * Initialisation de setaPDF
      */
-    protected function init_setaPDF($doc) {
+    protected function init_setaPDF($doc, $path) {
 
         // Create a reader : le fichier sur lequel on va apposer le tampon
-        $reader = 'uploads/docs/' . $doc;
+        $reader = $path . $doc;
 
-        // create a writer
+        // create a writer - 2nd parameter : true -> display inline, false -> download
         $writer = new \SetaPDF_Core_Writer_Http('VISA_' . $doc, true);
 
+        // get a document instance
+        $document = \SetaPDF_Core_Document::loadByFilename(
+            $reader, $writer
+        );
+
+        return $document;
+    }
+    /**
+     * @param $doc
+     * @return \SetaPDF_Core_Document
+     *
+     * Initialisation de setaPDF
+     */
+    protected function init_file_setaPDF($doc, $path) {
+
+        $reader = $path . $doc;
+        $writer = new \SetaPDF_Core_Writer_File($path . "visa-" . $doc);
         // get a document instance
         $document = \SetaPDF_Core_Document::loadByFilename(
             $reader, $writer
@@ -138,7 +155,6 @@ class DocumentRepository extends EntityRepository
         } else {
             $pagePosition = 'last';
         }
-//var_dump($document);
         // On recupere l orientation de la page portrait ou paysage
         // $format = $this->getFormatPdf($document, $first);
 
@@ -225,7 +241,7 @@ class DocumentRepository extends EntityRepository
         // On defini lequel des stamp est le plus large
         $stampWidth = $stamp->getWidth();
         $stamp_visaWidth = $stamp_visa->getWidth();
-        if ($stampWidth >> $stamp_visaWidth) {
+        if ($stampWidth >= $stamp_visaWidth) {
             $stamp_visa->setWidth($stampWidth);
         } else {
             $stamp_visa->setWidth($stamp_visaWidth + $padding);
@@ -351,9 +367,32 @@ class DocumentRepository extends EntityRepository
      * Affiche le fichier PDF avec le visa directement dans le navigateur
      *
      */
-    public function setaPDFTamponVisa($doc, $classeurId, $translateX = 30, $translateY = -30, $first = true, $texteVisa, $color = false) {
+    public function setaPDFTamponVisa($doc, $classeurId, $translateX = 30, $translateY = -30, $first = true, $texteVisa, $color = false, $path) {
 
-        $document = $this->init_setaPDF($doc);
+        $document = $this->init_setaPDF($doc,$path);
+
+        $this->createVisa($document, $classeurId, $translateX, $translateY, $first, $texteVisa, $color);
+
+        $this->finish_setaPDF($document);
+
+    }
+
+    /**
+     * @param $doc
+     * @param $classeurId
+     * @param int $translateX
+     * @param int $translateY
+     * @param bool $first
+     * @param $texteVisa
+     * @param bool $color
+     * @throws \SetaPDF_Core_Exception
+     *
+     * Affiche le fichier PDF avec le visa directement dans le navigateur
+     *
+     */
+    public function setaPDFTamponVisaAll($doc, $classeurId, $translateX = 30, $translateY = -30, $first = true, $texteVisa, $color = false, $path) {
+
+        $document = $this->init_file_setaPDF($doc, $path);
 
         $this->createVisa($document, $classeurId, $translateX, $translateY, $first, $texteVisa, $color);
 
@@ -370,9 +409,27 @@ class DocumentRepository extends EntityRepository
      *
      * Affiche le fichier PDF avec la signature directement dans le navigateur
      */
-    public function setaPDFTamponSignature($doc, $translateX = 30, $translateY = -30, $first = true, $imageSignature = '', $user, $classeurId) {
+    public function setaPDFTamponSignature($doc, $translateX = 30, $translateY = -30, $first = true, $imageSignature = '', $user, $classeurId, $path) {
 
-        $document = $this->init_setaPDF($doc);
+        $document = $this->init_setaPDF($doc, $path);
+
+        $this->createSignature($document, $translateX, $translateY, $first, $imageSignature, $user, $classeurId);
+
+        $this->finish_setaPDF($document);
+    }
+
+    /**
+     * @param $doc
+     * @param int $translateX
+     * @param int $translateY
+     * @param bool $first
+     * @param string $imageSignature
+     *
+     * Affiche le fichier PDF avec la signature directement dans le navigateur
+     */
+    public function setaPDFTamponSignatureAll($doc, $translateX = 30, $translateY = -30, $first = true, $imageSignature = '', $user, $classeurId, $path) {
+
+        $document = $this->init_file_setaPDF($doc, $path);
 
         $this->createSignature($document, $translateX, $translateY, $first, $imageSignature, $user, $classeurId);
 
@@ -393,9 +450,9 @@ class DocumentRepository extends EntityRepository
      *
      * Affiche le fichier PDF avec la signature et le visa directement dans le navigateur
      */
-    public function setaPDFTamponALL($doc, $classeurId, $translateXVisa = 30, $translateYVisa = -30, $translateXSign = 30, $translateYSign = -30, $firstSign = true, $firstVisa = true, $imageSignature = '', $texteVisa, $color = false, $user, $signed) {
+    public function setaPDFTamponALL($doc, $classeurId, $translateXVisa = 30, $translateYVisa = -30, $translateXSign = 30, $translateYSign = -30, $firstSign = true, $firstVisa = true, $imageSignature = '', $texteVisa, $color = false, $user, $path) {
 
-        $document = $this->init_setaPDF($doc);
+        $document = $this->init_setaPDF($doc,$path);
 
         $this->createSignature($document, $translateXSign, $translateYSign, $firstSign, $imageSignature, $user, $classeurId);
         $this->createVisa($document, $classeurId, $translateXVisa, $translateYVisa, $firstVisa, $texteVisa, $color);
@@ -403,9 +460,33 @@ class DocumentRepository extends EntityRepository
         $this->finish_setaPDF($document);
     }
 
-    public function affPDF($doc, $classeurId) {
+    /**
+     * @param $doc
+     * @param $classeurId
+     * @param int $translateXVisa
+     * @param int $translateYVisa
+     * @param int $translateXSign
+     * @param int $translateYSign
+     * @param bool $first
+     * @param string $imageSignature
+     * @param $texteVisa
+     * @param bool $color
+     *
+     * Affiche le fichier PDF avec la signature et le visa directement dans le navigateur
+     */
+    public function setaPDFTamponALLFiles($doc, $classeurId, $translateXVisa = 30, $translateYVisa = -30, $translateXSign = 30, $translateYSign = -30, $firstSign = true, $firstVisa = true, $imageSignature = '', $texteVisa, $color = false, $user, $path) {
 
+        $document = $this->init_file_setaPDF($doc, $path);
+
+        $this->createSignature($document, $translateXSign, $translateYSign, $firstSign, $imageSignature, $user, $classeurId);
+        $this->createVisa($document, $classeurId, $translateXVisa, $translateYVisa, $firstVisa, $texteVisa, $color);
+
+        $this->finish_setaPDF($document);
     }
+
+    /*public function affPDF($doc, $classeurId) {
+
+    }*/
 
     /**
      * @param $hex

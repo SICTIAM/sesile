@@ -31,12 +31,11 @@ parameters:
     domain_parse:
         default: sesile
         dbname: sictiam
-    url_applet: signature.sesile.fr
     ovh:
         environnement: ""
         zone: sesile.fr
         target: sesile.fr.
-    email_sender_address: sictiam@sesile.fr
+    email_sender_address: sesile@sictiam.fr
     url_applet: signature.sesile.fr
     upload:
         path: %kernel.root_dir%/../web/uploads/avatars/

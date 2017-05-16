@@ -1,0 +1,161 @@
+{% extends "SesileMainBundle:Default:index.html.twig" %}
+
+{% block content %}
+    <div class="bloc_page">
+        <div class="titre_page">
+            <span class="glyphicon glyphicon-folder-open"></span>
+            &nbsp;&nbsp;&nbsp;Gestion du certificat d'un utilisateur
+        </div>
+        {% if app.request.server.get('HTTP_X_SSL') %}
+            {% if certifCAS == certificatevalue %}
+                <div class="row row-padding">
+                    <div class="col-lg-8 col-lg-push-2 text-center alert alert-success">
+                        <h2>Ce certificat est déjà appairé à ce compte</h2>
+                    </div>
+                </div>
+            {% endif %}
+        <div class="row row-padding">
+            <div class="col-lg-12">
+                <div class="row row-padding">
+                    <div class="col-lg-12 text-center"><h3>CERTIFICAT</h3></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 text-right cert_attr">N° de série</div>
+                    <div class="col-lg-9">
+                        {{ app.request.server.get('HTTP_X_SSL_CLIENT_M_SERIAL') }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 text-right cert_attr">Emetteur</div>
+                    <div class="col-lg-9">{{ app.request.server.get('HTTP_X_SSL_CLIENT_I_DN') }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-padding">
+            <div class="col-lg-4 text-center">
+                <div class="row row-padding">
+                    <div class="col-lg-12"><h3>EMIS POUR</h3></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">Nom commun</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_S_DN_CN') }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">Organisation</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_S_DN_O') }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">Unité d'organisation</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_S_DN_OU') }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">E Mail</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_S_DN_EMAIL') }}</div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 text-center">
+                <div class="row row-padding">
+                    <div class="col-lg-12"><h3>EMIS PAR</h3></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">Nom commun</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_I_DN_CN') }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">Organisation</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_I_DN_O') }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">E-Mail</div>
+                    <div class="col-lg-6 text-left">{{ app.request.server.get('HTTP_X_SSL_CLIENT_I_DN_EMAIL') }}</div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 text-center">
+                <div class="row row-padding">
+                    <div class="col-lg-12"><h3>VALIDIT&Eacute;</h3></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">Emis le</div>
+                    <div class="col-lg-6 text-left">{{ startDate | date('d/m/Y à H:i:s') }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 text-right cert_attr">Expire le</div>
+                    <div class="col-lg-6 text-left">{{ endDate | date('d/m/Y à H:i:s') }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-padding"></div>
+
+        <div class="row row-padding">
+            <div class="col-lg-3 col-lg-push-3">
+                {% if certifCAS != certificatevalue %}
+                    {{ form(save_form) }}
+                {% endif %}
+            </div>
+
+            <div class="col-lg-3 col-lg-push-3">
+                {% if certifCAS %}
+                    <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#deleteCert"
+                            data-name="{{ user.prenom }} {{ user.nom }}" data-whatever="{{ path("certificate_delete", {'id' : user.id }) }}">
+                        Désappairer ce compte
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <h2>Vous ne pouvez pas accéder à ces fonctionnalités</h2>
+        </div>
+        <div class="row">
+            <p>
+                Votre application doit supporter le HTTPS pour supporter cette fonctionnalité
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Pour la modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="deleteCert">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Désappairer ce compte ?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>&Ecirc;tes vous sur de désappairer ce compte ?</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-lg-6 text-left">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        </div>
+                        <div class="col-lg-6">
+                            {{ form(remove_form) }}
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- Fin de la modal -->
+
+    <script>
+        $('#deleteCert').on('show.bs.modal', function (event) {
+            console.log('coucou');
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var recipient = button.data('whatever'); // Extract info from data-* attributes
+            var collectivite = button.data('name'); // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            modal.find('.modal-title').text('Désappairer le compte de ' + collectivite);
+            modal.find('.modal-body input').val(recipient);
+            modal.find('.btn-danger').attr('href', recipient);
+        })
+    </script>
+{% endblock %}

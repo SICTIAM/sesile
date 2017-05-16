@@ -25,9 +25,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
-//use Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
-//use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class DefaultController extends Controller
 {
@@ -42,7 +41,6 @@ class DefaultController extends Controller
         }
         else if($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             $em = $this->getDoctrine()->getManager();
-//            $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->getRequest()->getSession()->get("collectivite"));
             $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->find($this->get('session')->get("collectivite"));
             $users = $collectivite->getUsers();
         }
@@ -139,15 +137,6 @@ class DefaultController extends Controller
                     $em->flush();
                     // fin de la modification des roles
 
-                    //envoi d'un mail à l'utilisateur nouvellement créé
-                    // Fonction mis en commentaire suite a la demande de CB
-                    /*$message = \Swift_Message::newInstance()
-                        ->setContentType('text/html')
-                        ->setSubject('Nouvel utilisateur')
-                        ->setFrom("sesile@sictiam.fr")
-                        ->setTo($entity->getUsername())
-                        ->setBody('Bienvenue dans Sesile ' . $entity->getPrenom() . ' ' . $entity->getNom());
-                    $this->get('mailer')->send($message);*/
                 } else {
                     $this->get('session')->getFlashBag()->add(
                         'error',
@@ -173,30 +162,124 @@ class DefaultController extends Controller
     /**
      * Displays a form to edit an existing user entity.
      * @Route("/edit/{id}/", name="user_edit", options={"expose"=true})
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @Method("GET")
      * @Template()
+     * @param User $user
+     * @return array
      */
-    public function editAction($id)
+    public function editAction(User $user)
     {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('SesileUserBundle:User')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
+        $editForm = $this->createEditForm($user);
+        $deleteForm = $this->createDeleteForm($user->getId());
 
         return array(
-            'entity' => $entity,
+            'entity' => $user,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
             "menu_color" => "vert"
         );
+    }
+
+    /**
+     * Displays a form to edit an existing user entity.
+     * @Route("/certificate/{id}/", name="user_certificate")
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @Template()
+     * @param User $user
+     * @return array
+     */
+    public function certificateAction(User $user)
+    {
+        $request = Request::createFromGlobals();
+        $certificateValue = $this->cas_ssl_infos($request->server->get('HTTP_X_SSL_CLIENT_M_SERIAL'),$request->server->get('HTTP_X_SSL_CLIENT_I_DN'));
+        $startDate = $this->convert_date_certificate($request->server->get('HTTP_X_SSL_CLIENT_NOT_BEFORE'));
+        $endDate = $this->convert_date_certificate($request->server->get('HTTP_X_SSL_CLIENT_NOT_AFTER'));
+        $physicaldeliveryofficename = $this->getUserInfosFromCas($user->getUsername(), "physicaldeliveryofficename");
+
+        $saveForm = $this->certificateAppairForm($user->getId());
+        $removeForm = $this->certificateDeleteForm($user->getId());
+
+        return array(
+            'user'              => $user,
+            'certificatevalue'  => $certificateValue,
+            'startDate'         => $startDate,
+            'endDate'           => $endDate,
+            'certifCAS'         => $physicaldeliveryofficename,
+            'save_form'         => $saveForm->createView(),
+            'remove_form'       => $removeForm->createView(),
+            "menu_color"        => "vert"
+        );
+    }
+
+    /**
+     * Add certificate to user.
+     * @Route("/certificate_appair/{id}", name="certificate_appair")
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function certificateAppairAction (Request $request, User $user) {
+
+        $form = $this->certificateAppairForm($user->getId());
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+
+            $request = Request::createFromGlobals();
+            $certificateValue = $this->cas_ssl_infos($request->server->get('HTTP_X_SSL_CLIENT_M_SERIAL'),$request->server->get('HTTP_X_SSL_CLIENT_I_DN'));
+
+            if ($user_cas = $this->getUserInfosFromCas($certificateValue, "mail", "physicalDeliveryOfficeName")) {
+
+                $this->addFlash(
+                    'warning',
+                    "Ce certificat est déjà appairé pour l'utilisateur : " . $user_cas
+                );
+            }
+            else if($this->setUserInfosInCas($user, "physicaldeliveryofficename", $certificateValue)) {
+                $this->addFlash(
+                    'success',
+                    "Certificat appairé pour " . $user->getPrenom() . " " . $user->getNom()
+                );
+            } else {
+                $this->addFlash(
+                    'error',
+                    "Impossible d'appairer le certificat"
+                );
+            }
+        }
+
+        return $this->redirect($this->generateUrl('user_certificate', array('id' => $user->getId())));
+    }
+
+    /**
+     * Remove certificate to user.
+     * @Route("/certificate_delete/{id}", name="certificate_delete")
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function certificateRemoveAction(Request $request, User $user) {
+
+        $form = $this->certificateDeleteForm($user->getId());
+        $form->handleRequest($request);
+        if($form->isValid()) {
+            if ($this->removeUserInfosInCas($user, "physicaldeliveryofficename")) {
+                $this->addFlash(
+                    'success',
+                    "Certificat désappairé pour " . $user->getPrenom() . " " . $user->getNom()
+                );
+            } else {
+                $this->addFlash(
+                    'error',
+                    "Impossible de désappairer ce certificat"
+                );
+            }
+        }
+
+        return $this->redirect($this->generateUrl('user_certificate', array('id' => $user->getId())));
+
     }
 
 
@@ -375,11 +458,6 @@ class DefaultController extends Controller
 
         // Si l utilisateur existe bien
         if($user !== null) {
-            // On Supprime l'utilisateur de tous les UserPacks
-//        $em->getRepository('SesileUserBundle:UserPack')->deleteUserFromUserPacks($id);
-
-            // On supprime l'utilisateur de tous les Service organisationnel (EtapeGroupe)
-//            $em->getRepository('SesileUserBundle:EtapeGroupe')->deleteUserFromEtapeGroupes($id);
 
             // On récupère le dossier des avatar
             $upload = $this->container->getParameter('upload');
@@ -751,19 +829,23 @@ class DefaultController extends Controller
                 'multiple' => true
             ));*/
             $form->add('roles', ChoiceType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'choices' => array(
-                    'Utilisateurs' => 'ROLE_USER',
-                    'Admin'=> 'ROLE_ADMIN',
-                    'Super admin' => 'ROLE_SUPER_ADMIN'
+                    'profile.roles_choice.user' => 'ROLE_USER',
+                    'profile.roles_choice.admin'=> 'ROLE_ADMIN',
+                    'profile.roles_choice.super_admin' => 'ROLE_SUPER_ADMIN'
                 ),
 //                'choices_as_values' => true,
                 'multiple' => true
             ));
         } else {
             $form->add('roles', ChoiceType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'choices' => array(
-                    'Utilisateurs' => 'ROLE_USER',
-                    'Admin' => 'ROLE_ADMIN',
+                    'profile.roles_choice.user' => 'ROLE_USER',
+                    'profile.roles_choice.admin'=> 'ROLE_ADMIN',
                 ),
 //                'choices_as_values' => true,
                 'multiple' => true
@@ -773,6 +855,8 @@ class DefaultController extends Controller
         // liste des collectivités
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('collectivite', EntityType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.local_authoritie',
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
                     return $repository->createQueryBuilder('p')
@@ -783,7 +867,10 @@ class DefaultController extends Controller
             ));
         }
 
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array(
+            'translation_domain' => 'FOSUserBundle',
+            'label' => 'label.save',
+        ));
 
 
         return $form;
@@ -814,10 +901,12 @@ class DefaultController extends Controller
         ));
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('roles', ChoiceType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'choices' => array(
-                    'Utilisateurs' => 'ROLE_USER',
-                    'Admin'=> 'ROLE_ADMIN',
-                    'Super admin' => 'ROLE_SUPER_ADMIN'
+                    'profile.roles_choice.user' => 'ROLE_USER',
+                    'profile.roles_choice.admin'=> 'ROLE_ADMIN',
+                    'profile.roles_choice.super_admin' => 'ROLE_SUPER_ADMIN'
                 ),
 //                'choices_as_values' => true,
                 'choice_label' => function ($value, $key, $index) {
@@ -827,9 +916,11 @@ class DefaultController extends Controller
             ));
         } else {
             $form->add('roles', ChoiceType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.roles',
                 'choices' => array(
-                    'Utilisateurs' => 'ROLE_USER',
-                    'Admin'=> 'ROLE_ADMIN',
+                    'profile.roles_choice.user' => 'ROLE_USER',
+                    'profile.roles_choice.admin'=> 'ROLE_ADMIN'
                 ),
 //                'choices_as_values' => true,
                 'choice_label' => function ($value, $key, $index) {
@@ -842,6 +933,8 @@ class DefaultController extends Controller
         // liste des collectivités
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add('collectivite', EntityType::class, array(
+                'translation_domain' => 'FOSUserBundle',
+                'label' => 'profile.local_authoritie',
                 'class' => "SesileMainBundle:Collectivite",
                 'query_builder' => function ($repository) {
                     return $repository->createQueryBuilder('p')
@@ -854,7 +947,10 @@ class DefaultController extends Controller
 
 
 
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array(
+            'translation_domain' => 'FOSUserBundle',
+            'label' => 'profile.edit.submit'
+        ));
 
         return $form;
     }
@@ -872,6 +968,40 @@ class DefaultController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'Supprimer'))
             ->getForm();
     }
+    /**
+     * Creates a form to delete a User entity by id.
+     * @param mixed $id The entity id
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function certificateAppairForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('certificate_appair', array('id' => $id)))
+            ->setMethod('POST')
+            ->add('submit', SubmitType::class, array(
+                    'translation_domain' => 'FOSUserBundle',
+                    'label' => 'certificate.submit',
+                'attr' => array('class' => 'btn btn-success btn-lg btn-block'))
+            )
+            ->getForm();
+    }
+    /**
+     * Creates a form to delete a User entity by id.
+     * @param mixed $id The entity id
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function certificateDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('certificate_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', SubmitType::class, array(
+                    'translation_domain' => 'FOSUserBundle',
+                    'label' => 'certificate.delete',
+                'attr' => array('class' => 'btn btn-danger'))
+            )
+            ->getForm();
+    }
 
     private function getCASParams()
     {
@@ -879,7 +1009,6 @@ class DefaultController extends Controller
         $parsed = Yaml::parse(file_get_contents($file));
 
         $cas = $parsed['parameters'];
-
 
         return $cas;
     }
@@ -891,10 +1020,8 @@ class DefaultController extends Controller
      */
     public function errorAction()
     {
-
         return array();
     }
-
 
 
     /**
@@ -959,4 +1086,206 @@ class DefaultController extends Controller
             }
         }
     }
+
+
+    private function connexionLdap() {
+        $cas_server = $this->container->getParameter('cas_server');
+
+        $ldapconn = ldap_connect($cas_server) or die("Could not connect to LDAP server."); // security
+        $LdapInfo = $this->container->getParameter('ldap');
+        ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+        if ($ldapconn) {
+            if (ldap_bind($ldapconn, $LdapInfo["dn_admin"], $LdapInfo["password"])) {
+                return $ldapconn;
+            } else {
+                ldap_close($ldapconn);
+                exit("Authentification au serveur LDAP impossible");
+            }
+        }
+        return $ldapconn;
+    }
+
+    /**
+     * @Route("/cas/infos", name="user_infos_cas")
+     * @param $filter_value
+     * @param string $attribute
+     * @param string $filter
+     * @return array
+     */
+    private function getUserInfosFromCas($filter_value, $attribute = "mail", $filter = "mail") {
+        $LdapInfo = $this->container->getParameter('ldap');
+//        $userName = $user->getUsername();
+        $ldapconn = $this->connexionLdap();
+        $justthese = array($attribute);
+
+        $sr = ldap_search($ldapconn, $LdapInfo["dn_user"], "(" . $filter . "=" . $filter_value . ")", $justthese);
+        $data = ldap_get_entries($ldapconn, $sr);
+
+        if($data["count"] > 0 && isset($data[0][$attribute][0])) {
+            $ret = $data[0][$attribute][0];
+        } else {
+            $ret = null;
+        }
+        return $ret;
+    }
+
+
+    /**
+     * @param $user
+     * @param $attribute
+     * @param $value
+     * @return bool
+     */
+    private function setUserInfosInCas($user, $attribute, $value) {
+
+        $LdapInfo = $this->container->getParameter('ldap');
+        $ldapconn = $this->connexionLdap();
+        $parent = $LdapInfo["dn_user"];
+        $entry[$attribute] = $value;
+
+        return ldap_modify($ldapconn, "mail=" . $user->getUsername() . "," . $parent, $entry);
+
+    }
+
+    /**
+     * @param $user
+     * @param $attribute
+     * @return bool
+     */
+    private function removeUserInfosInCas($user, $attribute) {
+
+        $LdapInfo = $this->container->getParameter('ldap');
+        $ldapconn = $this->connexionLdap();
+        $parent = $LdapInfo["dn_user"];
+
+        $search = ldap_search($ldapconn, $LdapInfo["dn_user"], "(mail=" . $user->getUsername() . ")");
+        $entries = ldap_get_entries($ldapconn,$search);
+
+        if (isset($entries[0][$attribute][0])) {
+            $entry[$attribute] = $entries[0][$attribute][0];
+            return ldap_mod_del($ldapconn, "mail=" . $user->getUsername() . "," . $parent, $entry);
+        } else {
+            return false;
+        }
+
+
+    }
+
+    /**
+     * Convertit une chaine hexadécimale en valeur décimale en utiliant les fonctions calcul de précision (BCmath)
+     * @param string $hex
+     * @return number|string
+     */
+    private function bchexdec($hex) {
+        if(strlen($hex) == 1) {
+            return hexdec($hex);
+        } else {
+            $remain = substr($hex, 0, -1);
+            $last = substr($hex, -1);
+            return bcadd(bcmul(16, $this->bchexdec($remain)), hexdec($last));
+        }
+    }
+
+    /**
+     * @param $serial
+     * @param $vendor
+     * @return string
+     */
+    private function cas_ssl_infos($serial, $vendor) {
+        // conversion des infos serial + vendor pour correspondre à ce qu'attend CAS
+        $SSLCertificatSerial = $this->bchexdec($serial);
+        $utf8_dict = array('\xC3\x80' => "A", // Ã€
+            '\xC3\x81' => "Á", // Ã
+            '\xC3\x82' => "Â", // Ã‚
+            '\xC3\x83' => "Ã", // Ãƒ
+            '\xC3\x84' => "Ä", // Ã„
+            '\xC3\x85' => "Å", // Ã…
+            '\xC3\x86' => "Æ", // Ã†
+            '\xC3\x9E' => "Þ", // Ãž
+            '\xC3\x87' => "Ç", // Ã‡
+            '\xC4\x86' => "C", // Ä†
+            '\xC4\x8C' => "C", // ÄŒ
+            '\xC4\x90' => "Dj", // Ä
+            '\xC3\x88' => "È", // Ãˆ
+            '\xC3\x89' => "É", // Ã‰
+            '\xC3\x8A' => "Ê", // ÃŠ
+            '\xC3\x8B' => "Ë", // Ã‹
+            '\xC4\x9E' => "Þ", // Äž
+            '\xC3\x8C' => "Ì", // ÃŒ
+            '\xC3\x8D' => "Í", // Ã
+            '\xC3\x8E' => "Î", // ÃŽ
+            '\xC3\x8F' => "Ï", // Ã
+            '\xC4\xB0' => "I", // Ä°
+            '\xC3\x91' => "Ñ", // Ã‘
+            '\xC3\x92' => "Ò", // Ã’
+            '\xC3\x93' => "Ó", // Ã“
+            '\xC3\x94' => "Ô", // Ã”
+            '\xC3\x95' => "Õ", // Ã•
+            '\xC3\x96' => "Ö", // Ã–
+            '\xC3\x98' => "Ø", // Ã˜
+            '\xC3\x9F' => "ß", // ÃŸ
+            '\xC3\x99' => "Ù", // Ã™
+            '\xC3\x9A' => "Ú", // Ãš
+            '\xC3\x9B' => "Û", // Ã›
+            '\xC3\x9C' => "Ü", // Ãœ
+            '\xC3\x9D' => "Ý", // Ã
+            '\xC3\xA0' => "à", // Ã 
+            '\xC3\xA1' => "á", // Ã¡
+            '\xC3\xA2' => "â", // Ã¢
+            '\xC3\xA3' => "ã", // Ã£
+            '\xC3\xA4' => "ä", // Ã¤
+            '\xC3\xA5' => "å", // Ã¥
+            '\xC3\xA6' => "æ", // Ã¦
+            '\xC3\xBE' => "b", // Ã¾
+            '\xC3\xA7' => "ç", // Ã§
+            '\xC4\x87' => "Ç", // Ä‡
+            '\xC4\x8D' => "Í", // Ä
+            '\xC4\x91' => "Ñ", // Ä‘
+            '\xC3\xA8' => "è", // Ã¨
+            '\xC3\xA9' => "é", // Ã©
+            '\xC3\xAA' => "ê", // Ãª
+            '\xC3\xAB' => "ë", // Ã«
+            '\xC3\xAC' => "ì", // Ã¬
+            '\xC3\xAD' => "í", // Ã­
+            '\xC3\xAE' => "î", // Ã®
+            '\xC3\xAF' => "ï", // Ã¯
+            '\xC3\xB0' => "ð", // Ã°
+            '\xC3\xB1' => "ñ", // Ã±
+            '\xC3\xB2' => "ò", // Ã²
+            '\xC3\xB3' => "ó", // Ã³
+            '\xC3\xB4' => "ô", // Ã´
+            '\xC3\xB5' => "õ", // Ãµ
+            '\xC3\xB6' => "ö", // Ã¶
+            '\xC3\xB8' => "ø", // Ã¸
+            '\xC5\x94' => "R", // Å”
+            '\xC5\x95' => "r", // Å•
+            '\xC5\xA0' => "S", // Å 
+            '\xC5\x9E' => "S", // Åž
+            '\xC5\xA1' => "s", // Å¡
+            '\xC3\xB9' => "ù", // Ã¹
+            '\xC3\xBA' => "ú", // Ãº
+            '\xC3\xBB' => "û", // Ã»
+            '\xC3\xBC' => "ü", // Ã¼
+            '\xC3\xBD' => "ý", // Ã½
+            '\xC3\xBF' => "ÿ", // Ã¿
+            '\xC5\xBD' => "Z", // Å½
+            '\xC5\xBE' => "z"); // Å¾
+
+
+        $vendor = strtr(trim($vendor), $utf8_dict);
+        $str = "SERIALNUMBER=".$SSLCertificatSerial.", ".implode(", ", array_reverse(explode("/", trim($vendor, '/'))));
+        return $str;
+    }
+
+    /**
+     * Convertit la date du haproxy au format DateTime
+     * @param $date
+     * @return bool|\DateTime
+     */
+    private function convert_date_certificate($date) {
+        return $validDate = \DateTime::createFromFormat('ymdHisT', $date);
+    }
+
+
 }

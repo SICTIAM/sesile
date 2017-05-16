@@ -55,10 +55,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
     public function getAction(Request $request, $id)
     {
 
-
         $em = $this->getDoctrine()->getManager();
-
-
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
         $document = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
         if (empty($document)) {
@@ -66,11 +63,9 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
         }
         $classeur = $em->getRepository('SesileClasseurBundle:ClasseursUsers')->getClasseurByUser($document->getClasseur(), $user->getId());
 
-
         if (empty($classeur[0])) {
             throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur auquel appartient le document " . $id);
         }
-
 
         return $this->docToArray($document);
 
@@ -257,12 +252,11 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getName() . '"');
         $response->headers->set('Content-Length', filesize('uploads/docs/' . $document->getRepourl()));
 
-
-        // $response->sendHeaders();
-
-
         $response->setContent(file_get_contents('uploads/docs/' . $document->getRepourl()));
 
+        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
+        $document->setDownloaded(true);
+        $em->flush();
 
         return $response;
 
