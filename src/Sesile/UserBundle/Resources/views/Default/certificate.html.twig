@@ -7,6 +7,13 @@
             &nbsp;&nbsp;&nbsp;Gestion du certificat d'un utilisateur
         </div>
         {% if app.request.server.get('HTTP_X_SSL') %}
+            {% if certifCAS == certificatevalue %}
+                <div class="row row-padding">
+                    <div class="col-lg-8 col-lg-push-2 text-center alert alert-success">
+                        <h2>Ce certificat est déjà appairé à ce compte</h2>
+                    </div>
+                </div>
+            {% endif %}
         <div class="row row-padding">
             <div class="col-lg-12">
                 <div class="row row-padding">
