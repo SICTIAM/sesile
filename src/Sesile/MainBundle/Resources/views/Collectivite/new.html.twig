@@ -20,6 +20,15 @@
             <div class="col-md-9">{{ form_widget(form.active) }}</div>
         </div>
         <div class="row">
+            <div class="col-md-3">{{ form_label(form.deleteClasseurAfter) }}</div>
+            <div class="col-md-9">
+                {{ form_widget(form.deleteClasseurAfter) }}
+                {% if form_errors(form.deleteClasseurAfter) %}
+                    <div class="alert alert-danger" role="alert">{{form_errors(form.deleteClasseurAfter) }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-3">{{ form_label(form.file) }}</div>
             <div class="col-md-5">{{ form_widget(form.file) }}</div>
         </div>

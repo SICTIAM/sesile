@@ -515,26 +515,31 @@ class ClasseurController extends Controller {
 
         foreach ($files as $k => $file) {
 
+            //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
+            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
+                unlink($file->getPathname());
+            } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
 
-            $document->setName($request->request->get('serverfilename')[$k]);
-            $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
-            $document->setType($file->getMimeType());
-            $document->setSigned(false);
-            $document->setClasseur($classeur);
-            $em->persist($document);
+                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
+                $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
+                $document->setType($file->getMimeType());
+                $document->setSigned(false);
+                $document->setClasseur($classeur);
+                $em->persist($document);
 
-            $action = new Action();
-            $action->setClasseur($classeur);
-            $action->setUser($this->getUser());
-
-
-            $action->setAction("Ajout du document " . $document->getName());
-            $em->persist($action);
+                $action = new Action();
+                $action->setClasseur($classeur);
+                $action->setUser($this->getUser());
 
 
-            $em->flush();
-            $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
+                $action->setAction("Ajout du document " . $document->getName());
+                $em->persist($action);
+
+
+                $em->flush();
+                $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
+            }
 
         }
 
@@ -888,7 +893,7 @@ class ClasseurController extends Controller {
      * @Method("POST")
      *
      */
-    public function signPDFAction(Request $request)
+    /*public function signPDFAction(Request $request)
     {
 
         var_dump("Welcome");
@@ -900,7 +905,7 @@ class ClasseurController extends Controller {
             throw $this->createNotFoundException('Unable to find Classeur entity.');
         }
 
-    }
+    }*/
 
 
     /**
@@ -953,10 +958,7 @@ class ClasseurController extends Controller {
 
         // MAJ de la visibilite
         $this->set_user_visible ($classeur, $visibilite);
-//        $em->getRepository('SesileClasseurBundle:Classeur')->set_user_visible($classeur, $visibilite);
 
-
-//        $classeur->valider($em);
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur);
 
 
@@ -1253,99 +1255,16 @@ class ClasseurController extends Controller {
 
     /**
      * @Route("/statusclasseur/{id}", name="status_classeur",  options={"expose"=true})
-     *
+     * @param $id
+     * @return JsonResponse
      */
-    public function statusClasseurAction(Request $request, $id) {
+    public function statusClasseurAction($id) {
 
         $em = $this->getDoctrine()->getManager();
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
 
 
         return new JsonResponse($classeur->getStatus());
-    }
-
-
-    /**
-     * Valider_et_signer an existing Classeur entity.
-     *
-     * @Route("/signform/{id}/{role}", name="signform")
-     * @Template()
-     *
-     */
-    public function signAction(Request $request, $id, $role = null)
-    {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        if($request->request->get('circuit')) {
-            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
-//            $circuit = $request->request->get('circuit');
-            $classeur->setCircuit($user->getId());
-            $em->flush();
-        }
-        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
-
-
-        $session = $this->get('session');
-        $session->start();
-
-        $tmpdocs = $classeur->getXmlDocuments();
-
-        $docstosign = array();
-
-        foreach ($tmpdocs as $key => $value) {
-            $tmpdo = array();
-            $tmpdo['name'] = $value->getName();
-            $tmpdo['id'] = $value->getId();
-            $tmpdo['repourl'] = $value->getRepourl();
-            $docstosign[$key] = $tmpdo;
-        }
-        if($request->get("moncul") != 1) {
-
-            // Met a jour les etapes de validations
-            $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
-            $em->flush();
-
-            $visibilite = $request->get("visibilite");
-            $classeur->setVisibilite($visibilite);
-            $classeur->setNom($request->get("name"));
-            $classeur->setDescription($request->get("desc"));
-            list($d, $m, $a) = explode("/", $request->request->get('validation'));
-            $valid = new \DateTime($m . "/" . $d . "/" . $a);
-            $classeur->setValidation($valid);
-            $currentvalidant = $request->request->get('curentValidant');
-
-        }
-
-        // Gestion du role de l utilisateur
-        // Dans le cas l utilisateur a plusieurs roles
-        if(null !== $role) {
-            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
-            $role = $roleUser->getUserRoles();
-        }
-        // Dans le cas l utilisateur a un seul role
-        else {
-            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findByUser($user);
-            if (!empty($roleUser)) {
-                $role = $roleUser[0]->getUserRoles();
-            } else {
-                $role = '';
-            }
-        }
-
-        $servername = $_SERVER['HTTP_HOST'];
-        $url_applet = $this->container->getParameter('url_applet');
-
-        return array(
-            'user'      => $user,
-            'role'      => $role,
-            'classeur'  => $classeur,
-            'session_id' => $session->getId(),
-            'docstosign' => $docstosign,
-            'servername' => $servername,
-            "url_applet" => $url_applet
-        );
-
     }
 
 
@@ -1380,22 +1299,7 @@ class ClasseurController extends Controller {
         $em->flush();
 
         // MAJ de l etat de la visibilité, nom, description, date de validation
-//        $em->getRepository('SesileClasseurBundle:Classeur')->updateInfosClasseurs($request, $id);
         $this->updateInfosClasseurs($request, $id, $em);
-        /*if ($request->isMethod('post')) {
-            $visibilite = $request->get("visibilite");
-            $classeur->setVisibilite($visibilite);
-            $classeur->setNom($request->get("name"));
-            $classeur->setDescription($request->get("desc"));
-            list($d, $m, $a) = explode("/", $request->request->get('validation'));
-            $valid = new \DateTime($m . "/" . $d . "/" . $a);
-            $classeur->setValidation($valid);
-
-            // MAJ de la visibilite
-            $this->set_user_visible($classeur, $visibilite);
-
-            $em->flush();
-        }*/
 
         $classeurs[] = $classeur;
 
@@ -1420,7 +1324,9 @@ class ClasseurController extends Controller {
      *
      * @Route("/signdocsjws/{role}", name="signdocsjws")
      * @Template("SesileClasseurBundle:Classeur:signDocJws.html.twig")
-     *
+     * @param Request $request
+     * @param null $role
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function signDocsJwsAction(Request $request, $role = null)
     {
@@ -1465,69 +1371,24 @@ class ClasseurController extends Controller {
     }
 
     /**
-     * Valider_et_signer an existing Classeur entity.
+     * Génération du fichier JNLP permettant l exécution de l application de signature depuis la preview
      *
-     * @Route("/signPdfForm/{id}", name="signPdfDocAction")
-     * @Template()
-     *
+     * @Route("/jnlpSignerFilesFromPreview/{role}", name="jnlpSignerFilesFromPreview")
+     * @param Request $request
+     * @param null $role
+     * @return Response
      */
-    public function signPdfDocAction(Request $request, $id)
-    {
-        //var_dump($request->get("moncul"));exit;
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        if($request->request->get('circuit')) {
-            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
-            $classeur->setCircuit($user->getId());
-            $em->flush();
-        }
-        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
-
-
-        $session = $this->get('session');
-        $session->start();
-
-        $tmpdocs = $classeur->getPdfDocuments();
-
-        $docstosign = array();
-
-        foreach ($tmpdocs as $key => $value) {
-            $tmpdo = array();
-            $tmpdo['name'] = $value->getName();
-            $tmpdo['id'] = $value->getId();
-            $tmpdo['repourl'] = $value->getRepourl();
-            $docstosign[$key] = $tmpdo;
-        }
-        if($request->get("moncul") != 1) {
-
-            // Met a jour les etapes de validations
-            $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $request->request->get('valeurs'));
-            $em->flush();
-
-            $visibilite = $request->get("visibilite");
-            $classeur->setVisibilite($visibilite);
-            $classeur->setNom($request->get("name"));
-            $classeur->setDescription($request->get("desc"));
-            list($d, $m, $a) = explode("/", $request->request->get('validation'));
-            $valid = new \DateTime($m . "/" . $d . "/" . $a);
-            $classeur->setValidation($valid);
-            $currentvalidant = $request->request->get('curentValidant');
-
+    public function jnlpSignerFilesFromPreviewAction (Request $request, $role = null) {
+        // on verifie qu un classeur a bien ete soumis
+        if (!$request->get("classeurs")) {
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                "Aucun classeur n'a été séléctionné pour la signature"
+            );
+            return $this->redirect($this->generateUrl('index_valider'));
         }
 
-
-        $servername = $_SERVER['HTTP_HOST'];
-        $url_applet = $this->container->getParameter('url_applet');
-
-        return array(
-            'user'      => $user,
-            'classeur'  => $classeur,
-            'session_id' => $session->getId(),
-            'docstosign' => $docstosign,
-            'servername' => $servername,
-            "url_applet" => $url_applet
-        );
+        return $this->generateJnlp($request->get("classeurs"), $role);
 
     }
 
@@ -1535,14 +1396,33 @@ class ClasseurController extends Controller {
      * Génération du fichier JNLP permettant l exécution de l application de signature
      *
      * @Route("/jnlpsignerfiles/{id}/{role}", name="jnlpSignerFiles")
-     *
+     * @param Request $request
+     * @param $id
+     * @param null $role
+     * @return Response
      */
     public function jnlpSignerFilesAction(Request $request, $id, $role = null) {
 
         // On recupere les ids des classeurs a signer
         $ids = unserialize(urldecode($id));
 
-        $arguments = array();
+        // Connexion BDD
+        $em = $this->getDoctrine()->getManager();
+
+        // MAJ de l etat de la visibilité, nom, description, date de validation
+        $this->updateInfosClasseurs($request, $ids, $em);
+
+        return $this->generateJnlp($ids, $role);
+    }
+
+    /**
+     * Génération du JNLP
+     *
+     * @param $ids
+     * @param null $role
+     * @return Response
+     */
+    private function generateJnlp ($ids, $role = null) {
 
         // Connexion BDD
         $em = $this->getDoctrine()->getManager();
@@ -1550,12 +1430,7 @@ class ClasseurController extends Controller {
         // User courant
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        // MAJ de l etat de la visibilité, nom, description, date de validation
-//        $em->getRepository('SesileClasseurBundle:Classeur')->updateInfosClasseurs($request, $ids);
-        $this->updateInfosClasseurs($request, $ids, $em);
-
         // Infos JSON liste des fichiers
-//        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findById($ids);
 
         // Gestion du role de l utilisateur
@@ -1573,16 +1448,13 @@ class ClasseurController extends Controller {
                 $roleArg = 'Non renseigné';
             }
         }
-//        $documents = $classeur->getDocuments();
         $classeursJSON = array();
-//        $documentsJSON = array();
 
         // Generation du token pour les documents
         $token = uniqid();
 
         // Pour chaque classeurs
         foreach ($classeurs as $classeur) {
-//            var_dump("Classeur : " . $classeur->getId() . " " . $classeur->getNom() . "<br>");
 
             // Recuperation url de retour pour la validation du classeur
             $url_valid_classeur = $this->generateUrl('valider_classeur_jws', array('id' => $classeur->getId(), 'user_id' => $user->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
@@ -1593,7 +1465,6 @@ class ClasseurController extends Controller {
             foreach ($classeur->getDocuments() as $document) {
 
                 if(!$document->getSigned()) {
-//                    var_dump("Document : " . $document->getName() . "<br>");
 
                     $document->setToken($token);
 
@@ -1631,13 +1502,10 @@ class ClasseurController extends Controller {
                 'documents' => $documentsJSON
             );
         }
-//        $classeursJSON[] = $documentsJSON;
-//        var_dump($classeursJSON); die();
+        $arguments = array();
         $arguments[] = json_encode($classeursJSON);
 
-
         // Récupération des infos du user
-        $user = $this->get('security.token_storage')->getToken()->getUser();
         $arguments[] = ($user->getPays() === null) ? "Non renseigné" : $user->getPays();
         $arguments[] = ($user->getVille() === null) ? "Non renseignée" : $user->getVille();
         $arguments[] = ($user->getCp() === null) ? "Non renseigné" : $user->getCp();
@@ -1656,7 +1524,7 @@ class ClasseurController extends Controller {
         $url_applet = 'http://' . $this->container->getParameter('url_applet') . '/jws/sesile-jws-signer.jar';
 
         $contentSigner = '<?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="' . $this->generateUrl('jnlpSignerFiles', array('id' => $id, 'role' => $role), UrlGeneratorInterface::ABSOLUTE_URL) . '">
+<jnlp spec="1.0+" codebase="' . $this->generateUrl('jnlpSignerFiles', array('id' => urlencode(serialize($ids)), 'role' => $role), UrlGeneratorInterface::ABSOLUTE_URL) . '">
   <information>
     <title>SESILE JWS Signer</title>
     <vendor>SICTIAM</vendor>
@@ -1827,13 +1695,12 @@ class ClasseurController extends Controller {
 
         foreach ($files as $k => $file) {
             //Suppression des fichiers provenant du dossier de session par erreur et ne devant pas être sauvegardés
-            /*if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
-                var_dump('ok 2');
+            if ($request->request->get(str_replace(".", "_", $file->getBaseName())) == null) {
                 unlink($file->getPathname());
-            } else {*/ // Pas d'erreur, on crée un document correspondant
+            } else { // Pas d'erreur, on crée un document correspondant
                 $document = new Document();
-//                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
-                $document->setName($request->request->get('serverfilename')[$k]);
+
+                $document->setName($request->request->get(str_replace(".", "_", $file->getBaseName())));
                 $document->setRepourl($file->getBaseName()); //Temporairement associé au nom du fichier en attendant les repository git
                 $document->setType($file->getMimeType());
                 $document->setSigned(false);
@@ -1851,7 +1718,7 @@ class ClasseurController extends Controller {
                 $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Ajout du document au classeur " . $classeur->getNom(), null);
 
 
-//            }
+            }
         }
 
         return new JsonResponse(array('error' => 'ok'));
@@ -1892,49 +1759,59 @@ class ClasseurController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
         if (is_null($currentvalidant)) {
-//            $currentvalidant = $classeur->getValidant();
             $currentvalidant = $this->getUser();
         }
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
         $c_user = $em->getRepository("SesileUserBundle:User")->findOneById($currentvalidant);
-        $validant_obj = $em->getRepository("SesileUserBundle:User")->findOneById($classeur->getUser());
-        $env = new \Twig_Environment(new \Twig_Loader_String());
-        $body = $env->render($coll->getTextMailwalid(),
-            array(
-                'deposant' => $validant_obj->getPrenom() . " " . $validant_obj->getNom(),
-                'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
-                'role' => $c_user->getRole(),
-                'qualite' => $c_user->getQualite(),
-                'titre_classeur' => $classeur->getNom(),
-                'date_limite' => $classeur->getValidation(),
-                'type' => strtolower($classeur->getType()->getNom()),
-                "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>'
+        $deposant = $em->getRepository("SesileUserBundle:User")->findOneById($classeur->getUser());
+
+        $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
+        $template = $env->createTemplate($coll->getTextMailwalid());
+        $template_html = array(
+            'validant' => $c_user->getPrenom() . " " . $c_user->getNom(),
+            'role' => $c_user->getRole(),
+            'qualite' => $c_user->getQualite(),
+            'titre_classeur' => $classeur->getNom(),
+            'date_limite' => $classeur->getValidation(),
+            'type' => strtolower($classeur->getType()->getNom()),
+            "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>'
+        );
+
+        // notification du deposant
+        $this->sendMail(
+            "SESILE - Classeur validé",
+            $deposant->getEmail(),
+            $template->render(
+                array_merge($template_html, array('deposant' => $deposant->getPrenom() . " " . $deposant->getNom()))
             )
         );
 
-//        $validant_obj = ($classeur->getValidant() == 0)?$em->getRepository('SesileUserBundle:User')->find($classeur->getUser()):$em->getRepository('SesileUserBundle:User')->find($classeur->getValidant());
+        // notification des utilisateurs se trouvant dans les etapes
+        $etapesClasseur = $classeur->getEtapeClasseurs();
+        foreach ($etapesClasseur as $etapeClasseur) {
 
-        $validants_id = $classeur->getUser();
-        $validants = $em->getRepository("SesileUserBundle:User")->findById($validants_id);
+            $users = $etapeClasseur->getUsers();
 
-        foreach($validants as $validant_obj) {
-            if ($validant_obj != null) {
-                $this->sendMail("SESILE - Classeur validé", $validant_obj->getEmail(), $body);
+            foreach ($users as $user) {
+                $this->sendMail(
+                    "SESILE - Classeur validé",
+                    $user->getEmail(),
+                    $template->render(
+                        array_merge($template_html, array('deposant' => $user->getPrenom() . " " . $user->getNom()))
+                    )
+                );
             }
         }
+
     }
 
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-//        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
         $d_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
-//        $currentvalidant = $this->getUser();
-//        $c_user = $em->getRepository("SesileUserBundle:User")->findOneById($currentvalidant);
         $env = new \Twig_Environment(new \Twig_Loader_String());
 
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
-//        foreach($classeur->getValidant() as $validant) {
         foreach($validants as $validant) {
 
             if ($validant != null) {
@@ -1958,10 +1835,7 @@ class ClasseurController extends Controller {
     private function sendRefusMail($classeur,$motif) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-//        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getValidant());
         $c_user = $em->getRepository("SesileClasseurBundle:Classeur")->classeurValidator($classeur, $this->getUser());
-
-//        var_dump($classeur->getId(), $classeur->getValidant()); die();
 
         $env = new \Twig_Environment(new \Twig_Loader_String());
         $body = $env->render($coll->getTextmailrefuse(),
@@ -1990,13 +1864,11 @@ class ClasseurController extends Controller {
      * @param User $user
      * @return string les id user du circuit dans l'ordre
      */
-    private $ordre;
+    /*private $ordre;
 
     private function recursivesortHierarchie($hierarchie, $curr, $recurs = 0) {
-//        static $recurs = 0;
         foreach($hierarchie as $k => $groupeUser) {
             if($groupeUser->getUser()->getId() == $curr ) {
-//                var_dump($recurs, $curr);
                 if($recurs > 0) {
                     $this->ordre .= $groupeUser->getUser()->getId().",";
                 }
@@ -2010,7 +1882,7 @@ class ClasseurController extends Controller {
         }
         $this->ordre = rtrim($this->ordre, ",");
         return $this->ordre;
-    }
+    }*/
 
     /**
      * Fonction pour determiner la visibilite et enregister dans Classeur_visible
@@ -2141,7 +2013,9 @@ class ClasseurController extends Controller {
      * MAJ de l etat de la visibilité, nom, description, date de validation
      *
      * @param $request
-     * @param $classeur
+     * @param $id
+     * @param $em
+     * @internal param $classeur
      */
     public function updateInfosClasseurs($request, $id, $em) {
         if (null !== $request && $request->isMethod('post')) {

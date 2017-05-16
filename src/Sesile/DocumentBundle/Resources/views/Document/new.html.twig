@@ -73,8 +73,10 @@ console.log('coucou');
 
         $('.dz-remove').on("click", function () {
             dropzone.removeFile(file);
+            console.log(file);
 //            $("#documentcontent").children("#" + file.name).remove();
-            $('input[type="hidden"][value="'+ file.name +'"]').remove();
+            $('input[type="hidden"][id="'+ file.idfilename +'"]').remove();
+//            $('input[type="hidden"][value="'+ file.name +'"]').remove();
 
             $('#Mybutton').attr('disabled', false);
             if (dropzone.getAcceptedFiles().length == 0) {
@@ -99,9 +101,10 @@ console.log('coucou');
 
         $('.dz-remove').on("click", function () {
 
-//            myDropzone.removeFile(file);
             dropzone.removeFile(file);
-            $("#documentcontent").children("#" + file.name).remove();
+//            $("#documentcontent").children("#" + file.name).remove();
+            $('input[type="hidden"][id="'+ file.idfilename +'"]').remove();
+//            $('input[type="hidden"][value="'+ file.name +'"]').remove();
 
             $('#Mybutton').attr('disabled', false);
             if (dropzone.getAcceptedFiles().length == 0) {
@@ -116,9 +119,16 @@ console.log('coucou');
 
     dropzone.on('success', function (file, response) {
 
-        idfilename = file.name.split('.')[0];
-        $('#documentcontent').append("<input type='hidden' name='serverfilename[]' id='" + file.name + "' value='" + file.name + "'> ");
+//        idfilename = file.name.split('.')[0];
+//        $('#documentcontent').append("<input type='hidden' name='serverfilename[]' id='" + file.name + "' value='" + file.name + "'> ");
 
+        console.log(file, response);
+        $.each(response, function (serverfilename, originalname) {
+            file.idfilename = serverfilename.split('.')[0];
+
+
+            $('#documentcontent').append("<input type='hidden' name='" + serverfilename + "' id='" + file.idfilename + "' value='" + originalname + "'> ");
+        });
     });
 
 
