@@ -35,7 +35,7 @@ parameters:
         environnement: ""
         zone: sesile.fr
         target: sesile.fr.
-    email_sender_address: sesile@sictiam.fr
+    email_sender_address: sictiam@sesile.fr
     url_applet: signature.sesile.fr
     upload:
         path: %kernel.root_dir%/../web/uploads/avatars/

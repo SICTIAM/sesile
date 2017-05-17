@@ -8,9 +8,9 @@ be_simple_sso_auth:
             version: 2
         server:
             id: cas
-            login_url: https://demosso.sictiam.fr/login
-            logout_url: https://demosso.sictiam.fr/logout
-            validation_url: https://demosso.sictiam.fr/serviceValidate
+            login_url: https://sso.sictiam.fr/login
+            logout_url: https://sso.sictiam.fr/logout
+            validation_url: https://sso.sictiam.fr/serviceValidate
 
 framework:
     test: ~
@@ -33,10 +33,6 @@ parameters:
     database_user: root
     database_password: ***REMOVED***
     secret: ***REMOVED***
-    cas_server: 172.17.100.43
-    cas_port: 389
-    cas_path: /
-    cas_protocol: '2.0'
     ldap:
         dn_admin: cn=admin,dc=sictiam,dc=fr
         dn_user: cn=Users,dc=sictiam,dc=fr

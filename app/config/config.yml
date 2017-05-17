@@ -104,6 +104,7 @@ be_simple_sso_auth:
             logout_url: https://devsso.sictiam.fr/logout
             validation_url: https://devsso.sictiam.fr/serviceValidate
 
+
 parameters:
     cas_server: devsso.sictiam.fr
 #    cas_port: 389

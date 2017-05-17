@@ -41,11 +41,6 @@ if (typeof deposant != 'undefined') {
     $('<img />').attr("src", perso_src).appendTo(new_perso);
     $('<span class="nom_perso" />').text(deposant.nom).appendTo(new_perso);
 }
-// Fonction pour afficher les bouton valider et signer
-/*function aff_button_valider () {
-    //var c = document.getElementById("#contetapes").childNodes.length;
-    var nbEtapes = $('.etapes-circuit').length;
-}*/
 
 /* Ajoute un utilisateur dans le cadre "circuits" */
 function ajoutUser(id, k) {
@@ -248,4 +243,6 @@ $(document).ready(function () {
         });
     });
     // FIN de la recherche dans les utilisateurs
+    //aff_button_valider (valid_sign);
+    //aff_button_valider();
 });
