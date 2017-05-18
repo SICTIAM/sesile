@@ -71,7 +71,7 @@ class Document
      * @ORM\Column(name="downloaded", type="boolean")
      *
      */
-    private $downloaded;
+    private $downloaded = false;
 
     /**
      * @var boolean
