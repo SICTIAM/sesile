@@ -457,7 +457,8 @@ class ClasseurController extends Controller {
      *
      * @Route("/", name="classeur_create")
      * @Method("POST")
-     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createAction(Request $request)
     {
@@ -486,7 +487,7 @@ class ClasseurController extends Controller {
         $em->flush();
 
 
-//        $tabEtapes = json_decode($request->request->get('valeurs'));
+        // Etapes classeurs
         $tabEtapes = $request->request->get('valeurs');
         $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, $tabEtapes, true);
 
@@ -499,6 +500,9 @@ class ClasseurController extends Controller {
             $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
             $classeur->addVisible($userVisible);
         }
+
+        // Copies aux utilisateurs
+        $em->getRepository('SesileClasseurBundle:Classeur')->setUserCopyForClasseur($classeur, $request->request->get('usersCopy'));
 
         $action = new Action();
         $action->setClasseur($classeur);
@@ -593,8 +597,8 @@ class ClasseurController extends Controller {
         return array(
 //            "userGroupes" => $groupes,
             "typeClasseurs" => $types,
-            "menu_color" => "bleu",
-            "userGroupes" => $circuits,
+            "menu_color"    => "bleu",
+            "userGroupes"   => $circuits,
         );
     }
 
@@ -841,9 +845,10 @@ class ClasseurController extends Controller {
 
         // MAJ de la visibilite
         $this->set_user_visible ($classeur, $request->get("visibilite"));
-//        $em->getRepository('SesileClasseurBundle:Classeur')->set_user_visible($classeur, $request->get("visibilite"));
 
         $em->flush();
+
+        $em->getRepository('SesileClasseurBundle:Classeur')->setUserCopyForClasseur($classeur, $request->request->get('usersCopy'));
 
         if ($request->get("moncul") == 1) {
             $action = new Action();
@@ -1637,7 +1642,8 @@ class ClasseurController extends Controller {
      * @Route("/new_factory/", name="classeur_new_type", options={"expose"=true})
      * @Method("POST")
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @param Request $request
+     * @return Response
      */
     public function formulaireFactory(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -1646,20 +1652,30 @@ class ClasseurController extends Controller {
         ));
 
         $type = $request->request->get('type', 'elclassico');
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
+        $userPacks = $em->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite);
+        $users = $em->getRepository('SesileUserBundle:User')->findBy(
+            array("collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1),
+            array("Nom" => "ASC")
+        );
 
         switch ($type) {
             // Le cas ou c est Helios
             case 2:
-                return $this->render(
-                    'SesileClasseurBundle:Formulaires:elpez.html.twig', array("groupes" => $entities)
-                );
+                $form = 'SesileClasseurBundle:Formulaires:elpez.html.twig';
                 break;
             default:
-                return $this->render(
-                    'SesileClasseurBundle:Formulaires:elclassico.html.twig', array("groupes" => $entities)
-                );
+                $form = 'SesileClasseurBundle:Formulaires:elclassico.html.twig';
                 break;
         }
+        return $this->render(
+            $form,
+            array(
+                "groupes" => $entities,
+                "users"   => $users,
+                "userPacks"=>$userPacks
+            )
+        );
     }
 
     /**
@@ -1755,7 +1771,7 @@ class ClasseurController extends Controller {
         $this->get('mailer')->send($message);
     }
 
-    private function sendValidationMail($classeur, $currentvalidant = null)
+    private function sendValidationMail(Classeur $classeur, $currentvalidant = null)
     {
         $em = $this->getDoctrine()->getManager();
         if (is_null($currentvalidant)) {
@@ -1776,25 +1792,38 @@ class ClasseurController extends Controller {
             'type' => strtolower($classeur->getType()->getNom()),
             "lien" => '<a href="http://' . $this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>'
         );
+        $subject = "SESILE - Classeur validé";
 
         // notification du deposant
         $this->sendMail(
-            "SESILE - Classeur validé",
+            $subject,
             $deposant->getEmail(),
             $template->render(
                 array_merge($template_html, array('deposant' => $deposant->getPrenom() . " " . $deposant->getNom()))
             )
         );
 
+        // notification des users en copy
+        $usersCopy = $classeur->getCopy();
+        foreach ($usersCopy as $userCopy) {
+            if($userCopy != null && $userCopy != $deposant) {
+                $this->sendMail(
+                    $subject,
+                    $userCopy->getEmail(),
+                    $template->render(
+                        array_merge($template_html, array('deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                    )
+                );
+            }
+        }
+
         // notification des utilisateurs se trouvant dans les etapes
         $etapesClasseur = $classeur->getEtapeClasseurs();
         foreach ($etapesClasseur as $etapeClasseur) {
-
             $users = $etapeClasseur->getUsers();
-
             foreach ($users as $user) {
                 $this->sendMail(
-                    "SESILE - Classeur validé",
+                    $subject,
                     $user->getEmail(),
                     $template->render(
                         array_merge($template_html, array('deposant' => $user->getPrenom() . " " . $user->getNom()))
@@ -1805,84 +1834,96 @@ class ClasseurController extends Controller {
 
     }
 
-    private function sendCreationMail($classeur) {
+    private function sendCreationMail(Classeur $classeur) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
         $d_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
-        $env = new \Twig_Environment(new \Twig_Loader_String());
+
+        $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
+        $template = $env->createTemplate($coll->getTextmailnew());
+        $template_html = array(
+            'deposant' => $d_user->getPrenom() . " " . $d_user->getNom(),
+            'role' => $d_user->getRole(),
+            'qualite' => $d_user->getQualite(),
+            'titre_classeur' => $classeur->getNom(),
+            'date_limite' => $classeur->getValidation(),
+            'type' => strtolower($classeur->getType()->getNom()),
+            "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">valider le classeur</a>'
+        );
 
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
         foreach($validants as $validant) {
-
             if ($validant != null) {
-                $body = $env->render($coll->getTextmailnew(),
-                    array(
-                        'deposant' => $d_user->getPrenom() . " " . $d_user->getNom(),
-                        'validant' => $validant->getPrenom() . " " . $validant->getNom(),
-                        'role' => $d_user->getRole(),
-                        'qualite' => $d_user->getQualite(),
-                        'titre_classeur' => $classeur->getNom(),
-                        'date_limite' => $classeur->getValidation(),
-                        'type' => strtolower($classeur->getType()->getNom()),
-                        "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">valider le classeur</a>'
+                $this->sendMail(
+                    "SESILE - Nouveau classeur à valider",
+                    $validant->getEmail(),
+                    $template->render(
+                        array_merge($template_html, array('validant' => $validant->getPrenom() . " " . $validant->getNom()))
                     )
                 );
-                $this->sendMail("SESILE - Nouveau classeur à valider", $validant->getEmail(), $body);
+            }
+        }
+
+        // notification des users en copy
+        $usersCopy = $classeur->getCopy();
+        foreach ($usersCopy as $userCopy) {
+            if($userCopy != null && !in_array($userCopy, $validants)) {
+                $this->sendMail(
+                    "SESILE - Nouveau classeur déposé",
+                    $userCopy->getEmail(),
+                    $template->render(
+                        array_merge($template_html, array('validant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                    )
+                );
             }
         }
     }
 
-    private function sendRefusMail($classeur,$motif) {
+    private function sendRefusMail(Classeur $classeur,$motif) {
         $em = $this->getDoctrine()->getManager();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
         $c_user = $em->getRepository("SesileClasseurBundle:Classeur")->classeurValidator($classeur, $this->getUser());
 
-        $env = new \Twig_Environment(new \Twig_Loader_String());
-        $body = $env->render($coll->getTextmailrefuse(),
-            array(
-                'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
-                'role' => $c_user->getRole(),
-                'qualite' => $c_user->getQualite(),
-                'titre_classeur' => $classeur->getNom(),
-                'date_limite' => $classeur->getValidation(),
-                'type' => strtolower($classeur->getType()->getNom()),
-                "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>',
-                "motif" => $motif
-            )
+        $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
+        $template = $env->createTemplate($coll->getTextmailrefuse());
+        $template_html = array(
+            'validant' => $c_user->getPrenom()." ".$c_user->getNom(),
+            'role' => $c_user->getRole(),
+            'qualite' => $c_user->getQualite(),
+            'titre_classeur' => $classeur->getNom(),
+            'date_limite' => $classeur->getValidation(),
+            'type' => strtolower($classeur->getType()->getNom()),
+            "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">voir le classeur</a>',
+            "motif" => $motif
         );
 
         $deposant = $em->getRepository('SesileUserBundle:User')->find($classeur->getUser());
 
         if ($deposant != null) {
-            $this->sendMail("SESILE - Classeur refusé", $deposant->getEmail(), $body);
+            $this->sendMail(
+                "SESILE - Classeur refusé",
+                $deposant->getEmail(),
+                $template->render(
+                    array_merge($template_html, array('validant' => $c_user->getPrenom()." ".$c_user->getNom()))
+                )
+            );
+        }
+
+        // notification des users en copy
+        $usersCopy = $classeur->getCopy();
+        foreach ($usersCopy as $userCopy) {
+            if($userCopy != null && $userCopy != $deposant) {
+                $this->sendMail(
+                    "SESILE - Classeur refusé",
+                    $userCopy->getEmail(),
+                    $template->render(
+                        array_merge($template_html, array('validant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                    )
+                );
+            }
         }
     }
 
-    /**
-     * Retourne le circuit associé à un groupe pour un user donné
-     * @param Groupe $group
-     * @param User $user
-     * @return string les id user du circuit dans l'ordre
-     */
-    /*private $ordre;
-
-    private function recursivesortHierarchie($hierarchie, $curr, $recurs = 0) {
-        foreach($hierarchie as $k => $groupeUser) {
-            if($groupeUser->getUser()->getId() == $curr ) {
-                if($recurs > 0) {
-                    $this->ordre .= $groupeUser->getUser()->getId().",";
-                }
-
-                if($curr != 0 ) {
-                    $recurs++;
-                    $this->recursivesortHierarchie($hierarchie, $groupeUser->getParent(), $recurs);
-                }
-
-            }
-        }
-        $this->ordre = rtrim($this->ordre, ",");
-        return $this->ordre;
-    }*/
 
     /**
      * Fonction pour determiner la visibilite et enregister dans Classeur_visible

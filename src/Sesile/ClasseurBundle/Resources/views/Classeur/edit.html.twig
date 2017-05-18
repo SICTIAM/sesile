@@ -354,58 +354,60 @@
 
     <br>
 
-            <div class="titre_form_element">
-                <span class="glyphicon glyphicon-play"></span>
-                &nbsp;&nbsp;&nbsp;Documents
-            </div>
+    <div class="titre_form_element">
+        <span class="glyphicon glyphicon-play"></span>
+        &nbsp;&nbsp;&nbsp;Documents
+    </div>
 
 
-    <div id="infofile" class="alert alert-success" style="display: none"></div>
-            <div id="documentcontent"></div>
+        <div id="infofile" class="alert alert-success" style="display: none"></div>
+        <div id="documentcontent"></div>
+        <br>
 
-            <br>
+        <div class="titre_form_element">
+            <span class="glyphicon glyphicon-play"></span>
+            &nbsp;&nbsp;&nbsp;Circuit
+        </div>
+        <!-- Intégration de la liste des utilisateurs -->
+        <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
 
-            <div class="titre_form_element">
-                <span class="glyphicon glyphicon-play"></span>
-                &nbsp;&nbsp;&nbsp;Circuit
-            </div>
-            <!-- Intégration de la liste des utilisateurs -->
+        <div id="circuitcontent">
 
-            <link rel="stylesheet" href="{{ asset('/css/circuit.css') }}"/>
+            {% if currentValidant %}
+                <input type="hidden" name="curentValidant" value="{{ currentValidant.id }}">
+            {% endif %}
+            <script type="application/javascript">
 
-
-            <div id="circuitcontent">
-
-                {% if currentValidant %}
-                    <input type="hidden" name="curentValidant" value="{{ currentValidant.id }}">
+                {% if classeur.circuit and currentValidant and classeur.status != 0 and classeur.status != 4 %}
+                    var circuit_users = "{{ classeur.circuit }}" + "," + {{ currentValidant.id }};
+                {% elseif currentValidant and classeur.status != 0 and classeur.status != 4 %}
+                    var circuit_users = {{ currentValidant.id }} + "," ;
+                {% elseif classeur.circuit and classeur.status != 0 and classeur.status != 4 %}
+                    var circuit_users = "{{ classeur.circuit }}";
+                {% else %}
+                    var circuit_users = "";
                 {% endif %}
-                <script type="application/javascript">
 
+                var ordre_circuit = {{ classeur.ordreetape }};
+                var validant = {{ currentValidant|json_encode|raw }};
+                var status = {{ classeur.status }};
+                /*voir cette ligne*/
+                {#var deposant = {{ deposant|json_encode|raw }};#}
+                var path = "{{ asset(upload_path) }}";
+            </script>
 
-                    {% if classeur.circuit and currentValidant and classeur.status != 0 and classeur.status != 4 %}
-                        var circuit_users = "{{ classeur.circuit }}" + "," + {{ currentValidant.id }};
-                    {% elseif currentValidant and classeur.status != 0 and classeur.status != 4 %}
-                        var circuit_users = {{ currentValidant.id }} + "," ;
-                    {% elseif classeur.circuit and classeur.status != 0 and classeur.status != 4 %}
-                        var circuit_users = "{{ classeur.circuit }}";
-                    {% else %}
-                        var circuit_users = "";
-                    {% endif %}
+            <!-- Nouvelle vue ajouté "validation.html.twig" -->
+            {{ render(controller('SesileCircuitBundle:Circuit:validationeditclasseur', { 'id': classeur.id, 'validant': currentValidant })) }}
+        </div>
 
-                    var ordre_circuit = {{ classeur.ordreetape }};
-                    var validant = {{ currentValidant|json_encode|raw }};
-                    var status = {{ classeur.status }};
-                    /*voir cette ligne*/
-                    {#var deposant = {{ deposant|json_encode|raw }};#}
-                    var path = "{{ asset(upload_path) }}";
-                </script>
-
-
-                <!-- Nouvelle vue ajouté "validation.html.twig" -->
-
-                {{ render(controller('SesileCircuitBundle:Circuit:validationeditclasseur', { 'id': classeur.id, 'validant': currentValidant })) }}
-
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Copie à
             </div>
+            <div id="copycontent">
+                {% include "SesileClasseurBundle:Formulaires:copyedit.html.twig" %}
+            </div>
+
         </form>
             <div class="row">
                 <div class="col-lg-10">

@@ -167,6 +167,11 @@ class User extends BaseUser {
     private $classeurs;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="copy", cascade={"persist"})
+     */
+    private $classeursCopy;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", mappedBy="users", cascade={"persist"})
      */
     private $userPacks;
@@ -993,5 +998,39 @@ class User extends BaseUser {
     public function isUser(UserInterface $user = null)
     {
         return null !== $user && $this->getId() === $user->getId();
+    }
+
+    /**
+     * Add classeursCopy
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursCopy
+     *
+     * @return User
+     */
+    public function addClasseursCopy(\Sesile\ClasseurBundle\Entity\Classeur $classeursCopy)
+    {
+        $this->classeursCopy[] = $classeursCopy;
+
+        return $this;
+    }
+
+    /**
+     * Remove classeursCopy
+     *
+     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursCopy
+     */
+    public function removeClasseursCopy(\Sesile\ClasseurBundle\Entity\Classeur $classeursCopy)
+    {
+        $this->classeursCopy->removeElement($classeursCopy);
+    }
+
+    /**
+     * Get classeursCopy
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClasseursCopy()
+    {
+        return $this->classeursCopy;
     }
 }

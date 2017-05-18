@@ -1,0 +1,38 @@
+<div class="row" id="circuit_main">
+    <div id="circuit_etapes" >
+        <div id="circuit_with_js">
+            <div id="contetapes" class="ui-sortable">
+                <div class="col-lg-2 well etapes-circuit">
+                    <div class="text-center"><h4>Utilisateurs</h4></div>
+                    <select class="userscopy" multiple="multiple" style="width: 100%" id="listUsersCopy" name="usersCopy[]">
+                        <optgroup label="Groupes d'utilisateurs">
+                            {% for userPack in userPacks %}
+                                <option value="userpack-{{ userPack.id }}" data-type="groupe">{{ userPack.nom }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="utilisateurs">
+                            {% for user in users %}
+                                <option  value="user-{{ user.id }}" data-type="user">{{ user.nom }} {{ user.prenom }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                    {#<button type="button" class="btn btn-info btn-block btn-voirInter" id="seeUsers"><span class="glyphicon glyphicon-plus-sign"></span> Voir les intervenants</button>
+                    <button type="button" class="btn btn-info btn-block btn-voirInter" id="hiddeUsers"><span class="glyphicon glyphicon-minus-sign"></span> Cacher les intervenants</button>#}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+
+        $("#listUsersCopy").select2({
+            placeholder: function() {
+                $(this).data('placeholder');
+            }
+        });
+
+    })
+</script>

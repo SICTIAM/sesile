@@ -53,7 +53,14 @@
     &nbsp;&nbsp;&nbsp;Circuit
 </div>
 <div id="circuitcontent"></div>
-<br>
+
+<div class="titre_form_element">
+    <span class="glyphicon glyphicon-play"></span>
+    &nbsp;&nbsp;&nbsp;Copie à
+</div>
+<div id="copycontent">
+    {% include "SesileClasseurBundle:Formulaires:copy.html.twig" %}
+</div>
 
 {% block extraform %}
 {% endblock %}
@@ -61,10 +68,6 @@
 <div>
     <br/>
     <input type="submit" name="Mybutton" id="Mybutton" class="btn btn-success" value="Envoyer">
-  <!--  <a href="{{ app.request.headers.get('referer') }}"  class="btn btn-primary navbar-btn">
-        <span class="glyphicon glyphicon-share-alt"></span>
-        Retour à la page précédente
-    </a>  -->
 </div>
 <script type="text/javascript">
     // jQuery plugin to prevent double submission of forms

@@ -1,0 +1,26 @@
+<div class="row" id="circuit_main">
+    <div id="circuit_etapes" >
+        <div id="circuit_with_js">
+            <div id="contetapes" class="ui-sortable">
+                <div class="col-lg-2 well etapes-circuit">
+                    <div class="text-center"><h4>Utilisateurs</h4></div>
+                    <select class="userscopy" multiple="multiple" style="width: 100%" id="listUsersCopy" name="usersCopy[]" {% if classeur.status != 0 %}disabled="disabled"{% endif %}>
+                        {% for user in users %}
+                            <option value="user-{{ user.id }}" data-type="user" {% if user in classeur.copy %} selected{% endif %}>{{ user.nom }} {{ user.prenom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#listUsersCopy").select2({
+            placeholder: function() {
+                $(this).data('placeholder');
+            }
+        });
+    })
+</script>

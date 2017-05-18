@@ -115,6 +115,11 @@ class Classeur {
      */
     private $visible;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeursCopy", cascade={"persist"})
+     * @ORM\JoinTable(name="Classeur_copy")
+     */
+    private $copy;
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"remove"})
@@ -1030,4 +1035,38 @@ class Classeur {
         }
     }
 
+
+    /**
+     * Add copy
+     *
+     * @param \Sesile\UserBundle\Entity\User $copy
+     *
+     * @return Classeur
+     */
+    public function addCopy(\Sesile\UserBundle\Entity\User $copy)
+    {
+        $this->copy[] = $copy;
+
+        return $this;
+    }
+
+    /**
+     * Remove copy
+     *
+     * @param \Sesile\UserBundle\Entity\User $copy
+     */
+    public function removeCopy(\Sesile\UserBundle\Entity\User $copy)
+    {
+        $this->copy->removeElement($copy);
+    }
+
+    /**
+     * Get copy
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCopy()
+    {
+        return $this->copy;
+    }
 }
