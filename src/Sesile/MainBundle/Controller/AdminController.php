@@ -163,12 +163,12 @@ class AdminController extends Controller
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
             /**
-             * on prévient les devs
+             * on prévient la démat
              */
             $message = \Swift_Message::newInstance()
                 ->setSubject('Nouvelle Collectivité créée')
                 ->setFrom('sesile@sictiam.fr')
-                ->setTo('internet@sictiam.fr')
+                ->setTo('servicedemat@sictiam.fr')
                 ->setBody("La collectivité ".$form->get('nom')->getData()." vient d'être créée dans SESILE merci d'ajouter l'adresse ".$post->subDomain.".".$ovh->zone." dans vProxymus. \n\n\n" .
                         "La collectivité a été créée par " . $user->getPrenom() . " " . $user->getNom(). " " . $user->getEmail() . " pour l'envirronement : " . $environnement)
                 ->setContentType('text/html');
