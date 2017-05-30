@@ -25,6 +25,8 @@ Debug::enable();
 require_once __DIR__ . '/../app/AppKernel.php';
 
 $kernel = new AppKernel('evolutions', true);
+Request::setTrustedHeaderName(Request::HEADER_FORWARDED, null);
+Request::setTrustedProxies(['***REMOVED***', '***REMOVED***']);
 $kernel->loadClassCache();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
