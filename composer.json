@@ -77,7 +77,7 @@
         }
     },
     "http-basic": {
-        "www.setasign.com/downloads/": {
+        "www.setasign.com": {
             "username": "***REMOVED***",
             "password": "***REMOVED***"
         }
