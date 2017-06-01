@@ -35,11 +35,27 @@ class ClasseurController extends Controller {
      * @Template()
      */
     public function dashboardAction() {
+        $user = $this->getUser();
         return array(
-            "menu_color" => "bleu"
+            "menu_color" => "bleu",
+            "user_version" => $user->getSesileVersion()
         );
     }
 
+    /**
+     * @Route("/updateUserSesileVersion", name="classeur_updateUserSesile")
+     * @Method("POST")
+     */
+    public function updateUserSesileVersionAction(Request $request) {
+        $user = $this->getUser();
+        $version = $request->request->get('current_sesile_version');
+        $user->setSesileVersion($version);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse(array('user' => $user));
+    }
 
     /**
      * Page qui affiche la liste des classeurs visibles pour le user connecté.
