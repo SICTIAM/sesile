@@ -192,6 +192,13 @@ class User extends BaseUser {
      */
     private $hierarchie;
 
+    /**
+     * @var float
+     * 
+     * @ORM\Column(name="sesile_version", type="float")
+     */
+    private $sesileVersion;
+
 
     public function setPath($path) {
         return $this->path = $path;
@@ -1032,5 +1039,29 @@ class User extends BaseUser {
     public function getClasseursCopy()
     {
         return $this->classeursCopy;
+    }
+
+    /**
+     * Set sesileVersion
+     *
+     * @param integer $sesileVersion
+     *
+     * @return User
+     */
+    public function setSesileVersion($sesileVersion)
+    {
+        $this->sesileVersion = $sesileVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get sesileVersion
+     *
+     * @return integer
+     */
+    public function getSesileVersion()
+    {
+        return $this->sesileVersion;
     }
 }
