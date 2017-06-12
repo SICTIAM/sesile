@@ -28,7 +28,7 @@
         "nelmio/api-doc-bundle": "@stable",
         "jms-serializer/serializer-bundle": "^1.1",
         "besimple/sso-auth-bundle": "@dev",
-        "setasign/setapdf-stamper": "2.x"
+        "setasign/setapdf-stamper": "2.24.0.1049"
     },
     "repositories": [
         {
@@ -74,12 +74,6 @@
         },
         "branch-alias": {
             "dev-master": "3.2-dev"
-        }
-    },
-    "http-basic": {
-        "www.setasign.com": {
-            "username": "***REMOVED***",
-            "password": "***REMOVED***"
         }
     }
 }
