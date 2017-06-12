@@ -1821,15 +1821,17 @@ class ClasseurController extends Controller {
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
-        foreach ($usersCopy as $userCopy) {
-            if($userCopy != null && $userCopy != $deposant) {
-                $this->sendMail(
-                    $subject,
-                    $userCopy->getEmail(),
-                    $template->render(
-                        array_merge($template_html, array('deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
-                    )
-                );
+        if ($usersCopy !== null && is_array($usersCopy)) {
+            foreach ($usersCopy as $userCopy) {
+                if ($userCopy != null && $userCopy != $deposant) {
+                    $this->sendMail(
+                        $subject,
+                        $userCopy->getEmail(),
+                        $template->render(
+                            array_merge($template_html, array('deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                        )
+                    );
+                }
             }
         }
 
@@ -1882,15 +1884,17 @@ class ClasseurController extends Controller {
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
-        foreach ($usersCopy as $userCopy) {
-            if($userCopy != null && !in_array($userCopy, $validants)) {
-                $this->sendMail(
-                    "SESILE - Nouveau classeur déposé",
-                    $userCopy->getEmail(),
-                    $template->render(
-                        array_merge($template_html, array('validant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
-                    )
-                );
+        if ($usersCopy !== null && is_array($usersCopy)) {
+            foreach ($usersCopy as $userCopy) {
+                if($userCopy != null && !in_array($userCopy, $validants)) {
+                    $this->sendMail(
+                        "SESILE - Nouveau classeur déposé",
+                        $userCopy->getEmail(),
+                        $template->render(
+                            array_merge($template_html, array('validant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                        )
+                    );
+                }
             }
         }
     }
@@ -1927,15 +1931,17 @@ class ClasseurController extends Controller {
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
-        foreach ($usersCopy as $userCopy) {
-            if($userCopy != null && $userCopy != $deposant) {
-                $this->sendMail(
-                    "SESILE - Classeur refusé",
-                    $userCopy->getEmail(),
-                    $template->render(
-                        array_merge($template_html, array('validant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
-                    )
-                );
+        if ($usersCopy !== null && is_array($usersCopy)) {
+            foreach ($usersCopy as $userCopy) {
+                if ($userCopy != null && $userCopy != $deposant) {
+                    $this->sendMail(
+                        "SESILE - Classeur refusé",
+                        $userCopy->getEmail(),
+                        $template->render(
+                            array_merge($template_html, array('validant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                        )
+                    );
+                }
             }
         }
     }

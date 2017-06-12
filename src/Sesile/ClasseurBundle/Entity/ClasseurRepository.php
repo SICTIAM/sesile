@@ -500,9 +500,9 @@ class ClasseurRepository extends EntityRepository {
             }
         }
 
-        if ($usersCopy !== null) {
+        $usersCopyVisible = array();
 
-            $usersCopyVisible = array();
+        if ($usersCopy !== null) {
 
             foreach ($usersCopy as $userCopy) {
                 list($cat, $id) = explode('-', $userCopy);
