@@ -4,8 +4,8 @@ imports:
 
 framework:
     #esi:             ~
-    translator:      { fallback: %locale% }
-    secret:          %secret%
+    translator:      { fallback: '%locale%' }
+    secret:          '%secret%'
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
@@ -24,8 +24,8 @@ framework:
 
 # Twig Configuration
 twig:
-    debug:            %kernel.debug%
-    strict_variables: %kernel.debug%
+    debug:            '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
     globals:
         upload_path: uploads/avatars/
         upload_path_logo: uploads/logo_coll/
@@ -37,7 +37,7 @@ twig:
 
 # Assetic Configuration
 assetic:
-    debug:          %kernel.debug%
+    debug:          '%kernel.debug%'
     use_controller: false
     bundles:        [ SesileMainBundle ]
     filters:
@@ -46,25 +46,25 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   %database_driver%
-        host:     %database_host%
-        port:     %database_port%
-        dbname:   %database_name%
-        user:     %database_user%
-        password: %database_password%
+        driver:   '%database_driver%'
+        host:     '%database_host%'
+        port:     '%database_port%'
+        dbname:   '%database_name%'
+        user:     '%database_user%'
+        password: '%database_password%'
         charset:  UTF8
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: %kernel.root_dir%/data/data.db3
         # path:     %database_path%
 
     orm:
-        auto_generate_proxy_classes: %kernel.debug%
+        auto_generate_proxy_classes: '%kernel.debug%'
         auto_mapping: true
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: %mailer_transport%
-    host:      %mailer_host%
+    transport: '%mailer_transport%'
+    host:      '%mailer_host%'
     port:      25
 #    transport: mail
 #    host:      localhost
@@ -114,11 +114,11 @@ parameters:
 #        path: %kernel.root_dir%/../vendor/gorg/phpcas/
     be_simple.sso_auth.client.option.curlopt_ssl_verifypeer.value: FALSE
     upload:
-        path: %kernel.root_dir%/../web/uploads/avatars/
-        fics: %kernel.root_dir%/../web/uploads/docs/
-        logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
-        msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
-        signatures: %kernel.root_dir%/../web/uploads/signatures/
+        path: '%kernel.root_dir%/../web/uploads/avatars/'
+        fics: '%kernel.root_dir%/../web/uploads/docs/'
+        logo_coll: '%kernel.root_dir%/../web/uploads/logo_coll/'
+        msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
+        signatures: '%kernel.root_dir%/../web/uploads/signatures/'
     ldap:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local

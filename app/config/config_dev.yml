@@ -15,7 +15,7 @@ monolog:
     handlers:
         main:
             type:  stream
-            path:  %kernel.logs_dir%/%kernel.environment%.log
+            path:  '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug
         firephp:
             type:  firephp
@@ -38,11 +38,11 @@ parameters:
 #    gorg:
 #        path: %kernel.root_dir%/../vendor/gorg/phpcas/
     upload:
-        path: %kernel.root_dir%/../web/uploads/avatars/
-        signatures: %kernel.root_dir%/../web/uploads/signatures/
-        logo_coll: %kernel.root_dir%/../web/uploads/logo_coll/
-        msg_acc: %kernel.root_dir%/../web/uploads/documents/msg_accueil.txt
-        fics: %kernel.root_dir%/../web/uploads/docs/
+        path: '%kernel.root_dir%/../web/uploads/avatars/'
+        signatures: '%kernel.root_dir%/../web/uploads/signatures/'
+        logo_coll: '%kernel.root_dir%/../web/uploads/logo_coll/'
+        msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
+        fics: '%kernel.root_dir%/../web/uploads/docs/'
     ldap:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local
