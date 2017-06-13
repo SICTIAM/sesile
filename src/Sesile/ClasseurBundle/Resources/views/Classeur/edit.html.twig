@@ -400,15 +400,13 @@
             {{ render(controller('SesileCircuitBundle:Circuit:validationeditclasseur', { 'id': classeur.id, 'validant': currentValidant })) }}
         </div>
 
-            {% if classeur.copy is not empty %}
-                <div class="titre_form_element">
-                    <span class="glyphicon glyphicon-play"></span>
-                    &nbsp;&nbsp;&nbsp;Copie à
-                </div>
-                <div id="copycontent">
-                    {% include "SesileClasseurBundle:Formulaires:copyedit.html.twig" %}
-                </div>
-            {% endif %}
+            <div class="titre_form_element">
+                <span class="glyphicon glyphicon-play"></span>
+                &nbsp;&nbsp;&nbsp;Copie à
+            </div>
+            <div id="copycontent">
+                {% include "SesileClasseurBundle:Formulaires:copyedit.html.twig" %}
+            </div>
 
         </form>
             <div class="row">
