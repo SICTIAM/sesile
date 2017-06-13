@@ -17,7 +17,6 @@
     <div id="circuit_etapes">
         <div id="circuit_with_js">
 
-
             {# Etape déposante #}
             <div class="well etapes-circuit">
                 <span class="ok_perso glyphicon glyphicon-download-alt"></span>
@@ -93,11 +92,6 @@
             {% endif %}
                 {% for etape in etapesGroupe %}
 
-                    {# Etapes restantes a valider #}
-                    <div class="well etapes-circuit">
-                        {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>{% endif %}
-                        <div class="text-center"><h4 title="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer" x-moz-errormessage="merci de renseigner au moins un utilisateur dans l'étape vide ou de la supprimer">Etape à venir</h4></div>
-
                 {# Etapes restantes a valider #}
                 <div class="well etapes-circuit">
                     {% if edit %}<button type="button" class="btn btn-danger btn-suppetape" id="suppetape"><span class="glyphicon glyphicon-remove"></span></button>{% endif %}
@@ -135,9 +129,9 @@
                     <button type="button" class="btn btn-circle-lg btn-info first" id="addetape"><span class="glyphicon glyphicon-plus"></span> </button>
                 </div>
             {% endif %}
-        </div>
+            </div>
 
-    </div>
+        </div>
     </div>
 </div>
 
@@ -440,4 +434,3 @@
     });
 
 </script>
-</div>
