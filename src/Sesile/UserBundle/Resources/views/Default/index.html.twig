@@ -32,9 +32,11 @@
                         </div>
                     </td>
                     <td class="boutons_action">
-                        <a href="{{ path("user_certificate", {'id' : user.id }) }}" title="Editer l'utilisateur">
+                        {% if app.request.server.get('HTTP_X_SSL_CLIENT_SHA1') %}
+                        <a href="{{ path("user_certificate", {'id' : user.id }) }}" title="Appairage certificat">
                             <span class="glyphicon glyphicon-paperclip"></span>
                         </a>
+                        {% endif %}
                         <a href="{{ path("user_edit", {'id' : user.id }) }}" title="Editer l'utilisateur">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>

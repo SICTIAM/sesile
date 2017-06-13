@@ -6,7 +6,7 @@
             <span class="glyphicon glyphicon-folder-open"></span>
             &nbsp;&nbsp;&nbsp;Gestion du certificat d'un utilisateur
         </div>
-        {% if app.request.server.get('HTTP_X_SSL') %}
+        {% if app.request.server.get('HTTP_X_SSL_CLIENT_SHA1') %}
             {% if certifCAS == certificatevalue %}
                 <div class="row row-padding">
                     <div class="col-lg-8 col-lg-push-2 text-center alert alert-success">
