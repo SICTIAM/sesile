@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/",name="index")
+     * @Route("/old",name="index")
      * @Template()
      */
     public function indexAction() {
@@ -58,4 +58,12 @@ class DefaultController extends Controller
         return array('majorversion' => $major, 'commit' => $tabversion['commit'], 'buildnumber' => $tabversion['buildnumber']);
     }
 
+    /**
+     * @Route("/",name="app")
+     * @Template()
+     */
+    public function appAction()
+    {
+        return $this->render('app.html.twig');
+    }
 }

@@ -47,5 +47,10 @@
 /web/.htaccess
 /vendor/
 /app/sessions/
+composer.lock
 
 .idea
+### Node & yarn
+/node_modules
+/web/build
+yarn.lock
