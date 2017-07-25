@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-//use Symfony\Component\DependencyInjection\ContainerAware;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * User
@@ -157,38 +157,45 @@ class User extends BaseUser {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
+     * @Exclude()
      *
      */
     protected $collectivite;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="visible", cascade={"persist"})
+     * @Exclude()
      */
     private $classeurs;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\Classeur", mappedBy="copy", cascade={"persist"})
+     * @Exclude()
      */
     private $classeursCopy;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", mappedBy="users", cascade={"persist"})
+     * @Exclude()
      */
     private $userPacks;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="users", cascade={"persist"})
+     * @Exclude()
      */
     private $etapeClasseurs;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="users", cascade={"persist"})
+     * @Exclude()
      */
     private $etapeGroupes;
 
     /**
      * @var
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="user", cascade={"remove"})
+     * @Exclude()
      */
     private $hierarchie;
 
@@ -276,17 +283,6 @@ class User extends BaseUser {
         return $this->Prenom;
     }
 
-    public function getExpiresAt()
-    {
-        return $this->expiresAt;
-    }
-
-
-    public function getCredentialsExpireAt()
-    {
-        return $this->getCredentialsExpireAt();
-    }
-
     /**
      * @ORM\PrePersist()
      */
@@ -347,7 +343,6 @@ class User extends BaseUser {
      */
     public function __construct() {
         parent::__construct();
-        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -638,39 +633,6 @@ class User extends BaseUser {
     public function getCollectivite()
     {
         return $this->collectivite;
-    }
-
-    /**
-     * Add groupes
-     *
-     * @param \Sesile\UserBundle\Entity\Groupe $groupes
-     * @return User
-     */
-    public function addGroupe(\Sesile\UserBundle\Entity\Groupe $groupes)
-    {
-        $this->groupes[] = $groupes;
-    
-        return $this;
-    }
-
-    /**
-     * Remove groupes
-     *
-     * @param \Sesile\UserBundle\Entity\Groupe $groupes
-     */
-    public function removeGroupe(\Sesile\UserBundle\Entity\Groupe $groupes)
-    {
-        $this->groupes->removeElement($groupes);
-    }
-
-    /**
-     * Get groupes
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getGroupes()
-    {
-        return $this->groupes;
     }
 
     /**
