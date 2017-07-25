@@ -62,9 +62,7 @@ class EtapeGroupe
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userPacks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->classeurs = new \Doctrine\Common\Collections\ArrayCollection();
+
     }
     
     /**
@@ -108,39 +106,6 @@ class EtapeGroupe
     public function getGroupe()
     {
         return $this->groupe;
-    }
-
-    /**
-     * Add classeurs
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurs
-     * @return EtapeGroupe
-     */
-    public function addClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeurs)
-    {
-        $this->classeurs[] = $classeurs;
-    
-        return $this;
-    }
-
-    /**
-     * Remove classeurs
-     *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurs
-     */
-    public function removeClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeurs)
-    {
-        $this->classeurs->removeElement($classeurs);
-    }
-
-    /**
-     * Get classeurs
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getClasseurs()
-    {
-        return $this->classeurs;
     }
 
     /**
