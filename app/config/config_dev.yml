@@ -48,7 +48,7 @@ parameters:
         dn_user: cn=Users,dc=sictiam,dc=local
         password: WcJa37BI
     domain_parse:
-        default: sesile
+        default: sesile-react
         dbname: sictiam
     url_applet: signature.dev.sesile.fr
     ovh:

@@ -3,25 +3,37 @@ sesile_api:
     type:     annotation
     prefix:   /api/
 
-sesile_delegations:
-    resource: "@SesileDelegationsBundle/Controller/"
-    type:     annotation
-    prefix:   /delegation/
+#sesile_delegations:
+#    resource: "@SesileDelegationsBundle/Controller/"
+#    type:     annotation
+#    prefix:   /delegation/
 
-sesile_circuit:
-    resource: "@SesileCircuitBundle/Controller/"
-    type:     annotation
-    prefix:   /circuit/
+#sesile_circuit:
+#    resource: "@SesileCircuitBundle/Controller/"
+#    type:     annotation
+#    prefix:   /circuit/
 
-sesile_document:
-    resource: "@SesileDocumentBundle/Controller/"
-    type:     annotation
-    prefix:   /doc/
+#sesile_document:
+#    resource: "@SesileDocumentBundle/Controller/"
+#    type:     annotation
+#    prefix:   /doc/
 
-sesile_classeur:
-    resource: "@SesileClasseurBundle/Controller/"
-    type:     annotation
-    prefix:   /classeur/
+#sesile_classeur:
+#    resource: "@SesileClasseurBundle/Controller/ClasseurController.php"
+#    type:     annotation
+#    prefix:   /classeur/
+
+sesile_classeur_api:
+    resource: "@SesileClasseurBundle/Controller/ClasseurApiController.php"
+    type:     rest
+
+sesile_type_classeur_api:
+    resource: "@SesileClasseurBundle/Controller/TypeClasseurApiController.php"
+    type:     rest
+
+sesile_user_api:
+    resource: "@SesileUserBundle/Controller/UserApiController.php"
+    type:     rest
 
 
 sesile_main:
@@ -29,10 +41,10 @@ sesile_main:
     type:     annotation
     prefix:   /
 
-sesile_users:
-    resource: "@SesileUserBundle/Controller/"
-    type: annotation
-    prefix: /user
+#sesile_users:
+#    resource: "@SesileUserBundle/Controller/"
+#    type: annotation
+#    prefix: /user
 
 _default:
     path: /

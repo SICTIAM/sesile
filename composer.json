@@ -8,23 +8,23 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "symfony/symfony": "3.2.*",
-        "doctrine/orm": "^2.4.8",
-        "doctrine/doctrine-bundle": "~1.4",
+        "symfony/symfony": "3.3.*",
+        "doctrine/orm": "^2.5.6",
+        "doctrine/doctrine-bundle": "~1.6",
         "doctrine/doctrine-fixtures-bundle": "2.3",
-        "doctrine/doctrine-migrations-bundle": "^1.0",
-        "twig/extensions": "~1.0",
-        "symfony/assetic-bundle": "~2.7",
-        "symfony/swiftmailer-bundle": "~2.3",
-        "symfony/monolog-bundle": "~2.4",
-        "symfony/polyfill-iconv": "~1.0",
+        "doctrine/doctrine-migrations-bundle": "^1.2",
+        "twig/extensions": "~1.5",
+        "symfony/assetic-bundle": "~2.8",
+        "symfony/swiftmailer-bundle": "~2.6",
+        "symfony/monolog-bundle": "~3.1",
+        "symfony/polyfill-iconv": "~1.4",
         "sensio/distribution-bundle": "5.0.*",
         "sensio/framework-extra-bundle": "3.0.*",
-        "incenteev/composer-parameter-handler": "~2.0",
+        "incenteev/composer-parameter-handler": "~2.1",
         "friendsofsymfony/user-bundle": "2.0.*",
-        "friendsofsymfony/jsrouting-bundle": "~1.1",
-        "oneup/uploader-bundle": "~1.0",
-        "friendsofsymfony/rest-bundle": "2.0.*",
+        "friendsofsymfony/jsrouting-bundle": "~1.6",
+        "oneup/uploader-bundle": "~1.7",
+        "friendsofsymfony/rest-bundle": "2.2.*",
         "nelmio/api-doc-bundle": "@stable",
         "jms-serializer/serializer-bundle": "^1.1",
         "besimple/sso-auth-bundle": "@dev",
@@ -73,7 +73,7 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": {
-            "dev-master": "3.2-dev"
+            "dev-master": "3.3-dev"
         }
     }
 }
