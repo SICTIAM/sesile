@@ -18,7 +18,7 @@ class TypeClasseurType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class)
-            ->add('Enregister', SubmitType::class)
+            //->add('Enregister', SubmitType::class)
         ;
     }
 
@@ -28,7 +28,8 @@ class TypeClasseurType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Sesile\ClasseurBundle\Entity\TypeClasseur'
+            'data_class' => 'Sesile\ClasseurBundle\Entity\TypeClasseur',
+            'csrf_protection' => false
         ));
     }
 

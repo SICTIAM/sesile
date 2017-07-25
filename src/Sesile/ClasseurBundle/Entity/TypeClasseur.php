@@ -3,7 +3,8 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Sesile\UserBundle\Entity\Groupe;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * TypeClasseur
@@ -32,6 +33,7 @@ class TypeClasseur
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\Groupe", mappedBy="types", cascade={"persist"})
+     * @Exclude()
      */
     private $groupes;
 
