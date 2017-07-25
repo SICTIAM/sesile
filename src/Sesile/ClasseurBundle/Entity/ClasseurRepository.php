@@ -255,19 +255,10 @@ class ClasseurRepository extends EntityRepository {
      */
     public function getValidant(Classeur $classeur) {
         $em = $this->getEntityManager();
-        //var_dump($classeur->getOrdreValidant());
 
         $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
         $usersValidant = array();
-     /*   if(!count($tabEtapeClasseur))
-        {
-            if($classeur->getEtapeDeposante())
-            {
-                error_log('classeur refusé');
-                $usersValidant[] = $classeur->getEtapeDeposante();
-                return $usersValidant;
-            }
-        }*/
+
 
         /**
         * Pour réucpérer le validant je récupère le dernier id de la liste getOrdreValidant
@@ -285,10 +276,6 @@ class ClasseurRepository extends EntityRepository {
                 $usersValidant = array_merge($usersValidant, $usersP->toArray());
             }
 
-//        $usersValidant = new ArrayCollection(
-//            array_merge($users->toArray(), $usersP->toArray())
-//        );
-//            var_dump($users);
             if($users !== null) {
                 $usersValidant = array_merge($users->toArray(), $usersValidant);
             }
@@ -336,7 +323,6 @@ class ClasseurRepository extends EntityRepository {
                 $usersValidant = array_merge($usersValidant, $usersP->toArray());
             }
 
-//        $usersValidant = array_merge($users->toArray(), $usersP->toArray());
             $usersValidant = array_merge($users->toArray(), $usersValidant);
             $usersValidant = array_unique($usersValidant);
         }
@@ -353,9 +339,6 @@ class ClasseurRepository extends EntityRepository {
 
         $prevValidant = explode(',', $classeur->getCircuit());
         $prevValidant = end($prevValidant);
-       // var_dump($prevValidant);exit;
-        // Pour l amelioration du validant qui doit se retracter...
-        //var_dump($prevValidant);
         if (!$prevValidant) {
             $prevValidant = $classeur->getUser();
         }
@@ -373,8 +356,6 @@ class ClasseurRepository extends EntityRepository {
 
         $ordreEtape = $classeur->getOrdreEtape();
         $ordreEtape++;
-//        $tabEtapeClasseur = $classeur->getOrdreEtape());
-//        $ordreEtape = count($tabEtapeClasseur);
 
 
         $em = $this->getEntityManager();
@@ -390,11 +371,9 @@ class ClasseurRepository extends EntityRepository {
         $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
 
 
-//        $nbEtapesClasseur = count($classeur->getEtapeClasseurs()) - 1;
         $nbEtapesClasseur = count($classeur->getEtapeClasseurs());
 
 
-//        var_dump($nbEtapesClasseur, $ordreEtape);
         // Si c est la derniere etape
         if($nbEtapesClasseur == $ordreEtape) {
             $classeur->setStatus(2);
@@ -402,7 +381,6 @@ class ClasseurRepository extends EntityRepository {
         else {
             $classeur->setStatus(1);
             $currentEtapeId = $currentEtape[$ordreEtape]->getId();
-//            $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $currentEtape->getId());
             $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $currentEtapeId);
         }
 
