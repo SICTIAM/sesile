@@ -13,14 +13,25 @@ use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Form\UserType;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class UserApiController extends FOSRestController implements ClassResourceInterface
 {
+
+    /**
+     * @Rest\View()
+     * @Rest\Get("isauthenticated")
+     */
+    public function isauthenticatedAction() {
+        return $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY');
+        //return $this->getUser();
+        /*return array(
+            'userFred'  => $this->getUser()
+        );*/
+    }
+
     /**
      * @return array
-     * @Rest\View("/users/apis/list")
-     * @Method("get")
-     *
+     * @Rest\View()
+     * @Rest\Get("/list")
      */
     public function listAction()
     {
@@ -29,9 +40,8 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @return array
-     * @Rest\View("/users/apis/listadmin")
-     * @Method("get")
-     *
+     * @Rest\View()
+     * @Rest\Get("/listadmin")
      */
     public function listadminAction()
     {
@@ -40,7 +50,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @Rest\View()
-     * @Rest\Get("/users/apis/{id}")
+     * @Rest\Get("/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
      * @return User
@@ -54,7 +64,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @Rest\View("statusCode=Response::HTTP_CREATED")
-     * @Rest\Post("/users/apis/new")
+     * @Rest\Post("/new")
      * @param Request $request
      * @return User|\Symfony\Component\Form\Form
      */
@@ -80,7 +90,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @Rest\View()
-     * @Rest\Delete("/users/apis/{id}")
+     * @Rest\Delete("/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
      * @return User
@@ -97,7 +107,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @Rest\View()
-     * @Rest\Put("/users/apis/{id}")
+     * @Rest\Put("/{id}")
      * @param Request $request
      * @param User $user
      * @return User|\Symfony\Component\Form\Form|JsonResponse

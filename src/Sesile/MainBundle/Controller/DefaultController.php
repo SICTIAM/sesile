@@ -11,8 +11,27 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DefaultController extends Controller
 {
+
     /**
-     * @Route("/old",name="index")
+     * @Route("/",name="index")
+     * @Template()
+     */
+    public function appAction()
+    {
+        return $this->render('app.html.twig');
+    }
+
+    /**
+     * @Route("/dashboard",name="dashboard")
+     * @Template()
+     */
+    public function dashboardAction()
+    {
+        return $this->render('app.html.twig');
+    }
+
+    /**
+     * @Route("/old",name="indexold")
      * @Template()
      */
     public function indexAction() {
@@ -56,14 +75,5 @@ class DefaultController extends Controller
         $major = $this->container->getParameter('majorversion');
 
         return array('majorversion' => $major, 'commit' => $tabversion['commit'], 'buildnumber' => $tabversion['buildnumber']);
-    }
-
-    /**
-     * @Route("/",name="app")
-     * @Template()
-     */
-    public function appAction()
-    {
-        return $this->render('app.html.twig');
     }
 }
