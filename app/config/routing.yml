@@ -34,6 +34,7 @@ sesile_type_classeur_api:
 sesile_user_api:
     resource: "@SesileUserBundle/Controller/UserApiController.php"
     type:     rest
+    prefix:   /apirest/users
 
 
 sesile_main:
