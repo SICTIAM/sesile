@@ -1,2 +1,418 @@
-@import "node_modules/foundation-sites/scss/foundation";
+$foundation-palette: (
+    primary: #34a3fc,
+    secondary: #2068a2,
+    success: #39922c,
+    warning: #f48c4f,
+    alert: #c82d2e,
+);
+
+$button-palette: map-merge($foundation-palette, (
+        gray: #edf2f6
+)) !default;
+
+$title-color: #797c92;
+
+@import "./../../../../node_modules/foundation-sites/scss/foundation";
 @include foundation-everything(true);
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+
+
+@mixin my-icon ($url-image) {
+  background: url($url-image) no-repeat transparent;
+  width: 50px;
+  height: 50px;
+  display: block;
+}
+
+@mixin my-notification ($bg-color) {
+  background: $bg-color;
+  font-size:0.75em;
+  font-weight:700;
+  width: 2em;
+  height: 2em;
+  border-radius: 2em;
+  display: block;
+  text-align: center;
+  padding-top: 0.2em;
+  margin-left: 2.5em;
+  cursor: pointer;
+}
+
+$font-color-primary: #ffffff;
+
+html {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.button {
+  border-radius:0.5em;
+  text-transform: uppercase;
+
+  font-weight:700;
+  font-size: 0.75em;
+
+  &.primary, &.secondary {
+    color: #ffffff;
+  }
+  &.gray {
+    color: #404257;
+    font-weight: normal;
+    font-size: 0.75em;
+  }
+}
+
+.height100 {
+  max-height: 100%;
+  height: 100%;
+}
+
+.header {
+  background-color: #404257;
+  color: $font-color-primary;
+  font-family: 'Open Sans', sans-serif;
+
+  .sesile-search {
+    height:5.7em;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    color: #8a8eab;
+    font-size: 1em;
+    font-weight: 700;
+    padding-left: 2em;
+    background: #4a4c63 url("../images/ico_search.png") no-repeat right;
+  }
+
+  .logo {
+    font-weight: 700;
+    background-color: #fe5e3a;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    .logo-init {
+      font-size: 3em;
+      line-height: 0.8em;
+      color: white;
+    }
+    .logo-name {
+      color: white;
+      font-size: 0.875em;
+      text-transform: uppercase;
+    }
+  }
+
+  .ico-notif-classeur {
+    @include my-icon("../images/ico_notif.png");
+    span {
+      @include my-notification(#00a99d);
+    }
+
+  }
+  .ico-sign-classeur {
+    @include my-icon("../images/ico_cl_sign.png");
+    span {
+      @include my-notification(#fe5e3a);
+    }
+  }
+
+
+  .user-log {
+    font-weight: 700;
+    .avatar {
+      background-color: #92278f;
+      font-size: 2em;
+      border-radius: 2em;
+      width: 1.5em;
+      float: right;
+    }
+    .user-name {
+      font-size:1em;
+    }
+    .user-company {
+      text-transform: uppercase;
+      font-size:0.875em;
+      color: #8a8eab;
+    }
+
+    .dropdown-pane {
+
+      .avatar {
+        width: 2em;
+        height: 2em;
+        line-height:2em;
+      }
+
+      .user-name {
+        font-weight:700;
+        font-size: 1em;
+        color: #404257;
+      }
+      .user-mail {
+        font-weight:normal;
+        font-size: 1em;
+        color: #848488;
+      }
+      .user-company {
+        font-weight:700;
+        font-size: 1.25em;
+        color: #848488;
+      }
+      .button {
+        margin-bottom:0;
+      }
+
+    }
+  }
+}
+
+
+.menu-left {
+  margin-top:1em;
+  margin-bottom:1em;
+
+  .ico-hamburger {
+    @include my-icon("../images/ico_hamburger.png");
+  }
+
+  .ico-new-classeur {
+    @include my-icon("../images/ico_menu_cl_new.png")
+  }
+  .ico-valid-classeur {
+    @include my-icon("../images/ico_menu_cl_valid.png")
+  }
+  .ico-sign-classeur {
+    @include my-icon("../images/ico_menu_cl_sign.png")
+  }
+  .ico-revert-classeur {
+    @include my-icon("../images/ico_menu_cl_revert.png")
+  }
+  .ico-refuse-classeur {
+    @include my-icon("../images/ico_menu_cl_refus.png")
+  }
+  .ico-refuse-classeur {
+    @include my-icon("../images/ico_menu_cl_refus.png")
+  }
+  .ico-notif {
+    @include my-icon("../images/ico_menu_notif.png")
+  }
+  .ico-help {
+    @include my-icon("../images/ico_menu_help.png")
+  }
+
+}
+
+.main {
+  .progress {
+    border-radius: 1em;
+    height: 0.7em;
+    background-color: white;
+    border: solid 1px #a7a7a7;
+  }
+  .progress-meter {
+    border-radius: 1em;
+  }
+
+  .btn-sign {
+    @include my-icon("../images/btn_sign.png");
+  }
+  .btn-valid {
+    @include my-icon("../images/btn_valid.png");
+  }
+  .btn-revert {
+    @include my-icon("../images/btn_revert.png");
+  }
+  .btn-refus {
+    @include my-icon("../images/btn_refus.png");
+  }
+  .btn-comment {
+    @include my-icon("../images/btn_valid.png");
+  }
+
+  background-color: #edf2f6;
+
+  .actu {
+    color: $font-color-primary;
+    font-weight:700;
+    font-size: 1em;
+    background-color: #34a3fc;
+    margin-bottom:2em;
+    h1 {
+      font-size: 2em;
+      text-transform: uppercase;
+      padding:1em 0;
+      font-weight:700;
+    }
+    h2 {
+      font-size: 1em;
+      text-transform: uppercase;
+      text-decoration: underline;
+      font-weight:700;
+    }
+  }
+
+  .panel {
+    background-color: #ffffff;
+    //color: #555769;
+    border-radius: 1em;
+    font-weight:700;
+    .panel-heading {
+      font-size:1em;
+      text-transform: uppercase;
+      padding-top:1.5em;
+      padding-bottom:1em;
+    }
+    .panel-body {
+      color: #4a4c63;
+      font-size:0.875em;
+      font-weight:normal;
+      border-top: solid 1px #a7a7a7;
+      padding-top:1em;
+      padding-bottom:1em;
+
+
+    }
+  }
+
+
+  /**
+  Liste Classeur
+   */
+  .head-list-classeurs {
+    h2 {
+      color: $title-color;
+      font-weight:700;
+      font-size: 0.875em;
+      text-transform: uppercase;
+    }
+  }
+
+  .list-classeurs {
+    margin-bottom: 20em;
+  }
+
+  .list-classeurs, .list-classeurs a {
+    background-color: #fff;
+    color: #4a4c63;
+    font-size:0.875em;
+
+    .tri-classeurs {
+      color: #87878c;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.6875em;
+    }
+    .arrow-down {
+      border-bottom: 0.8em solid #87878c;
+      margin-bottom:1em;
+      font-size: 1em;
+    }
+    .arrow-up {
+      border-top: 0.8em solid #87878c;
+      margin-top:1em;
+      font-size: 1em;
+    }
+    .classeur {
+      border-bottom: solid 1px #a7a7a7;
+    }
+    .classeur:hover, .classeur:hover a {
+      background-color: #edf2f6;
+    }
+    .img-avatar {
+      margin-right:1em;
+    }
+    input[type=checkbox] {
+      margin: 1em 0;
+    }
+
+    .dropdown-pane-circuit {
+      font-size: 0.875em;
+      background-color: #edf2f6;
+      border-top: 0;
+      h3 {
+        color: $title-color;
+        font-size: 1em;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .circle {
+        font-size: 1.125em;
+        border-radius: 2em;
+        width: 2em;
+        height: 2em;
+        &.success {
+          border: solid 0.3em $success-color;
+        }
+        &.warning {
+          border: solid 0.3em $warning-color;
+        }
+        &.alert {
+          border: solid 0.3em $alert-color;
+        }
+
+      }
+    }
+
+  }
+
+}
+
+.text-bold {
+  font-weight:700;
+}
+
+.text-success {
+  color: $success-color;
+}
+.text-danger {
+  color: $warning-color;
+}
+.text-alert {
+  color: $alert-color;
+}
+
+.input-group-label {
+  background-color: $primary-color;
+  border-color: $primary-color;
+}
+
+.input-group-field {
+  border-color: $primary-color;
+}
+
+.fa {
+  color: white;
+  width: 1rem; // makes the width of icon labels equal
+}
+
+.img-avatar {
+  border-radius: 2em;
+  width: 3em;
+  height: 3em;
+}
+
+.arrow-down, .arrow-down:hover, .arrow-down:focus {
+  width: 0;
+  height: 0;
+  border-left: 0.4em solid transparent;
+  border-right: 0.4em solid transparent;
+
+  border-top: 0.8em solid #fff;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  margin-top: 0.5em;
+  margin-left: 1em;
+}
+
+.arrow-up, .arrow-up:hover, .arrow-up:focus {
+  width: 0;
+  height: 0;
+  border-left: 0.4em solid transparent;
+  border-right: 0.4em solid transparent;
+
+  border-bottom: 0.8em solid #fff;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  margin-top: 0.5em;
+  margin-left: 1em;
+}
