@@ -22,10 +22,6 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
     public function isauthenticatedAction() {
         return $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY');
-        //return $this->getUser();
-        /*return array(
-            'userFred'  => $this->getUser()
-        );*/
     }
 
     /**
