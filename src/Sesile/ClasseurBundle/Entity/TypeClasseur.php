@@ -46,6 +46,7 @@ class TypeClasseur
 
     /**
      * @ORM\Column(name="supprimable", type="boolean")
+     * @Exclude()
      */
     private $supprimable = true;
 

@@ -3,7 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Classeur
@@ -56,6 +56,7 @@ class Classeur {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", fetch="EAGER")
      * @ORM\JoinColumn(name="type", referencedColumnName="id")
+     *
      */
     private $type;
 
@@ -68,8 +69,6 @@ class Classeur {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="user", type="integer")
      *
      * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
@@ -112,18 +111,23 @@ class Classeur {
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeurs", cascade={"persist"})
      * @ORM\JoinTable(name="Classeur_visible")
+     *
+     * @Exclude()
      */
     private $visible;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeursCopy", cascade={"persist"})
      * @ORM\JoinTable(name="Classeur_copy")
+     *
+     * @Exclude()
      */
     private $copy;
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"remove"})
-     * @ORM\JoinColumn(name="etapeClasseur", referencedColumnName="id",nullable=true)
+     * @ORM\JoinColumn(name="etapeClasseurs", referencedColumnName="id",nullable=true)
+     *
      */
     private $etapeClasseurs;
 
@@ -150,6 +154,8 @@ class Classeur {
 
     /**
      * @var array
+     *
+     * @Exclude()
      *
      * Liste des types signables
      */

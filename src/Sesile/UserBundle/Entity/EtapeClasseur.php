@@ -49,12 +49,29 @@ class EtapeClasseur
     private $ordre;
 
     /**
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(name="EtapeValidante", type="integer", nullable=true)
+     * @ORM\Column(name="EtapeValidante", type="boolean", nullable=true, options={"default" = false})
      *
      */
-    private $etapeValidante = 0;
+    private $etapeValidante;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="etapeValide", type="boolean", nullable=true, options={"default" = false})
+     *
+     */
+    private $etapeValide;
+
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeValide")
+     * @ORM\JoinColumn(name="userValidant", referencedColumnName="id")
+     *
+     */
+    private $userValidant;
 
     /**
      * Get id
@@ -185,30 +202,6 @@ class EtapeClasseur
         return $this->ordre;
     }
 
-
-    /**
-     * Set etapeValidante
-     *
-     * @param integer $etapeValidante
-     * @return EtapeClasseur
-     */
-    public function setEtapeValidante($etapeValidante)
-    {
-        $this->etapeValidante = $etapeValidante;
-    
-        return $this;
-    }
-
-    /**
-     * Get etapeValidante
-     *
-     * @return integer 
-     */
-    public function getEtapeValidante()
-    {
-        return $this->etapeValidante;
-    }
-
     public function countUserPacksUsers() {
 
         $nbUsers =  count($this->getUsers());
@@ -216,5 +209,77 @@ class EtapeClasseur
         $total = $nbUsers + $nbUserPacks;
 
         return $total;
+    }
+
+    /**
+     * Set userValidant
+     *
+     * @param \Sesile\UserBundle\Entity\User $userValidant
+     *
+     * @return EtapeClasseur
+     */
+    public function setUserValidant(\Sesile\UserBundle\Entity\User $userValidant = null)
+    {
+        $this->userValidant = $userValidant;
+
+        return $this;
+    }
+
+    /**
+     * Get userValidant
+     *
+     * @return \Sesile\UserBundle\Entity\User
+     */
+    public function getUserValidant()
+    {
+        return $this->userValidant;
+    }
+
+    /**
+     * Set etapeValide
+     *
+     * @param boolean $etapeValide
+     *
+     * @return EtapeClasseur
+     */
+    public function setEtapeValide($etapeValide)
+    {
+        $this->etapeValide = $etapeValide;
+
+        return $this;
+    }
+
+    /**
+     * Get etapeValide
+     *
+     * @return boolean
+     */
+    public function getEtapeValide()
+    {
+        return $this->etapeValide;
+    }
+
+    /**
+     * Set etapeValidante
+     *
+     * @param boolean $etapeValidante
+     *
+     * @return EtapeClasseur
+     */
+    public function setEtapeValidante($etapeValidante)
+    {
+        $this->etapeValidante = $etapeValidante;
+
+        return $this;
+    }
+
+    /**
+     * Get etapeValidante
+     *
+     * @return boolean
+     */
+    public function getEtapeValidante()
+    {
+        return $this->etapeValidante;
     }
 }

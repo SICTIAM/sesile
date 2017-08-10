@@ -5,11 +5,13 @@ namespace Sesile\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\Serializer\Annotation\Exclude;
+use Sesile\ClasseurBundle\Entity\Classeur;
 
 /**
  * User
@@ -33,7 +35,6 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
-     *
      *
      */
     protected $Nom;
@@ -187,6 +188,11 @@ class User extends BaseUser {
     private $etapeClasseurs;
 
     /**
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="userValidant", cascade={"remove"})
+     */
+    private $etapeValide;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="users", cascade={"persist"})
      * @Exclude()
      */
@@ -248,11 +254,13 @@ class User extends BaseUser {
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\DelegationsBundle\Entity\Delegations", mappedBy="user")
+     * @Exclude()
      */
     protected $delegationsRecues;
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\DelegationsBundle\Entity\Delegations", mappedBy="delegant")
+     * @Exclude()
      */
     protected $delegationsDonnees;
 
@@ -641,7 +649,7 @@ class User extends BaseUser {
      * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurs
      * @return User
      */
-    public function addClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeurs)
+    public function addClasseur(Classeur $classeurs)
     {
         $this->classeurs[] = $classeurs;
     
@@ -653,7 +661,7 @@ class User extends BaseUser {
      *
      * @param \Sesile\ClasseurBundle\Entity\Classeur $classeurs
      */
-    public function removeClasseur(\Sesile\ClasseurBundle\Entity\Classeur $classeurs)
+    public function removeClasseur(Classeur $classeurs)
     {
         $this->classeurs->removeElement($classeurs);
     }
@@ -976,7 +984,7 @@ class User extends BaseUser {
      *
      * @return User
      */
-    public function addClasseursCopy(\Sesile\ClasseurBundle\Entity\Classeur $classeursCopy)
+    public function addClasseursCopy(Classeur $classeursCopy)
     {
         $this->classeursCopy[] = $classeursCopy;
 
@@ -988,7 +996,7 @@ class User extends BaseUser {
      *
      * @param \Sesile\ClasseurBundle\Entity\Classeur $classeursCopy
      */
-    public function removeClasseursCopy(\Sesile\ClasseurBundle\Entity\Classeur $classeursCopy)
+    public function removeClasseursCopy(Classeur $classeursCopy)
     {
         $this->classeursCopy->removeElement($classeursCopy);
     }
@@ -1025,5 +1033,39 @@ class User extends BaseUser {
     public function getSesileVersion()
     {
         return $this->sesileVersion;
+    }
+
+    /**
+     * Add etapeValide
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeValide
+     *
+     * @return User
+     */
+    public function addEtapeValide(\Sesile\UserBundle\Entity\EtapeClasseur $etapeValide)
+    {
+        $this->etapeValide[] = $etapeValide;
+
+        return $this;
+    }
+
+    /**
+     * Remove etapeValide
+     *
+     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeValide
+     */
+    public function removeEtapeValide(\Sesile\UserBundle\Entity\EtapeClasseur $etapeValide)
+    {
+        $this->etapeValide->removeElement($etapeValide);
+    }
+
+    /**
+     * Get etapeValide
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEtapeValide()
+    {
+        return $this->etapeValide;
     }
 }
