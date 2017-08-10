@@ -11,130 +11,80 @@ use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 class ClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
+     * @param int $limit
+     * @param int $start
      * @return array
      * @Rest\View()
-     * @Method("get")
-     *
+     * @Rest\Get("list/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"limit" = 10, "start" = 0})
      */
-    public function listAction()
+    public function listAction($limit, $start)
     {
+        return $this->getDoctrine()
+            ->getManager()
+            ->getRepository('SesileClasseurBundle:Classeur')
+            ->getClasseursVisibles($this->getUser()->getId(), $limit, $start);
 
-        $classeurs = $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:Classeur')->findAll();
-
-        $classeurView = array();
-        foreach ($classeurs as $classeur) {
-            $classeurView[] = array('id' => $classeur->getId(),
-                'nom' => $classeur->getNom(), 'description' => $classeur->getDescription(),
-                'creation' => $classeur->getCreation(),
-                'validation' => $classeur->getValidation(),
-                'type' => $classeur->getType()->getId(),
-                'visibilite' => $classeur->getVisibilite(),
-                'circuit' => $classeur->getCircuit(),
-                'status' => $classeur->getStatus(),
-            );
-        }
-
-//        return $view = $this->view($classeurView, 200);
-        return $classeurView;
-
+        /*return $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:Classeur')->findBy(
+            array("user"    => $this->getUser()),
+            array("creation"    => "DESC"),
+            $limit,
+            $start
+        );*/
     }
 
     /**
      * @Rest\View()
-     * @Method("get")
+     * @Rest\Get("/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Classeur $classeur
-     * @return array
+     * @return Classeur
      * @internal param $id
      */
-    public function getAction(Classeur $classeur)
+    public function getAction (Classeur $classeur)
     {
-
-        return $this->classeurToArray($classeur);
-
+        return $classeur;
     }
-
 
     /**
-     * @param Classeur $classeur
-     * @return array
+     * @Rest\View("statusCode=Response::HTTP_CREATED")
+     * @Rest\Post("/new")
+     * @param Request $request
      */
-    private function classeurToArray(Classeur $classeur)
+    public function postAction (Request $request)
     {
 
-        $tabActions = $classeur->getActions();
-        $cleanTabAction = array();
-        foreach ($tabActions as $action) {
-            $cleanTabAction[] = $this->actionToArray($action);
-        }
+    }
 
-        $tabDocs = $classeur->getDocuments();
-        $cleanTabDocs = array();
-        foreach ($tabDocs as $doc) {
-            $cleanTabDocs[] = $this->docToArray($doc);
-        }
+    /**
+     * @Rest\View()
+     * @Rest\Delete("/{id}")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"})
+     * @param Classeur $classeur
+     */
+    /*public function removeAction (Classeur $classeur)
+    {
         $em = $this->getDoctrine()->getManager();
-        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
-        $tabValidant = array();
-        foreach($validants as $validant)
-        {
-            $tabValidant[] = array(
-                'id' => $validant->getId(),
-                'nom'=> $validant->getPrenom() . ' ' . $validant->getNom()
-            );
-        }
+        $em->remove($classeur);
+        $em->flush();
+    }*/
 
-        return array(
-            'id' => $classeur->getId(),
-            'nom' => $classeur->getNom(), 'description' => $classeur->getDescription(),
-            'creation' => $classeur->getCreation(),
-            'validation' => $classeur->getValidation(), 'type' => $classeur->getType()->getId(),
-            'validant' => $tabValidant,
-            'visibilite' => $classeur->getVisibilite(),
-            'circuit' => $classeur->getCircuit(),
-            'status' => $classeur->getStatus(),
-            'documents' => $cleanTabDocs,
-            'actions' => $cleanTabAction
-        );
-    }
-
-    private function actionToArray($action)
+    /**
+     * @Rest\View()
+     * @Rest\Put("/{id}")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Request $request
+     * @param Classeur $classeur
+     */
+    public function updateAction (Request $request, Classeur $classeur)
     {
-        return array(
-            'id' => $action->getId(),
-            'username' => $action->getUsername(),
-            'date' => $action->getDate(),
-            'action' => $action->getAction(),
-            'observation' => $action->getObservation()
-        );
+
     }
 
-    private function docToArray($doc)
-    {
-        $tabHisto = $doc->getHistories();
-        $cleanTabHisto = array();
-        foreach ($tabHisto as $histo) {
-            $cleanTabHisto[] = $this->histoToArray($histo);
-        }
-        return array('id' => $doc->getId(),
-            'name' => $doc->getName(),
-            'repourl' => $doc->getrepourl(),
-            'type' => $doc->getType(),
-            'signed' => $doc->getSigned(),
-            'histories' => $cleanTabHisto);
-    }
 
-    private function histoToArray($histo)
-    {
-        return array(
-            'id' => $histo->getId(),
-            'date' => $histo->getDate(),
-            'comment' => $histo->getComment()
-        );
-    }
 
 }

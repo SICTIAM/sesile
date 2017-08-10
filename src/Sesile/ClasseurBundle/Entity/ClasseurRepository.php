@@ -47,6 +47,21 @@ class ClasseurRepository extends EntityRepository {
         ;
     }
 
+    public function getClasseursVisibles ($userid, $limit, $start) {
+        return $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userid)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->orderBy("c.creation", "DESC")
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     /*
      * Get current classeurs visible for Data Tables
      *
