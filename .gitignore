@@ -54,3 +54,4 @@ composer.lock
 /node_modules
 /web/build
 yarn.lock
+web/js/fos_js_routes\.js

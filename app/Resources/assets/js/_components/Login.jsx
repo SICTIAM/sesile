@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import renderIf from "render-if";
 
 class MenuBar extends Component {
@@ -10,9 +11,9 @@ class MenuBar extends Component {
     }
 
     componentWillMount() {
-        fetch(Routing.generate('isauthenticated_user_api'), { credentials: 'same-origin' })
+        fetch(Routing.generate('sesile_user_userapi_isauthenticated'), { credentials: 'same-origin' })
             .then(response => response.json())
-            .then(json => this.setState({user : json}))
+            .then(json => this.setState({user : true}))
     }
     render(){
         return (
@@ -72,8 +73,11 @@ class MenuBar extends Component {
                             </div>
                             <hr/>
                             <div className="grid-x">
-                                <div className="cell">
+                                <div className="medium-7 cell">
                                     <a href="#" className="button gray btn-user-conf">changer de compte</a>
+                                </div>
+                                <div className="medium-5 cell text-right">
+                                    <Link to={"/admin/circuit-de-validation"} className="button gray btn-user-conf">admin</Link>
                                 </div>
                             </div>
 

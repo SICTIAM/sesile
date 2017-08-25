@@ -43,18 +43,9 @@ sesile_type_classeur_api:
     resource: "@SesileClasseurBundle/Controller/TypeClasseurApiController.php"
     type:     rest
 
-sesile_user_api:
-    resource: "@SesileUserBundle/Controller/UserApiController.php"
-    type:     rest
-    prefix:   /apirest/users
-
-#sesile_users:
-#    resource: "@SesileUserBundle/Controller/"
-#    type: annotation
-#    prefix: /user
-
-_default:
-    path: /
+sesile_users:
+    resource: "@SesileUserBundle/Controller/"
+    type: annotation
 
 oneup_uploader:
     resource: .

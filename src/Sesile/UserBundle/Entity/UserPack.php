@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * UserPack
@@ -52,6 +53,7 @@ class UserPack
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="userPacks")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
+     * @Serializer\Exclude()
      *
      */
     protected $collectivite;

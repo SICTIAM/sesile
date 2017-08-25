@@ -416,3 +416,14 @@ html {
   margin-top: 0.5em;
   margin-left: 1em;
 }
+
+#circuit_name_search,
+#user_name_search {
+  border: 0;
+  box-shadow: none;
+
+  &:focus {
+    border: 0;
+    box-shadow: none;
+  }
+}

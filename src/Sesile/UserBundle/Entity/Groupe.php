@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Groupe
@@ -29,7 +30,7 @@ class Groupe {
 
     /**
      * @var int
-     *
+     * @Serializer\Exclude()
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="groupes", cascade={"persist"})
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
      *
