@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\HttpFoundation\Request;
 
 $loader = require_once __DIR__ . '/../app/autoload.php';
@@ -21,8 +20,6 @@ Request::setTrustedProxies(
     ['***REMOVED***', '***REMOVED***'],
     Request::HEADER_FORWARDED
 );
-$kernel->loadClassCache();
-//$kernel = new AppCache($kernel);
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

@@ -29,7 +29,6 @@ Request::setTrustedProxies(
     ['***REMOVED***', '***REMOVED***'],
     Request::HEADER_FORWARDED
 );
-$kernel->loadClassCache();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
