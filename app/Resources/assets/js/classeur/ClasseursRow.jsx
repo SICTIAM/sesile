@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Moment from 'moment';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import UserAvatar from 'react-user-avatar'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
 
 
@@ -27,12 +28,29 @@ class ClasseursRow extends Component {
         Moment.locale('fr')
         const classeur = this.props.classeur
 
+        const today = Moment()
+        const validation = Moment(classeur.validation)
+        const diff = validation.diff(today)
+
+        console.log(diff)
+
         return (
 
             <div id={classeur.id} className="grid-x grid-padding-x grid-padding-y classeur align-middle">
                 <div className="cell medium-2">
-                    <img src={"/uploads/avatars/" + classeur.user.path} alt={classeur.user._prenom + " " + classeur.user._nom} className="img-avatar" />
-                    <span className="text-bold">{classeur.user._prenom} {classeur.user._nom} - { classeur.circuit }</span>
+                    <div className="grid-x align-center-middle">
+                        <div className="cell medium-3">
+                            {
+                                classeur.user.path ?
+                                    <UserAvatar size="48" name={classeur.user._prenom} src={"/uploads/avatars/" + classeur.user.path} />
+                                    : <UserAvatar size="48" name={classeur.user._prenom} className="txt-avatar" />
+                            }
+                        </div>
+                        <div className="cell medium-9">
+                            <div className="text-bold">{classeur.user._prenom} {classeur.user._nom}</div>
+                        </div>
+                    </div>
+
                 </div>
                 <div className="cell medium-3">
                     <Link to={`/classeur/${classeur.id}`}><span className="text-bold">{classeur.nom}</span></Link>
@@ -44,7 +62,7 @@ class ClasseursRow extends Component {
                         <div className="progress-meter" style={styles.progressbar}></div>
                     </div>
                 </div>
-                <CircuitListClasseur classeur={classeur} />
+                <CircuitListClasseur classeurId={classeur.id} user={classeur.user} />
 
                 <div className="cell medium-2">
                     <div className="grid-x">

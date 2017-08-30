@@ -25,7 +25,7 @@ security:
                 created_users_roles: [ROLE_USER, ROLE_ADMIN]
 #                default_target_path: index
                 always_use_default_target_path: false
-                login_path: /login
+                login_path: /dashboard
                 check_path: /
             logout:
                 path: /logout

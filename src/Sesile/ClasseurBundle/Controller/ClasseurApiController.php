@@ -19,7 +19,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param int $limit
      * @param int $start
      * @return array
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("list/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"limit" = 10, "start" = 0})
      */
     public function listAction($limit, $start)
@@ -28,13 +28,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
             ->getManager()
             ->getRepository('SesileClasseurBundle:Classeur')
             ->getClasseursVisibles($this->getUser()->getId(), $limit, $start);
-
-        /*return $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:Classeur')->findBy(
-            array("user"    => $this->getUser()),
-            array("creation"    => "DESC"),
-            $limit,
-            $start
-        );*/
     }
 
     /**

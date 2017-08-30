@@ -341,6 +341,9 @@ html {
         &.success {
           border: solid 0.3em $success-color;
         }
+        &.gray {
+          border: solid 0.3em $title-color;
+        }
         &.warning {
           border: solid 0.3em $warning-color;
         }
@@ -368,6 +371,9 @@ html {
 .text-alert {
   color: $alert-color;
 }
+.text-gray {
+  color: $title-color;
+}
 
 .input-group-label {
   background-color: $primary-color;
@@ -387,6 +393,12 @@ html {
   border-radius: 2em;
   width: 3em;
   height: 3em;
+}
+
+.txt-avatar {
+  color: white;
+  font-weight: 700;
+  font-size: 1.5em;
 }
 
 .arrow-down, .arrow-down:hover, .arrow-down:focus {

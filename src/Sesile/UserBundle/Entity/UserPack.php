@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * UserPack
@@ -18,6 +19,7 @@ class UserPack
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"listEtapeClasseur"})
      */
     private $id;
 
@@ -25,12 +27,14 @@ class UserPack
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
+     * @Groups({"listEtapeClasseur"})
      */
     private $nom;
 
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="userPacks", cascade={"persist"})
+     * @Groups({"listEtapeClasseur"})
      */
     private $users;
 
