@@ -34,14 +34,9 @@ sesile_api:
 #    type:     annotation
 #    prefix:   /classeur/
 
-sesile_classeur_api:
-    resource: "@SesileClasseurBundle/Controller/ClasseurApiController.php"
-    type:     rest
-    prefix:   /apirest/classeurs/
-
 sesile_type_classeur_api:
-    resource: "@SesileClasseurBundle/Controller/TypeClasseurApiController.php"
-    type:     rest
+    resource: "@SesileClasseurBundle/Controller/"
+    type:     annotation
 
 sesile_users:
     resource: "@SesileUserBundle/Controller/"
