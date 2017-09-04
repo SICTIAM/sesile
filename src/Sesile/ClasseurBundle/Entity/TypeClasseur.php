@@ -5,6 +5,7 @@ namespace Sesile\ClasseurBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * TypeClasseur
@@ -16,7 +17,6 @@ class TypeClasseur
 {
     /**
      * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -25,7 +25,7 @@ class TypeClasseur
 
     /**
      * @var string
-     *
+     * @Groups("classeurById")
      * @ORM\Column(name="nom", type="string", length=255)
      */
     private $nom;

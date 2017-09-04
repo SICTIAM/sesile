@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * EtapeClasseur
@@ -18,11 +19,13 @@ class EtapeClasseur
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"listClasseur"})
      */
     private $id;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeClasseurs", cascade={"persist"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $users;
 
@@ -37,6 +40,7 @@ class EtapeClasseur
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", inversedBy="etapeClasseurs", cascade={"persist"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $userPacks;
 

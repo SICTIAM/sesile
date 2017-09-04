@@ -16,7 +16,7 @@ class ListClasseurs extends Component {
     }
 
     componentDidMount() {
-        fetch(Routing.generate('list_classeur_api'), { credentials: 'same-origin' })
+        fetch(Routing.generate('sesile_classeur_classeurapi_list'), { credentials: 'same-origin' })
             .then(response => response.json())
             .then(json => {
                 this.setState({classeurs : json})

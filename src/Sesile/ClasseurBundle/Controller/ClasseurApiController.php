@@ -13,14 +13,18 @@ use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Rest\Route("/apirest/classeur", options = { "expose" = true })
+ */
 class ClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
      * @param int $limit
      * @param int $start
      * @return array
-     * @Rest\View()
-     * @Rest\Get("list/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"limit" = 10, "start" = 0})
+     * @Rest\Get("s/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"limit" = 10, "start" = 0})
+     * @Rest\View(serializerGroups={"listClasseur"})
+     *
      */
     public function listAction($limit, $start)
     {
@@ -38,14 +42,14 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Classeur $classeur
      * @return Classeur
      * @internal param $id
      */
-    public function getAction (Classeur $classeur)
+    public function getByIdAction (Classeur $classeur)
     {
         return $classeur;
     }

@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * UserPack
@@ -25,12 +26,14 @@ class UserPack
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $nom;
 
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="userPacks", cascade={"persist"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $users;
 
@@ -43,6 +46,7 @@ class UserPack
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="userPacks", cascade={"persist"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $etapeGroupesUP;
 

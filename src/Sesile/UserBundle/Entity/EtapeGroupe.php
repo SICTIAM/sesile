@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * EtapeGroupe
@@ -23,6 +24,7 @@ class EtapeGroupe
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeGroupes", cascade={"persist"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $users;
 

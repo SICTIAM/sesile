@@ -3,7 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use JMS\Serializer\Annotation\Groups;
 
 
 /**
@@ -42,6 +42,7 @@ class Action
      *
      * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="user_action", referencedColumnName="id", onDelete="CASCADE")
+     * @Groups("classeurById")
      *
      */
     private $user_action;
@@ -52,7 +53,7 @@ class Action
      * @var string
      *
      * @ORM\Column(name="observation", type="text", nullable=true)
-     *  
+     * @Groups("classeurById")
      *
      */
     private $observation;
@@ -63,7 +64,7 @@ class Action
      *
      * @ORM\Column(name="username", type="string", length=255)
      *
-     *  
+     * @Groups("classeurById")
      */
     private $username;
 
@@ -74,7 +75,7 @@ class Action
      *
      * @ORM\Column(name="date", type="datetime")
      *
-     *  
+     * @Groups("classeurById")
      */
     private $date;
 
@@ -83,7 +84,7 @@ class Action
      *
      * @ORM\Column(name="action", type="text")
      *  
-     *
+     * @Groups("classeurById")
      */
     private $action;
 
@@ -93,7 +94,7 @@ class Action
      *
      * @ORM\Column(name="commentaire", type="text", nullable=true)
      *  
-     *
+     * @Groups("classeurById")
      */
     private $commentaire;
 
