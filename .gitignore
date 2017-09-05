@@ -26,6 +26,7 @@
 /bin/*
 !bin/console
 !bin/symfony_requirements
+composer.phar
 
 # Assets and user uploads
 /web/bundles/
@@ -47,10 +48,11 @@
 /web/.htaccess
 /vendor/
 /app/sessions/
-composer.lock
 
 .idea
 ### Node & yarn
 /node_modules
 /web/build
-yarn.lock
+
+/app/Resources/assets/css/global.css
+/app/Resources/assets/css/global.css.map
