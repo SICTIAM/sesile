@@ -1,0 +1,33 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+#header {
+    background-color: red;
+    height: 15%;
+}
+
+#main {
+    height: 80%;
+}
+
+#menu {
+
+}
+
+#content {
+    background-color: yellow;
+}
+
+#menu, #content {
+    height: 100%;
+}
+
+#footer {
+    background-color: pink;
+}
