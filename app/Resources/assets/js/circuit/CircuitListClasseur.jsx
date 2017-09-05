@@ -63,7 +63,7 @@ class CircuitListClasseur extends Component {
                                     : ("text-gray text-bold")
                             }>
                             {etape_classeur.users.map((user, key) =>
-                                <div key={"user" + user.id}>{user.id} - {user._prenom} {user._nom}</div>
+                                <div key={"user" + user.id}>{user._prenom} {user._nom}</div>
                             )}
                                 {etape_classeur.user_packs.map(user_pack =>
                                     <div key={"userpack" + user_pack.id}>{user_pack.nom}</div>

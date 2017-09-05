@@ -6,33 +6,36 @@ import UserAvatar from 'react-user-avatar'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
 
 
-const styles = {
-    progressbar: {
-        width: '75%'
-    }
-}
 
 class ClasseursRow extends Component {
 
 
     constructor(props) {
         super(props);
-        this.state = {classeurs: null};
-    }
-
-    componentDidMount() {
-
+        // this.state = {classeurs: null};
     }
 
     render(){
         Moment.locale('fr')
         const classeur = this.props.classeur
-
-        const today = Moment()
+        const creation = Moment(classeur.creation)
         const validation = Moment(classeur.validation)
-        const diff = validation.diff(today)
+        const diffToday = validation.diff(Moment(), 'days')
+        const diffToCreation = Moment().diff(creation, 'days')
 
-        console.log(diff)
+        let classProgress, percentProgress
+
+        if (diffToday < 0) {
+            classProgress = "alert"
+            percentProgress = 100
+        } else if (diffToday < 1) {
+            classProgress = "warning"
+            percentProgress = 100
+        } else {
+            classProgress = "success"
+            percentProgress = 100 - diffToday / diffToCreation * 100
+        }
+
 
         return (
 
@@ -57,9 +60,9 @@ class ClasseursRow extends Component {
                 </div>
                 <div className="cell medium-2">Déposé le <span className="text-bold">{Moment(classeur.creation).format('L')}</span></div>
                 <div className="cell medium-2" data-toggle={"example-dropdown-" + classeur.id}>
-                    <span className="text-alert">Date limite le <span className="text-bold">{Moment(classeur.validation).format('L')}</span></span>
-                    <div className="alert progress">
-                        <div className="progress-meter" style={styles.progressbar}></div>
+                    <span className={"text-" + classProgress}>Date limite le <span className="text-bold">{Moment(classeur.validation).format('L')}</span></span>
+                    <div className={classProgress +" progress"}>
+                        <div className="progress-meter" style={{width: percentProgress + '%'}}></div>
                     </div>
                 </div>
                 <CircuitListClasseur classeurId={classeur.id} user={classeur.user} />
@@ -74,7 +77,7 @@ class ClasseursRow extends Component {
                     </div>
                 </div>
                 <div className="cell medium-1 text-center">
-                    <input type="checkbox" id={classeur.id} />
+                    <input type="checkbox" id={classeur.id} checked={classeur.checked || false} onChange={this.props.checkClasseur} className="checkClasseur" />
                 </div>
             </div>
 
@@ -83,7 +86,8 @@ class ClasseursRow extends Component {
 }
 
 ClasseursRow.PropTypes = {
-    classeur: PropTypes.object.isRequired
+    classeur: PropTypes.object.isRequired,
+    checkClasseur: PropTypes.func.isRequired
 }
 
 export default ClasseursRow

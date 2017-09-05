@@ -1,31 +1,56 @@
 import React, { Component } from 'react'
-import Moment from 'moment';
 import ClasseursRow from './ClasseursRow'
 
-const styles = {
-    progressbar: {
-        width: '75%'
-    }
-}
 
 class ListClasseurs extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {classeurs: null};
+        this.state = {
+            classeurs: null,
+            sort: "id",
+            order: "DESC",
+            checkedAll: false
+        }
+        this.checkClasseur = this.checkClasseur.bind(this)
     }
 
     componentDidMount() {
-        fetch(Routing.generate('list_classeur_api'), { credentials: 'same-origin' })
+        this.listClasseurs(this.state.sort, this.state.order)
+    }
+
+    listClasseurs(sort, order) {
+
+        fetch(Routing.generate('list_classeur_api', {sort, order}), { credentials: 'same-origin' })
             .then(response => response.json())
             .then(json => {
                 this.setState({classeurs : json})
                 $('#classeurRow').foundation();
-            });
+            })
+            .then(() => {
+                let classeurs = this.state.classeurs.map(classeur =>
+                    Object.defineProperty(classeur, "checked", {value : false, writable : true, enumerable : true, configurable : true}))
+                this.setState({classeurs})
+            })
+    }
+
+
+    checkAllClasseurs() {
+        const classeurs = this.state.classeurs
+        const newCheckAll = !this.state.checkedAll
+        this.setState({checkedAll: newCheckAll})
+        classeurs.map(classeur => classeur.checked = newCheckAll)
+        this.setState({classeurs})
+    }
+
+    checkClasseur(event) {
+        const target = event.target
+        const classeurs = this.state.classeurs
+        classeurs[classeurs.findIndex(classeur => classeur.id == target.id)].checked = (target.checked)
+        this.setState({classeurs})
     }
 
     render(){
-        Moment.locale('fr')
         const classeurs = this.state.classeurs
 
         return (
@@ -43,31 +68,31 @@ class ListClasseurs extends Component {
                             <div className="grid-x grid-padding-x tri-classeurs">
                                 <div className="cell medium-2">
                                     trier
-                                    <button className="button arrow-down" type="button">&nbsp;</button>
-                                    <button className="button arrow-up" type="button">&nbsp;</button>
+                                    <button onClick={() => this.listClasseurs('user.nom', 'ASC')} className="button arrow-down" type="button">&nbsp;</button>
+                                    <button onClick={() => this.listClasseurs('user.nom', 'DESC')} className="button arrow-up" type="button">&nbsp;</button>
                                 </div>
                                 <div className="cell medium-3">
-                                    <button className="button arrow-down" type="button">&nbsp;</button>
-                                    <button className="button arrow-up" type="button">&nbsp;</button>
+                                    <button onClick={() => this.listClasseurs('nom', 'ASC')} className="button arrow-down" type="button">&nbsp;</button>
+                                    <button onClick={() => this.listClasseurs('nom', 'DESC')} className="button arrow-up" type="button">&nbsp;</button>
                                 </div>
                                 <div className="cell medium-2">
-                                    <button className="button arrow-down" type="button">&nbsp;</button>
-                                    <button className="button arrow-up" type="button">&nbsp;</button>
+                                    <button onClick={() => this.listClasseurs('creation', 'ASC')} className="button arrow-down" type="button">&nbsp;</button>
+                                    <button onClick={() => this.listClasseurs('creation', 'DESC')} className="button arrow-up" type="button">&nbsp;</button>
                                 </div>
                                 <div className="cell medium-2">
-                                    <button className="button arrow-down" type="button">&nbsp;</button>
-                                    <button className="button arrow-up" type="button">&nbsp;</button>
+                                    <button onClick={() => this.listClasseurs('validation', 'ASC')} className="button arrow-down" type="button">&nbsp;</button>
+                                    <button onClick={() => this.listClasseurs('validation', 'DESC')} className="button arrow-up" type="button">&nbsp;</button>
                                 </div>
                                 <div className="cell medium-2"></div>
                                 <div className="cell medium-1 text-center">
-                                    <input type="checkbox" />
+                                    <input value={this.state.checkedAll} onClick={() => this.checkAllClasseurs()} type="checkbox" />
                                 </div>
                             </div>
 
                             <div id="classeurRow">
                                 { classeurs ? (
                                     classeurs.map(classeur =>
-                                        <ClasseursRow classeur={classeur} key={classeur.id} />
+                                        <ClasseursRow classeur={classeur} key={classeur.id} checkClasseur={this.checkClasseur} />
                                     )
                                 ) : (<div>Chargement...</div>)
                                 }

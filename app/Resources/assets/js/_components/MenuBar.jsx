@@ -13,7 +13,7 @@ class MenuBar extends Component {
     }*/
 
     componentWillMount() {
-        fetch('/app_dev.php/apirest/users/isauthenticated', { credentials: 'same-origin' })
+        fetch(Routing.generate('isauthenticated_user_api'), { credentials: 'same-origin' })
             .then(response => response.json())
             .then(json => this.setState({user : json}))
     }
@@ -29,8 +29,8 @@ class MenuBar extends Component {
                     <ul className="menu">
                         {
                             this.state.user ?
-                                <li><a href="/app_dev.php/logout"><button type="button" className="button">Déconnexion</button></a></li>
-                                : <li><a href="/app_dev.php/dashboard"><button type="button" className="button">Connexion</button></a></li>
+                                <li><a href="/logout"><button type="button" className="button">Déconnexion</button></a></li>
+                                : <li><a href="/dashboard"><button type="button" className="button">Connexion</button></a></li>
                         }
                     </ul>
                 </div>

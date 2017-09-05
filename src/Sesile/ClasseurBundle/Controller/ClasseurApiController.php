@@ -13,21 +13,26 @@ use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Rest\Route("/apirest/classeur", options = { "expose" = true })
+ */
 class ClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
      * @param int $limit
      * @param int $start
+     * @param null $sort
+     * @param null $order
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("list/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"limit" = 10, "start" = 0})
+     * @Rest\Get("s/{sort}/{order}/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "odrder"="DESC", "limit" = 10, "start" = 0})
      */
-    public function listAction($limit, $start)
+    public function listAction($sort = null, $order = null, $limit, $start)
     {
         return $this->getDoctrine()
             ->getManager()
             ->getRepository('SesileClasseurBundle:Classeur')
-            ->getClasseursVisibles($this->getUser()->getId(), $limit, $start);
+            ->getClasseursVisibles($this->getUser()->getId(), $sort, $order, $limit, $start);
     }
 
     /**
