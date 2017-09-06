@@ -25,7 +25,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param null $order
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("s/{sort}/{order}/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "odrder"="DESC", "limit" = 10, "start" = 0})
+     * @Rest\Get("s/{sort}/{order}/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
     public function listAction($sort = null, $order = null, $limit, $start)
     {

@@ -55,6 +55,7 @@ security:
         - { path: ^/delegation, roles: ROLE_USER }
         - { path: ^/apirest, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/apirest/users/isauthenticated, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/apirest, roles: IS_AUTHENTICATED_ANONYMOUSLY } # temporary in "IS_AUTHENTICATED_ANONYMOUSLY" because sso authentication not work yet
         - { path: ^/dashboard, roles: ROLE_USER }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }

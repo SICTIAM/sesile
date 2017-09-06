@@ -27,7 +27,7 @@ class User extends BaseUser {
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"listClasseur", "listEtapeClasseur"})
+     * @Serializer\Groups({"listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      *
      */
     protected $id;
@@ -36,8 +36,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
-     * @Groups({"listClasseur", "listEtapeClasseur"})
-     *
+     * @Serializer\Groups({"listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      */
     protected $Nom;
 
@@ -45,7 +44,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
-     * @Groups({"listClasseur", "listEtapeClasseur"})
+     * @Serializer\Groups({"listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      *
      */
     protected $Prenom;
