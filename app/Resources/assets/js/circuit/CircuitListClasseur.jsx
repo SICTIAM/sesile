@@ -8,7 +8,8 @@ class CircuitListClasseur extends Component {
     }
 
     componentDidMount() {
-        fetch(Routing.generate('list_etapeclasseur_api') + "/" + this.props.classeurId, { credentials: 'same-origin' })
+        const classeur = this.props.classeurId
+        fetch(Routing.generate('sesile_user_etapeclasseurapi_list', {classeur}) , { credentials: 'same-origin' })
             .then(response => response.json())
             .then(json => {
                 this.setState({etapesClasseur: json})

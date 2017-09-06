@@ -13,6 +13,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Rest\Route("/apirest/etape_classeur", options = { "expose" = true })
+ */
 class EtapeClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
@@ -20,7 +23,7 @@ class EtapeClasseurApiController extends FOSRestController implements ClassResou
      * @return array
      * @internal param EtapeClasseur $etapeClasseur
      * @Rest\View(serializerGroups={"listEtapeClasseur"})
-     * @Rest\Get("list/{classeur}", requirements={"classeur" = "\d+"})
+     * @Rest\Get("s/{classeur}", requirements={"classeur" = "\d+"})
      */
     public function listAction($classeur)
     {

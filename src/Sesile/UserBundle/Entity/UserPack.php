@@ -34,7 +34,7 @@ class UserPack
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="userPacks", cascade={"persist"})
-     * @Serializer\Groups({{"classeurById", "listClasseur", "listEtapeClasseur"})
+     * @Serializer\Groups({"classeurById", "listClasseur", "listEtapeClasseur"})
      */
     private $users;
 

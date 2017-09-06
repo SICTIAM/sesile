@@ -52,7 +52,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
-     * @Groups({"listClasseur"})
+     * @Serializer\Groups({"listClasseur"})
      */
     protected $path;
 
@@ -86,7 +86,7 @@ class User extends BaseUser {
 
     /**
      * @var string
-     * @Groups({"classeurById"})
+     * @Serializer\Groups({"classeurById"})
      * @ORM\Column(name="qualite", type="string", length=255, nullable=true)
      */
     protected $qualite;
@@ -121,7 +121,7 @@ class User extends BaseUser {
 
     /**
      * @var string
-     * @Groups("classeurById")
+     * @Serializer\Groups("classeurById")
      * @ORM\Column(name="role", type="string", length=255, nullable=true)
      */
     protected $role;
@@ -129,7 +129,7 @@ class User extends BaseUser {
     /**
      * @var
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserRole", mappedBy="user", cascade={"remove", "persist"}, orphanRemoval=true)
-     * @Groups("classeurById")
+     * @Serializer\Groups("classeurById")
      */
     private $userRole;
 
