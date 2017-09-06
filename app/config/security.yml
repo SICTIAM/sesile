@@ -53,7 +53,7 @@ security:
         - { path: ^/classeur/liste-classeurs-admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/classeur/liste_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/delegation, roles: ROLE_USER }
-        - { path: ^/apirest, roles: ROLE_USER }
+        - { path: ^/apirest, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/apirest/users/isauthenticated, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/dashboard, roles: ROLE_USER }
         - { path: ^/profile, roles: ROLE_USER }

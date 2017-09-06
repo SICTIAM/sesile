@@ -35,9 +35,8 @@ sesile_api:
 #    prefix:   /classeur/
 
 sesile_classeur_api:
-    resource: "@SesileClasseurBundle/Controller/ClasseurApiController.php"
-    type:     rest
-    prefix:   /apirest/classeur
+    resource: "@SesileClasseurBundle/Controller/"
+    type:     annotation
 
 sesile_etapeclasseur_api:
     resource: "@SesileUserBundle/Controller/EtapeClasseurApiController.php"

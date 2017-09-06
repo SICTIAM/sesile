@@ -21,7 +21,7 @@ class ListClasseurs extends Component {
 
     listClasseurs(sort, order) {
 
-        fetch(Routing.generate('list_classeur_api', {sort, order}), { credentials: 'same-origin' })
+        fetch(Routing.generate('sesile_classeur_classeurapi_list', {sort, order}), { credentials: 'same-origin' })
             .then(response => response.json())
             .then(json => {
                 this.setState({classeurs : json})
