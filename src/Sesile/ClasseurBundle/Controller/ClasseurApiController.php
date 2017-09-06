@@ -36,14 +36,14 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Classeur $classeur
      * @return Classeur
      * @internal param $id
      */
-    public function getAction (Classeur $classeur)
+    public function getByIdAction (Classeur $classeur)
     {
         return $classeur;
     }

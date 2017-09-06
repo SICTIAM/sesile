@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * UserRole
@@ -23,7 +24,7 @@ class UserRole
 
     /**
      * @var string
-     *
+     * @Groups("classeurById")
      * @ORM\Column(name="userRoles", type="string", length=150)
      */
     private $userRoles;

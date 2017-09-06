@@ -429,6 +429,55 @@ html {
   margin-left: 1em;
 }
 
+.details-classeur {
+
+  .bold-info-details-classeur {
+    color: #404257;
+    font-weight: 700;
+    font-size: 0.875em;
+    text-transform: uppercase;
+  }
+  .doc-details-classeur {
+
+  }
+  .infos-details-classeur {
+    background: $white;
+    padding: 1em;
+    .name-details-classeur {
+      color: #404257;
+    }
+  }
+  .progress-bar-details-classeur {
+    width: 50%;
+  }
+
+  .circuit-validation-details-classeur {
+    font-size: 0.875em;
+    border-top: 0;
+    h3 {
+      color: $title-color;
+      font-size: 1em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .circle {
+      font-size: 1.125em;
+      border-radius: 2em;
+      width: 2em;
+      height: 2em;
+      &.success {
+        border: solid 0.3em $success-color;
+      }
+      &.warning {
+        border: solid 0.3em $warning-color;
+      }
+      &.alert {
+        border: solid 0.3em $alert-color;
+      }
+
+    }
+  }
+}
 #circuit_name_search,
 #user_name_search {
   border: 0;

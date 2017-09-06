@@ -40,7 +40,7 @@ sesile_api:
 #    type:     annotation
 #    prefix:   /classeur/
 
-sesile_type_classeur_api:
+sesile_classeur_api:
     resource: "@SesileClasseurBundle/Controller/"
     type:     annotation
 

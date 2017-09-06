@@ -25,7 +25,7 @@ class EtapeGroupe
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeGroupes", cascade={"persist"})
-     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"classeurById", "listClasseur", "listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $users;
 

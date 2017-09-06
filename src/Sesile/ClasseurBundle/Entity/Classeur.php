@@ -22,7 +22,7 @@ class Classeur {
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"listClasseur"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $id;
 
@@ -30,7 +30,7 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
-     * @Groups({"listClasseur"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $nom;
 
@@ -38,7 +38,7 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"listClasseur"})
+     * @Groups({"listClasseur", "classeurById"})
      *
      */
     private $description;
@@ -47,7 +47,7 @@ class Classeur {
      * @var \DateTime
      *
      * @ORM\Column(name="creation", type="datetime")
-     * @Groups({"listClasseur"})
+     * @Groups({"classeurById","listClasseur"})
      */
     private $creation;
 
@@ -55,7 +55,7 @@ class Classeur {
      * @var \Date
      *
      * @ORM\Column(name="validation", type="datetime")
-     * @Groups({"listClasseur"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $validation;
 
@@ -64,6 +64,7 @@ class Classeur {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", fetch="EAGER")
      * @ORM\JoinColumn(name="type", referencedColumnName="id")
+     * @Groups({"classeurById"})
      *
      */
     private $type;
@@ -72,6 +73,7 @@ class Classeur {
      * @var integer
      * En cours = 1 finalisé = 2, refusé = 0, retiré = 3, retracté = 4
      * @ORM\Column(name="status", type="integer")
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $status;
 
@@ -80,8 +82,7 @@ class Classeur {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
-     * @Groups({"listClasseur"})
-     *
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $user;
 
@@ -89,6 +90,7 @@ class Classeur {
      * @var integer
      *
      * @ORM\Column(name="ordreCircuit", type="integer"))
+     * @Groups({"classeurById"})
      */
     private $ordreCircuit = 0;
 
@@ -96,6 +98,7 @@ class Classeur {
      * @var int
      * 0 = privé, 1 = public, 2 = prive a partir de moi, 3 = service organisationnel (et le circuit)
      * @ORM\Column(name="visibilite", type="integer")
+     * @Groups({"classeur"})
      *
      */
     private $visibilite;
@@ -104,7 +107,7 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="circuit", type="string", length=255, nullable=true)
-     * @Groups({"listClasseur"})
+     * @Groups({"listClasseur", "classeurById"})
      */
     private $circuit;
 
@@ -115,6 +118,7 @@ class Classeur {
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Action", mappedBy="classeur", cascade={"remove"})
+     * @Groups({"classeurById"})
      */
     protected $actions;
 
@@ -137,6 +141,7 @@ class Classeur {
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"remove"})
      * @ORM\JoinColumn(name="etapeClasseurs", referencedColumnName="id",nullable=true)
+     * @Groups({"classeurById", "listClasseur"})
      *
      */
     private $etapeClasseurs;
@@ -145,6 +150,7 @@ class Classeur {
      * @var integer
      *
      * @ORM\Column(name="ordreEtape", type="integer")
+     * @Groups("classeur")
      */
     private $ordreEtape = 0;
 
@@ -152,6 +158,7 @@ class Classeur {
      * @var integer
      *
      * @ORM\Column(name="EtapeDeposante", type="integer")
+     * @Groups("classeur")
      */
     private $etapeDeposante;
 
@@ -159,6 +166,7 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="ordreValidant", type="string", length=255, nullable=true)
+     * @Groups("classeur")
      */
     private $ordreValidant;
 

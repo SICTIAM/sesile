@@ -17,7 +17,6 @@ class TypeClasseur
 {
     /**
      * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -27,7 +26,7 @@ class TypeClasseur
 
     /**
      * @var string
-     *
+     * @Groups("classeurById")
      * @ORM\Column(name="nom", type="string", length=255)
      * @Serializer\Groups({"getByIdCircuit"})
      */
