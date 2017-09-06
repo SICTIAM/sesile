@@ -17,7 +17,7 @@ class CircuitValidation extends Component {
     }
 
     render() {
-        const circuitDetailsId = this.state.circuitDetailsId
+        const { circuitDetailsId } = this.state
         return (
             <div className="circuit-validation">
                 <h4 className="text-center text-bold">Rechercher votre circuit de validation</h4>

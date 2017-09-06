@@ -16,17 +16,19 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
     /**
      * @Rest\Get("")
      * @return array
+     * @Rest\View(serializerGroups={"listCircuitByCollectivite"})
      */
     public function listByCollectiviteAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById(1);
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->getUser()->getCollectivite()->getId());
         $circuits = $em->getRepository('SesileUserBundle:Groupe')->findByCollectivite($collectivite);
         return $circuits;
     }
 
     /**
      * @Rest\Get("/{id}")
+     * @Rest\View(serializerGroups={"getByIdCircuit"})
      * @return Groupe
      * @ParamConverter("Groupe", options={"mapping": {"id": "id"}})
      * @param Groupe $groupe

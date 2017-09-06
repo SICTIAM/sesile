@@ -9,6 +9,12 @@ sesile_classeur:
     requirements:
         reactRouting: ".+"
 
+sesile_admin:
+    defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
+    path: /admin/{reactRouting}
+    requirements:
+        reactRouting: ".+"
+
 sesile_api:
     resource: "@SesileApiBundle/Controller/"
     type:     annotation

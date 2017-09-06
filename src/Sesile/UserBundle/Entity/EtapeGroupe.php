@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * EtapeGroupe
@@ -18,16 +19,19 @@ class EtapeGroupe
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $id;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeGroupes", cascade={"persist"})
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $users;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", inversedBy="etapeGroupesUP", cascade={"persist"})
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $userPacks;
 
@@ -44,6 +48,7 @@ class EtapeGroupe
      * @var int
      *
      * @ORM\Column(name="ordre", type="integer", nullable=true)
+     * @Serializer\Groups({"getByIdCircuit"})
      *
      */
     private $ordre;

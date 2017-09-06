@@ -15,6 +15,10 @@ class DetailsCircuitValidation extends Component {
         this.handleClasseurTypeCheckboxChange = this.handleClasseurTypeCheckboxChange.bind(this)
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.getCircuitValidation(nextProps.id)
+    }
+
     componentDidMount() {
         this.getCircuitValidation(this.props.id)
         this.getClasseurTypes()

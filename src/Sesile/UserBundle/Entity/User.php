@@ -26,7 +26,7 @@ class User extends BaseUser {
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      *
      */
     protected $id;
@@ -35,7 +35,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
-     *
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     protected $Nom;
 
@@ -43,6 +43,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      *
      */
     protected $Prenom;
