@@ -13,16 +13,17 @@ use Sesile\ClasseurBundle\Entity\TypeClasseur;
 use Sesile\ClasseurBundle\Form\TypeClasseurType;
 use Symfony\Component\HttpFoundation\Response;
 
-
+/**
+ * @Rest\Route("/apirest/classeur_type", options = { "expose" = true })
+ */
 class TypeClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
-     * @return array
-     * @Rest\View("/typeclasseurs/apis/list")
-     * @Method("get")
-     *
+     * @Rest\View()
+     * @Rest\Get("s")
+     * @
      */
-    public function listAction()
+    public function getAllAction()
     {
         $typeClasseurs = $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
 
@@ -31,13 +32,13 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
 
     /**
      * @Rest\View()
-     * @Rest\Get("/typeclasseurs/apis/{id}")
+     * @Rest\Get("/{id}")
      * @ParamConverter("TypeClasseur", options={"mapping": {"id": "id"}})
      * @param TypeClasseur $typeClasseur
      * @return TypeClasseur
      * @internal param $id
      */
-    public function getAction(TypeClasseur $typeClasseur)
+    public function getByIdAction(TypeClasseur $typeClasseur)
     {
         return $typeClasseur;
     }
@@ -45,7 +46,7 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
 
     /**
      * @Rest\View("statusCode=Response::HTTP_CREATED")
-     * @Rest\Post("/typeclasseurs/apis/new")
+     * @Rest\Post("/new")
      * @param Request $request
      * @return TypeClasseur|\Symfony\Component\Form\Form
      */
@@ -71,7 +72,7 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
 
     /**
      * @Rest\View()
-     * @Rest\Delete("/typeclasseurs/apis/{id}")
+     * @Rest\Delete("/{id}")
      * @ParamConverter("TypeClasseur", options={"mapping": {"id": "id"}})
      * @param TypeClasseur $typeClasseur
      * @return TypeClasseur
@@ -88,7 +89,7 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
 
     /**
      * @Rest\View()
-     * @Rest\Put("/typeclasseurs/apis/{id}")
+     * @Rest\Put("/{id}")
      * @param Request $request
      * @param TypeClasseur $typeClasseur
      * @return TypeClasseur|\Symfony\Component\Form\Form|JsonResponse

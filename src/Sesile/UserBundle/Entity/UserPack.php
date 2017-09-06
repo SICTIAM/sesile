@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * UserPack
@@ -18,6 +19,7 @@ class UserPack
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $id;
 
@@ -25,6 +27,7 @@ class UserPack
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $nom;
 
@@ -52,6 +55,7 @@ class UserPack
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="userPacks")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
+     * @Serializer\Exclude()
      *
      */
     protected $collectivite;

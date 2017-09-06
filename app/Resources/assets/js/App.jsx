@@ -13,7 +13,7 @@ class App extends Component {
     }
 
     componentWillMount() {
-        fetch(Routing.generate('isauthenticated_user_api'), { credentials: 'same-origin' })
+        fetch(Routing.generate('sesile_user_userapi_isauthenticated'), { credentials: 'same-origin' })
             .then(response => response.json())
             .then(json => this.setState({user : json}))
     }

@@ -9,6 +9,12 @@ sesile_classeur:
     requirements:
         reactRouting: ".+"
 
+sesile_admin:
+    defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
+    path: /admin/{reactRouting}
+    requirements:
+        reactRouting: ".+"
+
 sesile_api:
     resource: "@SesileApiBundle/Controller/"
     type:     annotation
@@ -34,27 +40,13 @@ sesile_api:
 #    type:     annotation
 #    prefix:   /classeur/
 
-sesile_classeur_api:
-    resource: "@SesileClasseurBundle/Controller/ClasseurApiController.php"
-    type:     rest
-    prefix:   /apirest/classeurs/
-
 sesile_type_classeur_api:
-    resource: "@SesileClasseurBundle/Controller/TypeClasseurApiController.php"
-    type:     rest
+    resource: "@SesileClasseurBundle/Controller/"
+    type:     annotation
 
-sesile_user_api:
-    resource: "@SesileUserBundle/Controller/UserApiController.php"
-    type:     rest
-    prefix:   /apirest/users
-
-#sesile_users:
-#    resource: "@SesileUserBundle/Controller/"
-#    type: annotation
-#    prefix: /user
-
-_default:
-    path: /
+sesile_users:
+    resource: "@SesileUserBundle/Controller/"
+    type: annotation
 
 oneup_uploader:
     resource: .

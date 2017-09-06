@@ -13,12 +13,15 @@ use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Form\UserType;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Rest\Route("/apirest/user", options = { "expose" = true })
+ */
 class UserApiController extends FOSRestController implements ClassResourceInterface
 {
 
     /**
      * @Rest\View()
-     * @Rest\Get("isauthenticated")
+     * @Rest\Get("/isauthenticated")
      */
     public function isauthenticatedAction() {
         return $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY');
@@ -27,9 +30,9 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     /**
      * @return array
      * @Rest\View()
-     * @Rest\Get("/list")
+     * @Rest\Get("s/by_collectivite")
      */
-    public function listAction()
+    public function listByCollectiviteAction()
     {
         return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByCollectivite($this->get('session')->get("collectivite"));
     }
@@ -37,9 +40,9 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     /**
      * @return array
      * @Rest\View()
-     * @Rest\Get("/listadmin")
+     * @Rest\Get("s")
      */
-    public function listadminAction()
+    public function listAction()
     {
         return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findAll();
     }

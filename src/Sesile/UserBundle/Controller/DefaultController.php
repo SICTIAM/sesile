@@ -31,7 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="liste_users")
+     * @Route("/liste_users", name="liste_users")
      * @Template("SesileUserBundle:Default:index.html.twig")
      */
     public function listAction() {

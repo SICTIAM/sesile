@@ -13,6 +13,9 @@ use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Rest\Route("/apirest/classeur", options = { "expose" = true })
+ */
 class ClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
@@ -20,7 +23,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param int $start
      * @return array
      * @Rest\View()
-     * @Rest\Get("list/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"limit" = 10, "start" = 0})
+     * @Rest\Get("s/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"limit" = 10, "start" = 0})
      */
     public function listAction($limit, $start)
     {
