@@ -4,6 +4,7 @@ import DashBoard from '../_components/DashBoard'
 import ListClasseurs from '../classeur/ListClasseurs'
 import Classeur from '../classeur/Classeur'
 import Home from '../Home'
+import CircuitValidation from '../admin/CircuitValidation'
 
 class AppRoute extends Component {
     render () {
@@ -16,6 +17,7 @@ class AppRoute extends Component {
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} />
                 )} />
+                <Route path={"/admin/circuit-de-validation"} component={CircuitValidation} />
             </Switch>
         )
     }

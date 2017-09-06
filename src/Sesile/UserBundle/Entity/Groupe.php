@@ -3,6 +3,8 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
+use Doctrine\Common\Collections;
 
 /**
  * Groupe
@@ -17,6 +19,7 @@ class Groupe {
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $id;
 
@@ -24,12 +27,13 @@ class Groupe {
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $nom;
 
     /**
      * @var int
-     *
+     * @Serializer\Exclude()
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="groupes", cascade={"persist"})
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
      *
@@ -51,6 +55,7 @@ class Groupe {
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", inversedBy="groupes", cascade={"persist"})
      * @ORM\JoinTable(name="classeur_groupe")
+     * @Serializer\Groups({"getByIdCircuit"})
      */
     private $types;
 
@@ -63,6 +68,7 @@ class Groupe {
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupe")
      * @ORM\OrderBy({"ordre" = "ASC"})
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $etapeGroupes;
 
@@ -115,7 +121,7 @@ class Groupe {
      * Constructor
      */
     public function __construct() {
-        $this->hierarchie = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->hierarchie = new ArrayCollection();
         $this->creation = new \DateTime('now');
     }
     
@@ -193,7 +199,7 @@ class Groupe {
     /**
      * Get hierarchie
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection
      */
     public function getHierarchie()
     {

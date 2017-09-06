@@ -3,6 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
@@ -37,7 +38,8 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"classeurById"})
+     * @Groups({"listClasseur", "classeurById"})
+     *
      */
     private $description;
 
@@ -105,7 +107,7 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="circuit", type="string", length=255, nullable=true)
-     * @Groups({"classeurById"})
+     * @Groups({"listClasseur", "classeurById"})
      */
     private $circuit;
 

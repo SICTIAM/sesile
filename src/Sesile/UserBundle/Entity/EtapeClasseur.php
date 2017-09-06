@@ -25,7 +25,7 @@ class EtapeClasseur
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeClasseurs", cascade={"persist"})
-     * @Groups({"classeurById", "listClasseur"})
+     * @Groups({"classeurById", "listClasseur", "listEtapeClasseur"})
      */
     private $users;
 
@@ -40,7 +40,7 @@ class EtapeClasseur
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", inversedBy="etapeClasseurs", cascade={"persist"})
-     * @Groups({"classeurById", "listClasseur"})
+     * @Groups({"classeurById", "listClasseur", "listEtapeClasseur"})
      */
     private $userPacks;
 
@@ -56,6 +56,7 @@ class EtapeClasseur
      * @var boolean
      *
      * @ORM\Column(name="EtapeValidante", type="boolean", nullable=true, options={"default" = false})
+     * @Groups({"listEtapeClasseur"})
      *
      */
     private $etapeValidante;
@@ -64,6 +65,7 @@ class EtapeClasseur
      * @var boolean
      *
      * @ORM\Column(name="etapeValide", type="boolean", nullable=true, options={"default" = false})
+     * @Groups({"listEtapeClasseur"})
      *
      */
     private $etapeValide;
@@ -73,6 +75,7 @@ class EtapeClasseur
      *
      * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeValide")
      * @ORM\JoinColumn(name="userValidant", referencedColumnName="id")
+     * @Groups({"listEtapeClasseur"})
      *
      */
     private $userValidant;

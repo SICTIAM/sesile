@@ -341,6 +341,9 @@ html {
         &.success {
           border: solid 0.3em $success-color;
         }
+        &.gray {
+          border: solid 0.3em $title-color;
+        }
         &.warning {
           border: solid 0.3em $warning-color;
         }
@@ -362,11 +365,14 @@ html {
 .text-success {
   color: $success-color;
 }
-.text-danger {
+.text-warning {
   color: $warning-color;
 }
 .text-alert {
   color: $alert-color;
+}
+.text-gray {
+  color: $title-color;
 }
 
 .input-group-label {
@@ -387,6 +393,12 @@ html {
   border-radius: 2em;
   width: 3em;
   height: 3em;
+}
+
+.txt-avatar {
+  color: white;
+  font-weight: 700;
+  font-size: 1.5em;
 }
 
 .arrow-down, .arrow-down:hover, .arrow-down:focus {
@@ -463,6 +475,69 @@ html {
         border: solid 0.3em $alert-color;
       }
 
+    }
+  }
+}
+#circuit_name_search,
+#user_name_search {
+  border: 0;
+  box-shadow: none;
+
+  &:focus {
+    border: 0;
+    box-shadow: none;
+  }
+}
+.list-circuit-validation {
+  padding: 2em;
+
+  .row-circuit {
+    cursor: pointer;
+  }
+}
+
+.circuit-validation {
+  padding: 2em;
+
+  .details-circuit-validation {
+
+    .name-details-circuit-validation {
+      background-color: #fe5e3a;
+      border-top-left-radius: 0.5em;
+      border-top-right-radius: 0.5em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: white;
+      padding: 1em;
+    }
+
+    .content-details-circuit-validation {
+      padding:1em;
+      background: white;
+    }
+  }
+
+  .step-circuit-validation{
+    border-radius: 0.3em;
+    background: $light-gray;
+    padding: 0.3em;
+
+    .name-step-circuit-validation {
+      font-weight: 700;
+    }
+
+    .content-step-circuit-validation {
+      background: white;
+      border-radius: 0.3em;
+      color: $dark-gray;
+      ul {
+        padding:0.5em 0em 0em 0.5em;
+      }
+      a {
+        color: $dark-gray;
+        float: right;
+        margin-right: 0.3em;
+      }
     }
   }
 }

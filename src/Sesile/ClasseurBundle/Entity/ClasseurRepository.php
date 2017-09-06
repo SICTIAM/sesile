@@ -47,14 +47,19 @@ class ClasseurRepository extends EntityRepository {
         ;
     }
 
-    public function getClasseursVisibles ($userid, $limit, $start) {
+    public function getClasseursVisibles ($userid, $sort, $order, $limit, $start) {
+
+        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+
         return $this
             ->createQueryBuilder('c')
             ->join('c.visible', 'v', 'WITH', 'v.id = :id')
             ->setParameter('id', $userid)
             ->join('c.type', 't')
             ->addSelect('t')
-            ->orderBy("c.creation", "DESC")
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
             ->getQuery()

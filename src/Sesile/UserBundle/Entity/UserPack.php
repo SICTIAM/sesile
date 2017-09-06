@@ -3,7 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * UserPack
@@ -19,6 +19,7 @@ class UserPack
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Serializer\Groups({"listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $id;
 
@@ -26,14 +27,14 @@ class UserPack
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
-     * @Groups({"classeurById", "listClasseur"})
+     * @Serializer\Groups({"classeurById", "listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $nom;
 
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="userPacks", cascade={"persist"})
-     * @Groups({"classeurById", "listClasseur"})
+     * @Serializer\Groups({{"classeurById", "listClasseur", "listEtapeClasseur"})
      */
     private $users;
 
@@ -46,7 +47,7 @@ class UserPack
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="userPacks", cascade={"persist"})
-     * @Groups({"classeurById", "listClasseur"})
+     * @Serializer\Groups({"classeurById", "listClasseur"})
      */
     private $etapeGroupesUP;
 
@@ -56,6 +57,7 @@ class UserPack
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="userPacks")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
+     * @Serializer\Exclude()
      *
      */
     protected $collectivite;

@@ -171,7 +171,7 @@ fos_rest:
             'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException': true
 
 fos_js_routing:
-    routes_to_expose: [ list_classeur_api, get_classeur_api, isauthenticated_user_api ]
+    routes_to_expose: [ list_classeur_api, get_classeur_api, isauthenticated_user_api, list_etapeclasseur_api ]
 
 jms_serializer:
     metadata:
