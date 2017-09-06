@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
 use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -26,7 +27,7 @@ class User extends BaseUser {
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      *
      */
     protected $id;
@@ -35,7 +36,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      */
     protected $Nom;
 
@@ -43,7 +44,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      *
      */
     protected $Prenom;
@@ -52,6 +53,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
+     * @Groups({"listClasseur"})
      */
     protected $path;
 
@@ -190,6 +192,7 @@ class User extends BaseUser {
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="userValidant", cascade={"remove"})
+     * @Exclude()
      */
     private $etapeValide;
 

@@ -68,7 +68,7 @@ fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
 login:
-    path:   /login_check
+    path:   /dashboard
 
 login_check:
     path:   /login_check

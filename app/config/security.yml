@@ -25,7 +25,7 @@ security:
                 created_users_roles: [ROLE_USER, ROLE_ADMIN]
 #                default_target_path: index
                 always_use_default_target_path: false
-                login_path: /login
+                login_path: /dashboard
                 check_path: /
             logout:
                 path: /logout
@@ -53,6 +53,7 @@ security:
         - { path: ^/classeur/liste-classeurs-admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/classeur/liste_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/delegation, roles: ROLE_USER }
+        - { path: ^/apirest, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/apirest/users/isauthenticated, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/apirest, roles: IS_AUTHENTICATED_ANONYMOUSLY } # temporary in "IS_AUTHENTICATED_ANONYMOUSLY" because sso authentication not work yet
         - { path: ^/dashboard, roles: ROLE_USER }

@@ -3,7 +3,9 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Classeur
@@ -20,6 +22,7 @@ class Classeur {
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"listClasseur"})
      */
     private $id;
 
@@ -27,6 +30,7 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
+     * @Groups({"listClasseur"})
      */
     private $nom;
 
@@ -34,6 +38,8 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
+     * @Groups({"listClasseur"})
+     *
      */
     private $description;
 
@@ -41,6 +47,7 @@ class Classeur {
      * @var \DateTime
      *
      * @ORM\Column(name="creation", type="datetime")
+     * @Groups({"listClasseur"})
      */
     private $creation;
 
@@ -48,6 +55,7 @@ class Classeur {
      * @var \Date
      *
      * @ORM\Column(name="validation", type="datetime")
+     * @Groups({"listClasseur"})
      */
     private $validation;
 
@@ -72,6 +80,7 @@ class Classeur {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * @Groups({"listClasseur"})
      *
      */
     private $user;
@@ -95,6 +104,7 @@ class Classeur {
      * @var string
      *
      * @ORM\Column(name="circuit", type="string", length=255, nullable=true)
+     * @Groups({"listClasseur"})
      */
     private $circuit;
 

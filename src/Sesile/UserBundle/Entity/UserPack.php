@@ -19,7 +19,7 @@ class UserPack
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $id;
 
@@ -27,13 +27,14 @@ class UserPack
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
-     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $nom;
 
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="userPacks", cascade={"persist"})
+     * @Serializer\Groups({"listEtapeClasseur"})
      */
     private $users;
 
