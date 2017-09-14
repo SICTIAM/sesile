@@ -47,7 +47,7 @@ class TypeClasseur
 
     /**
      * @ORM\Column(name="supprimable", type="boolean")
-     * @Exclude()
+     * @Serializer\Groups({"getByIdCircuit"})
      */
     private $supprimable = true;
 
