@@ -6,6 +6,7 @@ import Classeur from '../classeur/Classeur'
 import CircuitValidation from '../admin/CircuitValidation'
 import Groups from '../admin/Groups'
 import Group from '../admin/Group'
+import Types from '../admin/Types'
 import AdminRoute from './AdminRoute'
 import Home from '../Home'
 
@@ -35,6 +36,7 @@ class AppRoute extends Component {
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
                     <AdminRoute exact={true} path={match.path} component={Group} user={user} match={match} />                    
                 )} />
+                <AdminRoute path={"/admin/types-classeur"} component={Types} user={user} />
             </Switch>
         )
     }

@@ -80,10 +80,12 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
      */
     public function removeAction(TypeClasseur $typeClasseur)
     {
-        if($typeClasseur) {
+        if($typeClasseur && $typeClasseur->getSupprimable()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($typeClasseur);
             $em->flush();
+
+            return $typeClasseur;
         }
     }
 
