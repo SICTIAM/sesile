@@ -79,4 +79,15 @@ class UserRepository extends EntityRepository {
         return false;
     }
 
+    public function findByNameOrFirstName($value, $collectiviteId) {
+        return $this
+            ->createQueryBuilder('U')
+            ->join('U.collectivite', 'C', 'WITH', 'C.id = :collectiviteId')
+            ->setParameter('collectiviteId', $collectiviteId)
+            ->where('CONCAT(U.Nom, \' \', U.Prenom) LIKE :value')
+            ->orWhere('CONCAT(U.Prenom, \' \', U.Nom) LIKE :value')
+            ->setParameter('value', '%' .$value. '%')
+            ->getQuery()
+            ->getResult();
+    }
 }
