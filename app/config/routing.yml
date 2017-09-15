@@ -1,5 +1,5 @@
 sesile_main:
-    resource: "@SesileMainBundle/Controller/DefaultController.php"
+    resource: "@SesileMainBundle/Controller/"
     type:     annotation
     prefix:   /
 
