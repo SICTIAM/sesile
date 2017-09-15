@@ -3,6 +3,7 @@
 namespace Sesile\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -24,6 +25,7 @@ class Collectivite
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Serializer\Groups({"getAllCollectivite"})
      */
     private $id;
 
@@ -31,6 +33,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
+     * @Serializer\Groups({"getAllCollectivite"})
      */
     private $nom;
 
@@ -38,6 +41,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="domain", type="string", length=255)
+     * @Serializer\Groups({"getAllCollectivite"})
      */
     private $domain;
 
@@ -59,6 +63,7 @@ class Collectivite
      * @var boolean
      *
      * @ORM\Column(name="active", type="boolean")
+     * @Serializer\Groups({"getAllCollectivite"})
      */
     private $active;
 
