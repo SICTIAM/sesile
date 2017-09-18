@@ -4,26 +4,22 @@ namespace Sesile\ClasseurBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TypeClasseurType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom', TextType::class)
-            //->add('Enregister', SubmitType::class)
-        ;
+            ->add('nom')
+            ->add('collectivites');
     }
-
+    
     /**
-     * @param OptionsResolver $resolver
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -34,10 +30,10 @@ class TypeClasseurType extends AbstractType
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getBlockPrefix()
     {
-        return 'sesile_classeurbundle_typeClasseur';
+        return 'sesile_classeurbundle_typeclasseur';
     }
 }
