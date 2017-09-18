@@ -8,6 +8,9 @@ class Types extends Component {
             types: [],
             filteredTypes: [],
             typesId: null,
+            collectivites: [],
+            collectiviteId: '',
+            userRoles: '',
             name: '',
             nom: '',
             newNom: '',
@@ -17,13 +20,36 @@ class Types extends Component {
     }
 
     componentDidMount() {
-        this.getTypes()
+        this.getCurrentCollectivite()
+        this.getCollectivites()
     }
 
-    getTypes () {
-        fetch(Routing.generate('sesile_classeur_typeclasseurapi_getall'), { credentials: 'same-origin'})
+    getTypes (id) {
+        if (id === undefined) id = this.state.collectiviteId
+        fetch(Routing.generate('sesile_classeur_typeclasseurapi_getall', {id}), { credentials: 'same-origin'})
             .then(response => response.json())
-            .then(json => this.setState({types: json, filteredTypes: json}))
+            .then(json => this.setState({types: json, filteredTypes: json, collectiviteId: id}))
+            .then(() => {
+                if (this.state.name) this.onSearchByNameFieldChange(this.state.name)
+            })
+    }
+
+    getCollectivites () {
+
+        fetch(Routing.generate('sesile_main_collectiviteapi_getall'), { credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(json => this.setState({collectivites: json}))
+
+    }
+
+    getCurrentCollectivite () {
+        fetch(Routing.generate('sesile_user_userapi_getcurrentuser'), { credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(json => {
+                this.setState({collectiviteId: json.collectivite.id})
+                this.setState({userRoles: json.roles})
+                this.getTypes(this.state.collectiviteId)
+            })
     }
 
     postTypes () {
@@ -35,6 +61,7 @@ class Types extends Component {
             },
             body: JSON.stringify({
                 nom: this.state.nom,
+                collectivites: this.state.collectiviteId,
             }),
             credentials: 'same-origin'
         })
@@ -55,12 +82,12 @@ class Types extends Component {
             },
             body: JSON.stringify({
                 nom: nom,
+                collectivites: this.state.collectiviteId,
             }),
             credentials: 'same-origin'
         })
             .then(response => response.json())
-            .then(json => {
-                this.onSearchByNameFieldChange(this.state.name)
+            .then(() => {
                 this.setState({infos: 'Enregistrement modifié !'})
             })
     }
@@ -68,8 +95,8 @@ class Types extends Component {
     deleteType (typeId) {
         fetch(Routing.generate('sesile_classeur_typeclasseurapi_remove', {id: typeId}), { method: 'delete', credentials: 'same-origin'})
             .then(response => response.json())
-            .then(json => {
-                this.getTypes()
+            .then(() => {
+                this.getTypes(this.state.collectiviteId)
                 this.setState({infos: 'Enregistrement supprimé !'})
             })
     }
@@ -87,8 +114,16 @@ class Types extends Component {
     onSearchByNameFieldChange(value) {
         this.setState({name:value})
         const regex = this.escapedValue(value)
-        const filteredTypes = this.state.types.filter(type => regex.test(type.nom))
-        this.setState({filteredTypes})
+        if (this.state.types) {
+            const filteredTypes = this.state.types.filter(type => regex.test(type.nom))
+            this.setState({filteredTypes})
+        }
+
+    }
+
+    onSearchByCollectiviteFieldChange(value) {
+        this.setState({collectiviteId:value})
+        this.getTypes(value)
     }
 
     handleChangeName(id, value) {
@@ -122,6 +157,11 @@ class Types extends Component {
             </div>
         )
 
+        const collectivites = this.state.collectivites
+        const collectivitesSelect = collectivites && collectivites.map(collectivite =>
+                <option value={collectivite.id} key={collectivite.id}>{collectivite.nom}</option>
+        )
+
         return (
             <div>
                 <h4 className="text-center text-bold">Rechercher votre type de classeur</h4>
@@ -132,12 +172,33 @@ class Types extends Component {
                         <div className="grid-x grid-padding-x align-center-middle">
                             <div className="medium-6 cell">
                                 <label htmlFor="circuit_name_search">Lequel ?</label>
-                                <input id="circuit_name_search"
+                                <input id="type_name_search"
                                    value={this.state.name}
                                    onChange={(event) => this.onSearchByNameFieldChange(event.target.value)}
                                    placeholder="Entrez le nom du circuit..."
                                    type="text" />
                             </div>
+                            {
+                                (collectivitesSelect.length > 0) ?
+                                    <div className="medium-6 cell">
+                                        {
+                                            (this.state.userRoles.indexOf("ROLE_SUPER_ADMIN")) ?
+                                                <div>
+                                                    <label htmlFor="collectivite_name_search">Collectivité ?</label>
+                                                    <select id="collectivite_name_search" value={this.state.collectiviteId} onChange={(event) => this.onSearchByCollectiviteFieldChange(event.target.value)}>
+                                                        {collectivitesSelect}
+                                                    </select>
+                                                </div>
+                                                : <div>Admin</div>
+                                        }
+                                    </div>
+                                    : <div className="medium-6 cell">
+                                        <div className="text-center">
+                                            Aucune collectivités...
+                                        </div>
+                                    </div>
+                            }
+
                         </div>
                     </div>
                     <div className="cell medium-8">

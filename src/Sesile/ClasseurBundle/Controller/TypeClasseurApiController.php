@@ -29,14 +29,13 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
     public function getAllAction(Collectivite $collectivite)
     {
 
-        /*if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
             || $this->getUser()->getCollectivite() == $collectivite) {
+
             return $collectivite->getTypes();
+        } else {
+            return $this->getUser()->getCollectivite()->getTypes();
         }
-
-        return array();*/
-
-        return $typeClasseurs = $this->getUser()->getCollectivite()->getTypes();
     }
 
     /**

@@ -39,7 +39,8 @@ class TypeClasseur
     private $groupes;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="types", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="types")
+     * @ORM\JoinColumn(name="collectivites", referencedColumnName="id")
      * @Exclude()
      */
     private $collectivites;
@@ -180,33 +181,23 @@ class TypeClasseur
     }
 
     /**
-     * Add collectivite
+     * Set collectivites
      *
-     * @param \Sesile\MainBundle\Entity\Collectivite $collectivite
+     * @param \Sesile\MainBundle\Entity\Collectivite $collectivites
      *
      * @return TypeClasseur
      */
-    public function addCollectivite(\Sesile\MainBundle\Entity\Collectivite $collectivite)
+    public function setCollectivites(\Sesile\MainBundle\Entity\Collectivite $collectivites = null)
     {
-        $this->collectivites[] = $collectivite;
+        $this->collectivites = $collectivites;
 
         return $this;
     }
 
     /**
-     * Remove collectivite
-     *
-     * @param \Sesile\MainBundle\Entity\Collectivite $collectivite
-     */
-    public function removeCollectivite(\Sesile\MainBundle\Entity\Collectivite $collectivite)
-    {
-        $this->collectivites->removeElement($collectivite);
-    }
-
-    /**
      * Get collectivites
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Sesile\MainBundle\Entity\Collectivite
      */
     public function getCollectivites()
     {

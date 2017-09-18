@@ -1,12 +1,13 @@
 <?php
 namespace Sesile\ClasseurBundle\Command;
 
+use Sesile\ClasseurBundle\Entity\TypeClasseur;
+use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Sesile\UserBundle\Entity\EtapeClasseur;
 
 class AddTypeClasseurCollectivitesCommand extends ContainerAwareCommand
 {
@@ -24,17 +25,31 @@ class AddTypeClasseurCollectivitesCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine')->getManager();
 
         $collectivites = $em->getRepository("SesileMainBundle:Collectivite")->findAll();
+        $types = $em->getRepository("SesileClasseurBundle:TypeClasseur")->findAll();
 
         if ($collectivites !== null) {
 
-            foreach ($collectivites as $collectivite) {
-                $types = $em->getRepository("SesileClasseurBundle:TypeClasseur")->findAll();
+            foreach ($collectivites as $key => $collectivite) {
 
                 if ($types !== null) {
                     foreach ($types as $type) {
-                        $collectivite->addType($type);
-                        $type->addCollectivite($collectivite);
-                        $em->persist($collectivite);
+
+                        if ($key == 0) {
+                            $type->setCollectivites($collectivite);
+
+                            $em->persist($type);
+                        } else {
+                            $newType = new TypeClasseur();
+                            $newType->setNom($type->getNom());
+                            $newType->setCreation($type->getCreation());
+                            $newType->setSupprimable($type->getSupprimable());
+                            $newType->setCollectivites($collectivite);
+
+                            $em->persist($newType);
+                        }
+
+
+
                         $em->flush();
 
                         $output->writeln('Type : ' . $type->getNom());

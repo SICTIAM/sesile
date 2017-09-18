@@ -39,3 +39,7 @@ Open [http://sesile.dev/app_dev.php]()
 * [Webpack encore](http://symfony.com/doc/current/frontend.html) /  API to integrate Webpack into your Symfony application
 * [ReactBundle](https://github.com/Limenius/ReactBundle/blob/master/Resources/doc/index.md) / server and client-side React rendering 
 * [Symfony React Sandbox](https://github.com/Limenius/symfony-react-sandbox) / This sandbox provides an example of usage of ReactBundle
+
+6. Migrations
+
+ - update to 4.0 `$ php app/console collectivite:addtypeclasseur`

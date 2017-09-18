@@ -36,6 +36,14 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
+     * @Rest\Get("/current")
+     * @Rest\View(serializerGroups={"userCurrentInfos"})
+     */
+    public function getCurrentUserAction() {
+        return $this->getUser();
+    }
+
+    /**
      * @return array
      * @Rest\View()
      * @Rest\Get("s/by_collectivite")
