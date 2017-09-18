@@ -2,6 +2,7 @@
 
 namespace Sesile\ClasseurBundle\Controller;
 
+use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -20,14 +21,22 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
 {
     /**
      * @Rest\View()
-     * @Rest\Get("s")
-     * @
+     * @Rest\Get("s/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @param Collectivite $collectivite
+     * @return array|\Doctrine\Common\Collections\Collection
      */
-    public function getAllAction()
+    public function getAllAction(Collectivite $collectivite)
     {
-        $typeClasseurs = $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
 
-        return $typeClasseurs;
+        /*if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+            || $this->getUser()->getCollectivite() == $collectivite) {
+            return $collectivite->getTypes();
+        }
+
+        return array();*/
+
+        return $typeClasseurs = $this->getUser()->getCollectivite()->getTypes();
     }
 
     /**
