@@ -39,6 +39,12 @@ class TypeClasseur
     private $groupes;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="types", cascade={"persist"})
+     * @Exclude()
+     */
+    private $collectivites;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="creation", type="datetime", nullable=true)
@@ -171,5 +177,39 @@ class TypeClasseur
     public function getSupprimable()
     {
         return $this->supprimable;
+    }
+
+    /**
+     * Add collectivite
+     *
+     * @param \Sesile\MainBundle\Entity\Collectivite $collectivite
+     *
+     * @return TypeClasseur
+     */
+    public function addCollectivite(\Sesile\MainBundle\Entity\Collectivite $collectivite)
+    {
+        $this->collectivites[] = $collectivite;
+
+        return $this;
+    }
+
+    /**
+     * Remove collectivite
+     *
+     * @param \Sesile\MainBundle\Entity\Collectivite $collectivite
+     */
+    public function removeCollectivite(\Sesile\MainBundle\Entity\Collectivite $collectivite)
+    {
+        $this->collectivites->removeElement($collectivite);
+    }
+
+    /**
+     * Get collectivites
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCollectivites()
+    {
+        return $this->collectivites;
     }
 }

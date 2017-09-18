@@ -163,6 +163,12 @@ class Collectivite
     private $groupes;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", mappedBy="collectivites", cascade={"persist"})
+     * @Exclude()
+     */
+    private $types;
+
+    /**
      * @var int
      *
      * @Assert\Range(
@@ -785,5 +791,39 @@ class Collectivite
     public function getDeleteClasseurAfter()
     {
         return $this->deleteClasseurAfter;
+    }
+
+    /**
+     * Add type
+     *
+     * @param \Sesile\ClasseurBundle\Entity\TypeClasseur $type
+     *
+     * @return Collectivite
+     */
+    public function addType(\Sesile\ClasseurBundle\Entity\TypeClasseur $type)
+    {
+        $this->types[] = $type;
+
+        return $this;
+    }
+
+    /**
+     * Remove type
+     *
+     * @param \Sesile\ClasseurBundle\Entity\TypeClasseur $type
+     */
+    public function removeType(\Sesile\ClasseurBundle\Entity\TypeClasseur $type)
+    {
+        $this->types->removeElement($type);
+    }
+
+    /**
+     * Get types
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTypes()
+    {
+        return $this->types;
     }
 }
