@@ -492,8 +492,8 @@ html {
     }
   }
 }
-#circuit_name_search,
-#user_name_search {
+#name-search-admin,
+#user-search-admin {
   border: 0;
   box-shadow: none;
 
@@ -502,10 +502,10 @@ html {
     box-shadow: none;
   }
 }
-.list-circuit-validation {
+.list-admin {
   padding: 2em;
 
-  .row-circuit {
+  .row-admin {
     cursor: pointer;
   }
 }
@@ -690,3 +690,4 @@ $list-group-margin: $global-margin;
 .large{ font-size: 50px; line-height: 50px; }
 .medium { font-size: 35px; padding: 0 5px; }
 .small { font-size: 20px; padding: 0 5px; }
+.text-uppercase{ text-transform: uppercase; }

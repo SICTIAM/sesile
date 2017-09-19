@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Debounce from 'debounce'
+import History from '../_utils/History'
 
-const { number, array, func } = PropTypes
+const { number, array, func, object } = PropTypes
 
 class Group extends Component {
     constructor(props) {
@@ -10,11 +11,11 @@ class Group extends Component {
 
         this.state = {
             group: {
-                id: null,
+                id: '',
                 nom: '',
                 users: []
             },
-            collectivite: null,
+            collectiviteId: '',
             users: [],
             inputDisplayed: false,
             inputSearchUser: ''
@@ -23,11 +24,11 @@ class Group extends Component {
 
     componentDidMount() {
         const { collectiviteId, groupId } = this.props.match.params
-        this.setState({collectivite: collectiviteId})
+        this.setState({collectiviteId})
         if(!!groupId) this.getGroup(groupId)
     }
 
-    onChangeGroupName = (value) => {
+    handleChangeGroupName = (value) => {
         const { group } = this.state
         group.nom = value
         this.setState({group})
@@ -35,31 +36,41 @@ class Group extends Component {
 
     handleChangeSearchUser = (value) => {
         this.setState({inputSearchUser: value})
-        if(value.trim().length > 2) this.findUser(value, this.state.collectivite)
+        if(value.trim().length > 2) this.findUser(value, this.state.collectiviteId)
         else this.setState({users: []})
     }
 
-    onClickUser = (user) => {
+    handleClickUser = (user) => {
         const { group } = this.state
         group.users.push(user)
         this.setState({inputSearchUser: '', users: [], group})
     }
 
-    onClickDelete = (key) => {
+    handleClickRemoveUser = (key) => {
         const group = this.state.group
         group.users.splice(key, 1)
         this.setState({group})
     }
 
-    onClickSave = () => {
-        const { group, collectivite } = this.state
+    handleClickSave = () => {
+        const { group, collectiviteId } = this.state
         const fields = {
             nom: group.nom,
-            collectivite: collectivite,
+            collectivite: collectiviteId,
             users: group.users.map(user => user.id)
         }
-        if(group.id) this.putGroup(group.id, fields) 
-        else this.postGroup(fields)
+        if(fields.users.length >= 2) {
+            if(group.id) this.putGroup(group.id, fields) 
+            else this.postGroup(fields)
+        }
+    }
+
+    handleClickDelete = () => {
+        fetch(Routing.generate("sesile_user_userpackapi_remove", {id: this.state.group.id}), {
+            method: 'DELETE',
+            credentials: 'same-origin'
+        })
+        .then(response => {if(response.ok === true) History.push(`/admin/groupes`)})
     }
 
     postGroup = (fields) => {
@@ -69,10 +80,10 @@ class Group extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(fields)
+            body: JSON.stringify(fields),
+            credentials: 'same-origin'
         })
-        .then(response => response.json())
-        .then(json => this.setState({group: json}))
+        .then(response => {if(response.ok === true) History.push(`/admin/groupes`)})
     }
 
     putGroup = (id, fields) => {
@@ -82,10 +93,10 @@ class Group extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(fields)
+            body: JSON.stringify(fields),
+            credentials: 'same-origin'
         })
-        .then(response => response.json())
-        .then(json => this.setState({group: json}))
+        .then(response => {if(response.ok === true) History.push(`/admin/groupes`)})
     }
 
     addUser = () => {
@@ -112,7 +123,7 @@ class Group extends Component {
         const { group, inputDisplayed, inputSearchUser, users, value, suggestions } = this.state
         const ListUser = group.users.map((user, key) => 
                         <li key={key}>{user._prenom + ' ' + user._nom} 
-                            <a onClick={() => this.onClickDelete(key)}>X</a>
+                            <a onClick={() => this.handleClickRemoveUser(key)}>X</a>
                         </li>)
         return (
             <div className="parameters-user-group">
@@ -121,7 +132,7 @@ class Group extends Component {
                 <div className="details-user-group">
                     <div className="grid-x name-details-user-group">
                         <div className="medium-12 cell">
-                            <input value={group.nom} onChange={(e) => this.onChangeGroupName(e.target.value)} placeholder={"Nom du groupe"} />
+                            <input value={group.nom} onChange={(e) => this.handleChangeGroupName(e.target.value)} placeholder={"Nom du groupe"} />
                             <i className={"fi-pencil small"}></i>
                         </div>
                     </div>
@@ -139,17 +150,18 @@ class Group extends Component {
                                                 <div className="autocomplete">
                                                     <input value={inputSearchUser} type={"text"} onChange={(e) => this.handleChangeSearchUser(e.target.value)} className="input-autocomplete"></input>
                                                     {users.length > 0 &&
-                                                        <ListSearchUser users={users} onClick={this.onClickUser} />
+                                                        <ListSearchUser users={users} onClick={this.handleClickUser} />
                                                     }
                                                 </div>
                                             }
                                             <li><button className={"btn-add"} type={"button"} onClick={this.addUser}>Ajouter un utilisateur</button></li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div>  
                             </div>
                             <div className="medium-12 cell">
-                                <button className="button float-right text-uppercase" onClick={() => this.onClickSave()}>{(!group.id) ? "Ajouter le groupe" : "Valider les modificatrions"}</button>
+                                <button className="button float-right text-uppercase" onClick={() => this.handleClickSave()}>{(!group.id) ? "Ajouter le groupe" : "Valider les modifications"}</button>
+                                {(group.id) && <button className="alert button float-right text-uppercase" onClick={() => this.handleClickDelete()}>{"Supprimer"}</button>}
                             </div>
                         </div>
                     </div>
@@ -160,7 +172,7 @@ class Group extends Component {
 }
 
 Group.PropTypes = {
-    groupId: number.isRequired
+    match: object.isRequired
 }
 
 export default Group

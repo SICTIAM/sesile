@@ -2,6 +2,7 @@
 
 namespace Sesile\UserBundle\Controller;
 
+use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\UserBundle\Form\UserPackType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,19 +12,23 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\UserBundle\Entity\UserPack;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Rest\Route("/apirest/user_pack", options = { "expose" = true })
+ * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
  */
 class UserPackApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
      * @Rest\View(serializerGroups={"userPack"})
-     * @Rest\Get("s/by_collectivite")
+     * @Rest\Get("s/{collectiviteId}")
+     * @ParamConverter("collectivite", options={"mapping": {"collectiviteId": "id"}})
      */
-    public function listByCollectiviteAction()
+    public function getByCollectiviteAction(Collectivite $collectivite)
     {
-        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:UserPack')->findByCollectivite($this->getUser()->getCollectivite()->getId());
+        $this->get('logger')->info('Get group by collectivite {id}', array('id' => $collectivite->getId()));
+        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite->getId());
     }
 
     /**
@@ -32,7 +37,7 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
      * @Rest\Get("s")
      *
      */
-    public function listSuperAdminAction()
+    public function getAllAction()
     {
         return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:UserPack')->findAll();
     }
@@ -80,14 +85,13 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View()
-     * @Rest\Delete("/userpacks/apis/{id}")
+     * @Rest\Delete("/{id}")
      * @ParamConverter("UserPack", options={"mapping": {"id": "id"}})
      * @param UserPack $userpack
-     * @return UserPack
-     * @internal param $id
      */
     public function removeAction(UserPack $userpack)
     {
+        $this->get('logger')->info('Remove group {name}', array('name' => $userpack->getNom()));
         if($userpack) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($userpack);
