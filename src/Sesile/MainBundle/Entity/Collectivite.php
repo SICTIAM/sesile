@@ -163,8 +163,8 @@ class Collectivite
     private $groupes;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", mappedBy="collectivites", cascade={"persist"})
-     * @Exclude()
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", mappedBy="collectivites")
+     * @Serializer\Exclude()
      */
     private $types;
 
