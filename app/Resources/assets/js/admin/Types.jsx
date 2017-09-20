@@ -43,7 +43,7 @@ class Types extends Component {
     }
 
     getCurrentCollectivite () {
-        fetch(Routing.generate('sesile_user_userapi_getcurrentuser'), { credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_user_userapi_getcurrent'), { credentials: 'same-origin'})
             .then(response => response.json())
             .then(json => {
                 this.setState({collectiviteId: json.collectivite.id})

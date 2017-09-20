@@ -6,6 +6,9 @@ import Classeur from '../classeur/Classeur'
 import CircuitValidation from '../admin/CircuitValidation'
 import Groups from '../admin/Groups'
 import Group from '../admin/Group'
+import Users from '../admin/Users'
+import User from '../admin/User'
+import Types from '../admin/Types'
 import AdminRoute from './AdminRoute'
 import Home from '../Home'
 
@@ -30,10 +33,15 @@ class AppRoute extends Component {
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} />
                 )} />
-                <Route exact={true} path={"/admin/circuit-de-validation"} component={CircuitValidation} />
+                <AdminRoute exact={true} path={"/admin/circuit-de-validation"} component={CircuitValidation} user={user} />
                 <AdminRoute exact={true} path={"/admin/groupes"} component={Groups} user={user} />
+                <AdminRoute exact={true} path={"/admin/users"} component={Users} user={user} />
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
                     <AdminRoute exact={true} path={match.path} component={Group} user={user} match={match} />                    
+                )} />
+                <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
+                <Route exact={true} path={"/admin/:collectiviteId/user/:userId?"} render={({match}) => (
+                    <AdminRoute exact={true} path={match.path} component={User} user={user} match={match} />
                 )} />
             </Switch>
         )

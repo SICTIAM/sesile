@@ -2,6 +2,7 @@
 
 namespace Sesile\UserBundle\Controller;
 
+use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -36,21 +37,32 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\Get("/current")
-     * @Rest\View(serializerGroups={"userCurrentInfos"})
-     */
-    public function getCurrentUserAction() {
-        return $this->getUser();
-    }
-
-    /**
      * @return array
      * @Rest\View()
      * @Rest\Get("s/by_collectivite")
      */
     public function listByCollectiviteAction()
     {
-        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByCollectivite($this->get('session')->get("collectivite"));
+        return $this->get('session')->get("collectivite");
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Get("s/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @param Collectivite $collectivite
+     * @return array|\Doctrine\Common\Collections\Collection
+     */
+    public function usersCollectiviteAction(Collectivite $collectivite)
+    {
+
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+            || $this->getUser()->getCollectivite() == $collectivite) {
+
+            return $collectivite->getUsers();
+        } else {
+            return $this->getUser()->getCollectivite()->getUsers();
+        }
     }
 
     /**
@@ -129,18 +141,26 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @Rest\View()
-     * @Rest\Delete("/{id}")
+     * @Rest\Delete("{id_collectivite}/user/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id_collectivite"}})
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @param Collectivite $collectivite
      * @param User $user
      * @return User
      * @internal param $id
      */
-    public function removeAction(User $user)
+    public function removeAction(Collectivite $collectivite, User $user)
     {
-        if($user) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($user);
-            $em->flush();
+        if ($user
+            && $collectivite
+            && ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+            || $this->getUser()->getCollectivite() == $collectivite)
+        ) {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($user);
+                $em->flush();
+
+                return $user;
         }
     }
 
