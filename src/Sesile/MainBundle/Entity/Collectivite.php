@@ -25,7 +25,7 @@ class Collectivite
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"getAllCollectivite"})
+     * @Serializer\Groups({"getAllCollectivite","currentUser"})
      */
     private $id;
 
@@ -33,7 +33,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
-     * @Serializer\Groups({"getAllCollectivite"})
+     * @Serializer\Groups({"currentUser", "getAllCollectivite"})
      */
     private $nom;
 
@@ -41,7 +41,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="domain", type="string", length=255)
-     * @Serializer\Groups({"getAllCollectivite"})
+     * @Serializer\Groups({"currentUser", "getAllCollectivite"})
      */
     private $domain;
 

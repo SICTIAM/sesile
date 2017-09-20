@@ -59,16 +59,16 @@ class ListCircuitValidation extends Component {
                 <div className="cell medium-6">
                     <div className="grid-x grid-padding-x">
                         <div className="medium-6 cell">
-                            <label htmlFor="circuit_name_search">Lequel ?</label>
-                            <input id="circuit_name_search"
+                            <label htmlFor="name-search-admin">Lequel ?</label>
+                            <input id="name-search-admin"
                                    value={this.state.circuitName}
                                    onChange={(event) => this.onSearchCircuitNameFieldChange(event.target.value)}
                                    placeholder="Entrez le nom du circuit..."
                                    type="text" />
                         </div>
                         <div className="medium-6 cell">
-                            <label htmlFor="user_name_search">Avec qui ?</label>
-                            <input id="user_name_search"
+                            <label htmlFor="user-search-admin">Avec qui ?</label>
+                            <input id="user-search-admin"
                                    value={this.state.userName}
                                    onChange={(event) => this.onSearchUserNameFieldChange(event.target.value)}
                                    placeholder="Entrez le nom d'un utilisateur..."
@@ -76,7 +76,7 @@ class ListCircuitValidation extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="cell medium-10 list-circuit-validation">
+                <div className="cell medium-10 list-admin">
                     <div className="grid-x grid-padding-x panel">
                         <div className="cell medium-12 panel-heading grid-x">
                             <div className="cell medium-4">Circuit de validation</div>
@@ -101,7 +101,7 @@ const ValidationCircuitRow = ({circuit, onClick}) => {
     const arrayNoms = []
     circuit.etape_groupes.map((groupe, index) => groupe.users.map(user => arrayNoms.unshift(user._nom)))
     return (
-        <div className="cell medium-12 panel-body grid-x row-circuit" onClick={() => onClick(circuit.id)}>
+        <div className="cell medium-12 panel-body grid-x row-admin" onClick={() => onClick(circuit.id)}>
             <div className="cell medium-4">
                 {circuit.nom}
             </div>

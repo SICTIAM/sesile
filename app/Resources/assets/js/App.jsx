@@ -1,28 +1,30 @@
-'use strict';
-
-import React, { Component } from 'react';
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import Login from './_components/Login'
-import AppRoute from "./_utils/Routes";
+import AppRoute from './_utils/AppRoute'
+import { Redirect } from 'react-router-dom'
 
 class App extends Component {
 
     constructor(props) {
-        super(props);
-        this.state = {user: {}};
+        super(props)
+        this.state = {
+            isAuthenticated: null
+        }
     }
 
     componentWillMount() {
         fetch(Routing.generate('sesile_user_userapi_isauthenticated'), { credentials: 'same-origin' })
             .then(response => response.json())
-            .then(json => this.setState({user : json}))
+            .then(json => this.setState({isAuthenticated : json}))
     }
 
     componentDidMount() {
-        $(document).foundation();
+        $(document).foundation()
     }
 
     render () {
+        const isAuthenticated = this.state.isAuthenticated
         return (
         <div className="grid-x grid-y medium-grid-frame grid-frame">
             <div className="cell header medium-cell-block-container cell-block-container">
@@ -94,7 +96,7 @@ class App extends Component {
                                 </div>
                             </div>
                             <div className="cell medium-12">
-                                <AppRoute />
+                                {isAuthenticated && <AppRoute isAuthenticated={isAuthenticated}/>}
                             </div>
 
                         </div>

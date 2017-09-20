@@ -17,11 +17,22 @@ $title-color: #797c92;
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 
 
+@import url("https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css");
+
+
 @mixin my-icon ($url-image) {
   background: url($url-image) no-repeat transparent;
   width: 50px;
   height: 50px;
   display: block;
+}
+
+@mixin button-icon ($url-image) {
+  background: url($url-image) no-repeat transparent;
+  width: 16em;
+  height: 3em;
+  text-align: center;
+  cursor: pointer;
 }
 
 @mixin my-notification ($bg-color) {
@@ -211,6 +222,9 @@ html {
     border-radius: 1em;
   }
 
+  .btn-add {
+    @include button-icon("../images/btn_add.png");
+  }
   .btn-sign {
     @include my-icon("../images/btn_sign.png");
   }
@@ -478,8 +492,8 @@ html {
     }
   }
 }
-#circuit_name_search,
-#user_name_search {
+#name-search-admin,
+#user-search-admin {
   border: 0;
   box-shadow: none;
 
@@ -488,10 +502,10 @@ html {
     box-shadow: none;
   }
 }
-.list-circuit-validation {
+.list-admin {
   padding: 2em;
 
-  .row-circuit {
+  .row-admin {
     cursor: pointer;
   }
 }
@@ -541,3 +555,139 @@ html {
     }
   }
 }
+
+.parameters-user-group {
+  .details-user-group {
+    .name-details-user-group {
+      background-color: #fe5e3a;
+      border-top-left-radius: 0.5em;
+      border-top-right-radius: 0.5em;
+      padding: 1em;
+      div input {
+        background: rgba(0, 0, 0, 0);
+        border: none;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: white;
+        width: auto;
+      }
+      i {
+        color: white;
+      }
+    }
+  
+    .content-details-user-group {
+      padding:1em;
+      background: white;
+    }
+  }
+
+  .list-user-group {
+    border-radius: 0.3em;
+    background: $light-gray;
+    padding: 0.3em;
+
+    .name-list-user-group {
+      font-weight: 700;
+    }
+
+    .content-list-user-group {
+      background: white;
+      border-radius: 0.3em;
+      color: $dark-gray;
+      ul {
+        padding:0.5em;
+      }
+      a {
+        color: $dark-gray;
+        float: right;
+        margin-right: 0.3em;
+      }
+      li button span {
+        padding: 0em 3.5em;
+      }
+    }
+  }
+}
+
+$list-group-background: $white;
+$list-group-active-background: $primary-color;
+$list-group-hover-background: $light-gray;
+$list-group-disabled-background: $white;
+$list-group-font-color: $body-font-color;
+$list-group-font-disabled-color: $dark-gray;
+$list-group-font-active-color: $white;
+$list-group-border: 1px solid $light-gray;
+$list-group-active-border: 1px solid $primary-color;
+$list-group-shadow: none;
+$list-group-border-radius: $global-radius;
+$list-group-padding: $global-padding;
+$list-group-margin: $global-margin;
+
+
+
+.autocomplete {
+  position: relative;
+  .input-autocomplete {
+    margin: 0;
+  }
+  .list-autocomplete {
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #e6e6e6;
+    .list-group {
+      margin: 0 !important;
+      padding: 0 !important;
+      margin-bottom: $list-group-margin;
+      border: $list-group-border;
+      border-radius: $list-group-border-radius;
+      background: $list-group-background;
+      box-shadow: $list-group-shadow;
+      overflow: hidden;
+      color: $list-group-font-color;
+    
+      & > :last-child {
+        margin-bottom: 0;
+      }
+    }
+    
+    .list-group-item {
+      padding: 0.7em;
+      border-bottom: $list-group-border;
+    
+      & > :last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+    
+      &.active {
+        color: $list-group-font-active-color;
+        background-color: $list-group-active-background;
+        border-color: $list-group-active-border;
+      }
+    
+      &:hover, &:focus {
+        background-color: $list-group-hover-background;
+        &.active {
+          background-color: $list-group-active-background;
+        }
+      }
+    
+      &.disabled,
+      &[disabled] {
+        &,
+        &:hover, &:focus {
+          color: $list-group-font-disabled-color;
+          cursor: not-allowed;
+          background-color: $list-group-disabled-background;
+        }
+      }
+    }
+  }
+}
+
+.large{ font-size: 50px; line-height: 50px; }
+.medium { font-size: 35px; padding: 0 5px; }
+.small { font-size: 20px; padding: 0 5px; }
+.text-uppercase{ text-transform: uppercase; }

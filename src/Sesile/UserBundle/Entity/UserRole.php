@@ -24,8 +24,8 @@ class UserRole
 
     /**
      * @var string
-     * @Groups("classeurById")
      * @ORM\Column(name="userRoles", type="string", length=150)
+     * @Groups({"classeurById", "currentUser"})
      */
     private $userRoles;
 

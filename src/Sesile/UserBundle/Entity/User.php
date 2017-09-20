@@ -26,7 +26,13 @@ class User extends BaseUser {
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"listClasseur",
+     *                      "listEtapeClasseur",
+     *                      "listCircuitByCollectivite",
+     *                      "getByIdCircuit",
+     *                      "currentUser",
+     *                      "userPack",
+     *                      "searchUser"})
      *
      */
     protected $id;
@@ -35,7 +41,14 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"classeurById", "listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"classeurById",
+     *                      "listClasseur",
+     *                      "listEtapeClasseur",
+     *                      "listCircuitByCollectivite",
+     *                      "getByIdCircuit",
+     *                      "currentUser",
+     *                      "userPack",
+     *                      "searchUser"})
      */
     protected $Nom;
 
@@ -43,7 +56,14 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="Prenom", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"classeurById", "listClasseur", "listEtapeClasseur","listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"classeurById",
+     *                      "listClasseur",
+     *                      "listEtapeClasseur",
+     *                      "listCircuitByCollectivite",
+     *                      "getByIdCircuit",
+     *                      "currentUser",
+     *                      "userPack",
+     *                      "searchUser"})
      *
      */
     protected $Prenom;
@@ -52,7 +72,8 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"listClasseur"})
+     * @Serializer\Groups({"listClasseur",
+     *                      "currentUser"})
      */
     protected $path;
 
@@ -71,6 +92,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="pathSignature", type="string", length=255, nullable=true)
+     * @Serializer\Groups({"currentUser"})
      */
     protected $pathSignature;
 
@@ -86,8 +108,9 @@ class User extends BaseUser {
 
     /**
      * @var string
-     * @Serializer\Groups({"classeurById"})
      * @ORM\Column(name="qualite", type="string", length=255, nullable=true)
+     * @Serializer\Groups({"classeurById",
+     *                     "currentUser"})
      */
     protected $qualite;
 
@@ -95,6 +118,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="ville", type="string", length=255, nullable=true)
+     * @Serializer\Groups({"currentUser"})
      */
     protected $ville;
 
@@ -102,6 +126,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="code_postal", type="string", length=6, nullable=true)
+     * @Serializer\Groups({"currentUser"})
      */
     protected $cp;
 
@@ -109,6 +134,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="pays", type="string", length=255, nullable=true)
+     * @Serializer\Groups({"currentUser"})
      */
     protected $pays;
 
@@ -116,20 +142,22 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="departement", type="string", length=255, nullable=true)
+     * @Serializer\Groups({"currentUser"})
      */
     protected $departement;
 
     /**
      * @var string
-     * @Serializer\Groups("classeurById")
      * @ORM\Column(name="role", type="string", length=255, nullable=true)
+     * @Serializer\Groups({"classeurById","currentUser"})
      */
     protected $role;
 
     /**
      * @var
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserRole", mappedBy="user", cascade={"remove", "persist"}, orphanRemoval=true)
-     * @Serializer\Groups("classeurById")
+     * @Serializer\Groups({"classeurById",
+     *                      "currentUser"})
      */
     private $userRole;
 
@@ -161,7 +189,7 @@ class User extends BaseUser {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
-     * @Exclude()
+     * @Serializer\Groups({"currentUser"})
      *
      */
     protected $collectivite;
@@ -215,6 +243,12 @@ class User extends BaseUser {
      * @ORM\Column(name="sesile_version", type="float")
      */
     private $sesileVersion;
+
+    /**
+     * @var array
+     * @Serializer\Groups({"currentUser"})
+     */
+    protected $roles;
 
 
     public function setPath($path) {
@@ -1071,5 +1105,21 @@ class User extends BaseUser {
     public function getEtapeValide()
     {
         return $this->etapeValide;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoles()
+    {
+        $roles = $this->roles;
+
+        foreach ($this->getGroups() as $group) {
+            $roles = array_merge($roles, $group->getRoles());
+        }
+
+        $roles[] = static::ROLE_DEFAULT;
+
+        return array_unique($roles);
     }
 }

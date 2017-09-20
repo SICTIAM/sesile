@@ -6,18 +6,26 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Form\UserType;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Request\ParamFetcher;
 
 /**
  * @Rest\Route("/apirest/user", options = { "expose" = true })
  */
 class UserApiController extends FOSRestController implements ClassResourceInterface
 {
+    /**
+     * @Rest\View(serializerGroups={"currentUser"})
+     * @Rest\Get("/current")
+     */
+    public function getCurrentAction() {
+        return $this->getUser();
+    }
 
     /**
      * @Rest\View()
@@ -44,8 +52,32 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
     public function listAction()
     {
-        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findAll();
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findAll();
+        }
+        else if($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByCollectivite($this->getUser()->getCollectivite()->getId());
+        }
+        else {
+            return array();
+        }
     }
+
+    /**
+     * @return array
+     * @Rest\View(serializerGroups={"searchUser"})
+     * @Rest\Get("/search")
+     * @QueryParam(name="value")
+     * @QueryParam(name="collectiviteId")
+     */
+     public function findByNomOrPrenomAction(ParamFetcher $paramFetcher)
+     {
+         $value = $paramFetcher->get('value');
+         $collectiviteId = $paramFetcher->get('collectiviteId');
+         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivite()->getId() == $collectiviteId) {
+            return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByNameOrFirstName($value, $collectiviteId);
+         }
+     }
 
     /**
      * @Rest\View()
