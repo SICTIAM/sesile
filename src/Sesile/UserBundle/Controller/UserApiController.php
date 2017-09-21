@@ -37,16 +37,6 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @return array
-     * @Rest\View()
-     * @Rest\Get("s/by_collectivite")
-     */
-    public function listByCollectiviteAction()
-    {
-        return $this->get('session')->get("collectivite");
-    }
-
-    /**
      * @Rest\View()
      * @Rest\Get("s/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
@@ -56,9 +46,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     public function usersCollectiviteAction(Collectivite $collectivite)
     {
 
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
-            || $this->getUser()->getCollectivite() == $collectivite) {
-
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             return $collectivite->getUsers();
         } else {
             return $this->getUser()->getCollectivite()->getUsers();
