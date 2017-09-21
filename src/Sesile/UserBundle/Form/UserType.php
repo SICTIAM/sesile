@@ -29,7 +29,7 @@ class UserType extends AbstractType
             ->add('apiactivated')
         ;
     }
-    
+
     /**
      * {@inheritdoc}
      */

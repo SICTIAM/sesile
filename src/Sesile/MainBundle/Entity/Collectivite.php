@@ -167,6 +167,7 @@ class Collectivite
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\User", mappedBy="collectivite")
+     * @Serializer\Groups({"currentUser"})
      */
     private $users;
 

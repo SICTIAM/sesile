@@ -273,6 +273,36 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         return $user;
     }
 
+
+    /**
+     * @Rest\View()
+     * @Rest\Post("/avatar/{id}")
+     * @param Request $request
+     * @param User $user
+     * @return User|\Symfony\Component\Form\Form|JsonResponse
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     */
+    public function uploadAvatarAction(Request $request, User $user) {
+
+        //var_dump($request->request->all());
+        var_dump($request->request->all());
+
+        $avatar = $request->request->get('file');
+
+        var_dump($avatar);
+
+        //$file = $user->getPath();
+
+        $avatarName = md5(uniqid()) . '.' . $avatar->guessExtension();
+
+        $avatar->move(
+            $this->getParameter('upload.path'),
+            $avatarName
+        );
+
+        return $avatarName;
+    }
+
     /**
      * @Rest\View()
      * @Rest\Put("/{id}")
