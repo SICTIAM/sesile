@@ -8,6 +8,7 @@ import Groups from '../admin/Groups'
 import Group from '../admin/Group'
 import Users from '../admin/Users'
 import User from '../admin/User'
+import UserListClasseurs from '../admin/UserListClasseurs'
 import Types from '../admin/Types'
 import AdminRoute from './AdminRoute'
 import Home from '../Home'
@@ -42,6 +43,9 @@ class AppRoute extends Component {
                 <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
                 <Route exact={true} path={"/admin/:collectiviteId/user/:userId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={User} user={user} match={match} />
+                )} />
+                <Route exact={true} path={"/admin/:collectiviteId/user-list-classeurs/:userId?"} render={({match}) => (
+                    <AdminRoute exact={true} path={match.path} component={UserListClasseurs} user={user} match={match} />
                 )} />
             </Switch>
         )

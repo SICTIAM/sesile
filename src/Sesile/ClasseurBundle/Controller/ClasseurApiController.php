@@ -25,14 +25,19 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param null $order
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("s/{sort}/{order}/{limit}/{start}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     * @Rest\Get("s/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
-    public function listAction($sort = null, $order = null, $limit, $start)
+    public function listAction($sort = null, $order = null, $limit, $start, $userId = null)
     {
+        if (
+            $userId === null
+            || !($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))
+        ) $userId = $this->getUser()->getId();
+
         return $this->getDoctrine()
             ->getManager()
             ->getRepository('SesileClasseurBundle:Classeur')
-            ->getClasseursVisibles($this->getUser()->getId(), $sort, $order, $limit, $start);
+            ->getClasseursVisibles($userId, $sort, $order, $limit, $start);
     }
 
     /**

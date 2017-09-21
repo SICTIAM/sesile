@@ -96,6 +96,7 @@ class Users extends Component {
                 </div>
                 <div className="cell medium-3">
                     <Link to={`/admin/${filteredUsers.collectivite.id}/user/${filteredUsers.id}`} className="button primary" >éditer</Link>
+                    <Link to={`/admin/${filteredUsers.collectivite.id}/user-list-classeurs/${filteredUsers.id}`} className="button secondary" >classeurs</Link>
                     <button className="button alert" onClick={() => this.deleteType(filteredUsers.id)}>supprimer</button>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import ClasseursRow from './ClasseursRow'
 
 
@@ -10,18 +11,21 @@ class ListClasseurs extends Component {
             classeurs: null,
             sort: "id",
             order: "DESC",
-            checkedAll: false
+            limit: 10,
+            start: 0,
+            checkedAll: false,
+            userId: this.props.userId
         }
         this.checkClasseur = this.checkClasseur.bind(this)
     }
 
     componentDidMount() {
-        this.listClasseurs(this.state.sort, this.state.order)
+        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
     }
 
-    listClasseurs(sort, order) {
+    listClasseurs(sort, order, limit, start, userId) {
 
-        fetch(Routing.generate('sesile_classeur_classeurapi_list', {sort, order}), { credentials: 'same-origin' })
+        fetch(Routing.generate('sesile_classeur_classeurapi_list', {sort, order, limit, start, userId}), { credentials: 'same-origin' })
             .then(response => response.json())
             .then(json => {
                 this.setState({classeurs : json})
@@ -105,6 +109,10 @@ class ListClasseurs extends Component {
             </div>
         )
     }
+}
+
+ListClasseurs.PropTypes = {
+    userId: PropTypes.any
 }
 
 export default ListClasseurs
