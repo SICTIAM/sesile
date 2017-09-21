@@ -29,7 +29,8 @@
 /composer.phar
 
 # Assets and user uploads
-/web/bundles/
+/web/bundles/*
+web/bundles/
 /web/uploads/
 
 # PHPUnit
@@ -56,3 +57,8 @@
 
 /app/Resources/assets/css/global.css
 /app/Resources/assets/css/global.css.map
+
+
+web/config\.php
+app/check\.php
+app/SymfonyRequirements\.php

@@ -2,6 +2,8 @@
 
 namespace Sesile\ClasseurBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -15,19 +17,25 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Rest\Route("/apirest/classeur_type", options = { "expose" = true })
+ * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
  */
 class TypeClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
      * @Rest\View()
-     * @Rest\Get("s")
-     * @
+     * @Rest\Get("s/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @param Collectivite $collectivite
+     * @return array|\Doctrine\Common\Collections\Collection
      */
-    public function getAllAction()
+    public function getAllAction(Collectivite $collectivite)
     {
-        $typeClasseurs = $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:TypeClasseur')->findAll();
-
-        return $typeClasseurs;
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+            $this->getUser()->getCollectivite() == $collectivite) {
+            return $collectivite->getTypes();
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -80,10 +88,12 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
      */
     public function removeAction(TypeClasseur $typeClasseur)
     {
-        if($typeClasseur) {
+        if($typeClasseur && $typeClasseur->getSupprimable()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($typeClasseur);
             $em->flush();
+
+            return $typeClasseur;
         }
     }
 

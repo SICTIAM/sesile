@@ -13,16 +13,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class CollectiviteApiController extends Controller
 {
     /**
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\View(serializerGroups={"getAllCollectivite"})
      * @Rest\Get("s")
      * @return array
      */
     public function getAllAction()
     {
-        return $this->getDoctrine()
-            ->getManager()
-            ->getRepository('SesileMainBundle:Collectivite')
-            ->findAll();
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+
+            return $this->getDoctrine()
+                ->getManager()
+                ->getRepository('SesileMainBundle:Collectivite')
+                ->findAll();
+        } else {
+            return array($this->getUser()->getCollectivite());
+        }
+
     }
 }

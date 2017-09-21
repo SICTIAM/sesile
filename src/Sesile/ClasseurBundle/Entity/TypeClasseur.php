@@ -39,6 +39,13 @@ class TypeClasseur
     private $groupes;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="types")
+     * @ORM\JoinColumn(name="collectivites", referencedColumnName="id")
+     * @Exclude()
+     */
+    private $collectivites;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="creation", type="datetime", nullable=true)
@@ -47,7 +54,7 @@ class TypeClasseur
 
     /**
      * @ORM\Column(name="supprimable", type="boolean")
-     * @Exclude()
+     * @Serializer\Groups({"getByIdCircuit"})
      */
     private $supprimable = true;
 
@@ -171,5 +178,29 @@ class TypeClasseur
     public function getSupprimable()
     {
         return $this->supprimable;
+    }
+
+    /**
+     * Set collectivites
+     *
+     * @param \Sesile\MainBundle\Entity\Collectivite $collectivites
+     *
+     * @return TypeClasseur
+     */
+    public function setCollectivites(\Sesile\MainBundle\Entity\Collectivite $collectivites = null)
+    {
+        $this->collectivites = $collectivites;
+
+        return $this;
+    }
+
+    /**
+     * Get collectivites
+     *
+     * @return \Sesile\MainBundle\Entity\Collectivite
+     */
+    public function getCollectivites()
+    {
+        return $this->collectivites;
     }
 }
