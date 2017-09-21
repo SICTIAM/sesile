@@ -2,6 +2,7 @@
 
 namespace Sesile\ClasseurBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Rest\Route("/apirest/classeur_type", options = { "expose" = true })
+ * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
  */
 class TypeClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
@@ -28,13 +30,11 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
      */
     public function getAllAction(Collectivite $collectivite)
     {
-
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
-            || $this->getUser()->getCollectivite() == $collectivite) {
-
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+            $this->getUser()->getCollectivite() == $collectivite) {
             return $collectivite->getTypes();
         } else {
-            return $this->getUser()->getCollectivite()->getTypes();
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_NOT_FOUND);
         }
     }
 

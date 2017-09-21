@@ -1,58 +1,50 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { escapedValue } from '../_utils/Search'
+
+const { object, func } = PropTypes
 
 class Types extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
+            isSuperAdmin: false,
             types: [],
             filteredTypes: [],
             typesId: null,
             collectivites: [],
-            collectiviteId: '',
+            currentCollectiviteId: '',
             userRoles: '',
-            name: '',
-            nom: '',
-            newNom: '',
-            infos: ''
+            searchFieldName: '',
+            nom: ''
         }
-        this.handleChangeName = this.handleChangeName.bind(this)
     }
 
     componentDidMount() {
-        this.getCurrentCollectivite()
-        this.getCollectivites()
+        const user = this.props.user
+        this.fetchTypes(user.collectivite.id)
+        this.setState({currentCollectiviteId: user.collectivite.id})
+        if(user.roles.includes("ROLE_SUPER_ADMIN")) {
+            this.fetchCollectivites()
+            this.setState({isSuperAdmin: true})
+        }
     }
 
-    getTypes (id) {
-        if (id === undefined) id = this.state.collectiviteId
+    fetchTypes = (id) => {
         fetch(Routing.generate('sesile_classeur_typeclasseurapi_getall', {id}), { credentials: 'same-origin'})
             .then(response => response.json())
-            .then(json => this.setState({types: json, filteredTypes: json, collectiviteId: id}))
-            .then(() => {
-                if (this.state.name) this.onSearchByNameFieldChange(this.state.name)
-            })
+            .then(json => this.setState({types: json, filteredTypes: json}))
+            .then(() => {if(this.state.searchFieldName) this.handleChangeSearchByName(this.state.searchFieldName)})
     }
 
-    getCollectivites () {
-
+    fetchCollectivites() {
         fetch(Routing.generate('sesile_main_collectiviteapi_getall'), { credentials: 'same-origin'})
             .then(response => response.json())
-            .then(json => this.setState({collectivites: json}))
-
+            .then(json => this.setState({collectivites: json.filter(collectivite => collectivite.active)}))
     }
 
-    getCurrentCollectivite () {
-        fetch(Routing.generate('sesile_user_userapi_getcurrentuser'), { credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(json => {
-                this.setState({collectiviteId: json.collectivite.id})
-                this.setState({userRoles: json.roles})
-                this.getTypes(this.state.collectiviteId)
-            })
-    }
-
-    postTypes () {
+    createType() {
         fetch(Routing.generate('sesile_classeur_typeclasseurapi_posttypeclasseur'), {
             method: 'post',
             headers: {
@@ -61,19 +53,19 @@ class Types extends Component {
             },
             body: JSON.stringify({
                 nom: this.state.nom,
-                collectivites: this.state.collectiviteId,
+                collectivites: this.state.currentCollectiviteId,
             }),
             credentials: 'same-origin'
-        })
+            })
             .then(response => response.json())
             .then(json => {
-                const filteredTypes = this.state.filteredTypes
-                filteredTypes.push(json)
-                this.setState({filteredTypes, nom: '', infos: 'Enregistrement effectué !'})
+                let filteredTypes = this.state.filteredTypes
+                filteredTypes = [json, ...filteredTypes]
+                this.setState({filteredTypes, nom: ''})
             })
     }
 
-    updateType(id, nom) {
+    updateType = (id, nom) => {
         fetch(Routing.generate('sesile_classeur_typeclasseurapi_updatetypeclasseur', {id}), {
             method: 'put',
             headers: {
@@ -82,121 +74,81 @@ class Types extends Component {
             },
             body: JSON.stringify({
                 nom: nom,
-                collectivites: this.state.collectiviteId,
+                collectivites: this.state.currentCollectiviteId,
             }),
             credentials: 'same-origin'
-        })
+            })
             .then(response => response.json())
-            .then(() => {
-                this.setState({infos: 'Enregistrement modifié !'})
+            .then((json) => {
+                const filteredTypes = this.state.filteredTypes
+                filteredTypes.map(filteredType => {if (filteredType.id === id) filteredType = json})
+                this.setState({filteredTypes})
             })
     }
 
-    deleteType (typeId) {
-        fetch(Routing.generate('sesile_classeur_typeclasseurapi_remove', {id: typeId}), { method: 'delete', credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(() => {
-                this.getTypes(this.state.collectiviteId)
-                this.setState({infos: 'Enregistrement supprimé !'})
+    removeType = (id) => {
+        fetch(Routing.generate('sesile_classeur_typeclasseurapi_remove', {id}), {
+            method: 'delete',
+            credentials: 'same-origin'
             })
+            .then(response => response.json())
+            .then(() => this.fetchTypes(this.state.currentCollectiviteId))
     }
 
-    escapedValue(value) {
-        const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
-        if (escapedValue === '') {
-            this.setState({types: this.getTypes()})
-        }
-
-        return RegExp(escapedValue, 'i')
+    handleChangeSearchByName = (searchFieldName) => {
+        this.setState({searchFieldName})
+        const regex = escapedValue(searchFieldName, this.state.filteredTypes, this.state.types)
+        const filteredTypes = this.state.types.filter(type => regex.test(type.nom))
+        this.setState({filteredTypes})
     }
 
-    onSearchByNameFieldChange(value) {
-        this.setState({name:value})
-        const regex = this.escapedValue(value)
-        if (this.state.types) {
-            const filteredTypes = this.state.types.filter(type => regex.test(type.nom))
-            this.setState({filteredTypes})
-        }
-
+    handleChangeSearchByCollectivite = (currentCollectiviteId) => {
+        this.setState({currentCollectiviteId})
+        this.fetchTypes(currentCollectiviteId)
     }
 
-    onSearchByCollectiviteFieldChange(value) {
-        this.setState({collectiviteId:value})
-        this.getTypes(value)
-    }
-
-    handleChangeName(id, value) {
+    handleChangeNameFields = (id, value) => {
         const filteredTypes = this.state.filteredTypes
-
-        filteredTypes.map(filteredTypes => {
-            if (filteredTypes.id === id) {
-                filteredTypes.nom = value
-            }
-        })
-
+        filteredTypes.map(filteredType => {if (filteredType.id === id) filteredType.nom = value})
         this.setState({filteredTypes})
     }
 
     render() {
-        const filteredTypes = this.state.filteredTypes
-
-        const typesRow = filteredTypes && filteredTypes.map(filteredTypes =>
-            <div className="cell medium-12 panel-body grid-x" key={filteredTypes.id}>
-                <div className="cell medium-6">
-                    <input type="text" value={filteredTypes.nom} onChange={(e) => this.handleChangeName(filteredTypes.id, e.target.value)} />
-                </div>
-                <div className="cell medium-3">
-                    <button className="button primary" onClick={() => this.updateType(filteredTypes.id, filteredTypes.nom)}>enregistrer</button>
-                </div>
-                <div className="cell medium-3">
-                    {
-                        (filteredTypes.supprimable) ? <button className="button alert" onClick={() => this.deleteType(filteredTypes.id)}>supprimer</button> : ""
-                    }
-                </div>
-            </div>
-        )
-
-        const collectivites = this.state.collectivites
-        const collectivitesSelect = collectivites && collectivites.map(collectivite =>
-                <option value={collectivite.id} key={collectivite.id}>{collectivite.nom}</option>
-        )
+        const { filteredTypes, collectivites, isSuperAdmin } = this.state
+        const listType = filteredTypes.map(type => <TypeRow key={type.id}
+                                                            type={type}
+                                                            removeType={this.removeType}
+                                                            updateType={this.updateType}
+                                                            handleChangeNameFields={this.handleChangeNameFields}/>)
+        const listCollectivite = collectivites.map(collectivite =>
+                <option value={collectivite.id} key={collectivite.id}>{collectivite.nom}</option>)
 
         return (
             <div>
                 <h4 className="text-center text-bold">Rechercher votre type de classeur</h4>
                 <p className="text-center">Puis accéder aux paramétres</p>
-                <p className="text-center">{ this.state.infos }</p>
                 <div className="grid-x align-center-middle">
                     <div className="cell medium-6">
                         <div className="grid-x grid-padding-x align-center-middle">
-                            <div className="medium-6 cell">
+                            <div className="medium-auto cell">
                                 <label htmlFor="circuit_name_search">Lequel ?</label>
                                 <input id="type_name_search"
-                                   value={this.state.name}
-                                   onChange={(event) => this.onSearchByNameFieldChange(event.target.value)}
+                                   value={this.state.searchFieldName}
+                                   onChange={(event) => this.handleChangeSearchByName(event.target.value)}
                                    placeholder="Entrez le nom du circuit..."
                                    type="text" />
                             </div>
-                            {
-                                (collectivitesSelect.length > 0) ?
-                                    <div className="medium-6 cell">
-                                        {
-                                            (this.state.userRoles.indexOf("ROLE_SUPER_ADMIN")) ?
-                                                <div>
-                                                    <label htmlFor="collectivite_name_search">Collectivité ?</label>
-                                                    <select id="collectivite_name_search" value={this.state.collectiviteId} onChange={(event) => this.onSearchByCollectiviteFieldChange(event.target.value)}>
-                                                        {collectivitesSelect}
-                                                    </select>
-                                                </div>
-                                                : <div>Admin</div>
-                                        }
+                            {(isSuperAdmin) &&
+                                <div className="medium-auto cell">
+                                    <div>
+                                        <label htmlFor="collectivite_name_search">Quelle collectivité ?</label>
+                                        <select id="collectivite_name_search"
+                                                value={this.state.currentCollectiviteId}
+                                                onChange={(event) => this.handleChangeSearchByCollectivite(event.target.value)}>
+                                            {listCollectivite}
+                                        </select>
                                     </div>
-                                    : <div className="medium-6 cell">
-                                        <div className="text-center">
-                                            Aucune collectivités...
-                                        </div>
-                                    </div>
+                                </div>
                             }
 
                         </div>
@@ -206,22 +158,27 @@ class Types extends Component {
                             <div className="cell medium-12 panel-heading grid-x">
                                 <div className="cell medium-12">Type de classeurs</div>
                             </div>
-                            <div className="cell medium-12 panel-heading grid-x">
+                            <div className="cell medium-12 panel-body grid-x">
                                 <div className="cell medium-6">
-                                    <input type="text" placeholder="Nouveau type" name="nom" onChange={(e) => this.setState({nom: e.target.value})} value={this.state.nom} />
+                                    <input type="text"
+                                           placeholder="Nouveau type"
+                                           name="nom"
+                                           onChange={(e) => this.setState({nom: e.target.value})}
+                                           value={this.state.nom} />
                                 </div>
-                                <div className="cell medium-3"></div>
-                                <div className="cell medium-3">
-                                    <button className="button primary" onClick={() => this.postTypes()}>enregistrer</button>
+                                <div className="cell medium-6 text-right">
+                                    <button className="button primary text-uppercase"
+                                            onClick={() => this.createType()}>
+                                        Créer un nouveau type
+                                    </button>
                                 </div>
                             </div>
-                            {
-                                (typesRow.length > 0) ? typesRow :
-                                    <div className="cell medium-12 panel-body">
-                                        <div className="text-center">
-                                            Aucun types ne correspond à votre recherche...
-                                        </div>
+                            {(listType.length > 0) ? listType :
+                                <div className="cell medium-12 panel-body">
+                                    <div className="text-center">
+                                        Aucun types ne correspond à votre recherche...
                                     </div>
+                                </div>
                             }
                         </div>
                     </div>
@@ -232,5 +189,41 @@ class Types extends Component {
 
 }
 
+Types.PropTypes = {
+    user: object.isRequired
+}
 
 export default Types
+
+const TypeRow = ({type, removeType, updateType, handleChangeNameFields}) => {
+    return (
+        <div className="cell medium-12 panel-body grid-x">
+            <div className="cell medium-auto">
+                <input type="text"
+                       value={type.nom}
+                       onChange={(e) => handleChangeNameFields(type.id, e.target.value)} />
+            </div>
+            <div className="cell medium-auto text-right">
+                <button className="button primary text-uppercase"
+                        onClick={() => updateType(type.id, type.nom)}>
+                    Enregistrer
+                </button>
+            </div>
+            {(type.supprimable) &&
+                <div className="cell medium-auto text-right">
+                    <button className="button alert text-uppercase"
+                            onClick={() => removeType(type.id)}>
+                        Supprimer
+                    </button>
+                </div>
+            }
+        </div>
+    )
+}
+
+TypeRow.PropTypes = {
+    type: object.isRequired,
+    removeType: func.isRequired,
+    updateType: func.isRequired,
+    handleChangeNameFields: func.isRequired
+}
