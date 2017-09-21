@@ -159,7 +159,7 @@ class User extends BaseUser {
      * @Serializer\Groups({"classeurById",
      *                      "currentUser"})
      */
-    private $userRole;
+    private $userrole;
 
     /**
      * @var string
@@ -255,6 +255,18 @@ class User extends BaseUser {
      * @Serializer\Groups({"currentUser", "searchUser"})
      */
     protected $email;
+
+    /**
+     * @var array
+     * @Serializer\Groups({"currentUser"})
+     */
+    protected $username;
+
+    /**
+     * @var array
+     * @Serializer\Groups({"currentUser"})
+     */
+    protected $enabled;
 
 
     public function setPath($path) {
@@ -975,39 +987,6 @@ class User extends BaseUser {
     }
 
     /**
-     * Add userRole
-     *
-     * @param \Sesile\UserBundle\Entity\UserRole $userRole
-     * @return User
-     */
-    public function addUserRole(\Sesile\UserBundle\Entity\UserRole $userRole)
-    {
-        $this->userRole[] = $userRole;
-    
-        return $this;
-    }
-
-    /**
-     * Remove userRole
-     *
-     * @param \Sesile\UserBundle\Entity\UserRole $userRole
-     */
-    public function removeUserRole(\Sesile\UserBundle\Entity\UserRole $userRole)
-    {
-        $this->userRole->removeElement($userRole);
-    }
-
-    /**
-     * Get userRole
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUserRole()
-    {
-        return $this->userRole;
-    }
-
-    /**
      * Tells if the the given user is this user.
      *
      * Useful when not hydrating all fields.
@@ -1127,5 +1106,39 @@ class User extends BaseUser {
         $roles[] = static::ROLE_DEFAULT;
 
         return array_unique($roles);
+    }
+
+    /**
+     * Add userrole
+     *
+     * @param \Sesile\UserBundle\Entity\UserRole $userrole
+     *
+     * @return User
+     */
+    public function addUserrole(\Sesile\UserBundle\Entity\UserRole $userrole)
+    {
+        $this->userrole[] = $userrole;
+
+        return $this;
+    }
+
+    /**
+     * Remove userrole
+     *
+     * @param \Sesile\UserBundle\Entity\UserRole $userrole
+     */
+    public function removeUserrole(\Sesile\UserBundle\Entity\UserRole $userrole)
+    {
+        $this->userrole->removeElement($userrole);
+    }
+
+    /**
+     * Get userrole
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserrole()
+    {
+        return $this->userrole;
     }
 }

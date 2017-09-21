@@ -112,7 +112,7 @@ parameters:
     cas_server: devsso.sictiam.fr
     be_simple.sso_auth.client.option.curlopt_ssl_verifypeer.value: FALSE
     upload:
-        path: '%kernel.root_dir%/../web/uploads/avatars/'
+        path: '%kernel.project_dir%/web/uploads/avatars/'
         fics: '%kernel.root_dir%/../web/uploads/docs/'
         logo_coll: '%kernel.project_dir%/web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'

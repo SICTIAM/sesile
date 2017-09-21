@@ -19,23 +19,25 @@ class UserRole
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"userRole"})
      */
     private $id;
 
     /**
      * @var string
      * @ORM\Column(name="userRoles", type="string", length=150)
-     * @Groups({"classeurById", "currentUser"})
+     * @Groups({"userRole"})
      */
     private $userRoles;
 
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", fetch="EAGER", inversedBy="userRole")
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\User", fetch="EAGER", inversedBy="userrole")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * @Groups({"userRole"})
      */
-    protected $user;
+    private $user;
 
     /**
      * Get id

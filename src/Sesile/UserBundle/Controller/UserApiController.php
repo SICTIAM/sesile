@@ -54,6 +54,24 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
+     * @Rest\View()
+     * @Rest\Get("/roles")
+     * @return object|\Symfony\Component\Security\Core\Role\RoleHierarchy
+     */
+    public function getRoles() {
+        $roles = array();
+        foreach ($this->getParameter('security.role_hierarchy.roles') as $key => $value) {
+            $roles[] = $key;
+
+            foreach ($value as $value2) {
+                $roles[] = $value2;
+            }
+        }
+
+        return array_unique($roles);
+    }
+
+    /**
      * @return array
      * @Rest\View()
      * @Rest\Get("s")
@@ -152,6 +170,36 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         }
     }
 
+
+    /**
+     * @Rest\View()
+     * @Rest\Post("/avatar/{id}")
+     * @param Request $request
+     * @param User $user
+     * @return User|\Symfony\Component\Form\Form|JsonResponse
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     */
+    public function uploadAvatarAction(Request $request, User $user) {
+
+        //var_dump($request->request->all());
+        var_dump($request->request->all());
+
+        $avatar = $request->request->get('file');
+
+        var_dump($avatar);
+
+        //$file = $user->getPath();
+
+        $avatarName = md5(uniqid()) . '.' . $avatar->guessExtension();
+
+        $avatar->move(
+            $this->getParameter('upload.path'),
+            $avatarName
+        );
+
+        return $avatarName;
+    }
+
     /**
      * @Rest\View()
      * @Rest\Put("/{id}")
@@ -171,6 +219,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             $em->merge($user);
             $em->flush();
 

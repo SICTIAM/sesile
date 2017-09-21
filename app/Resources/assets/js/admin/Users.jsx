@@ -30,7 +30,7 @@ class Users extends Component {
             this.setState({isSuperAdmin: true})
         }
         this.getUsers(this.props.user.collectivite.id)
-        this.getCollectivites()
+        this.fetchCollectivites()
     }
 
     getUsers (id) {
@@ -42,7 +42,7 @@ class Users extends Component {
             })
     }
 
-    getCollectivites () {
+    fetchCollectivites () {
         fetch(Routing.generate('sesile_main_collectiviteapi_getall'), { credentials: 'same-origin'})
             .then(response => response.json())
             .then(json => this.setState({collectivites: json}))
