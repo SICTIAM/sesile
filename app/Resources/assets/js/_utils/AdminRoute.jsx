@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Route, Redirect } from 'react-router-dom'
+import MenuBarAdmin from '../_components/MenuBarAdmin'
 
 const AdminRoute = ({ component, exact = false, path, user, match }) => {
     return(
@@ -9,7 +10,12 @@ const AdminRoute = ({ component, exact = false, path, user, match }) => {
             exact={exact}
             path={path}
             render={props => (
-                (user.roles.find(role => role.includes("ADMIN")) !== undefined) ? React.createElement(component, {user, match}) : <Redirect to={{ pathname: '/login',  state: {from: props.location}}}/>
+                (user.roles.find(role => role.includes("ADMIN")) !== undefined)
+                    ? <div>
+                        <MenuBarAdmin/>
+                        {React.createElement(component, {user, match})}
+                      </div>
+                    : <Redirect to={{ pathname: '/login',  state: {from: props.location}}}/>
             )}
         />
     )

@@ -189,7 +189,7 @@ class User extends BaseUser {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "searchUser"})
      *
      */
     protected $collectivite;
@@ -249,6 +249,12 @@ class User extends BaseUser {
      * @Serializer\Groups({"currentUser"})
      */
     protected $roles;
+
+    /**
+     * @var array
+     * @Serializer\Groups({"currentUser", "searchUser"})
+     */
+    protected $email;
 
 
     public function setPath($path) {

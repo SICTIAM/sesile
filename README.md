@@ -42,4 +42,7 @@ Open [http://sesile.dev/app_dev.php]()
 
 6. Migrations
 
- - update to 4.0 `$ php app/console collectivite:addtypeclasseur`
+ - update to 4.0 
+  - `$ php app/console doctrine:schema:update --force`
+  - `$ php app/console classeur:addetapesclasseur`
+  - `$ php app/console collectivite:addtypeclasseur`

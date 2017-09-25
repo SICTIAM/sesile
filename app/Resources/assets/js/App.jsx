@@ -64,10 +64,10 @@ class App extends Component {
                                 <a href="#"><span className="fa ico-hamburger"></span></a>
                             </div>
                             <div className="cell auto">
-                                <Link to={"/classeur/list"}><span className="ico-new-classeur"></span></Link>
+                                <Link to={"/classeurs"}><span className="ico-new-classeur"></span></Link>
                             </div>
                             <div className="cell auto">
-                                <Link to={"/classeur/list"}><span className="ico-sign-classeur"></span></Link>
+                                <Link to={"/classeurs"}><span className="ico-sign-classeur"></span></Link>
                             </div>
                             <div className="cell auto">
                                 <a href="#"><span className="ico-valid-classeur"></span></a>
