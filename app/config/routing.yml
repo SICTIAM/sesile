@@ -5,7 +5,7 @@ sesile_main:
 
 sesile_classeur:
     defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
-    path: /classeur/{reactRouting}
+    path: /classeurs/{reactRouting}
     requirements:
         reactRouting: ".+"
 

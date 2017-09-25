@@ -29,22 +29,22 @@ class AppRoute extends Component {
             (!!user) &&
             <Switch>
                 <Route path={"/"} exact={true} component={Home} />
-                <Route path={"/dashboard"} exact={true} component={DashBoard} />
-                <Route path={"/classeur/list"} exact={true} component={ListClasseurs} />
+                <Route path={"/tableau-de-bord"} exact={true} component={DashBoard} />
+                <Route path={"/classeurs"} exact={true} component={ListClasseurs} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} />
                 )} />
                 <AdminRoute exact={true} path={"/admin/circuit-de-validation"} component={CircuitValidation} user={user} />
                 <AdminRoute exact={true} path={"/admin/groupes"} component={Groups} user={user} />
-                <AdminRoute exact={true} path={"/admin/users"} component={Users} user={user} />
+                <AdminRoute exact={true} path={"/admin/utilisateurs"} component={Users} user={user} />
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
                     <AdminRoute exact={true} path={match.path} component={Group} user={user} match={match} />                    
                 )} />
                 <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
-                <Route exact={true} path={"/admin/:collectiviteId/user/:userId?"} render={({match}) => (
+                <Route exact={true} path={"/admin/:collectiviteId/utilisateur/:userId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={User} user={user} match={match} />
                 )} />
-                <Route exact={true} path={"/admin/:collectiviteId/user-list-classeurs/:userId?"} render={({match}) => (
+                <Route exact={true} path={"/admin/:collectiviteId/classeurs/:userId"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={UserListClasseurs} user={user} match={match} />
                 )} />
             </Switch>

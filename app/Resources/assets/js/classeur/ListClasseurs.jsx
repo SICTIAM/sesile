@@ -16,7 +16,6 @@ class ListClasseurs extends Component {
             checkedAll: false,
             userId: this.props.userId
         }
-        this.checkClasseur = this.checkClasseur.bind(this)
     }
 
     componentDidMount() {
@@ -112,7 +111,7 @@ class ListClasseurs extends Component {
 }
 
 ListClasseurs.PropTypes = {
-    userId: PropTypes.any
+    userId: PropTypes.number
 }
 
 export default ListClasseurs

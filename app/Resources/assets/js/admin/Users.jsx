@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import Debounce from 'debounce'
-import {Link} from "react-router-dom";
+import PropTypes from 'prop-types'
+import {Link} from 'react-router-dom'
+import { escapedValue } from '../_utils/Search'
 
 class Users extends Component {
 
@@ -10,26 +11,27 @@ class Users extends Component {
             users: [],
             filteredUsers: [],
             collectivites: [],
-            collectiviteId: '',
-            name: '',
-            nom: '',
+            collectiviteId: this.props.user.collectivite.id,
+            fieldSearch: '',
             infos: '',
             isSuperAdmin: false
         }
     }
 
     componentDidMount() {
-        this.getCurrentCollectivite()
+        if(this.props.user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
+            this.setState({isSuperAdmin: true})
+        }
+        this.getUsers(this.props.user.collectivite.id)
         this.getCollectivites()
     }
 
     getUsers (id) {
-        if (id === undefined) id = this.state.collectiviteId
         fetch(Routing.generate('sesile_user_userapi_userscollectivite', {id}), { credentials: 'same-origin'})
             .then(response => response.json())
-            .then(json => this.setState({users: json, filteredUsers: json, collectiviteId: id}))
+            .then(json => this.setState({users: json, filteredUsers: json}))
             .then(() => {
-                if (this.state.name) this.handleChangeSearchUser(this.state.name)
+                if (this.state.fieldSearch) this.handleChangeSearchUser(this.state.fieldSearch)
             })
     }
 
@@ -39,21 +41,8 @@ class Users extends Component {
             .then(json => this.setState({collectivites: json}))
     }
 
-    getCurrentCollectivite () {
-        fetch(Routing.generate('sesile_user_userapi_getcurrent'), { credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(json => {
-                this.setState({collectiviteId: json.collectivite.id})
-                if(json.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
-                    this.setState({isSuperAdmin: true})
-                }
-
-                this.getUsers(this.state.collectiviteId)
-            })
-    }
-
-    deleteType (typeId) {
-        fetch(Routing.generate('sesile_user_userapi_remove', {id: typeId}), { method: 'delete', credentials: 'same-origin'})
+    deleteType (id) {
+        fetch(Routing.generate('sesile_user_userapi_remove', {id}), { method: 'delete', credentials: 'same-origin'})
             .then(response => response.json())
             .then(() => {
                 this.getUsers(this.state.collectiviteId)
@@ -61,45 +50,23 @@ class Users extends Component {
             })
     }
 
-    findUser = Debounce((value, collectiviteId) => {
-        fetch(Routing.generate("sesile_user_userapi_findbynomorprenom", {value,collectiviteId}), {credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(json => {
-                this.setState({filteredUsers: json})
-            })
-    }, 800, true)
-
-    handleChangeSearchUser = (value) => {
-        this.setState({name: value})
-        if(value.trim().length > 2) this.findUser(value, this.state.collectiviteId)
-        else this.setState({users: []})
+    handleChangeSearchUser = (fieldSearch) => {
+        this.setState({fieldSearch})
+        const regex = escapedValue(fieldSearch, this.state.filteredUsers, this.state.users)
+        const filteredUsers = this.state.users.filter(user => regex.test(user._prenom.concat(user._nom)))
+        this.setState({filteredUsers})
     }
 
-    onSearchByCollectiviteFieldChange(value) {
-        this.setState({collectiviteId:value})
-        this.getUsers(value)
+    onSearchByCollectiviteFieldChange(collectiviteId) {
+        this.setState({collectiviteId})
+        this.getUsers(collectiviteId)
     }
 
     render() {
         const filteredUsers = this.state.filteredUsers
 
-        const Row = filteredUsers && filteredUsers.map(filteredUsers =>
-            <div className="cell medium-12 panel-body grid-x" key={filteredUsers.id}>
-                <div className="cell medium-3">
-                    {filteredUsers._prenom} {filteredUsers._nom}
-                </div>
-                <div className="cell medium-3">
-                    {filteredUsers.collectivite.nom}
-                </div>
-                <div className="cell medium-3">
-                    {filteredUsers.email}
-                </div>
-                <div className="cell medium-3">
-                    <Link to={`/admin/${filteredUsers.collectivite.id}/user/${filteredUsers.id}`} className="button primary" >éditer</Link>
-                    <Link to={`/admin/${filteredUsers.collectivite.id}/user-list-classeurs/${filteredUsers.id}`} className="button secondary" >classeurs</Link>
-                    <button className="button alert" onClick={() => this.deleteType(filteredUsers.id)}>supprimer</button>
-                </div>
-            </div>
+        const Row = filteredUsers && filteredUsers.map(filteredUser =>
+            <UserRow key={filteredUser.id} User={filteredUser} deleteType={this.deleteType} />
         )
 
         const collectivites = this.state.collectivites
@@ -122,13 +89,13 @@ class Users extends Component {
                             <div className="medium-6 cell">
                                 <label htmlFor="circuit_name_search">Lequel ?</label>
                                 <input id="type_name_search"
-                                       value={this.state.name}
+                                       value={this.state.fieldSearch}
                                        onChange={(event) => this.handleChangeSearchUser(event.target.value)}
                                        placeholder="Entrez le nom de l'utilisateur..."
                                        type="text" />
                             </div>
                             {
-                                (collectivitesSelect.length > 0 && this.state.isSuperAdmin) ?
+                                (collectivitesSelect.length > 0 && this.state.isSuperAdmin) &&
                                     <div className="medium-6 cell">
                                         {
                                             <div>
@@ -139,7 +106,6 @@ class Users extends Component {
                                             </div>
                                         }
                                     </div>
-                                    : ""
                             }
 
                         </div>
@@ -171,5 +137,35 @@ class Users extends Component {
 
 }
 
+Users.PropTypes = {
+    user: PropTypes.object.isRequired
+}
+
 
 export default Users
+
+const UserRow = ({User, deleteType}) => {
+    return (
+        <div className="cell medium-12 panel-body grid-x">
+            <div className="cell medium-3">
+                {User._prenom} {User._nom}
+            </div>
+            <div className="cell medium-3">
+                {User.collectivite.nom}
+            </div>
+            <div className="cell medium-3">
+                {User.email}
+            </div>
+            <div className="cell medium-3">
+                <Link to={`/admin/${User.collectivite.id}/utilisateur/${User.id}`} className="button primary" >éditer</Link>
+                <Link to={`/admin/${User.collectivite.id}/classeurs/${User.id}`} className="button secondary" >classeurs</Link>
+                <button className="button alert" onClick={() => deleteType(User.id)}>supprimer</button>
+            </div>
+        </div>
+    )
+}
+
+UserRow.PropTypes = {
+    User: PropTypes.object.isRequired,
+    deleteType: PropTypes.func.isRequired
+}
