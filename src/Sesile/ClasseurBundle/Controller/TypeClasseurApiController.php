@@ -4,7 +4,6 @@ namespace Sesile\ClasseurBundle\Controller;
 
 use Sesile\MainBundle\Entity\Collectivite;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
