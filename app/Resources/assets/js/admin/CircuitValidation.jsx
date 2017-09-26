@@ -52,6 +52,8 @@ class CircuitValidation extends Component {
         return (
             circuitReceived &&
             <div className="circuit-validation">
+                <h4 className="text-center text-bold">Paramètrer votre circuit de validation</h4>
+                <p className="text-center">Puis sauvegarder</p>
                 <div className="details-circuit-validation">
                     <div className="grid-x name-details-circuit-validation">
                         <div className="medium-12 cell">

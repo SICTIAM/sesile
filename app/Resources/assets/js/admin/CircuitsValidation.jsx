@@ -12,7 +12,6 @@ class CircuitsValidation extends Component {
             circuits: [],
             filteredCircuits: [],
             collectivites: [],
-            currentCollectiviteName: '',
             currentCollectiviteId: '',
             userName: '',
             circuitName: '',
@@ -22,7 +21,7 @@ class CircuitsValidation extends Component {
 
     componentDidMount() {
         const user = this.props.user
-        this.setState({currentCollectiviteName: user.collectivite.domain, currentCollectiviteId: user.collectivite.id})
+        this.setState({currentCollectiviteId: user.collectivite.id})
 
         this.fetchCircuitsValidations(user.collectivite.id)
         if(user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
@@ -64,7 +63,7 @@ class CircuitsValidation extends Component {
     }
 
     render () {
-        const { currentCollectiviteName, collectivites, isSuperAdmin, currentCollectiviteId } = this.state
+        const { collectivites, isSuperAdmin, currentCollectiviteId } = this.state
         const listCircuits = this.state.filteredCircuits.map((circuit) =>
             <ValidationCircuitRow  key={circuit.id} circuit={circuit} onClick={this.props.onClick} collectiviteId={currentCollectiviteId} />
         )
@@ -94,7 +93,7 @@ class CircuitsValidation extends Component {
                             {isSuperAdmin &&
                                 <div className="auto cell">
                                     <label htmlFor="collectivites_select">Quelle collectivité ?</label>
-                                    <SelectCollectivite currentCollectivite={currentCollectiviteName} collectivites={collectivites} handleChange={this.handleChangeCollectivite} />
+                                    <SelectCollectivite collectiviteId={currentCollectiviteId} collectivites={collectivites} handleChange={this.handleChangeCollectivite} />
                                 </div>
                             }
                         </div>
@@ -147,12 +146,12 @@ ValidationCircuitRow.propTypes = {
     collectiviteId: number.isRequired
 }
 
-const SelectCollectivite = ({currentCollectivite, collectivites, handleChange}) => {
+const SelectCollectivite = ({collectiviteId, collectivites, handleChange}) => {
     const options = collectivites.map((collectivite, key) => {
-        if(collectivite.active) { return <option key={key} value={collectivite.id}>{collectivite.domain}</option> }
+        if(collectivite.active) { return <option key={key} value={collectivite.id}>{collectivite.nom}</option> }
     })
     return(
-        <select id="collectivites_select" value={currentCollectivite.domain} onChange={(e) => handleChange(e.target.value)} >
+        <select id="collectivites_select" value={collectiviteId} onChange={(e) => handleChange(parseInt(e.target.value))} >
             {options}
         </select>
     )
@@ -161,5 +160,5 @@ const SelectCollectivite = ({currentCollectivite, collectivites, handleChange}) 
 SelectCollectivite.PropTypes = {
     collectivites: array.isRequired,
     handleChange: func.isRequired,
-    currentCollectivite:object.isRequired
+    currentCollectiviteId: number.isRequired
 }
