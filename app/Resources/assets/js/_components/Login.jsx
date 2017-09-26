@@ -77,7 +77,7 @@ class MenuBar extends Component {
                                     <a href="#" className="button gray btn-user-conf">changer de compte</a>
                                 </div>
                                 <div className="medium-5 cell text-right">
-                                    <Link to={"/admin/circuit-de-validation"} className="button gray btn-user-conf">admin</Link>
+                                    <Link to={"/admin/circuits-de-validation"} className="button gray btn-user-conf">admin</Link>
                                 </div>
                             </div>
 
