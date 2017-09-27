@@ -3,13 +3,47 @@ import { Link } from 'react-router-dom'
 import Login from './_components/Login'
 import AppRoute from './_utils/AppRoute'
 import { Redirect } from 'react-router-dom'
+import NotificationSystem from 'react-notification-system'
+import PropTypes from 'prop-types'
 
 class App extends Component {
 
-    constructor(props) {
-        super(props)
+    constructor() {
+        super()
         this.state = {
             isAuthenticated: null
+        }
+        this._notificationSystem = null
+    }
+
+    static childContextTypes = {
+        _addNotification: PropTypes.func
+    }
+
+    notificationStyle = {
+        Title: {
+            DefaultStyle: {
+                textTransform: 'uppercase'
+            }
+        },
+        NotificationItem: { 
+            DefaultStyle: { 
+                margin: '100px 5px 2px 1px',
+                backgroundColor: '#404257',
+                color: 'white',
+                fontWeight: '700'
+            }
+        },
+        Dismiss: {
+            DefaultStyle: {
+              backgroundColor: '#404257'
+            }
+        }
+      }
+
+    getChildContext() {
+        return {
+            _addNotification: this._addNotification
         }
     }
 
@@ -21,6 +55,13 @@ class App extends Component {
 
     componentDidMount() {
         $(document).foundation()
+    }
+
+    _addNotification = (notification) => {
+        if (this._notificationSystem) {
+            console.log(notification)
+            this._notificationSystem.addNotification(notification)
+        }
     }
 
     render () {
@@ -96,6 +137,7 @@ class App extends Component {
                                 </div>
                             </div>
                             <div className="cell medium-12">
+                            <NotificationSystem ref={n => this._notificationSystem = n} style= {this.notificationStyle} />
                                 {isAuthenticated && <AppRoute isAuthenticated={isAuthenticated}/>}
                             </div>
 
@@ -104,9 +146,6 @@ class App extends Component {
                     </div>
                 </div>
             </div>
-            {/*<div className="cell shrink footer">
-                <h3>Here's my footer v2</h3>
-            </div>*/}
         </div>
         )
     }
