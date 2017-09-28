@@ -8,13 +8,15 @@
             "delete": "Supprimer",
             "add_user": "Ajouter un utilisateur",
             "edit_save": "Enregistrer les modifications",
+            "update": "Mettre à jour",
             "save": "Enregistrer",
             "edit": "éditer",
             "change_img": "Changer l'image",
             "upload_img": "Ajouter une image",
             "delete_img": "Supprimer l'image",
             "confirm": "Confirmer",
-            "cancel": "Annuler"
+            "cancel": "Annuler",
+            "add": "Ajouter"
         },
         "label": {
             "enabled": "Active",
@@ -35,7 +37,14 @@
             "save": "Ajouter le {{name}}"
         },
         "error": {
-            "not_extrayable_list": "Impossible de récuperer la liste de {{name}} - erreur {{errorCode}}"
+            "not_extrayable_list": "Impossible de récuperer la liste de {{name}} - erreur {{errorCode}}",
+            "not_addable": "Impossible de créer le {{name}} - erreur {{errorCode}}",
+            "not_removable": "Impossible de supprimer le {{name}} - erreur {{errorCode}}"
+        },
+        "success": {
+            "add": "Ajout de {{name}}",
+            "update": "Modification de {{name}}",
+            "delete": "Suppression de {{name}}"
         },
         "placeholder": {
             "type_user_name": "Entrez le nom d'un utilisateur...",
@@ -73,46 +82,80 @@
         },
         "user": {
             "name": "utilisateur",
-            "name_plural": "utilisateurs"
+            "name_plural": "utilisateurs",
+            "subtitle_user": "Informations utilisateurs",
+            "subtitle_signature": "Informations signatures",
+            "subtitle_geo": "Informations géographiques",
+            "subtitle_application": "Informations applications",
+            "subtitle_role": "Rôles de l'utilisateur",
+            "image_avatar": "avatar",
+            "image_signature": "signature",
+            "label_email": "Email",
+            "placeholder_email": "Email de l'utilisateur",
+            "label_firstname": "Prénom",
+            "placeholder_firstname": "Prénom de l'utilisateur",
+            "label_name": "Nom",
+            "placeholder_name": "Nom de l'utilisateur",
+            "placeholder_enable": "Actif",
+            "label_quality": "Qualité",
+            "placeholder_quality": "Actif",
+            "label_zip": "Code postal",
+            "placeholder_zip": "Code postal de l'utilisateur",
+            "label_city": "Ville",
+            "placeholder_city": "Ville de l'utilisateur",
+            "label_department": "Département",
+            "placeholder_department": "Département de l'utilisateur",
+            "label_country": "Pays",
+            "placeholder_country": "Pays de l'utilisateur",
+            "label_role_app": "Role application",
+            "label_api_enable": "Accès aux API",
+            "label_api_key": "Clé API",
+            "label_api_secret": "Secret API",
+            "label_role_user": "Role",
+            "placeholder_role_user": "Role de l'utilisateur"
         },
         "collectivite": {
             "title": "Rechercher une collectivité",
             "name": "collectivité",
             "name_plural": "collectivités",
-            "message": "Message d'accueil", 
+            "message": "Message d'accueil",
             "which": "Laquelle ?",
             "type_name": "Entrez le nom de la collectivité...",
             "no_results": "Aucune collectivité ne correspond à votre recherche...",
             "state": "Etat",
-            "infos": "Informations générales",
-            "mails_templates": "Modèles de mails",
-            "visa_location": "Emplacement du Visa",
-            "signature_location": "Emplacement de la signature",
-            "classeur_delay": "Durée des classeurs",
-            "placeholder_delay": "Saisir un nombre de 10 à 365",
-            "classeur_delay_help_text": "La durée des classeurs doit être comprise entre 10 et 365 jours",
-            "placeholder_type_name": "Saisir le nom de la collectivité",
-            "placeholder_type_visa_title": "Saisir le titre du VISA",
-            "draggable_help_text": "Déplacer manuellement le tampon pour définir son emplacement",
-            "last_page": "Dérniere page",
-            "first_page": "Première page",
-            "success_edit": "La collectivité a bien été bien modifier",
-            "success_upload_avatar": "L'image a été correctement chargée",
-            "error": {
-                "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
-                "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
-                "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
-                "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
-                "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
-                "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
-                "field_delay_required": "La durée des classeurs est requise",
-                "visa_title": "Le titre du VISA est requis"
-            },
-            "mail": {
-                "new_classeur": "Mail nouveau classeur",
-                "refused_classeur": "Mail classeur refusé",
-                "valid_classeur": "Mail classeur validé"
-            }
+          "infos": "Informations générales",
+          "mails_templates": "Modèles de mails",
+          "visa_location": "Emplacement du Visa",
+          "signature_location": "Emplacement de la signature",
+          "classeur_delay": "Durée des classeurs",
+          "placeholder_delay": "Saisir un nombre de 10 à 365",
+          "classeur_delay_help_text": "La durée des classeurs doit être comprise entre 10 et 365 jours",
+          "placeholder_type_name": "Saisir le nom de la collectivité",
+          "placeholder_type_visa_title": "Saisir le titre du VISA",
+          "draggable_help_text": "Déplacer manuellement le tampon pour définir son emplacement",
+          "last_page": "Dérniere page",
+          "first_page": "Première page",
+          "success_edit": "La collectivité a bien été bien modifier",
+          "success_upload_avatar": "L'image a été correctement chargée",
+          "error": {
+            "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
+            "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
+            "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
+            "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
+            "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
+            "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
+            "field_delay_required": "La durée des classeurs est requise",
+            "visa_title": "Le titre du VISA est requis"
+          },
+          "mail": {
+            "new_classeur": "Mail nouveau classeur",
+            "refused_classeur": "Mail classeur refusé",
+            "valid_classeur": "Mail classeur validé"
+          }
+        },
+        "role_application": {
+            "name": "role",
+            "name_plural": "roles"
         }
     }
 }

@@ -32,7 +32,8 @@ class User extends BaseUser {
      *                      "getByIdCircuit",
      *                      "currentUser",
      *                      "userPack",
-     *                      "searchUser"})
+     *                      "searchUser",
+     *                      "userRole"})
      *
      */
     protected $id;
@@ -92,7 +93,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="pathSignature", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"classeurById", "currentUser"})
      */
     protected $pathSignature;
 
@@ -359,7 +360,7 @@ class User extends BaseUser {
         }
 
         //Création des tokens d'api si absents
-        $tok = $this->getApitoken();
+        /*$tok = $this->getApitoken();
         $sec = $this->getApisecret();
         if (empty($tok)) {
             $this->setApitoken("token_" . md5(uniqid(rand(), true)));
@@ -368,7 +369,7 @@ class User extends BaseUser {
         //Création des tokens d'api si absents
         if (empty($sec)) {
             $this->setApisoken("secret_" . md5(uniqid(rand(), true)));
-        }
+        }*/
     }
 
     /**
@@ -407,6 +408,8 @@ class User extends BaseUser {
      */
     public function __construct() {
         parent::__construct();
+        $this->setApisecret("secret_" . md5(uniqid(rand(), true)));
+        $this->setApitoken("token_" . md5(uniqid(rand(), true)));
     }
 
     /**

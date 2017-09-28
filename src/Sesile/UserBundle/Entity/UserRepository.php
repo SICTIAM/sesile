@@ -23,6 +23,38 @@ class UserRepository extends EntityRepository {
             ->getResult();
     }
 
+    public function uploadFile($avatar, $user, $dirPath) {
+
+        if ($avatar) {
+            if ($user->getPath()) {
+                $user->removeUpload($dirPath);
+            }
+            $avatarName = sha1(uniqid(mt_rand(), true)) . '.' . $avatar->guessExtension();
+            $user->setPath($avatarName);
+            $avatar->move(
+                $dirPath,
+                $avatarName
+            );
+        }
+        return $user;
+    }
+
+    public function uploadSignatureFile($file, $user, $dirPath) {
+
+        if ($file) {
+            if ($user->getPathSignature()) {
+                $user->removeUpload($dirPath);
+            }
+            $fileName = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
+            $user->setPathSignature($fileName);
+            $file->move(
+                $dirPath,
+                $fileName
+            );
+        }
+        return $user;
+    }
+
     /**
      * Fonction pour savoir si un user est dans des classeurs
      * https://www.youtube.com/watch?v=T1JOlxiEDXw

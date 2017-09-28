@@ -2,6 +2,7 @@
 
 namespace Sesile\UserBundle\Controller;
 
+use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Form\UserRoleType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,19 @@ class UserRoleApiController extends FOSRestController implements ClassResourceIn
     public function getByIdAction(UserRole $userrole)
     {
         return $userrole;
+    }
+
+    /**
+     * @Rest\View(serializerGroups={"userRole"})
+     * @Rest\Get("/user/{id}")
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @param User $user
+     * @return UserRole
+     * @internal param $id
+     */
+    public function getByUserAction(User $user)
+    {
+        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:UserRole')->findByUser($user);
     }
 
 

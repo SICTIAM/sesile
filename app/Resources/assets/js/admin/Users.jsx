@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { object, func } from 'prop-types'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { escapedValue } from '../_utils/Search'
-
-const { object, func } = PropTypes
+import { basicNotification } from '../_components/Notifications'
 
 class Users extends Component {
 
     static contextTypes = {
-        t: func 
+        t: func,
+        _addNotification: func
     }
 
     constructor(props) {
@@ -25,36 +25,70 @@ class Users extends Component {
         }
     }
 
+    handleErrors(response) {
+        if (response.ok) {
+            return response
+        }
+        throw response
+    }
+
     componentDidMount() {
         if(this.props.user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
             this.setState({isSuperAdmin: true})
         }
-        this.getUsers(this.props.user.collectivite.id)
+        this.fetchUsers(this.props.user.collectivite.id)
         this.fetchCollectivites()
     }
 
-    getUsers (id) {
+    fetchUsers (id) {
+        const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_user_userapi_userscollectivite', {id}), { credentials: 'same-origin'})
+            .then(this.handleErrors)
             .then(response => response.json())
             .then(json => this.setState({users: json, filteredUsers: json}))
             .then(() => {
                 if (this.state.fieldSearch) this.handleChangeSearchUser(this.state.fieldSearch)
             })
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_extrayable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
+                error.statusText)))
     }
 
     fetchCollectivites () {
+        const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_main_collectiviteapi_getall'), { credentials: 'same-origin'})
+            .then(this.handleErrors)
             .then(response => response.json())
             .then(json => this.setState({collectivites: json}))
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_extrayable_list', {name: t('admin.collectivite.name', {count: 2}), errorCode: error.status}),
+                error.statusText)))
     }
 
-    deleteType (id) {
-        fetch(Routing.generate('sesile_user_userapi_remove', {id}), { method: 'delete', credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(() => {
-                this.getUsers(this.state.collectiviteId)
-                this.setState({infos: 'Enregistrement supprimé !'})
+    handleDeleteUser = (id) => {
+        const { t, _addNotification } = this.context
+        const id_collectivite = this.state.collectiviteId
+        fetch(Routing.generate("sesile_user_userapi_remove", {id}), {
+            method: 'DELETE',
+            credentials: 'same-origin'
+        })
+            .then(response => {
+                if(response.ok === true) {
+                    _addNotification(basicNotification(
+                        'success',
+                        t('admin.success.delete', {name: t('admin.user.name')}),
+                        t('admin.success.delete', {name: t('admin.user.name')})
+                    ))
+                    this.fetchUsers(id_collectivite)
+                }
             })
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_removable', {name: t('admin.user.name'), errorCode: error.status}),
+                error.statusText)
+            ))
     }
 
     handleChangeSearchUser = (fieldSearch) => {
@@ -66,14 +100,14 @@ class Users extends Component {
 
     onSearchByCollectiviteFieldChange(collectiviteId) {
         this.setState({collectiviteId})
-        this.getUsers(collectiviteId)
+        this.fetchUsers(collectiviteId)
     }
 
     render() {
         const { t } = this.context
         const filteredUsers = this.state.filteredUsers
         const Row = filteredUsers && filteredUsers.map(filteredUser =>
-            <UserRow key={filteredUser.id} User={filteredUser} deleteType={this.deleteType} />
+            <UserRow key={filteredUser.id} User={filteredUser} handleDeleteUser={this.handleDeleteUser} />
         )
         const collectivites = this.state.collectivites
         const collectivitesSelect = collectivites && collectivites.map(collectivite =>
@@ -123,7 +157,7 @@ class Users extends Component {
                             </div>
                             <div className="cell medium-12 panel-heading grid-x">
                                 <div className="cell medium-3">
-                                    <button className="button primary" onClick={() => this.postTypes()}>{t('common.button.add_user')}</button>
+                                    <Link to={`/admin/${this.state.collectiviteId}/utilisateur`} className="button primary" >{t('common.button.add_user')}</Link>
                                 </div>
                             </div>
                             {
@@ -144,12 +178,12 @@ class Users extends Component {
 }
 
 Users.PropTypes = {
-    user: object
+    user: object.isRequired
 }
 
 export default translate(['sesile'])(Users)
 
-const UserRow = ({ User, deleteType}, {t}) => {
+const UserRow = ({ User, handleDeleteUser}, {t}) => {
     return (
         <div className="cell medium-12 panel-body grid-x">
             <div className="cell medium-3">
@@ -164,7 +198,7 @@ const UserRow = ({ User, deleteType}, {t}) => {
             <div className="cell medium-3">
                 <Link to={`/admin/${User.collectivite.id}/utilisateur/${User.id}`} className="button primary" >{t('common.button.edit')}</Link>
                 <Link to={`/admin/${User.collectivite.id}/classeurs/${User.id}`} className="button secondary" >{t('common.classeur', {count: 2})}</Link>
-                <button className="button alert" onClick={() => deleteType(User.id)}>{t('common.button.delete')}</button>
+                <button className="button alert" onClick={() => handleDeleteUser(User.id)}>{t('common.button.delete')}</button>
             </div>
         </div>
     )
@@ -172,7 +206,7 @@ const UserRow = ({ User, deleteType}, {t}) => {
 
 UserRow.PropTypes = {
     User: object.isRequired,
-    deleteType: func.isRequired
+    handleDeleteUser: func.isRequired
 }
 
 UserRow.contextTypes = {
