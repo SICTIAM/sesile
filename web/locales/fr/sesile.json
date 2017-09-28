@@ -1,0 +1,59 @@
+{
+    "common": {
+        "no_results": "Aucun {{name}} ne correspond à votre recherche...",
+        "classeur": "classeur",
+        "classeur_plural": "classeurs",
+        "button": {
+            "delete": "Supprimer",
+            "add_user": "Ajouter un utilisateur",
+            "edit_save": "Enregistrer les modifications",
+            "save": "Enregistrer",
+            "edit": "éditer"
+        }
+    },
+    "admin": {
+        "title": "Rechercher un {{name}}",
+        "subtitle": "Puis accéder aux paramétres",
+        "associated_users": "Utilisateurs associés",
+        "users_list": "Liste des utilisateurs",
+        "button": {
+            "save": "Ajouter le {{name}}"
+        },
+        "placeholder": {
+            "type_user_name": "Entrez le nom d'un utilisateur...",
+            "name": "Nom du {{name}}",
+            "type_name": "Entrez le nom du {{name}}..."
+        },
+        "details": {
+            "title": "Paramètrer le {{name}}",
+            "subtitle": "Puis sauvegarder"
+        },
+        "label": {
+            "which": "Le quel ?",
+            "who": "Avec qui ?",
+            "which_collectivite": "Quelle collectivité ?"
+        },
+        "group": {
+            "name": "groupe",
+            "name_plural": "groupes",
+            "complet_name": "groupe d'utilisateurs",
+            "complet_name_plural": "groupes d'utilisateurs"
+        },
+        "type": {
+            "name": "type",
+            "name_plural": "types",
+            "complet_name": "type de classeurs",
+            "complet_name_plural": "types de classeurs"
+        },
+        "circuit": {
+            "name": "circuit",
+            "name_plural": "circuits",
+            "complet_name": "circuit de validation",
+            "step": "Etape {{ordre}}"
+        },
+        "user": {
+            "name": "utilisateur",
+            "name_plural": "utilisateurs"
+        }
+    }
+}

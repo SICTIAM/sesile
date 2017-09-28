@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
 
 const { func, object, array, number } = PropTypes
 
 class CircuitsValidation extends Component {
+
+    static contextTypes = {
+        t: func 
+    }
+
     constructor(props) {
         super(props)
         this.state = {
@@ -63,36 +69,37 @@ class CircuitsValidation extends Component {
     }
 
     render () {
+        const { t } = this.context
         const { collectivites, isSuperAdmin, currentCollectiviteId } = this.state
         const listCircuits = this.state.filteredCircuits.map((circuit) =>
             <ValidationCircuitRow  key={circuit.id} circuit={circuit} onClick={this.props.onClick} collectiviteId={currentCollectiviteId} />
         )
         return (
             <div className="circuit-validation">
-                <h4 className="text-center text-bold">Rechercher votre circuit de validation</h4>
-                <p className="text-center">Puis accéder aux paramétres</p>
+                <h4 className="text-center text-bold">{t('admin.title', {name: t('admin.circuit.complet_name')})}</h4>
+                <p className="text-center">{t('admin.subtitle')}</p>
                 <div className="grid-x align-center-middle">
                     <div className="cell medium-6">
                         <div className="grid-x grid-padding-x">
                             <div className="auto cell">
-                                <label htmlFor="name-search-admin">Lequel ?</label>
+                                <label htmlFor="name-search-admin">{t('admin.label.which')}</label>
                                 <input id="name-search-admin"
                                        value={this.state.circuitName}
                                        onChange={(event) => this.handleChangeCircuitName(event.target.value)}
-                                       placeholder="Entrez le nom du circuit..."
+                                       placeholder={t('admin.placeholder.type_name', {name: 'admin.circuit.name'})}
                                        type="text" />
                             </div>
                             <div className="auto cell">
-                                <label htmlFor="user-search-admin">Avec qui ?</label>
+                                <label htmlFor="user-search-admin">{t('admin.label.who')}</label>
                                 <input id="user-search-admin"
                                        value={this.state.userName}
                                        onChange={(event) => this.handleChangeUserName(event.target.value)}
-                                       placeholder="Entrez le nom d'un utilisateur..."
+                                       placeholder={t('admin.placeholder.type_user_name')}
                                        type="text" />
                             </div>
                             {isSuperAdmin &&
                                 <div className="auto cell">
-                                    <label htmlFor="collectivites_select">Quelle collectivité ?</label>
+                                    <label htmlFor="collectivites_select">{t('admin.label.which_collectivite')}</label>
                                     <SelectCollectivite collectiviteId={currentCollectiviteId} collectivites={collectivites} handleChange={this.handleChangeCollectivite} />
                                 </div>
                             }
@@ -101,14 +108,14 @@ class CircuitsValidation extends Component {
                     <div className="cell medium-10 list-admin">
                         <div className="grid-x grid-padding-x panel">
                             <div className="cell medium-12 panel-heading grid-x">
-                                <div className="cell medium-4">Circuit de validation</div>
-                                <div className="cell medium-8">Utilisateurs associés</div>
+                                <div className="cell medium-4">{t('admin.circuit.name')}</div>
+                                <div className="cell medium-8">{t('admin.associated_users')}</div>
                             </div>
                             {
                                 (listCircuits.length > 0) ? listCircuits :
                                 <div className="cell medium-12 panel-body">
                                     <div className="text-center">
-                                        Aucun circuit ne correspond à votre recherche...
+                                        {t('common.no_results', {name: t('admin.circuit.name')})}
                                     </div>
                                 </div>
                             }
@@ -124,7 +131,7 @@ CircuitsValidation.PropTypes = {
     onClick: func.isRequired
 }
 
-export default CircuitsValidation
+export default translate(['sesile'])(CircuitsValidation)
 
 const ValidationCircuitRow = ({circuit, collectiviteId}) => {
     const arrayNoms = []
