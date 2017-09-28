@@ -55,7 +55,6 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
-
     public function getClasseurIdValidableForUser($user) {
         $classeursId = array();
 

@@ -287,20 +287,82 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         //var_dump($request->request->all());
         var_dump($request->request->all());
 
-        $avatar = $request->request->get('file');
-
-        var_dump($avatar);
-
-        //$file = $user->getPath();
-
-        $avatarName = md5(uniqid()) . '.' . $avatar->guessExtension();
-
-        $avatar->move(
-            $this->getParameter('upload.path'),
-            $avatarName
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('SesileUserBundle:User')->uploadFile(
+            $request->files->get('path'),
+            $user,
+            $this->getParameter('upload')['path']
         );
 
-        return $avatarName;
+        $em->persist($user);
+        $em->flush();
+
+        return $user;
+
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Post("/avatar_remove/{id}")
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @param User $user
+     * @return User
+     * @internal param $id
+     */
+    public function deleteAvatarAction(User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user->removeUpload($this->getParameter('upload')['path']);
+        $user->setPath("");
+        $em->flush();
+
+        return $user;
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Post("/signature/{id}")
+     * @param Request $request
+     * @param User $user
+     * @return User|\Symfony\Component\Form\Form|JsonResponse
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     */
+    public function uploadSignatureAction(Request $request, User $user) {
+
+        if (empty($user)) {
+            return new JsonResponse(['message' => 'Utilisateur inexistant'], Response::HTTP_NOT_FOUND);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('SesileUserBundle:User')->uploadSignatureFile(
+            $request->files->get('signatures'),
+            $user,
+            $this->getParameter('upload')['signatures']
+        );
+
+        $em->persist($user);
+        $em->flush();
+
+        return $user;
+
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Post("/signature_remove/{id}")
+     * @ParamConverter("User", options={"mapping": {"id": "id"}})
+     * @param User $user
+     * @return User
+     * @internal param $id
+     */
+    public function deleteSignatureAction(User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user->removeUploadSignature($this->getParameter('upload')['signatures']);
+        $user->setPathSignature("");
+        $em->flush();
+
+        return $user;
     }
 
     /**
