@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { translate } from 'react-i18next'
 import { escapedValue } from '../_utils/Search'
 
+const { object, func } = PropTypes
+
 class Users extends Component {
+
+    static contextTypes = {
+        t: func 
+    }
 
     constructor(props) {
         super(props)
@@ -63,12 +70,11 @@ class Users extends Component {
     }
 
     render() {
+        const { t } = this.context
         const filteredUsers = this.state.filteredUsers
-
         const Row = filteredUsers && filteredUsers.map(filteredUser =>
             <UserRow key={filteredUser.id} User={filteredUser} deleteType={this.deleteType} />
         )
-
         const collectivites = this.state.collectivites
         const collectivitesSelect = collectivites && collectivites.map(collectivite =>
             {
@@ -80,14 +86,14 @@ class Users extends Component {
 
         return (
             <div>
-                <h4 className="text-center text-bold">Recherche d'un utilisateur</h4>
-                <p className="text-center">Puis accéder aux paramétres</p>
+                <h4 className="text-center text-bold">{t('admin.title', {name: t('admin.user.name')})}</h4>
+                <p className="text-center">{t('admin.subtitle')}</p>
                 <p className="text-center">{ this.state.infos }</p>
                 <div className="grid-x align-center-middle">
                     <div className="cell medium-6">
                         <div className="grid-x grid-padding-x align-center-middle">
                             <div className="medium-6 cell">
-                                <label htmlFor="circuit_name_search">Lequel ?</label>
+                                <label htmlFor="circuit_name_search">{t('admin.label.which')}</label>
                                 <input id="type_name_search"
                                        value={this.state.fieldSearch}
                                        onChange={(event) => this.handleChangeSearchUser(event.target.value)}
@@ -99,7 +105,7 @@ class Users extends Component {
                                     <div className="medium-6 cell">
                                         {
                                             <div>
-                                                <label htmlFor="collectivite_name_search">Collectivité ?</label>
+                                                <label htmlFor="collectivite_name_search">{t('admin.label.which_collectivite')}</label>
                                                 <select id="collectivite_name_search" value={this.state.collectiviteId} onChange={(event) => this.onSearchByCollectiviteFieldChange(event.target.value)}>
                                                     {collectivitesSelect}
                                                 </select>
@@ -113,18 +119,18 @@ class Users extends Component {
                     <div className="cell medium-8">
                         <div className="grid-x grid-padding-x panel">
                             <div className="cell medium-12 panel-heading grid-x">
-                                <div className="cell medium-12">Liste des utilisateurs</div>
+                                <div className="cell medium-12">{t('admin.users_list')}</div>
                             </div>
                             <div className="cell medium-12 panel-heading grid-x">
                                 <div className="cell medium-3">
-                                    <button className="button primary" onClick={() => this.postTypes()}>Ajouter un utilisateur</button>
+                                    <button className="button primary" onClick={() => this.postTypes()}>{t('common.button.add_user')}</button>
                                 </div>
                             </div>
                             {
                                 (Row.length > 0) ? Row :
                                     <div className="cell medium-12 panel-body">
                                         <div className="text-center">
-                                            Aucun utilisateur ne correspond à votre recherche...
+                                            {t('common.no_results', {name: t('admin.user.name')})}
                                         </div>
                                     </div>
                             }
@@ -138,13 +144,12 @@ class Users extends Component {
 }
 
 Users.PropTypes = {
-    user: PropTypes.object.isRequired
+    user: object
 }
 
+export default translate(['sesile'])(Users)
 
-export default Users
-
-const UserRow = ({User, deleteType}) => {
+const UserRow = ({ User, deleteType}, {t}) => {
     return (
         <div className="cell medium-12 panel-body grid-x">
             <div className="cell medium-3">
@@ -157,15 +162,19 @@ const UserRow = ({User, deleteType}) => {
                 {User.email}
             </div>
             <div className="cell medium-3">
-                <Link to={`/admin/${User.collectivite.id}/utilisateur/${User.id}`} className="button primary" >éditer</Link>
-                <Link to={`/admin/${User.collectivite.id}/classeurs/${User.id}`} className="button secondary" >classeurs</Link>
-                <button className="button alert" onClick={() => deleteType(User.id)}>supprimer</button>
+                <Link to={`/admin/${User.collectivite.id}/utilisateur/${User.id}`} className="button primary" >{t('common.button.edit')}</Link>
+                <Link to={`/admin/${User.collectivite.id}/classeurs/${User.id}`} className="button secondary" >{t('common.classeur', {count: 2})}</Link>
+                <button className="button alert" onClick={() => deleteType(User.id)}>{t('common.button.delete')}</button>
             </div>
         </div>
     )
 }
 
 UserRow.PropTypes = {
-    User: PropTypes.object.isRequired,
-    deleteType: PropTypes.func.isRequired
+    User: object.isRequired,
+    deleteType: func.isRequired
+}
+
+UserRow.contextTypes = {
+    t: func
 }

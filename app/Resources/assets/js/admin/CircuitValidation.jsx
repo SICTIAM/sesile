@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-
-const { object, func } = PropTypes
+import PropTypes, { object, func } from 'prop-types'
+import { translate } from 'react-i18next'
 
 class CircuitValidation extends Component {
+
+    static contextTypes = {
+        t: func
+    }
+
     constructor(props) {
         super(props)
         this.state = {
@@ -43,6 +47,7 @@ class CircuitValidation extends Component {
     }
 
     render() {
+        const { t } = this.context
         const { circuit, circuitReceived } = this.state
         const listClasseurTypes = this.state.classeurTypes.map(classeurType =>
             <ClasseurTypeCheckbox key={classeurType.id}
@@ -52,8 +57,8 @@ class CircuitValidation extends Component {
         return (
             circuitReceived &&
             <div className="circuit-validation">
-                <h4 className="text-center text-bold">Paramètrer votre circuit de validation</h4>
-                <p className="text-center">Puis sauvegarder</p>
+                <h4 className="text-center text-bold">{t('admin.details.title', {name: t('admin.circuit.complet_name')})}</h4>
+                <p className="text-center">{t('admin.details.subtitle')}</p>
                 <div className="details-circuit-validation">
                     <div className="grid-x name-details-circuit-validation">
                         <div className="medium-12 cell">
@@ -63,10 +68,10 @@ class CircuitValidation extends Component {
                     <div className="content-details-circuit-validation">
                         <div className="grid-x">
                             <div className="medium-2 cell">
-                                <span>Type de classeur</span>
+                                <span>{t('admin.type.name', {count: 2})}</span>
                             </div>
                             <div className="medium-8 cell">
-                                <span>Circuit de validation</span>
+                                <span>{t('admin.circuit.complet_name')}</span>
                             </div>
                         </div>
                         <div className="grid-x">
@@ -87,7 +92,7 @@ class CircuitValidation extends Component {
 CircuitValidation.PropTypes = {
 }
 
-export default CircuitValidation
+export default translate(['sesile'])(CircuitValidation)
 
 const ClasseurTypeCheckbox = ({classeurType, circuit, onChange}) => {
     const checked = (circuit.types.find(type => classeurType.nom === type.nom) !== undefined) ? true : false
@@ -114,18 +119,18 @@ const StepsCircuitValidation = ({circuit}) => {
     )
 }
 
-StepsCircuitValidation.Proptypes = {
+StepsCircuitValidation.proptypes = {
     circuit: object.isRequired
 }
 
-const StepCircuitValidation = ({groupStep}) => {
+const StepCircuitValidation = ({groupStep}, {t}) => {
     const users = groupStep.users.map(user => <li key={user.id}>{user._prenom + " " + user._nom}<a>x</a></li>)
     const usersGroups = groupStep.user_packs.map(group => group.users.map(user => <li key={user.id}>{user._prenom + " " + user._nom}<a>x</a></li>))
     return (
         <div className="medium-3 cell">
             <div className="grid-x step-circuit-validation">
                 <div className="medium-12 cell name-step-circuit-validation">
-                    Etape {groupStep.ordre + 1 + " - ".concat(groupStep.ordre == 0 ? 'Déposante':'Validante')}
+                {groupStep.ordre == 0 ? t('admin.circuit.applicant_step', {ordre:groupStep.ordre + 1}) : t('admin.circuit.validat_step', {ordre:groupStep.ordre + 1})}
                 </div>
                 <div className="medium-12 cell content-step-circuit-validation">
                     <ul className="no-bullet">
@@ -138,6 +143,10 @@ const StepCircuitValidation = ({groupStep}) => {
     )
 }
 
-StepCircuitValidation.Proptypes = {
+StepCircuitValidation.proptypes = {
     groupStep: object.isRequired
+}
+
+StepCircuitValidation.contextTypes = {
+    t: func
 }

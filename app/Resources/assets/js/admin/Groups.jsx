@@ -1,12 +1,18 @@
 import React, { Component }from 'react'
 import PropTypes from 'prop-types'
 import Link from 'react-router-dom'
+import { translate } from 'react-i18next'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
 
 const { object, array, func, any } = PropTypes
 
 class Groups extends Component {
+
+    static contextTypes = {
+        t: func
+    }
+
     constructor(props) {
         super(props)
         this.state = {
@@ -65,36 +71,36 @@ class Groups extends Component {
     
     
     render() {
+        const { t } = this.context
         const user = this.props.user 
         const { currentCollectiviteName, currentCollectiviteId, collectivites, isSuperAdmin, filteredGroups, groupName, userName } = this.state
         const listFilteredGroups = filteredGroups.map((group, key) => <GroupRow key={key} group={group} collectiviteId={currentCollectiviteId} />)
         return (
             <div className="user-group">
-                <h4 className="text-center text-bold">Rechercher votre groupe d'utilisateurs</h4>
-                <p className="text-center">Puis accéder aux paramétres</p>
-
+                <h4 className="text-center text-bold">{t('admin.title', {name: t('admin.group.complet_name')})}</h4>
+                <p className="text-center">{t('admin.subtitle')}</p>
                 <div className="grid-x align-center-middle">
                     <div className="cell medium-6">
                         <div className="grid-x grid-padding-x">
                             <div className="auto cell">
-                                <label htmlFor="name-search-admin">Lequel ?</label>
+                                <label htmlFor="name-search-admin">{t('admin.label.which')}</label>
                                 <input id="name-search-admin"
-                                    placeholder="Entrez le nom du groupe..."
+                                    placeholder={t('admin.placeholder.type_name', {name: t('admin.group.name')})}
                                     type="text" 
                                     value={groupName}
                                     onChange={(e) => this.handleSearchByGroupName(e.target.value)} />
                             </div>
                             <div className="auto cell">
-                                <label htmlFor="user-search-admin">Avec qui ?</label>
+                                <label htmlFor="user-search-admin">{t('admin.label.who')}</label>
                                 <input id="user-search-admin"
-                                    placeholder="Entrez le nom d'un utilisateur..."
+                                    placeholder={t('admin.placeholder.type_user_name')}
                                     type="text" 
                                     value={userName}
                                     onChange={(e) => this.handleSearchByUserName(e.target.value)}/>
                             </div>
                             {isSuperAdmin &&
                                 <div className="auto cell">
-                                    <label htmlFor="collectivites_select">Quelle collectivité ?</label>
+                                    <label htmlFor="collectivites_select">{t('admin.label.which_collectivite')}</label>
                                     <SelectCollectivite currentCollectivite={currentCollectiviteName} collectivites={collectivites} handleChange={this.handleChangeCollectivite} />
                                 </div>
                             }
@@ -103,13 +109,13 @@ class Groups extends Component {
                     <div className="cell medium-10 list-admin">
                         <div className="grid-x grid-padding-x panel">
                             <div className="cell medium-12 panel-heading grid-x">
-                                <div className="cell medium-4">Groupe d'utilisateurs</div>
-                                <div className="cell medium-8">Utilisateurs associés</div>
+                                <div className="cell medium-4">{t('admin.group.name')}</div>
+                                <div className="cell medium-8">{t('admin.associated_users')}</div>
                             </div>
                             {(listFilteredGroups.length > 0) ? listFilteredGroups :
                                 <div className="cell medium-12 panel-body">
                                     <div className="text-center">
-                                        Aucun groupe ne correspond à votre recherche...
+                                        {t('common.no_results', {name: t('admin.group.name')})}
                                     </div>
                                 </div>
                             }
@@ -125,7 +131,7 @@ Groups.PropTypes = {
     user: object.isRequired
 }
 
-export default Groups
+export default translate(['sesile'])(Groups)
 
 const SelectCollectivite = ({currentCollectivite, collectivites, handleChange}) => {
     const options = collectivites.map((collectivite, key) => {

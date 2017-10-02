@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 import { escapedValue } from '../_utils/Search'
 
 const { object, func } = PropTypes
 
 class Types extends Component {
+
+    static contextTypes = {
+        t: func
+    }
 
     constructor(props) {
         super(props)
@@ -114,6 +119,7 @@ class Types extends Component {
     }
 
     render() {
+        const { t } = this.context
         const { filteredTypes, collectivites, isSuperAdmin } = this.state
         const listType = filteredTypes.map(type => <TypeRow key={type.id}
                                                             type={type}
@@ -125,23 +131,23 @@ class Types extends Component {
 
         return (
             <div>
-                <h4 className="text-center text-bold">Rechercher votre type de classeur</h4>
-                <p className="text-center">Puis accéder aux paramétres</p>
+                <h4 className="text-center text-bold">{t('admin.title', {name: t('admin.type.complet_name')})}</h4>
+                <p className="text-center">{t('admin.subtitle')}</p>
                 <div className="grid-x align-center-middle">
                     <div className="cell medium-6">
                         <div className="grid-x grid-padding-x align-center-middle">
                             <div className="medium-auto cell">
-                                <label htmlFor="circuit_name_search">Lequel ?</label>
+                                <label htmlFor="circuit_name_search">{t('admin.label.which')}</label>
                                 <input id="type_name_search"
                                    value={this.state.searchFieldName}
                                    onChange={(event) => this.handleChangeSearchByName(event.target.value)}
-                                   placeholder="Entrez le nom du circuit..."
+                                   placeholder={t('admin.placeholder.type_name', {name: t('admin.type.name')})}
                                    type="text" />
                             </div>
                             {(isSuperAdmin) &&
                                 <div className="medium-auto cell">
                                     <div>
-                                        <label htmlFor="collectivite_name_search">Quelle collectivité ?</label>
+                                        <label htmlFor="collectivite_name_search">{t('admin.label.which_collectivite')}</label>
                                         <select id="collectivite_name_search"
                                                 value={this.state.currentCollectiviteId}
                                                 onChange={(event) => this.handleChangeSearchByCollectivite(event.target.value)}>
@@ -156,12 +162,12 @@ class Types extends Component {
                     <div className="cell medium-8">
                         <div className="grid-x grid-padding-x panel">
                             <div className="cell medium-12 panel-heading grid-x">
-                                <div className="cell medium-12">Type de classeurs</div>
+                                <div className="cell medium-12">{t('admin.type.complet_name')}</div>
                             </div>
                             <div className="cell medium-12 panel-body grid-x">
                                 <div className="cell medium-6">
                                     <input type="text"
-                                           placeholder="Nouveau type"
+                                           placeholder={t('admin.placeholder.name', { name: t('admin.type.name')})}
                                            name="nom"
                                            onChange={(e) => this.setState({nom: e.target.value})}
                                            value={this.state.nom} />
@@ -169,14 +175,14 @@ class Types extends Component {
                                 <div className="cell medium-6 text-right">
                                     <button className="button primary text-uppercase"
                                             onClick={() => this.createType()}>
-                                        Créer un nouveau type
+                                        {t('admin.button.save', {name: t('admin.type.name')})}
                                     </button>
                                 </div>
                             </div>
                             {(listType.length > 0) ? listType :
                                 <div className="cell medium-12 panel-body">
                                     <div className="text-center">
-                                        Aucun types ne correspond à votre recherche...
+                                        {t('common.no_results', {name: t('admin.type.name')})}
                                     </div>
                                 </div>
                             }
@@ -193,9 +199,9 @@ Types.PropTypes = {
     user: object.isRequired
 }
 
-export default Types
+export default translate(['sesile'])(Types)
 
-const TypeRow = ({type, removeType, updateType, handleChangeNameFields}) => {
+const TypeRow = ({type, removeType, updateType, handleChangeNameFields}, {t}) => {
     return (
         <div className="cell medium-12 panel-body grid-x">
             <div className="cell medium-auto">
@@ -206,14 +212,14 @@ const TypeRow = ({type, removeType, updateType, handleChangeNameFields}) => {
             <div className="cell medium-auto text-right">
                 <button className="button primary text-uppercase"
                         onClick={() => updateType(type.id, type.nom)}>
-                    Enregistrer
+                    {t('common.button.save')}
                 </button>
             </div>
             {(type.supprimable) &&
                 <div className="cell medium-auto text-right">
                     <button className="button alert text-uppercase"
                             onClick={() => removeType(type.id)}>
-                        Supprimer
+                        {t('common.button.delete')}
                     </button>
                 </div>
             }
@@ -226,4 +232,8 @@ TypeRow.PropTypes = {
     removeType: func.isRequired,
     updateType: func.isRequired,
     handleChangeNameFields: func.isRequired
+}
+
+TypeRow.contextTypes = {
+    t: func
 }
