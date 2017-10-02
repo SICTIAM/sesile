@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
-import PropTypes, { object } from 'prop-types'
+import PropTypes, { object, func } from 'prop-types'
+import { translate } from 'react-i18next'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
+import { basicNotification } from '../_components/Notifications'
 
 class Collectivites extends Component {
+
+    static contextTypes = {
+        t: func,
+        _addNotification: func
+    }
+
     constructor(props) {
         super(props)
          this.state = {
@@ -13,15 +21,28 @@ class Collectivites extends Component {
          }
     }
 
+    handleErrors(response) {
+        if (response.ok) {
+            return response
+        }
+        throw response  
+    }
+
     componentDidMount() {
         this.fetchCollectivites()
     }
     
 
     fetchCollectivites() {
+        const { t } = this.context
         fetch(Routing.generate('sesile_main_collectiviteapi_getall'), {credentials: 'same-origin'})
+        .then(this.handleErrors)
         .then(response => response.json())
         .then(json => this.setState({collectivites: json, filteredCollectivites: json}))
+        .catch(error => this.context._addNotification(basicNotification('error', 
+                                                                        t('admin.error.not_extrayable_list', 
+                                                                        {name: t('admin.collectivite.name', {count: 2}), errorCode: error.status}), 
+                                                                        error.statusText)))
     }
 
     handleSearchByCollectiviteName(collectiviteName) {
@@ -32,20 +53,21 @@ class Collectivites extends Component {
     }
 
     render() {
+        const { t } = this.context
         const { filteredCollectivites, collectiviteName } = this.state
         const listFilteredCollectivites = filteredCollectivites.map((collectivite, key) => <CollectiviteRow key={key} collectivite={collectivite} />)
         return (
             <div className="user-group">
-                <h4 className="text-center text-bold">Rechercher la collectivité</h4>
-                <p className="text-center">Puis accéder aux paramétres</p>
+                <h4 className="text-center text-bold">{t('admin.collectivite.title')}</h4>
+                <p className="text-center">{t('admin.subtitle')}</p>
 
                 <div className="grid-x align-center-middle">
                     <div className="cell medium-6">
                         <div className="grid-x grid-padding-x">
                             <div className="auto cell">
-                                <label htmlFor="name-search-admin">Lequel ?</label>
+                                <label htmlFor="name-search-admin">{t('admin.collectivite.which')}</label>
                                 <input id="name-search-admin"
-                                    placeholder="Entrez le nom de la collectivite..."
+                                    placeholder={t('admin.collectivite.type_name')}
                                     type="text" 
                                     value={collectiviteName}
                                     onChange={(e) => this.handleSearchByCollectiviteName(e.target.value)} />
@@ -55,13 +77,13 @@ class Collectivites extends Component {
                     <div className="cell medium-10 list-admin">
                         <div className="grid-x grid-padding-x panel">
                             <div className="cell medium-12 panel-heading grid-x">
-                                <div className="cell medium-4">Collecitivite</div>
-                                <div className="cell medium-8">Etat</div>
+                                <div className="cell medium-4">{t('admin.collectivite.name')}</div>
+                                <div className="cell medium-8">{t('admin.collectivite.state')}</div>
                             </div>
                             {(listFilteredCollectivites.length > 0) ? listFilteredCollectivites :
                                 <div className="cell medium-12 panel-body">
                                     <div className="text-center">
-                                        Aucun collectivité ne correspond à votre recherche...
+                                        {t('admin.collectivite.no_results')}
                                     </div>
                                 </div>
                             }
@@ -77,16 +99,16 @@ Collectivites.propTypes = {
     user: object.isRequired
 }
 
-export default Collectivites
+export default translate(['sesile'])(Collectivites)
 
-const CollectiviteRow = ({ collectivite }) => {
+const CollectiviteRow = ({ collectivite }, {t}) => {
     return (
         <div className="cell medium-12 panel-body grid-x row-admin" onClick={() => History.push(`collectivite/${collectivite.id}`)}>
             <div className="cell medium-4 text-uppercase">
                 {collectivite.nom}
             </div>
-            <div className="cell medium-8 text-uppercase">
-                {(collectivite.active) ? 'Active' : 'Non active'}
+            <div className="cell medium-6 text-uppercase">
+                {(collectivite.active) ? t('common.label.enabled') : t('common.label.disabled')}
             </div>
         </div>
     )
@@ -94,4 +116,8 @@ const CollectiviteRow = ({ collectivite }) => {
 
 CollectiviteRow.propTypes = {
     collectivite: object.isRequired
+}
+
+CollectiviteRow.contextTypes = {
+    t: func 
 }
