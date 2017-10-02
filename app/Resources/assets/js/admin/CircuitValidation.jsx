@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { object, func } from 'prop-types'
 import { translate } from 'react-i18next'
-
-const { object, func } = PropTypes
 
 class CircuitValidation extends Component {
 
@@ -81,7 +79,7 @@ class CircuitValidation extends Component {
                                 {listClasseurTypes}
                             </div>
                             <div className="medium-8 cell">
-                                <StepsCircuitValidation t={t} circuit={circuit} />
+                                <StepsCircuitValidation circuit={circuit} />
                             </div>
                         </div>
                     </div>
@@ -112,8 +110,8 @@ ClasseurTypeCheckbox.Proptypes = {
     onChange: func.isRequired
 }
 
-const StepsCircuitValidation = ({t, circuit}) => {
-    const steps = circuit.etape_groupes.map(groupStep => <StepCircuitValidation t={t} key={groupStep.id} groupStep={groupStep}/>)
+const StepsCircuitValidation = ({circuit}) => {
+    const steps = circuit.etape_groupes.map(groupStep => <StepCircuitValidation key={groupStep.id} groupStep={groupStep}/>)
     return (
         <div className="grid-x grid-margin-x">
             {steps}
@@ -121,19 +119,18 @@ const StepsCircuitValidation = ({t, circuit}) => {
     )
 }
 
-StepsCircuitValidation.Proptypes = {
-    t: func.isRequired,
+StepsCircuitValidation.proptypes = {
     circuit: object.isRequired
 }
 
-const StepCircuitValidation = ({t, groupStep}) => {
+const StepCircuitValidation = ({groupStep}, {t}) => {
     const users = groupStep.users.map(user => <li key={user.id}>{user._prenom + " " + user._nom}<a>x</a></li>)
     const usersGroups = groupStep.user_packs.map(group => group.users.map(user => <li key={user.id}>{user._prenom + " " + user._nom}<a>x</a></li>))
     return (
         <div className="medium-3 cell">
             <div className="grid-x step-circuit-validation">
                 <div className="medium-12 cell name-step-circuit-validation">
-                    {t('admin.circuit.step', {ordre: groupStep.ordre + 1 + " - ".concat(groupStep.ordre == 0 ? 'Déposante':'Validante')})}
+                {groupStep.ordre == 0 ? t('admin.circuit.applicant_step', {ordre:groupStep.ordre + 1}) : t('admin.circuit.validat_step', {ordre:groupStep.ordre + 1})}
                 </div>
                 <div className="medium-12 cell content-step-circuit-validation">
                     <ul className="no-bullet">
@@ -146,7 +143,10 @@ const StepCircuitValidation = ({t, groupStep}) => {
     )
 }
 
-StepCircuitValidation.Proptypes = {
-    t: func.isRequired,
+StepCircuitValidation.proptypes = {
     groupStep: object.isRequired
+}
+
+StepCircuitValidation.contextTypes = {
+    t: func
 }

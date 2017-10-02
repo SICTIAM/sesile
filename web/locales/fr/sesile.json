@@ -49,7 +49,8 @@
             "name": "circuit",
             "name_plural": "circuits",
             "complet_name": "circuit de validation",
-            "step": "Etape {{ordre}}"
+            "applicant_step": "Etape {{ordre}} - Déposante",
+            "validat_step": "Etape {{ordre}} - Validante"
         },
         "user": {
             "name": "utilisateur",

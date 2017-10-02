@@ -121,8 +121,7 @@ class Types extends Component {
     render() {
         const { t } = this.context
         const { filteredTypes, collectivites, isSuperAdmin } = this.state
-        const listType = filteredTypes.map(type => <TypeRow t={t}
-                                                            key={type.id}
+        const listType = filteredTypes.map(type => <TypeRow key={type.id}
                                                             type={type}
                                                             removeType={this.removeType}
                                                             updateType={this.updateType}
@@ -202,7 +201,7 @@ Types.PropTypes = {
 
 export default translate(['sesile'])(Types)
 
-const TypeRow = ({type, removeType, updateType, handleChangeNameFields, t}) => {
+const TypeRow = ({type, removeType, updateType, handleChangeNameFields}, {t}) => {
     return (
         <div className="cell medium-12 panel-body grid-x">
             <div className="cell medium-auto">
@@ -232,6 +231,9 @@ TypeRow.PropTypes = {
     type: object.isRequired,
     removeType: func.isRequired,
     updateType: func.isRequired,
-    handleChangeNameFields: func.isRequired,
-    t: func.isRequired
+    handleChangeNameFields: func.isRequired
+}
+
+TypeRow.contextTypes = {
+    t: func
 }

@@ -73,7 +73,7 @@ class Users extends Component {
         const { t } = this.context
         const filteredUsers = this.state.filteredUsers
         const Row = filteredUsers && filteredUsers.map(filteredUser =>
-            <UserRow t={t} key={filteredUser.id} User={filteredUser} deleteType={this.deleteType} />
+            <UserRow key={filteredUser.id} User={filteredUser} deleteType={this.deleteType} />
         )
         const collectivites = this.state.collectivites
         const collectivitesSelect = collectivites && collectivites.map(collectivite =>
@@ -149,7 +149,7 @@ Users.PropTypes = {
 
 export default translate(['sesile'])(Users)
 
-const UserRow = ({t, User, deleteType}) => {
+const UserRow = ({ User, deleteType}, {t}) => {
     return (
         <div className="cell medium-12 panel-body grid-x">
             <div className="cell medium-3">
@@ -171,7 +171,10 @@ const UserRow = ({t, User, deleteType}) => {
 }
 
 UserRow.PropTypes = {
-    t: func.isRequired,
     User: object.isRequired,
     deleteType: func.isRequired
+}
+
+UserRow.contextTypes = {
+    t: func
 }
