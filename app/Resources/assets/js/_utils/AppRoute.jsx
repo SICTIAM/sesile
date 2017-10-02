@@ -11,6 +11,8 @@ import Users from '../admin/Users'
 import User from '../admin/User'
 import UserListClasseurs from '../admin/UserListClasseurs'
 import Types from '../admin/Types'
+import Collectivites from '../admin/Collectivites'
+import Collectivite from '../admin/Collectivite'
 import AdminRoute from './AdminRoute'
 import Home from '../Home'
 
@@ -38,10 +40,11 @@ class AppRoute extends Component {
                 <AdminRoute exact={true} path={"/admin/circuits-de-validation"} component={CircuitsValidation} user={user} />
                 <AdminRoute exact={true} path={"/admin/groupes"} component={Groups} user={user} />
                 <AdminRoute exact={true} path={"/admin/utilisateurs"} component={Users} user={user} />
+                <AdminRoute exact={true} path={"/admin/collectivites"} component={Collectivites} user={user} />
+                <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
                     <AdminRoute exact={true} path={match.path} component={Group} user={user} match={match} />                    
                 )} />
-                <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
                 <Route exact={true} path={"/admin/:collectiviteId/utilisateur/:userId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={User} user={user} match={match} />
                 )} />
@@ -50,6 +53,9 @@ class AppRoute extends Component {
                 )} />
                 <Route exact={true} path={"/admin/:collectiviteId/circuit-de-validation/:circuitId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={CircuitValidation} user={user} match={match} />
+                )} />
+                <Route exact={true} path={"/admin/collectivite/:collectiviteId?"} render={({match}) => (
+                    <AdminRoute exact={true} path={match.path} component={Collectivite} user={user} match={match} />
                 )} />
             </Switch>
         )

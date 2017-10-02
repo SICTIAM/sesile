@@ -49,6 +49,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
+     * @Serializer\Groups({"getAllCollectivite"})
      */
     private $image;
 
