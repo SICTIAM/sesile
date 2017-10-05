@@ -44,28 +44,64 @@ class migrateEtapeClasseurCommand extends ContainerAwareCommand
 
                 foreach ($etapesClasseur as $key => $etapeClasseur) {
 
-                    $output->writeln('Etape classeur : ' . $etapeClasseur->getId());
+                    $output->writeln('Etape classeur : ' . $key . ' - ' . $etapeClasseur->getId() . ' - ' . count($usersValidant));
 
-                    if (in_array($etapeClasseur->getId(), $etapeValidant)) {
+                    // setEtapeValidante
+                    if (in_array($classeur->getStatus(), array(1,4))) {
+                        if ($key == count($usersValidant)) {
+                            $etapeClasseur->setEtapeValidante(true);
+                            $etapeClasseur->setEtapeValide(false);
 
-                        $output->writeln('User validant : ' . $etapeClasseur->getId());
+                            //$output->writeln('Set etape validante : ' . $key . " - " . $etapeClasseur->getId());
 
-                        $etapeClasseur->setEtapeValide(true);
-
-                        $output->writeln('count uservalidant : ' . count($usersValidant));
-                        if ($usersValidant != null && array_key_exists($key, $usersValidant)) {
-                            $userValidant = $em->getrepository('SesileUserBundle:User')->findOneById($usersValidant[$key]);
-
-                            $etapeClasseur->setUserValidant($userValidant);
-                            $output->writeln('User validant : ' . $userValidant->getNom());
                         }
 
                         $em->persist($etapeClasseur);
                         $em->flush();
                     }
+                    else if (in_array($etapeClasseur->getId(), $etapeValidant)) {
+
+                        //$output->writeln('User validant : ' . $etapeClasseur->getId());
+
+                        $etapeClasseur->setEtapeValide(true);
+
+                        //$output->writeln('count uservalidant : ' . count($usersValidant));
+                        if ($usersValidant != null && array_key_exists($key, $usersValidant)) {
+                            $userValidant = $em->getrepository('SesileUserBundle:User')->findOneById($usersValidant[$key]);
+
+                            $etapeClasseur->setUserValidant($userValidant);
+                            //$output->writeln('User validant : ' . $userValidant->getNom());
+                        }
+
+                        $em->persist($etapeClasseur);
+                        $em->flush();
+                    }
+
+
                 }
 
                 $output->writeln('Migration classeur ' . $classeur->getNom() . ' ok.');
+
+            } else {
+
+                $output->writeln('============================');
+                $output->writeln('Migration classeur ' . $classeur->getNom() . ' begin.');
+
+                $etapeClasseur = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneBy(
+                    array('classeur' => $classeur),
+                    array('ordre'    => 'ASC')
+                );
+
+                if ($etapeClasseur) {
+
+                    $etapeClasseur->setEtapeValidante(true);
+                    $etapeClasseur->setEtapeValide(false);
+
+                    $em->persist($etapeClasseur);
+                }
+                $output->writeln('Etape classeur First only ');
+                $output->writeln('Migration classeur ' . $classeur->getNom() . ' ok.');
+                $em->flush();
 
             }
 

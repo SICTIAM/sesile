@@ -19,6 +19,14 @@
             "add": "Ajouter"
         },
         "label": {
+            "enabled": "active",
+            "disabled": "inactive"
+        },
+        "classeurs": {
+            "title_list": "liste des classeurs",
+            "title_to_sign": "classeur à signer",
+            "title_to_sign_plural": "classeurs à signer",
+            "sort": "trier"
             "enabled": "Active",
             "disabled": "inactive",
             "name": "Nom",

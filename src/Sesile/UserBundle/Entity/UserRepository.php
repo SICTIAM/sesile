@@ -55,6 +55,31 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
+
+    public function getClasseurIdValidableForUser($user) {
+        $classeursId = array();
+
+        $etapeClasseurs = $user->getEtapeClasseurs();
+        foreach ($etapeClasseurs as $etapeClasseur) {
+            if ($etapeClasseur->getEtapeValidante()) {
+                $classeursId[] = $etapeClasseur->getClasseur()->getId();
+            }
+        }
+
+        $userPacks = $user->getUserPacks();
+        foreach ($userPacks as $userPack) {
+            $packEtapeClasseurs = $userPack->getEtapeClasseurs();
+            foreach ($packEtapeClasseurs as $packEtapeClasseur) {
+                if ($packEtapeClasseur->getEtapeValidante()) {
+                    $classeursId[] = $packEtapeClasseur->getClasseur()->getId();
+                }
+            }
+        }
+
+
+        return array_unique($classeursId);
+    }
+
     /**
      * Fonction pour savoir si un user est dans des classeurs
      * https://www.youtube.com/watch?v=T1JOlxiEDXw

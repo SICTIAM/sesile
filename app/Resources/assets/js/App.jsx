@@ -78,7 +78,7 @@ class App extends Component {
                         <div className="grid-x align-middle align-center">
                             <div className="medium-1 cell">
                                 <div className="logo text-center">
-                                    <Link to={'/dashboard'}>
+                                    <Link to={'/tableau-de-bord'}>
                                         <div className="logo-init">S</div>
                                         <div className="logo-name">sesile</div>
                                     </Link>
@@ -111,13 +111,13 @@ class App extends Component {
                                         <a href="#"><span className="fa ico-hamburger"></span></a>
                                     </div>
                                     <div className="cell auto">
-                                        <Link to={"/classeurs"}><span className="ico-new-classeur"></span></Link>
+                                        <Link to={"/classeurs/list"}><span className="ico-new-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
-                                        <Link to={"/classeurs"}><span className="ico-sign-classeur"></span></Link>
+                                        <Link to={"/classeurs/list"}><span className="ico-sign-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
-                                        <a href="#"><span className="ico-valid-classeur"></span></a>
+                                        <Link to={"/classeurs/valid"}><span className="ico-valid-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
                                         <a href="#"><span className="ico-revert-classeur"></span></a>

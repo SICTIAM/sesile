@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
+use Sesile\UserBundle\Entity\User;
 use Symfony\Component\BrowserKit\Request;
 
 /**
@@ -55,6 +56,31 @@ class ClasseurRepository extends EntityRepository {
             ->createQueryBuilder('c')
             ->join('c.visible', 'v', 'WITH', 'v.id = :id')
             ->setParameter('id', $userid)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->orderBy($sort, $order)
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    public function getClasseursValidable ($classeursId, $sort, $order, $limit, $start) {
+
+        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+
+        $status = array(0,1,4);
+
+        return $this
+            ->createQueryBuilder('c')
+            ->where('c.id IN (:id)')
+            ->andWhere('c.status IN (:status)')
+            ->setParameter('id', $classeursId)
+            ->setParameter('status', $status)
             ->join('c.type', 't')
             ->addSelect('t')
             ->join('c.user', 'u')
@@ -240,31 +266,6 @@ class ClasseurRepository extends EntityRepository {
             ;*/
     }
 
-    /*public function isDelegatedToUserV2($classeur, $user) {
-        $em = $this->getEntityManager();
-        $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
-        $liste_delegants = $repositorydelegates->getUsersWhoHasMeAsDelegateRecursively($user);
-
-        $sql = 'SELECT c.* FROM ClasseursUsers cu
-                inner join Classeur c on cu.classeur_id = c.id
-                WHERE ((c.visibilite = 0 and cu.user_id = :userid) or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid)))
-                and c.id = :classeurid
-                group by cu.classeur_id';
-
-        $rsm = new ResultSetMappingBuilder($em);
-        $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
-        $query = $em->createNativeQuery($sql, $rsm);
-
-        foreach($liste_delegants as $delegant) {
-            $query->setParameter('userid', $user->getId());
-            $query->setParameter("classeurid", $classeur->getId());
-            if(count($query->getResult()) > 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }*/
 
     /**
      * On passe le classeur en parametre et la fonction retourne un tableau d'objet avec users validant du classeur

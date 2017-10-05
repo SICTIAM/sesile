@@ -19,13 +19,14 @@ use Symfony\Component\HttpFoundation\Request;
 class ClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
-     * @param int $limit
-     * @param int $start
      * @param null $sort
      * @param null $order
+     * @param int $limit
+     * @param int $start
+     * @param null $userId
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("s/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     * @Rest\Get("s/list/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
     public function listAction($sort = null, $order = null, $limit, $start, $userId = null)
     {
@@ -38,6 +39,26 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
             ->getManager()
             ->getRepository('SesileClasseurBundle:Classeur')
             ->getClasseursVisibles($userId, $sort, $order, $limit, $start);
+    }
+
+    /**
+     * @param null $sort
+     * @param null $order
+     * @param int $limit
+     * @param int $start
+     * @param null $userId
+     * @return array
+     * @Rest\View(serializerGroups={"listClasseur"})
+     * @Rest\Get("s/valid/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     */
+    public function validAction($sort = null, $order = null, $limit, $start, $userId = null)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $classeursId = $em->getRepository('SesileUserBundle:User')->getClasseurIdValidableForUser($this->getUser());
+        return $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursValidable($classeursId, $sort, $order, $limit, $start);
+
     }
 
     /**
