@@ -177,7 +177,7 @@ class Classeur {
      *
      * Liste des types signables
      */
-    private $typeSignable = array(
+    public $typeSignable = array(
             'application/pdf',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -187,6 +187,18 @@ class Classeur {
             'application/xml',
             'text/plain'
     );
+
+    /**
+     * @var boolean
+     * @Groups("listClasseur")
+     */
+    private $signableAndLastValidant = false;
+
+    /**
+     * @var boolean
+     * @Groups("listClasseur")
+     */
+    private $validable = false;
 
     /**
      * Get id
@@ -413,10 +425,6 @@ class Classeur {
     public function __construct()
     {
 
-
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->actions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -487,6 +495,16 @@ class Classeur {
             return false;
         }*/
 
+    }
+
+    public function getEtapeValidante() {
+        $etapeClasseurs = $this->getEtapeClasseurs();
+        foreach ($etapeClasseurs as $etapeClasseur) {
+            if ($etapeClasseur->getEtapeValidante()) {
+                return $etapeClasseur;
+            }
+        }
+        return false;
     }
 
     public function valider(\Doctrine\ORM\EntityManager $em)
@@ -648,23 +666,23 @@ class Classeur {
         return false;
     }
 
-    /**
-     * Function pour tester si le classeur est signable
-     * @return bool
-     */
-    public function isSignableAndLastValidant() {
-        if($this->isAtLastValidant()){
 
-            $docs = $this->getDocuments();
+    public function setSignableAndLastValidant($signableAndLastValidant) {
 
-            // Si au moins un document est signable alors le classeur peut etre signé
-            foreach($docs as $doc){
-                if(in_array($doc->getType(), $this->typeSignable)){
-                    return true;
-                }
-            }
-        }
-        return false;
+        $this->signableAndLastValidant = $signableAndLastValidant;
+
+        return $this;
+    }
+
+    public function setValidable($validable) {
+
+        $this->validable = $validable;
+
+        return $this;
+    }
+
+    public function getValidable() {
+        return $this->validable;
     }
 
     public function getXmlDocuments()

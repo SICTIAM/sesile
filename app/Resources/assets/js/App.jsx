@@ -111,19 +111,19 @@ class App extends Component {
                                         <a href="#"><span className="fa ico-hamburger"></span></a>
                                     </div>
                                     <div className="cell auto">
-                                        <Link to={"/classeurs/list"}><span className="ico-new-classeur"></span></Link>
+                                        <Link to={"/classeurs/liste"}><span className="ico-new-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
-                                        <Link to={"/classeurs/list"}><span className="ico-sign-classeur"></span></Link>
+                                        <Link to={"/classeurs/liste"}><span className="ico-sign-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
-                                        <Link to={"/classeurs/valid"}><span className="ico-valid-classeur"></span></Link>
+                                        <Link to={"/classeurs/valide"}><span className="ico-valid-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
                                         <a href="#"><span className="ico-revert-classeur"></span></a>
                                     </div>
                                     <div className="cell auto">
-                                        <a href="#"><span className="ico-refuse-classeur"></span></a>
+                                        <Link to={"/classeurs/supprimee"}><span className="ico-refuse-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
                                         <a href="#"><span className="ico-notif"></span></a>

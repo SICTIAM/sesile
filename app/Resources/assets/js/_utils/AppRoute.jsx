@@ -3,6 +3,7 @@ import {Route, Switch} from 'react-router-dom'
 import DashBoard from '../_components/DashBoard'
 import ClasseursList from '../classeur/ClasseursList'
 import ClasseursValid from '../classeur/ClasseursValid'
+import ClasseursRemove from '../classeur/ClasseursRemove'
 import Classeur from '../classeur/Classeur'
 import CircuitsValidation from '../admin/CircuitsValidation'
 import CircuitValidation from '../admin/CircuitValidation'
@@ -34,8 +35,9 @@ class AppRoute extends Component {
             <Switch>
                 <Route path={"/"} exact={true} component={Home} />
                 <Route path={"/tableau-de-bord"} exact={true} component={DashBoard} />
-                <Route path={"/classeurs/list"} exact={true} component={ClasseursList} />
-                <Route path={"/classeurs/valid"} exact={true} component={ClasseursValid} />
+                <Route path={"/classeurs/liste"} exact={true} component={ClasseursList} />
+                <Route path={"/classeurs/valide"} exact={true} component={ClasseursValid} />
+                <Route path={"/classeurs/supprimee"} exact={true} component={ClasseursRemove} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} />
                 )} />

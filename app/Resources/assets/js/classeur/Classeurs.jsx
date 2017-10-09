@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { string, number, func }from 'prop-types'
+import ClasseursButtonList from './ClasseursButtonList'
 import ClasseursRow from './ClasseursRow'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
@@ -52,7 +53,7 @@ class Classeurs extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('admin.user.name'), errorCode: error.status}),
+                t('admin.error.not_extrayable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -72,7 +73,7 @@ class Classeurs extends Component {
     }
 
     render(){
-        const { classeurs, limit, start } = this.state
+        const { classeurs, limit, start, checkedAll } = this.state
         const { t } = this.context
 
         return (
@@ -96,9 +97,14 @@ class Classeurs extends Component {
                             <button onClick={() => this.listClasseurs('validation', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                             <button onClick={() => this.listClasseurs('validation', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                         </div>
-                        <div className="cell medium-2"></div>
+                        <div className="cell medium-2">
+                            {
+                                (checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
+                                    <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)} />
+                            }
+                        </div>
                         <div className="cell medium-1 text-center">
-                            <input value={this.state.checkedAll} onClick={() => this.checkAllClasseurs()} type="checkbox" />
+                            <input value={checkedAll} onClick={() => this.checkAllClasseurs()} type="checkbox" />
                         </div>
                     </div>
 

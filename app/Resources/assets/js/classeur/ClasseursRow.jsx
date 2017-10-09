@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
+import ClasseursButtonList from "./ClasseursButtonList";
 
 
 
@@ -68,13 +69,7 @@ class ClasseursRow extends Component {
                 <CircuitListClasseur classeurId={classeur.id} user={classeur.user} />
 
                 <div className="cell medium-2">
-                    <div className="grid-x">
-                        <div className="cell auto"><a href="#" className="btn-valid"></a></div>
-                        <div className="cell auto"><a href="#" className="btn-sign"></a></div>
-                        <div className="cell auto"><a href="#" className="btn-revert"></a></div>
-                        <div className="cell auto"><a href="#" className="btn-refus"></a></div>
-                        <div className="cell auto"><a href="#" className="btn-comment"></a></div>
-                    </div>
+                    <ClasseursButtonList classeur={classeur} />
                 </div>
                 <div className="cell medium-1 text-center">
                     <input type="checkbox" id={classeur.id} checked={classeur.checked || false} onChange={this.props.checkClasseur} className="checkClasseur" />

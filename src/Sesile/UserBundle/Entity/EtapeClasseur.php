@@ -289,4 +289,21 @@ class EtapeClasseur
     {
         return $this->etapeValidante;
     }
+
+    public function getValidantUsersId () {
+        $usersId = array();
+        foreach ($this->getUsers() as $user) {
+            $usersId[] = $user->getId();
+        }
+
+        foreach ($this->getUserPacks() as $userPack) {
+            foreach ($userPack->getUsers() as $user) {
+                $usersId[] = $user->getId();
+            }
+        }
+
+        return array_unique($usersId);
+
+    }
+
 }
