@@ -19,8 +19,13 @@
             "add": "Ajouter"
         },
         "label": {
-            "enabled": "active",
-            "disabled": "inactive"
+            "enabled": "Active",
+            "disabled": "inactive",
+            "name": "Nom",
+            "yes": "Oui",
+            "no": "Non",
+            "title": "Titre",
+            "page": "Page"
         },
         "classeurs": {
             "name": "classeur",
@@ -135,35 +140,36 @@
             "type_name": "Entrez le nom de la collectivité...",
             "no_results": "Aucune collectivité ne correspond à votre recherche...",
             "state": "Etat",
-          "infos": "Informations générales",
-          "mails_templates": "Modèles de mails",
-          "visa_location": "Emplacement du Visa",
-          "signature_location": "Emplacement de la signature",
-          "classeur_delay": "Durée des classeurs",
-          "placeholder_delay": "Saisir un nombre de 10 à 365",
-          "classeur_delay_help_text": "La durée des classeurs doit être comprise entre 10 et 365 jours",
-          "placeholder_type_name": "Saisir le nom de la collectivité",
-          "placeholder_type_visa_title": "Saisir le titre du VISA",
-          "draggable_help_text": "Déplacer manuellement le tampon pour définir son emplacement",
-          "last_page": "Dérniere page",
-          "first_page": "Première page",
-          "success_edit": "La collectivité a bien été bien modifier",
-          "success_upload_avatar": "L'image a été correctement chargée",
-          "error": {
-            "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
-            "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
-            "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
-            "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
-            "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
-            "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
-            "field_delay_required": "La durée des classeurs est requise",
-            "visa_title": "Le titre du VISA est requis"
-          },
-          "mail": {
-            "new_classeur": "Mail nouveau classeur",
-            "refused_classeur": "Mail classeur refusé",
-            "valid_classeur": "Mail classeur validé"
-          }
+            "infos": "Informations générales",
+            "mails_templates": "Modèles de mails",
+            "visa_location": "Emplacement du Visa",
+            "signature_location": "Emplacement de la signature",
+            "classeur_delay": "Durée des classeurs",
+            "placeholder_delay": "Saisir un nombre de 10 à 365",
+            "classeur_delay_help_text": "La durée des classeurs doit être comprise entre 10 et 365 jours",
+            "placeholder_type_name": "Saisir le nom de la collectivité",
+            "placeholder_type_visa_title": "Saisir le titre du VISA",
+            "draggable_help_text": "Déplacer manuellement le tampon pour définir son emplacement",
+            "last_page": "Dérniere page",
+            "first_page": "Première page",
+            "success_edit": "La collectivité a bien été bien modifier",
+            "success_upload_avatar": "L'image a été correctement chargée",
+            "state": "Etat",
+            "error": {
+              "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
+              "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
+              "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
+              "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
+              "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
+              "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
+              "field_delay_required": "La durée des classeurs est requise",
+              "visa_title": "Le titre du VISA est requis"
+            },
+            "mail": {
+              "new_classeur": "Mail nouveau classeur",
+              "refused_classeur": "Mail classeur refusé",
+              "valid_classeur": "Mail classeur validé"
+            }
         },
         "roles_user": {
             "name": "role",

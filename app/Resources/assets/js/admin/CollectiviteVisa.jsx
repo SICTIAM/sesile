@@ -16,9 +16,9 @@ class CollectiviteVisa extends Component {
 
     static propTypes = {
         handleChange: func.isRequired,
-        titre_visa: string,
-        ordonnees_visa: number,
-        abscisses_visa: number
+        titre_visa: string.isRequired,
+        ordonnees_visa: number.isRequired,
+        abscisses_visa: number.isRequired
     }
 
     static defaultProps = {
