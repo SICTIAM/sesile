@@ -25,7 +25,9 @@ class Collectivite
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"getAllCollectivite","currentUser"})
+     * @Serializer\Groups({"currentUser",
+     *                      "getAllCollectivite",
+     *                      "getCollectiviteById"})
      */
     private $id;
 
@@ -33,7 +35,9 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
-     * @Serializer\Groups({"currentUser", "getAllCollectivite"})
+     * @Serializer\Groups({"currentUser",
+     *                      "getAllCollectivite",
+     *                      "getCollectiviteById"})
      */
     private $nom;
 
@@ -41,7 +45,9 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="domain", type="string", length=255)
-     * @Serializer\Groups({"currentUser", "getAllCollectivite"})
+     * @Serializer\Groups({"currentUser",
+     *                      "getAllCollectivite",
+     *                      "getCollectiviteById"})
      */
     private $domain;
 
@@ -49,7 +55,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"getAllCollectivite"})
+     * @Serializer\Groups({"getAllCollectivite","getCollectiviteById"})
      */
     private $image;
 
@@ -57,6 +63,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="message", type="text", nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $message;
 
@@ -64,7 +71,7 @@ class Collectivite
      * @var boolean
      *
      * @ORM\Column(name="active", type="boolean")
-     * @Serializer\Groups({"getAllCollectivite"})
+     * @Serializer\Groups({"getAllCollectivite", "getCollectiviteById"})
      */
     private $active;
 
@@ -82,6 +89,7 @@ class Collectivite
      * @var text
      *
      * @ORM\Column(name="textmailnew", type="string", length=3000, nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $textmailnew;
 
@@ -89,6 +97,7 @@ class Collectivite
      * @var text
      *
      * @ORM\Column(name="textmailrefuse", type="string", length=3000, nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $textmailrefuse;
 
@@ -96,6 +105,7 @@ class Collectivite
      * @var text
      *
      * @ORM\Column(name="textmailwalid", type="string", length=3000, nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $textmailwalid;
 
@@ -103,6 +113,7 @@ class Collectivite
      * @var int
      *
      * @ORM\Column(name="abscissesVisa", type="integer",nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $abscissesVisa = 135;
 
@@ -110,6 +121,7 @@ class Collectivite
      * @var int
      *
      * @ORM\Column(name="ordonneesVisa", type="integer", length=255,nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $ordonneesVisa = 11;
 
@@ -117,6 +129,7 @@ class Collectivite
      * @var int
      *
      * @ORM\Column(name="abscissesSignature", type="integer", length=255,nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $abscissesSignature = 123;
 
@@ -124,6 +137,7 @@ class Collectivite
      * @var int
      *
      * @ORM\Column(name="ordonneesSignature", type="integer", length=255,nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $ordonneesSignature = 253;
 
@@ -131,6 +145,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="couleurVisa", type="string", length=10,nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $couleurVisa = "#454545";
 
@@ -138,13 +153,15 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="titreVisa", type="string", length=250,nullable=true,options={"default":"VISE PAR"})
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $titreVisa = "VISE PAR";
 
     /**
      * @var int
      *
-     * @ORM\Column(name="pageSignature", type="integer",nullable=true)
+     * @ORM\Column(name="pageSignature", type="integer", options={"default"=0})
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $pageSignature;
 
@@ -180,6 +197,7 @@ class Collectivite
      *     payload = {"severity" = "error"}
      * )
      * @ORM\Column(name="deleteClasseurAfter", type="integer", options={"default"=180})
+     * @Serializer\Groups({"getCollectiviteById"})
      */
     private $deleteClasseurAfter = 180;
 
@@ -400,12 +418,12 @@ class Collectivite
         unset($this->file);
     }
 
-    public function removeUpload()
+    public function removeUpload($file)
     {
-        if ($file = $this->getUploadRootDir() . $this->image) {
-            if(file_exists($file) && !is_dir($file)) {
-                unlink($file);
-            }
+        if(file_exists($file) && !is_dir($file)) {
+            unlink($file);
+            $this->setImage(null);
+            return $this;
         }
     }
 

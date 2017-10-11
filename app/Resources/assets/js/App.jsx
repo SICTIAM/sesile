@@ -7,6 +7,8 @@ import PropTypes from 'prop-types'
 import Login from './_components/Login'
 import AppRoute from './_utils/AppRoute'
 import i18n from './_utils/i18n'
+import Validator from 'validatorjs'
+Validator.useLang(window.localStorage.i18nextLng);
 
 class App extends Component {
 
@@ -63,7 +65,6 @@ class App extends Component {
 
     _addNotification = (notification) => {
         if (this._notificationSystem) {
-            console.log(notification)
             this._notificationSystem.addNotification(notification)
         }
     }

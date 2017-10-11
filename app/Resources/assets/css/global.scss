@@ -692,3 +692,42 @@ $list-group-margin: $global-margin;
 .medium { font-size: 35px; padding: 0 5px; }
 .small { font-size: 20px; padding: 0 5px; }
 .text-uppercase{ text-transform: uppercase; }
+
+.admin-details {
+  padding: 2em;
+  .admin-details-name {
+    background-color: #fe5e3a;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: white;
+    padding: 1em;
+    height: 3.5em;
+  }
+
+  .admin-details-accordion-title {
+    background-color:white;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: black;
+    padding: 1em;
+  }
+
+  .admin-content-details {
+    padding:1em;
+    background: white;
+  }
+}
+
+.draggable-position-box {
+  background: #fff;
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 3px;
+  display: inline-block;
+}
+
+.RichTextEditor__editor___1QqIU {
+  height: 200px;
+}
