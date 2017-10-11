@@ -37,8 +37,7 @@ class ClasseurRepository extends EntityRepository {
             ->getResult()
         ;
 
-        $classeurs = $this->isClasseursValidableByUser($classeurs, $userId);
-        $classeurs = $this->isClasseursSignable($classeurs);
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
 
         return $classeurs;
     }
@@ -67,8 +66,36 @@ class ClasseurRepository extends EntityRepository {
             ->getResult()
         ;
 
-        $classeurs = $this->isClasseursValidableByUser($classeurs, $userId);
-        $classeurs = $this->isClasseursSignable($classeurs);
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
+
+        return $classeurs;
+
+    }
+
+    public function getClasseursRetractable ($classeursId, $sort, $order, $limit, $start, $userId) {
+
+        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+
+        $status = 1;
+
+        $classeurs = $this
+            ->createQueryBuilder('c')
+            ->where('c.id IN (:id)')
+            ->andWhere('c.status = :status')
+            ->setParameter('id', $classeursId)
+            ->setParameter('status', $status)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->orderBy($sort, $order)
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
 
         return $classeurs;
 
@@ -97,10 +124,16 @@ class ClasseurRepository extends EntityRepository {
             ->getResult()
             ;
 
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
 
+        return $classeurs;
+
+    }
+
+    public function addClasseursValue($classeurs, $userId) {
         $classeurs = $this->isClasseursValidableByUser($classeurs, $userId);
         $classeurs = $this->isClasseursSignable($classeurs);
-
+        $classeurs = $this->isClasseursRetractableByUser($classeurs, $userId);
         return $classeurs;
 
     }
@@ -152,6 +185,33 @@ class ClasseurRepository extends EntityRepository {
         }
         else {
             $classeur->setValidable(false);
+        }
+        return $classeur;
+    }
+
+    public function isClasseursRetractableByUser(array $classeurs, $userId) {
+        foreach ($classeurs as $classeur) {
+            $this->isClasseurRetractableByUser($classeur, $userId);
+        }
+        return $classeurs;
+    }
+
+    public function isClasseurRetractableByUser(Classeur $classeur, $userId) {
+        $em = $this->getEntityManager();
+        $etapeValidante = $classeur->getEtapeValidante();
+        $validantUserId = null;
+        if ($etapeValidante){
+            $etapeRetractable = $em->getRepository('SesileUserBundle:EtapeClasseur')->getPreviousEtape($etapeValidante);
+            if ($etapeRetractable) {
+                $validantUserId = $etapeRetractable->getUserValidant()->getId();
+            }
+        }
+
+        if(($userId == $validantUserId OR $classeur->countEtapeValide() == 0) AND $classeur->getStatus() == 1) {
+            $classeur->setRetractable(true);
+        }
+        else {
+            $classeur->setRetractable(false);
         }
         return $classeur;
     }

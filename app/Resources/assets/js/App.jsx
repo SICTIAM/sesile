@@ -117,13 +117,13 @@ class App extends Component {
                                         <Link to={"/classeurs/liste"}><span className="ico-sign-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
-                                        <Link to={"/classeurs/valide"}><span className="ico-valid-classeur"></span></Link>
+                                        <Link to={"/classeurs/valides"}><span className="ico-valid-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
-                                        <a href="#"><span className="ico-revert-classeur"></span></a>
+                                        <Link to={"/classeurs/retractables"}><span className="ico-revert-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
-                                        <Link to={"/classeurs/supprimee"}><span className="ico-refuse-classeur"></span></Link>
+                                        <Link to={"/classeurs/supprimes"}><span className="ico-refuse-classeur"></span></Link>
                                     </div>
                                     <div className="cell auto">
                                         <a href="#"><span className="ico-notif"></span></a>

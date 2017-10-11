@@ -13,6 +13,34 @@ use Sesile\ClasseurBundle\Entity\Classeur;
  */
 class EtapeClasseurRepository extends EntityRepository
 {
+
+    /**
+     * @param EtapeClasseur $etape
+     * @return bool|EtapeClasseur
+     */
+    public function getPreviousEtape(EtapeClasseur $etape) {
+        $classeur = $etape->getClasseur();
+        $order = $etape->getOrdre() - 1;
+
+        if ($order < 0) {
+            return false;
+        }
+        else {
+            $em = $this->getEntityManager();
+            $etapeClasseur = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneBy(
+                array(
+                    'classeur' => $classeur,
+                    'ordre' => $order
+                )
+            );
+            if ($etapeClasseur) {
+                return $etapeClasseur;
+            }
+            else return false;
+
+        }
+    }
+
     /**
      * Retourne les etapes validantes restantes d un classeur
      *

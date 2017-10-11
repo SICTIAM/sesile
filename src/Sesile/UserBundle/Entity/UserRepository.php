@@ -75,7 +75,48 @@ class UserRepository extends EntityRepository {
                 }
             }
         }
+        return array_unique($classeursId);
+    }
 
+    public function getClasseurIdRetractableForUser($user) {
+        $classeursId = array();
+        $em = $this->getEntityManager();
+
+        $etapeClasseurs = $user->getEtapeClasseurs();
+        foreach ($etapeClasseurs as $etapeClasseur) {
+            if ($etapeClasseur->getEtapeValidante()) {
+                $etapeClasseurRetractable = $em->getRepository('SesileUserBundle:EtapeClasseur')->getPreviousEtape($etapeClasseur);
+
+                if ($etapeClasseurRetractable && $etapeClasseurRetractable->getUserValidant() == $user) {
+                    $classeursId[] = $etapeClasseurRetractable->getClasseur()->getId();
+                }
+            }
+        }
+
+        $userPacks = $user->getUserPacks();
+        foreach ($userPacks as $userPack) {
+            $packEtapeClasseurs = $userPack->getEtapeClasseurs();
+            foreach ($packEtapeClasseurs as $packEtapeClasseur) {
+                if ($packEtapeClasseur->getEtapeValidante()) {
+
+                    $etapeClasseurRetractable = $em->getRepository('SesileUserBundle:EtapeClasseur')->getPreviousEtape($etapeClasseur);
+                    if ($etapeClasseurRetractable && $etapeClasseurRetractable->getUserValidant() == $user) {
+                        $classeursId[] = $etapeClasseurRetractable->getClasseur()->getId();
+                    }
+
+                }
+            }
+        }
+
+        $classeursDepose = $em->getRepository('SesileClasseurBundle:Classeur')->findBy(array(
+            'user' => $user,
+            'status'=> 1
+        ));
+        foreach ($classeursDepose as $classeurDepose) {
+            if($classeurDepose->countEtapeValide() == 0) {
+                $classeursId[] = $classeurDepose->getId();
+            }
+        }
 
         return array_unique($classeursId);
     }

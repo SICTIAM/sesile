@@ -201,6 +201,12 @@ class Classeur {
     private $validable = false;
 
     /**
+     * @var boolean
+     * @Groups("listClasseur")
+     */
+    private $retractable = false;
+
+    /**
      * Get id
      *
      * @return integer
@@ -474,26 +480,17 @@ class Classeur {
 
 
     public function isAtLastValidant(){
-        $ordreCircuit = $this->getOrdreEtape();
-        if($this->getStatus() != 0 && $this->getStatus() != 4)
-        {
-            $ordreCircuit++;
-        }
-        $nbEtapes = count($this->getEtapeClasseurs());
-        //var_dump($ordreCircuit,$nbEtapes,"<br>");
-        //var_dump("Etape status : " . $this->getStatus() . "<br>");
-        if ($ordreCircuit == $nbEtapes){
-            return true;
-        }
-        else {
-            return false;
-        }
-        /*$ordreCircuit = $this->getOrdreCircuit() + 1;
-        if ($ordreCircuit == count(explode(",", $this->getCircuit()))) {
+
+        if(
+            $this->getStatus() != 2
+            && $this->getStatus() != 3
+            && $this->getEtapeValidante()
+            && !$this->getNextEtapeValidante()
+        ) {
             return true;
         } else {
             return false;
-        }*/
+        }
 
     }
 
@@ -505,6 +502,17 @@ class Classeur {
             }
         }
         return false;
+    }
+
+    public function countEtapeValide() {
+        $count = 0;
+        $etapeClasseurs = $this->getEtapeClasseurs();
+        foreach ($etapeClasseurs as $etapeClasseur) {
+            if ($etapeClasseur->getEtapeValide()) {
+                $count++;
+            }
+        }
+        return $count;
     }
 
     public function valider(\Doctrine\ORM\EntityManager $em)
@@ -617,6 +625,42 @@ class Classeur {
         } else {
             return false;
         }
+    }
+
+    public function getEtapeByOrdre (int $ordre) {
+        foreach ($this->getEtapeClasseurs() as $etapeClasseur) {
+            if($etapeClasseur->getOrdre() == $ordre) {
+                return $etapeClasseur;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
+    public function getPrevEtapeValidante() {
+        $etapeValidante = $this->getEtapeValidante();
+        $ordre = $etapeValidante->getOrdre() - 1;
+
+        return $this->getEtapeByOrdre($ordre);
+
+    }
+
+    public function getNextEtapeValidante() {
+        $etapeValidante = $this->getEtapeValidante();
+        $ordre = $etapeValidante->getOrdre() + 1;
+        return $this->getEtapeByOrdre($ordre);
+    }
+
+    public function setRetractable(bool $retractable) {
+
+        $this->retractable = $retractable;
+
+        return $this;
+    }
+
+    public function getRetractable() {
+        return $this->retractable;
     }
 
     public function isSupprimable($userid)

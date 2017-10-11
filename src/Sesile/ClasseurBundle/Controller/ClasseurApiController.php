@@ -73,6 +73,28 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param null $userId
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
+     * @Rest\Get("s/retract/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     */
+    public function listRetractAction($sort = null, $order = null, $limit, $start, $userId = null)
+    {
+        $user = $this->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $classeursId = $em->getRepository('SesileUserBundle:User')->getClasseurIdRetractableForUser($user);
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursRetractable($classeursId, $sort, $order, $limit, $start, $user->getId());
+
+        return $classeurs;
+
+    }
+
+    /**
+     * @param null $sort
+     * @param null $order
+     * @param int $limit
+     * @param int $start
+     * @param null $userId
+     * @return array
+     * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("s/remove/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
     public function listRemoveAction($sort = null, $order = null, $limit, $start, $userId = null)
