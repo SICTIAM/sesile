@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes, { array, number, bool, func } from 'prop-types'
 import { translate } from 'react-i18next'
-import UserAvatar from 'react-user-avatar'
 import RolesUser from './RolesUser'
 import History from '../_utils/History'
 import { basicNotification } from '../_components/Notifications'
+import AvatarForm from "../user/AvatarForm"
+import SignatureForm from "../user/SignatureForm"
 
 class User extends Component {
 
@@ -194,108 +195,6 @@ class User extends Component {
 
     }
 
-    putFile = (image, userId) => {
-        const { t, _addNotification } = this.context
-        let formData  = new FormData()
-        formData.append('path', image)
-
-        fetch(Routing.generate("sesile_user_userapi_uploadavatar", {id: userId}), {
-            method: 'POST',
-            body: formData,
-            credentials: 'same-origin'
-        })
-            .then(this.handleErrors)
-            .then(() => {
-                _addNotification(basicNotification(
-                    'success',
-                    t('admin.succes.update', {name: t('admin.user.image_avatar')}),
-                    t('admin.succes.update', {name: t('admin.user.image_avatar')})
-                ))
-                this.fetchUser(this.state.user.id)
-            })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_addable', {name: t('admin.user.image_avatar'), errorCode: error.status}),
-                error.statusText)))
-    }
-
-    deleteFile = (userId) => {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_user_userapi_deleteavatar', {id: userId}), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin'
-        })
-            .then(this.handleErrors)
-            .then(() => {
-                _addNotification(basicNotification(
-                    'success',
-                    t('admin.succes.delete', {name: t('admin.user.image_avatar')}),
-                    t('admin.succes.delete', {name: t('admin.user.image_avatar')})
-                ))
-                this.fetchUser(this.state.user.id)
-            })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_removable', {name: t('admin.user.image_avatar'), errorCode: error.status}),
-                error.statusText)))
-
-    }
-
-    putFileSignature = (image, userId) => {
-        const { t, _addNotification } = this.context
-        let formData  = new FormData()
-        formData.append('signatures', image)
-
-        fetch(Routing.generate("sesile_user_userapi_uploadsignature", {id: userId}), {
-            method: 'POST',
-            body: formData,
-            credentials: 'same-origin'
-        })
-            .then(this.handleErrors)
-            .then(() => {
-                _addNotification(basicNotification(
-                    'success',
-                    t('admin.succes.add', {name: t('admin.user.image_signature')}),
-                    t('admin.succes.add', {name: t('admin.user.image_signature')})
-                ))
-                this.fetchUser(this.state.user.id)
-            })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_addable', {name: t('admin.user.image_signature'), errorCode: error.status}),
-                error.statusText)))
-    }
-
-    deleteFileSignature = (userId) => {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_user_userapi_deletesignature', {id: userId}), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin'
-        })
-            .then(this.handleErrors)
-            .then(() => {
-                _addNotification(basicNotification(
-                    'success',
-                    t('admin.succes.delete', {name: t('admin.user.image_signature')}),
-                    t('admin.succes.delete', {name: t('admin.user.image_signature')})
-                ))
-                this.fetchUser(this.state.user.id)
-            })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_removable', {name: t('admin.user.image_signature'), errorCode: error.status}),
-                error.statusText)))
-
-    }
-
     handleClickDelete = (id) => {
         fetch(Routing.generate("sesile_user_userapi_remove", {id}), {
             method: 'DELETE',
@@ -307,7 +206,6 @@ class User extends Component {
                 }
             })
     }
-
 
 
     render() {
@@ -340,17 +238,8 @@ class User extends Component {
                             <div className="medium-12 cell">
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     {
-                                        (userId) &&
-                                        <div className="medium-2 cell">
-                                            {
-                                                user.path ?
-                                                    <UserAvatar size="100" name="user" src={"/uploads/avatars/" + user.path} />
-                                                    : <UserAvatar size="100" name="user" className="txt-avatar" />
-
-                                            }
-                                            <input type="file" name="file" onChange={(e) => this.putFile(e.target.files[0], user.id)} />
-                                            { user.path && <button className="button alert text-uppercase" onClick={() => this.deleteFile(user.id)}>{t('common.button.delete')}</button>}
-                                        </div>
+                                        userId &&
+                                        <AvatarForm user={user} styleClass={"medium-4 cell"} />
                                     }
 
                                     <div className="medium-10 cell">
@@ -403,17 +292,8 @@ class User extends Component {
                             <div className="medium-12 cell">
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     {
-                                        (userId) &&
-                                        <div className="medium-4 cell">
-                                            {
-                                                user.path_signature &&
-                                                <div className="grid-x grid-padding-x align-center-middle">
-                                                    <img className="medium-4 cell" src={"/uploads/signatures/" + user.path_signature} />
-                                                </div>
-                                            }
-                                            <input type="file" onChange={(e) => this.putFileSignature(e.target.files[0], user.id)} />
-                                            { user.path_signature && <button className="button alert text-uppercase" onClick={() => this.deleteFileSignature(user.id)}>{t('common.button.delete')}</button>}
-                                        </div>
+                                        userId &&
+                                        <SignatureForm user={user} styleClass={"medium-4 cell"} />
                                     }
 
                                     <div className="medium-8 cell">
