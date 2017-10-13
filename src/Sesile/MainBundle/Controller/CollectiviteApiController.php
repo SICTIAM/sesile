@@ -121,10 +121,10 @@ class CollectiviteApiController extends Controller
                 $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->uploadImage(
                     $request->files->get('image'),
                     $collectivite,
-                    $this->getParameter('upload')['path']
+                    $this->getParameter('upload')['logo_coll']
                 );
             } else if ($request->isMethod('DELETE')) {
-                $collectivite->removeUpload($this->getParameter('upload')['path'] . $collectivite->getImage());
+                $collectivite->removeUpload($this->getParameter('upload')['logo_coll'] . $collectivite->getImage());
             }
 
             $em->persist($collectivite);

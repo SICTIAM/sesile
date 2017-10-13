@@ -95,7 +95,7 @@ class CollectiviteInfos extends Component {
             <AccordionItem className="is-active" title={t('admin.collectivite.infos')}>
                 <div className="medium-6 cell">
                     <div className="grid-x grid-padding-y">
-                        <Avatar className="cell medium-12" size={200} nom={nom} fileName={image}/>
+                        <Avatar className="cell medium-12" size={200} nom={nom} fileName={image ? "/uploads/logo_coll/" + image : null}/>
                         <InputFile  id="add_collectivite_img"
                                     className="columns medium-3"
                                     labelText={image ? t('common.button.change_img') : t('common.button.upload_img')}

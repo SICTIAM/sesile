@@ -14,8 +14,8 @@ class CollectiviteSignature extends Component {
 
     static propTypes = {
         handleChange: func.isRequired,
-        ordonnees_signature: number.isRequired,
-        abscisses_signature: number.isRequired
+        ordonnees_signature: number,
+        abscisses_signature: number
     }
 
     static defaultProps = {

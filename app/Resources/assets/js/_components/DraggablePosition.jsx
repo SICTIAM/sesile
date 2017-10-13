@@ -29,7 +29,7 @@ export default class DraggablePosition extends Component {
             <div className={className}>
                 <div className="draggable-position-box" style={style}>
                     <Draggable position={this.props.position} bounds={bounds} onDrag={this.handleDrag}>
-                        <div className="draggable-position-box" style={{color: labelColor}}>
+                        <div className="draggable-position-box" style={{color: labelColor, cursor: 'pointer'}}>
                             {label}
                         </div>
                     </Draggable>

@@ -74,7 +74,7 @@ const Switch = ({ id, className, onChange, labelText, checked, activeText, inact
 const Avatar = ({ className, size = 100, nom, fileName }) =>
     fileName ?
         <div className={className}>
-            <UserAvatar size="200" name={nom || "default"} src={"/uploads/avatars/" + fileName} />
+            <UserAvatar size="200" name={nom || "default"} src={fileName} />
         </div> 
         :
         <div className={className}>
