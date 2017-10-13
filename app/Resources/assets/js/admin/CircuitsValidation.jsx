@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { func, object, number } from 'prop-types'
 import { translate } from 'react-i18next'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
-
-const { func, object, array, number } = PropTypes
+import SelectCollectivite from '../_components/SelectCollectivite'
 
 class CircuitsValidation extends Component {
 
@@ -18,6 +17,7 @@ class CircuitsValidation extends Component {
             circuits: [],
             filteredCircuits: [],
             collectivites: [],
+            filteredCollectivites: [],
             currentCollectiviteId: '',
             userName: '',
             circuitName: '',
@@ -64,13 +64,13 @@ class CircuitsValidation extends Component {
     }
 
     handleChangeCollectivite = (currentCollectiviteId) => {
-        this.setState({currentCollectiviteId, userName: '', circuitName: ''})
+        this.setState({currentCollectiviteId, userName: '', circuitName: ''}) 
         this.fetchCircuitsValidations(currentCollectiviteId)
     }
 
     render () {
         const { t } = this.context
-        const { collectivites, isSuperAdmin, currentCollectiviteId } = this.state
+        const { filteredCollectivites, collectivites, isSuperAdmin, currentCollectiviteId } = this.state
         const listCircuits = this.state.filteredCircuits.map((circuit) =>
             <ValidationCircuitRow  key={circuit.id} circuit={circuit} onClick={this.props.onClick} collectiviteId={currentCollectiviteId} />
         )
@@ -99,8 +99,7 @@ class CircuitsValidation extends Component {
                             </div>
                             {isSuperAdmin &&
                                 <div className="auto cell">
-                                    <label htmlFor="collectivites_select">{t('admin.label.which_collectivite')}</label>
-                                    <SelectCollectivite collectiviteId={currentCollectiviteId} collectivites={collectivites} handleChange={this.handleChangeCollectivite} />
+                                    <SelectCollectivite currentCollectiviteId={currentCollectiviteId} handleChange={this.handleChangeCollectivite} />
                                 </div>
                             }
                         </div>
@@ -151,21 +150,4 @@ const ValidationCircuitRow = ({circuit, collectiviteId}) => {
 ValidationCircuitRow.propTypes = {
     circuit: object.isRequired,
     collectiviteId: number.isRequired
-}
-
-const SelectCollectivite = ({collectiviteId, collectivites, handleChange}) => {
-    const options = collectivites.map((collectivite, key) => {
-        if(collectivite.active) { return <option key={key} value={collectivite.id}>{collectivite.nom}</option> }
-    })
-    return(
-        <select id="collectivites_select" value={collectiviteId} onChange={(e) => handleChange(parseInt(e.target.value))} >
-            {options}
-        </select>
-    )
-}
-
-SelectCollectivite.PropTypes = {
-    collectivites: array.isRequired,
-    handleChange: func.isRequired,
-    currentCollectiviteId: number.isRequired
 }
