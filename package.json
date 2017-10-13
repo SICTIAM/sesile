@@ -32,13 +32,17 @@
     "moment": "^2.18.1",
     "node-sass": "^4.5.3",
     "react": "^15.6.1",
+    "react-color": "^2.13.8",
     "react-dom": "^15.6.1",
+    "react-draggable": "^3.0.3",
     "react-i18next": "^6.0.0",
     "react-notification-system": "0.2.x",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-rte": "0.15.0",
     "react-user-avatar": "^1.9.0",
     "render-if": "^0.1.1",
+    "validatorjs": "^3.13.5",
     "watch": "^1.0.2"
   }
 }

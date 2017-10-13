@@ -114,7 +114,7 @@ parameters:
     upload:
         path: '%kernel.root_dir%/../web/uploads/avatars/'
         fics: '%kernel.root_dir%/../web/uploads/docs/'
-        logo_coll: '%kernel.root_dir%/../web/uploads/logo_coll/'
+        logo_coll: '%kernel.project_dir%/web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'
     ldap:
