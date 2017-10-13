@@ -25,7 +25,7 @@ class ClasseursRemove extends Component {
                         </div>
                     </div>
 
-                    <Classeurs url="sesile_classeur_classeurapi_listremove" userId={this.props.userId} />
+                    <Classeurs url="sesile_classeur_classeurapi_listremovable" userId={this.props.userId} />
 
                 </div>
             </div>
@@ -35,10 +35,6 @@ class ClasseursRemove extends Component {
 
 ClasseursRemove.PropTypes = {
     userId: number
-}
-
-ClasseursRemove.contextTypes = {
-    t: func
 }
 
 export default translate(['sesile'])(ClasseursRemove)

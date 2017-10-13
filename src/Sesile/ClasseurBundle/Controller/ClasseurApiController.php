@@ -97,7 +97,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("s/remove/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
-    public function listRemoveAction($sort = null, $order = null, $limit, $start, $userId = null)
+    public function listRemovableAction($sort = null, $order = null, $limit, $start, $userId = null)
     {
         if (
             $userId === null

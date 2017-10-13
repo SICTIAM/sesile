@@ -1,23 +1,31 @@
 import React, { Component } from 'react'
-import PropTypes, { number, func } from 'prop-types'
+import { number, func } from 'prop-types'
 import { translate } from 'react-i18next'
+import { basicNotification } from '../_components/Notifications'
 
 class RolesUser extends Component {
 
     static contextTypes = {
-        t: func
+        t: func,
+        _addNotification: func
     }
 
     constructor(props) {
         super(props)
         this.state = {
-            user: "",
             userrole: {
                 id: '',
                 user_roles: '',
                 user: ''
             }
         }
+    }
+
+    handleErrors(response) {
+        if (response.ok) {
+            return response
+        }
+        throw response
     }
 
     componentDidMount() {
@@ -39,6 +47,7 @@ class RolesUser extends Component {
     }
 
     putUserRole = (key, id) => {
+        const { t, _addNotification } = this.context
         const userrole = this.state.userrole[key]
         fetch(Routing.generate("sesile_user_userroleapi_updateuserrole", {id}), {
             method: 'PUT',
@@ -49,10 +58,21 @@ class RolesUser extends Component {
             body: JSON.stringify(userrole),
             credentials: 'same-origin'
         })
-            .then(response => {if(response.ok === true) console.log("save !") })
+            .then(this.handleErrors)
+            .then(response => {
+                _addNotification(basicNotification(
+                    'success',
+                    t('admin.success.update', {name: t('admin.roles_user.name'), errorCode: response.status}),
+                    response.statusText))
+            })
+            .catch(error => _addNotification(basicNotification('error',
+                t('admin.error.not_updatable',
+                    {name: t('admin.roles_user.name'), errorCode: error.status}),
+                error.statusText)))
     }
 
     createUserRole = (key) => {
+        const { t, _addNotification } = this.context
         let userrole = this.state.userrole[key]
         fetch(Routing.generate("sesile_user_userroleapi_postuserrole"), {
             method: 'POST',
@@ -63,28 +83,50 @@ class RolesUser extends Component {
             body: JSON.stringify(userrole),
             credentials: 'same-origin'
         })
-            .then(response => {if(response.ok === true) console.log("nouveau role !")})
-            .then(() => {
-                this.fetchUserRoles(this.state.user)
+            .then(this.handleErrors)
+            .then(response => {
+                _addNotification(basicNotification(
+                    'success',
+                    t('admin.success.add', {name: t('admin.roles_user.name'), errorCode: response.status}),
+                    response.statusText))
+                this.fetchUserRoles(this.props.user)
+            })
+            .catch(error => {
+                _addNotification(basicNotification('error',
+                    t('admin.error.not_addable',
+                        {name: t('admin.roles_user.name'), errorCode: error.status}),
+                    error.statusText))
             })
     }
 
     handleClickDeleteRole = (key, id) => {
+        const { t, _addNotification } = this.context
         const newUserRole = this.state.userrole
         newUserRole.splice(key,1)
         this.setState({userrole: newUserRole})
-        if (id !== undefined) {
+        if (id) {
             fetch(Routing.generate("sesile_user_userroleapi_remove", {id}), {
                 method: 'DELETE',
                 credentials: 'same-origin'
             })
-                .then(response => {if(response.ok === true) console.log("Role supprimé")})
+                .then(this.handleErrors)
+                .then(response => {
+                    _addNotification(basicNotification(
+                        'success',
+                        t('admin.success.delete', {name: t('admin.roles_user.name'), errorCode: response.status}),
+                        response.statusText))
+                    this.fetchUserRoles(this.props.user)
+                })
+                .catch(error => _addNotification(basicNotification('error',
+                    t('admin.error.not_removable',
+                        {name: t('admin.roles_user.name'), errorCode: error.status}),
+                    error.statusText)))
         }
 
     }
 
     handleClickAddRole() {
-        const newRole = {id: null, user_roles: '', user: this.state.user}
+        const newRole = {id: null, user_roles: '', user: this.props.user}
         const newUserRole = this.state.userrole
         newUserRole.push(newRole)
 

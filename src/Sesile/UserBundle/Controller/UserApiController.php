@@ -211,7 +211,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @Rest\View()
-     * @Rest\Post("/avatar_remove/{id}")
+     * @Rest\Delete("/avatar_remove/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
      * @return User
@@ -257,7 +257,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @Rest\View()
-     * @Rest\Post("/signature_remove/{id}")
+     * @Rest\Delete("/signature_remove/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
      * @return User

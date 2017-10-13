@@ -51,7 +51,7 @@ class Users extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -63,7 +63,7 @@ class Users extends Component {
             .then(json => this.setState({collectivites: json}))
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('admin.collectivite.name', {count: 2}), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {name: t('admin.collectivite.name', {count: 2}), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -78,7 +78,6 @@ class Users extends Component {
                 if(response.ok === true) {
                     _addNotification(basicNotification(
                         'success',
-                        t('admin.success.delete', {name: t('admin.user.name')}),
                         t('admin.success.delete', {name: t('admin.user.name')})
                     ))
                     this.fetchUsers(id_collectivite)

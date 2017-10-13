@@ -37,8 +37,4 @@ ClasseursRetract.PropTypes = {
     userId: number
 }
 
-ClasseursRetract.contextTypes = {
-    t: func
-}
-
 export default translate(['sesile'])(ClasseursRetract)

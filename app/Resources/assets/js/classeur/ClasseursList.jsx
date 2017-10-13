@@ -37,8 +37,4 @@ ClasseursList.PropTypes = {
     userId: number
 }
 
-ClasseursList.contextTypes = {
-    t: func
-}
-
 export default translate(['sesile'])(ClasseursList)

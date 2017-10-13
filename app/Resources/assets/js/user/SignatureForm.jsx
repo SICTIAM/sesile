@@ -61,7 +61,7 @@ class SignatureForm extends Component {
     deleteFileSignature = (userId) => {
         const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_user_userapi_deletesignature', {id: userId}), {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',

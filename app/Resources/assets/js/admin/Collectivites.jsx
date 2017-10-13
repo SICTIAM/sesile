@@ -40,7 +40,7 @@ class Collectivites extends Component {
         .then(response => response.json())
         .then(json => this.setState({collectivites: json, filteredCollectivites: json}))
         .catch(error => this.context._addNotification(basicNotification('error', 
-                                                                        t('admin.error.not_extrayable_list', 
+                                                                        t('admin.error.not_extractable_list',
                                                                         {name: t('admin.collectivite.name', {count: 2}), errorCode: error.status}), 
                                                                         error.statusText)))
     }

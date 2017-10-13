@@ -83,7 +83,7 @@ class Account extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
                 error.statusText)))
     }
 

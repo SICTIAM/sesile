@@ -354,22 +354,8 @@ class User extends BaseUser {
     public function preUpload() {
         if (null !== $this->file) {
             // faites ce que vous voulez pour générer un nom unique
-
             $this->path = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
-
         }
-
-        //Création des tokens d'api si absents
-        /*$tok = $this->getApitoken();
-        $sec = $this->getApisecret();
-        if (empty($tok)) {
-            $this->setApitoken("token_" . md5(uniqid(rand(), true)));
-        }
-
-        //Création des tokens d'api si absents
-        if (empty($sec)) {
-            $this->setApisoken("secret_" . md5(uniqid(rand(), true)));
-        }*/
     }
 
     /**

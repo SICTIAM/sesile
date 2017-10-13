@@ -53,7 +53,7 @@ class Classeurs extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -125,10 +125,6 @@ class Classeurs extends Component {
 Classeurs.PropTypes = {
     url: string.isRequired,
     userId: number.isRequired
-}
-
-Classeurs.contextTypes = {
-    t: func
 }
 
 export default translate(['sesile'])(Classeurs)

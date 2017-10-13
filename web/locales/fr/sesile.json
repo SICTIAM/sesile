@@ -48,8 +48,9 @@
             "save": "Ajouter le {{name}}"
         },
         "error": {
-            "not_extrayable_list": "Impossible de récuperer la liste de {{name}} - erreur {{errorCode}}",
+            "not_extractable_list": "Impossible de récuperer la liste de {{name}} - erreur {{errorCode}}",
             "not_addable": "Impossible de créer le {{name}} - erreur {{errorCode}}",
+            "not_updatable": "Impossible de mettre à jour le {{name}} - erreur {{errorCode}}",
             "not_removable": "Impossible de supprimer le {{name}} - erreur {{errorCode}}"
         },
         "success": {
@@ -94,7 +95,7 @@
         "user": {
             "name": "utilisateur",
             "name_plural": "utilisateurs",
-            "subtitle_user": "Informations utilisateurs",
+            "subtitle_user": "Informations utilisateur",
             "subtitle_signature": "Informations signatures",
             "subtitle_geo": "Informations géographiques",
             "subtitle_application": "Informations applications",
@@ -163,6 +164,10 @@
             "refused_classeur": "Mail classeur refusé",
             "valid_classeur": "Mail classeur validé"
           }
+        },
+        "roles_user": {
+            "name": "role",
+            "name_plural": "roles"
         },
         "role_application": {
             "name": "role",

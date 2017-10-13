@@ -37,8 +37,4 @@ ClasseursValid.PropTypes = {
     userId: number
 }
 
-ClasseursValid.contextTypes = {
-    t: func
-}
-
 export default translate(['sesile'])(ClasseursValid)

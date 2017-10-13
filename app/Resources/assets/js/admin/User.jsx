@@ -74,7 +74,7 @@ class User extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('admin.user.name'), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {name: t('admin.user.name'), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -86,7 +86,7 @@ class User extends Component {
             .then(collectivites => this.setState({collectivites}))
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('admin.collectivite.name'), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {name: t('admin.collectivite.name'), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -98,7 +98,7 @@ class User extends Component {
             .then(roles => this.setState({roles}))
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('admin.role_application.name', {count: 2}), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {name: t('admin.role_application.name', {count: 2}), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -164,7 +164,7 @@ class User extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extrayable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -184,8 +184,8 @@ class User extends Component {
             .then(response => {
                 _addNotification(basicNotification(
                     'success',
-                    t('admin.error.not_addable', {name: t('admin.user.name'), errorCode: error.status}),
-                    error.statusText))
+                    t('admin.success.add', {name: t('admin.user.name'), errorCode: response.status}),
+                    response.statusText))
                 History.push(`/admin/${response.collectivite.id}/utilisateur/${response.id}`)
             })
             .catch(error => _addNotification(basicNotification(
@@ -238,8 +238,8 @@ class User extends Component {
                             <div className="medium-12 cell">
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     {
-                                        userId &&
-                                        <AvatarForm user={user} styleClass={"medium-4 cell"} />
+                                        user.id &&
+                                        <AvatarForm user={user} styleClass={"medium-2 cell"} />
                                     }
 
                                     <div className="medium-10 cell">
@@ -292,13 +292,13 @@ class User extends Component {
                             <div className="medium-12 cell">
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     {
-                                        userId &&
-                                        <SignatureForm user={user} styleClass={"medium-4 cell"} />
+                                        user.id &&
+                                        <SignatureForm user={user} styleClass={"medium-6 cell"} />
                                     }
 
-                                    <div className="medium-8 cell">
+                                    <div className="medium-6 cell">
                                         <div className="grid-x grid-padding-x grid-padding-y">
-                                            <div className="medium-8 cell">
+                                            <div className="medium-12 cell">
                                                 <label>{t('admin.user.label_quality')}
                                                     <textarea name="qualite" value={user.qualite || ''} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} />
                                                 </label>
