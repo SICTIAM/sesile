@@ -7,6 +7,8 @@
         "button": {
             "delete": "Supprimer",
             "add_user": "Ajouter un utilisateur",
+            "certificate_user": "Voir les informations de mon certificat",
+            "certificate_order": "Commander un certificat",
             "edit_save": "Enregistrer les modifications",
             "update": "Mettre à jour",
             "save": "Enregistrer",
@@ -35,13 +37,20 @@
             "title_remove": "classeurs supprimable",
             "title_to_sign_plural": "classeurs à signer",
             "sort": "trier"
-            "enabled": "Active",
-            "disabled": "inactive",
-            "name": "Nom",
-            "yes": "Oui",
-            "no": "Non",
-            "title": "Titre",
-            "page": "Page"
+        },
+        "user": {
+          "certificate" : "certificat",
+          "certificate_serial" : "N° de série :",
+          "certificate_transmitter": "émetteur",
+          "transmitter_for": "émis pour",
+          "common_name": "nom commun",
+          "organisation": "organisation",
+          "organisation_unit": "Unité d'organisation",
+          "email": "e-mail",
+          "transmitter_from": "émis par",
+          "validity": "validité",
+          "from": "émis le",
+          "to": "expire le"
         }
     },
     "admin": {

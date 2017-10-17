@@ -7,8 +7,9 @@ import ClasseursRemove from '../classeur/ClasseursRemove'
 import Classeur from '../classeur/Classeur'
 import CircuitsValidation from '../admin/CircuitsValidation'
 import CircuitValidation from '../admin/CircuitValidation'
-import ClasseursRetract from "../classeur/ClasseursRetract";
-import Account from "../user/Account";
+import ClasseursRetract from "../classeur/ClasseursRetract"
+import Account from "../user/Account"
+import Certificate from '../user/Certificate'
 import Groups from '../admin/Groups'
 import Group from '../admin/Group'
 import Users from '../admin/Users'
@@ -38,6 +39,7 @@ class AppRoute extends Component {
                 <Route path={"/"} exact={true} component={Home} />
                 <Route path={"/tableau-de-bord"} exact={true} component={DashBoard} />
                 <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
+                <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />
                 <Route path={"/classeurs/liste"} exact={true} component={ClasseursList} />
                 <Route path={"/classeurs/valides"} exact={true} component={ClasseursValid} />
                 <Route path={"/classeurs/retractables"} exact={true} component={ClasseursRetract} />

@@ -73,6 +73,38 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
+     * @Rest\View()
+     * @Rest\Get("/certificate")
+     */
+    public function getCertificate() {
+        $request = Request::createFromGlobals()->server;
+
+        if ($request->get('HTTP_X_SSL_CLIENT_SHA1')) {
+
+            $certificate = array();
+            $certificate['HTTP_X_SSL_CLIENT_SHA1'] = $request->get('HTTP_X_SSL_CLIENT_SHA1');
+            $certificate['HTTP_X_SSL_CLIENT_M_SERIAL'] = $request->get('HTTP_X_SSL_CLIENT_M_SERIAL');
+            $certificate['HTTP_X_SSL_CLIENT_I_DN'] = $request->get('HTTP_X_SSL_CLIENT_I_DN');
+            $certificate['HTTP_X_SSL_CLIENT_S_DN_CN'] = $request->get('HTTP_X_SSL_CLIENT_S_DN_CN');
+            $certificate['HTTP_X_SSL_CLIENT_S_DN_O'] = $request->get('HTTP_X_SSL_CLIENT_S_DN_O');
+            $certificate['HTTP_X_SSL_CLIENT_S_DN_OU'] = $request->get('HTTP_X_SSL_CLIENT_S_DN_OU');
+            $certificate['HTTP_X_SSL_CLIENT_S_DN_EMAIL'] = $request->get('HTTP_X_SSL_CLIENT_S_DN_EMAIL');
+            $certificate['HTTP_X_SSL_CLIENT_I_DN_CN'] = $request->get('HTTP_X_SSL_CLIENT_I_DN_CN');
+            $certificate['HTTP_X_SSL_CLIENT_I_DN_O'] = $request->get('HTTP_X_SSL_CLIENT_I_DN_O');
+            $certificate['HTTP_X_SSL_CLIENT_I_DN_EMAIL'] = $request->get('HTTP_X_SSL_CLIENT_I_DN_EMAIL');
+
+            $startDate = $this->convert_date_certificate($request->get('HTTP_X_SSL_CLIENT_NOT_BEFORE'));
+            $endDate = $this->convert_date_certificate($request->get('HTTP_X_SSL_CLIENT_NOT_AFTER'));
+            $certificate['HTTP_X_SSL_CLIENT_NOT_BEFORE'] = $startDate;
+            $certificate['HTTP_X_SSL_CLIENT_NOT_AFTER'] = $endDate;
+
+            return $certificate;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @return array
      * @Rest\View()
      * @Rest\Get("s")
@@ -392,6 +424,16 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         else {
             return $form;
         }
+    }
+
+
+    /**
+     * Convertit la date du haproxy au format DateTime
+     * @param $date
+     * @return bool|\DateTime
+     */
+    private function convert_date_certificate($date) {
+        return $validDate = \DateTime::createFromFormat('ymdHisT', $date);
     }
 
 }

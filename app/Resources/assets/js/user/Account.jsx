@@ -4,6 +4,7 @@ import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import AvatarForm from "./AvatarForm"
 import SignatureForm from "./SignatureForm"
+import {Link} from "react-router-dom";
 
 class Account extends Component {
 
@@ -15,6 +16,7 @@ class Account extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            certificate: {},
             user: {
                 _nom: '',
                 _prenom: '',
@@ -25,6 +27,7 @@ class Account extends Component {
 
     componentDidMount() {
         this.fetchUser()
+        this.fetchCertificate()
     }
 
     fetchUser() {
@@ -32,6 +35,15 @@ class Account extends Component {
             .then(response => response.json())
             .then(json => {
                 this.setState({user: json})
+            })
+    }
+
+    fetchCertificate() {
+        fetch(Routing.generate("sesile_user_userapi_getcertificate"), {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(certificate => {
+                console.log(certificate)
+                this.setState({certificate})
             })
     }
 
@@ -161,8 +173,17 @@ class Account extends Component {
                         </div>
                     </div>
 
-                    <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-12 cell">
+                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                        <div className="medium-4 cell">
+                            <Link className="button float-left text-uppercase" to="https://www.sictiam.fr/certificat-electronique/" target="_blank">{ t('common.button.certificate_order') }</Link>
+                        </div>
+                        <div className="medium-4 cell">
+                            {
+                                this.state.certificate &&
+                                <Link className="button float-left text-uppercase" to="/utilisateur/certificat-electronique">{ t('common.button.certificate_user') }</Link>
+                            }
+                        </div>
+                        <div className="medium-4 cell">
                             <button className="button float-right text-uppercase" onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
                         </div>
                     </div>
