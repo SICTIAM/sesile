@@ -16,6 +16,12 @@ Encore
     // will output as web/build/global.css
     .addStyleEntry('global', './app/Resources/assets/css/global.scss')
 
+    .addLoader({
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules\/(?!(foundation-sites)\/).*/ 
+    })
+
     .createSharedEntry('vendor', [
         'jquery',
         'what-input',

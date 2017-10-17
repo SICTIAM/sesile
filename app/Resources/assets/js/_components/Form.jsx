@@ -90,4 +90,4 @@ const Select = ({ id, className, label, value, onChange, children }) =>
     </div>
 
 
-export { Form, FormGroup, Input, InputFile, Button, ButtonConfirm, Alert, Switch, Avatar, Select }
+export { Form, FormGroup, Input, InputFile, Button, ButtonConfirm, Switch, Avatar, Select }
