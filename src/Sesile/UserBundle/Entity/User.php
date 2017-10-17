@@ -32,7 +32,8 @@ class User extends BaseUser {
      *                      "getByIdCircuit",
      *                      "currentUser",
      *                      "userPack",
-     *                      "searchUser"})
+     *                      "searchUser",
+     *                      "userRole"})
      *
      */
     protected $id;
@@ -92,7 +93,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="pathSignature", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"classeurById", "currentUser"})
      */
     protected $pathSignature;
 
@@ -159,7 +160,7 @@ class User extends BaseUser {
      * @Serializer\Groups({"classeurById",
      *                      "currentUser"})
      */
-    private $userRole;
+    private $userrole;
 
     /**
      * @var string
@@ -256,6 +257,18 @@ class User extends BaseUser {
      */
     protected $email;
 
+    /**
+     * @var array
+     * @Serializer\Groups({"currentUser"})
+     */
+    protected $username;
+
+    /**
+     * @var array
+     * @Serializer\Groups({"currentUser"})
+     */
+    protected $enabled;
+
 
     public function setPath($path) {
         return $this->path = $path;
@@ -341,21 +354,7 @@ class User extends BaseUser {
     public function preUpload() {
         if (null !== $this->file) {
             // faites ce que vous voulez pour générer un nom unique
-
             $this->path = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
-
-        }
-
-        //Création des tokens d'api si absents
-        $tok = $this->getApitoken();
-        $sec = $this->getApisecret();
-        if (empty($tok)) {
-            $this->setApitoken("token_" . md5(uniqid(rand(), true)));
-        }
-
-        //Création des tokens d'api si absents
-        if (empty($sec)) {
-            $this->setApisoken("secret_" . md5(uniqid(rand(), true)));
         }
     }
 
@@ -395,6 +394,8 @@ class User extends BaseUser {
      */
     public function __construct() {
         parent::__construct();
+        $this->setApisecret("secret_" . md5(uniqid(rand(), true)));
+        $this->setApitoken("token_" . md5(uniqid(rand(), true)));
     }
 
     /**
@@ -975,39 +976,6 @@ class User extends BaseUser {
     }
 
     /**
-     * Add userRole
-     *
-     * @param \Sesile\UserBundle\Entity\UserRole $userRole
-     * @return User
-     */
-    public function addUserRole(\Sesile\UserBundle\Entity\UserRole $userRole)
-    {
-        $this->userRole[] = $userRole;
-    
-        return $this;
-    }
-
-    /**
-     * Remove userRole
-     *
-     * @param \Sesile\UserBundle\Entity\UserRole $userRole
-     */
-    public function removeUserRole(\Sesile\UserBundle\Entity\UserRole $userRole)
-    {
-        $this->userRole->removeElement($userRole);
-    }
-
-    /**
-     * Get userRole
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUserRole()
-    {
-        return $this->userRole;
-    }
-
-    /**
      * Tells if the the given user is this user.
      *
      * Useful when not hydrating all fields.
@@ -1127,5 +1095,39 @@ class User extends BaseUser {
         $roles[] = static::ROLE_DEFAULT;
 
         return array_unique($roles);
+    }
+
+    /**
+     * Add userrole
+     *
+     * @param \Sesile\UserBundle\Entity\UserRole $userrole
+     *
+     * @return User
+     */
+    public function addUserrole(\Sesile\UserBundle\Entity\UserRole $userrole)
+    {
+        $this->userrole[] = $userrole;
+
+        return $this;
+    }
+
+    /**
+     * Remove userrole
+     *
+     * @param \Sesile\UserBundle\Entity\UserRole $userrole
+     */
+    public function removeUserrole(\Sesile\UserBundle\Entity\UserRole $userrole)
+    {
+        $this->userrole->removeElement($userrole);
+    }
+
+    /**
+     * Get userrole
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserrole()
+    {
+        return $this->userrole;
     }
 }

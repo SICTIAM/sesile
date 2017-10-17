@@ -177,7 +177,7 @@ class Classeur {
      *
      * Liste des types signables
      */
-    private $typeSignable = array(
+    public $typeSignable = array(
             'application/pdf',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -187,6 +187,24 @@ class Classeur {
             'application/xml',
             'text/plain'
     );
+
+    /**
+     * @var boolean
+     * @Groups("listClasseur")
+     */
+    private $signableAndLastValidant = false;
+
+    /**
+     * @var boolean
+     * @Groups("listClasseur")
+     */
+    private $validable = false;
+
+    /**
+     * @var boolean
+     * @Groups("listClasseur")
+     */
+    private $retractable = false;
 
     /**
      * Get id
@@ -413,10 +431,6 @@ class Classeur {
     public function __construct()
     {
 
-
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->actions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -466,27 +480,39 @@ class Classeur {
 
 
     public function isAtLastValidant(){
-        $ordreCircuit = $this->getOrdreEtape();
-        if($this->getStatus() != 0 && $this->getStatus() != 4)
-        {
-            $ordreCircuit++;
-        }
-        $nbEtapes = count($this->getEtapeClasseurs());
-        //var_dump($ordreCircuit,$nbEtapes,"<br>");
-        //var_dump("Etape status : " . $this->getStatus() . "<br>");
-        if ($ordreCircuit == $nbEtapes){
-            return true;
-        }
-        else {
-            return false;
-        }
-        /*$ordreCircuit = $this->getOrdreCircuit() + 1;
-        if ($ordreCircuit == count(explode(",", $this->getCircuit()))) {
+
+        if(
+            $this->getStatus() != 2
+            && $this->getStatus() != 3
+            && $this->getEtapeValidante()
+            && !$this->getNextEtapeValidante()
+        ) {
             return true;
         } else {
             return false;
-        }*/
+        }
 
+    }
+
+    public function getEtapeValidante() {
+        $etapeClasseurs = $this->getEtapeClasseurs();
+        foreach ($etapeClasseurs as $etapeClasseur) {
+            if ($etapeClasseur->getEtapeValidante()) {
+                return $etapeClasseur;
+            }
+        }
+        return false;
+    }
+
+    public function countEtapeValide() {
+        $count = 0;
+        $etapeClasseurs = $this->getEtapeClasseurs();
+        foreach ($etapeClasseurs as $etapeClasseur) {
+            if ($etapeClasseur->getEtapeValide()) {
+                $count++;
+            }
+        }
+        return $count;
     }
 
     public function valider(\Doctrine\ORM\EntityManager $em)
@@ -601,6 +627,42 @@ class Classeur {
         }
     }
 
+    public function getEtapeByOrdre (int $ordre) {
+        foreach ($this->getEtapeClasseurs() as $etapeClasseur) {
+            if($etapeClasseur->getOrdre() == $ordre) {
+                return $etapeClasseur;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
+    public function getPrevEtapeValidante() {
+        $etapeValidante = $this->getEtapeValidante();
+        $ordre = $etapeValidante->getOrdre() - 1;
+
+        return $this->getEtapeByOrdre($ordre);
+
+    }
+
+    public function getNextEtapeValidante() {
+        $etapeValidante = $this->getEtapeValidante();
+        $ordre = $etapeValidante->getOrdre() + 1;
+        return $this->getEtapeByOrdre($ordre);
+    }
+
+    public function setRetractable(bool $retractable) {
+
+        $this->retractable = $retractable;
+
+        return $this;
+    }
+
+    public function getRetractable() {
+        return $this->retractable;
+    }
+
     public function isSupprimable($userid)
     {
         return ($this->getUser() == $userid && $this->getStatus() != 3);
@@ -648,23 +710,23 @@ class Classeur {
         return false;
     }
 
-    /**
-     * Function pour tester si le classeur est signable
-     * @return bool
-     */
-    public function isSignableAndLastValidant() {
-        if($this->isAtLastValidant()){
 
-            $docs = $this->getDocuments();
+    public function setSignableAndLastValidant($signableAndLastValidant) {
 
-            // Si au moins un document est signable alors le classeur peut etre signé
-            foreach($docs as $doc){
-                if(in_array($doc->getType(), $this->typeSignable)){
-                    return true;
-                }
-            }
-        }
-        return false;
+        $this->signableAndLastValidant = $signableAndLastValidant;
+
+        return $this;
+    }
+
+    public function setValidable($validable) {
+
+        $this->validable = $validable;
+
+        return $this;
+    }
+
+    public function getValidable() {
+        return $this->validable;
     }
 
     public function getXmlDocuments()

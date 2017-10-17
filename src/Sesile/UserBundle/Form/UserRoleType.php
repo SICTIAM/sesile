@@ -16,11 +16,8 @@ class UserRoleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('userRoles', TextType::class, array(
-                'translation_domain' => 'FOSUserBundle',
-                'label' => 'profile.user_roles',
-                'attr' => array('class' => 'col-md-5 col-sm-5 col-xs-5'),
-                'label_attr' => array('class' => 'col-md-5 col-sm-5 col-xs-5')))
+            ->add('id')
+            ->add('user_roles')
             ->add('user')
         ;
     }
@@ -31,7 +28,8 @@ class UserRoleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Sesile\UserBundle\Entity\UserRole'
+            'data_class' => 'Sesile\UserBundle\Entity\UserRole',
+            'csrf_protection' => false
         ));
     }
 

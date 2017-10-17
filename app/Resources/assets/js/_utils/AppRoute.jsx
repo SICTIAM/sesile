@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import {Route, Switch} from 'react-router-dom'
 import DashBoard from '../_components/DashBoard'
-import ListClasseurs from '../classeur/ListClasseurs'
+import ClasseursList from '../classeur/ClasseursList'
+import ClasseursValid from '../classeur/ClasseursValid'
+import ClasseursRemove from '../classeur/ClasseursRemove'
 import Classeur from '../classeur/Classeur'
 import CircuitsValidation from '../admin/CircuitsValidation'
 import CircuitValidation from '../admin/CircuitValidation'
+import ClasseursRetract from "../classeur/ClasseursRetract"
+import Account from "../user/Account"
+import Certificate from '../user/Certificate'
 import Groups from '../admin/Groups'
 import Group from '../admin/Group'
 import Users from '../admin/Users'
@@ -33,7 +38,12 @@ class AppRoute extends Component {
             <Switch>
                 <Route path={"/"} exact={true} component={Home} />
                 <Route path={"/tableau-de-bord"} exact={true} component={DashBoard} />
-                <Route path={"/classeurs"} exact={true} component={ListClasseurs} />
+                <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
+                <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />
+                <Route path={"/classeurs/liste"} exact={true} component={ClasseursList} />
+                <Route path={"/classeurs/valides"} exact={true} component={ClasseursValid} />
+                <Route path={"/classeurs/retractables"} exact={true} component={ClasseursRetract} />
+                <Route path={"/classeurs/supprimes"} exact={true} component={ClasseursRemove} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} />
                 )} />

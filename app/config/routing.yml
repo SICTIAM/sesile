@@ -9,6 +9,12 @@ sesile_classeur:
     requirements:
         reactRouting: ".+"
 
+sesile_ustilisateur:
+    defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
+    path: /utilisateur/{reactRouting}
+    requirements:
+        reactRouting: ".+"
+
 sesile_admin:
     defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
     path: /admin/{reactRouting}

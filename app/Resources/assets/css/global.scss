@@ -612,6 +612,38 @@ html {
   }
 }
 
+.admin-details {
+  .admin-head-details {
+    background-color: #fe5e3a;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+    font-weight: 700;
+    color: white;
+    padding: 1em;
+    input {
+      background: rgba(0, 0, 0, 0);
+      border: none;
+      outline: none;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: white;
+    }
+    i {
+      color: white;
+    }
+  }
+
+  .admin-content-details {
+    padding-top:2em;
+    padding-bottom:2em;
+    background: white;
+    input {
+      width: 100%;
+      padding:0.5em;
+    }
+  }
+}
+
 $list-group-background: $white;
 $list-group-active-background: $primary-color;
 $list-group-hover-background: $light-gray;

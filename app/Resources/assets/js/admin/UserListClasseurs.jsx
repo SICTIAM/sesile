@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import ListClasseurs from '../classeur/ListClasseurs'
+import ClasseursList from '../classeur/ClasseursList'
 
 class UserListClasseurs extends Component {
 
@@ -14,7 +14,7 @@ class UserListClasseurs extends Component {
 
     render(){
         return (
-            <ListClasseurs userId={this.state.userId} />
+            <ClasseursList userId={this.state.userId} />
         )
     }
 }

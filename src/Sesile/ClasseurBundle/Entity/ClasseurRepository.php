@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
+use Sesile\UserBundle\Entity\User;
 use Symfony\Component\BrowserKit\Request;
 
 /**
@@ -16,45 +17,15 @@ use Symfony\Component\BrowserKit\Request;
  */
 class ClasseurRepository extends EntityRepository {
 
-    /*
-     * Return number of classeurs visible for user
-     *
-     * @param integer user id
-     * @return integer
-     */
-    public function countClasseursVisiblesForDTablesV3($userid) {
-        return $this
-            ->createQueryBuilder('c')
-            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
-            ->setParameter('id', $userid)
-            ->getQuery()
-//            ->getSingleScalarResult()
-            ->getResult()
-        ;
-    }
 
-    /*
-     * Return number of classeurs visible for super admin
-     *
-     * @param integer user id
-     * @return integer
-     */
-    public function countClasseursVisiblesForDTablesV3SuperAdmin() {
-        return $this
-            ->createQueryBuilder('c')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-    public function getClasseursVisibles ($userid, $sort, $order, $limit, $start) {
+    public function getClasseursVisibles ($userId, $sort, $order, $limit, $start) {
 
         ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
 
-        return $this
+        $classeurs =  $this
             ->createQueryBuilder('c')
             ->join('c.visible', 'v', 'WITH', 'v.id = :id')
-            ->setParameter('id', $userid)
+            ->setParameter('id', $userId)
             ->join('c.type', 't')
             ->addSelect('t')
             ->join('c.user', 'u')
@@ -65,148 +36,186 @@ class ClasseurRepository extends EntityRepository {
             ->getQuery()
             ->getResult()
         ;
+
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
+
+        return $classeurs;
     }
 
-    /*
-     * Get current classeurs visible for Data Tables
-     *
-     * @param integer user id
-     * @param array get values of Data Tables
-     */
-    public function getClasseursVisiblesForDTablesV3($userid, $get) {
 
-        $qb = $this
+    public function getClasseursValidable ($classeursId, $sort, $order, $limit, $start, $userId) {
+
+        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+
+        $status = array(0,1,4);
+
+        $classeurs = $this
+            ->createQueryBuilder('c')
+            ->where('c.id IN (:id)')
+            ->andWhere('c.status IN (:status)')
+            ->setParameter('id', $classeursId)
+            ->setParameter('status', $status)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->orderBy($sort, $order)
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
+
+        return $classeurs;
+
+    }
+
+    public function getClasseursRetractable ($classeursId, $sort, $order, $limit, $start, $userId) {
+
+        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+
+        $status = 1;
+
+        $classeurs = $this
+            ->createQueryBuilder('c')
+            ->where('c.id IN (:id)')
+            ->andWhere('c.status = :status')
+            ->setParameter('id', $classeursId)
+            ->setParameter('status', $status)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->orderBy($sort, $order)
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
+
+        return $classeurs;
+
+    }
+
+    public function getClasseursremovable ($userId, $sort, $order, $limit, $start) {
+
+        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+
+        $status = 3;
+
+        $classeurs = $this
             ->createQueryBuilder('c')
             ->join('c.visible', 'v', 'WITH', 'v.id = :id')
-            ->setParameter('id', $userid)
+            ->andWhere('c.status = :status')
+            ->setParameter('id', $userId)
+            ->setParameter('status', $status)
             ->join('c.type', 't')
             ->addSelect('t')
-        ;
-
-//        var_dump($get->get('order'));
-        // Pour changer l ordre du tableau
-        $colonnes = array('nom', 'creation', 'validation', 'intervenants', 'type', 'status');
-
-        if($get->get('order') !== null) {
-            // Condition spéciale pour trier par type par ordre alphabétique
-            if ($colonnes[$get->get('order')[0]["column"]] == "type") {
-                $order = 't.nom';
-            } else {
-                $order = 'c.' . $colonnes[$get->get('order')[0]["column"]];
-            }
-//        $order == 'c.type' ? $order = 't.nom' : $order;
-//            var_dump('Column', $get->get('order')[0]["column"], "GET order : ", $get->get('order')[0]["dir"]);
-            $qb->orderBy($order, $get->get('order')[0]["dir"]);
-        }
-
-        /*if(isset($get['order'])) {
-            $order = 'c.'.strtolower($get["colonnes"][$get["order"][0]["column"]]);
-            $order == 'c.type' ? $order = 't.nom' : $order;
-            $qb->orderBy($order, $get['order'][0]["dir"]);
-        }*/
-
-        // Pour la recherche dans le tableau
-        if (isset($get->get('search')["value"]) && $get->get('search')['value'] != '') {
-            $str = $get->get('search')['value'];
-
-            $qb
-                ->where('c.nom LIKE :str')
-                ->orWhere('t.nom LIKE :str')
-                ->orWhere('c.creation LIKE :str')
-                ->orWhere('c.validation LIKE :str')
-                ->setParameter('str', '%'.$str.'%')
-            ;
-        }
-        /*if (isset($get['search']) && $get['search']['value'] != '') {
-            $str = $get['search']['value'];
-
-            $qb
-                ->where('c.nom LIKE :str')
-                ->orWhere('t.nom LIKE :str')
-                ->setParameter('str', '%'.$str.'%')
-            ;
-        }*/
-        // Pour l affichage parcellaire
-        if ($get->get('start') != '' && $get->get('length') != '-1') {
-            $start = (int)$get->get('start');
-            $length = (int)$get->get('length');
-            $qb
-                ->setFirstResult($start)
-                ->setMaxResults($length)
-            ;
-        }
-        /*if (isset($get['start']) && $get['length'] != '-1') {
-            $start = (int)$get['start'];
-            $length = (int)$get['length'];
-            $qb
-                ->setFirstResult($start)
-                ->setMaxResults($length)
-            ;
-        }*/
-
-        // on retourne la requete
-        return $qb
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->orderBy($sort, $order)
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult()
-        ;
+            ;
+
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
+
+        return $classeurs;
 
     }
 
-    /*
-     * Get current classeurs visible for Data Tables for super admin
-     *
-     * @param integer user id
-     * @param array get values of Data Tables
+    public function addClasseursValue($classeurs, $userId) {
+        $classeurs = $this->isClasseursValidableByUser($classeurs, $userId);
+        $classeurs = $this->isClasseursSignable($classeurs);
+        $classeurs = $this->isClasseursRetractableByUser($classeurs, $userId);
+        return $classeurs;
+
+    }
+
+    public function isClasseursSignable(array $classeurs) {
+        foreach ($classeurs as $classeur) {
+            $this->isClasseurSignable($classeur);
+        }
+        return $classeurs;
+    }
+
+
+    /**
+     * Function pour tester si le classeur est signable
+     * @param Classeur $classeur
+     * @return bool
      */
-    public function getClasseursVisiblesForDTablesV3SuperAdmin($get) {
+    public function isClasseurSignable(Classeur $classeur) {
 
-        $qb = $this
-            ->createQueryBuilder('c')
-            ->join('c.type', 't')
-            ->addSelect('t')
-        ;
-
-        // Pour changer l ordre du tableau
-        $colonnes = array('nom', 'creation', 'validation', 'intervenants', 'type', 'status');
-
-        if($get->get('order') !== null) {
-            // Condition spéciale pour trier par type par ordre alphabétique
-            if ($colonnes[$get->get('order')[0]["column"]] == "type") {
-                $order = 't.nom';
-            } else {
-                $order = 'c.' . $colonnes[$get->get('order')[0]["column"]];
+        if($classeur->isAtLastValidant() AND $classeur->getValidable()){
+            $docs = $classeur->getDocuments();
+            foreach($docs as $doc){
+                if(in_array($doc->getType(), $classeur->typeSignable)){
+                    $classeur->setSignableAndLastValidant(true);
+                }
             }
-            $qb->orderBy($order, $get->get('order')[0]["dir"]);
         }
-
-        // Pour la recherche dans le tableau
-        if (isset($get->get('search')["value"]) && $get->get('search')['value'] != '') {
-            $str = $get->get('search')['value'];
-
-            $qb
-                ->where('c.nom LIKE :str')
-                ->orWhere('t.nom LIKE :str')
-                ->setParameter('str', '%'.$str.'%')
-            ;
-        }
-
-        // Pour l affichage parcellaire
-        if ($get->get('start') != '' && $get->get('length') != '-1') {
-            $start = (int)$get->get('start');
-            $length = (int)$get->get('length');
-            $qb
-                ->setFirstResult($start)
-                ->setMaxResults($length)
-            ;
-        }
-
-        // on retourne la requete
-        return $qb
-            ->getQuery()
-            ->getResult()
-        ;
-
+        $classeur->setSignableAndLastValidant(false);
     }
+
+    public function isClasseursValidableByUser(array $classeurs, $userId) {
+        foreach ($classeurs as $classeur) {
+            $this->isClasseurValidableByUser($classeur, $userId);
+        }
+        return $classeurs;
+    }
+
+    public function isClasseurValidableByUser(Classeur $classeur, $userId) {
+        $etapeValidante = $classeur->getEtapeValidante();
+
+        if ($etapeValidante) {
+            $validantUsersId = $etapeValidante->getValidantUsersId();
+        } else {
+            $validantUsersId = array();
+        }
+
+        if(in_array($userId, $validantUsersId) AND $classeur->getStatus() != 2 AND $classeur->getStatus() != 3) {
+            $classeur->setValidable(true);
+        }
+        else {
+            $classeur->setValidable(false);
+        }
+        return $classeur;
+    }
+
+    public function isClasseursRetractableByUser(array $classeurs, $userId) {
+        foreach ($classeurs as $classeur) {
+            $this->isClasseurRetractableByUser($classeur, $userId);
+        }
+        return $classeurs;
+    }
+
+    public function isClasseurRetractableByUser(Classeur $classeur, $userId) {
+        $em = $this->getEntityManager();
+        $etapeValidante = $classeur->getEtapeValidante();
+        $validantUserId = null;
+        if ($etapeValidante){
+            $etapeRetractable = $em->getRepository('SesileUserBundle:EtapeClasseur')->getPreviousEtape($etapeValidante);
+            if ($etapeRetractable) {
+                $validantUserId = $etapeRetractable->getUserValidant()->getId();
+            }
+        }
+
+        if(($userId == $validantUserId OR $classeur->countEtapeValide() == 0) AND $classeur->getStatus() == 1) {
+            $classeur->setRetractable(true);
+        }
+        else {
+            $classeur->setRetractable(false);
+        }
+        return $classeur;
+    }
+
 
     public function countClasseurToValidate($userid) {
 
@@ -240,31 +249,6 @@ class ClasseurRepository extends EntityRepository {
             ;*/
     }
 
-    /*public function isDelegatedToUserV2($classeur, $user) {
-        $em = $this->getEntityManager();
-        $repositorydelegates = $em->getRepository('SesileDelegationsBundle:delegations');
-        $liste_delegants = $repositorydelegates->getUsersWhoHasMeAsDelegateRecursively($user);
-
-        $sql = 'SELECT c.* FROM ClasseursUsers cu
-                inner join Classeur c on cu.classeur_id = c.id
-                WHERE ((c.visibilite = 0 and cu.user_id = :userid) or (c.visibilite > 0 and c.visibilite in (select groupe from UserGroupe where user = :userid)))
-                and c.id = :classeurid
-                group by cu.classeur_id';
-
-        $rsm = new ResultSetMappingBuilder($em);
-        $rsm->addRootEntityFromClassMetadata('SesileClasseurBundle:Classeur', 'c');
-        $query = $em->createNativeQuery($sql, $rsm);
-
-        foreach($liste_delegants as $delegant) {
-            $query->setParameter('userid', $user->getId());
-            $query->setParameter("classeurid", $classeur->getId());
-            if(count($query->getResult()) > 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }*/
 
     /**
      * On passe le classeur en parametre et la fonction retourne un tableau d'objet avec users validant du classeur

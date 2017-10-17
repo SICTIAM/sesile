@@ -30,7 +30,7 @@ class MenuBar extends Component {
                         {
                             this.state.user ?
                                 <li><a href="/logout"><button type="button" className="button">Déconnexion</button></a></li>
-                                : <li><a href="/dashboard"><button type="button" className="button">Connexion</button></a></li>
+                                : <li><a href="/tableau-de-bord"><button type="button" className="button">Connexion</button></a></li>
                         }
                     </ul>
                 </div>
