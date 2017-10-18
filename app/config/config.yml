@@ -109,6 +109,9 @@ be_simple_sso_auth:
 
 
 parameters:
+    informations:
+        version: 4.2.0
+        contact_link: http://support.sictiam.fr/declarer-un-incident/
     cas_server: devsso.sictiam.fr
     be_simple.sso_auth.client.option.curlopt_ssl_verifypeer.value: FALSE
     upload:
@@ -197,8 +200,3 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-#    kernel.listener.route_listener:
-#        class: Sesile\MainBundle\EventListener\RouteListener
-#        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container", "@security.authorization_checker"]
-#        tags:
-#            - { name: kernel.event_listener, event: kernel.request, method: onDomainParse }

@@ -8,7 +8,8 @@ import Login from './_components/Login'
 import AppRoute from './_utils/AppRoute'
 import i18n from './_utils/i18n'
 import Validator from 'validatorjs'
-Validator.useLang(window.localStorage.i18nextLng);
+import AppInfos from './_components/AppInfos'
+Validator.useLang(window.localStorage.i18nextLng)
 
 class App extends Component {
 
@@ -131,6 +132,7 @@ class App extends Component {
                                     <div className="cell auto">
                                         <a href="#"><span className="ico-help"></span></a>
                                     </div>
+                                    <AppInfos />
                                 </div>
                             </div>
                             <div className="cell medium-11 medium-cell-block-y main">
@@ -143,12 +145,10 @@ class App extends Component {
                                         </div>
                                     </div>
                                     <div className="cell medium-12">
-                                    <NotificationSystem ref={n => this._notificationSystem = n} style= {this.notificationStyle} />
+                                        <NotificationSystem ref={n => this._notificationSystem = n} style= {this.notificationStyle} />
                                         {isAuthenticated && <AppRoute isAuthenticated={isAuthenticated}/>}
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>

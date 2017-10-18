@@ -187,5 +187,10 @@
             "name": "role",
             "name_plural": "roles"
         }
+    },
+    "footer": {
+        "contact": "Contact",
+        "general_conditions": "CGU",
+        "version": "Version {{version}}"
     }
 }
