@@ -1,5 +1,6 @@
 {
     "common": {
+        "locale" : "fr",
         "no_results": "Aucun {{name}} ne correspond à votre recherche...",
         "classeur": "classeur",
         "classeur_plural": "classeurs",
