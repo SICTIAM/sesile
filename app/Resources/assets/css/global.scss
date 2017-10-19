@@ -11,6 +11,9 @@ $button-palette: map-merge($foundation-palette, (
 )) !default;
 
 $title-color: #797c92;
+$sesile-color: (
+  dark-blue: #4a4c63
+);
 
 @import "./../../../../node_modules/foundation-sites/scss/foundation";
 @include foundation-everything(true);
@@ -92,7 +95,7 @@ html {
     font-size: 1em;
     font-weight: 700;
     padding-left: 2em;
-    background: #4a4c63 url("../images/ico_search.png") no-repeat right;
+    background: map-get($sesile-color, 'dark-blue') url("../images/ico_search.png") no-repeat right;
   }
 
   .logo {
@@ -276,7 +279,7 @@ html {
       padding-bottom:1em;
     }
     .panel-body {
-      color: #4a4c63;
+      color: map-get($sesile-color, 'dark-blue');
       font-size:0.875em;
       font-weight:normal;
       border-top: solid 1px #a7a7a7;
@@ -306,7 +309,7 @@ html {
 
   .list-classeurs, .list-classeurs a {
     background-color: #fff;
-    color: #4a4c63;
+    color: map-get($sesile-color, 'dark-blue');
     font-size:0.875em;
 
     .tri-classeurs {
@@ -762,4 +765,13 @@ $list-group-margin: $global-margin;
 
 .RichTextEditor__editor___1QqIU {
   height: 200px;
+}
+
+.app-infos {
+  text-align: center;
+  font-size: 0.7em;
+  font-weight: 700;
+  a {
+    color: map-get($sesile-color, 'dark-blue');
+  }
 }

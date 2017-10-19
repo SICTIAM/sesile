@@ -2,13 +2,15 @@
 
 namespace Sesile\MainBundle\Controller;
 
-use Sesile\CircuitBundle\Controller\CircuitController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @Rest\Route("", options = { "expose" = true })
+ */
 class DefaultController extends Controller
 {
 
@@ -28,5 +30,14 @@ class DefaultController extends Controller
     public function dashboardAction()
     {
         return $this->render('app.html.twig');
+    }
+
+    /**
+     * @Rest\Get("/informations")
+     * @return JsonResponse
+     */
+    public function getAppInformationAction()
+    {
+        return new JsonResponse($this->getParameter('informations'));
     }
 }
