@@ -10,6 +10,7 @@ import CircuitValidation from '../admin/CircuitValidation'
 import ClasseursRetract from "../classeur/ClasseursRetract"
 import Account from "../user/Account"
 import Certificate from '../user/Certificate'
+import HelpBoard from '../documentation/HelpBoard'
 import Groups from '../admin/Groups'
 import Group from '../admin/Group'
 import Users from '../admin/Users'
@@ -44,6 +45,7 @@ class AppRoute extends Component {
                 <Route path={"/classeurs/valides"} exact={true} component={ClasseursValid} />
                 <Route path={"/classeurs/retractables"} exact={true} component={ClasseursRetract} />
                 <Route path={"/classeurs/supprimes"} exact={true} component={ClasseursRemove} />
+                <Route path={"/documentations"} exact={true} component={HelpBoard} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} />
                 )} />

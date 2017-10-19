@@ -129,7 +129,7 @@ class App extends Component {
                                         <a href="#"><span className="ico-notif"></span></a>
                                     </div>
                                     <div className="cell auto">
-                                        <a href="#"><span className="ico-help"></span></a>
+                                        <Link to={"/documentations"}><span className="ico-help"></span></Link>
                                     </div>
                                 </div>
                             </div>

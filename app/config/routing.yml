@@ -9,9 +9,15 @@ sesile_classeur:
     requirements:
         reactRouting: ".+"
 
-sesile_ustilisateur:
+sesile_utilisateur:
     defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
     path: /utilisateur/{reactRouting}
+    requirements:
+        reactRouting: ".+"
+
+sesile_documentations:
+    defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
+    path: /documentations/{reactRouting}
     requirements:
         reactRouting: ".+"
 

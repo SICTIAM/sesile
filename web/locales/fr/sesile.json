@@ -51,6 +51,13 @@
           "validity": "validité",
           "from": "émis le",
           "to": "expire le"
+        },
+        "help_board":{
+            "title": "Documentation et aides",
+            "title_patchs": "Documentation des mises à jours",
+            "title_helps": "Aides",
+            "title_video": "Vidéo",
+            "view_button": "Voir le document"
         }
     },
     "admin": {
@@ -78,8 +85,8 @@
             "type_name": "Entrez le nom du {{name}}..."
         },
         "details": {
-            "title": "Paramètrer le {{name}}",
-            "title_female": "Paramètrer la {{name}}",
+            "title": "Paramétrer le {{name}}",
+            "title_female": "Paramétrer la {{name}}",
             "subtitle": "Puis sauvegarder"
         },
         "label": {
