@@ -3,10 +3,13 @@ import { func, object } from 'prop-types'
 import { translate } from 'react-i18next'
 import { AccordionItem } from "../_components/AdminUI"
 import DocumentationRow from "./DocumentationRow"
+import { handleErrors } from '../_utils/Utils'
+import { basicNotification } from '../_components/Notifications'
 
 class Helps extends Component {
     static contextTypes = {
-        t: func
+        t: func,
+        _addNotification: func
     }
 
     constructor(props) {
@@ -23,7 +26,7 @@ class Helps extends Component {
     fetchHelps () {
         const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_main_documentationapi_getallaides'), { credentials: 'same-origin'})
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(helps => this.setState({helps}))
             .catch(error => _addNotification(basicNotification(
@@ -35,11 +38,11 @@ class Helps extends Component {
     render() {
         const {t} = this.context
         const { helps } = this.state
-        console.log(helps)
+
         const row = helps.map((help, key) => <DocumentationRow key={key} documentation={help} />)
 
         return (
-            <AccordionItem title={t('common.help_board.title_helps')}>
+            <AccordionItem title={t('common.help_board.title_helps')} className="is-active">
                 { row }
             </AccordionItem>
         )

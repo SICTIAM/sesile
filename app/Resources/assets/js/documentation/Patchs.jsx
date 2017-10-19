@@ -4,6 +4,7 @@ import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import { AccordionItem } from "../_components/AdminUI"
 import DocumentationRow from "./DocumentationRow"
+import { handleErrors } from '../_utils/Utils'
 
 
 class Patchs extends Component {
@@ -26,7 +27,7 @@ class Patchs extends Component {
     fetchPatchs () {
         const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_main_documentationapi_getallpatch'), { credentials: 'same-origin'})
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(patchs => this.setState({patchs}))
             .catch(error => _addNotification(basicNotification(

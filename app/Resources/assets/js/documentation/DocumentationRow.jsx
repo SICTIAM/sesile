@@ -19,7 +19,7 @@ class DocumentationRow extends Component {
         const { documentation } = this.props
         const { t } = this.context
 
-        Moment.locale(t('common.locale'))
+        Moment.locale(window.localStorage.i18nextLng)
 
         return (
             <div className="cell medium-12">
