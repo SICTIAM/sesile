@@ -19,6 +19,7 @@ import UserListClasseurs from '../admin/UserListClasseurs'
 import Types from '../admin/Types'
 import Collectivites from '../admin/Collectivites'
 import Collectivite from '../admin/Collectivite'
+import AdminHelpBoard from "../admin/Documentations";
 import AdminRoute from './AdminRoute'
 import Home from '../Home'
 
@@ -54,6 +55,7 @@ class AppRoute extends Component {
                 <AdminRoute exact={true} path={"/admin/utilisateurs"} component={Users} user={user} />
                 <AdminRoute exact={true} path={"/admin/collectivites"} component={Collectivites} user={user} />
                 <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
+                <AdminRoute exact={true} path={"/admin/documentations"} component={AdminHelpBoard} user={user} />
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
                     <AdminRoute exact={true} path={match.path} component={Group} user={user} match={match} />                    
                 )} />

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { func, object } from 'prop-types'
+import { func } from 'prop-types'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import { AccordionItem } from "../_components/AdminUI"
-import DocumentationRow from "./DocumentationRow"
 import { handleErrors } from '../_utils/Utils'
+import DocumentationRow from "./DocumentationRow"
 
 
 class Patchs extends Component {

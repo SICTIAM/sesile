@@ -58,7 +58,7 @@ class Patch
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="datetime", options={"default": "CURRENT_TIMESTAMP"}))
      *
      *
      */

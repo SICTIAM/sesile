@@ -12,4 +12,27 @@ use Doctrine\ORM\EntityRepository;
  */
 class AideRepository extends EntityRepository
 {
+    public function uploadFile($file, $aide, $dirPath) {
+
+        if ($file) {
+            if ($aide->getPath()) {
+                $this->removeUpload($dirPath . $aide->getPath());
+            }
+            $fileName = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
+            $aide->setPath($fileName);
+            $file->move(
+                $dirPath,
+                $fileName
+            );
+        }
+        return $aide;
+    }
+
+
+    public function removeUpload($file) {
+
+        if (is_file($file)) {
+            unlink($file);
+        }
+    }
 }

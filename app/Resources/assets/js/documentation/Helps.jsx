@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
-import { func, object } from 'prop-types'
+import { func } from 'prop-types'
 import { translate } from 'react-i18next'
 import { AccordionItem } from "../_components/AdminUI"
 import DocumentationRow from "./DocumentationRow"
+import { basicNotification } from "../_components/Notifications"
 import { handleErrors } from '../_utils/Utils'
-import { basicNotification } from '../_components/Notifications'
 
 class Helps extends Component {
     static contextTypes = {
-        t: func,
-        _addNotification: func
+        t: func
     }
 
     constructor(props) {
@@ -38,7 +37,6 @@ class Helps extends Component {
     render() {
         const {t} = this.context
         const { helps } = this.state
-
         const row = helps.map((help, key) => <DocumentationRow key={key} documentation={help} />)
 
         return (

@@ -52,7 +52,7 @@ class Aide
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="datetime", options={"default": "CURRENT_TIMESTAMP"}))
      *
      *
      */
@@ -153,7 +153,7 @@ class Aide
     public function removeUpload()
     {
         if ($file = $this->getAbsolutePath()) {
-            unlink($file);
+            if(is_file($file))  unlink($file);
         }
     }
 
