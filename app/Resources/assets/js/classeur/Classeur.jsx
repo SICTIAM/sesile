@@ -11,6 +11,12 @@ class Classeur extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.classeurId !== nextProps.classeurId) {
+            this.getClasseur(nextProps.classeurId)
+        }
+    }
+
     componentDidMount() {
         this.getClasseur(this.props.classeurId)
     }

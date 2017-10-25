@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
-import { Redirect } from 'react-router-dom'
 import NotificationSystem from 'react-notification-system'
 import PropTypes from 'prop-types'
 import Login from './_components/Login'
@@ -9,6 +8,7 @@ import AppRoute from './_utils/AppRoute'
 import i18n from './_utils/i18n'
 import Validator from 'validatorjs'
 import AppInfos from './_components/AppInfos'
+import SearchClasseurs from './_components/SearchClasseurs'
 import Moment from 'moment'
 Validator.useLang(window.localStorage.i18nextLng)
 Moment.locale(window.localStorage.i18nextLng)
@@ -88,7 +88,7 @@ class App extends Component {
                                 </div>
                             </div>
                             <div className="medium-5 cell">
-                                <input type="search" name="sesile-search" className="sesile-search" id="" placeholder="Rechercher un classeur" />
+                                <SearchClasseurs/>
                             </div>
                             <div className="medium-2 cell"></div>
                             <div className="medium-1 cell">

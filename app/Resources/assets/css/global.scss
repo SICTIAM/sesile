@@ -672,6 +672,7 @@ $list-group-margin: $global-margin;
     position: absolute;
     width: 100%;
     border-bottom: 1px solid #e6e6e6;
+    z-index: 100;
     .list-group {
       margin: 0 !important;
       padding: 0 !important;
@@ -691,7 +692,9 @@ $list-group-margin: $global-margin;
     .list-group-item {
       padding: 0.7em;
       border-bottom: $list-group-border;
-    
+      cursor: pointer;
+      color: #0a0a0a;
+
       & > :last-child {
         margin-bottom: 0;
         border-bottom: none;
