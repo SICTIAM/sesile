@@ -10,6 +10,7 @@ import Validator from 'validatorjs'
 import AppInfos from './_components/AppInfos'
 import SearchClasseurs from './_components/SearchClasseurs'
 import Moment from 'moment'
+import SearchClasseurs from './_components/SearchClasseurs'
 Validator.useLang(window.localStorage.i18nextLng)
 Moment.locale(window.localStorage.i18nextLng)
 
