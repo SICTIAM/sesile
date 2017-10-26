@@ -131,6 +131,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
      public function findByNomOrPrenomAction(ParamFetcher $paramFetcher)
      {
+         //TODO: return just actif users
          $value = $paramFetcher->get('value');
          $collectiviteId = $paramFetcher->get('collectiviteId');
          if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivite()->getId() == $collectiviteId) {

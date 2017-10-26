@@ -1,6 +1,7 @@
 {
     "common": {
         "no_results": "Aucun {{name}} ne correspond à votre recherche...",
+        "small_no_results": "Aucun résultat..." ,
         "classeur": "classeur",
         "classeur_plural": "classeurs",
         "confirm_delete_img": "Voulez-vous supprimer l'image",
@@ -87,6 +88,7 @@
             "type_user_name": "Entrez le nom d'un utilisateur...",
             "name": "Nom du {{name}}",
             "type_name": "Entrez le nom du {{name}}...",
+            "type_userName_or_groupName": "Groupe ou utilisateur...",
             "subject": "Sujet",
             "message": "Message"
         },
@@ -117,7 +119,8 @@
             "name_plural": "circuits",
             "complet_name": "circuit de validation",
             "applicant_step": "Etape {{ordre}} - Déposante",
-            "validat_step": "Etape {{ordre}} - Validante"
+            "validat_step": "Etape {{ordre}} - Validante",
+            "add_step": "Ajouter une étape"
         },
         "user": {
             "name": "utilisateur",

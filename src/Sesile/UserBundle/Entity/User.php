@@ -190,7 +190,7 @@ class User extends BaseUser {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
-     * @Serializer\Groups({"currentUser", "searchUser"})
+     * @Serializer\Groups({"currentUser"})
      *
      */
     protected $collectivite;
