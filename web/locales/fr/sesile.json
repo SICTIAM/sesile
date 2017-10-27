@@ -69,7 +69,8 @@
         "associated_users": "Utilisateurs associés",
         "users_list": "Liste des utilisateurs",
         "button": {
-            "save": "Ajouter le {{name}}"
+            "save": "Ajouter le {{name}}",
+            "send": "Envoyer"
         },
         "error": {
             "not_extractable_list": "Impossible de récuperer la liste de {{name}} - erreur {{errorCode}}",
@@ -85,7 +86,9 @@
         "placeholder": {
             "type_user_name": "Entrez le nom d'un utilisateur...",
             "name": "Nom du {{name}}",
-            "type_name": "Entrez le nom du {{name}}..."
+            "type_name": "Entrez le nom du {{name}}...",
+            "subject": "Sujet",
+            "message": "Message"
         },
         "details": {
             "title": "Paramétrer le {{name}}",
@@ -213,6 +216,13 @@
                 "fail_add": "Impossible d'ajouter la documentation - erreur {{errorCode}}",
                 "fetch": "Impossible de récupérer la documentation - erreur {{errorCode}}"
             }
+        },
+        "emailing": {
+            "title": "Emailing",
+            "complet_name": "Rédiger un emailing",
+            "subtitle": "Puis envoyez à tous les utilisateurs",
+            "success_add": "L'emailing a bien été envoyé",
+            "fail_add": "L'emailing n'a pas être envoyé - erreur {{errorCode}}"
         },
         "roles_user": {
             "name": "role",
