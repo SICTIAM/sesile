@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { func } from 'prop-types'
 import { translate } from 'react-i18next'
-import { AdminDetails, AccordionContent, AccordionItem} from "../_components/AdminUI"
+import { AdminDetails, AccordionContent, AccordionItem} from "../_components/AdminUI";
 import Patchs from "./Patchs";
 import Helps from "./Helps";
 

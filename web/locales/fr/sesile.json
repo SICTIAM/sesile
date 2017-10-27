@@ -24,6 +24,8 @@
             "enabled": "Active",
             "disabled": "inactive",
             "name": "Nom",
+            "description" :"Description",
+            "date" :"Date",
             "yes": "Oui",
             "no": "Non",
             "title": "Titre",
@@ -54,7 +56,7 @@
         },
         "help_board":{
             "title": "Documentation et aides",
-            "title_patchs": "Documentation des mises à jours",
+            "title_patchs": "Mises à jours",
             "title_helps": "Aides",
             "title_video": "Vidéo",
             "view_button": "Voir le document"
@@ -184,6 +186,31 @@
               "new_classeur": "Mail nouveau classeur",
               "refused_classeur": "Mail classeur refusé",
               "valid_classeur": "Mail classeur validé"
+            }
+        },
+        "documentations": {
+            "help": "aide",
+            "help_add": "Ajouter une aide",
+            "patch": "mise à jour",
+            "patch_add": "Ajouter une mise à jour",
+            "placeholder_description": "Saisir une description",
+            "label_version": "Version",
+            "placeholder_version": "Saisir une version",
+            "label_date": "Date",
+            "placeholder_date": "Saisir une date",
+            "remove_document": "Supprimer le document",
+            "change_document": "Changer le document",
+            "add_document": "Ajouter un document",
+            "new_document": "Charger le document",
+            "success_edit": "La documentation a bien été bien modifiée",
+            "success_add": "La documentation a bien été bien ajoutée",
+            "error": {
+                "upload_document": "Impossible de charger votre document - erreur {{errorCode}}",
+                "delete_document": "Impossible de supprimer votre document - erreur {{errorCode}}",
+                "delete_documentation": "Impossible de supprimer la documentation - erreur {{errorCode}}",
+                "fail_edit": "Impossible de modifier la documentation - erreur {{errorCode}}",
+                "fail_add": "Impossible d'ajouter la documentation - erreur {{errorCode}}",
+                "fetch": "Impossible de récupérer la documentation - erreur {{errorCode}}"
             }
         },
         "roles_user": {

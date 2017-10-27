@@ -9,7 +9,9 @@ import AppRoute from './_utils/AppRoute'
 import i18n from './_utils/i18n'
 import Validator from 'validatorjs'
 import AppInfos from './_components/AppInfos'
+import Moment from 'moment'
 Validator.useLang(window.localStorage.i18nextLng)
+Moment.locale(window.localStorage.i18nextLng)
 
 class App extends Component {
 

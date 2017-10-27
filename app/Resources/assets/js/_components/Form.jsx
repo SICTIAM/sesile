@@ -1,5 +1,6 @@
 import React from 'react'
 import UserAvatar from 'react-user-avatar'
+import DatePicker from 'react-datepicker'
 
 const Form = ({ children }) =>
     <form>
@@ -19,8 +20,7 @@ const Input = ({ type, id, value, placeholder, onChange, className, onBlur, labe
             {labelText}
             <input  id={id}
                     type={type}
-                    name={id} 
-                    id={name} 
+                    name={id}
                     value={value}
                     placeholder={placeholder}  
                     onChange={e => {
@@ -89,5 +89,17 @@ const Select = ({ id, className, label, value, onChange, children }) =>
         </select>
     </div>
 
+const InputDatePicker = ({className, date, label, onChange, i18nextLng}) =>
+    <div className={className}>
+        <label>
+            { label }
+            <DatePicker
+                selected={ date }
+                onChange={ onChange }
+                locale={ i18nextLng || window.localStorage.i18nextLng }
+            />
+        </label>
+    </div>
 
-export { Form, FormGroup, Input, InputFile, Button, ButtonConfirm, Switch, Avatar, Select }
+
+export { Form, FormGroup, Input, InputFile, Button, ButtonConfirm, Switch, Avatar, Select, InputDatePicker }

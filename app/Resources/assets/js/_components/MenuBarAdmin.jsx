@@ -18,6 +18,7 @@ class MenuBarAdmin extends Component {
                 <li><Link to={"/admin/groupes"} className="button gray btn-user-conf"><span>{t('admin.group.name', {count: 2})}</span></Link></li>
                 <li><Link to={"/admin/types-classeur"} className="button gray btn-user-conf"><span>{t('admin.type.name', {count: 2})}</span></Link></li>
                 <li><Link to={"/admin/collectivites"} className="button gray btn-user-conf"><span>{t('admin.collectivite.name', {count: 2})}</span></Link></li>
+                <li><Link to={"/admin/documentations"} className="button gray btn-user-conf"><span>{t('common.help_board.title')}</span></Link></li>
             </ul>
         )
     }
