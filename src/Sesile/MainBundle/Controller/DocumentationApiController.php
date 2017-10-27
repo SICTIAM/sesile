@@ -112,7 +112,7 @@ class DocumentationApiController extends Controller
     public function updateAideAction(Request $request, Aide $aide)
     {
         if (empty($aide)) {
-            return new JsonResponse(['message' => 'type de classeur inexistant'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Aide inexistante'], Response::HTTP_NOT_FOUND);
         }
 
         $form = $this->createForm(AideType::class, $aide);
@@ -142,7 +142,7 @@ class DocumentationApiController extends Controller
     public function updatePatchAction(Request $request, Patch $patch)
     {
         if (empty($patch)) {
-            return new JsonResponse(['message' => 'type de classeur inexistant'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Mise à jour inexistante'], Response::HTTP_NOT_FOUND);
         }
 
         $form = $this->createForm(PatchType::class, $patch);

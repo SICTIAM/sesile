@@ -30,7 +30,7 @@ class DocumentationHelp extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.help !== nextProps.help) {
-            this.state.help = nextProps.help
+            this.setState({help: nextProps.help})
         }
     }
 
@@ -153,7 +153,6 @@ class DocumentationHelp extends Component {
         const { help, editState } = this.state
         const { t } = this.context
         const { i18nextLng } = window.localStorage
-        Moment.locale(i18nextLng)
 
         return (
             <div className="grid-x grid-padding-x grid-padding-y">

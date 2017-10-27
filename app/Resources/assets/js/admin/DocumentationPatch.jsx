@@ -30,7 +30,7 @@ class DocumentationPatch extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.patch !== nextProps.patch) {
-            this.state.patch = nextProps.patch
+            this.setState({patch: nextProps.patch})
         }
     }
 
