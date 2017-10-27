@@ -19,6 +19,20 @@ use Symfony\Component\HttpFoundation\Request;
 class ClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
+     * @return array
+     * @Rest\View(serializerGroups={"listClasseur"})
+     * @Rest\Get("s/list/all")
+     */
+    public function listAllAction()
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getAllClasseursVisibles($this->getUser()->getId());
+
+        return $classeurs;
+    }
+
+    /**
      * @param null $sort
      * @param null $order
      * @param int $limit

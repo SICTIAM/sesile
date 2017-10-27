@@ -2,12 +2,7 @@
 
 namespace Sesile\ClasseurBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Doctrine\ORM\QueryBuilder;
-use Sesile\UserBundle\Entity\User;
-use Symfony\Component\BrowserKit\Request;
 
 /**
  * ClasseurRepository
@@ -17,6 +12,27 @@ use Symfony\Component\BrowserKit\Request;
  */
 class ClasseurRepository extends EntityRepository {
 
+
+    public function getAllClasseursVisibles ($userId) {
+
+        $sort = "c.creation";
+        $order = "DESC";
+
+        $classeurs =  $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userId)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->orderBy($sort, $order)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $classeurs;
+    }
 
     public function getClasseursVisibles ($userId, $sort, $order, $limit, $start) {
 

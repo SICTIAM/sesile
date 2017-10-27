@@ -3,9 +3,15 @@ sesile_main:
     type:     annotation
     prefix:   /
 
-sesile_classeur:
+sesile_classeurs:
     defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
     path: /classeurs/{reactRouting}
+    requirements:
+        reactRouting: ".+"
+
+sesile_classeur:
+    defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
+    path: /classeur/{reactRouting}
     requirements:
         reactRouting: ".+"
 
