@@ -41,18 +41,6 @@ class Groupe {
     protected $collectivite;
 
     /**
-     * @var
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="groupe")
-     */
-    private $hierarchie;
-
-    /**
-     * @var string
-     * @ORM\Column(name="couleur", type="string", length=255, nullable=true)
-     */
-    private $couleur;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", inversedBy="groupes", cascade={"persist"})
      * @ORM\JoinTable(name="classeur_groupe")
      * @Serializer\Groups({"getByIdCircuit"})
@@ -60,24 +48,11 @@ class Groupe {
     private $types;
 
     /**
-     * @var string
-     * @ORM\Column(name="json", type="text",nullable=true)
-     */
-    private $json;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupe")
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupe", cascade={"remove"})
      * @ORM\OrderBy({"ordre" = "ASC"})
      * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
     private $etapeGroupes;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ordreEtape", type="string", length=255)
-     */
-    private $ordreEtape;
 
     /**
      * @var \DateTime
@@ -121,89 +96,7 @@ class Groupe {
      * Constructor
      */
     public function __construct() {
-        $this->hierarchie = new ArrayCollection();
         $this->creation = new \DateTime('now');
-    }
-    
-
-
-    /**
-     * Set couleur
-     *
-     * @param string $couleur
-     * @return Groupe
-     */
-    public function setCouleur($couleur)
-    {
-        $this->couleur = $couleur;
-    
-        return $this;
-    }
-
-    /**
-     * Get couleur
-     *
-     * @return string
-     */
-    public function getCouleur()
-    {
-        return $this->couleur;
-    }
-
-    /**
-     * Set json
-     *
-     * @param string $json
-     * @return Groupe
-     */
-    public function setJson($json)
-    {
-        $this->json = $json;
-    
-        return $this;
-    }
-
-    /**
-     * Get json
-     *
-     * @return string 
-     */
-    public function getJson()
-    {
-        return $this->json;
-    }
-
-    /**
-     * Add hierarchie
-     *
-     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
-     * @return Groupe
-     */
-    public function addHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
-    {
-        $this->hierarchie[] = $hierarchie;
-    
-        return $this;
-    }
-
-    /**
-     * Remove hierarchie
-     *
-     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
-     */
-    public function removeHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
-    {
-        $this->hierarchie->removeElement($hierarchie);
-    }
-
-    /**
-     * Get hierarchie
-     *
-     * @return Collection
-     */
-    public function getHierarchie()
-    {
-        return $this->hierarchie;
     }
 
     /**
@@ -270,29 +163,6 @@ class Groupe {
     public function getEtapeGroupes()
     {
         return $this->etapeGroupes;
-    }
-
-    /**
-     * Set ordreEtape
-     *
-     * @param string $ordreEtape
-     * @return Groupe
-     */
-    public function setOrdreEtape($ordreEtape)
-    {
-        $this->ordreEtape = $ordreEtape;
-    
-        return $this;
-    }
-
-    /**
-     * Get ordreEtape
-     *
-     * @return string 
-     */
-    public function getOrdreEtape()
-    {
-        return $this->ordreEtape;
     }
 
     /**

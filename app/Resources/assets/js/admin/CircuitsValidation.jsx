@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
-import { func, object, number } from 'prop-types'
+import { func, object, number, string } from 'prop-types'
 import { translate } from 'react-i18next'
+import { handleErrors } from '../_utils/Utils'
+import { basicNotification } from '../_components/Notifications'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
 import SelectCollectivite from '../_components/SelectCollectivite'
+import { Button, Input } from '../_components/Form'
 
 class CircuitsValidation extends Component {
 
     static contextTypes = {
-        t: func 
+        t: func,
+        _addNotification: func
     }
 
     constructor(props) {
@@ -21,7 +25,8 @@ class CircuitsValidation extends Component {
             currentCollectiviteId: '',
             userName: '',
             circuitName: '',
-            isSuperAdmin: false
+            isSuperAdmin: false,
+            newValidationcircuit: ''
         }
     }
 
@@ -68,9 +73,39 @@ class CircuitsValidation extends Component {
         this.fetchCircuitsValidations(currentCollectiviteId)
     }
 
+    handleAddValidationCircuit = () => {
+        const { t, _addNotification} = this.context
+        const { currentCollectiviteId, newValidationcircuit } = this.state
+        fetch(Routing.generate('sesile_user_circuitvalidationapi_post'), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(({
+                collectivite: currentCollectiviteId,
+                nom: newValidationcircuit
+            })) ,
+            credentials: 'same-origin'
+        })
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(groupe => {
+                History.push(`/admin/${currentCollectiviteId}/circuit-de-validation/${groupe.id}`)
+            })
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_addable', {name:t('admin.circuit.complet_name'), errorCode: error.status}),
+                error.statusText)))
+    }
+
+    handleChangeValidationCircuit = (name, value) => {
+        this.setState({newValidationcircuit: value})
+    }
+
     render () {
         const { t } = this.context
-        const { filteredCollectivites, collectivites, isSuperAdmin, currentCollectiviteId } = this.state
+        const { newValidationcircuit, isSuperAdmin, currentCollectiviteId } = this.state
         const listCircuits = this.state.filteredCircuits.map((circuit) =>
             <ValidationCircuitRow  key={circuit.id} circuit={circuit} onClick={this.props.onClick} collectiviteId={currentCollectiviteId} />
         )
@@ -110,6 +145,7 @@ class CircuitsValidation extends Component {
                                 <div className="cell medium-4">{t('admin.circuit.name')}</div>
                                 <div className="cell medium-8">{t('admin.associated_users')}</div>
                             </div>
+                            <AddValidationCircuitRow newValidationcircuit={newValidationcircuit} addValidationCircuit={ this.handleAddValidationCircuit } changeValidationCircuit={ this.handleChangeValidationCircuit } />
                             {
                                 (listCircuits.length > 0) ? listCircuits :
                                 <div className="cell medium-12 panel-body">
@@ -150,4 +186,35 @@ const ValidationCircuitRow = ({circuit, collectiviteId}) => {
 ValidationCircuitRow.propTypes = {
     circuit: object.isRequired,
     collectiviteId: number.isRequired
+}
+
+const AddValidationCircuitRow = ({ newValidationcircuit, addValidationCircuit, changeValidationCircuit }, {t}) => {
+
+    return (
+        <div className="cell medium-12 panel-body grid-x row-admin">
+            <Input id="circuit"
+                   className="cell medium-4"
+                   placeholder={ t('admin.placeholder.add_circuit') }
+                   value={ newValidationcircuit }
+                   onChange={ changeValidationCircuit }
+            />
+            <Button id="add-circuit"
+                    className="cell medium-8 text-right"
+                    classNameButton=""
+                    onClick={ addValidationCircuit }
+                    disabled={ !newValidationcircuit.length }
+                    labelText={t('common.button.add')}
+            />
+        </div>
+    )
+}
+
+AddValidationCircuitRow.propTypes = {
+    newValidationcircuit: string,
+    addValidationCircuit: func,
+    changeValidationCircuit: func
+}
+
+AddValidationCircuitRow.contextTypes = {
+    t: func
 }

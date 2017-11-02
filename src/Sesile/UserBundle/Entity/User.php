@@ -232,13 +232,6 @@ class User extends BaseUser {
     private $etapeGroupes;
 
     /**
-     * @var
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="user", cascade={"remove"})
-     * @Exclude()
-     */
-    private $hierarchie;
-
-    /**
      * @var float
      * 
      * @ORM\Column(name="sesile_version", type="float")
@@ -818,39 +811,6 @@ class User extends BaseUser {
     public function getEtapeGroupes()
     {
         return $this->etapeGroupes;
-    }
-
-    /**
-     * Add hierarchie
-     *
-     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
-     * @return User
-     */
-    public function addHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
-    {
-        $this->hierarchie[] = $hierarchie;
-    
-        return $this;
-    }
-
-    /**
-     * Remove hierarchie
-     *
-     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
-     */
-    public function removeHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
-    {
-        $this->hierarchie->removeElement($hierarchie);
-    }
-
-    /**
-     * Get hierarchie
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getHierarchie()
-    {
-        return $this->hierarchie;
     }
 
     /**

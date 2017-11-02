@@ -78,8 +78,8 @@ class SearchUserAndGroup extends Component {
 
     onSuggestionSelected = (event, { suggestion }) => {
         this.setState({value: ''})
-        if(suggestion.users) this.props.addGroup(this.props.stepKey, suggestion)
-        else this.props.addUser(this.props.stepKey, suggestion)
+        if(suggestion.users) this.props.addGroup(this.props.step.id, suggestion)
+        else this.props.addUser(this.props.step.id, suggestion)
     }
     
     render() {

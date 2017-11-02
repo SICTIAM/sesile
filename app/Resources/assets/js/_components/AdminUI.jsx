@@ -45,11 +45,11 @@ const AccordionItem = ({ className, title, children }) =>
         </div>
     </li>
 
-const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey }) => 
+const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey, stepId }) =>
     <div className={className}>
         <div className="grid-x step-item">
             <div className="medium-12 cell name-step-item">
-            {title}<a className="float-right" style={{color: "red"}} onClick={e => handleClickDeleteStep(stepKey)}>x</a>
+            {title}<a className="float-right" style={{color: "red"}} onClick={e => handleClickDeleteStep(stepId)}>x</a>
             </div>
             <div className="medium-12 cell content-step-item">
                 {children}

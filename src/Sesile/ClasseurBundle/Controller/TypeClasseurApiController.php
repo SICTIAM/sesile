@@ -22,6 +22,23 @@ use Symfony\Component\HttpFoundation\Response;
 class TypeClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
+     * @Rest\View(serializerGroups={"simpleListType"})
+     * @Rest\Get("s/simple/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @param Collectivite $collectivite
+     * @return array|\Doctrine\Common\Collections\Collection
+     */
+    public function getAllSimpleAction(Collectivite $collectivite)
+    {
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+            $this->getUser()->getCollectivite() == $collectivite) {
+            return $collectivite->getTypes();
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
      * @Rest\View()
      * @Rest\Get("s/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})

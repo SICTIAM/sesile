@@ -90,7 +90,8 @@
             "type_name": "Entrez le nom du {{name}}...",
             "type_userName_or_groupName": "Groupe ou utilisateur...",
             "subject": "Sujet",
-            "message": "Message"
+            "message": "Message",
+            "add_circuit": "Nouveau circuit de validation"
         },
         "details": {
             "title": "Paramétrer le {{name}}",
@@ -114,6 +115,12 @@
             "complet_name": "type de classeurs",
             "complet_name_plural": "types de classeurs"
         },
+        "etape": {
+            "name": "étape",
+            "name_plural": "étapes",
+            "complet_name": "étape du circuit",
+            "complet_name_plural": "étapes du circuit"
+        },
         "circuit": {
             "name": "circuit",
             "name_plural": "circuits",
@@ -121,6 +128,10 @@
             "applicant_step": "Etape {{ordre}} - Déposante",
             "validat_step": "Etape {{ordre}} - Validante",
             "add_step": "Ajouter une étape"
+        },
+        "user_pack": {
+            "name": "groupe utilisateur",
+            "name_plural": "groupes utilisateur"
         },
         "user": {
             "name": "utilisateur",
