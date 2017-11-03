@@ -240,6 +240,14 @@
             "success_add": "L'emailing a bien été envoyé",
             "fail_add": "L'emailing n'a pas être envoyé - erreur {{errorCode}}"
         },
+        "notes": {
+            "title": "notes",
+            "complet_name": "Rédiger une note",
+            "subtitle": "Puis envoyez à tous les utilisateurs",
+            "note_title": "Titre",
+            "note_subtitle": "Sous-titre",
+            "note_created": "créé le"
+        },
         "roles_user": {
             "name": "role",
             "name_plural": "roles"

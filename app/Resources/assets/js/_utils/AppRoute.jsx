@@ -16,6 +16,8 @@ import Group from '../admin/Group'
 import Users from '../admin/Users'
 import User from '../admin/User'
 import Emailing from '../admin/Emailing'
+import Notes from '../admin/Notes'
+import Note from '../admin/Note'
 import UserListClasseurs from '../admin/UserListClasseurs'
 import Types from '../admin/Types'
 import Collectivites from '../admin/Collectivites'
@@ -58,6 +60,7 @@ class AppRoute extends Component {
                 <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
                 <AdminRoute exact={true} path={"/admin/documentations"} component={AdminHelpBoard} user={user} />
                 <AdminRoute exact={true} path={"/admin/emailing"} component={Emailing} user={user} />
+                <AdminRoute exact={true} path={"/admin/notes"} component={Notes} user={user} />
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
                     <AdminRoute exact={true} path={match.path} component={Group} user={user} match={match} />                    
                 )} />
@@ -72,6 +75,9 @@ class AppRoute extends Component {
                 )} />
                 <Route exact={true} path={"/admin/collectivite/:collectiviteId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={Collectivite} user={user} match={match} />
+                )} />
+                <Route exact={true} path={"/admin/note/:noteId?"} render={({match}) => (
+                    <AdminRoute exact={true} path={match.path} component={Note} user={user} match={match} />
                 )} />
             </Switch>
         )

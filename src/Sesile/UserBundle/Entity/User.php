@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\Serializer\Annotation\Exclude;
 use Sesile\ClasseurBundle\Entity\Classeur;
+use Sesile\UserBundle\Entity\Note;
 
 /**
  * User
@@ -237,6 +238,13 @@ class User extends BaseUser {
      * @ORM\Column(name="sesile_version", type="float")
      */
     private $sesileVersion;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\Note", inversedBy="users", cascade={"persist"})
+     * @ORM\JoinTable(name="User_has_Note")
+     * @ORM\OrderBy({"created"="DESC"})
+     */
+    private $notes;
 
     /**
      * @var array
@@ -1089,5 +1097,39 @@ class User extends BaseUser {
     public function getUserrole()
     {
         return $this->userrole;
+    }
+
+    /**
+     * Add note
+     *
+     * @param \Sesile\UserBundle\Entity\Note $note
+     *
+     * @return User
+     */
+    public function addNote(Note $note)
+    {
+        $this->notes[] = $note;
+
+        return $this;
+    }
+
+    /**
+     * Remove note
+     *
+     * @param \Sesile\UserBundle\Entity\Note $note
+     */
+    public function removeNote(Note $note)
+    {
+        $this->notes->removeElement($note);
+    }
+
+    /**
+     * Get notes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNotes()
+    {
+        return $this->notes;
     }
 }

@@ -1,3 +1,15 @@
+$font-path: "foundation-icons/foundation-icons";
+@font-face {
+  font-family: "foundation-icons";
+  src: url("#{$font-path}.eot");
+  src: url("#{$font-path}.eot?#iefix") format("embedded-opentype"),
+  url("#{$font-path}.woff") format("woff"),
+  url("#{$font-path}.ttf") format("truetype"),
+  url("#{$font-path}.svg#fontcustom") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
 $foundation-palette: (
     primary: #34a3fc,
     secondary: #2068a2,
@@ -15,12 +27,11 @@ $sesile-color: (
   dark-blue: #4a4c63
 );
 
+@import "./../../../../node_modules/foundation-icons/foundation-icons.scss";
 @import "./../../../../node_modules/foundation-sites/scss/foundation";
 @include foundation-everything(true);
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
-
 @import './../../../../node_modules/react-datepicker/dist/react-datepicker.css';
-@import url("https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css");
 
 
 @mixin my-icon ($url-image) {
@@ -264,6 +275,9 @@ html {
       text-transform: uppercase;
       text-decoration: underline;
       font-weight:700;
+    }
+    h5 {
+      margin-bottom:0;
     }
   }
 
@@ -883,4 +897,10 @@ label > input {
   color: #0a0a0a;
   transition: box-shadow 0.5s, border-color 0.25s ease-in-out;
   appearance: none;
+}
+
+
+.note-ico {
+  font-size:1.6em;
+  cursor: pointer;
 }

@@ -9,6 +9,7 @@ import i18n from './_utils/i18n'
 import Validator from 'validatorjs'
 import AppInfos from './_components/AppInfos'
 import SearchClasseurs from './_components/SearchClasseurs'
+import Note from './_components/Note'
 import Moment from 'moment'
 Validator.useLang(window.localStorage.i18nextLng)
 Moment.locale(window.localStorage.i18nextLng)
@@ -138,14 +139,8 @@ class App extends Component {
                                 </div>
                             </div>
                             <div className="cell medium-11 medium-cell-block-y main">
+                                <Note/>
                                 <div className="grid-x grid-padding-x">
-                                    <div className="cell medium-12 actu align-center-middle text-center">
-                                        <h1>Les dernières nouvelles</h1>
-                                        <h2>Mise à jour du 12/07/2017</h2>
-                                        <div className="cell medium-6">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci distinctio dolorem dolorum illo incidunt ipsa libero mollitia, numquam officia, optio provident quaerat rerum tempore, veniam? Adipisci itaque iure maxime.</p>
-                                        </div>
-                                    </div>
                                     <div className="cell medium-12">
                                         <NotificationSystem ref={n => this._notificationSystem = n} style= {this.notificationStyle} />
                                         {isAuthenticated && <AppRoute isAuthenticated={isAuthenticated}/>}
