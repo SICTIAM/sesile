@@ -2,10 +2,11 @@
 
 namespace Sesile\UserBundle\Form;
 
-use Sesile\ClasseurBundle\Entity\TypeClasseur;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GroupeType extends AbstractType
 {
@@ -16,33 +17,36 @@ class GroupeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-//            ->add('nom')
-//            ->add('collectivite')
-//            ->add('couleur')
-//            ->add('json')
-            ->add('types', 'entity', array(
+            ->add('nom')
+            ->add('collectivite')
+            ->add('types', EntityType::class, array(
                 'class' => 'SesileClasseurBundle:TypeClasseur',
-                'property' => 'nom',
-                'multiple' => true,
-                'expanded' => true
-                ))
+                'multiple' => true
+            ))
+            ->add('etapeGroupes', CollectionType::class, array(
+                'entry_type' => EtapeGroupeType::class,
+                'allow_delete' => true,
+                'allow_add' => true,
+            ))
         ;
     }
-    
+
     /**
-     * @param OptionsResolverInterface $resolver
+     * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Sesile\UserBundle\Entity\Groupe'
+            'data_class' => 'Sesile\UserBundle\Entity\Groupe',
+            'csrf_protection' => false,
+            'cascade_validation' => true,
         ));
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sesile_userbundle_groupe';
     }

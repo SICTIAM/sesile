@@ -190,7 +190,7 @@ class User extends BaseUser {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
-     * @Serializer\Groups({"currentUser", "searchUser"})
+     * @Serializer\Groups({"currentUser"})
      *
      */
     protected $collectivite;
@@ -230,13 +230,6 @@ class User extends BaseUser {
      * @Exclude()
      */
     private $etapeGroupes;
-
-    /**
-     * @var
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserGroupe", mappedBy="user", cascade={"remove"})
-     * @Exclude()
-     */
-    private $hierarchie;
 
     /**
      * @var float
@@ -818,39 +811,6 @@ class User extends BaseUser {
     public function getEtapeGroupes()
     {
         return $this->etapeGroupes;
-    }
-
-    /**
-     * Add hierarchie
-     *
-     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
-     * @return User
-     */
-    public function addHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
-    {
-        $this->hierarchie[] = $hierarchie;
-    
-        return $this;
-    }
-
-    /**
-     * Remove hierarchie
-     *
-     * @param \Sesile\UserBundle\Entity\UserGroupe $hierarchie
-     */
-    public function removeHierarchie(\Sesile\UserBundle\Entity\UserGroupe $hierarchie)
-    {
-        $this->hierarchie->removeElement($hierarchie);
-    }
-
-    /**
-     * Get hierarchie
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getHierarchie()
-    {
-        return $this->hierarchie;
     }
 
     /**

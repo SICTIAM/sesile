@@ -102,6 +102,7 @@ class CollectiviteInfos extends Component {
                                     accept="image/png,image/jpeg"
                                     onChange={this.updateAvatar}/>
                         <ButtonConfirm  id="confirm_delete"
+                                        className="columns medium-3"
                                         labelButton={t('common.button.delete_img')}
                                         confirmationText={t('common.confirm_delete_img')}
                                         labelConfirmButton={t('common.button.confirm')}

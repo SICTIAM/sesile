@@ -190,7 +190,7 @@ class User extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_addable', {name: t('admin.user.name'), errorCode: error.status}),
+                t('admin.error.add', {name: t('admin.user.name'), errorCode: error.status}),
                 error.statusText)))
 
     }

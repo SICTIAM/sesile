@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
-import { func, object, number } from 'prop-types'
+import { func, object, number, string } from 'prop-types'
 import { translate } from 'react-i18next'
+import { handleErrors } from '../_utils/Utils'
+import { basicNotification } from '../_components/Notifications'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
 import SelectCollectivite from '../_components/SelectCollectivite'
+import { Button, Input } from '../_components/Form'
 
 class CircuitsValidation extends Component {
 
     static contextTypes = {
-        t: func 
+        t: func,
+        _addNotification: func
     }
 
     constructor(props) {
@@ -51,7 +55,7 @@ class CircuitsValidation extends Component {
     handleChangeUserName(userName) {
         this.setState({userName})
         const regex = escapedValue(userName, this.state.filteredCircuits, this.state.circuits)
-        const filteredCircuits = this.state.circuits.filter(circuit =>
+        let filteredCircuits = this.state.circuits.filter(circuit =>
                                  regex.test(circuit.etape_groupes.map(groupe => groupe.users.map(user => user._nom))))
         this.setState({filteredCircuits})
     }
@@ -70,7 +74,7 @@ class CircuitsValidation extends Component {
 
     render () {
         const { t } = this.context
-        const { filteredCollectivites, collectivites, isSuperAdmin, currentCollectiviteId } = this.state
+        const { newValidationcircuit, isSuperAdmin, currentCollectiviteId } = this.state
         const listCircuits = this.state.filteredCircuits.map((circuit) =>
             <ValidationCircuitRow  key={circuit.id} circuit={circuit} onClick={this.props.onClick} collectiviteId={currentCollectiviteId} />
         )
@@ -86,7 +90,7 @@ class CircuitsValidation extends Component {
                                 <input id="name-search-admin"
                                        value={this.state.circuitName}
                                        onChange={(event) => this.handleChangeCircuitName(event.target.value)}
-                                       placeholder={t('admin.placeholder.type_name', {name: 'admin.circuit.name'})}
+                                       placeholder={t('admin.placeholder.type_name', {name: t('admin.circuit.name')})}
                                        type="text" />
                             </div>
                             <div className="auto cell">
@@ -110,6 +114,7 @@ class CircuitsValidation extends Component {
                                 <div className="cell medium-4">{t('admin.circuit.name')}</div>
                                 <div className="cell medium-8">{t('admin.associated_users')}</div>
                             </div>
+                            <AddValidationCircuitRow currentCollectiviteId={currentCollectiviteId} />
                             {
                                 (listCircuits.length > 0) ? listCircuits :
                                 <div className="cell medium-12 panel-body">
@@ -134,7 +139,10 @@ export default translate(['sesile'])(CircuitsValidation)
 
 const ValidationCircuitRow = ({circuit, collectiviteId}) => {
     const arrayNoms = []
-    circuit.etape_groupes.map((groupe, index) => groupe.users.map(user => arrayNoms.unshift(user._nom)))
+    circuit.etape_groupes.map((etape_groupe, index) => {
+        etape_groupe.users.map(user => arrayNoms.unshift(user._nom))
+        etape_groupe.user_packs.map(user_pack => arrayNoms.unshift(user_pack.nom))
+    })
     return (
         <div className="cell medium-12 panel-body grid-x row-admin" onClick={() => History.push(`${collectiviteId}/circuit-de-validation/${circuit.id}`)}>
             <div className="cell medium-4">
@@ -150,4 +158,20 @@ const ValidationCircuitRow = ({circuit, collectiviteId}) => {
 ValidationCircuitRow.propTypes = {
     circuit: object.isRequired,
     collectiviteId: number.isRequired
+}
+
+const AddValidationCircuitRow = ({ currentCollectiviteId }, {t}) => {
+
+    return (
+        <div className="cell medium-12 panel-body row-admin">
+            <Button id="add-circuit"
+                    className="text-right"
+                    onClick={() => History.push(`${currentCollectiviteId}/circuit-de-validation/`)}
+                    labelText={t('common.button.add')}/>
+        </div>
+    )
+}
+
+AddValidationCircuitRow.contextTypes = {
+    t: func
 }

@@ -93,8 +93,8 @@ class RolesUser extends Component {
             })
             .catch(error => {
                 _addNotification(basicNotification('error',
-                    t('admin.error.not_addable',
-                        {name: t('admin.roles_user.name'), errorCode: error.status}),
+                    t('admin.error.add',
+                    {name: t('admin.roles_user.name'), errorCode: error.status}),
                     error.statusText))
             })
     }

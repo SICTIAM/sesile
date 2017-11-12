@@ -1,6 +1,7 @@
 {
     "common": {
         "no_results": "Aucun {{name}} ne correspond à votre recherche...",
+        "small_no_results": "Aucun résultat..." ,
         "classeur": "classeur",
         "classeur_plural": "classeurs",
         "confirm_delete_img": "Voulez-vous supprimer l'image",
@@ -74,7 +75,7 @@
         },
         "error": {
             "not_extractable_list": "Impossible de récuperer la liste de {{name}} - erreur {{errorCode}}",
-            "not_addable": "Impossible de créer le {{name}} - erreur {{errorCode}}",
+            "add": "Impossible de créer le {{name}} - erreur {{errorCode}}",
             "not_updatable": "Impossible de mettre à jour le {{name}} - erreur {{errorCode}}",
             "not_removable": "Impossible de supprimer le {{name}} - erreur {{errorCode}}"
         },
@@ -87,8 +88,10 @@
             "type_user_name": "Entrez le nom d'un utilisateur...",
             "name": "Nom du {{name}}",
             "type_name": "Entrez le nom du {{name}}...",
+            "type_userName_or_groupName": "Groupe ou utilisateur...",
             "subject": "Sujet",
-            "message": "Message"
+            "message": "Message",
+            "add_circuit": "Nouveau circuit de validation"
         },
         "details": {
             "title": "Paramétrer le {{name}}",
@@ -112,12 +115,25 @@
             "complet_name": "type de classeurs",
             "complet_name_plural": "types de classeurs"
         },
+        "etape": {
+            "name": "étape",
+            "name_plural": "étapes",
+            "complet_name": "étape du circuit",
+            "complet_name_plural": "étapes du circuit"
+        },
         "circuit": {
             "name": "circuit",
             "name_plural": "circuits",
             "complet_name": "circuit de validation",
             "applicant_step": "Etape {{ordre}} - Déposante",
-            "validat_step": "Etape {{ordre}} - Validante"
+            "validat_step": "Etape {{ordre}} - Validante",
+            "add_step": "Ajouter une étape",
+            "not_valid": "Circuit de validation non valide",
+            "validation_conditions": "Vérifier que le circuit contient un \"nom\", au moins un \"type\" et que les étapes contiennent au moins un groupe et/ou plusieurs utilisateurs"
+        },
+        "user_pack": {
+            "name": "groupe utilisateur",
+            "name_plural": "groupes utilisateur"
         },
         "user": {
             "name": "utilisateur",

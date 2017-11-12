@@ -1,95 +1,272 @@
 import React, { Component } from 'react'
-import PropTypes, { object, func } from 'prop-types'
+import { object, func } from 'prop-types'
 import { translate } from 'react-i18next'
+import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
+import { handleErrors } from '../_utils/Utils'
+import History from '../_utils/History'
+import { basicNotification } from '../_components/Notifications'
+import { AdminDetailsWithInputField, SimpleContent, StepItem } from '../_components/AdminUI'
+import { Button, ButtonConfirm } from '../_components/Form'
+import SearchUserAndGroup from '../_components/SearchUserAndGroup'
+import { GridX, Cell } from '../_components/UI'
 
 class CircuitValidation extends Component {
 
     static contextTypes = {
-        t: func
+        t: func,
+        _addNotification: func
     }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            circuit: {},
-            classeurTypes: [],
-            circuitReceived: false,
-            collectiviteId: ''
-        }
+    state = {
+        circuit: {
+            id: 0,
+            nom: '',
+            etape_groupes: [],
+            types: []
+        },
+        classeurTypes: [],
+        collectiviteId: ''
     }
 
     componentDidMount() {
         const { collectiviteId, circuitId } = this.props.match.params
         this.setState({collectiviteId})
-        if(!!circuitId) this.fetchCircuitValidation(circuitId)
+        if(circuitId) this.fetchCircuitValidation(circuitId)
         this.fetchClasseurTypes(collectiviteId)
+        $("#admin-details-input").foundation()
     }
-
+    
     fetchCircuitValidation(id) {
         fetch(Routing.generate('sesile_user_circuitvalidationapi_getbyid', {id}), {credentials: 'same-origin'})
+            .then(handleErrors)
             .then(response => response.json())
-            .then(json => this.setState({circuit: json, circuitReceived: true}))
+            .then(json => this.setState({circuit: json}))
+            .catch(error => this.context._addNotification(basicNotification(
+                'error',
+                this.context.t('admin.error.not_extractable_list', {name: this.context.t('admin.circuit.complet_name'), errorCode: error.status}),
+                error.statusText)))
     }
 
     fetchClasseurTypes(id) {
         fetch(Routing.generate('sesile_classeur_typeclasseurapi_getall', {id}), {credentials: 'same-origin'})
+            .then(handleErrors)
             .then(response => response.json())
             .then(json => this.setState({classeurTypes: json}))
+            .catch(error => this.context._addNotification(basicNotification(
+                'error',
+                this.context.t('admin.error.not_extractable_list', {name: this.context.t('admin.type.complet_name'), errorCode: error.status}),
+                error.statusText)))
+    }
+
+    sendCircuitValidation = () => {
+        const { circuit } = this.state
+        let valid = false 
+        
+        if(circuit.nom.length > 2 && circuit.types.length > 0 && circuit.etape_groupes.length > 0) {
+            valid = circuit.etape_groupes.every(etape_groupe => etape_groupe.users.length > 1 || etape_groupe.user_packs.length > 0)
+        } 
+        if (valid) {
+            const etape_groupes = circuit.etape_groupes
+            Object.assign(etape_groupes, circuit.etape_groupes.map(etape_groupe => { return {
+                ordre: etape_groupe.ordre,
+                users: etape_groupe.users.map(user => user.id),
+                user_packs: etape_groupe.user_packs.map(user_pack => user_pack.id),
+            }}))
+            const fields = {
+                nom: circuit.nom,
+                collectivite: this.state.collectiviteId,
+                types: circuit.types.map(type => type.id),
+                etapeGroupes: etape_groupes
+            }
+            if(circuit.id) this.putCircuitValidation(circuit.id, fields)
+            else this.postCircuitValidation(fields)
+        } else {
+            this.context._addNotification(basicNotification(
+                'error',
+                this.context.t('admin.circuit.not_valid'),
+                this.context.t('admin.circuit.validation_conditions'),15))
+        }
+    }
+
+    postCircuitValidation = (fields) => {
+        const { t, _addNotification} = this.context
+        fetch(Routing.generate('sesile_user_circuitvalidationapi_post'), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(fields),
+            credentials: 'same-origin'
+        })
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(json => {
+            this.setState({circuit: json})
+            _addNotification(basicNotification(
+                'success',
+                t('admin.success.add', {name:t('admin.circuit.complet_name')}))
+            )
+            History.push(`/admin/${this.state.collectiviteId}/circuit-de-validation/${json.id}`)
+        })
+        .catch(error => _addNotification(basicNotification(
+            'error',
+            t('admin.error.add', {name:t('admin.circuit.complet_name'), errorCode: error.status}),
+            error.statusText)))
+    }
+
+    putCircuitValidation = (id, fields) => {
+        const { t, _addNotification} = this.context
+        fetch(Routing.generate('sesile_user_circuitvalidationapi_update', {id}), {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(fields),
+            credentials: 'same-origin'
+        })
+            .then(handleErrors)
+            .then(response => response.json())
+            .then((json) => {
+                this.setState({circuit: json})
+                _addNotification(basicNotification(
+                    'success',
+                    t('admin.success.update', {name:t('admin.circuit.complet_name')}))
+                )
+            })
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_updatable', {name:t('admin.circuit.complet_name'), errorCode: error.status}),
+                error.statusText)))
+    }
+
+    removeCircuitValidation = () => {
+        const { id } = this.state.circuit
+        const { t, _addNotification} = this.context
+        fetch(Routing.generate('sesile_user_circuitvalidationapi_remove', {id_groupe: id}), {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin'
+        })
+            .then(handleErrors)
+            .then(() => {
+                _addNotification(basicNotification(
+                    'success',
+                    t('admin.success.delete', {name:t('admin.circuit.complet_name')}))
+                )
+                History.push(`/admin/circuits-de-validation`)
+            })
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_removable', {name:t('admin.circuit.complet_name'), errorCode: error.status}),
+                error.statusText)))
     }
 
     handleChangeClasseurType = (event) => {
         const target = event.target
-        const circuit = this.state.circuit
-        const types = this.state.classeurTypes
-        if(target.checked) circuit.types.push(types.find(type => type.id == target.id))
+        const { circuit, classeurTypes } = this.state
+        if(target.checked) circuit.types.push(classeurTypes.find(type => type.id == target.id))
         else circuit.types.splice(circuit.types.findIndex(type => type.id == target.id), 1)
+        this.setState({circuit})
+    }
+
+    handleChangeCircuit = (key, value) => this.setState(prevState => {circuit: prevState.circuit[key] = value})
+
+    handleClickAddStep = () => this.setState(prevState => {circuit: prevState.circuit.etape_groupes.push({ordre: this.state.circuit.etape_groupes.length, user_packs:[], users:[]})})
+
+    handleClickDeleteStep = (stepKey) => {
+        this.setState(prevState => {
+            prevState.circuit.etape_groupes.forEach((etape_groupe, key) => {if(key > stepKey) etape_groupe.ordre-- })
+            {circuit: prevState.circuit.etape_groupes.splice(stepKey,1)}
+        })
+    }
+
+    handleClickDeleteUser = (stepKey, userKey) => this.setState(prevState => {circuit: prevState.circuit.etape_groupes[stepKey].users.splice(userKey, 1)})
+
+    handleClickDeleteGroup = (stepKey, groupId) => this.setState(prevState => {circuit: prevState.circuit.etape_groupes[stepKey].user_packs.splice(groupId, 1)})
+
+    addGroup = (stepKey, group) => this.setState(prevState => {circuit: prevState.circuit.etape_groupes[stepKey].user_packs.push(group)})
+    
+    addUser = (stepKey, user) => this.setState(prevState => {circuit: prevState.circuit.etape_groupes[stepKey].users.push(user)})
+
+    onSortEnd = ({oldIndex, newIndex}) => {
+        let { circuit } = this.state
+        circuit.etape_groupes = arrayMove(circuit.etape_groupes, oldIndex, newIndex)
+        this.setState(prevState => {circuit: prevState.circuit.etape_groupes.forEach((etape_groupe, key) => { etape_groupe.ordre = key })})
         this.setState({circuit})
     }
 
     render() {
         const { t } = this.context
-        const { circuit, circuitReceived } = this.state
-        const listClasseurTypes = this.state.classeurTypes.map(classeurType =>
-            <ClasseurTypeCheckbox key={classeurType.id}
-                                  classeurType={classeurType}
-                                  circuit={this.state.circuit}
-                                  onChange={this.handleChangeClasseurType}/>)
+        const { circuit, collectiviteId } = this.state
+        const listClasseurTypes = this.state.classeurTypes.map(classeurType =>  <ClasseurTypeCheckbox   key={classeurType.id}
+                                                                                                        classeurType={classeurType}
+                                                                                                        circuit={this.state.circuit}
+                                                                                                        onChange={this.handleChangeClasseurType}/>)
+
         return (
-            circuitReceived &&
-            <div className="circuit-validation">
-                <h4 className="text-center text-bold">{t('admin.details.title', {name: t('admin.circuit.complet_name')})}</h4>
-                <p className="text-center">{t('admin.details.subtitle')}</p>
-                <div className="details-circuit-validation">
-                    <div className="grid-x name-details-circuit-validation">
-                        <div className="medium-12 cell">
-                            {circuit.nom}
-                        </div>
-                    </div>
-                    <div className="content-details-circuit-validation">
-                        <div className="grid-x">
-                            <div className="medium-2 cell">
-                                <span>{t('admin.type.name', {count: 2})}</span>
-                            </div>
-                            <div className="medium-8 cell">
-                                <span>{t('admin.circuit.complet_name')}</span>
-                            </div>
-                        </div>
-                        <div className="grid-x">
-                            <div className="medium-2 cell">
-                                {listClasseurTypes}
-                            </div>
-                            <div className="medium-8 cell">
-                                <StepsCircuitValidation circuit={circuit} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <AdminDetailsWithInputField className="circuit-validation" 
+                                        title={t('admin.details.title', {name: t('admin.circuit.complet_name')})} 
+                                        subtitle={t('admin.details.subtitle')} 
+                                        nom={circuit.nom} 
+                                        inputName="nom"
+                                        handleChangeName={this.handleChangeCircuit}
+                                        placeholder={t('admin.placeholder.name', {name: t('admin.circuit.name')})} >
+                <SimpleContent>
+                    <GridX>
+                        <Cell className="medium-2">
+                            <GridX>
+                                <Cell className="medium-12">
+                                    <span>{t('admin.type.name', {count: 2})}</span>
+                                </Cell>
+                                <Cell className="medium-12">
+                                    {listClasseurTypes}
+                                </Cell>
+                            </GridX>
+                        </Cell>
+                        <Cell className="medium-10">
+                            <GridX>
+                                <Cell className="medium-12">
+                                    <span>{t('admin.circuit.complet_name')}</span>
+                                </Cell>
+                                <Cell className="medium-12">
+                                    <CircuitValidationStepList  axis="x"
+                                                                pressDelay={200}
+                                                                pressThreshold={15}
+                                                                steps={this.state.circuit.etape_groupes}
+                                                                collectiviteId={collectiviteId}
+                                                                onSortEnd={this.onSortEnd}
+                                                                handleClickDeleteUser={this.handleClickDeleteUser}
+                                                                handleClickDeleteGroup={this.handleClickDeleteGroup}
+                                                                handleClickDeleteStep={this.handleClickDeleteStep}
+                                                                handleClickAddStep={this.handleClickAddStep}
+                                                                addUser={this.addUser}
+                                                                addGroup={this.addGroup}
+                                                                labelButtonAddStep={t('admin.circuit.add_step')}/>
+                                </Cell>
+                            </GridX>
+                        </Cell>
+                    </GridX>
+                    <GridX className="grid-padding-y">
+                        <ButtonConfirm  id="confirm_delete"
+                                        className="cell medium-10 text-right"
+                                        handleClickConfirm={this.removeCircuitValidation}
+                                        labelButton={t('common.button.delete')}
+                                        confirmationText={"Voulez-vous le supprimer ?"}
+                                        labelConfirmButton={t('common.button.confirm')}/>
+                        <Button id="submit-infos"
+                                className="cell medium-2 text-right"
+                                onClick={this.sendCircuitValidation}
+                                labelText={t('common.button.edit_save')}/>
+                    </GridX>
+                </SimpleContent>
+            </AdminDetailsWithInputField>
         )
     }
-}
-
-CircuitValidation.PropTypes = {
 }
 
 export default translate(['sesile'])(CircuitValidation)
@@ -110,43 +287,72 @@ ClasseurTypeCheckbox.Proptypes = {
     onChange: func.isRequired
 }
 
-const StepsCircuitValidation = ({circuit}) => {
-    const steps = circuit.etape_groupes.map(groupStep => <StepCircuitValidation key={groupStep.id} groupStep={groupStep}/>)
+const CircuitValidationStepList = SortableContainer(({steps, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, handleClickAddStep, addGroup, addUser, labelButtonAddStep}) => {
+    const listStep = steps.map((step, key) => <SortableCircuitValidationStep    key={`item-${key}`}
+                                                                                index={key} 
+                                                                                stepKey={key}
+                                                                                step={step} 
+                                                                                collectiviteId={collectiviteId}  
+                                                                                handleClickDeleteUser={handleClickDeleteUser}
+                                                                                handleClickDeleteGroup={handleClickDeleteGroup}
+                                                                                handleClickDeleteStep={handleClickDeleteStep}
+                                                                                addUser={addUser}
+                                                                                addGroup={addGroup} />)
     return (
-        <div className="grid-x grid-margin-x">
-            {steps}
-        </div>
+        <GridX className="grid-margin-x grid-margin-y">
+            {listStep}
+            <Cell className="medium-3">
+                <GridX className="step-item">
+                    <button className="btn-add" type={"button"} onClick={() => handleClickAddStep()}>{labelButtonAddStep}</button> 
+                </GridX> 
+            </Cell>
+        </GridX>
     )
-}
+})
 
-StepsCircuitValidation.proptypes = {
-    circuit: object.isRequired
-}
-
-const StepCircuitValidation = ({groupStep}, {t}) => {
-    const users = groupStep.users.map(user => <li key={user.id}>{user._prenom + " " + user._nom}<a>x</a></li>)
-    const usersGroups = groupStep.user_packs.map(group => group.users.map(user => <li key={user.id}>{user._prenom + " " + user._nom}<a>x</a></li>))
+const SortableCircuitValidationStep = SortableElement(({stepKey, step, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser}) => {
     return (
-        <div className="medium-3 cell">
-            <div className="grid-x step-circuit-validation">
-                <div className="medium-12 cell name-step-circuit-validation">
-                {groupStep.ordre == 0 ? t('admin.circuit.applicant_step', {ordre:groupStep.ordre + 1}) : t('admin.circuit.validat_step', {ordre:groupStep.ordre + 1})}
-                </div>
-                <div className="medium-12 cell content-step-circuit-validation">
-                    <ul className="no-bullet">
-                        {users}
-                        {usersGroups}
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <CircuitValidationStep  key={stepKey} 
+                                stepKey={stepKey}
+                                collectiviteId={collectiviteId}
+                                step={step}
+                                handleClickDeleteUser={handleClickDeleteUser}
+                                handleClickDeleteGroup={handleClickDeleteGroup}
+                                handleClickDeleteStep={handleClickDeleteStep}
+                                addUser={addUser}
+                                addGroup={addGroup}/>
     )
-}
+})
 
-StepCircuitValidation.proptypes = {
-    groupStep: object.isRequired
-}
+class CircuitValidationStep extends Component {
+    
+    static contextTypes = {t: func}
 
-StepCircuitValidation.contextTypes = {
-    t: func
+    static defaultProps = {step : {user_packs: [], users: []}}
+
+    state = {inputDisplayed: false}
+
+    render() {
+        const { t } = this.context
+        const { stepKey, step, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser } = this.props
+        const listUsers = step.users && step.users.map((user, key) => <li key={key}>{user._prenom + " " + user._nom}<a onClick={e => handleClickDeleteUser(stepKey, key)}>x</a></li>)
+        const listGroups = step.user_packs && step.user_packs.map((group, key) => <li key={key}>{group.nom}<a onClick={e => handleClickDeleteGroup(stepKey, key)}>x</a></li>)
+        return (
+            <StepItem   stepKey={stepKey}
+                        className="cell medium-3"
+                        handleClickDeleteStep={handleClickDeleteStep} 
+                        title={step.ordre == 0 ? t('admin.circuit.applicant_step', {ordre:step.ordre + 1}) : t('admin.circuit.validat_step', {ordre:step.ordre + 1})}>
+                <ul className="no-bullet">
+                    {listUsers && listUsers.length > 0 && <li><strong className="text-uppercase">{t('admin.user.name', {count: listUsers.length})}</strong></li>}
+                    {listUsers}
+                    {listGroups && listGroups.length > 0 && <li><strong className="text-uppercase">{t('admin.group.name', {count: listGroups.length})}</strong></li>}
+                    {listGroups}
+                    {this.state.inputDisplayed ?
+                        <SearchUserAndGroup placeholder={t('admin.placeholder.type_userName_or_groupName')} addGroup={addGroup} addUser={addUser} stepKey={stepKey} step={step} collectiviteId={collectiviteId} /> :
+                        <li><button className="btn-add" type={"button"} onClick={() => this.setState({inputDisplayed: true})}>{t('common.button.add_user')}</button></li>
+                    }
+                </ul>
+            </StepItem>
+        )
+    }
 }
