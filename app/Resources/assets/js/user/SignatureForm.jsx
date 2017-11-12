@@ -54,7 +54,7 @@ class SignatureForm extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_addable', {name: t('admin.user.image_signature'), errorCode: error.status}),
+                t('admin.error.add', {name: t('admin.user.image_signature'), errorCode: error.status}),
                 error.statusText)))
     }
 

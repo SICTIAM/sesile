@@ -44,14 +44,16 @@ const Button = ({ id, className, classNameButton, labelText, onClick, disabled }
         <button id={id} className={classNameButton + " button"} disabled={disabled} onClick={() => onClick()}>{labelText}</button>
     </div>
 
-const ButtonConfirm = ({ id, labelButton, confirmationText, labelConfirmButton, handleClickConfirm, disabled }) =>
-    <div className="columns medium-3">
+const ButtonConfirm = ({ id, className, labelButton, confirmationText, labelConfirmButton, handleClickConfirm, disabled }) =>
+    <div className={className}>
         <button className="alert button" disabled={disabled} data-toggle={id}>{labelButton}</button>
         <div className="dropdown-pane" id={id} data-dropdown data-auto-focus="true"> 
             <button className="close-button" type="button" onClick={e => $("#" + id).foundation('close')}>
                 <span aria-hidden="true">&times;</span>
             </button>
-            {confirmationText}
+            <div className="text-left">
+                <span>{confirmationText}</span>
+            </div>
             <Button className="medium-6 columns"
                     classNameButton="alert"
                     labelText={labelConfirmButton}

@@ -2,9 +2,9 @@
 
 namespace Sesile\UserBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sesile\ClasseurBundle\Entity\TypeClasseur;
 use Sesile\UserBundle\Entity\Groupe;
 use Sesile\MainBundle\Entity\Collectivite;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -29,8 +29,7 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
      */
     public function listByCollectiviteAction(Collectivite $collectivite)
     {
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
-            $this->getUser()->getCollectivite() == $collectivite) {
+        if ($this->authorize($collectivite)) {
             $em = $this->getDoctrine()->getManager();
             $circuits = $em->getRepository('SesileUserBundle:Groupe')->findByCollectivite($collectivite);
             return $circuits;
@@ -50,16 +49,20 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
      */
     public function getByIdAction(Groupe $groupe)
     {
-        return $groupe;
+        if ($this->authorize($groupe->getCollectivite())){
+            return $groupe;
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);
+        }
     }
 
     /**
-     * @Rest\View()
-     * @Rest\Put("/{id}")
+     * @Rest\PUT("/{id}")
+     * @Rest\View(serializerGroups={"getByIdCircuit"})
      * @param Request $request
      * @param Groupe $groupe
      * @return Groupe|\Symfony\Component\Form\Form|JsonResponse
-     * @ParamConverter("TypeClasseur", options={"mapping": {"id": "id"}})
+     * @ParamConverter("Groupe", options={"mapping": {"id": "id"}})
      */
     public function updateAction(Request $request, Groupe $groupe)
     {
@@ -67,21 +70,48 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
             return new JsonResponse(['message' => 'Circuit de validation inexistant'], Response::HTTP_NOT_FOUND);
         }
 
-        $form = $this->createForm(GroupeType::class, $groupe);
-        $form->submit($request->request->all(), false);
+        if ($this->authorize($groupe->getCollectivite())){
 
-        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $etapeGroupes = new ArrayCollection();
 
-            $em->merge($groupe);
-            $em->flush();
+            foreach ($groupe->getEtapeGroupes() as $etapeGroupe) {
+                $etapeGroupes->add($etapeGroupe);
+            }
+
+            $form = $this->createForm(GroupeType::class, $groupe);
+            $form->submit($request->request->all());
+
+            if ($form->isValid()) {
+
+                foreach ($groupe->getTypes() as $type) {
+                    $type->addGroupe($groupe);
+                    $em->persist($type);
+                }
+                foreach ($groupe->getEtapeGroupes() as $etapeGroupe) {
+                    $etapeGroupe->setGroupe($groupe);
+                    $em->persist($etapeGroupe);
+                }
+                foreach ($etapeGroupes as $etapeGroupe) {
+                    if ($groupe->getEtapeGroupes()->contains($etapeGroupe) === false) {
+                        $groupe->removeEtapeGroupe($etapeGroupe);
+                        $etapeGroupe->setGroupe();
+                        $em->remove($etapeGroupe);
+                    }
+                }
+                $em->persist($groupe);
+                $em->flush();
+                return $groupe;
+            } else {
+                return $form;
+            }
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);
         }
-
-        return $groupe;
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getByIdCircuit"})
      * @Rest\Post("/")
      * @param Request $request
      * @return Groupe|\Symfony\Component\Form\Form|JsonResponse
@@ -91,11 +121,18 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
         $groupe = new Groupe();
         $form = $this->createForm(GroupeType::class, $groupe);
         $form->submit($request->request->all());
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($groupe);
-            $em->flush();
+        if ($this->authorize($groupe->getCollectivite())){
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                foreach ($groupe->getEtapeGroupes() as $etapeGroupe) {
+                    $etapeGroupe->setGroupe($groupe);
+                    $em->persist($etapeGroupe);
+                }
+                $em->persist($groupe);
+                $em->flush();
+            }
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);
         }
 
         return $groupe;
@@ -113,66 +150,32 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
         if (empty($groupe)) {
             return new JsonResponse(['message' => 'Circuit de validation inexistant'], Response::HTTP_NOT_FOUND);
         }
+        if ($this->authorize($groupe->getCollectivite())){
+            $em = $this->getDoctrine()->getManager();
+            $etapeGroupes = new ArrayCollection();
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($groupe);
-        $em->flush();
+            foreach ($groupe->getEtapeGroupes() as $etapeGroupe) {
+                $etapeGroupes->add($etapeGroupe);
+            }
 
-        return true;
+            foreach ($etapeGroupes as $etapeGroupe) {
+                $groupe->removeEtapeGroupe($etapeGroupe);
+                $em->remove($etapeGroupe);
+            }
+
+            $em->remove($groupe);
+            $em->flush();
+
+            return true;
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);
+        }
     }
 
-    /**
-     * @Rest\View()
-     * @Rest\Post("/types/{id_groupe}/{id_type}")
-     * @param TypeClasseur $typeClasseur
-     * @param Groupe $groupe
-     * @return Groupe|\Symfony\Component\Form\Form|JsonResponse
-     * @internal param Request $request
-     * @ParamConverter("typeClasseur", options={"mapping": {"id_type" : "id"}})
-     * @ParamConverter("groupe", options={"mapping": {"id_groupe" : "id"}})
-     */
-    public function addTypesAction(TypeClasseur $typeClasseur, Groupe $groupe)
-    {
-        if (empty($groupe) || empty($typeClasseur)) {
-            return new JsonResponse(['message' => 'Circuit de validation inexistant'], Response::HTTP_NOT_FOUND);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $typeClasseur->addGroupe($groupe);
-        $groupe->addType($typeClasseur);
-
-        $em->persist($groupe);
-        $em->persist($typeClasseur);
-        $em->flush();
-
-        return $groupe;
-    }
-
-    /**
-     * @Rest\View()
-     * @Rest\Delete("/types/{id_groupe}/{id_type}")
-     * @param TypeClasseur $typeClasseur
-     * @param Groupe $groupe
-     * @return Groupe|\Symfony\Component\Form\Form|JsonResponse
-     * @internal param Request $request
-     * @ParamConverter("typeClasseur", options={"mapping": {"id_type" : "id"}})
-     * @ParamConverter("groupe", options={"mapping": {"id_groupe" : "id"}})
-     */
-    public function removeTypesAction(TypeClasseur $typeClasseur, Groupe $groupe)
-    {
-        if (empty($groupe) || empty($typeClasseur)) {
-            return new JsonResponse(['message' => 'Circuit de validation inexistant'], Response::HTTP_NOT_FOUND);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $typeClasseur->removeGroupe($groupe);
-        $groupe->removeType($typeClasseur);
-
-        $em->flush();
-
-        return $groupe;
+    private function authorize(Collectivite $collectivite) {
+        return $this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+                ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') &&
+                $this->getUser()->getCollectivite() == $collectivite);
     }
 
 }

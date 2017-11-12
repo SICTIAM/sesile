@@ -2,6 +2,7 @@
 
 namespace Sesile\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -67,7 +68,8 @@ class EtapeGroupe
      */
     public function __construct()
     {
-
+        $this->userPacks = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
     
     /**

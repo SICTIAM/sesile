@@ -2,7 +2,9 @@
 
 namespace Sesile\UserBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,6 +19,15 @@ class GroupeType extends AbstractType
         $builder
             ->add('nom')
             ->add('collectivite')
+            ->add('types', EntityType::class, array(
+                'class' => 'SesileClasseurBundle:TypeClasseur',
+                'multiple' => true
+            ))
+            ->add('etapeGroupes', CollectionType::class, array(
+                'entry_type' => EtapeGroupeType::class,
+                'allow_delete' => true,
+                'allow_add' => true,
+            ))
         ;
     }
 

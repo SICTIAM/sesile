@@ -25,8 +25,7 @@ class CircuitsValidation extends Component {
             currentCollectiviteId: '',
             userName: '',
             circuitName: '',
-            isSuperAdmin: false,
-            newValidationcircuit: ''
+            isSuperAdmin: false
         }
     }
 
@@ -56,7 +55,7 @@ class CircuitsValidation extends Component {
     handleChangeUserName(userName) {
         this.setState({userName})
         const regex = escapedValue(userName, this.state.filteredCircuits, this.state.circuits)
-        const filteredCircuits = this.state.circuits.filter(circuit =>
+        let filteredCircuits = this.state.circuits.filter(circuit =>
                                  regex.test(circuit.etape_groupes.map(groupe => groupe.users.map(user => user._nom))))
         this.setState({filteredCircuits})
     }
@@ -71,36 +70,6 @@ class CircuitsValidation extends Component {
     handleChangeCollectivite = (currentCollectiviteId) => {
         this.setState({currentCollectiviteId, userName: '', circuitName: ''}) 
         this.fetchCircuitsValidations(currentCollectiviteId)
-    }
-
-    handleAddValidationCircuit = () => {
-        const { t, _addNotification} = this.context
-        const { currentCollectiviteId, newValidationcircuit } = this.state
-        fetch(Routing.generate('sesile_user_circuitvalidationapi_post'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(({
-                collectivite: currentCollectiviteId,
-                nom: newValidationcircuit
-            })) ,
-            credentials: 'same-origin'
-        })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(groupe => {
-                History.push(`/admin/${currentCollectiviteId}/circuit-de-validation/${groupe.id}`)
-            })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_addable', {name:t('admin.circuit.complet_name'), errorCode: error.status}),
-                error.statusText)))
-    }
-
-    handleChangeValidationCircuit = (name, value) => {
-        this.setState({newValidationcircuit: value})
     }
 
     render () {
@@ -121,7 +90,7 @@ class CircuitsValidation extends Component {
                                 <input id="name-search-admin"
                                        value={this.state.circuitName}
                                        onChange={(event) => this.handleChangeCircuitName(event.target.value)}
-                                       placeholder={t('admin.placeholder.type_name', {name: 'admin.circuit.name'})}
+                                       placeholder={t('admin.placeholder.type_name', {name: t('admin.circuit.name')})}
                                        type="text" />
                             </div>
                             <div className="auto cell">
@@ -145,7 +114,7 @@ class CircuitsValidation extends Component {
                                 <div className="cell medium-4">{t('admin.circuit.name')}</div>
                                 <div className="cell medium-8">{t('admin.associated_users')}</div>
                             </div>
-                            <AddValidationCircuitRow newValidationcircuit={newValidationcircuit} addValidationCircuit={ this.handleAddValidationCircuit } changeValidationCircuit={ this.handleChangeValidationCircuit } />
+                            <AddValidationCircuitRow currentCollectiviteId={currentCollectiviteId} />
                             {
                                 (listCircuits.length > 0) ? listCircuits :
                                 <div className="cell medium-12 panel-body">
@@ -170,7 +139,10 @@ export default translate(['sesile'])(CircuitsValidation)
 
 const ValidationCircuitRow = ({circuit, collectiviteId}) => {
     const arrayNoms = []
-    circuit.etape_groupes.map((groupe, index) => groupe.users.map(user => arrayNoms.unshift(user._nom)))
+    circuit.etape_groupes.map((etape_groupe, index) => {
+        etape_groupe.users.map(user => arrayNoms.unshift(user._nom))
+        etape_groupe.user_packs.map(user_pack => arrayNoms.unshift(user_pack.nom))
+    })
     return (
         <div className="cell medium-12 panel-body grid-x row-admin" onClick={() => History.push(`${collectiviteId}/circuit-de-validation/${circuit.id}`)}>
             <div className="cell medium-4">
@@ -188,31 +160,16 @@ ValidationCircuitRow.propTypes = {
     collectiviteId: number.isRequired
 }
 
-const AddValidationCircuitRow = ({ newValidationcircuit, addValidationCircuit, changeValidationCircuit }, {t}) => {
+const AddValidationCircuitRow = ({ currentCollectiviteId }, {t}) => {
 
     return (
-        <div className="cell medium-12 panel-body grid-x row-admin">
-            <Input id="circuit"
-                   className="cell medium-4"
-                   placeholder={ t('admin.placeholder.add_circuit') }
-                   value={ newValidationcircuit }
-                   onChange={ changeValidationCircuit }
-            />
+        <div className="cell medium-12 panel-body row-admin">
             <Button id="add-circuit"
-                    className="cell medium-8 text-right"
-                    classNameButton=""
-                    onClick={ addValidationCircuit }
-                    disabled={ !newValidationcircuit.length }
-                    labelText={t('common.button.add')}
-            />
+                    className="text-right"
+                    onClick={() => History.push(`${currentCollectiviteId}/circuit-de-validation/`)}
+                    labelText={t('common.button.add')}/>
         </div>
     )
-}
-
-AddValidationCircuitRow.propTypes = {
-    newValidationcircuit: string,
-    addValidationCircuit: func,
-    changeValidationCircuit: func
 }
 
 AddValidationCircuitRow.contextTypes = {

@@ -1,10 +1,10 @@
-const basicNotification = (type, title, message) => {
+const basicNotification = (type, title, message, autoDismiss = 6) => {
     return {
         title: title,
         message: message,
         level: type,
         position: 'tr',
-        autoDismiss: 6
+        autoDismiss: autoDismiss
     }
 }
 

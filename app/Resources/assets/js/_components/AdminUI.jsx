@@ -12,7 +12,7 @@ const AdminDetails = ({ className, title, subtitle, nom, children }) =>
         </div>
     </div>
 
-const AdminDetailsInput = ({ className, title, subtitle, nom, inputName, handleChangeName, placeholder, children }) => 
+const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName, handleChangeName, placeholder, children }) => 
     <div className={className}>
         <div id="admin-details-input" className="admin-details">
             <h4 className="text-center text-bold">{title}</h4>
@@ -45,11 +45,11 @@ const AccordionItem = ({ className, title, children }) =>
         </div>
     </li>
 
-const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey, stepId }) =>
+const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey }) =>
     <div className={className}>
         <div className="grid-x step-item">
             <div className="medium-12 cell name-step-item">
-            {title}<a className="float-right" style={{color: "red"}} onClick={e => handleClickDeleteStep(stepId)}>x</a>
+            {title}<a className="float-right" style={{color: "red"}} onClick={e => handleClickDeleteStep(stepKey)}>x</a>
             </div>
             <div className="medium-12 cell content-step-item">
                 {children}
@@ -57,4 +57,4 @@ const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey, 
         </div>
     </div>
 
-export { AdminDetails, AdminDetailsInput, SimpleContent, AccordionContent, AccordionItem, StepItem }
+export { AdminDetails, AdminDetailsWithInputField, SimpleContent, AccordionContent, AccordionItem, StepItem }

@@ -48,7 +48,7 @@ class Groupe {
     private $types;
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupe", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeGroupe", mappedBy="groupe", cascade={"persist"})
      * @ORM\OrderBy({"ordre" = "ASC"})
      * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
      */
@@ -146,13 +146,13 @@ class Groupe {
     }
 
     /**
-     * Remove etapeGroupes
+     * Remove etapeGroupe
      *
-     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes
+     * @param \Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupe
      */
-    public function removeEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupes)
+    public function removeEtapeGroupe(\Sesile\UserBundle\Entity\EtapeGroupe $etapeGroupe)
     {
-        $this->etapeGroupes->removeElement($etapeGroupes);
+        $this->etapeGroupes->removeElement($etapeGroupe);
     }
 
     /**
