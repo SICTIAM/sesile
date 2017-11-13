@@ -63,7 +63,7 @@ class CircuitValidation extends Component {
         let valid = false 
         
         if(circuit.nom.length > 2 && circuit.types.length > 0 && circuit.etape_groupes.length > 0) {
-            valid = circuit.etape_groupes.every(etape_groupe => etape_groupe.users.length > 1 || etape_groupe.user_packs.length > 0)
+            valid = circuit.etape_groupes.every(etape_groupe => etape_groupe.users.length > 0 || etape_groupe.user_packs.length > 0)
         } 
         if (valid) {
             const etape_groupes = circuit.etape_groupes
