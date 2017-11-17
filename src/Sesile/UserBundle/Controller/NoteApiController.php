@@ -23,6 +23,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
     /**
      * @Rest\View(serializerGroups={"noteMaj"})
      * @Rest\Get("s/")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function getAction()
     {
@@ -66,6 +67,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
      * @ParamConverter("Note", options={"mapping": {"id": "id"}})
      * @param Note $note
      * @return Note
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function getIdAction(Note $note)
     {
@@ -77,6 +79,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
      * @Rest\Post("/")
      * @param Request $request
      * @return Note
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function postAction(Request $request) {
         $note = new Note();
@@ -119,6 +122,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
      * @param Request $request
      * @param Note $note
      * @return Note
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function updateAction(Request $request, Note $note) {
         $form = $this->createForm(NoteType::class, $note);
@@ -139,6 +143,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
      * @ParamConverter("note", options={"mapping": {"id": "id"}})
      * @param Note $note
      * @return bool
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function removeAction (Note $note) {
 

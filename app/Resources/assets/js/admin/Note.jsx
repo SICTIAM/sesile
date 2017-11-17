@@ -37,7 +37,7 @@ class Note extends Component {
             .then(note => this.setState({note}))
             .catch(error => this.context._addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extractable_list', {name:t('admin.notes.title'), errorCode: error.status}),
+                t('admin.error.not_extractable', {name:t('admin.notes.name'), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -157,7 +157,7 @@ class Note extends Component {
                         <div className="grid-x align-center-middle">
                             <Input id="title"
                                    className="cell medium-11"
-                                   placeholder={ t('admin.notes.note_title') }
+                                   placeholder={ t('admin.notes.note_title_placeholder') }
                                    labelText={ t('admin.notes.note_title') }
                                    value={ note.title }
                                    onChange={ this.handleChangeNote }
@@ -166,7 +166,7 @@ class Note extends Component {
                         <div className="grid-x align-center-middle">
                             <Input id="subtitle"
                                    className="cell medium-11"
-                                   placeholder={ t('admin.notes.note_subtitle') }
+                                   placeholder={ t('admin.notes.note_subtitle_placeholder') }
                                    labelText={ t('admin.notes.note_subtitle') }
                                    value={ note.subtitle }
                                    onChange={ this.handleChangeNote }
