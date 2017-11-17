@@ -1,14 +1,26 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import Moment from 'moment'
-import DocumentsClasseur from "./DocumentsClasseur"
+import PropTypes, { func } from 'prop-types'
+import { translate } from 'react-i18next'
+import ClasseurInfos from './ClasseurInfos'
+import { handleErrors } from '../_utils/Utils'
+import { basicNotification } from '../_components/Notifications'
+import DocumentsClasseur from "./DocumentsClasseur";
 
 class Classeur extends Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            classeur: null
+    static contextTypes = {
+        t: func,
+        _addNotification: func
+    }
+
+    state = {
+        classeur: {
+            id: null,
+            nom: '',
+            validation: '',
+            user: {_prenom: '',_nom: ''},
+            type: {nom: ''},
+            etape_classeurs: []
         }
     }
 
@@ -22,85 +34,97 @@ class Classeur extends Component {
         this.getClasseur(this.props.classeurId)
     }
 
-    getClasseur(classeurId) {
-        fetch(Routing.generate('sesile_classeur_classeurapi_getbyid', {id: classeurId}), {credentials: 'same-origin'})
+    getClasseur(id) {
+        fetch(Routing.generate('sesile_classeur_classeurapi_getbyid', {id}), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(json => this.setState({classeur: json}))
     }
 
-    render() {
-        const classeur = this.state.classeur
-        return (
-            classeur &&
-                <div className="grid-y grid-frame details-classeur">
-                    <div className="cell medium-12 grid-y">
-                        <div className="grid-x medium-12">
-                            <div className="cell medium-8 doc-details-classeur">
-                                <DocumentsClasseur documents={classeur.documents} classeurId={classeur.id} />
-                            </div>
-                            <div className="cell medium-4 infos-details-classeur">
-                                <InfosClasseur classeur={classeur} key={classeur.id}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        )
+    putClasseur = (fields) => {
+        fetch(Routing.generate('sesile_classeur_classeurapi_update', {id: this.state.classeur.id}), {
+            method: 'PATCH',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(fields),
+            credentials: 'same-origin'
+        })
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(json => {
+            this.context._addNotification(basicNotification(
+                'success',
+                this.context.t('classeur.success.edit')))
+            this.setState({classeur: json})
+        })
+        .catch(error => this.context._addNotification(basicNotification(
+            'error',
+            this.context.t('classeur.error.edit', {errorCode: error.status}),
+            error.statusText)))
     }
-}
 
-Classeur.propTypes = {
-    classeurId: PropTypes.string.isRequired
-}
+    handleChangeClasseur = (key, value) => this.setState(prevState => {classeur: prevState.classeur[key] = value })
 
-const InfosClasseur = ({classeur}) => {
-    const listEtapeClasseur = classeur.etape_classeurs.map((etape_classeur, key) =>
+    render() {
+        const { t } = this.context
+        const { classeur } = this.state
+        const listEtapeClasseur = this.state.classeur.etape_classeurs.map((etape_classeur, key) =>
         <div className="cell auto text-center" key={key}>
             <div className="circle success">
                 {key + 2}
             </div>
         </div>)
 
-    const listEtapeClasseurUser = classeur.etape_classeurs.map((etape_classeur, key) =>
-        <EtapeClasseurUser etapeClasseur={etape_classeur} id={key} key={key}/>)
+        const listEtapeClasseurUser = classeur.etape_classeurs.map((etape_classeur, key) =>
+            <EtapeClasseurUser etapeClasseur={etape_classeur} id={key} key={key}/>)
+        return (
+            <div className="grid-y grid-frame details-classeur">
+                <div className="cell medium-12 grid-y">
+                    <div className="grid-x medium-12">
+                        <div className="cell medium-8 doc-details-classeur">
+                            {
+                                classeur.documents &&
+                                <DocumentsClasseur documents={classeur.documents} classeurId={classeur.id} />
+                            }
+                        </div>
+                        <div className="cell medium-4 infos-details-classeur">
+                            <div className="grid-x">
+                                <ClasseurInfos  id={classeur.id}
+                                                nom={classeur.nom}
+                                                validation={classeur.validation}
+                                                type={classeur.type}
+                                                creation={classeur.creation}
+                                                handleChangeClasseur={this.handleChangeClasseur}
+                                                putClasseur={this.putClasseur} />
+                                <div className="cell medium-12 name-details-classeur">
+                                    <p>{t('admin.circuit.complet_name')}</p>
+                                </div>
+                                <div className="cell medium-6 circuit-validation-details-classeur">
+                                    <div className="grid-x grid-margin-y">
+                                        <div className="cell auto text-center"><div className="circle success">1</div></div>
+                                        {listEtapeClasseur}
+                                    </div>
+                                    <div className="grid-x align-center-middle grid-padding-x grid-margin-y">
+                                        <div className="cell medium-2 text-center"><div className="circle success">1</div></div>
+                                        <div className="cell medium-4"><span className="text-success">Déposant</span></div>
+                                        <div className="cell medium-6"><span className="text-success text-bold">{classeur.user._prenom} {classeur.user._nom}</span></div>
+                                    </div>
+                                    {listEtapeClasseurUser}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    return (
-        <div className="grid-x grid-margin-x grid-margin-y">
-            <div className="cell medium-12 bold-info-details-classeur">
-                {classeur.nom}
-            </div>
-            <div className="cell medium-6">
-                Type de classeur <span className="bold-info-details-classeur">{classeur.type.nom}</span>
-            </div>
-            <div className="cell medium-6">
-                Déposé le <span className="bold-info-details-classeur">{Moment(classeur.creation).format('L')}</span>
-            </div>
-            <div className="cell medium-12">
-                <p className="text-alert">Date limite le <span className="text-bold">{Moment(classeur.validation).format('L')}</span></p>
-                <div className="alert progress progress-bar-details-classeur">
-                    <div className="progress-meter" style={styles.progressbar}></div>
-                </div>
-            </div>
-            <div className="cell medium-12 bold-info-details-classeur">
-                Circuit de validation
-            </div>
-            <div className="cell medium-6 circuit-validation-details-classeur">
-                <div className="grid-x grid-margin-y">
-                    <div className="cell auto text-center"><div className="circle success">1</div></div>
-                    {listEtapeClasseur}
-                </div>
-                <div className="grid-x align-center-middle grid-padding-x grid-margin-y">
-                    <div className="cell medium-2 text-center"><div className="circle success">1</div></div>
-                    <div className="cell medium-4"><span className="text-success">Déposant</span></div>
-                    <div className="cell medium-6"><span className="text-success text-bold">{classeur.user._prenom} {classeur.user._nom}</span></div>
-                </div>
-                {listEtapeClasseurUser}
-            </div>
-        </div>
-    )
+
+        )
+    }
 }
 
-InfosClasseur.propTypes = {
-    classeur: PropTypes.object.isRequired
+Classeur.propTypes = {
+    classeurId: PropTypes.string.isRequired
 }
 
 const EtapeClasseurUser = ({etapeClasseur, id}) => {
@@ -126,15 +150,9 @@ const EtapeClasseurUser = ({etapeClasseur, id}) => {
     )
 }
 
+export default translate(['sesile'])(Classeur)
+
 EtapeClasseurUser.propTypes = {
     etapeClasseur: PropTypes.object.isRequired,
     id: PropTypes.number.isRequired
 }
-
-const styles = {
-    progressbar: {
-        width: '75%'
-    }
-}
-
-export default Classeur
