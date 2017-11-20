@@ -49,9 +49,12 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
         );
 
         $open = true;
-        foreach ($note->getUsers() as $user) {
-            if ($user->getId() == $this->getUser()->getId()) {
-                $open = false;
+
+        if ($note && $note->getUsers()) {
+            foreach ($note->getUsers() as $user) {
+                if ($user->getId() == $this->getUser()->getId()) {
+                    $open = false;
+                }
             }
         }
 

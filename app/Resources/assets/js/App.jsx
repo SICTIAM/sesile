@@ -139,7 +139,7 @@ class App extends Component {
                                 </div>
                             </div>
                             <div className="cell medium-11 medium-cell-block-y main">
-                                <Note/>
+                                {isAuthenticated &&  <Note/> }
                                 <div className="grid-x grid-padding-x">
                                     <div className="cell medium-12">
                                         <NotificationSystem ref={n => this._notificationSystem = n} style= {this.notificationStyle} />

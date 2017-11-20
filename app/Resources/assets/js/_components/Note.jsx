@@ -56,6 +56,7 @@ class Note extends Component {
         return (
             <div className="grid-x grid-padding-x">
                 {
+                    note && (
                     open ?
                         <div className="cell medium-12 actu">
                             <div className="grid-x grid-padding-x">
@@ -90,6 +91,7 @@ class Note extends Component {
                                 </div>
                             </div>
                         </div>
+                    )
                 }
 
             </div>
