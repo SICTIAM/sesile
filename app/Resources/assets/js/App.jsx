@@ -138,9 +138,9 @@ class App extends Component {
                                     <AppInfos />
                                 </div>
                             </div>
-                            <div className="cell medium-11 medium-cell-block-y main">
+                            <div className="grid-y cell medium-11 medium-cell-block-y main">
                                 {isAuthenticated &&  <Note/> }
-                                <div className="grid-x grid-padding-x">
+                                <div className="grid-x grid-padding-x medium-11">
                                     <div className="cell medium-12">
                                         <NotificationSystem ref={n => this._notificationSystem = n} style= {this.notificationStyle} />
                                         {isAuthenticated && <AppRoute isAuthenticated={isAuthenticated}/>}

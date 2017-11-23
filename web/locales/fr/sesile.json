@@ -42,6 +42,18 @@
             "sort": "trier",
             "search": "Rechercher un classeur"
         },
+        "documents": {
+            "name": "document",
+            "name_plural": "documents",
+            "title_list": "liste de documents",
+            "label_dropzone": "Déposer vos documents ici",
+            "full_screen": "Voir en plein écran",
+            "delete_document": "Supprimer le document",
+            "btn_origin": "original",
+            "btn_visa": "visa",
+            "btn_signature": "signature",
+            "btn_both": "visa + signature"
+        },
         "user": {
           "certificate" : "certificat",
           "certificate_serial" : "N° de série :",

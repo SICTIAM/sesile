@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Moment from 'moment'
+import DocumentsClasseur from "./DocumentsClasseur"
 
 class Classeur extends Component {
 
@@ -31,14 +32,16 @@ class Classeur extends Component {
         const classeur = this.state.classeur
         return (
             classeur &&
-                <div className="grid-x details-classeur">
-                    <div className="cell medium-12 bold-info-details-classeur">
-                        Votre classeur
-                    </div>
-                    <div className="cell medium-8 doc-details-classeur">
-                    </div>
-                    <div className="cell medium-4 infos-details-classeur">
-                        <InfosClasseur classeur={classeur} key={classeur.id}/>
+                <div className="grid-y grid-frame details-classeur">
+                    <div className="cell medium-12 grid-y">
+                        <div className="grid-x medium-12">
+                            <div className="cell medium-8 doc-details-classeur">
+                                <DocumentsClasseur documents={classeur.documents} classeurId={classeur.id} />
+                            </div>
+                            <div className="cell medium-4 infos-details-classeur">
+                                <InfosClasseur classeur={classeur} key={classeur.id}/>
+                            </div>
+                        </div>
                     </div>
                 </div>
         )

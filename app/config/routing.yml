@@ -33,6 +33,11 @@ sesile_admin:
     requirements:
         reactRouting: ".+"
 
+sesile_document:
+    resource: "@SesileDocumentBundle/Controller/"
+    type:     annotation
+#    prefix:   /doc/
+
 sesile_api:
     resource: "@SesileApiBundle/Controller/"
     type:     annotation
@@ -65,10 +70,6 @@ sesile_classeur_api:
 sesile_users:
     resource: "@SesileUserBundle/Controller/"
     type: annotation
-
-oneup_uploader:
-    resource: .
-    type: uploader
 
 #sesile_security:
 #    resource: "@SesileMainBundle/Resources/config/security.xml"

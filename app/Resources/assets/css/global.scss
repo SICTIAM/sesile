@@ -263,7 +263,6 @@ html {
     font-weight:700;
     font-size: 1em;
     background-color: #34a3fc;
-    margin-bottom:2em;
     h1 {
       font-size: 2em;
       text-transform: uppercase;
@@ -888,7 +887,7 @@ label > input {
   padding: 0.5rem;
   border: 1px solid #cacaca;
   border-radius: 0;
-  background-color: #fefefe;
+  background-color: $white;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
   font-family: inherit;
   font-size: 1rem;
@@ -903,4 +902,48 @@ label > input {
 .note-ico {
   font-size:1.6em;
   cursor: pointer;
+}
+
+.reveal-ico {
+  font-size:1.6em;
+  cursor: pointer;
+  z-index: 150;
+  position: fixed;
+  top: 0.2em;
+  right: 1em;
+}
+
+// Document
+.dropzone {
+  background: $white;
+  border: dashed 0.2em #fe5e3a;
+  cursor: pointer;
+}
+
+.document-name {
+  font-size: 0.875em;
+}
+
+.document-ico {
+  font-size: 3em;
+  cursor: pointer;
+}
+
+.document-remove {
+  position: absolute;
+  font-size: 1.5em;
+  color: $alert-color;
+  cursor: pointer;
+  margin: 0.3em 0 0 0.7em;
+}
+
+.reveal-full {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background: $white;
 }

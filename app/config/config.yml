@@ -36,6 +36,7 @@ twig:
         upload_path_signatures: /uploads/signatures/
         sesile_version: 3.5
         id_video_yt: 'ms-YYoaU4PE'
+        only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 # Assetic Configuration
@@ -71,19 +72,6 @@ swiftmailer:
     port:      25
 #    transport: mail
 #    host:      localhost
-
-oneup_uploader:
-#    mappings:
-#        docs:
-#            frontend: dropzone
-#            use_orphanage: true
-    mappings:
-        docs:
-            frontend: custom
-            custom_frontend:
-                class: Sesile\DocumentBundle\Controller\DocumentUploader
-                name: DocumentUploader
-            use_orphanage: true
 
 fos_user:
     db_driver:     orm

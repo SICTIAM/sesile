@@ -14,6 +14,43 @@ use Doctrine\ORM\EntityRepository;
 class DocumentRepository extends EntityRepository
 {
 
+    public function uploadDocument($file, $classeur, $dirPath) {
+
+        if ($file) {
+
+            $em = $this->getEntityManager();
+            $fileName = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
+            $document = new Document();
+
+            $document->setName($file->getClientOriginalName());
+            $document->setType($file->getClientMimeType());
+            $document->setRepourl($fileName);
+            $document->setSigned(false);
+            $document->setClasseur($classeur);
+
+            $file->move(
+                $dirPath,
+                $fileName
+            );
+
+            $em->persist($document);
+            $em->flush();
+
+            return $document;
+        }
+    }
+
+    public function removeDocument($file) {
+
+        if (is_file($file)) {
+            unlink($file);
+
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
     /**
      * @param $doc

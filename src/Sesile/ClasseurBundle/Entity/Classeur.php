@@ -113,6 +113,7 @@ class Classeur {
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\DocumentBundle\Entity\Document", mappedBy="classeur")
+     * @Groups({"classeurById"})
      */
     protected $documents;
 

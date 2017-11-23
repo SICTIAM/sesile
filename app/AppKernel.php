@@ -18,7 +18,6 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-            new Oneup\UploaderBundle\OneupUploaderBundle(),
             new Sesile\MainBundle\SesileMainBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Sesile\UserBundle\SesileUserBundle(),
