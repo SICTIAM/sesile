@@ -18,6 +18,9 @@ class App extends Component {
 
     constructor() {
         super()
+        this.state = {
+            isAuthenticated: null
+        }
         this._notificationSystem = null
     }
 
@@ -54,6 +57,12 @@ class App extends Component {
         }
     }
 
+    componentWillMount() {
+        fetch(Routing.generate('sesile_user_userapi_isauthenticated'), { credentials: 'same-origin' })
+            .then(response => response.json())
+            .then(json => this.setState({isAuthenticated : json}))
+    }
+
     componentDidMount() {
         $(document).foundation()
     }
@@ -65,6 +74,7 @@ class App extends Component {
     }
 
     render () {
+        const isAuthenticated = this.state.isAuthenticated
         return (
             <I18nextProvider i18n={i18n}>
                 <div className="grid-x grid-y medium-grid-frame grid-frame">
@@ -129,11 +139,11 @@ class App extends Component {
                                 </div>
                             </div>
                             <div className="grid-y cell medium-11 medium-cell-block-y main">
-                                <Note/>
+                                {isAuthenticated &&  <Note/> }
                                 <div className="grid-x grid-padding-x medium-11">
                                     <div className="cell medium-12">
                                         <NotificationSystem ref={n => this._notificationSystem = n} style= {this.notificationStyle} />
-                                        <AppRoute/>
+                                        {isAuthenticated && <AppRoute isAuthenticated={isAuthenticated}/>}
                                     </div>
                                 </div>
                             </div>
