@@ -38,7 +38,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"listUsers"})
      * @Rest\Get("s/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
