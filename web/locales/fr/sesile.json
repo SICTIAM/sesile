@@ -75,6 +75,7 @@
         },
         "error": {
             "not_extractable_list": "Impossible de récuperer la liste de {{name}} - erreur {{errorCode}}",
+            "not_extractable": "Impossible de récuperer {{name}} - erreur {{errorCode}}",
             "add": "Impossible de créer le {{name}} - erreur {{errorCode}}",
             "not_updatable": "Impossible de mettre à jour le {{name}} - erreur {{errorCode}}",
             "not_removable": "Impossible de supprimer le {{name}} - erreur {{errorCode}}"
@@ -239,6 +240,18 @@
             "subtitle": "Puis envoyez à tous les utilisateurs",
             "success_add": "L'emailing a bien été envoyé",
             "fail_add": "L'emailing n'a pas être envoyé - erreur {{errorCode}}"
+        },
+        "notes": {
+            "name": "note",
+            "name_plural": "notes",
+            "title": "notes",
+            "complet_name": "Rédiger une note",
+            "subtitle": "Puis envoyez à tous les utilisateurs",
+            "note_title": "Titre",
+            "note_title_placeholder": "Saisir un titre",
+            "note_subtitle": "Sous-titre",
+            "note_subtitle_placeholder": "Saisir un sous-titre",
+            "note_created": "créé le"
         },
         "roles_user": {
             "name": "role",
