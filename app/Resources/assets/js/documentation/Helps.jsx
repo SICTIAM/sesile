@@ -37,7 +37,7 @@ class Helps extends Component {
     render() {
         const {t} = this.context
         const { helps } = this.state
-        const row = helps.map((help, key) => <DocumentationRow key={key} documentation={help} />)
+        const row = helps.map((help, key) => <DocumentationRow key={key} documentation={help} download_route="download_aide" />)
 
         return (
             <AccordionItem title={t('common.help_board.title_helps')} className="is-active">

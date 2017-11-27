@@ -266,6 +266,7 @@
             "change_document": "Changer le document",
             "add_document": "Ajouter un document",
             "new_document": "Charger le document",
+            "success_upload": "Le fichier a été correctement chargée",
             "success_edit": "La documentation a bien été bien modifiée",
             "success_add": "La documentation a bien été bien ajoutée",
             "error": {
