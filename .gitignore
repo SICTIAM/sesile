@@ -62,3 +62,8 @@ web/bundles/
 web/config\.php
 app/check\.php
 app/SymfonyRequirements\.php
+
+# Docker
+/docker-symfony/logs
+/docker-symfony/.data
+/docker-symfony/.env
