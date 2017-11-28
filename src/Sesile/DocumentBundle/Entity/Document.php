@@ -3,6 +3,7 @@
 namespace Sesile\DocumentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 use Sesile\ClasseurBundle\Entity\Classeur;
 use Imagick;
 
@@ -22,7 +23,7 @@ class Document
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *  
+     * @Groups({"classeurById"})
      */
     private $id;
 
@@ -30,7 +31,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     *  
+     * @Groups({"classeurById"})
      */
     private $name;
 
@@ -38,6 +39,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="repourl", type="string", length=1000)
+     * @Groups({"classeurById"})
      */
     private $repourl;
 
@@ -45,7 +47,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
-     *  
+     * @Groups({"classeurById"})
      */
     private $type;
 

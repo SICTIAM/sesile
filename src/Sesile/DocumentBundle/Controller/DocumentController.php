@@ -460,7 +460,6 @@ class DocumentController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-//        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
         if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
@@ -489,14 +488,13 @@ class DocumentController extends Controller
 
     /**
      * @Route("/download_zip/{id}", name="download_doc_zip",  options={"expose"=true})
-     *
+     * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      */
-    public function downloadZipAction($id)
+    public function downloadZipAction(Document $doc)
     {
 
         // Recuperation du classeur
         $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
         if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
@@ -578,15 +576,15 @@ class DocumentController extends Controller
 
     /**
      * @Route("/download_visa/{id}/{absVisa}/{ordVisa}", name="download_doc_visa",  options={"expose"=true})
+     * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @param $id
      * @param int $absVisa
      * @param int $ordVisa
      * @return Response
      */
-    public function downloadVisaAction($id, $absVisa = 10, $ordVisa = 10)
+    public function downloadVisaAction(Document $doc, $absVisa = 10, $ordVisa = 10)
     {
         $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
         if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
@@ -594,7 +592,7 @@ class DocumentController extends Controller
         }
 
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $id_user = $this->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
@@ -619,12 +617,11 @@ class DocumentController extends Controller
 
     /**
      * @Route("/download_sign/{id}/{absSign}/{ordSign}", name="download_doc_sign",  options={"expose"=true})
-     *
+     * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      */
-    public function downloadSignAction($id, $absSign = 10, $ordSign = 10) {
+    public function downloadSignAction(Document $doc, $absSign = 10, $ordSign = 10) {
 
         $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         // Verif des autorisations
         if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
@@ -632,7 +629,7 @@ class DocumentController extends Controller
         }
 
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $id_user = $this->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
@@ -662,14 +659,15 @@ class DocumentController extends Controller
 
     /**
      * @Route("/download_all/{id}/{absVisa}/{ordVisa}/{absSign}/{ordSign}", name="download_doc_all",  options={"expose"=true})
+     * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      *
      */
-    public function downloadAllAction($id, $absVisa = 10, $ordVisa = 10, $absSign = 10, $ordSign = 10) {
+    public function downloadAllAction(Document $doc, $absVisa = 10, $ordVisa = 10, $absSign = 10, $ordSign = 10) {
 
         $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
+
         // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $id_user = $this->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
@@ -704,12 +702,14 @@ class DocumentController extends Controller
 
     /**
      * @Route("/{id}/delete", name="delete_document",  options={"expose"=true})
+     * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @Method("POST")
+     * @param Document $doc
+     * @return JsonResponse
      */
-    public function deleteAction(Request $request, $id) {
+    public function deleteAction(Document $doc) {
 
         $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
 
         $classeur = $doc->getClasseur();
 
@@ -720,7 +720,6 @@ class DocumentController extends Controller
         $em->persist($action);
 
         $em->flush();
-
 
         $em->remove($doc);
         $em->flush();
@@ -903,22 +902,6 @@ class DocumentController extends Controller
         return $response;
 
     }
-
-/*
-    /**
-     * @Route("/edit-history/{id}/document", name="edit_history_document",  options={"expose"=true})
-     * @Method("POST")
-     */
-    /*public function editHistoryFactory($id) {
-        $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
-        // Ecriture de l'hitorique du document
-        $id_user = $this->get('security.token_storage')->getToken()->getUser()->getId();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
-        $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Edition du document par " . $user->getPrenom() . " " . $user->getNom(), null);
-
-        return new Response();
-    }*/
 
 
     /**

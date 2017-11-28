@@ -30,32 +30,24 @@ security:
             logout:
                 path: /logout
 
-        #            logout:
-        #                success_handler: security.logout.success_handler
-        #            cas:
-        #                cas_server: sso.dev.sictiam.fr
-        #                cas_port: 443
-        #                cas_path: /
-        #                ca_cert_path: ~
-        #                cas_protocol: '2.0'
-        #                cas_mapping_attribute:
-        #                check_path: /login_check
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN]
 
     access_control:
+        - { path: ^/web/uploads/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/uploadfile, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/notifymodif, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/downloadJWS, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/doc/uploaddocument, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/doc/uploadonly, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/classeur/valider_classeur_jws, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/classeur/liste-classeurs-admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/classeur/liste_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/delegation, roles: ROLE_USER }
-        - { path: ^/apirest, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/apirest/users/isauthenticated, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/apirest, roles: IS_AUTHENTICATED_ANONYMOUSLY } # temporary in "IS_AUTHENTICATED_ANONYMOUSLY" because sso authentication not work yet
+        - { path: ^/apirest/document/only-office, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/apirest, roles: ROLE_USER }
         - { path: ^/dashboard, roles: ROLE_USER }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }

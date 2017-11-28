@@ -38,6 +38,7 @@
     "react-datepicker": "^0.56.0",
     "react-dom": "^15.6.1",
     "react-draggable": "^3.0.3",
+    "react-dropzone": "^4.2.2",
     "react-i18next": "^6.0.0",
     "react-notification-system": "0.2.x",
     "react-router": "^4.1.1",
