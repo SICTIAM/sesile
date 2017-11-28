@@ -255,7 +255,7 @@ html {
     @include my-icon("../images/btn_refus.png");
   }
   .btn-comment {
-    @include my-icon("../images/btn_valid.png");
+      @include my-icon("../images/btn_notif.png");
   }
 
   .ico-comment {
@@ -304,11 +304,24 @@ html {
       border-top: solid 1px #a7a7a7;
       padding-top:1em;
       padding-bottom:1em;
-
-
+    }
+    .panel-body-no-padding {
+      color: map-get($sesile-color, 'dark-blue');
+      font-size:0.875em;
+      font-weight:normal;
+      border-top: solid 1px #a7a7a7;
     }
   }
 
+  /**
+  Dashboard
+   */
+  .list-dashboard {
+    margin-top: 1em;
+    a {
+      color: map-get($sesile-color, 'dark-blue');
+    }
+  }
 
   /**
   Liste Classeur

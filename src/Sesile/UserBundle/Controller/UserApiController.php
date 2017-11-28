@@ -30,14 +30,6 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
-     * @Rest\Get("/isauthenticated")
-     */
-    public function isauthenticatedAction() {
-        return $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY');
-    }
-
-    /**
      * @Rest\View(serializerGroups={"listUsers"})
      * @Rest\Get("s/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})

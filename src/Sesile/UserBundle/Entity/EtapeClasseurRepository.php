@@ -14,6 +14,23 @@ use Sesile\ClasseurBundle\Entity\Classeur;
 class EtapeClasseurRepository extends EntityRepository
 {
 
+    public function getClasseurValidate($user, $type) {
+        $classeurs =  $this
+            ->createQueryBuilder('ec')
+            ->select('COUNT(ec)')
+            ->join('ec.classeur', 'c', 'WITH', 'c.type = :type')
+            ->where('ec.userValidant = :user')
+            ->andWhere('ec.etapeValide = true')
+            ->setParameter('user', $user)
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        return $classeurs;
+
+    }
+
     /**
      * @param EtapeClasseur $etape
      * @return bool|EtapeClasseur

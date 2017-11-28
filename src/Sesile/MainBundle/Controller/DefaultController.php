@@ -29,7 +29,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/dashboard", options={"expose"=true},name="dashboard")
+     * @Route("/tableau-de-bord", options={"expose"=true},name="dashboard")
      * @Template()
      */
     public function dashboardAction()

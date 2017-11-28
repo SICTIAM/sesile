@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {Route, Switch} from 'react-router-dom'
-import DashBoard from '../_components/DashBoard'
+import DashBoard from '../Dashboard/DashBoard'
 import ClasseursList from '../classeur/ClasseursList'
 import ClasseursValid from '../classeur/ClasseursValid'
 import ClasseursRemove from '../classeur/ClasseursRemove'
@@ -24,7 +24,6 @@ import Collectivites from '../admin/Collectivites'
 import Collectivite from '../admin/Collectivite'
 import AdminHelpBoard from "../admin/Documentations";
 import AdminRoute from './AdminRoute'
-import Home from '../Home'
 
 
 class AppRoute extends Component {
@@ -41,7 +40,7 @@ class AppRoute extends Component {
         return (
             (!!user) &&
             <Switch>
-                <Route path={"/"} exact={true} component={Home} />
+                <Route path={"/"} exact={true} component={DashBoard} />
                 <Route path={"/tableau-de-bord"} exact={true} component={DashBoard} />
                 <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
                 <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />

@@ -3,6 +3,12 @@ sesile_main:
     type:     annotation
     prefix:   /
 
+sesile_tableau-de-bord:
+    defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
+    path: /tableau-de-bord
+    requirements:
+        reactRouting: ".+"
+
 sesile_classeurs:
     defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
     path: /classeurs/{reactRouting}
@@ -87,7 +93,7 @@ fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
 login:
-    path:   /dashboard
+    path:   /tableau-de-bord
 
 login_check:
     path:   /login_check

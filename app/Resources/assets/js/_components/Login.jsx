@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { func } from 'prop-types'
 import UserAvatar from 'react-user-avatar'
+import { translate } from 'react-i18next'
 
 class MenuBar extends Component {
 
+    static contextTypes = {
+        t: func
+    }
 
     constructor(props) {
         super(props);
         this.state = {
-            user_is_auth: false,
             user: {
                 collectivite: {}
             }
@@ -16,13 +20,7 @@ class MenuBar extends Component {
     }
 
     componentDidMount() {
-        fetch(Routing.generate('sesile_user_userapi_isauthenticated'), { credentials: 'same-origin' })
-            .then(response => response.json())
-            .then(json => {
-                this.setState({user_is_auth: json})
-                json && this.fetchUser()
-            })
-
+        this.fetchUser()
     }
 
     fetchUser() {
@@ -36,13 +34,14 @@ class MenuBar extends Component {
 
     render(){
 
-        const { user_is_auth, user } = this.state
+        const { user } = this.state
+        const { t } = this.context
 
         return (
 
             <div className="user-log" data-toggle="user-infos">
                 {
-                    (user_is_auth && user.id) ?
+                    user.id ?
                     <div>
                         <div className="grid-x grid-padding-x row align-middle">
                             <div className="medium-4 cell shrink">
@@ -91,30 +90,34 @@ class MenuBar extends Component {
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6 cell">
-                                    <Link to={"/utilisateur/mon-compte"} className="button primary btn-user-conf">paramètre du compte</Link>
+                                    <Link to="/utilisateur/mon-compte" className="button primary btn-user-conf">{ t('common.menu.account_parameter') }</Link>
                                 </div>
                                 <div className="medium-6 cell text-right">
-                                    <a href="/logout" className="button secondary btn-user-logout">Déconnexion</a>
+                                    <a href="/logout" className="button secondary btn-user-logout">{ t('common.menu.disconnection') }</a>
                                 </div>
                             </div>
                             <hr/>
                             <div className="grid-x">
                                 <div className="medium-7 cell">
-                                    <a href="#" className="button gray btn-user-conf">changer de compte</a>
+                                    <a href="#" className="button gray btn-user-conf">{ t('common.menu.account_change') }</a>
                                 </div>
                                 <div className="medium-5 cell text-right">
-                                    <Link to={"/admin/circuits-de-validation"} className="button gray btn-user-conf">admin</Link>
+                                    <Link to="/admin/circuits-de-validation" className="button gray btn-user-conf">{ t('common.menu.admin') }</Link>
                                 </div>
                             </div>
 
                         </div>
                     </div>
                     :
-                    <a href="/dashboard" className="button primary">Connexion</a>
+                    <a href="/login" className="button primary">{ t('connection') }</a>
                 }
             </div>
         )
     }
 }
 
-export default MenuBar
+export default translate(['sesile'])(MenuBar)
+
+MenuBar.contextTypes = {
+    t: func
+}

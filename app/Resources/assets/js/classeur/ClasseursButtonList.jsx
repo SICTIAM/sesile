@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
-import { object, array }from 'prop-types'
-import renderIf from 'render-if'
+import { object, array, func }from 'prop-types'
+import { translate } from 'react-i18next'
 
 class ClasseursButtonList extends Component {
+
+    static contextTypes = {
+        t: func
+    }
 
     render () {
 
         const { classeur, classeurs } = this.props
-
-
 
         return (
 
@@ -48,10 +50,6 @@ class ClasseursButtonList extends Component {
                 }
 
                 {
-                    (
-                        classeur && classeur.comment
-                        || classeurs && !classeurs.filter(classeur => !classeur.comment).length > 0
-                    ) &&
                     <ButtonComment/>
                 }
 
@@ -66,30 +64,39 @@ ClasseursButtonList.PropTypes = {
     classeurs: array
 }
 
-export default ClasseursButtonList
+export default translate(['sesile'])(ClasseursButtonList)
 
-const ButtonValid = () => {
+const ButtonValid = ({}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" className="btn-valid"></a></div>
+        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.valid_title') } className="btn-valid"></a></div>
     )
 }
-const ButtonSign = () => {
+ButtonValid.contextTypes = { t: func }
+
+const ButtonSign = ({}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" className="btn-sign"></a></div>
+        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.sign_title') } className="btn-sign"></a></div>
     )
 }
-const ButtonRevert = () => {
+ButtonSign.contextTypes = { t: func }
+
+const ButtonRevert = ({}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" className="btn-revert"></a></div>
+        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.revert_title') } className="btn-revert"></a></div>
     )
 }
-const ButtonRefus = () => {
+ButtonRevert.contextTypes = { t: func }
+
+const ButtonRefus = ({}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" className="btn-refus"></a></div>
+        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.refus_title') } className="btn-refus"></a></div>
     )
 }
-const ButtonComment = () => {
+ButtonRefus.contextTypes = { t: func }
+
+const ButtonComment = ({}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" className="btn-comment"></a></div>
+        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.comment_title') } className="btn-comment"></a></div>
     )
 }
+ButtonComment.contextTypes = { t: func }
