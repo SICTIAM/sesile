@@ -14,7 +14,19 @@ use Doctrine\ORM\EntityRepository;
 class DocumentRepository extends EntityRepository
 {
 
-    public function uploadDocument($file, $classeur, $dirPath) {
+    public function uploadDocuments($documents, $classeur, $dirPath, $user) {
+
+        foreach ($documents as $document) {
+            $this->uploadDocument(
+                $document,
+                $classeur,
+                $dirPath,
+                $user
+            );
+        }
+    }
+
+    public function uploadDocument($file, $classeur, $dirPath, $user) {
 
         if ($file) {
 
@@ -31,6 +43,14 @@ class DocumentRepository extends EntityRepository
             $file->move(
                 $dirPath,
                 $fileName
+            );
+
+            $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction(
+                $classeur,
+                "Ajout du document " . $document->getName(),
+                "",
+                "",
+                $user
             );
 
             $em->persist($document);

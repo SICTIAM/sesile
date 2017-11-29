@@ -46,6 +46,34 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         }
     }
 
+
+    /**
+     * @Rest\View(serializerGroups={"listUsers"})
+     * @Rest\Get("s-select/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @param Collectivite $collectivite
+     * @return array|\Doctrine\Common\Collections\Collection
+     */
+    public function usersCollectiviteSelectAction(Collectivite $collectivite)
+    {
+
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            $users = $collectivite->getUsers();
+        } else {
+            $users = $this->getUser()->getCollectivite()->getUsers();
+        }
+
+        $users_select = [];
+        foreach ($users as $user) {
+            $users_select[] = array(
+                'label' => $user->getPrenom() . " " . $user->getNom(),
+                'value' => $user->getId()
+            );
+        }
+
+        return $users_select;
+    }
+
     /**
      * @Rest\View()
      * @Rest\Get("/roles")

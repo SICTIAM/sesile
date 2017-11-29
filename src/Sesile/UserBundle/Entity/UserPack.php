@@ -20,7 +20,10 @@ class UserPack
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Serializer\Groups({"listEtapeClasseur",
+     *                      "classeurById",
+     *                      "listClasseur",
      *                      "listCircuitByCollectivite",
+     *                      "listCircuitByUser",
      *                      "getByIdCircuit",
      *                      "userPack"})
      */
@@ -34,6 +37,7 @@ class UserPack
      *                      "listClasseur",
      *                      "listEtapeClasseur",
      *                      "listCircuitByCollectivite",
+     *                      "listCircuitByUser",
      *                      "getByIdCircuit",
      *                      "userPack"})
      */

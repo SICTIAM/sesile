@@ -20,19 +20,19 @@ class EtapeGroupe
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit", "listCircuitByUser"})
      */
     private $id;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="etapeGroupes", cascade={"persist"})
-     * @Serializer\Groups({"classeurById", "listClasseur", "listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"classeurById", "listClasseur", "listCircuitByCollectivite", "getByIdCircuit", "listCircuitByUser"})
      */
     private $users;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", inversedBy="etapeGroupesUP", cascade={"persist"})
-     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit"})
+     * @Serializer\Groups({"listCircuitByCollectivite", "getByIdCircuit", "listCircuitByUser"})
      */
     private $userPacks;
 
@@ -49,7 +49,7 @@ class EtapeGroupe
      * @var int
      *
      * @ORM\Column(name="ordre", type="integer", nullable=true)
-     * @Serializer\Groups({"getByIdCircuit"})
+     * @Serializer\Groups({"getByIdCircuit", "listCircuitByUser"})
      *
      */
     private $ordre;

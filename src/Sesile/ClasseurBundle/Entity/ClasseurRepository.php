@@ -255,6 +255,57 @@ class ClasseurRepository extends EntityRepository {
         return $classeur;
     }
 
+    /**
+     * Fonction permettant la mise a jour de la visibilite
+     *
+     * @param Classeur $classeur
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function setUserVisible(Classeur $classeur) {
+        $em = $this->getEntityManager();
+
+        switch ($classeur->getVisibilite()) {
+            // Privé soit le circuit
+            case 0:
+                $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
+                break;
+
+            // Public
+            case 1:
+                $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($classeur->getUser()->getCollectivite());
+                break;
+
+            // Privé à partir de moi
+            case 2:
+                $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
+                break;
+
+            // Pour le service organisationnel (et le circuit)
+            case 3:
+                $usersGroupe = $em->getRepository('SesileUserBundle:Groupe')->findUsers($classeur->getCircuitId());
+                $usersCircuit = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
+                $users = array_merge($usersGroupe, $usersCircuit);
+                break;
+        }
+
+        $users[] = $classeur->getUser();
+        if ($classeur->getCopy()) {
+            $users = array_merge($users, $classeur->getCopy());
+        }
+        $users = array_unique($users);
+        if ($classeur->getVisible()) {
+            $classeur->getVisible()->clear();
+        }
+
+        foreach ($users as $user) {
+            $classeur->addVisible($user);
+        }
+
+        $em->persist($classeur);
+        $em->flush();
+
+    }
+
 
     public function countClasseurToValidate($userid) {
 
@@ -270,22 +321,6 @@ class ClasseurRepository extends EntityRepository {
             ->getQuery()
             ->getResult()
             ;
-
-        /*$qb = $this
-            ->createQueryBuilder('c')
-            ->select('c.status', 'c.id')
-            ->where('c.status = :sta')
-            ->orWhere('c.status = :stat')
-            ->setParameter('sta', 1)
-            ->setParameter('stat', 4)
-        ;
-
-
-        // on retourne la requete
-        return $qb
-            ->getQuery()
-            ->getResult()
-            ;*/
     }
 
 

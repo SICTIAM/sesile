@@ -20,14 +20,14 @@ class TypeClasseur
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"getByIdCircuit"})
+     * @Serializer\Groups({"getByIdCircuit", "listCircuitByUser"})
      */
     private $id;
 
     /**
      * @var string
      * @ORM\Column(name="nom", type="string", length=255)
-     * @Serializer\Groups({"getByIdCircuit", "classeurById"})
+     * @Serializer\Groups({"getByIdCircuit", "classeurById", "listCircuitByUser"})
      */
     private $nom;
 

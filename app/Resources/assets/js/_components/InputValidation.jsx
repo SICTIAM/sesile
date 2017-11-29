@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import Validator from 'validatorjs'
-import Moment from 'moment'
 import { Input, InputDatePicker } from './Form'
 
 export default class InputValidation extends Component {
     state = { isValid: true, errorMessage: '' }
-    static defaultProps = { value: '', type: '', accept: '', className: '' }
+    static defaultProps = { value: '', type: '', accept: '', className: '', labelText: '', minDate: '', maxDate: '' }
     validateValue = () => {
         const validation = new Validator({ field: this.props.value }, { field: this.props.validationRule }, this.props.customErrorMessages)
         validation.setAttributeNames({ field: this.props.id })
@@ -29,8 +28,10 @@ export default class InputValidation extends Component {
                 {(this.props.type === 'date' ) &&
                     <InputDatePicker    id={this.props.id}
                                         date={this.props.value}
+                                        label={this.props.labelText}
                                         locale={this.props.locale}
                                         readOnly={this.props.readOnly}
+                                        minDate={this.props.minDate}
                                         onBlur={this.validateValue}
                                         onChange={this.props.onChange}/>}
                 {(!this.state.isValid) && 

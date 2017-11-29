@@ -12,4 +12,46 @@ use Doctrine\ORM\EntityRepository;
  */
 class GroupeRepository extends EntityRepository
 {
+    public function findUsers (Groupe $groupe) {
+
+        $users = array();
+
+        // Etapes du Circuit
+        $etapesGroupe = $groupe->getEtapeGroupes();
+        foreach ($etapesGroupe as $etapeGroupe) {
+
+            // UserPack des etapes
+            $usersPacks = $etapeGroupe->getUserPacks();
+            foreach ($usersPacks as $usersPack) {
+                $users = array_merge($users, $usersPack->getUsers()->toArray());
+            }
+
+            // Liste des utilisateurs directement ajouté
+            $users = array_merge($users, $etapeGroupe->getUsers()->toArray());
+        }
+
+        return array_unique($users);
+    }
+
+    public function getCircuits ($circuitsId, $user) {
+
+        $em = $this->getEntityManager();
+        $circuits = $em->getRepository('SesileUserBundle:Groupe')->findById($circuitsId);
+
+        foreach ($circuits as $circuit) {
+            $etapeDeposante = false;
+
+            foreach ($circuit->getEtapeGroupes() as $etapeGroupe) {
+                if(!$etapeDeposante) {
+                    $circuit->removeEtapeGroupe($etapeGroupe);
+                } else {
+                    break;
+                }
+
+                $etapeDeposante = $em->getRepository('SesileUserBundle:EtapeGroupe')->isUserInEtape($etapeGroupe, $user->getId());
+            }
+        }
+
+        return $circuits;
+    }
 }

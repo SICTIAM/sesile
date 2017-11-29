@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {Route, Switch} from 'react-router-dom'
 import DashBoard from '../Dashboard/DashBoard'
+import ClasseurNew from '../classeur/ClasseurNew'
 import ClasseursList from '../classeur/ClasseursList'
 import ClasseursValid from '../classeur/ClasseursValid'
 import ClasseursRemove from '../classeur/ClasseursRemove'
@@ -44,6 +45,7 @@ class AppRoute extends Component {
                 <Route path={"/tableau-de-bord"} exact={true} component={DashBoard} />
                 <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
                 <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />
+                <Route path={"/classeur/nouveau"} exact={true} component={ClasseurNew} user={user} />
                 <Route path={"/classeurs/liste"} exact={true} component={ClasseursList} />
                 <Route path={"/classeurs/valides"} exact={true} component={ClasseursValid} />
                 <Route path={"/classeurs/retractables"} exact={true} component={ClasseursRetract} />

@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 use Sesile\UserBundle\Entity\EtapeClasseur;
+use Sesile\UserBundle\Entity\Groupe;
 use Sesile\UserBundle\Entity\User;
 
 /**
@@ -91,6 +92,14 @@ class Classeur {
     /**
      * @var integer
      *
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\Groupe")
+     * @ORM\JoinColumn(name="circuit_id", referencedColumnName="id")
+     */
+    private $circuit_id;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="ordreCircuit", type="integer"))
      * @Groups({"classeurById"})
      */
@@ -156,14 +165,6 @@ class Classeur {
      * @Groups("classeur")
      */
     private $ordreEtape = 0;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="EtapeDeposante", type="integer")
-     * @Groups("classeur")
-     */
-    private $etapeDeposante;
 
     /**
      * @var string
@@ -1058,29 +1059,6 @@ class Classeur {
     }
 
     /**
-     * Set etapeDeposante
-     *
-     * @param string $etapeDeposante
-     * @return Classeur
-     */
-    public function setEtapeDeposante($etapeDeposante)
-    {
-        $this->etapeDeposante = $etapeDeposante;
-    
-        return $this;
-    }
-
-    /**
-     * Get etapeDeposante
-     *
-     * @return string 
-     */
-    public function getEtapeDeposante()
-    {
-        return $this->etapeDeposante;
-    }
-
-    /**
      * Set ordreValidant
      *
      * @param string $ordreValidant
@@ -1162,5 +1140,29 @@ class Classeur {
     public function getCopy()
     {
         return $this->copy;
+    }
+
+    /**
+     * Set circuitId
+     *
+     * @param Groupe $circuitId
+     *
+     * @return Classeur
+     */
+    public function setCircuitId(Groupe $circuitId = null)
+    {
+        $this->circuit_id = $circuitId;
+
+        return $this;
+    }
+
+    /**
+     * Get circuitId
+     *
+     * @return Groupe
+     */
+    public function getCircuitId()
+    {
+        return $this->circuit_id;
     }
 }
