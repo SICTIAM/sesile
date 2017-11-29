@@ -53,7 +53,7 @@ class DocumentsClasseur extends Component {
             .then(currentDocument => this.setState({currentDocument}))
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.get', {name: t('common.documents.name'), errorCode: error.status}),
+                t('admin.error.not_extractable', {name: t('common.documents.name'), errorCode: error.status}),
                 error.statusText)))
     }
 
