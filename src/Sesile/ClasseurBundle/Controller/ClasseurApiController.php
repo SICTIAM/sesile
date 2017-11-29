@@ -3,14 +3,12 @@
 namespace Sesile\ClasseurBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\RequestParam;
-use FOS\RestBundle\View\View;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sesile\ClasseurBundle\Form\ClasseurType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -163,16 +161,35 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View()
-     * @Rest\Put("/{id}")
+     * @Rest\Patch("/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Request $request
      * @param Classeur $classeur
      */
     public function updateAction (Request $request, Classeur $classeur)
     {
+        if (empty($classeur)) {
+            return new JsonResponse(['message' => 'classeur inexistant'], Response::HTTP_NOT_FOUND);
+        }
 
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ||
+            $this->getUser()->getId() == $classeur->getUser()) {
+
+            $form = $this->createForm(ClasseurType::class, $classeur);
+            $form->submit($request->request->all(), false);
+
+            if ($form->handleRequest($request)->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->flush();
+
+                return $classeur;
+            }
+            else {
+                return $form;
+            }
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);
+        }
     }
-
-
-
 }

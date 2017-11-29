@@ -19,7 +19,8 @@
             "delete_img": "Supprimer l'image",
             "confirm": "Confirmer",
             "cancel": "Annuler",
-            "add": "Ajouter"
+            "add": "Ajouter",
+            "modify": "Modifier"
         },
         "label": {
             "enabled": "Active",
@@ -40,7 +41,8 @@
             "title_remove": "classeurs supprimable",
             "title_to_sign_plural": "classeurs à signer",
             "sort": "trier",
-            "search": "Rechercher un classeur"
+            "search": "Rechercher un classeur",
+            "classeur_name": "Nom du classeur"
         },
         "documents": {
             "name": "document",
@@ -272,6 +274,17 @@
         "role_application": {
             "name": "role",
             "name_plural": "roles"
+        }
+    },
+    "classeur": {
+        "name": "Classeur",
+        "deposited": "Déposé le",
+        "deadline": "Date limite le",
+        "success": {
+            "edit": "Le classeur à bien été modifié"
+        },
+        "error": {
+            "edit": "Impossible de modifier le classeur - erreur {{errorCode}}"
         }
     },
     "footer": {

@@ -3,8 +3,9 @@
 namespace Sesile\ClasseurBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ClasseurType extends AbstractType
 {
@@ -16,17 +17,20 @@ class ClasseurType extends AbstractType
     {
         $builder
             ->add('nom')
-            ->add('description')
-            ->add('circuit');
+            ->add('validation', DateTimeType::class, [
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd HH:mm'
+            ]);
     }
 
     /**
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Sesile\ClasseurBundle\Entity\Classeur'
+            'data_class' => 'Sesile\ClasseurBundle\Entity\Classeur',
+            'csrf_protection' => false
         ));
     }
 

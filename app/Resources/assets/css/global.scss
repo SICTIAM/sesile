@@ -401,6 +401,9 @@ html {
 }
 .text-alert {
   color: $alert-color;
+  font-weight: 700;
+  font-size: 0.75em;
+  text-transform: uppercase;
 }
 .text-gray {
   color: $title-color;
@@ -465,7 +468,7 @@ html {
   .bold-info-details-classeur {
     color: #404257;
     font-weight: 700;
-    font-size: 0.875em;
+    font-size: 0.75em;
     text-transform: uppercase;
   }
   .infos-details-classeur {
@@ -473,6 +476,9 @@ html {
     padding: 1em;
     .name-details-classeur {
       color: #404257;
+      font-weight: 700;
+      font-size: 0.875em;
+      text-transform: uppercase;
     }
   }
   .progress-bar-details-classeur {

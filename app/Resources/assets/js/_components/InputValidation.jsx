@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import Validator from 'validatorjs'
-import moment from 'moment'
-import { Input } from './Form'
+import Moment from 'moment'
+import { Input, InputDatePicker } from './Form'
 
 export default class InputValidation extends Component {
     state = { isValid: true, errorMessage: '' }
     static defaultProps = { value: '', type: '', accept: '', className: '' }
     validateValue = () => {
-        const value = this.props.type === 'date' ? moment(this.props.value).format('MM.DD.YYYY') : this.props.value
-        const validation = new Validator({ field: value }, { field: this.props.validationRule }, this.props.customErrorMessages)
+        const validation = new Validator({ field: this.props.value }, { field: this.props.validationRule }, this.props.customErrorMessages)
         validation.setAttributeNames({ field: this.props.id })
         const isValid = validation.passes()
         const errorMessage = validation.errors.first('field') || ''
@@ -17,21 +16,27 @@ export default class InputValidation extends Component {
     render() {
         return (
             <div className={this.props.className}>
-                <Input  id={this.props.id}
-                        labelText={this.props.labelText}
-                        type={this.props.type}
-                        className={this.props.className}
-                        placeholder={this.props.placeholder}
-                        value={this.props.value}
-                        onChange={this.props.onChange}
-                        onBlur={this.validateValue}
-                        helpText={this.props.helpText}>
-                    {(!this.state.isValid) && (
-                        <span style={{color:"red"}}>
-                            {this.state.errorMessage}
-                        </span>)}
-                </Input>
-
+                {(this.props.type === 'text' || '' || undefined) &&
+                    <Input  id={this.props.id}
+                            labelText={this.props.labelText}
+                            type={this.props.type}
+                            className={this.props.className}
+                            placeholder={this.props.placeholder}
+                            value={this.props.value}
+                            onChange={this.props.onChange}
+                            onBlur={this.validateValue}
+                            helpText={this.props.helpText}/>}
+                {(this.props.type === 'date' ) &&
+                    <InputDatePicker    id={this.props.id}
+                                        date={this.props.value}
+                                        locale={this.props.locale}
+                                        readOnly={this.props.readOnly}
+                                        onBlur={this.validateValue}
+                                        onChange={this.props.onChange}/>}
+                {(!this.state.isValid) && 
+                    (<span style={{color:"red"}}>
+                        {this.state.errorMessage}
+                    </span>)}
             </div>
         )
     }

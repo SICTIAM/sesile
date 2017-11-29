@@ -91,16 +91,15 @@ const Select = ({ id, className, label, value, onChange, children }) =>
         </select>
     </div>
 
-const InputDatePicker = ({className, date, label, onChange, i18nextLng}) =>
+const InputDatePicker = ({id, className, date, label, onChange, i18nextLng, onBlur, readOnly=false}) =>
     <div className={className}>
-        <label>
-            { label }
-            <DatePicker
-                selected={ date }
-                onChange={ onChange }
-                locale={ i18nextLng || window.localStorage.i18nextLng }
-            />
-        </label>
+        <label htmlFor={id}>{label}</label>
+        <DatePicker id={id}
+                    selected={ date }
+                    onChange={ onChange }
+                    readOnly={readOnly}
+                    onBlur={onBlur}
+                    locale={i18nextLng || window.localStorage.i18nextLng}/>
     </div>
 
 
