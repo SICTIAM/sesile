@@ -4,11 +4,13 @@ namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
+use Sesile\UserBundle\Entity\User;
 
 
 /**
  * Action
  *
+ * @property  user
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Sesile\ClasseurBundle\Entity\ActionRepository")
  * @ORM\HasLifecycleCallbacks()
@@ -22,7 +24,7 @@ class Action
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
+     * @Groups("classeurById")
      *  
      */
     private $id;
@@ -247,20 +249,12 @@ class Action
     }
 
     /**
-     * @ORM\PrePersist
-     */
-    public function setUsernameValue()
-    {
-        $this->username = $this->user->getNom() . " " . $this->user->getPrenom();
-    }
-
-    /**
      * Set username
      *
      * @param string $username
      * @return Action
      */
-    private function setUsername($username)
+    public function setUsername($username)
     {
         $this->username = $username;
 
@@ -281,10 +275,10 @@ class Action
     /**
      * Set user_action
      *
-     * @param \Sesile\UserBundle\Entity\User $userAction
+     * @param User $userAction
      * @return Action
      */
-    public function setUserAction(\Sesile\UserBundle\Entity\User $userAction = null)
+    public function setUserAction(User $userAction = null)
     {
         $this->user_action = $userAction;
     
@@ -294,7 +288,7 @@ class Action
     /**
      * Get user_action
      *
-     * @return \Sesile\UserBundle\Entity\User 
+     * @return User
      */
     public function getUserAction()
     {
