@@ -96,11 +96,11 @@ const Switch = ({ id, className, onChange, labelText, checked, activeText, inact
 const Avatar = ({ className, size = 100, nom, fileName }) =>
     fileName ?
         <div className={className}>
-            <UserAvatar size="200" name={nom || "default"} src={fileName} />
+            <UserAvatar size={size} name={nom.charAt(0) || "S"} src={fileName} />
         </div> 
         :
         <div className={className}>
-            <UserAvatar size="200" name={nom || "default"} color="#4a4c63" />
+            <UserAvatar size={size} name={nom.charAt(0) || "S"} colors={['#fe5e3a', '#404257', '#34a3fc']}/>
         </div>
 
 const Select = ({ id, className, label, value, onChange, children }) =>
