@@ -2,19 +2,11 @@ import React, { Component } from 'react'
 import Moment from 'moment';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import UserAvatar from 'react-user-avatar'
+import { Avatar } from '../_components/Form'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
-import ClasseursButtonList from "./ClasseursButtonList";
-
-
+import ClasseursButtonList from "./ClasseursButtonList"
 
 class ClasseursRow extends Component {
-
-
-    constructor(props) {
-        super(props);
-        // this.state = {classeurs: null};
-    }
 
     render(){
         Moment.locale('fr')
@@ -42,12 +34,11 @@ class ClasseursRow extends Component {
 
             <div id={classeur.id} className="grid-x grid-padding-x grid-padding-y classeur align-middle">
                 <div className="cell medium-2">
-                    <div className="grid-x align-center-middle">
+                    <div className="grid-x grid-margin-x align-center-middle">
                         <div className="cell medium-3">
-                            {
-                                classeur.user.path ?
-                                    <UserAvatar size="48" name={classeur.user._prenom} src={"/uploads/avatars/" + classeur.user.path} />
-                                    : <UserAvatar size="48" name={classeur.user._prenom} className="txt-avatar" />
+                            {classeur.user.path ?
+                                <Avatar size="48" nom={classeur.user._nom} src={"/uploads/avatars/" + classeur.user.path}/> :
+                                <Avatar size="48" nom={classeur.user._nom}/>
                             }
                         </div>
                         <div className="cell medium-9">
