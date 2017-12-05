@@ -280,6 +280,7 @@
         "name": "Classeur",
         "deposited": "Déposé le",
         "deadline": "Date limite le",
+        "users_in_copy": "Utilisateurs en copie",
         "success": {
             "edit": "Le classeur à bien été modifié"
         },

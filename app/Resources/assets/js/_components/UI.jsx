@@ -5,7 +5,7 @@ const GridX = ({className = "", children}) =>
         {children}
     </div>
 
-const Cell = ({className, children}) =>
+const Cell = ({className="medium-12", children}) =>
     <div className={"cell " + className}>
         {children}
     </div>

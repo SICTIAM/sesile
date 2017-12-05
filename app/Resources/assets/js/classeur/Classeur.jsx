@@ -3,9 +3,10 @@ import PropTypes, { func } from 'prop-types'
 import { translate } from 'react-i18next'
 import ClasseurInfos from './ClasseurInfos'
 import { handleErrors } from '../_utils/Utils'
+import History from '../_utils/History'
 import { basicNotification } from '../_components/Notifications'
-import DocumentsClasseur from "./DocumentsClasseur";
-import { GridX, Cell } from '../_components/UI';
+import DocumentsClasseur from "./DocumentsClasseur"
+import { GridX, Cell } from '../_components/UI'
 
 class Classeur extends Component {
 
@@ -54,16 +55,14 @@ class Classeur extends Component {
         })
         .then(handleErrors)
         .then(response => response.json())
-        .then(json => {
-            this.context._addNotification(basicNotification(
+        .then(json => this.setState({classeur: json}))
+        .then(this.context._addNotification(basicNotification(
                 'success',
-                this.context.t('classeur.success.edit')))
-            this.setState({classeur: json})
-        })
+                this.context.t('classeur.success.edit'))))
         .catch(error => this.context._addNotification(basicNotification(
-            'error',
-            this.context.t('classeur.error.edit', {errorCode: error.status}),
-            error.statusText)))
+                        'error',
+                        this.context.t('classeur.error.edit', {errorCode: error.status}),
+                        error.statusText)))
     }
 
     handleChangeClasseur = (key, value) => this.setState(prevState => {classeur: prevState.classeur[key] = value })
@@ -98,6 +97,7 @@ class Classeur extends Component {
                                                     validation={classeur.validation}
                                                     type={classeur.type}
                                                     creation={classeur.creation}
+                                                    description={classeur.description}
                                                     handleChangeClasseur={this.handleChangeClasseur}
                                                     putClasseur={this.putClasseur} />
                                 </Cell>
@@ -166,12 +166,12 @@ EtapeClasseurUser.propTypes = {
     id: PropTypes.number.isRequired
 }
 
-const UserInCopy = ({users}) => {
+const UserInCopy = ({users}, {t}) => {
     const listUsers = users.map(user => <Cell className="medium-12" key={user.id}>{ user._prenom + " " + user._nom }</Cell>)
     return (
-        <div className="grid-x grid-margin-x grid-margin-y">
+        <div className="grid-x grid-margin-x">
             <Cell className="medium-12 name-details-classeur">
-                Utilisateurs en copie
+                {t('classeur.users_in_copy')}
             </Cell>
             <Cell className="medium-12">
                 <GridX>
@@ -180,4 +180,8 @@ const UserInCopy = ({users}) => {
             </Cell>
         </div>
     )
+}
+
+UserInCopy.contextTypes = {
+    t: func
 }

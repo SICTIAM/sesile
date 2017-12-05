@@ -20,7 +20,8 @@ class ClasseurType extends AbstractType
             ->add('validation', DateTimeType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd HH:mm'
-            ]);
+            ])
+            ->add('description');
     }
 
     /**

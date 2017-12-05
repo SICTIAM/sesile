@@ -33,6 +33,26 @@ const Input = ({ type, id, value, placeholder, onChange, className, onBlur, labe
         </label>
     </div>
 
+const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, labelText, helpText, children }) =>
+    <div className={className}>
+        <label>
+            {labelText}
+            <textarea   id={id}
+                        name={name}
+                        placeholder={placeholder}
+                        onChange={e => {
+                            let { value } = e.target
+                            onChange(e.target.name, value)
+                        }}
+                        onBlur={onBlur}
+                        value={value}
+            >
+            </textarea>
+                {children ? children : <p className="help-text" id={id}>{helpText}</p> }
+
+        </label>
+    </div>
+
 const InputFile = ({ id, className, labelText, accept, onChange}) => 
     <div className={className}>
         <label htmlFor={id} className="button">{labelText}</label>
@@ -103,4 +123,4 @@ const InputDatePicker = ({id, className, date, label, onChange, i18nextLng, onBl
     </div>
 
 
-export { Form, FormGroup, Input, InputFile, Button, ButtonConfirm, Switch, Avatar, Select, InputDatePicker }
+export { Form, FormGroup, Input, Textarea, InputFile, Button, ButtonConfirm, Switch, Avatar, Select, InputDatePicker }

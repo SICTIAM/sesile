@@ -953,3 +953,10 @@ label > input {
   z-index: 100;
   background: $white;
 }
+
+.react-datepicker__input-container {
+  input {
+    cursor: pointer;
+    background: #fefefe;
+  }
+}
