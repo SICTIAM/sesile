@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { number, array, func, object } from 'prop-types'
 import Debounce from 'debounce'
 import { translate } from 'react-i18next'
 import History from '../_utils/History'
-
-const { number, array, func, object } = PropTypes
+import { handleErrors } from '../_utils/Utils'
+import { ButtonConfirm } from '../_components/Form'
+import { GridX, Cell } from '../_components/UI'
+import { basicNotification } from '../_components/Notifications'
 
 class Group extends Component {
 
     static contextTypes = {
-        t: func
+        t: func,
+        _addNotification: func
     }
 
     constructor(props) {
@@ -29,6 +32,7 @@ class Group extends Component {
     }
 
     componentDidMount() {
+        $(document).foundation()
         const { collectiviteId, groupId } = this.props.match.params
         this.setState({collectiviteId})
         if(!!groupId) this.getGroup(groupId)
@@ -72,11 +76,20 @@ class Group extends Component {
     }
 
     handleClickDelete = () => {
+        const { t, _addNotification } = this.context
         fetch(Routing.generate("sesile_user_userpackapi_remove", {id: this.state.group.id}), {
             method: 'DELETE',
             credentials: 'same-origin'
         })
-        .then(response => {if(response.ok === true) History.push(`/admin/groupes`)})
+        .then(handleErrors)
+        .then(response => { _addNotification(basicNotification(
+            'success',
+            t('admin.group.success_delete')))
+            History.push(`/admin/groupes`)})
+        .catch(error => _addNotification(basicNotification(
+            'error',
+            t('admin.error.not_removable', {name:t('admin.group.complet_name'), errorCode: error.status}),
+            error.statusText)))
     }
 
     postGroup = (fields) => {
@@ -139,7 +152,7 @@ class Group extends Component {
                 <div className="details-user-group">
                     <div className="grid-x name-details-user-group">
                         <div className="medium-12 cell">
-                            <input value={group.nom} onChange={(e) => this.handleChangeGroupName(e.target.value)} placeholder={t('admin.placeholder.add_', {name: t('admin.group.name')})} />
+                            <input value={group.nom} onChange={(e) => this.handleChangeGroupName(e.target.value)} placeholder={t('admin.placeholder.name', {name: t('admin.group.name')})} />
                             <i className={"fi-pencil small"}></i>
                         </div>
                     </div>
@@ -166,10 +179,22 @@ class Group extends Component {
                                     </div>
                                 </div>  
                             </div>
-                            <div className="medium-12 cell">
-                                <button className="button float-right text-uppercase" onClick={() => this.handleClickSave()}>{(!group.id) ? t('admin.button.save', {name: t('admin.group.name')}) : t('common.button.edit_save')}</button>
-                                {(group.id) && <button className="alert button float-right text-uppercase" onClick={() => this.handleClickDelete()}>{t('common.button.delete')}</button>}
-                            </div>
+                            <Cell>
+                                <GridX className="grid-margin-x">
+                                    <ButtonConfirm  id="confirm-delete"
+                                                    className="cell medium-9 text-right"
+                                                    handleClickConfirm={this.handleClickDelete}
+                                                    labelButton={t('common.button.delete')}
+                                                    confirmationText={"Voulez-vous le supprimer ?"}
+                                                    labelConfirmButton={t('common.button.confirm')}/>
+                                    <Cell className="medium-3">
+                                        <button className="button float-right text-uppercase" 
+                                                onClick={() => this.handleClickSave()}>
+                                                {(!group.id) ? t('admin.button.save', {name: t('admin.group.name')}) : t('common.button.edit_save')}
+                                        </button>        
+                                    </Cell>
+                                </GridX>
+                            </Cell>
                         </div>
                     </div>
                 </div>

@@ -122,7 +122,8 @@
             "name": "groupe",
             "name_plural": "groupes",
             "complet_name": "groupe d'utilisateurs",
-            "complet_name_plural": "groupes d'utilisateurs"
+            "complet_name_plural": "groupes d'utilisateurs",
+            "success_delete": "Le groupe a bien été supprimé"
         },
         "type": {
             "name": "type",
