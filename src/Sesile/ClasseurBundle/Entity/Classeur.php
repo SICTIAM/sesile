@@ -134,8 +134,7 @@ class Classeur {
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="classeursCopy", cascade={"persist"})
      * @ORM\JoinTable(name="Classeur_copy")
-     *
-     * @Exclude()
+     * @Groups({"classeurById"})
      */
     private $copy;
 

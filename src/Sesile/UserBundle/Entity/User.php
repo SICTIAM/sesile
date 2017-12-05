@@ -34,7 +34,8 @@ class User extends BaseUser {
      *                      "currentUser",
      *                      "userPack",
      *                      "searchUser",
-     *                      "userRole"})
+     *                      "userRole",
+     *                      "classeurById"})
      *
      */
     protected $id;
