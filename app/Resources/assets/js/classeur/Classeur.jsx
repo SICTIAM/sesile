@@ -5,6 +5,7 @@ import ClasseurInfos from './ClasseurInfos'
 import { handleErrors } from '../_utils/Utils'
 import { basicNotification } from '../_components/Notifications'
 import DocumentsClasseur from "./DocumentsClasseur";
+import { GridX, Cell } from '../_components/UI';
 
 class Classeur extends Component {
 
@@ -20,7 +21,8 @@ class Classeur extends Component {
             validation: '',
             user: {_prenom: '',_nom: ''},
             type: {nom: ''},
-            etape_classeurs: []
+            etape_classeurs: [],
+            copy: []
         }
     }
 
@@ -89,18 +91,20 @@ class Classeur extends Component {
                             }
                         </div>
                         <div className="cell medium-4 infos-details-classeur">
-                            <div className="grid-x">
-                                <ClasseurInfos  id={classeur.id}
-                                                nom={classeur.nom}
-                                                validation={classeur.validation}
-                                                type={classeur.type}
-                                                creation={classeur.creation}
-                                                handleChangeClasseur={this.handleChangeClasseur}
-                                                putClasseur={this.putClasseur} />
-                                <div className="cell medium-12 name-details-classeur">
+                            <div className="grid-x grid-margin-y">
+                                <Cell className="medium-12">
+                                    <ClasseurInfos  id={classeur.id}
+                                                    nom={classeur.nom}
+                                                    validation={classeur.validation}
+                                                    type={classeur.type}
+                                                    creation={classeur.creation}
+                                                    handleChangeClasseur={this.handleChangeClasseur}
+                                                    putClasseur={this.putClasseur} />
+                                </Cell>
+                                <Cell className="medium-12 name-details-classeur">
                                     <p>{t('admin.circuit.complet_name')}</p>
-                                </div>
-                                <div className="cell medium-6 circuit-validation-details-classeur">
+                                </Cell>
+                                <Cell className="medium-12 circuit-validation-details-classeur">
                                     <div className="grid-x grid-margin-y">
                                         <div className="cell auto text-center"><div className="circle success">1</div></div>
                                         {listEtapeClasseur}
@@ -111,7 +115,12 @@ class Classeur extends Component {
                                         <div className="cell medium-6"><span className="text-success text-bold">{classeur.user._prenom} {classeur.user._nom}</span></div>
                                     </div>
                                     {listEtapeClasseurUser}
-                                </div>
+                                </Cell>
+                                {classeur.copy.length > 0 &&
+                                    <Cell className="medium-12">
+                                        <UserInCopy users={classeur.copy} />
+                                    </Cell>
+                                }
                             </div>
                         </div>
                     </div>
@@ -122,6 +131,8 @@ class Classeur extends Component {
         )
     }
 }
+
+export default translate(['sesile'])(Classeur)
 
 Classeur.propTypes = {
     classeurId: PropTypes.string.isRequired
@@ -150,9 +161,23 @@ const EtapeClasseurUser = ({etapeClasseur, id}) => {
     )
 }
 
-export default translate(['sesile'])(Classeur)
-
 EtapeClasseurUser.propTypes = {
     etapeClasseur: PropTypes.object.isRequired,
     id: PropTypes.number.isRequired
+}
+
+const UserInCopy = ({users}) => {
+    const listUsers = users.map(user => <Cell className="medium-12" key={user.id}>{ user._prenom + " " + user._nom }</Cell>)
+    return (
+        <div className="grid-x grid-margin-x grid-margin-y">
+            <Cell className="medium-12 name-details-classeur">
+                Utilisateurs en copie
+            </Cell>
+            <Cell className="medium-12">
+                <GridX>
+                    {listUsers}
+                </GridX>
+            </Cell>
+        </div>
+    )
 }
