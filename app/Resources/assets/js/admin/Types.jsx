@@ -205,15 +205,20 @@ const TypeRow = ({type, removeType, updateType, handleChangeNameFields}, {t}) =>
     return (
         <div className="cell medium-12 panel-body grid-x">
             <div className="cell medium-auto">
-                <input type="text"
-                       value={type.nom}
-                       onChange={(e) => handleChangeNameFields(type.id, e.target.value)} />
+                {type.supprimable ?
+                    <input  type="text"
+                            value={type.nom}
+                            onChange={(e) => handleChangeNameFields(type.id, e.target.value)} /> :
+                    <span className="text-uppercase">{type.nom}</span> 
+                }
             </div>
             <div className="cell medium-auto text-right">
-                <button className="button primary text-uppercase"
-                        onClick={() => updateType(type.id, type.nom)}>
-                    {t('common.button.save')}
-                </button>
+                {type.supprimable &&
+                    <button className="button primary text-uppercase"
+                            onClick={() => updateType(type.id, type.nom)}>
+                        {t('common.button.save')}
+                    </button>
+                }
             </div>
             {(type.supprimable) &&
                 <div className="cell medium-auto text-right">
