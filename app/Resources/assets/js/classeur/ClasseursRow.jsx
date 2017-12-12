@@ -31,7 +31,6 @@ class ClasseursRow extends Component {
 
 
         return (
-
             <div id={classeur.id} className="grid-x grid-padding-x grid-padding-y classeur align-middle">
                 <div className="cell medium-2">
                     <div className="grid-x grid-margin-x align-center-middle">
@@ -47,9 +46,11 @@ class ClasseursRow extends Component {
                     </div>
 
                 </div>
-                <div className="cell medium-3">
-                    <Link to={`/classeur/${classeur.id}`}><span className="text-bold">{classeur.nom}</span></Link>
-                </div>
+                <Link className="classeur-name cell medium-3" to={`/classeur/${classeur.id}`}>
+                    <div>
+                        <span className="text-bold">{classeur.nom}</span>
+                    </div>
+                </Link>
                 <div className="cell medium-2">Déposé le <span className="text-bold">{Moment(classeur.creation).format('L')}</span></div>
                 <div className="cell medium-2" data-toggle={"example-dropdown-" + classeur.id}>
                     <span className={"text-" + classProgress}>Date limite le <span className="text-bold">{Moment(classeur.validation).format('L')}</span></span>

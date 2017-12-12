@@ -325,6 +325,10 @@ html {
     color: map-get($sesile-color, 'dark-blue');
     font-size:0.875em;
 
+    .classeur-name:hover {
+      color: #ec5935;
+    }
+
     .tri-classeurs {
       color: #87878c;
       font-weight: 700;
