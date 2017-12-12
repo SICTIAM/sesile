@@ -4,6 +4,7 @@ import Link from 'react-router-dom'
 import { translate } from 'react-i18next'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
+import SelectCollectivite from '../_components/SelectCollectivite'
 
 const { object, array, func, any } = PropTypes
 
@@ -16,8 +17,6 @@ class Groups extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            collectivites: [],
-            currentCollectiviteName: '',
             currentCollectiviteId: null,
             isSuperAdmin: false,
             groups: [],
@@ -29,19 +28,9 @@ class Groups extends Component {
 
     componentDidMount() {
         const user = this.props.user
-        this.setState({currentCollectiviteName: user.collectivite.domain, currentCollectiviteId: user.collectivite.id})
-
+        this.setState({currentCollectiviteId: user.collectivite.id})
         this.getListGroupe(user.collectivite.id)
-        if(user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
-            this.getListCollectivite()
-            this.setState({isSuperAdmin: true})
-        }
-    }
-
-    getListCollectivite() {
-        fetch(Routing.generate('sesile_main_collectiviteapi_getall'), {credentials: 'same-origin'})
-        .then(response => response.json())
-        .then(json => this.setState({collectivites: json}))
+        if(user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
     }
 
     getListGroupe(id) {
@@ -73,7 +62,7 @@ class Groups extends Component {
     render() {
         const { t } = this.context
         const user = this.props.user 
-        const { currentCollectiviteName, currentCollectiviteId, collectivites, isSuperAdmin, filteredGroups, groupName, userName } = this.state
+        const { currentCollectiviteId, isSuperAdmin, filteredGroups, groupName, userName } = this.state
         const listFilteredGroups = filteredGroups.map((group, key) => <GroupRow key={key} group={group} collectiviteId={currentCollectiviteId} />)
         return (
             <div className="user-group">
@@ -100,8 +89,8 @@ class Groups extends Component {
                             </div>
                             {isSuperAdmin &&
                                 <div className="auto cell">
-                                    <label htmlFor="collectivites_select">{t('admin.label.which_collectivite')}</label>
-                                    <SelectCollectivite currentCollectivite={currentCollectiviteName} collectivites={collectivites} handleChange={this.handleChangeCollectivite} />
+                                    <SelectCollectivite currentCollectiviteId={currentCollectiviteId} 
+                                                        handleChange={this.handleChangeCollectivite} />
                                 </div>
                             }
                         </div>
@@ -132,23 +121,6 @@ Groups.PropTypes = {
 }
 
 export default translate(['sesile'])(Groups)
-
-const SelectCollectivite = ({currentCollectivite, collectivites, handleChange}) => {
-    const options = collectivites.map((collectivite, key) => {
-        if(collectivite.active) { return <option key={key} value={collectivite.id}>{collectivite.domain}</option> }
-    })
-    return(
-        <select id="collectivites_select" value={currentCollectivite.domain} onChange={(e) => handleChange(e.target.value)} >
-            {options}
-        </select>
-    )
-}
-
-SelectCollectivite.PropTypes = {
-    collectivites: array.isRequired,
-    handleChange: func.isRequired,
-    currentCollectivite:object.isRequired
-}
 
 const GroupRow = ({ group, collectiviteId }) => {
     const arrayNoms = []

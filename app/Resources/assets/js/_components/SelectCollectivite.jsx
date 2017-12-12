@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { number, func } from 'prop-types'
 import { translate } from 'react-i18next'
 import { escapedValue } from '../_utils/Search'
+import Select from 'react-select'
 
 class SelectCollectivite extends Component {
 
@@ -16,71 +17,35 @@ class SelectCollectivite extends Component {
 
     state = {
         collectivites: [],
-        filteredCollectivites: [],
-        currentCollectiviteNom: '',
-        currentCollectiviteId: 0
+        currentCollectivite: {}
     }
 
     componentDidMount() {
-        this.fetchCollectivites()
-    }
-    
-    fetchCollectivites() {
         fetch(Routing.generate('sesile_main_collectiviteapi_getall'), {credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(json => {
-                this.setState({collectivites: json})
-                this.HandleClick(this.props.currentCollectiviteId)
-            })
+        .then(response => response.json())
+        .then(json => this.setState({collectivites: json}))
+        .then(() => {
+            const currentCollectivite = this.state.collectivites.find(collectivite => collectivite.id === this.props.currentCollectiviteId) 
+            this.setState({currentCollectivite})
+        })
     }
 
-    HandleClick = (currentCollectiviteId) => {
-        const currentCollectivite = this.state.collectivites.find(collectivite => collectivite.id === currentCollectiviteId)
-        this.setState({ filteredCollectivites: [], currentCollectiviteNom: currentCollectivite.nom})
-        this.props.handleChange(currentCollectivite.id)
-    }
-
-    handleChange = (value) => {
-        this.setState({currentCollectiviteNom: value})
-        if(!!value) {
-            const regex = escapedValue(value, this.state.filteredCollectivites, this.state.collectivites, false)
-            const filteredCollectivites = this.state.collectivites.filter(collectivite => regex.test(collectivite.nom))
-            this.setState({filteredCollectivites})
-        } else {
-            this.setState({filteredCollectivites: []})
-        }
+    handleChange = (collectivite) => {
+        this.setState({currentCollectivite: collectivite})
+        if(!!collectivite) this.props.handleChange(collectivite.id)
     }
 
     render() {
         const { t } = this.context
-        const { filteredCollectivites, currentCollectiviteNom } = this.state
+        const { currentCollectivite, collectivites } = this.state
+        const options = collectivites.map((collectivite, key) => <option key={key} value={collectivite.id} disabled={!collectivite.active ? true : false}>{collectivite.nom}</option>)
         return (
-            <div className="autocomplete">
-                <label htmlFor="collectivites-select">{t('admin.label.which_collectivite')}</label>
-                <input  className="input-autocomplete" 
-                        value={currentCollectiviteNom} 
-                        type={"text"}
-                        placeholder={t('admin.collectivite.type_name')} 
-                        onChange={(e) => this.handleChange(e.target.value)}/>
-                {filteredCollectivites.length > 0 &&
-                    <ListCollectivite filteredCollectivites={filteredCollectivites} HandleClick={this.HandleClick} />
-                }
+            <div >
+                <label htmlFor="collectivites_select">{t('admin.label.which_collectivite')}</label>
+                <Select id="collectivites_select" value={currentCollectivite} wrapperStyle={{marginBottom : "1em"}} valueKey="id" labelKey="nom" options={collectivites} onChange={this.handleChange} />
             </div>
         )
     }
 }
 
 export default translate(['sesile'])(SelectCollectivite)
-
-const ListCollectivite = ({filteredCollectivites, HandleClick}) => {
-    const options = filteredCollectivites.map((collectivite, key) => {
-        if(collectivite.active && key < 10) { return <li key={key} className="list-group-item" value={collectivite.id} onClick={(e) => HandleClick(e.target.value)}>{collectivite.nom}</li> }
-    })
-    return(
-        <div className="list-autocomplete">
-            <ul className="list-group">
-                {options}
-            </ul>
-        </div>
-    )
-}
