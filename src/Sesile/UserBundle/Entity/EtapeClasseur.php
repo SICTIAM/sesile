@@ -2,8 +2,11 @@
 
 namespace Sesile\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
+use Sesile\UserBundle\Entity\User;
+use Sesile\UserBundle\Entity\UserPack;
 
 /**
  * EtapeClasseur
@@ -19,7 +22,7 @@ class EtapeClasseur
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"listClasseur"})
+     * @Groups({"listClasseur", "classeurById"})
      */
     private $id;
 
@@ -48,6 +51,7 @@ class EtapeClasseur
      * @var int
      *
      * @ORM\Column(name="ordre", type="integer", nullable=true)
+     * @Groups({"classeurById"})
      *
      */
     private $ordre;
@@ -117,16 +121,17 @@ class EtapeClasseur
      */
     public function __construct()
     {
-        $this->userPacks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userPacks = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
     
     /**
      * Add userPacks
      *
-     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     * @param UserPack $userPacks
      * @return EtapeClasseur
      */
-    public function addUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    public function addUserPack(UserPack $userPacks)
     {
         $this->userPacks[] = $userPacks;
     
@@ -136,9 +141,9 @@ class EtapeClasseur
     /**
      * Remove userPacks
      *
-     * @param \Sesile\UserBundle\Entity\UserPack $userPacks
+     * @param UserPack $userPacks
      */
-    public function removeUserPack(\Sesile\UserBundle\Entity\UserPack $userPacks)
+    public function removeUserPack(UserPack $userPacks)
     {
         $this->userPacks->removeElement($userPacks);
     }
@@ -156,10 +161,10 @@ class EtapeClasseur
     /**
      * Add users
      *
-     * @param \Sesile\UserBundle\Entity\User $users
+     * @param User $users
      * @return EtapeClasseur
      */
-    public function addUser(\Sesile\UserBundle\Entity\User $users)
+    public function addUser(User $users)
     {
         $this->users[] = $users;
     
@@ -169,9 +174,9 @@ class EtapeClasseur
     /**
      * Remove users
      *
-     * @param \Sesile\UserBundle\Entity\User $users
+     * @param User $users
      */
-    public function removeUser(\Sesile\UserBundle\Entity\User $users)
+    public function removeUser(User $users)
     {
         $this->users->removeElement($users);
     }
@@ -221,11 +226,11 @@ class EtapeClasseur
     /**
      * Set userValidant
      *
-     * @param \Sesile\UserBundle\Entity\User $userValidant
+     * @param User $userValidant
      *
      * @return EtapeClasseur
      */
-    public function setUserValidant(\Sesile\UserBundle\Entity\User $userValidant = null)
+    public function setUserValidant(User $userValidant = null)
     {
         $this->userValidant = $userValidant;
 
@@ -235,7 +240,7 @@ class EtapeClasseur
     /**
      * Get userValidant
      *
-     * @return \Sesile\UserBundle\Entity\User
+     * @return User
      */
     public function getUserValidant()
     {
