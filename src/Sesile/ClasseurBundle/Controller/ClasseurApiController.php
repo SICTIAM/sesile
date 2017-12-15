@@ -2,6 +2,7 @@
 
 namespace Sesile\ClasseurBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\RouteRedirectView;
@@ -11,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Rest\Route("/apirest/classeur", options = { "expose" = true })
@@ -134,6 +136,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      */
     public function getByIdAction (Classeur $classeur)
     {
+        $classeur = $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:Classeur')
+                        ->addClasseurValue($classeur, $this->getUser()->getId());
+
         return $classeur;
     }
 
@@ -166,6 +171,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Request $request
      * @param Classeur $classeur
+     * @return Classeur|\Symfony\Component\Form\Form|JsonResponse
      */
     public function updateAction (Request $request, Classeur $classeur)
     {
@@ -177,11 +183,31 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
             $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ||
             $this->getUser()->getId() == $classeur->getUser()) {
 
+            $etapeClasseurs = new ArrayCollection();
+            foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
+                $etapeClasseurs->add($etapeClasseur);
+            }
+
             $form = $this->createForm(ClasseurType::class, $classeur);
             $form->submit($request->request->all(), false);
 
-            if ($form->handleRequest($request)->isValid()) {
+            if ($form->isValid()) {
+
                 $em = $this->getDoctrine()->getManager();
+
+                foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
+                    $etapeClasseur->setClasseur($classeur);
+                    $em->persist($etapeClasseur);
+                }
+                foreach ($etapeClasseurs as $etapeClasseur) {
+                    if ($classeur->getEtapeClasseurs()->contains($etapeClasseur) === false) {
+                        $classeur->removeEtapeClasseur($etapeClasseur);
+                        $etapeClasseur->setClasseur();
+                        $em->remove($etapeClasseur);
+                    }
+                }
+
+                $em->persist($classeur);
                 $em->flush();
 
                 return $classeur;

@@ -146,12 +146,33 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
+    public function getClasseursById($userId, $id) {
+
+        $classeur =  $this
+            ->createQueryBuilder('c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getSingleResult()
+        ;
+
+        $classeur = $this->addClasseurValue($classeur, $userId);
+
+        return $classeur;
+    }
+
     public function addClasseursValue($classeurs, $userId) {
         $classeurs = $this->isClasseursValidableByUser($classeurs, $userId);
         $classeurs = $this->isClasseursSignable($classeurs);
         $classeurs = $this->isClasseursRetractableByUser($classeurs, $userId);
         return $classeurs;
+    }
 
+    public function addClasseurValue($classeur, $userId) {
+        $this->isClasseurValidableByUser($classeur, $userId);
+        $this->isClasseurSignable($classeur);
+        $this->isClasseurRetractableByUser($classeur, $userId);
+        return $classeur;
     }
 
     public function isClasseursSignable(array $classeurs) {
@@ -165,7 +186,7 @@ class ClasseurRepository extends EntityRepository {
     /**
      * Function pour tester si le classeur est signable
      * @param Classeur $classeur
-     * @return bool
+     * @return Classeur
      */
     public function isClasseurSignable(Classeur $classeur) {
 
@@ -174,10 +195,12 @@ class ClasseurRepository extends EntityRepository {
             foreach($docs as $doc){
                 if(in_array($doc->getType(), $classeur->typeSignable)){
                     $classeur->setSignableAndLastValidant(true);
+                    return $classeur;
                 }
             }
         }
         $classeur->setSignableAndLastValidant(false);
+        return $classeur;
     }
 
     public function isClasseursValidableByUser(array $classeurs, $userId) {

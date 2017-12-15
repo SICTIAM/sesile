@@ -39,6 +39,7 @@ $sesile-color: (
   width: 50px;
   height: 50px;
   display: block;
+  margin: 0 auto;
 }
 
 @mixin button-icon ($url-image) {
@@ -256,6 +257,10 @@ html {
     @include my-icon("../images/btn_valid.png");
   }
 
+  .ico-comment {
+    @include my-icon("../images/ico_comment.png")
+  }
+
   background-color: #edf2f6;
 
   .actu {
@@ -368,29 +373,42 @@ html {
         font-weight: 700;
         text-transform: uppercase;
       }
-      .circle {
-        font-size: 1.125em;
-        border-radius: 2em;
-        width: 2em;
-        height: 2em;
-        &.success {
-          border: solid 0.3em $success-color;
-        }
-        &.gray {
-          border: solid 0.3em $title-color;
-        }
-        &.warning {
-          border: solid 0.3em $warning-color;
-        }
-        &.alert {
-          border: solid 0.3em $alert-color;
-        }
-
-      }
     }
 
   }
 
+}
+
+.circuit-list {
+  .circle {
+    font-size: 1.125em;
+    border-radius: 2em;
+    width: 2em;
+    height: 2em;
+    &.success {
+      border: solid 0.3em $success-color;
+    }
+    &.gray {
+      border: solid 0.3em $title-color;
+    }
+    &.warning {
+      border: solid 0.3em $warning-color;
+    }
+    &.alert {
+      border: solid 0.3em $alert-color;
+    }
+  }
+
+  .dropdown-add-actions {
+    border: none;
+    background-color: #404257;
+    .dropdown-add-actions-text {
+      color: $white;
+      font-size: 0.875rem;
+      text-transform: none;
+      font-weight: bold;
+    }
+  }
 }
 
 .text-bold {
@@ -405,9 +423,6 @@ html {
 }
 .text-alert {
   color: $alert-color;
-  font-weight: 700;
-  font-size: 0.75em;
-  text-transform: uppercase;
 }
 .text-gray {
   color: $title-color;
@@ -469,52 +484,38 @@ html {
 
 .details-classeur {
 
-  .bold-info-details-classeur {
+  background: $white;
+
+  .bold-info-details-classeur, h3 {
     color: #404257;
     font-weight: 700;
     font-size: 0.75em;
     text-transform: uppercase;
   }
-  .infos-details-classeur {
-    background: $white;
-    padding: 1em;
-    .name-details-classeur {
-      color: #404257;
-      font-weight: 700;
-      font-size: 0.875em;
-      text-transform: uppercase;
-    }
-  }
-  .progress-bar-details-classeur {
-    width: 50%;
+  h3 {
+    margin: 0.5em 0 1em;
   }
 
-  .circuit-validation-details-classeur {
+  .info-details-classeur {
+    color: #404257;
+    font-weight: normal;
     font-size: 0.875em;
-    border-top: 0;
-    h3 {
-      color: $title-color;
-      font-size: 1em;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .circle {
-      font-size: 1.125em;
-      border-radius: 2em;
-      width: 2em;
-      height: 2em;
-      &.success {
-        border: solid 0.3em $success-color;
-      }
-      &.warning {
-        border: solid 0.3em $warning-color;
-      }
-      &.alert {
-        border: solid 0.3em $alert-color;
-      }
+    text-transform: capitalize;
+  }
 
+  .classeur-progress {
+    font-weight: 700;
+    font-size: 0.75em;
+    text-transform: uppercase;
+  }
+
+  .circuit-list {
+    font-size: 0.875em;
+    .circuit-add {
+      font-size: 1em;
     }
   }
+
 }
 #name-search-admin,
 #user-search-admin {

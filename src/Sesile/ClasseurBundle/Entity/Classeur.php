@@ -2,10 +2,12 @@
 
 namespace Sesile\ClasseurBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+use Sesile\UserBundle\Entity\EtapeClasseur;
+use Sesile\UserBundle\Entity\User;
 
 /**
  * Classeur
@@ -118,7 +120,8 @@ class Classeur {
     protected $documents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Action", mappedBy="classeur", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\Action", mappedBy="classeur", cascade={"all"})
+     * @ORM\OrderBy({"date" = "DESC"})
      * @Groups({"classeurById"})
      */
     protected $actions;
@@ -139,7 +142,7 @@ class Classeur {
     private $copy;
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"persist"})
      * @ORM\JoinColumn(name="etapeClasseurs", referencedColumnName="id",nullable=true)
      * @Groups({"classeurById", "listClasseur"})
      *
@@ -190,19 +193,19 @@ class Classeur {
 
     /**
      * @var boolean
-     * @Groups("listClasseur")
+     * @Groups({"listClasseur", "classeurById"})
      */
     private $signableAndLastValidant = false;
 
     /**
      * @var boolean
-     * @Groups("listClasseur")
+     * @Groups({"listClasseur", "classeurById"})
      */
     private $validable = false;
 
     /**
      * @var boolean
-     * @Groups("listClasseur")
+     * @Groups({"listClasseur", "classeurById"})
      */
     private $retractable = false;
 
@@ -430,7 +433,8 @@ class Classeur {
      */
     public function __construct()
     {
-
+        $this->actions = new ArrayCollection();
+        $this->etapeClasseurs = new ArrayCollection();
     }
 
 
@@ -851,14 +855,16 @@ class Classeur {
     }
 
     /**
-     * Add actions
+     * Add action
      *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $actions
+     * @param \Sesile\ClasseurBundle\Entity\Action $action
+     *
      * @return Classeur
      */
-    public function addAction(\Sesile\ClasseurBundle\Entity\Classeur $actions)
+    public function addAction(Action $action)
     {
-        $this->actions[] = $actions;
+        $this->actions[] = $action;
+        $action->setClasseur($this);
 
         return $this;
     }
@@ -866,9 +872,9 @@ class Classeur {
     /**
      * Remove actions
      *
-     * @param \Sesile\ClasseurBundle\Entity\Classeur $actions
+     * @param \Sesile\ClasseurBundle\Entity\Action $actions
      */
-    public function removeAction(\Sesile\ClasseurBundle\Entity\Classeur $actions)
+    public function removeAction(Action $actions)
     {
         $this->actions->removeElement($actions);
     }
@@ -909,10 +915,10 @@ class Classeur {
     /**
      * Add visible
      *
-     * @param \Sesile\UserBundle\Entity\User $visible
+     * @param User $visible
      * @return Classeur
      */
-    public function addVisible(\Sesile\UserBundle\Entity\User $visible)
+    public function addVisible(User $visible)
     {
         $this->visible[] = $visible;
 
@@ -922,9 +928,9 @@ class Classeur {
     /**
      * Remove visible
      *
-     * @param \Sesile\UserBundle\Entity\User $visible
+     * @param User $visible
      */
-    public function removeVisible(\Sesile\UserBundle\Entity\User $visible)
+    public function removeVisible(User $visible)
     {
         $this->visible->removeElement($visible);
     }
@@ -966,12 +972,14 @@ class Classeur {
     /**
      * Add etapeClasseurs
      *
-     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     * @param EtapeClasseur $etapeClasseur
      * @return Classeur
      */
-    public function addEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    public function addEtapeClasseur(EtapeClasseur $etapeClasseur)
     {
-        $this->etapeClasseurs[] = $etapeClasseurs;
+        //$this->etapeClasseurs[] = $etapeClasseur;
+        $this->etapeClasseurs->add($etapeClasseur);
+        $etapeClasseur->setClasseur($this);
     
         return $this;
     }
@@ -979,9 +987,9 @@ class Classeur {
     /**
      * Remove etapeClasseurs
      *
-     * @param \Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs
+     * @param EtapeClasseur $etapeClasseurs
      */
-    public function removeEtapeClasseur(\Sesile\UserBundle\Entity\EtapeClasseur $etapeClasseurs)
+    public function removeEtapeClasseur(EtapeClasseur $etapeClasseurs)
     {
         $this->etapeClasseurs->removeElement($etapeClasseurs);
     }
@@ -1125,11 +1133,11 @@ class Classeur {
     /**
      * Add copy
      *
-     * @param \Sesile\UserBundle\Entity\User $copy
+     * @param User $copy
      *
      * @return Classeur
      */
-    public function addCopy(\Sesile\UserBundle\Entity\User $copy)
+    public function addCopy(User $copy)
     {
         $this->copy[] = $copy;
 
@@ -1139,9 +1147,9 @@ class Classeur {
     /**
      * Remove copy
      *
-     * @param \Sesile\UserBundle\Entity\User $copy
+     * @param User $copy
      */
-    public function removeCopy(\Sesile\UserBundle\Entity\User $copy)
+    public function removeCopy(User $copy)
     {
         $this->copy->removeElement($copy);
     }

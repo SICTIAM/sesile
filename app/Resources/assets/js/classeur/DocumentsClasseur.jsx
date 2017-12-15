@@ -106,13 +106,13 @@ class DocumentsClasseur extends Component {
         return (
             <div className="grid-x grid-y grid-frame">
 
-                { (this.props.documents[0] && revealDisplay === "block") &&
+                { (currentDocument.repourl && revealDisplay === "block") &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
                         <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
                         <OnlyOffice document={ currentDocument }/>
                     </div>
                 }
-                { (this.props.documents[0]  && revealDisplay === "none") && <OnlyOffice document={ currentDocument }/> }
+                { (currentDocument.repourl  && revealDisplay === "none") && <OnlyOffice document={ currentDocument }/> }
                 <Documents documents={ documents }
                            onClick={ this.handleClickDocument}
                            onDrop={ this.onDrop }

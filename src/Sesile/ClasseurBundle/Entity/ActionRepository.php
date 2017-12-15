@@ -13,16 +13,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class ActionRepository extends EntityRepository
 {
-    public function addDocumentAction ($document, $text, $user) {
+    public function addDocumentAction ($classeur, $text, $observation = "", $commentaire = "", $user) {
 
         $em = $this->getEntityManager();
-        $classeur = $document->getClasseur();
-
         $action = new Action();
+
         $action->setClasseur($classeur);
+        $action->setAction($text);
+        $action->setObservation($observation);
+        $action->setCommentaire($commentaire);
         $action->setUser($user);
-        $action->setAction($text . " " . $document->getName());
+
         $em->persist($action);
         $em->flush();
+
+        return true;
     }
 }

@@ -4,31 +4,14 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Avatar } from '../_components/Form'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
-import ClasseursButtonList from "./ClasseursButtonList"
+import ClasseursButtonList from './ClasseursButtonList'
+import ClasseurProgress from './ClasseurProgress'
 
 class ClasseursRow extends Component {
 
     render(){
-        Moment.locale('fr')
+
         const classeur = this.props.classeur
-        const creation = Moment(classeur.creation)
-        const validation = Moment(classeur.validation)
-        const diffToday = validation.diff(Moment(), 'days')
-        const diffToCreation = Moment().diff(creation, 'days')
-
-        let classProgress, percentProgress
-
-        if (diffToday < 0) {
-            classProgress = "alert"
-            percentProgress = 100
-        } else if (diffToday < 1) {
-            classProgress = "warning"
-            percentProgress = 100
-        } else {
-            classProgress = "success"
-            percentProgress = 100 - diffToday / diffToCreation * 100
-        }
-
 
         return (
             <div id={classeur.id} className="grid-x grid-padding-x grid-padding-y classeur align-middle">
@@ -53,12 +36,9 @@ class ClasseursRow extends Component {
                 </Link>
                 <div className="cell medium-2">Déposé le <span className="text-bold">{Moment(classeur.creation).format('L')}</span></div>
                 <div className="cell medium-2" data-toggle={"example-dropdown-" + classeur.id}>
-                    <span className={"text-" + classProgress}>Date limite le <span className="text-bold">{Moment(classeur.validation).format('L')}</span></span>
-                    <div className={classProgress +" progress"}>
-                        <div className="progress-meter" style={{width: percentProgress + '%'}}></div>
-                    </div>
+                    <ClasseurProgress creation={classeur.creation} validation={classeur.validation} />
                 </div>
-                <CircuitListClasseur classeurId={classeur.id} user={classeur.user} />
+                <CircuitListClasseur classeurId={classeur.id} etape_classeurs={classeur.etape_classeurs} user={classeur.user} />
 
                 <div className="cell medium-2">
                     <ClasseursButtonList classeur={classeur} />

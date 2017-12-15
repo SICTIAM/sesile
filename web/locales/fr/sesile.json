@@ -5,6 +5,7 @@
         "classeur": "classeur",
         "classeur_plural": "classeurs",
         "confirm_delete_img": "Voulez-vous supprimer l'image",
+        "loading": "Chargement...",
         "button": {
             "delete": "Supprimer",
             "add_user": "Ajouter un utilisateur",
@@ -42,7 +43,19 @@
             "title_to_sign_plural": "classeurs à signer",
             "sort": "trier",
             "search": "Rechercher un classeur",
-            "classeur_name": "Nom du classeur"
+            "classeur_name": "Nom du classeur",
+            "status": {
+                "name": "status",
+                "refuse": "Refusé",
+                "pending": "En cours",
+                "finish": "Finalisé",
+                "remote": "Retiré",
+                "retract": "Retracté"
+
+            },
+            "comments": {
+                "name": "Commentaires du classeur"
+            }
         },
         "documents": {
             "name": "document",
@@ -141,10 +154,13 @@
             "name": "circuit",
             "name_plural": "circuits",
             "complet_name": "circuit de validation",
+            "depositor": "Déposant",
+            "validator": "Validant",
             "applicant_step": "Etape {{ordre}} - Déposante",
             "validat_step": "Etape {{ordre}} - Validante",
             "add_step": "Ajouter une étape",
             "not_valid": "Circuit de validation non valide",
+            "remove_step": "Supprimer l'étape",
             "validation_conditions": "Vérifier que le circuit contient un \"nom\", au moins un \"type\" et que les étapes contiennent au moins un groupe et/ou plusieurs utilisateurs"
         },
         "user_pack": {
