@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { object, func } from 'prop-types'
 import { translate } from 'react-i18next'
 import { escapedValue } from '../_utils/Search'
-
-const { object, func } = PropTypes
+import SelectCollectivite from '../_components/SelectCollectivite'
 
 class Types extends Component {
 
@@ -18,8 +17,7 @@ class Types extends Component {
             types: [],
             filteredTypes: [],
             typesId: null,
-            collectivites: [],
-            currentCollectiviteId: '',
+            currentCollectiviteId: 0,
             userRoles: '',
             searchFieldName: '',
             nom: ''
@@ -30,10 +28,7 @@ class Types extends Component {
         const user = this.props.user
         this.fetchTypes(user.collectivite.id)
         this.setState({currentCollectiviteId: user.collectivite.id})
-        if(user.roles.includes("ROLE_SUPER_ADMIN")) {
-            this.fetchCollectivites()
-            this.setState({isSuperAdmin: true})
-        }
+        if(user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
     }
 
     fetchTypes = (id) => {
@@ -41,12 +36,6 @@ class Types extends Component {
             .then(response => response.json())
             .then(json => this.setState({types: json, filteredTypes: json}))
             .then(() => {if(this.state.searchFieldName) this.handleChangeSearchByName(this.state.searchFieldName)})
-    }
-
-    fetchCollectivites() {
-        fetch(Routing.generate('sesile_main_collectiviteapi_getall'), { credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(json => this.setState({collectivites: json.filter(collectivite => collectivite.active)}))
     }
 
     createType() {
@@ -107,7 +96,7 @@ class Types extends Component {
         this.setState({filteredTypes})
     }
 
-    handleChangeSearchByCollectivite = (currentCollectiviteId) => {
+    handleChangeCollectivite = (currentCollectiviteId) => {
         this.setState({currentCollectiviteId})
         this.fetchTypes(currentCollectiviteId)
     }
@@ -120,15 +109,12 @@ class Types extends Component {
 
     render() {
         const { t } = this.context
-        const { filteredTypes, collectivites, isSuperAdmin } = this.state
+        const { filteredTypes, isSuperAdmin, currentCollectiviteId } = this.state
         const listType = filteredTypes.map(type => <TypeRow key={type.id}
                                                             type={type}
                                                             removeType={this.removeType}
                                                             updateType={this.updateType}
                                                             handleChangeNameFields={this.handleChangeNameFields}/>)
-        const listCollectivite = collectivites.map(collectivite =>
-                <option value={collectivite.id} key={collectivite.id}>{collectivite.nom}</option>)
-
         return (
             <div>
                 <h4 className="text-center text-bold">{t('admin.title', {name: t('admin.type.complet_name')})}</h4>
@@ -146,14 +132,8 @@ class Types extends Component {
                             </div>
                             {(isSuperAdmin) &&
                                 <div className="medium-auto cell">
-                                    <div>
-                                        <label htmlFor="collectivite_name_search">{t('admin.label.which_collectivite')}</label>
-                                        <select id="collectivite_name_search"
-                                                value={this.state.currentCollectiviteId}
-                                                onChange={(event) => this.handleChangeSearchByCollectivite(event.target.value)}>
-                                            {listCollectivite}
-                                        </select>
-                                    </div>
+                                    <SelectCollectivite currentCollectiviteId={currentCollectiviteId} 
+                                                        handleChange={this.handleChangeCollectivite} />
                                 </div>
                             }
 

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { escapedValue } from '../_utils/Search'
 import { basicNotification } from '../_components/Notifications'
+import SelectCollectivite from '../_components/SelectCollectivite'
 
 class Users extends Component {
 
@@ -17,7 +18,6 @@ class Users extends Component {
         this.state = {
             users: [],
             filteredUsers: [],
-            collectivites: [],
             collectiviteId: this.props.user.collectivite.id,
             fieldSearch: '',
             infos: '',
@@ -33,11 +33,8 @@ class Users extends Component {
     }
 
     componentDidMount() {
-        if(this.props.user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
-            this.setState({isSuperAdmin: true})
-        }
+        if(this.props.user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
         this.fetchUsers(this.props.user.collectivite.id)
-        this.fetchCollectivites()
     }
 
     fetchUsers (id) {
@@ -52,18 +49,6 @@ class Users extends Component {
             .catch(error => _addNotification(basicNotification(
                 'error',
                 t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
-                error.statusText)))
-    }
-
-    fetchCollectivites () {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_main_collectiviteapi_getall'), { credentials: 'same-origin'})
-            .then(this.handleErrors)
-            .then(response => response.json())
-            .then(json => this.setState({collectivites: json}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('admin.collectivite.name', {count: 2}), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -97,7 +82,7 @@ class Users extends Component {
         this.setState({filteredUsers})
     }
 
-    onSearchByCollectiviteFieldChange(collectiviteId) {
+    onSearchByCollectiviteFieldChange = (collectiviteId) => {
         this.setState({collectiviteId})
         this.fetchUsers(collectiviteId)
     }
@@ -108,14 +93,6 @@ class Users extends Component {
         const Row = filteredUsers && filteredUsers.map(filteredUser =>
             <UserRow key={filteredUser.id} User={filteredUser} handleDeleteUser={this.handleDeleteUser} />
         )
-        const collectivites = this.state.collectivites
-        const collectivitesSelect = collectivites && collectivites.map(collectivite =>
-            {
-                if (collectivite.active) {
-                    return <option value={collectivite.id} key={collectivite.id}>{collectivite.nom}</option>
-                }
-            }
-        )
 
         return (
             <div>
@@ -125,7 +102,7 @@ class Users extends Component {
                 <div className="grid-x align-center-middle">
                     <div className="cell medium-6">
                         <div className="grid-x grid-padding-x align-center-middle">
-                            <div className="medium-6 cell">
+                            <div className="medium-auto cell">
                                 <label htmlFor="circuit_name_search">{t('admin.label.which')}</label>
                                 <input id="type_name_search"
                                        value={this.state.fieldSearch}
@@ -133,17 +110,10 @@ class Users extends Component {
                                        placeholder="Entrez le nom de l'utilisateur..."
                                        type="text" />
                             </div>
-                            {
-                                (collectivitesSelect.length > 0 && this.state.isSuperAdmin) &&
-                                    <div className="medium-6 cell">
-                                        {
-                                            <div>
-                                                <label htmlFor="collectivite_name_search">{t('admin.label.which_collectivite')}</label>
-                                                <select id="collectivite_name_search" value={this.state.collectiviteId} onChange={(event) => this.onSearchByCollectiviteFieldChange(event.target.value)}>
-                                                    {collectivitesSelect}
-                                                </select>
-                                            </div>
-                                        }
+                            {this.state.isSuperAdmin &&
+                                    <div className="medium-auto cell">
+                                        <SelectCollectivite currentCollectiviteId={this.state.collectiviteId} 
+                                                            handleChange={this.onSearchByCollectiviteFieldChange} />
                                     </div>
                             }
 

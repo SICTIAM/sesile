@@ -44,6 +44,7 @@
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-rte": "0.15.0",
+    "react-select": "^1.1.0",
     "react-sortable-hoc": "^0.6.8",
     "react-user-avatar": "^1.9.0",
     "render-if": "^0.1.1",
