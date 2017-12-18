@@ -18,6 +18,9 @@ class App extends Component {
 
     constructor() {
         super()
+        this.state = {
+            isAuthenticated: null
+        }
         this._notificationSystem = null
     }
 

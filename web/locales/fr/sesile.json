@@ -34,6 +34,22 @@
             "title": "Titre",
             "page": "Page"
         },
+        "menu": {
+            "connection": "Connexion",
+            "disconnection": "Déconnexion",
+            "account_parameter": "paramètre du compte",
+            "account_change": "changer de compte",
+            "admin": "admin"
+        },
+        "dashboard": {
+            "last_classeurs": "Mes derniers classeurs",
+            "urgent_classeurs": "Classeurs urgent",
+            "stats_classeurs_validate_by_type": "Statistiques classeurs validés par type",
+            "stats_title_name": "Type",
+            "stats_title_total": "Total",
+            "classeurs_add": "Création de classeur"
+
+        },
         "classeurs": {
             "name": "classeur",
             "title_list": "liste des classeurs",
@@ -43,19 +59,29 @@
             "title_to_sign_plural": "classeurs à signer",
             "sort": "trier",
             "search": "Rechercher un classeur",
+            "date_limit": "Date limite le",
             "classeur_name": "Nom du classeur",
             "status": {
-                "name": "status",
-                "refuse": "Refusé",
-                "pending": "En cours",
-                "finish": "Finalisé",
-                "remote": "Retiré",
-                "retract": "Retracté"
+              "name": "status",
+              "refuse": "Refusé",
+              "pending": "En cours",
+              "finish": "Finalisé",
+              "remote": "Retiré",
+              "retract": "Retracté"
 
             },
             "comments": {
-                "name": "Commentaires du classeur"
+              "name": "Commentaires du classeur"
+            },
+            "button": {
+                "add_classeur": "Nouveau classeur",
+                "valid_title": "Valider le classeur",
+                "sign_title": "Signer le classeur",
+                "revert_title": "Rétracter le classeur",
+                "refus_title": "Refuser le classeur",
+                "comment_title": "Commenter le classeur"
             }
+
         },
         "documents": {
             "name": "document",
@@ -70,18 +96,21 @@
             "btn_both": "visa + signature"
         },
         "user": {
-          "certificate" : "certificat",
-          "certificate_serial" : "N° de série :",
-          "certificate_transmitter": "émetteur",
-          "transmitter_for": "émis pour",
-          "common_name": "nom commun",
-          "organisation": "organisation",
-          "organisation_unit": "Unité d'organisation",
-          "email": "e-mail",
-          "transmitter_from": "émis par",
-          "validity": "validité",
-          "from": "émis le",
-          "to": "expire le"
+            "certificate" : "certificat",
+            "certificate_info" : "Information certificat",
+            "certificate_validity" : "Votre certificat expire dans {{count}} jour",
+            "certificate_validity_plural" : "Votre certificat expire dans {{count}} jours",
+            "certificate_serial" : "N° de série :",
+            "certificate_transmitter": "émetteur",
+            "transmitter_for": "émis pour",
+            "common_name": "nom commun",
+            "organisation": "organisation",
+            "organisation_unit": "Unité d'organisation",
+            "email": "e-mail",
+            "transmitter_from": "émis par",
+            "validity": "validité",
+            "from": "émis le",
+            "to": "expire le"
         },
         "help_board":{
             "title": "Documentation et aides",
@@ -254,6 +283,7 @@
             "change_document": "Changer le document",
             "add_document": "Ajouter un document",
             "new_document": "Charger le document",
+            "success_upload": "Le fichier a été correctement chargée",
             "success_edit": "La documentation a bien été bien modifiée",
             "success_add": "La documentation a bien été bien ajoutée",
             "error": {

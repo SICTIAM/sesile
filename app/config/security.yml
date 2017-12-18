@@ -25,7 +25,7 @@ security:
                 created_users_roles: [ROLE_USER, ROLE_ADMIN]
 #                default_target_path: index
                 always_use_default_target_path: false
-                login_path: /dashboard
+                login_path: /tableau-de-bord
                 check_path: /
             logout:
                 path: /logout
@@ -44,15 +44,12 @@ security:
         - { path: ^/classeur/valider_classeur_jws, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/classeur/liste-classeurs-admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/classeur/liste_admin, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/delegation, roles: ROLE_USER }
+        - { path: ^/apirest/users/isauthenticated, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/apirest/document/only-office, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_USER }
-        - { path: ^/dashboard, roles: ROLE_USER }
-        - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }
         - { path: ^/mailing, roles: ROLE_SUPER_ADMIN }
         - { path: ^/user, roles: ROLE_ADMIN }
-        - { path: ^/circuit, roles: ROLE_USER }
-        - { path: ^/classeur, roles: ROLE_USER }
-        - { path: ^/doc, roles: ROLE_USER }
         - { path: ^/preferences/message, roles: ROLE_ADMIN }
         - { path: ^/preferences/notifications, roles: ROLE_ADMIN }

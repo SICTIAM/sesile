@@ -48,6 +48,27 @@ class EtapeClasseurApiController extends FOSRestController implements ClassResou
     }
 
     /**
+     * @return array
+     * @internal param EtapeClasseur $etapeClasseur
+     * @Rest\View(serializerGroups={"listClasseurStats"})
+     * @Rest\Get("s/classeur_stats/", requirements={"classeur" = "\d+"})
+     */
+    public function getClasseursValidateByTypeAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findBy(
+            array('collectivites'   => $this->getUser()->getCollectivite()->getId())
+        );
+
+        $stats[] = array("nom", "total");
+        foreach ($types as $type) {
+            $stats[] = array($type->getNom(), intval($this->getDoctrine()->getRepository('SesileUserBundle:EtapeClasseur')->getClasseurValidate($this->getUser(), $type)));
+        }
+
+        return $stats;
+    }
+
+    /**
      * @Rest\View("statusCode=Response::HTTP_CREATED")
      * @Rest\Post("/new")
      * @param Request $request

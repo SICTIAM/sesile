@@ -54,12 +54,12 @@ class DocumentationHelp extends Component {
                 .then(help => {
                     this.context._addNotification(basicNotification(
                         'success',
-                        this.context.t('admin.collectivite.success_upload_avatar')))
+                        this.context.t('admin.documentations.success_upload')))
                     this.setState({help})}
                 )
                 .catch(error => this.context._addNotification(basicNotification(
                    'error',
-                   this.context.t('admin.collectivite.error.upload_avatar', {errorCode: error.status}),
+                   this.context.t('admin.documentations.error.upload_document', {errorCode: error.status}),
                    error.statusText)))
         }
     }
@@ -178,7 +178,7 @@ class DocumentationHelp extends Component {
                         {
                             help.path &&
                             <div className="cell auto text-center">
-                                <Link to={"/uploads/docs/" + help.path} className="button primary" target="_blank">{t('common.help_board.view_button')}</Link>
+                                <Link to={Routing.generate('download_aide', {id: help.id})} className="button primary" target="_blank">{t('common.help_board.view_button')}</Link>
                             </div>
                         }
                     </div>

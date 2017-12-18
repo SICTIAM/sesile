@@ -35,7 +35,9 @@ class User extends BaseUser {
      *                      "userPack",
      *                      "searchUser",
      *                      "userRole",
+     *                      "listUsers",
      *                      "classeurById"})
+     *     })
      *
      */
     protected $id;
@@ -51,7 +53,9 @@ class User extends BaseUser {
      *                      "getByIdCircuit",
      *                      "currentUser",
      *                      "userPack",
-     *                      "searchUser"})
+     *                      "searchUser",
+     *                      "listUsers"
+     *      })
      */
     protected $Nom;
 
@@ -66,7 +70,9 @@ class User extends BaseUser {
      *                      "getByIdCircuit",
      *                      "currentUser",
      *                      "userPack",
-     *                      "searchUser"})
+     *                      "searchUser",
+     *                      "listUsers"
+     *      })
      *
      */
     protected $Prenom;
@@ -192,7 +198,7 @@ class User extends BaseUser {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "listUsers"})
      *
      */
     protected $collectivite;
@@ -255,7 +261,7 @@ class User extends BaseUser {
 
     /**
      * @var array
-     * @Serializer\Groups({"currentUser", "searchUser"})
+     * @Serializer\Groups({"currentUser", "searchUser", "listUsers"})
      */
     protected $email;
 
