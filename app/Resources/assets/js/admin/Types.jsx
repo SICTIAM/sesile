@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { object, func } from 'prop-types'
 import { translate } from 'react-i18next'
+import Validator from 'validatorjs'
 import { escapedValue } from '../_utils/Search'
 import SelectCollectivite from '../_components/SelectCollectivite'
+import InputValidation from '../_components/InputValidation'
+import { GridX, Cell } from '../_components/UI'
+import { Form } from '../_components/Form'
 
 class Types extends Component {
 
@@ -20,8 +24,13 @@ class Types extends Component {
             currentCollectiviteId: 0,
             userRoles: '',
             searchFieldName: '',
-            nom: ''
+            nom: '',
+            disabledButtonAdd: true
         }
+    }
+
+    validationRules = {
+        nom: 'required'
     }
 
     componentDidMount() {
@@ -38,25 +47,28 @@ class Types extends Component {
             .then(() => {if(this.state.searchFieldName) this.handleChangeSearchByName(this.state.searchFieldName)})
     }
 
-    createType() {
-        fetch(Routing.generate('sesile_classeur_typeclasseurapi_posttypeclasseur'), {
-            method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                nom: this.state.nom,
-                collectivites: this.state.currentCollectiviteId,
-            }),
-            credentials: 'same-origin'
+    createType = () => {
+        const validation = new Validator({nom: this.state.nom}, this.validationRules)
+        if(validation.passes()) {
+            fetch(Routing.generate('sesile_classeur_typeclasseurapi_posttypeclasseur'), {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nom: this.state.nom,
+                    collectivites: this.state.currentCollectiviteId,
+                }),
+                credentials: 'same-origin'
+                })
+                .then(response => response.json())
+                .then(json => {
+                    let filteredTypes = this.state.filteredTypes
+                    filteredTypes.push(json)
+                    this.setState({filteredTypes, nom: ''})
             })
-            .then(response => response.json())
-            .then(json => {
-                let filteredTypes = this.state.filteredTypes
-                filteredTypes = [json, ...filteredTypes]
-                this.setState({filteredTypes, nom: ''})
-            })
+        }
     }
 
     updateType = (id, nom) => {
@@ -107,6 +119,13 @@ class Types extends Component {
         this.setState({filteredTypes})
     }
 
+    handleChangeAddField = (field, value) => {
+        this.setState({nom: value})
+        const validation = new Validator({nom: value}, this.validationRules)
+        if(validation.passes()) this.setState({disabledButtonAdd: false})
+        else this.setState({disabledButtonAdd: true})
+    }
+
     render() {
         const { t } = this.context
         const { filteredTypes, isSuperAdmin, currentCollectiviteId } = this.state
@@ -144,21 +163,27 @@ class Types extends Component {
                             <div className="cell medium-12 panel-heading grid-x">
                                 <div className="cell medium-12">{t('admin.type.complet_name')}</div>
                             </div>
-                            <div className="cell medium-12 panel-body grid-x">
-                                <div className="cell medium-6">
-                                    <input type="text"
-                                           placeholder={t('admin.placeholder.name', { name: t('admin.type.name')})}
-                                           name="nom"
-                                           onChange={(e) => this.setState({nom: e.target.value})}
-                                           value={this.state.nom} />
-                                </div>
-                                <div className="cell medium-6 text-right">
-                                    <button className="button primary text-uppercase"
-                                            onClick={() => this.createType()}>
-                                        {t('admin.button.save', {name: t('admin.type.name')})}
-                                    </button>
-                                </div>
-                            </div>
+                            <Cell className="add-type">
+                                <Form onSubmit={this.createType}>
+                                    <GridX>
+                                        <Cell className="medium-6">
+                                            <InputValidation    id="nom"
+                                                                type="text"
+                                                                labelText={t('common.label.name')}
+                                                                helpText={t('admin.type.help_text_add_type')}
+                                                                value={this.state.nom} 
+                                                                onChange={this.handleChangeAddField}
+                                                                validationRule={this.validationRules.nom}
+                                                                placeholder={t('admin.placeholder.name', { name: t('admin.type.name')})}/>
+                                        </Cell>
+                                        <Cell className="medium-6 text-right">
+                                            <button className="button primary text-uppercase" disabled={this.state.disabledButtonAdd} onClick={() => this.createType()}>
+                                                {t('admin.button.save', {name: t('admin.type.name')})}
+                                            </button>
+                                        </Cell>
+                                    </GridX>
+                                </Form>
+                            </Cell>
                             {(listType.length > 0) ? listType :
                                 <div className="cell medium-12 panel-body">
                                     <div className="text-center">

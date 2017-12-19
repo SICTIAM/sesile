@@ -55,7 +55,7 @@ class ClasseurInfos extends Component {
         return (
             <div className="cell medium-12">
 
-                <Form>
+                <Form onSubmit={this.saveClasseurInfos}>
                     <GridX>
                         <Cell className="medium-10 name-details-classeur">
                             {edit ? <InputValidation    id="nom"

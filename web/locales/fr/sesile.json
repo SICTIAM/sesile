@@ -171,7 +171,8 @@
             "name": "type",
             "name_plural": "types",
             "complet_name": "type de classeurs",
-            "complet_name_plural": "types de classeurs"
+            "complet_name_plural": "types de classeurs",
+            "help_text_add_type": "Saisir un nom pour ajouter un nouveau type"
         },
         "etape": {
             "name": "étape",

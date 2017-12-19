@@ -2,8 +2,19 @@ import React from 'react'
 import UserAvatar from 'react-user-avatar'
 import DatePicker from 'react-datepicker'
 
-const Form = ({ children }) =>
-    <form>
+const Form = ({ children, onSubmit }) =>
+    <form onKeyDown={e => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            onSubmit()
+          }
+        }
+      }
+      onSubmit={e => {
+          e.preventDefault()
+          e.stopPropagation()
+        }
+      }>
         {children}
     </form>
 
