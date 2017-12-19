@@ -27,7 +27,7 @@ class AppInfos extends Component {
         return (
             <div className=" cell auto app-infos text-uppercase">
                 <div className="">
-                    <a href={this.state.informations.contact_link}>{t('footer.contact')}</a>
+                    <a href={this.state.informations.contact_link} target="_blank">{t('footer.contact')}</a>
                 </div>
                 <div className="">
                         <Link to="">{t('footer.general_conditions')}</Link>
