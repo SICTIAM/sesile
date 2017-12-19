@@ -150,7 +150,6 @@ class Note extends Component {
                 <div className="admin-details medium-12 cell">
                     <div className="grid-x admin-head-details">
                         { t('admin.notes.complet_name') }
-                        <i className="fi-pencil small medium-6 cell"></i>
                     </div>
                     <div className="admin-content-details">
 

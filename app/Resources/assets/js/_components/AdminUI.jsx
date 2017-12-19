@@ -18,8 +18,7 @@ const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName
             <h4 className="text-center text-bold">{title}</h4>
             <p className="text-center">{subtitle}</p>
             <div className="admin-details-name">
-                <input name={inputName} value={nom} onChange={(e) => handleChangeName(e.target.name, e.target.value)} placeholder={placeholder} />
-                <i className={"fi-pencil small"}></i>
+                <input name={inputName} value={nom} onChange={(e) => handleChangeName(e.target.name, e.target.value)} placeholder={placeholder} autoFocus={true}/>
             </div>
             {children}
         </div>

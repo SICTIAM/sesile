@@ -778,13 +778,16 @@ $list-group-margin: $global-margin;
     padding: 1em;
     height: 3.5em;
     input {
-      background: rgba(0, 0, 0, 0);
-      border: none;
+      background: #fefefe2e;
+      border-bottom-color: #fefefe47;
+      border-left-style: none;
+      border-top-style: none;
+      border-right-style: none;
       outline: none;
-      text-transform: uppercase;
+      text-transform: none;
       font-weight: 700;
-      color: white;
-      width: auto;
+      color: #fefefe;
+      padding: 0.4em 0.5em 0.3em 0.6em;
     }
   }
 

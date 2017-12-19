@@ -224,8 +224,7 @@ class User extends Component {
             <div className="grid-x">
                 <div className="admin-details medium-12 cell">
                     <div className="grid-x admin-head-details">
-                        {user._prenom}&nbsp;{user._nom} - {user.email}
-                        <i className="fi-pencil small medium-6 cell"></i>
+                        {user.email}
                     </div>
                     <div className="admin-content-details">
 

@@ -7,6 +7,7 @@ import { handleErrors } from '../_utils/Utils'
 import { ButtonConfirm } from '../_components/Form'
 import { GridX, Cell } from '../_components/UI'
 import { basicNotification } from '../_components/Notifications'
+import { AdminDetailsWithInputField, SimpleContent } from '../_components/AdminUI'
 
 class Group extends Component {
 
@@ -38,9 +39,9 @@ class Group extends Component {
         if(!!groupId) this.getGroup(groupId)
     }
 
-    handleChangeGroupName = (value) => {
+    handleChangeGroupName = (key, value) => {
         const { group } = this.state
-        group.nom = value
+        group[key] = value
         this.setState({group})
     }
 
@@ -146,59 +147,55 @@ class Group extends Component {
                             <a onClick={() => this.handleClickRemoveUser(key)}>X</a>
                         </li>)
         return (
-            <div className="parameters-user-group">
-                <h4 className="text-center text-bold">{t('admin.details.title', {name: t('admin.group.complet_name')})}</h4>
-                <p className="text-center">{t('admin.details.subtitle')}</p>
-                <div className="details-user-group">
-                    <div className="grid-x name-details-user-group">
-                        <div className="medium-12 cell">
-                            <input value={group.nom} onChange={(e) => this.handleChangeGroupName(e.target.value)} placeholder={t('admin.placeholder.name', {name: t('admin.group.name')})} />
-                            <i className={"fi-pencil small"}></i>
+            <AdminDetailsWithInputField className="parameters-user-group" 
+                                        title={t('admin.details.title', {name: t('admin.group.complet_name')})} 
+                                        subtitle={t('admin.details.subtitle')} 
+                                        nom={group.nom} 
+                                        inputName="nom"
+                                        handleChangeName={this.handleChangeGroupName}
+                                        placeholder={t('admin.placeholder.name', {name: t('admin.group.name')})} >
+                <SimpleContent>
+                    <div className="grid-x grid-margin-x">
+                        <div className="medium-3 cell">
+                            <div className="grid-x list-user-group">
+                                <div className="medium-12 cell name-list-user-group">
+                                    {t("admin.users_list")}
+                                </div>
+                                <div className="medium-12 cell content-list-user-group">
+                                    <ul className="no-bullet">
+                                        {ListUser}
+                                        {inputDisplayed && 
+                                            <div className="autocomplete">
+                                                <input value={inputSearchUser} type={"text"} onChange={(e) => this.handleChangeSearchUser(e.target.value)} className="input-autocomplete"></input>
+                                                {users.length > 0 &&
+                                                    <ListSearchUser users={users} onClick={this.handleClickUser} />
+                                                }
+                                            </div>
+                                        }
+                                        <li><button className={"btn-add"} type={"button"} onClick={this.addUser}>{t('common.button.add_user')}</button></li>
+                                    </ul>
+                                </div>
+                            </div>  
                         </div>
+                        <Cell>
+                            <GridX className="grid-margin-x">
+                                <ButtonConfirm  id="confirm-delete"
+                                                className="cell medium-9 text-right"
+                                                handleClickConfirm={this.handleClickDelete}
+                                                labelButton={t('common.button.delete')}
+                                                confirmationText={"Voulez-vous le supprimer ?"}
+                                                labelConfirmButton={t('common.button.confirm')}/>
+                                <Cell className="medium-3">
+                                    <button className="button float-right text-uppercase" 
+                                            onClick={() => this.handleClickSave()}>
+                                            {(!group.id) ? t('admin.button.save', {name: t('admin.group.name')}) : t('common.button.edit_save')}
+                                    </button>        
+                                </Cell>
+                            </GridX>
+                        </Cell>
                     </div>
-                    <div className="content-details-user-group">
-                        <div className="grid-x grid-margin-x">
-                            <div className="medium-3 cell">
-                                <div className="grid-x list-user-group">
-                                    <div className="medium-12 cell name-list-user-group">
-                                        {t("admin.users_list")}
-                                    </div>
-                                    <div className="medium-12 cell content-list-user-group">
-                                        <ul className="no-bullet">
-                                            {ListUser}
-                                            {inputDisplayed && 
-                                                <div className="autocomplete">
-                                                    <input value={inputSearchUser} type={"text"} onChange={(e) => this.handleChangeSearchUser(e.target.value)} className="input-autocomplete"></input>
-                                                    {users.length > 0 &&
-                                                        <ListSearchUser users={users} onClick={this.handleClickUser} />
-                                                    }
-                                                </div>
-                                            }
-                                            <li><button className={"btn-add"} type={"button"} onClick={this.addUser}>{t('common.button.add_user')}</button></li>
-                                        </ul>
-                                    </div>
-                                </div>  
-                            </div>
-                            <Cell>
-                                <GridX className="grid-margin-x">
-                                    <ButtonConfirm  id="confirm-delete"
-                                                    className="cell medium-9 text-right"
-                                                    handleClickConfirm={this.handleClickDelete}
-                                                    labelButton={t('common.button.delete')}
-                                                    confirmationText={"Voulez-vous le supprimer ?"}
-                                                    labelConfirmButton={t('common.button.confirm')}/>
-                                    <Cell className="medium-3">
-                                        <button className="button float-right text-uppercase" 
-                                                onClick={() => this.handleClickSave()}>
-                                                {(!group.id) ? t('admin.button.save', {name: t('admin.group.name')}) : t('common.button.edit_save')}
-                                        </button>        
-                                    </Cell>
-                                </GridX>
-                            </Cell>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </SimpleContent>
+            </AdminDetailsWithInputField>
         )
     }
 }
