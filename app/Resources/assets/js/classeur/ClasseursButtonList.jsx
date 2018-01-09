@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { object, array, func }from 'prop-types'
+import { object, array, func, number, oneOfType }from 'prop-types'
 import { translate } from 'react-i18next'
 
 class ClasseursButtonList extends Component {
@@ -10,17 +10,18 @@ class ClasseursButtonList extends Component {
 
     render () {
 
-        const { classeur, classeurs } = this.props
+        const { classeur, classeurs, validClasseur } = this.props
 
         return (
 
             <div className="grid-x">
                 {
-                    (
-                        classeur && classeur.validable
-                        || classeurs && !classeurs.filter(classeur => !classeur.validable).length
-                    ) &&
-                    <ButtonValid/>
+                    classeur && classeur.validable &&
+                    <ButtonValid classeurs={ [classeur] } valid={ validClasseur } />
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.validable).length &&
+                    <ButtonValid classeurs={ classeurs } valid={ validClasseur } />
                 }
 
                 {
@@ -61,17 +62,23 @@ class ClasseursButtonList extends Component {
 
 ClasseursButtonList.PropTypes = {
     classeur: object,
-    classeurs: array
+    classeurs: array,
+    validClasseur: func
 }
 
 export default translate(['sesile'])(ClasseursButtonList)
 
-const ButtonValid = ({}, {t}) => {
+const ButtonValid = ({classeurs, valid}, {t}) => {
+
     return(
-        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.valid_title') } className="btn-valid"></a></div>
+        <div className="cell auto"><a onClick={() => valid(classeurs)} title={ t('common.classeurs.button.valid_title') } className="btn-valid"></a></div>
     )
 }
 ButtonValid.contextTypes = { t: func }
+ButtonValid.propTypes = {
+    classeurs: array,
+    valid: func
+}
 
 const ButtonSign = ({}, {t}) => {
     return(

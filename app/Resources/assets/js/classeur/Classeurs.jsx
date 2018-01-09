@@ -72,6 +72,24 @@ class Classeurs extends Component {
         this.setState({classeurs})
     }
 
+    validClasseurs = (classeurs) => {
+        classeurs.map(classeur => {
+            fetch(Routing.generate('sesile_classeur_classeurapi_validclasseur', {id: classeur.id}),
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(this.handleErrors)
+                .then(() => {
+                    this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
+                })
+        })
+    }
+
     render(){
         const { classeurs, limit, start, checkedAll } = this.state
         const { t } = this.context
@@ -100,7 +118,9 @@ class Classeurs extends Component {
                         <div className="cell medium-2">
                             {
                                 (checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
-                                    <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)} />
+                                    <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)}
+                                                         validClasseur={this.validClasseurs}
+                                    />
                             }
                         </div>
                         <div className="cell medium-1 text-center">
@@ -111,9 +131,13 @@ class Classeurs extends Component {
                     <div id="classeurRow">
                         { classeurs ? (
                             classeurs.map(classeur =>
-                                <ClasseursRow classeur={classeur} key={classeur.id} checkClasseur={this.checkClasseur} />
+                                <ClasseursRow classeur={classeur}
+                                              key={classeur.id}
+                                              checkClasseur={this.checkClasseur}
+                                              validClasseur={this.validClasseurs}
+                                />
                             )
-                        ) : (<div>Chargement...</div>)
+                        ) : (<div>{ t('common.loading') }</div>)
                         }
                     </div>
                 </div>

@@ -171,13 +171,8 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 );
             }
 
-            $etapeValidante = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneBy(
-                array(
-                    'classeur' => $classeur,
-                    'ordre' => 0
-                )
-            );
-            $etapeValidante->setEtapeValidante(1);
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
+
             $em->flush();
 
             $this->sendCreationMail($classeur);
@@ -256,6 +251,24 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         } else {
             return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);
         }
+    }
+
+    /**
+     * @Rest\View(serializerGroups={"classeurById"})
+     * @Rest\Put("/action/valid/{id}")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return Classeur|\Symfony\Component\Form\Form|JsonResponse
+     */
+    public function validClasseurAction (Classeur $classeur) {
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
+        $em->flush();
+
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
+
+        return $classeur;
     }
 
 

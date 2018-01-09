@@ -3,6 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Sesile\UserBundle\Entity\User;
 
 /**
  * ClasseurRepository
@@ -425,44 +426,32 @@ class ClasseurRepository extends EntityRepository {
     }
 
     /**
-     * Fonction pour valider les classeurs
+     * Fonction pour valider un classeur
      *
      * @param Classeur $classeur
+     * @param User $user
      * @return Classeur
      */
-    public function validerClasseur (Classeur $classeur) {
+    public function validerClasseur (Classeur $classeur, User $user) {
 
-        $ordreEtape = $classeur->getOrdreEtape();
-        $ordreEtape++;
+        foreach ($classeur->getEtapeClasseurs() as $etape) {
 
+            if ($etape->getEtapeValidante()) {
+                $etape->setEtapeValide(1);
+                $etape->setEtapeValidante(0);
+                $etape->setUserValidant($user);
+            }
 
-        $em = $this->getEntityManager();
-        $currentEtape = $em->getRepository('SesileUserBundle:EtapeClasseur')->findBy(
-            array('classeur' => $classeur)
-        );
+            if (!$etape->getEtapeValide()) {
+                $etape->setEtapeValidante(1);
+                $classeur->setStatus(1);
+                break;
+            } else {
+                $classeur->setStatus(2);
+            }
 
-
-        /**
-         * Pour réucpérer le validant je récupère le dernier id de la liste getOrdreValidant
-         */
-        $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
-        $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
-
-
-        $nbEtapesClasseur = count($classeur->getEtapeClasseurs());
-
-
-        // Si c est la derniere etape
-        if($nbEtapesClasseur == $ordreEtape) {
-            $classeur->setStatus(2);
-        }
-        else {
-            $classeur->setStatus(1);
-            $currentEtapeId = $currentEtape[$ordreEtape]->getId();
-            $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $currentEtapeId);
         }
 
-        $classeur->setOrdreEtape($ordreEtape);
 
         return $classeur;
     }

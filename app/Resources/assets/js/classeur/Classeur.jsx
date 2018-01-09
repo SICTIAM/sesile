@@ -145,6 +145,30 @@ class Classeur extends Component {
     addUser = (stepKey, user) => this.setState(prevState => prevState.classeur.etape_classeurs[stepKey].users.push(user))
     handleChangeClasseur = (key, value) => this.setState(prevState => {classeur: prevState.classeur[key] = value })
 
+    validClasseurs = (classeurs) => {
+        classeurs.map(classeur => {
+            fetch(Routing.generate('sesile_classeur_classeurapi_validclasseur', {id: classeur.id}),
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(handleErrors)
+                .then(response => response.json())
+                .then(classeur => this.setState({classeur}))
+                .then(this.context._addNotification(basicNotification(
+                    'success',
+                    this.context.t('classeur.success.edit'))))
+                .catch(error => this.context._addNotification(basicNotification(
+                    'error',
+                    this.context.t('classeur.error.edit', {errorCode: error.status}),
+                    error.statusText)))
+        })
+    }
+
     render() {
         const { t } = this.context
         const { classeur, user } = this.state
@@ -156,7 +180,7 @@ class Classeur extends Component {
                     <div className="grid-x">
                         <div className="cell medium-4"></div>
                         <div className="cell medium-4">
-                            <ClasseursButtonList classeur={classeur} />
+                            <ClasseursButtonList classeur={classeur} validClasseur={this.validClasseurs} />
                         </div>
                     </div>
 
