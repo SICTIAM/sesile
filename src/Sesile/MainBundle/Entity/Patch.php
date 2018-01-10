@@ -58,7 +58,7 @@ class Patch
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime", options={"default": "CURRENT_TIMESTAMP"}))
+     * @ORM\Column(name="date", type="datetime")
      *
      *
      */
@@ -72,6 +72,11 @@ class Patch
     public function getId()
     {
         return $this->id;
+    }
+
+    public function __construct()
+    {
+        $this->date = new \DateTime();
     }
 
     /**
