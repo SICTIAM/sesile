@@ -15,7 +15,7 @@ class EtapeGroupeRepository extends EntityRepository
 {
     public function findByUsers($userId) {
 
-        $serviceOrgs = array();
+        $circuits_id = array();
 
         /*
          * On recupere les etapes qui sont attribués a l utilisateur directement
@@ -29,7 +29,7 @@ class EtapeGroupeRepository extends EntityRepository
             ->getResult();
 
         foreach($groupes_du_user as $group) {
-            $serviceOrgs[] = $group->getGroupe()->getId();
+            $circuits_id[] = $group->getGroupe()->getId();
         }
 
         /*
@@ -47,18 +47,36 @@ class EtapeGroupeRepository extends EntityRepository
                 foreach ($users as $user) {
                     // Si on trouve un utilisateur qui est l utilisateur courant, on enregistre l 'id du SO
                     if ($user->getId() == $userId) {
-                        $serviceOrgs[] = $etapeGroupe->getGroupe()->getId();
+                        $circuits_id[] = $etapeGroupe->getGroupe()->getId();
                     }
                 }
             }
         }
 
         // dedoublonnage des id
-        $serviceOrgs = array_unique($serviceOrgs);
+        $circuits_id = array_unique($circuits_id);
 
         // On retourne les id des services organisationels
-        return $serviceOrgs;
+        return $circuits_id;
 
+    }
+
+    public function isUserInEtape(EtapeGroupe $etapeGroupe, $userId) {
+        foreach ($etapeGroupe->getUsers() as $user) {
+            if ($user-> getId() === $userId) {
+                return true;
+            }
+        }
+
+        foreach ($etapeGroupe->getUserPacks() as $userPack) {
+            foreach ($userPack->getUsers() as $user) {
+                if ($user-> getId() === $userId) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 /*    public function findByUsersTools( User $user) {
