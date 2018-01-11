@@ -9,6 +9,7 @@ import DocumentsClasseur from './DocumentsClasseur'
 import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
 import CircuitClasseur from '../circuit/CircuitClasseur'
+import History from '../_utils/History'
 
 class Classeur extends Component {
 
@@ -147,10 +148,12 @@ class Classeur extends Component {
 
     validClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_validclasseur', classeur.id) })}
     revertClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id) })}
-    actionClasseur (url, id) {
+    removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
+    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
+    actionClasseur (url, id, method = 'PUT') {
         fetch(Routing.generate(url, {id}),
             {
-                method: 'PUT',
+                method: method,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -160,9 +163,18 @@ class Classeur extends Component {
             .then(handleErrors)
             .then(response => response.json())
             .then(classeur => this.setState({classeur}))
-            .then(this.context._addNotification(basicNotification(
-                'success',
-                this.context.t('classeur.success.edit'))))
+            .then(() => {
+                if (method === 'PUT') {
+                    this.context._addNotification(basicNotification(
+                        'success',
+                        this.context.t('classeur.success.edit')))
+                } else {
+                    this.context._addNotification(basicNotification(
+                        'success',
+                        this.context.t('classeur.success.delete')))
+                    History.push(`/classeurs/supprimes`)
+                }
+            })
             .catch(error => this.context._addNotification(basicNotification(
                 'error',
                 this.context.t('classeur.error.edit', {errorCode: error.status}),
@@ -183,6 +195,8 @@ class Classeur extends Component {
                             <ClasseursButtonList classeur={classeur}
                                                  validClasseur={this.validClasseurs}
                                                  revertClasseur={this.revertClasseurs}
+                                                 removeClasseur={this.removeClasseurs}
+                                                 deleteClasseur={this.deleteClasseurs}
                             />
                         </div>
                     </div>

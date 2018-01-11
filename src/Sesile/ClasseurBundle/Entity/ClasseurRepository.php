@@ -166,6 +166,8 @@ class ClasseurRepository extends EntityRepository {
         $classeurs = $this->isClasseursValidableByUser($classeurs, $userId);
         $classeurs = $this->isClasseursSignable($classeurs);
         $classeurs = $this->isClasseursRetractableByUser($classeurs, $userId);
+        $classeurs = $this->isClasseursRemovableByUser($classeurs, $userId);
+        $classeurs = $this->isClasseursDeletableByUser($classeurs, $userId);
         return $classeurs;
     }
 
@@ -173,7 +175,38 @@ class ClasseurRepository extends EntityRepository {
         $this->isClasseurValidableByUser($classeur, $userId);
         $this->isClasseurSignable($classeur);
         $this->isClasseurRetractableByUser($classeur, $userId);
+        $this->isClasseurRemovableByUser($classeur, $userId);
+        $this->isClasseurDeletableByUser($classeur, $userId);
         return $classeur;
+    }
+
+    public function isClasseursDeletableByUser (array $classeurs, $userId) {
+        foreach ($classeurs as $classeur) {
+            $this->isClasseurDeletableByUser($classeur, $userId);
+        }
+        return $classeurs;
+    }
+
+    public function isClasseurDeletableByUser (Classeur $classeur, $userId) {
+        $em = $this->getEntityManager();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneById($userId);
+        if($classeur->getStatus() === 3 && $user->hasRole('ROLE_ADMIN')) {
+            $classeur->setDeletable(true);
+        }
+    }
+
+    public function isClasseursRemovableByUser(array $classeurs, $userId) {
+        foreach ($classeurs as $classeur) {
+            $this->isClasseurRemovableByUser($classeur, $userId);
+        }
+        return $classeurs;
+    }
+    public function isClasseurRemovableByUser(Classeur $classeur, $userId) {
+        $em = $this->getEntityManager();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneById($userId);
+        if($classeur->getStatus() === 2 && $user->hasRole('ROLE_ADMIN')) {
+            $classeur->setRemovable(true);
+        }
     }
 
     public function isClasseursSignable(array $classeurs) {
@@ -413,18 +446,6 @@ class ClasseurRepository extends EntityRepository {
     }
 
 
-
-    public function getPrevValidantForRetract(Classeur $classeur) {
-
-        $prevValidant = explode(',', $classeur->getCircuit());
-        $prevValidant = end($prevValidant);
-        if (!$prevValidant) {
-            $prevValidant = $classeur->getUser();
-        }
-
-        return $prevValidant;
-    }
-
     /**
      * Fonction pour valider un classeur
      *
@@ -469,6 +490,11 @@ class ClasseurRepository extends EntityRepository {
         $classeur->setStatus(4);
         return $classeur;
 
+    }
+
+    public function removeClasseur (Classeur $classeur) {
+        $classeur->setStatus(3);
+        return $classeur;
     }
 
     /**

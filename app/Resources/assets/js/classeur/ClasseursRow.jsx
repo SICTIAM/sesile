@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Moment from 'moment';
-import PropTypes from 'prop-types'
+import { func, object } from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Avatar } from '../_components/Form'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
@@ -11,7 +11,8 @@ class ClasseursRow extends Component {
 
     render(){
 
-        const {classeur, validClasseur, revertClasseur} = this.props
+        const {classeur, validClasseur, revertClasseur, removeClasseur, deleteClasseur} = this.props
+        console.log(classeur)
 
         return (
             <div id={classeur.id} className="grid-x grid-padding-x grid-padding-y classeur align-middle">
@@ -44,6 +45,8 @@ class ClasseursRow extends Component {
                     <ClasseursButtonList classeur={classeur}
                                          validClasseur={validClasseur}
                                          revertClasseur={revertClasseur}
+                                         removeClasseur={removeClasseur}
+                                         deleteClasseur={deleteClasseur}
                     />
                 </div>
                 <div className="cell medium-1 text-center">
@@ -56,9 +59,11 @@ class ClasseursRow extends Component {
 }
 
 ClasseursRow.PropTypes = {
-    classeur: PropTypes.object.isRequired,
-    checkClasseur: PropTypes.func.isRequired,
-    validClasseur: PropTypes.func
+    classeur: object.isRequired,
+    checkClasseur: func.isRequired,
+    validClasseur: func,
+    removeClasseur: func,
+    deleteClasseur: func
 }
 
 export default ClasseursRow

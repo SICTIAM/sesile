@@ -14,6 +14,7 @@ use Sesile\ClasseurBundle\Form\ClasseurType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Rest\Route("/apirest/classeur", options = { "expose" = true })
@@ -187,19 +188,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View()
-     * @Rest\Delete("/{id}")
-     * @ParamConverter("Classeur", options={"mapping": {"id": "id"})
-     * @param Classeur $classeur
-     */
-    /*public function removeAction (Classeur $classeur)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($classeur);
-        $em->flush();
-    }*/
-
-    /**
-     * @Rest\View()
      * @Rest\Patch("/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Request $request
@@ -287,6 +275,43 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
 
         return $classeur;
+    }
+
+    /**
+     * @Rest\View(serializerGroups={"classeurById"})
+     * @Rest\Put("/action/remove/{id}")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return Classeur
+     */
+    public function removeClasseurAction (Classeur $classeur) {
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getRepository('SesileClasseurBundle:Classeur')->removeClasseur($classeur);
+        $em->flush();
+
+        return $classeur;
+    }
+
+
+    /**
+     * @Rest\View(serializerGroups={"classeurById"})
+     * @Rest\Delete("/action/delete/{id}")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return JsonResponse
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
+     */
+    public function deleteClasseurAction (Classeur $classeur) {
+
+        $em = $this->getDoctrine()->getManager();
+        foreach ($classeur->getDocuments() as $document) {
+            $delete = $em->getRepository('SesileDocumentBundle:Document')->removeDocument($this->getParameter('upload')['fics'] . $document->getRepourl());
+        }
+        $em->remove($classeur);
+        $em->flush();
+
+        return new JsonResponse(['message' => "Classeur remove"], Response::HTTP_OK);
     }
 
 

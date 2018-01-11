@@ -72,40 +72,24 @@ class Classeurs extends Component {
         this.setState({classeurs})
     }
 
-    validClasseurs = (classeurs) => {
-        classeurs.map(classeur => {
-            fetch(Routing.generate('sesile_classeur_classeurapi_validclasseur', {id: classeur.id}),
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'same-origin'
-                })
-                .then(this.handleErrors)
-                .then(() => {
-                    this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
-                })
-        })
-    }
-
-    revertClasseurs = (classeurs) => {
-        classeurs.map(classeur => {
-            fetch(Routing.generate('sesile_classeur_classeurapi_retractclasseur', {id: classeur.id}),
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'same-origin'
-                })
-                .then(this.handleErrors)
-                .then(() => {
-                    this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
-                })
-        })
+    validClasseurs = (classeurs) => { classeurs.map(classeur => {this.actionClasseur('sesile_classeur_classeurapi_validclasseur', classeur.id)})}
+    revertClasseurs = (classeurs) => { classeurs.map(classeur => {this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id)})}
+    removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
+    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
+    actionClasseur (url, id, method = 'PUT') {
+        fetch(Routing.generate(url, {id}),
+            {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin'
+            })
+            .then(this.handleErrors)
+            .then(() => {
+                this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
+            })
     }
 
     render(){
@@ -139,6 +123,8 @@ class Classeurs extends Component {
                                     <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)}
                                                          validClasseur={this.validClasseurs}
                                                          revertClasseur={this.revertClasseurs}
+                                                         removeClasseur={this.removeClasseurs}
+                                                         deleteClasseur={this.deleteClasseurs}
                                     />
                             }
                         </div>
@@ -155,6 +141,8 @@ class Classeurs extends Component {
                                               checkClasseur={this.checkClasseur}
                                               validClasseur={this.validClasseurs}
                                               revertClasseur={this.revertClasseurs}
+                                              removeClasseur={this.removeClasseurs}
+                                              deleteClasseur={this.deleteClasseurs}
                                 />
                             )
                         ) : (<div>{ t('common.loading') }</div>)

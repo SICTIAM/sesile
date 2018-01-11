@@ -10,7 +10,7 @@ class ClasseursButtonList extends Component {
 
     render () {
 
-        const { classeur, classeurs, validClasseur, revertClasseur } = this.props
+        const { classeur, classeurs, validClasseur, revertClasseur, removeClasseur, deleteClasseur } = this.props
 
         return (
 
@@ -44,10 +44,24 @@ class ClasseursButtonList extends Component {
 
 
                 {
-                    (
-                        classeur && classeur.status === 3
-                        || classeurs && !classeurs.filter(classeur => classeur.status !== 3).length > 0
-                    ) &&
+                    classeur && classeur.removable &&
+                    <ButtonRemove classeurs={ [classeur] } remove={ removeClasseur }/>
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.removable).length &&
+                    <ButtonRemove classeurs={ classeurs } remove={ removeClasseur }/>
+                }
+
+                {
+                    classeur && classeur.deletable &&
+                    <ButtonDelete classeurs={ [classeur] } deleteClasseur={ deleteClasseur }/>
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.deletable).length &&
+                    <ButtonDelete classeurs={ classeurs } deleteClasseur={ deleteClasseur }/>
+                }
+
+                {
                     <ButtonRefus/>
                 }
 
@@ -65,7 +79,9 @@ ClasseursButtonList.PropTypes = {
     classeur: object,
     classeurs: array,
     validClasseur: func,
-    revertClasseur: func
+    revertClasseur: func,
+    removeClasseur: func,
+    deleteClasseur: func
 }
 
 export default translate(['sesile'])(ClasseursButtonList)
@@ -103,6 +119,29 @@ ButtonRevert.propTypes = {
     classeurs: array,
     revert: func
 }
+
+const ButtonRemove = ({classeurs, remove}, {t}) => {
+    return(
+        <div className="cell auto text-center"><a onClick={() => remove(classeurs)}  title={ t('common.classeurs.button.remove_title') }><span className="fi-minus btn-classeur-action"></span></a></div>
+    )
+}
+ButtonRemove.contextTypes = { t: func }
+ButtonRemove.propTypes = {
+    classeurs: array,
+    remove: func
+}
+
+const ButtonDelete = ({classeurs, deleteClasseur}, {t}) => {
+    return(
+        <div className="cell auto text-center"><a onClick={() => deleteClasseur(classeurs)}  title={ t('common.classeurs.button.delete_title') }><span className="fi-trash btn-classeur-action"></span></a></div>
+    )
+}
+ButtonDelete.contextTypes = { t: func }
+ButtonDelete.propTypes = {
+    classeurs: array,
+    deleteClasseur: func
+}
+
 
 const ButtonRefus = ({}, {t}) => {
     return(
