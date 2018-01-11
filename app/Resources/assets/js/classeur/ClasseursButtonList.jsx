@@ -10,7 +10,7 @@ class ClasseursButtonList extends Component {
 
     render () {
 
-        const { classeur, classeurs, validClasseur } = this.props
+        const { classeur, classeurs, validClasseur, revertClasseur } = this.props
 
         return (
 
@@ -34,11 +34,12 @@ class ClasseursButtonList extends Component {
 
 
                 {
-                    (
-                        classeur && classeur.retractable
-                        || classeurs && !classeurs.filter(classeur => !classeur.retractable).length
-                    ) &&
-                    <ButtonRevert/>
+                    classeur && classeur.retractable &&
+                    <ButtonRevert classeurs={ [classeur] } revert={ revertClasseur }/>
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.retractable).length &&
+                    <ButtonRevert classeurs={ classeurs } revert={ revertClasseur }/>
                 }
 
 
@@ -63,13 +64,13 @@ class ClasseursButtonList extends Component {
 ClasseursButtonList.PropTypes = {
     classeur: object,
     classeurs: array,
-    validClasseur: func
+    validClasseur: func,
+    revertClasseur: func
 }
 
 export default translate(['sesile'])(ClasseursButtonList)
 
 const ButtonValid = ({classeurs, valid}, {t}) => {
-
     return(
         <div className="cell auto"><a onClick={() => valid(classeurs)} title={ t('common.classeurs.button.valid_title') } className="btn-valid"></a></div>
     )
@@ -82,17 +83,26 @@ ButtonValid.propTypes = {
 
 const ButtonSign = ({}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.sign_title') } className="btn-sign"></a></div>
+        <div className="cell auto"><a title={ t('common.classeurs.button.sign_title') } className="btn-sign"></a></div>
     )
 }
 ButtonSign.contextTypes = { t: func }
+ButtonSign.propTypes = {
+    classeurs: array,
+    sign: func
+}
 
-const ButtonRevert = ({}, {t}) => {
+const ButtonRevert = ({classeurs, revert}, {t}) => {
+    console.log(classeurs)
     return(
-        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.revert_title') } className="btn-revert"></a></div>
+        <div className="cell auto"><a onClick={() => revert(classeurs)} title={ t('common.classeurs.button.revert_title') } className="btn-revert"></a></div>
     )
 }
 ButtonRevert.contextTypes = { t: func }
+ButtonRevert.propTypes = {
+    classeurs: array,
+    revert: func
+}
 
 const ButtonRefus = ({}, {t}) => {
     return(
@@ -100,6 +110,10 @@ const ButtonRefus = ({}, {t}) => {
     )
 }
 ButtonRefus.contextTypes = { t: func }
+ButtonRefus.propTypes = {
+    classeurs: array,
+    refuse: func
+}
 
 const ButtonComment = ({}, {t}) => {
     return(
@@ -107,3 +121,7 @@ const ButtonComment = ({}, {t}) => {
     )
 }
 ButtonComment.contextTypes = { t: func }
+ButtonComment.propTypes = {
+    classeurs: array,
+    comment: func
+}

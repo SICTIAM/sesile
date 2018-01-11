@@ -637,10 +637,8 @@ class Classeur {
             if($etapeClasseur->getOrdre() == $ordre) {
                 return $etapeClasseur;
             }
-            else {
-                return false;
-            }
         }
+        return false;
     }
 
     public function getPrevEtapeValidante() {

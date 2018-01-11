@@ -258,12 +258,30 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\Put("/action/valid/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Classeur $classeur
-     * @return Classeur|\Symfony\Component\Form\Form|JsonResponse
+     * @return Classeur
      */
     public function validClasseurAction (Classeur $classeur) {
 
         $em = $this->getDoctrine()->getManager();
         $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
+        $em->flush();
+
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
+
+        return $classeur;
+    }
+
+    /**
+     * @Rest\View(serializerGroups={"classeurById"})
+     * @Rest\Put("/action/retract/{id}")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return Classeur
+     */
+    public function retractClasseurAction (Classeur $classeur) {
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getRepository('SesileClasseurBundle:Classeur')->retractClasseur($classeur);
         $em->flush();
 
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());

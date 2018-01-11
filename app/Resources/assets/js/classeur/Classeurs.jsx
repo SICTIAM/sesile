@@ -90,6 +90,24 @@ class Classeurs extends Component {
         })
     }
 
+    revertClasseurs = (classeurs) => {
+        classeurs.map(classeur => {
+            fetch(Routing.generate('sesile_classeur_classeurapi_retractclasseur', {id: classeur.id}),
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(this.handleErrors)
+                .then(() => {
+                    this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
+                })
+        })
+    }
+
     render(){
         const { classeurs, limit, start, checkedAll } = this.state
         const { t } = this.context
@@ -120,6 +138,7 @@ class Classeurs extends Component {
                                 (checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
                                     <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)}
                                                          validClasseur={this.validClasseurs}
+                                                         revertClasseur={this.revertClasseurs}
                                     />
                             }
                         </div>
@@ -135,6 +154,7 @@ class Classeurs extends Component {
                                               key={classeur.id}
                                               checkClasseur={this.checkClasseur}
                                               validClasseur={this.validClasseurs}
+                                              revertClasseur={this.revertClasseurs}
                                 />
                             )
                         ) : (<div>{ t('common.loading') }</div>)

@@ -451,9 +451,24 @@ class ClasseurRepository extends EntityRepository {
             }
 
         }
-
-
         return $classeur;
+    }
+
+    public function retractClasseur (Classeur $classeur) {
+
+        $etapeValidante = $classeur->getEtapeValidante();
+
+        $newEtapeValidante = $classeur->getPrevEtapeValidante();
+        if ($newEtapeValidante) {
+            $newEtapeValidante->setEtapeValidante(1);
+            $newEtapeValidante->setEtapeValide(0);
+            $newEtapeValidante->setUserValidant(null);
+        }
+
+        $etapeValidante->setEtapeValidante(0);
+        $classeur->setStatus(4);
+        return $classeur;
+
     }
 
     /**
