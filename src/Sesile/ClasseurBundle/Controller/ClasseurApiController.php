@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Rest\Route("/apirest/classeur", options = { "expose" = true })
@@ -261,6 +262,25 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View(serializerGroups={"classeurById"})
+     * @Rest\Put("/action/sign/{id}")
+     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Classeur $classeur
+     * @return Classeur
+     */
+    public function signClasseurAction (Classeur $classeur) {
+
+        $em = $this->getDoctrine()->getManager();
+//        $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
+        $em->flush();
+        $this->signClasseur(array($classeur));
+
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
+
+        return $classeur;
+    }
+
+    /**
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Put("/action/retract/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Classeur $classeur
@@ -386,5 +406,137 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 }
             }
         }
+    }
+
+
+
+    private function signClasseur ($ids, $role = null) {
+
+        // Connexion BDD
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        // Infos JSON liste des fichiers
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findById($ids);
+
+        // Gestion du role de l utilisateur
+        // Dans le cas l utilisateur a plusieurs roles
+        if(null !== $role) {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findOneById($role);
+            $roleArg = $roleUser->getUserRoles();
+        }
+        // Dans le cas l utilisateur a un seul role
+        else {
+            $roleUser = $em->getRepository('SesileUserBundle:UserRole')->findByUser($user);
+            if (!empty($roleUser)) {
+                $roleArg = $roleUser[0]->getUserRoles();
+            } else {
+                $roleArg = 'Non renseigné';
+            }
+        }
+        $classeursJSON = array();
+
+        // Generation du token pour les documents
+        $token = uniqid();
+
+        // Pour chaque classeurs
+        foreach ($classeurs as $classeur) {
+
+            // Recuperation url de retour pour la validation du classeur
+            $url_valid_classeur = $this->generateUrl('valider_classeur_jws', array('id' => $classeur->getId(), 'user_id' => $user->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+
+            $documentsJSON = array();
+
+            foreach ($classeur->getDocuments() as $document) {
+
+                if(!$document->getSigned()) {
+
+                    $document->setToken($token);
+
+                    $typeDocument = $document->getType();
+
+                    // Definition du type de document a transmettre au JWS
+                    if(
+                        ($typeDocument == "application/xml" || $typeDocument == "text/xml")
+                        && $classeur->getType()->getNom() == "Helios"
+                    ) {
+                        $typeJWS = "xades-pes";
+                    } else if($typeDocument == "application/xml") {
+                        $typeJWS = "xades";
+                    } else if($typeDocument == "application/pdf") {
+                        $typeJWS = "pades";
+                    } else {
+                        $typeJWS = "cades";
+                    }
+
+                    $documentsJSON[] = array(
+                        'name'          => $document->getName(),
+                        'type'          => $typeJWS,
+                        'description'   => $classeur->getDescription(),
+                        'url_file'      => $this->generateUrl('download_jws_doc', array('name' => $document->getrepourl()), UrlGeneratorInterface::ABSOLUTE_URL),
+                        'url_upload'    => $this->generateUrl('upload_document_fron_jws', array('id' => $document->getId()), UrlGeneratorInterface::ABSOLUTE_URL)
+                    );
+                }
+
+            }
+
+            // On enregistre les modifications du document en bas
+            $em->flush();
+
+            // On incrémente les arguments passés
+            $classeursJSON[] = array(
+                'name' => $classeur->getNom(),
+                'url_valid_classeur' => $url_valid_classeur,
+                'documents' => $documentsJSON
+            );
+        }
+        $arguments = array();
+        $arguments[] = json_encode($classeursJSON);
+
+        // Récupération des infos du user
+        $arguments[] = ($user->getPays() === null) ? "Non renseigné" : $user->getPays();
+        $arguments[] = ($user->getVille() === null) ? "Non renseignée" : $user->getVille();
+        $arguments[] = ($user->getCp() === null) ? "Non renseigné" : $user->getCp();
+        $arguments[] = $roleArg;
+
+        // On passse le token
+        $arguments[] = $token;
+
+
+        // Création de la réponse pour envoyer le fichier JNLP générer automatiquement
+        $response = new Response();
+        // Envoie des bonnes headers pour le JNLP
+        $response->headers->set('Content-type', 'application/x-java-jnlp-file');
+        $response->headers->set('Content-disposition', 'filename="signer.jnlp"');
+
+        $url_applet = 'http://' . $this->container->getParameter('url_applet') . '/jws/sesile-jws-signer.jar';
+
+        $contentSigner = '<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="' . $this->generateUrl('jnlpSignerFiles', array('id' => urlencode(serialize($ids)), 'role' => $role), UrlGeneratorInterface::ABSOLUTE_URL) . '">
+  <information>
+    <title>SESILE JWS Signer</title>
+    <vendor>SICTIAM</vendor>
+    <homepage href="' . $url_applet . '"/>
+    <description>Application de de signature de documents</description>
+    <description kind="short">Application de signatures</description>
+    <offline-allowed/>
+  </information>
+<security><all-permissions /></security>
+  <resources>
+    <j2se version="1.8" initial-heap-size="128m" max-heap-size="1024m"/>
+    <jar href="' . $url_applet . '"/>
+  </resources>
+  <application-desc >';
+
+        foreach ($arguments as $argument) {
+            $contentSigner .= '<argument>' . $argument . '</argument>';
+        }
+
+        $contentSigner .= '</application-desc>
+</jnlp>';
+        $response->setContent($contentSigner);
+
+        return $response;
+
     }
 }

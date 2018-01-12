@@ -73,6 +73,14 @@ class Classeurs extends Component {
     }
 
     validClasseurs = (classeurs) => { classeurs.map(classeur => {this.actionClasseur('sesile_classeur_classeurapi_validclasseur', classeur.id)})}
+    signClasseurs = (classeurs) => {
+        let ids
+        ids = []
+        classeurs.map(classeur => {
+            ids.push(classeur.id)
+        })
+        window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids)}))
+    }
     revertClasseurs = (classeurs) => { classeurs.map(classeur => {this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id)})}
     removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
     deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
@@ -125,6 +133,7 @@ class Classeurs extends Component {
                                                          revertClasseur={this.revertClasseurs}
                                                          removeClasseur={this.removeClasseurs}
                                                          deleteClasseur={this.deleteClasseurs}
+                                                         signClasseur={this.signClasseurs}
                                     />
                             }
                         </div>
@@ -143,6 +152,7 @@ class Classeurs extends Component {
                                               revertClasseur={this.revertClasseurs}
                                               removeClasseur={this.removeClasseurs}
                                               deleteClasseur={this.deleteClasseurs}
+                                              signClasseur={this.signClasseurs}
                                 />
                             )
                         ) : (<div>{ t('common.loading') }</div>)

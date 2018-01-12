@@ -147,6 +147,14 @@ class Classeur extends Component {
     handleChangeClasseur = (key, value) => this.setState(prevState => {classeur: prevState.classeur[key] = value })
 
     validClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_validclasseur', classeur.id) })}
+    signClasseurs = (classeurs) => {
+        let ids
+        ids = []
+        classeurs.map(classeur => {
+            ids.push(classeur.id)
+        })
+        window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids)}))
+    }
     revertClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id) })}
     removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
     deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
@@ -194,6 +202,7 @@ class Classeur extends Component {
                         <div className="cell medium-4">
                             <ClasseursButtonList classeur={classeur}
                                                  validClasseur={this.validClasseurs}
+                                                 signClasseur={this.signClasseurs}
                                                  revertClasseur={this.revertClasseurs}
                                                  removeClasseur={this.removeClasseurs}
                                                  deleteClasseur={this.deleteClasseurs}

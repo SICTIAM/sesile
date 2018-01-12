@@ -11,8 +11,7 @@ class ClasseursRow extends Component {
 
     render(){
 
-        const {classeur, validClasseur, revertClasseur, removeClasseur, deleteClasseur} = this.props
-        console.log(classeur)
+        const {classeur, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur} = this.props
 
         return (
             <div id={classeur.id} className="grid-x grid-padding-x grid-padding-y classeur align-middle">
@@ -44,6 +43,7 @@ class ClasseursRow extends Component {
                 <div className="cell medium-2">
                     <ClasseursButtonList classeur={classeur}
                                          validClasseur={validClasseur}
+                                         signClasseur={signClasseur}
                                          revertClasseur={revertClasseur}
                                          removeClasseur={removeClasseur}
                                          deleteClasseur={deleteClasseur}
@@ -62,6 +62,7 @@ ClasseursRow.PropTypes = {
     classeur: object.isRequired,
     checkClasseur: func.isRequired,
     validClasseur: func,
+    signClasseur: func,
     removeClasseur: func,
     deleteClasseur: func
 }

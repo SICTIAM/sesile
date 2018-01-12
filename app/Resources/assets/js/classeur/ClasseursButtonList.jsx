@@ -10,7 +10,7 @@ class ClasseursButtonList extends Component {
 
     render () {
 
-        const { classeur, classeurs, validClasseur, revertClasseur, removeClasseur, deleteClasseur } = this.props
+        const { classeur, classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur } = this.props
 
         return (
 
@@ -25,11 +25,12 @@ class ClasseursButtonList extends Component {
                 }
 
                 {
-                    (
-                        classeur && classeur.signable_and_last_validant
-                        || classeurs && !classeurs.filter(classeur => !classeur.signable_and_last_validant).length
-                    ) &&
-                    <ButtonSign/>
+                    classeur && classeur.signable_and_last_validant &&
+                    <ButtonSign classeurs={ [classeur] } sign={ signClasseur }/>
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.signable_and_last_validant).length &&
+                    <ButtonSign classeurs={ classeurs } sign={ signClasseur }/>
                 }
 
 
@@ -81,7 +82,8 @@ ClasseursButtonList.PropTypes = {
     validClasseur: func,
     revertClasseur: func,
     removeClasseur: func,
-    deleteClasseur: func
+    deleteClasseur: func,
+    signClasseur: func
 }
 
 export default translate(['sesile'])(ClasseursButtonList)
@@ -97,9 +99,9 @@ ButtonValid.propTypes = {
     valid: func
 }
 
-const ButtonSign = ({}, {t}) => {
+const ButtonSign = ({classeurs, sign}, {t}) => {
     return(
-        <div className="cell auto"><a title={ t('common.classeurs.button.sign_title') } className="btn-sign"></a></div>
+        <div className="cell auto"><a onClick={() => sign(classeurs)} title={ t('common.classeurs.button.sign_title') } className="btn-sign"></a></div>
     )
 }
 ButtonSign.contextTypes = { t: func }
@@ -109,7 +111,6 @@ ButtonSign.propTypes = {
 }
 
 const ButtonRevert = ({classeurs, revert}, {t}) => {
-    console.log(classeurs)
     return(
         <div className="cell auto"><a onClick={() => revert(classeurs)} title={ t('common.classeurs.button.revert_title') } className="btn-revert"></a></div>
     )

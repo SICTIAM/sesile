@@ -189,6 +189,7 @@ class Classeur {
             'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
             'application/xml',
+            'text/xml',
             'text/plain'
     );
 
