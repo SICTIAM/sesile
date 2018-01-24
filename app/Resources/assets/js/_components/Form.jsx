@@ -25,22 +25,23 @@ const FormGroup = ({ children }) =>
         </div>
     </div>
 
-const Input = ({ type, id, value, placeholder, onChange, className, onBlur, labelText, helpText, children }) =>
-    <div className={className}>
+const Input = (props) =>
+    <div className={`admin_search_input ${props.className}`}>
         <label>
-            {labelText}
-            <input  id={id}
-                    type={type}
-                    name={id}
-                    value={value}
-                    placeholder={placeholder}  
+            <span className="text-bold">{props.labelText}</span>
+            <input  id={props.id}
+                    autoFocus={props.autoFocus || false}
+                    type={props.type}
+                    name={props.id}
+                    value={props.value}
+                    placeholder={props.placeholder}  
                     onChange={e => {
-                        let { value } = e.target
-                        if(type === 'number') value = parseInt(value)
-                        onChange(e.target.name, value)
+                        let { value, name } = e.target
+                        if(props.type === 'number') value = parseInt(value)
+                        props.onChange(name, value)
                     }} 
-                    onBlur={onBlur} />
-            {children ? children : <p className="help-text" id={id}>{helpText}</p> }
+                    onBlur={props.onBlur} />
+            {props.children ? props.children : <p className="help-text" id={props.id}>{props.helpText}</p> }
         </label>
     </div>
 

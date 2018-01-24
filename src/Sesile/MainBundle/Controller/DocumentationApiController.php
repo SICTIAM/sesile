@@ -3,6 +3,7 @@
 namespace Sesile\MainBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\Filesystem\Filesystem;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sesile\MainBundle\Entity\Aide;
@@ -13,20 +14,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 
 /**
- * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+ * @Security("is_granted('ROLE_SUPER_ADMIN')")
  * @Rest\Route("/apirest/documentation", options = { "expose" = true })
  */
-class DocumentationApiController extends Controller
-{
+class DocumentationApiController extends Controller {
     /**
      * @Rest\View()
      * @Rest\Get("/aides")
      * @return array
      */
-    public function getAllAidesAction()
+    public function getAllAideAction()
     {
         return $this->getDoctrine()
             ->getManager()
@@ -48,11 +50,32 @@ class DocumentationApiController extends Controller
     }
 
     /**
+     * @Rest\View()
+     * @Rest\Get("/patchs/{id}")
+     * @ParamConverter("Patch", options={"mapping": {"id": "id"}})
+     * @return Patch
+     */
+    public function showPatchAction(Patch $patch) {
+        $patch->setFile(array('name' => $patch->getPath()));
+        return $patch;
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Get("/aides/{id}")
+     * @ParamConverter("Aide", options={"mapping": {"id": "id"}})
+     * @return Aide
+     */
+    public function showAideAction(Aide $aide) {
+        $aide->setFile(array('name' => $aide->getPath()));
+        return $aide;
+    }
+
+    /**
      * @Rest\View("statusCode=Response::HTTP_CREATED")
      * @Rest\Post("/newAide")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @param Request $request
-     * @return Aide|\Symfony\Component\Form\Form
+     * @return Aide|JsonResponse
      */
     public function postAideAction(Request $request)
     {
@@ -63,22 +86,26 @@ class DocumentationApiController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $aide =
+                $this->uploadFile(
+                    $request->files->get('file'),
+                    $aide);
+
             $em->persist($aide);
             $em->flush();
 
             return $aide;
         }
         else {
-            return $form;
+            return new JsonResponse($form->getErrors(), Response::HTTP_BAD_REQUEST);
         }
     }
 
     /**
      * @Rest\View("statusCode=Response::HTTP_CREATED")
      * @Rest\Post("/newPatch")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @param Request $request
-     * @return Patch|\Symfony\Component\Form\Form
+     * @return JsonResponse|Patch
      */
     public function postPatchAction(Request $request)
     {
@@ -89,51 +116,55 @@ class DocumentationApiController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $patch =
+                $this->uploadFile(
+                    $request->files->get('file'),
+                    $patch);
             $em->persist($patch);
             $em->flush();
-
             return $patch;
-        }
-        else {
-            return $form;
+        } else {
+            return new JsonResponse($form->getErrors(), Response::HTTP_BAD_REQUEST);
         }
     }
 
 
     /**
      * @Rest\View()
-     * @Rest\Put("/aide/{id}")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Rest\Post("/aides/{id}")
+     * @ParamConverter("Aide", options={"mapping": {"id": "id"}})
      * @param Request $request
      * @param Aide $aide
      * @return Aide|\Symfony\Component\Form\Form|JsonResponse
-     * @ParamConverter("Aide", options={"mapping": {"id": "id"}})
      */
     public function updateAideAction(Request $request, Aide $aide)
     {
         if (empty($aide)) {
-            return new JsonResponse(['message' => 'Aide inexistante'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse('', Response::HTTP_NOT_FOUND);
         }
 
         $form = $this->createForm(AideType::class, $aide);
-        $form->submit($request->request->all());
+        $form->submit($request->request->all(), false);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $aide =
+                $this->uploadFile(
+                    $request->files->get('file'),
+                    $aide);
             $em->merge($aide);
             $em->flush();
 
             return $aide;
         }
         else {
-            return $form;
+            return new JsonResponse($form->getErrors(), Response::HTTP_BAD_REQUEST);
         }
     }
 
     /**
      * @Rest\View()
-     * @Rest\Put("/patch/{id}")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Rest\Post("/patch/{id}")
      * @param Request $request
      * @param Patch $patch
      * @return Patch|\Symfony\Component\Form\Form|JsonResponse
@@ -142,154 +173,126 @@ class DocumentationApiController extends Controller
     public function updatePatchAction(Request $request, Patch $patch)
     {
         if (empty($patch)) {
-            return new JsonResponse(['message' => 'Mise à jour inexistante'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse('', Response::HTTP_NOT_FOUND);
         }
 
         $form = $this->createForm(PatchType::class, $patch);
-        $form->submit($request->request->all());
+        $form->submit($request->request->all(), false);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $patch =
+                $this->uploadFile(
+                    $request->files->get('file'),
+                    $patch);
             $em->merge($patch);
             $em->flush();
 
             return $patch;
         }
         else {
-            return $form;
+            return new JsonResponse($form->getErrors(), Response::HTTP_BAD_REQUEST);
         }
     }
 
     /**
      * @Rest\View()
      * @Rest\Delete("/aide/{id}")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @ParamConverter("Aide", options={"mapping": {"id": "id"}})
      * @param Aide $aide
-     * @return Aide
+     * @return array|Aide[]|JsonResponse
      * @internal param $id
      */
-    public function removeAideAction(Aide $aide)
-    {
+    public function removeAideAction(Aide $aide) {
+        if(empty($aide)) return new JsonResponse('',JsonResponse::HTTP_NOT_FOUND);
+        $uploadPath = $this->getParameter('upload')['fics'];
         $em = $this->getDoctrine()->getManager();
-        $em->remove($aide);
-        $em->flush();
-
-        return $aide;
+        try {
+            $this->removeDocument($uploadPath. $aide->getPath());
+            $em->remove($aide);
+            $em->flush();
+            $aides = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('SesileMainBundle:Aide')
+                ->findAll();
+            return $aides;
+        } catch (IOExceptionInterface $e) {
+            return new JsonResponse('',JsonResponse::HTTP_NOT_FOUND);
+        }
     }
 
     /**
      * @Rest\View()
      * @Rest\Delete("/patch/{id}")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @ParamConverter("Patch", options={"mapping": {"id": "id"}})
      * @param Patch $patch
-     * @return Patch
+     * @return array|Patch[]|JsonResponse
      * @internal param $id
      */
-    public function removePatchAction(Patch $patch)
-    {
+    public function removePatchAction(Patch $patch) {
+        if(empty($patch)) return new JsonResponse('',JsonResponse::HTTP_NOT_FOUND);
+        $uploadPath = $this->getParameter('upload')['fics'];
         $em = $this->getDoctrine()->getManager();
-        $em->remove($patch);
-        $em->flush();
-
-        return $patch;
-    }
-
-
-    /**
-     * @Rest\View()
-     * @Rest\Post("/aide/document/{id}")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     * @param Request $request
-     * @param Aide $aide
-     * @return Aide|\Symfony\Component\Form\Form|JsonResponse
-     * @ParamConverter("Aide", options={"mapping": {"id": "id"}})
-     */
-    public function uploadAideDocumentAction(Request $request, Aide $aide) {
-
-        if (empty($aide)) {
-            return new JsonResponse(['message' => 'Document inexistant'], Response::HTTP_NOT_FOUND);
+        try {
+            $this->removeDocument($uploadPath. $patch->getPath());
+            $em->remove($patch);
+            $em->flush();
+            $patchs = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('SesileMainBundle:Patch')
+                ->findAll();
+            return $patchs;
+        } catch (IOExceptionInterface $e) {
+            return new JsonResponse('',JsonResponse::HTTP_NOT_FOUND);
         }
-
-        $em = $this->getDoctrine()->getManager();
-        $aide = $em->getRepository('SesileMainBundle:Aide')->uploadFile(
-            $request->files->get('path'),
-            $aide,
-            $this->getParameter('upload')['fics']
-        );
-
-        $em->persist($aide);
-        $em->flush();
-
-        return $aide;
     }
 
     /**
-     * @Rest\View()
-     * @Rest\Post("/patch/document/{id}")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     * @param Request $request
+     * @Rest\Get("/download/patch/{id}")
+     * @ParamConverter("Patch", options={"mapping": {"id": "id"}})
      * @param Patch $patch
-     * @ParamConverter("Aide", options={"mapping": {"id": "id"}})
-     * @return Patch|JsonResponse
+     * @return Response
      */
-    public function uploadPatchDocumentAction(Request $request, Patch $patch) {
+    public function showDocumentPatchAction(Patch $patch)
+    {
+        $path = $this->container->getParameter('upload')['fics'] . $patch->getPath();
 
-        if (empty($patch)) {
-            return new JsonResponse(['message' => 'Document inexistant'], Response::HTTP_NOT_FOUND);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $patch = $em->getRepository('SesileMainBundle:Patch')->uploadFile(
-            $request->files->get('path'),
-            $patch,
-            $this->getParameter('upload')['fics']
-        );
-
-        $em->persist($patch);
-        $em->flush();
-
-        return $patch;
+        return $this->file($path, $patch->getDescription(), ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
-
     /**
-     * @Rest\View()
-     * @Rest\Delete("/aide/document/{id}")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Rest\Get("/download/aide/{id}")
      * @ParamConverter("Aide", options={"mapping": {"id": "id"}})
      * @param Aide $aide
-     * @return Aide
-     * @internal param $id
+     * @return Response
      */
-    public function deleteAideDocumentAction(Aide $aide)
+    public function showDocumentAideAction(Aide $aide)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->getRepository('SesileMainBundle:Aide')->removeUpload($this->getParameter('upload')['fics'] . $aide->getPath());
-        $aide->setPath("");
-        $em->flush();
+        $path = $this->container->getParameter('upload')['fics'] . $aide->getPath();
 
-        return $aide;
+        return $this->file($path, $aide->getDescription(), ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
-    /**
-     * @Rest\View()
-     * @Rest\Delete("/patch/document/{id}")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     * @ParamConverter("Path", options={"mapping": {"id": "id"}})
-     * @param Patch $patch
-     * @return Patch
-     * @internal param $id
-     */
-    public function deletePatchDocumentAction(Patch $patch)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $em->getRepository('SesileMainBundle:Aide')->removeUpload($this->getParameter('upload')['fics'] . $patch->getPath());
-        $patch->setPath("");
-        $em->flush();
+    protected function removeDocument($path) {
+        $fs = new Filesystem();
+        try {
+            if(is_file($path)) $fs->remove($path);
+        } catch (IOExceptionInterface $exception) {
+            throw new IOExceptionInterface($exception);
+        }
+    }
 
-        return $patch;
+    protected function uploadFile($file, $aideOrPatch) {
+        $uploadPath = $this->getParameter('upload')['fics'];
+        if($file) {
+            if(!empty($aideOrPatch->getPath())) {
+                $this->removeDocument($uploadPath. $aideOrPatch->getPath());
+            }
+            $fileName = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
+            $aideOrPatch->setPath($fileName);
+            $file->move($uploadPath, $fileName);
+        }
+        return $aideOrPatch;
     }
 
 }

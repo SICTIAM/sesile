@@ -1,11 +1,15 @@
 {
     "common": {
         "no_results": "Aucun {{name}} ne correspond à votre recherche...",
+        "no_results_female": "Aucune {{name}} ne correspond à votre recherche...",
         "small_no_results": "Aucun résultat..." ,
         "classeur": "classeur",
         "classeur_plural": "classeurs",
         "confirm_delete_img": "Voulez-vous supprimer l'image",
         "loading": "Chargement...",
+        "confirm_deletion_item": "Voulez vous vraiment supprimer cet élément ?",
+        "drop_file_here": "Déposer le fichier ici",
+        "file_is_required": "Le fichier est requis",
         "button": {
             "delete": "Supprimer",
             "add_user": "Ajouter un utilisateur",
@@ -14,14 +18,15 @@
             "edit_save": "Enregistrer les modifications",
             "update": "Mettre à jour",
             "save": "Enregistrer",
-            "edit": "éditer",
+            "edit": "Editer",
             "change_img": "Changer l'image",
             "upload_img": "Ajouter une image",
             "delete_img": "Supprimer l'image",
             "confirm": "Confirmer",
             "cancel": "Annuler",
             "add": "Ajouter",
-            "modify": "Modifier"
+            "modify": "Modifier",
+            "remove": "Retirer"
         },
         "label": {
             "enabled": "Active",
@@ -32,7 +37,9 @@
             "yes": "Oui",
             "no": "Non",
             "title": "Titre",
-            "page": "Page"
+            "page": "Page",
+            "actions": "Actions",
+            "version": "Version"
         },
         "menu": {
             "connection": "Connexion",
@@ -118,7 +125,8 @@
             "title_helps": "Aides",
             "title_video": "Vidéo",
             "view_button": "Voir le document"
-        }
+        },
+        "consult_document": "Voir le document"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
@@ -271,29 +279,26 @@
             }
         },
         "documentations": {
-            "help": "aide",
-            "help_add": "Ajouter une aide",
-            "patch": "mise à jour",
-            "patch_add": "Ajouter une mise à jour",
+            "name": "documentation",
+            "title": "Rechercher un document",
+            "subtitle": "Puis accéder aux paramétres",
+            "list_update_title": "Les documents de mise à jour",
+            "list_help_title": "Les documents d'aide",
+            "help": "Document d'aide",
+            "update": "Document de mise à jour",
             "placeholder_description": "Saisir une description",
             "label_version": "Version",
             "placeholder_version": "Saisir une version",
-            "label_date": "Date",
-            "placeholder_date": "Saisir une date",
-            "remove_document": "Supprimer le document",
-            "change_document": "Changer le document",
+            "success_save": "La documentation a été enregitrée",
+            "succes_delete": "La documentation a été supprimée",
+            "search_by_description": "Recherche par description",
             "add_document": "Ajouter un document",
-            "new_document": "Charger le document",
-            "success_upload": "Le fichier a été correctement chargée",
-            "success_edit": "La documentation a bien été bien modifiée",
-            "success_add": "La documentation a bien été bien ajoutée",
             "error": {
-                "upload_document": "Impossible de charger votre document - erreur {{errorCode}}",
-                "delete_document": "Impossible de supprimer votre document - erreur {{errorCode}}",
-                "delete_documentation": "Impossible de supprimer la documentation - erreur {{errorCode}}",
-                "fail_edit": "Impossible de modifier la documentation - erreur {{errorCode}}",
-                "fail_add": "Impossible d'ajouter la documentation - erreur {{errorCode}}",
-                "fetch": "Impossible de récupérer la documentation - erreur {{errorCode}}"
+                "file_acceptation_rules": "Le fichier doit être au format PDF et d'une taille maximum de 20 Mo",
+                "delete": "Impossible de supprimer la documentation",
+                "save": "Impossible d'enregistrer la documentation",
+                "fetch": "Impossible de récupérer la documentation",
+                "fetch_all": "Impossible de récupérer les liste de documentation"
             }
         },
         "emailing": {

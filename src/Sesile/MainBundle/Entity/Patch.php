@@ -3,10 +3,7 @@
 namespace Sesile\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * Patch
@@ -98,73 +95,6 @@ class Patch
     }
 
 
-    public function getAbsolutePath()
-    {
-        return null === $this->path ? null : $this->getUploadDir() . '/' . $this->path;
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->path ? null : $this->getUploadDir() . '/' . $this->path;
-    }
-
-    protected function getUploadRootDir()
-    {
-        // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
-        return __DIR__ . '/../../../../web/uploads/docs/' . $this->getUploadDir();
-    }
-
-    protected function getUploadDir()
-    {
-        $upload = $GLOBALS['kernel']->getContainer()->getParameter('upload');
-        return $upload['fics'];
-    }
-
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preUpload()
-    {
-        error_log('passth');
-        if (null !== $this->file) {
-
-            // faites ce que vous voulez pour générer un nom unique
-            $this->path = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
-            error_log('PATH' . $this->path);
-        }
-    }
-
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function upload()
-    {
-        if (null === $this->file) {
-            return;
-        }
-
-        // s'il y a une erreur lors du déplacement du fichier, une exception
-        // va automatiquement être lancée par la méthode move(). Cela va empêcher
-        // proprement l'entité d'être persistée dans la base de données si
-        // erreur il y a
-        $this->file->move($this->getUploadDir(), $this->path);
-
-        unset($this->file);
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath()) {
-            unlink($file);
-        }
-    }
-
-
     /**
      * Set path
      *
@@ -243,5 +173,13 @@ class Patch
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function onPrePersistDate()
+    {
+        $this->date = new \DateTime();
     }
 }
