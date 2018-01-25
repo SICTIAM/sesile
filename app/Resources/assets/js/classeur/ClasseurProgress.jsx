@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Moment from 'moment/moment'
 import { translate } from 'react-i18next'
-import {func, string} from 'prop-types'
+import {func, string, number} from 'prop-types'
 
 
 class ClasseurProgress extends Component {
@@ -13,7 +13,7 @@ class ClasseurProgress extends Component {
     render() {
 
         const { t } = this.context
-        const { creation, validation } = this.props
+        const { creation, validation, status } = this.props
         const creationDate = Moment(creation)
         const validationDate = Moment(validation)
         const diffToday = validationDate.diff(Moment(), 'days')
@@ -38,9 +38,11 @@ class ClasseurProgress extends Component {
                     <span className="text-bold">{Moment(validationDate).format('L')}</span>
                 </span>
 
-                <div className={classProgress +" progress"}>
-                    <div className="progress-meter" style={{width: percentProgress + '%'}}></div>
-                </div>
+                { status !== 2 &&
+                    <div className={classProgress +" progress"}>
+                        <div className="progress-meter" style={{width: percentProgress + '%'}}></div>
+                    </div>
+                }
             </div>
         )
     }
@@ -48,7 +50,8 @@ class ClasseurProgress extends Component {
 
 ClasseurProgress.PropTypes = {
     creation: string.isRequired,
-    validation: string.isRequired
+    validation: string.isRequired,
+    status: number
 }
 
 export default translate(['sesile'])(ClasseurProgress)

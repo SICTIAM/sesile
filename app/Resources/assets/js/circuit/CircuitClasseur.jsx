@@ -57,7 +57,7 @@ class CircuitClasseur extends Component {
                                 { etape_classeur.users && etape_classeur.users.map((user, userKey) =>
                                     <div key={"user" + user.id}>
                                         {user._prenom} {user._nom} {
-                                           editable && !etape_classeur.etape_valide &&
+                                           editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
                                             <a onClick={() => removeUser(key, userKey)}><i className="fi-x"></i></a>
                                         }
                                     </div>
@@ -66,8 +66,8 @@ class CircuitClasseur extends Component {
                                 {etape_classeur.user_packs && etape_classeur.user_packs.map((user_pack, user_packKey) =>
                                     <div key={"userpack" + user_pack.id}>
                                         {user_pack.nom} {
-                                            editable && !etape_classeur.etape_valide
-                                            && <a onClick={() => removeGroup(key, user_packKey)}><i className="fi-x"></i></a>
+                                            editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
+                                            <a onClick={() => removeGroup(key, user_packKey)}><i className="fi-x"></i></a>
                                         }
                                     </div>
                                 )}
@@ -77,7 +77,7 @@ class CircuitClasseur extends Component {
                             {
                                 editable &&
                                 <div className="cell medium-3 text-right">
-                                    { !etape_classeur.etape_valide &&
+                                    { !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
                                         <div>
                                             <button className="button clear primary add-actions-etapes" type="button" data-toggle={"add-actions-etapes" + key}>
                                                 <i className="fi-plus"></i>

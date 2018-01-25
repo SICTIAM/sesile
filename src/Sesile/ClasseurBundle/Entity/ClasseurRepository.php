@@ -257,7 +257,7 @@ class ClasseurRepository extends EntityRepository {
             }
         }
 
-        if(($userId == $validantUserId OR $classeur->countEtapeValide() == 0) AND $classeur->getStatus() == 1) {
+        if(($userId === $validantUserId OR ($classeur->countEtapeValide() === 0 AND $userId == $classeur->getUser()->getId())) AND $classeur->getStatus() == 1) {
             $classeur->setRetractable(true);
         }
         else {

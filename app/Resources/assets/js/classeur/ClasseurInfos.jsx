@@ -101,9 +101,7 @@ class ClasseurInfos extends Component {
                         </Cell>
 
                         <Cell className="medium-6">
-
-                            <ClasseurProgress creation={creation} validation={validation} />
-
+                            <ClasseurProgress creation={creation} validation={validation} status={status} />
                             {edit && <InputValidation   id="validation"
                                                         type="date"
                                                         value={Moment(validation)}
@@ -112,7 +110,6 @@ class ClasseurInfos extends Component {
                                                         validationRule={this.validationRules.validation}
                                                         onChange={this.handleChangeLimitDate}/>
                             }
-
                         </Cell>
                     </GridX>
 
