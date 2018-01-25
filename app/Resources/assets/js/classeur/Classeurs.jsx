@@ -82,6 +82,7 @@ class Classeurs extends Component {
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids)}))
     }
     revertClasseurs = (classeurs) => { classeurs.map(classeur => {this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id)})}
+    refuseClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_refuseclasseur', classeur.id) })}
     removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
     deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
     actionClasseur (url, id, method = 'PUT') {
@@ -126,12 +127,13 @@ class Classeurs extends Component {
                             <button onClick={() => this.listClasseurs('validation', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                             <button onClick={() => this.listClasseurs('validation', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                         </div>
-                        <div className="cell medium-2">
+                        <div className="cell medium-2 title-sort">
                             {
                                 (checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
                                     <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)}
                                                          validClasseur={this.validClasseurs}
                                                          revertClasseur={this.revertClasseurs}
+                                                         refuseClasseur={this.refuseClasseurs}
                                                          removeClasseur={this.removeClasseurs}
                                                          deleteClasseur={this.deleteClasseurs}
                                                          signClasseur={this.signClasseurs}
@@ -152,6 +154,7 @@ class Classeurs extends Component {
                                               checkClasseur={this.checkClasseur}
                                               validClasseur={this.validClasseurs}
                                               revertClasseur={this.revertClasseurs}
+                                              refuseClasseur={this.refuseClasseurs}
                                               removeClasseur={this.removeClasseurs}
                                               deleteClasseur={this.deleteClasseurs}
                                               signClasseur={this.signClasseurs}

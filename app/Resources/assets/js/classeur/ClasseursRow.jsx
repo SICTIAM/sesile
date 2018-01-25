@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Moment from 'moment';
 import { func, object } from 'prop-types'
 import { Link } from 'react-router-dom'
-import { Avatar } from '../_components/Form'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
 import ClasseursButtonList from './ClasseursButtonList'
 import ClasseurProgress from './ClasseurProgress'
@@ -11,13 +10,15 @@ class ClasseursRow extends Component {
 
     render(){
 
-        const {classeur, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur} = this.props
+        const {classeur, validClasseur, signClasseur, revertClasseur, refuseClasseur, removeClasseur, deleteClasseur} = this.props
 
         let validEtape,validUsers
         validEtape = classeur.etape_classeurs.find(etape_classeur => etape_classeur.etape_validante)
-        validUsers = validEtape.users.map(user => user._prenom + " " + user._nom )
+        validEtape
+            ? validUsers = validEtape.users.map(user => user._prenom + " " + user._nom )
                             .concat(validEtape.user_packs.map(user_pack => user_pack.nom))
                             .join(' / ')
+            : validUsers = classeur.user._prenom + " " + classeur.user._nom
 
         return (
             <div id={classeur.id} className="grid-x grid-padding-x grid-padding-y classeur align-middle">
@@ -35,10 +36,11 @@ class ClasseursRow extends Component {
                 <CircuitListClasseur classeurId={classeur.id} etape_classeurs={classeur.etape_classeurs} user={classeur.user} />
 
                 <div className="cell medium-2">
-                    <ClasseursButtonList classeur={classeur}
+                    <ClasseursButtonList classeurs={[classeur]}
                                          validClasseur={validClasseur}
                                          signClasseur={signClasseur}
                                          revertClasseur={revertClasseur}
+                                         refuseClasseur={refuseClasseur}
                                          removeClasseur={removeClasseur}
                                          deleteClasseur={deleteClasseur}
                     />
@@ -57,6 +59,7 @@ ClasseursRow.PropTypes = {
     checkClasseur: func.isRequired,
     validClasseur: func,
     signClasseur: func,
+    refuseClasseur: func,
     removeClasseur: func,
     deleteClasseur: func
 }

@@ -10,60 +10,39 @@ class ClasseursButtonList extends Component {
 
     render () {
 
-        const { classeur, classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur } = this.props
+        const { classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur } = this.props
 
         return (
 
             <div className="grid-x button-list align-middle text-center">
-                {
-                    classeur && classeur.validable &&
-                    <ButtonValid classeurs={ [classeur] } valid={ validClasseur } />
-                }
                 {
                     classeurs && !classeurs.filter(classeur => !classeur.validable).length &&
                     <ButtonValid classeurs={ classeurs } valid={ validClasseur } />
                 }
 
                 {
-                    classeur && classeur.signable_and_last_validant &&
-                    <ButtonSign classeurs={ [classeur] } sign={ signClasseur }/>
-                }
-                {
                     classeurs && !classeurs.filter(classeur => !classeur.signable_and_last_validant).length &&
                     <ButtonSign classeurs={ classeurs } sign={ signClasseur }/>
                 }
 
-
-                {
-                    classeur && classeur.retractable &&
-                    <ButtonRevert classeurs={ [classeur] } revert={ revertClasseur }/>
-                }
                 {
                     classeurs && !classeurs.filter(classeur => !classeur.retractable).length &&
                     <ButtonRevert classeurs={ classeurs } revert={ revertClasseur }/>
                 }
 
-
-                {
-                    classeur && classeur.removable &&
-                    <ButtonRemove classeurs={ [classeur] } remove={ removeClasseur }/>
-                }
                 {
                     classeurs && !classeurs.filter(classeur => !classeur.removable).length &&
                     <ButtonRemove classeurs={ classeurs } remove={ removeClasseur }/>
                 }
 
                 {
-                    classeur && classeur.deletable &&
-                    <ButtonDelete classeurs={ [classeur] } deleteClasseur={ deleteClasseur }/>
-                }
-                {
                     classeurs && !classeurs.filter(classeur => !classeur.deletable).length &&
                     <ButtonDelete classeurs={ classeurs } deleteClasseur={ deleteClasseur }/>
                 }
 
                 {
-                    <ButtonRefus/>
+                    classeurs && !classeurs.filter(classeur => !classeur.refusable).length &&
+                    <ButtonRefuse classeurs={ classeurs } refuseClasseur={ refuseClasseur } />
                 }
 
             </div>
@@ -72,10 +51,10 @@ class ClasseursButtonList extends Component {
 }
 
 ClasseursButtonList.PropTypes = {
-    classeur: object,
     classeurs: array,
     validClasseur: func,
     revertClasseur: func,
+    refuseClasseur: func,
     removeClasseur: func,
     deleteClasseur: func,
     signClasseur: func
@@ -139,13 +118,13 @@ ButtonDelete.propTypes = {
 }
 
 
-const ButtonRefus = ({}, {t}) => {
+const ButtonRefuse = ({classeurs, refuseClasseur}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.refus_title') } className="fa fa-times"></a></div>
+        <div className="cell auto"><a onClick={() => refuseClasseur(classeurs)} title={ t('common.classeurs.button.refus_title') } className="fa fa-times"></a></div>
     )
 }
-ButtonRefus.contextTypes = { t: func }
-ButtonRefus.propTypes = {
+ButtonRefuse.contextTypes = { t: func }
+ButtonRefuse.propTypes = {
     classeurs: array,
-    refuse: func
+    refuseClasseur: func
 }

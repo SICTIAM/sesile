@@ -10,7 +10,6 @@ import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
 import CircuitClasseur from '../circuit/CircuitClasseur'
 import History from '../_utils/History'
-import Documents from './Documents'
 
 class Classeur extends Component {
 
@@ -157,6 +156,7 @@ class Classeur extends Component {
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids)}))
     }
     revertClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id) })}
+    refuseClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_refuseclasseur', classeur.id) })}
     removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
     deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
     actionClasseur (url, id, method = 'PUT') {
@@ -207,10 +207,11 @@ class Classeur extends Component {
                     <div className="grid-x">
                         <div className="cell medium-4"></div>
                         <div className="cell medium-4">
-                            <ClasseursButtonList classeur={classeur}
+                            <ClasseursButtonList classeurs={[classeur]}
                                                  validClasseur={this.validClasseurs}
                                                  signClasseur={this.signClasseurs}
                                                  revertClasseur={this.revertClasseurs}
+                                                 refuseClasseur={this.refuseClasseurs}
                                                  removeClasseur={this.removeClasseurs}
                                                  deleteClasseur={this.deleteClasseurs}
                             />
@@ -234,7 +235,9 @@ class Classeur extends Component {
                                                 status={classeur.status}
                                                 description={classeur.description}
                                                 handleChangeClasseur={this.handleChangeClasseur}
-                                                putClasseur={this.putClasseur} />
+                                                putClasseur={this.putClasseur}
+                                                editable={classeur.validable}
+                                />
                             </div>
 
                             <div className="grid-x grid-padding-y">
@@ -247,7 +250,8 @@ class Classeur extends Component {
                                             <CircuitClasseur classeurId={classeur.id}
                                                              etape_classeurs={classeur.etape_classeurs}
                                                              user={classeur.user}
-                                                             editable={true}
+                                                             etapeDeposante={classeur.etape_deposante}
+                                                             editable={classeur.validable}
                                                              addEtape={this.handleAddEtape}
                                                              addUser={this.addUser}
                                                              addGroup={this.addGroup}

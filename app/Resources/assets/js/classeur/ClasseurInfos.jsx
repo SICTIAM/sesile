@@ -20,7 +20,8 @@ class ClasseurInfos extends Component {
         type: {
             nom: ''
         },
-        description: ''
+        description: '',
+        editable: false
     }
 
     state = {
@@ -48,7 +49,7 @@ class ClasseurInfos extends Component {
     }
 
     render() {
-        const { nom, validation, creation, type, description, status, handleChangeClasseur } = this.props
+        const { nom, validation, creation, type, description, status, handleChangeClasseur, editable } = this.props
         const { edit } = this.state
         const { t } = this.context
         const { i18nextLng } = window.localStorage
@@ -58,7 +59,7 @@ class ClasseurInfos extends Component {
                 <Form onSubmit={this.saveClasseurInfos}>
                     <GridX>
                         <Cell className="medium-8 name-details-classeur">
-                            {edit ? <InputValidation    id="nom"
+                            { edit ? <InputValidation    id="nom"
                                                         type="text"
                                                         labelText={t('common.label.name')}
                                                         value={nom}
@@ -69,13 +70,16 @@ class ClasseurInfos extends Component {
                             }
                         </Cell>
                         <Cell className="medium-4 text-right">
-                            <a onClick={() => this.setState({edit: !this.state.edit})} className="button">
-                                {
-                                    edit
-                                        ? "Annuler"
-                                        : "Modifier"
-                                }
-                            </a>
+                            {
+                                editable &&
+                                <a onClick={() => this.setState({edit: !this.state.edit})} className="button">
+                                    {
+                                        edit
+                                            ? "Annuler"
+                                            : "Modifier"
+                                    }
+                                </a>
+                            }
                         </Cell>
                     </GridX>
 

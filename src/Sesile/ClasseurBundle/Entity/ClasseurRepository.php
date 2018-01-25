@@ -163,28 +163,21 @@ class ClasseurRepository extends EntityRepository {
     }
 
     public function addClasseursValue($classeurs, $userId) {
-        $classeurs = $this->isClasseursValidableByUser($classeurs, $userId);
-        $classeurs = $this->isClasseursSignable($classeurs);
-        $classeurs = $this->isClasseursRetractableByUser($classeurs, $userId);
-        $classeurs = $this->isClasseursRemovableByUser($classeurs, $userId);
-        $classeurs = $this->isClasseursDeletableByUser($classeurs, $userId);
+        foreach ($classeurs as $classeur) {
+            $this->addClasseurValue($classeur, $userId);
+        }
         return $classeurs;
     }
 
     public function addClasseurValue($classeur, $userId) {
+        $this->isEtapeDeposante($classeur);
         $this->isClasseurValidableByUser($classeur, $userId);
         $this->isClasseurSignable($classeur);
+        $this->isClasseurRefusable($classeur);
         $this->isClasseurRetractableByUser($classeur, $userId);
         $this->isClasseurRemovableByUser($classeur, $userId);
         $this->isClasseurDeletableByUser($classeur, $userId);
         return $classeur;
-    }
-
-    public function isClasseursDeletableByUser (array $classeurs, $userId) {
-        foreach ($classeurs as $classeur) {
-            $this->isClasseurDeletableByUser($classeur, $userId);
-        }
-        return $classeurs;
     }
 
     public function isClasseurDeletableByUser (Classeur $classeur, $userId) {
@@ -195,25 +188,12 @@ class ClasseurRepository extends EntityRepository {
         }
     }
 
-    public function isClasseursRemovableByUser(array $classeurs, $userId) {
-        foreach ($classeurs as $classeur) {
-            $this->isClasseurRemovableByUser($classeur, $userId);
-        }
-        return $classeurs;
-    }
     public function isClasseurRemovableByUser(Classeur $classeur, $userId) {
         $em = $this->getEntityManager();
         $user = $em->getRepository('SesileUserBundle:User')->findOneById($userId);
         if($classeur->getStatus() === 2 && $user->hasRole('ROLE_ADMIN')) {
             $classeur->setRemovable(true);
         }
-    }
-
-    public function isClasseursSignable(array $classeurs) {
-        foreach ($classeurs as $classeur) {
-            $this->isClasseurSignable($classeur);
-        }
-        return $classeurs;
     }
 
 
@@ -237,13 +217,6 @@ class ClasseurRepository extends EntityRepository {
         return $classeur;
     }
 
-    public function isClasseursValidableByUser(array $classeurs, $userId) {
-        foreach ($classeurs as $classeur) {
-            $this->isClasseurValidableByUser($classeur, $userId);
-        }
-        return $classeurs;
-    }
-
     public function isClasseurValidableByUser(Classeur $classeur, $userId) {
         $etapeValidante = $classeur->getEtapeValidante();
 
@@ -253,20 +226,24 @@ class ClasseurRepository extends EntityRepository {
             $validantUsersId = array();
         }
 
-        if(in_array($userId, $validantUsersId) AND $classeur->getStatus() != 2 AND $classeur->getStatus() != 3) {
+        if(
+            (in_array($userId, $validantUsersId) AND $classeur->getStatus() != 0 AND $classeur->getStatus() != 2 AND $classeur->getStatus() != 3)
+            OR ($classeur->getEtapeDeposante() AND $classeur->getUser()->getId() === $userId)
+        ) {
             $classeur->setValidable(true);
-        }
-        else {
+        } else {
             $classeur->setValidable(false);
         }
         return $classeur;
     }
 
-    public function isClasseursRetractableByUser(array $classeurs, $userId) {
-        foreach ($classeurs as $classeur) {
-            $this->isClasseurRetractableByUser($classeur, $userId);
+    public function isClasseurRefusable(Classeur $classeur) {
+
+        if ($classeur->getValidable() && !$classeur->getEtapeDeposante()) {
+            $classeur->setRefusable(true);
+        } else {
+            $classeur->setRefusable(false);
         }
-        return $classeurs;
     }
 
     public function isClasseurRetractableByUser(Classeur $classeur, $userId) {
@@ -287,6 +264,33 @@ class ClasseurRepository extends EntityRepository {
             $classeur->setRetractable(false);
         }
         return $classeur;
+    }
+
+    public function isEtapeDeposante (Classeur $classeur) {
+        if (!$this->isOneEtapevalidante($classeur) AND $classeur->getStatus() !== 2 AND $classeur->getStatus() !== 3) {
+            $classeur->setEtapeDeposante(true);
+        } else {
+            $classeur->setEtapeDeposante(false);
+        }
+        return $classeur;
+    }
+
+    public function countEtapesValide (Classeur $classeur) {
+        $count = 0;
+        foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
+            if ($etapeClasseur->getEtapeValide()) $count++;
+        }
+
+        return $count;
+    }
+
+    public function isOneEtapevalidante (Classeur $classeur) {
+        foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
+            if ($etapeClasseur->getEtapeValidante()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -495,6 +499,17 @@ class ClasseurRepository extends EntityRepository {
     public function removeClasseur (Classeur $classeur) {
         $classeur->setStatus(3);
         return $classeur;
+    }
+
+    public function refuseClasseur (Classeur $classeur) {
+
+        $classeur->setStatus(0);
+        $etapesClasseur = $classeur->getEtapeClasseurs();
+        foreach ($etapesClasseur as $etapeClasseur) {
+            $etapeClasseur->setEtapeValidante(false);
+            $etapeClasseur->setEtapeValide(false);
+            $etapeClasseur->setUserValidant(null);
+        }
     }
 
     /**
