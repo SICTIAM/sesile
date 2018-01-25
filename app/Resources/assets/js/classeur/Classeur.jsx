@@ -9,6 +9,7 @@ import DocumentsClasseur from './DocumentsClasseur'
 import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
 import CircuitClasseur from '../circuit/CircuitClasseur'
+import History from '../_utils/History'
 
 class Classeur extends Component {
 
@@ -145,6 +146,49 @@ class Classeur extends Component {
     addUser = (stepKey, user) => this.setState(prevState => prevState.classeur.etape_classeurs[stepKey].users.push(user))
     handleChangeClasseur = (key, value) => this.setState(prevState => {classeur: prevState.classeur[key] = value })
 
+    validClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_validclasseur', classeur.id) })}
+    signClasseurs = (classeurs) => {
+        let ids
+        ids = []
+        classeurs.map(classeur => {
+            ids.push(classeur.id)
+        })
+        window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids)}))
+    }
+    revertClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id) })}
+    removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
+    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
+    actionClasseur (url, id, method = 'PUT') {
+        fetch(Routing.generate(url, {id}),
+            {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin'
+            })
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(classeur => this.setState({classeur}))
+            .then(() => {
+                if (method === 'PUT') {
+                    this.context._addNotification(basicNotification(
+                        'success',
+                        this.context.t('classeur.success.edit')))
+                } else {
+                    this.context._addNotification(basicNotification(
+                        'success',
+                        this.context.t('classeur.success.delete')))
+                    History.push(`/classeurs/supprimes`)
+                }
+            })
+            .catch(error => this.context._addNotification(basicNotification(
+                'error',
+                this.context.t('classeur.error.edit', {errorCode: error.status}),
+                error.statusText)))
+    }
+
     render() {
         const { t } = this.context
         const { classeur, user } = this.state
@@ -156,7 +200,13 @@ class Classeur extends Component {
                     <div className="grid-x">
                         <div className="cell medium-4"></div>
                         <div className="cell medium-4">
-                            <ClasseursButtonList classeur={classeur} />
+                            <ClasseursButtonList classeur={classeur}
+                                                 validClasseur={this.validClasseurs}
+                                                 signClasseur={this.signClasseurs}
+                                                 revertClasseur={this.revertClasseurs}
+                                                 removeClasseur={this.removeClasseurs}
+                                                 deleteClasseur={this.deleteClasseurs}
+                            />
                         </div>
                     </div>
 

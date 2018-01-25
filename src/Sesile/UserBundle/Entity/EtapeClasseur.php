@@ -69,7 +69,7 @@ class EtapeClasseur
      * @var boolean
      *
      * @ORM\Column(name="etapeValide", type="boolean", options={"default" = false})
-     * @Groups({"listEtapeClasseur"})
+     * @Groups({"classeurById", "listClasseur", "listEtapeClasseur"})
      *
      */
     private $etapeValide = 0;

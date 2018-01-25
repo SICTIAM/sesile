@@ -57,7 +57,7 @@ class CircuitClasseur extends Component {
                                 { etape_classeur.users && etape_classeur.users.map((user, userKey) =>
                                     <div key={"user" + user.id}>
                                         {user._prenom} {user._nom} {
-                                           editable &&
+                                           editable && !etape_classeur.etape_valide &&
                                             <a onClick={() => removeUser(key, userKey)}><i className="fi-x"></i></a>
                                         }
                                     </div>
@@ -66,7 +66,8 @@ class CircuitClasseur extends Component {
                                 {etape_classeur.user_packs && etape_classeur.user_packs.map((user_pack, user_packKey) =>
                                     <div key={"userpack" + user_pack.id}>
                                         {user_pack.nom} {
-                                            editable && <a onClick={() => removeGroup(key, user_packKey)}><i className="fi-x"></i></a>
+                                            editable && !etape_classeur.etape_valide
+                                            && <a onClick={() => removeGroup(key, user_packKey)}><i className="fi-x"></i></a>
                                         }
                                     </div>
                                 )}

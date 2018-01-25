@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { object, array, func }from 'prop-types'
+import { object, array, func, number, oneOfType }from 'prop-types'
 import { translate } from 'react-i18next'
 
 class ClasseursButtonList extends Component {
@@ -10,42 +10,59 @@ class ClasseursButtonList extends Component {
 
     render () {
 
-        const { classeur, classeurs } = this.props
+        const { classeur, classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur } = this.props
 
         return (
 
             <div className="grid-x">
                 {
-                    (
-                        classeur && classeur.validable
-                        || classeurs && !classeurs.filter(classeur => !classeur.validable).length
-                    ) &&
-                    <ButtonValid/>
+                    classeur && classeur.validable &&
+                    <ButtonValid classeurs={ [classeur] } valid={ validClasseur } />
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.validable).length &&
+                    <ButtonValid classeurs={ classeurs } valid={ validClasseur } />
                 }
 
                 {
-                    (
-                        classeur && classeur.signable_and_last_validant
-                        || classeurs && !classeurs.filter(classeur => !classeur.signable_and_last_validant).length
-                    ) &&
-                    <ButtonSign/>
+                    classeur && classeur.signable_and_last_validant &&
+                    <ButtonSign classeurs={ [classeur] } sign={ signClasseur }/>
                 }
-
-
                 {
-                    (
-                        classeur && classeur.retractable
-                        || classeurs && !classeurs.filter(classeur => !classeur.retractable).length
-                    ) &&
-                    <ButtonRevert/>
+                    classeurs && !classeurs.filter(classeur => !classeur.signable_and_last_validant).length &&
+                    <ButtonSign classeurs={ classeurs } sign={ signClasseur }/>
                 }
 
 
                 {
-                    (
-                        classeur && classeur.status === 3
-                        || classeurs && !classeurs.filter(classeur => classeur.status !== 3).length > 0
-                    ) &&
+                    classeur && classeur.retractable &&
+                    <ButtonRevert classeurs={ [classeur] } revert={ revertClasseur }/>
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.retractable).length &&
+                    <ButtonRevert classeurs={ classeurs } revert={ revertClasseur }/>
+                }
+
+
+                {
+                    classeur && classeur.removable &&
+                    <ButtonRemove classeurs={ [classeur] } remove={ removeClasseur }/>
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.removable).length &&
+                    <ButtonRemove classeurs={ classeurs } remove={ removeClasseur }/>
+                }
+
+                {
+                    classeur && classeur.deletable &&
+                    <ButtonDelete classeurs={ [classeur] } deleteClasseur={ deleteClasseur }/>
+                }
+                {
+                    classeurs && !classeurs.filter(classeur => !classeur.deletable).length &&
+                    <ButtonDelete classeurs={ classeurs } deleteClasseur={ deleteClasseur }/>
+                }
+
+                {
                     <ButtonRefus/>
                 }
 
@@ -61,31 +78,71 @@ class ClasseursButtonList extends Component {
 
 ClasseursButtonList.PropTypes = {
     classeur: object,
-    classeurs: array
+    classeurs: array,
+    validClasseur: func,
+    revertClasseur: func,
+    removeClasseur: func,
+    deleteClasseur: func,
+    signClasseur: func
 }
 
 export default translate(['sesile'])(ClasseursButtonList)
 
-const ButtonValid = ({}, {t}) => {
+const ButtonValid = ({classeurs, valid}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.valid_title') } className="btn-valid"></a></div>
+        <div className="cell auto"><a onClick={() => valid(classeurs)} title={ t('common.classeurs.button.valid_title') } className="btn-valid"></a></div>
     )
 }
 ButtonValid.contextTypes = { t: func }
+ButtonValid.propTypes = {
+    classeurs: array,
+    valid: func
+}
 
-const ButtonSign = ({}, {t}) => {
+const ButtonSign = ({classeurs, sign}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.sign_title') } className="btn-sign"></a></div>
+        <div className="cell auto"><a onClick={() => sign(classeurs)} title={ t('common.classeurs.button.sign_title') } className="btn-sign"></a></div>
     )
 }
 ButtonSign.contextTypes = { t: func }
+ButtonSign.propTypes = {
+    classeurs: array,
+    sign: func
+}
 
-const ButtonRevert = ({}, {t}) => {
+const ButtonRevert = ({classeurs, revert}, {t}) => {
     return(
-        <div className="cell auto"><a href="#" title={ t('common.classeurs.button.revert_title') } className="btn-revert"></a></div>
+        <div className="cell auto"><a onClick={() => revert(classeurs)} title={ t('common.classeurs.button.revert_title') } className="btn-revert"></a></div>
     )
 }
 ButtonRevert.contextTypes = { t: func }
+ButtonRevert.propTypes = {
+    classeurs: array,
+    revert: func
+}
+
+const ButtonRemove = ({classeurs, remove}, {t}) => {
+    return(
+        <div className="cell auto text-center"><a onClick={() => remove(classeurs)}  title={ t('common.classeurs.button.remove_title') }><span className="fi-minus btn-classeur-action"></span></a></div>
+    )
+}
+ButtonRemove.contextTypes = { t: func }
+ButtonRemove.propTypes = {
+    classeurs: array,
+    remove: func
+}
+
+const ButtonDelete = ({classeurs, deleteClasseur}, {t}) => {
+    return(
+        <div className="cell auto text-center"><a onClick={() => deleteClasseur(classeurs)}  title={ t('common.classeurs.button.delete_title') }><span className="fi-trash btn-classeur-action"></span></a></div>
+    )
+}
+ButtonDelete.contextTypes = { t: func }
+ButtonDelete.propTypes = {
+    classeurs: array,
+    deleteClasseur: func
+}
+
 
 const ButtonRefus = ({}, {t}) => {
     return(
@@ -93,6 +150,10 @@ const ButtonRefus = ({}, {t}) => {
     )
 }
 ButtonRefus.contextTypes = { t: func }
+ButtonRefus.propTypes = {
+    classeurs: array,
+    refuse: func
+}
 
 const ButtonComment = ({}, {t}) => {
     return(
@@ -100,3 +161,7 @@ const ButtonComment = ({}, {t}) => {
     )
 }
 ButtonComment.contextTypes = { t: func }
+ButtonComment.propTypes = {
+    classeurs: array,
+    comment: func
+}
