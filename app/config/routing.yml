@@ -5,7 +5,7 @@ sesile_main:
 
 sesile_tableau-de-bord:
     defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
-    path: /tableau-de-bord
+    path: /tableau-de-bord/{reactRouting}
     requirements:
         reactRouting: ".+"
 

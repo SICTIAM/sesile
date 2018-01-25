@@ -20,7 +20,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
 {
 
     /**
-     * @Rest\View("classeurById")
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("/{id}")
      * @param Document $document
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
@@ -32,7 +32,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Rest\View("classeurById")
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("s/classeur/{id}")
      * @param Classeur $classeur
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
@@ -44,7 +44,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Rest\View("classeurById")
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Post("/only-office/{id}")
      * @param Request $request
      * @param Document $document
@@ -55,7 +55,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Rest\View("classeurById")
+     * @Rest\View("statusCode=Response::HTTP_CREATED", serializerGroups={"classeurById"})
      * @Rest\Post("/classeur/{id}")
      * @param Request $request
      * @param Classeur $classeur
@@ -95,7 +95,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
 
         if ($em->getRepository('SesileDocumentBundle:Document')->removeDocument($this->getParameter('upload')['fics'] . $document->getRepourl()) ) {
 
-            $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction($document->getClasseur(), "Suppression du document " . $document->getName(), $this->getUser());
+            $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction($document->getClasseur(), "Suppression du document " . $document->getName(), "", "", $this->getUser());
 
             $em->remove($document);
             $em->flush();

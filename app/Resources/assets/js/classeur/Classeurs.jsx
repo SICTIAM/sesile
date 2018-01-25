@@ -108,20 +108,21 @@ class Classeurs extends Component {
             <div className="grid-x grid-margin-x grid-padding-x align-middle">
                 <div className="cell medium-12 list-classeurs">
                     <div className="grid-x grid-padding-x tri-classeurs">
-                        <div className="cell medium-2">
-                            {t('common.classeurs.sort')}
-                            <button onClick={() => this.listClasseurs('user.nom', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
-                            <button onClick={() => this.listClasseurs('user.nom', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
-                        </div>
                         <div className="cell medium-3">
+                            {t('common.classeurs.sort_label.name')}
                             <button onClick={() => this.listClasseurs('nom', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                             <button onClick={() => this.listClasseurs('nom', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                         </div>
+                        <div className="cell medium-2 title-sort">
+                            {t('common.classeurs.sort_label.current_user')}
+                        </div>
                         <div className="cell medium-2">
+                            {t('common.classeurs.sort_label.create_date')}
                             <button onClick={() => this.listClasseurs('creation', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                             <button onClick={() => this.listClasseurs('creation', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                         </div>
                         <div className="cell medium-2">
+                            {t('common.classeurs.sort_label.limit_date')}
                             <button onClick={() => this.listClasseurs('validation', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                             <button onClick={() => this.listClasseurs('validation', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                         </div>
@@ -138,6 +139,7 @@ class Classeurs extends Component {
                             }
                         </div>
                         <div className="cell medium-1 text-center">
+                            {t('common.classeurs.sort_label.select')}<br/>
                             <input value={checkedAll} onClick={() => this.checkAllClasseurs()} type="checkbox" />
                         </div>
                     </div>

@@ -10,6 +10,7 @@ import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
 import CircuitClasseur from '../circuit/CircuitClasseur'
 import History from '../_utils/History'
+import Documents from './Documents'
 
 class Classeur extends Component {
 
@@ -196,6 +197,12 @@ class Classeur extends Component {
         return (
             <div className="grid-y grid-frame">
                 <div className="cell medium-12 grid-y">
+
+                    <div className="grid-x">
+                        <div className="cell medium-12 text-center">
+                            <h1>{ classeur.nom }</h1>
+                        </div>
+                    </div>
 
                     <div className="grid-x">
                         <div className="cell medium-4"></div>

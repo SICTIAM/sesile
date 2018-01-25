@@ -18,15 +18,13 @@ class DashBoard extends Component {
         super(props)
         this.state = {
             lastClasseurs: [],
-            urgentClasseurs: [],
-            statsType: []
+            urgentClasseurs: []
         }
     }
 
     componentDidMount() {
         this.fetchLastClasseurs()
         this.fetchUrgentClasseurs()
-        this.fetchClasseursValidateByType()
     }
 
     fetchLastClasseurs() {
@@ -61,21 +59,10 @@ class DashBoard extends Component {
                 error.statusText)))
     }
 
-    fetchClasseursValidateByType() {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_user_etapeclasseurapi_getclasseursvalidatebytype'), { credentials: 'same-origin'})
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(statsType => this.setState({statsType}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('admin.type.name'), errorCode: error.status}),
-                error.statusText)))
-    }
 
     render () {
 
-        const { lastClasseurs, urgentClasseurs, statsType } = this.state
+        const { lastClasseurs, urgentClasseurs } = this.state
         const { t } = this.context
 
         return (
@@ -83,12 +70,17 @@ class DashBoard extends Component {
 
                 <div className="cell medium-12">
                     <div className="grid-x grid-margin-x grid-padding-x align-top align-center">
+                        <div className="cell medium-12 text-center">
+                            <h1>{ t('common.dashboard.title') }</h1>
+                        </div>
+                    </div>
+                    <div className="grid-x grid-margin-x grid-padding-x align-top align-center">
                         <div className="cell medium-5">
-                            <Classeurs classeurs={ lastClasseurs } title={ t('common.dashboard.last_classeurs')} />
+                            <Classeurs classeurs={ lastClasseurs } title={ t('common.dashboard.last_classeurs')} displayButtons={false} />
                         </div>
 
                         <div className="cell medium-5">
-                            <Classeurs classeurs={ urgentClasseurs } title={ t('common.dashboard.urgent_classeurs')} />
+                            <Classeurs classeurs={ urgentClasseurs } title={ t('common.dashboard.urgent_classeurs')} displayButtons={false} />
 
                             <div className="grid-x grid-padding-x panel list-dashboard">
                                 <div className="cell medium-12 panel-heading">
@@ -106,31 +98,6 @@ class DashBoard extends Component {
                                 </div>
                             </div>
 
-                            <div className="grid-x grid-padding-x panel list-dashboard">
-                                <div className="cell medium-12 panel-heading">
-                                    { t('common.dashboard.classeurs_add')}
-                                </div>
-                                <div className="cell medium-12 panel-body text-center">
-                                    <Link className="button primary" to="#">{ t('common.classeurs.button.add_classeur') }</Link>
-                                </div>
-                            </div>
-
-                            <div className="grid-x grid-padding-x panel list-dashboard">
-                                <div className="cell medium-12 panel-heading">
-                                    { t('common.dashboard.stats_classeurs_validate_by_type')}
-                                </div>
-                                <div className="cell medium-12 panel-body-no-padding">
-                                    <Chart
-                                        chartType="PieChart"
-                                        data={statsType}
-                                        options={{"is3D":true,"fontSize":14}}
-                                        graph_id="statsType"
-                                        width="100%"
-                                        height="300px"
-                                        legend_toggle
-                                    />
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

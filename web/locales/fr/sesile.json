@@ -48,11 +48,19 @@
             "disconnection": "Déconnexion",
             "account_parameter": "paramètre du compte",
             "account_change": "changer de compte",
-            "admin": "admin"
+            "admin": "admin",
+            "new_classeur": "Créer un classeur",
+            "list_classeur": "Liste des classeurs",
+            "validate_classeur": "Classeurs à valider",
+            "retractable_classeur": "Classeurs rétractable",
+            "deletable_classeur": "Classeurs supprimable",
+            "stats": "Statistiques",
+            "help": "Aide"
         },
         "dashboard": {
+            "title": "Tableau de bord",
             "last_classeurs": "Mes derniers classeurs",
-            "urgent_classeurs": "Classeurs urgent",
+            "urgent_classeurs": "Mes classeurs à valider",
             "stats_classeurs_validate_by_type": "Statistiques classeurs validés par type",
             "stats_title_name": "Type",
             "stats_title_total": "Total",
@@ -102,6 +110,14 @@
                 "remove_title": "Retirer le classeur",
                 "delete_title": "Suprimer le classeur",
                 "comment_title": "Commenter le classeur"
+            },
+            "sort_label": {
+                "name": "Nom",
+                "current_user": "Nom intervenant",
+                "create_date": "Date de dépôt",
+                "limit_date": "Date limite",
+                "actions": "Actions",
+                "select": "Sélection"
             }
 
         },

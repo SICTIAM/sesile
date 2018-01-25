@@ -23,10 +23,11 @@ import Certificate from '../user/Certificate'
 import Classeur from '../classeur/Classeur'
 import ClasseursList from '../classeur/ClasseursList'
 import ClasseursRemove from '../classeur/ClasseursRemove'
-import ClasseursRetract from "../classeur/ClasseursRetract"
+import ClasseursRetract from '../classeur/ClasseursRetract'
 import ClasseursValid from '../classeur/ClasseursValid'
 import ClasseurNew from '../classeur/ClasseurNew'
 import DashBoard from '../Dashboard/DashBoard'
+import Stats from '../Dashboard/Stats'
 import HelpBoard from '../documentation/HelpBoard'
 
 
@@ -54,6 +55,7 @@ class AppRoute extends Component {
                 <Route path={"/classeurs/retractables"} exact={true} component={ClasseursRetract} />
                 <Route path={"/classeurs/supprimes"} exact={true} component={ClasseursRemove} />
                 <Route path={"/documentations"} exact={true} component={HelpBoard} />
+                <Route path={"/tableau-de-bord/stats"} exact={true} component={Stats} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} />
                 )} />

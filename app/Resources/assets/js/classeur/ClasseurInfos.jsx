@@ -57,7 +57,7 @@ class ClasseurInfos extends Component {
 
                 <Form onSubmit={this.saveClasseurInfos}>
                     <GridX>
-                        <Cell className="medium-10 name-details-classeur">
+                        <Cell className="medium-8 name-details-classeur">
                             {edit ? <InputValidation    id="nom"
                                                         type="text"
                                                         labelText={t('common.label.name')}
@@ -68,12 +68,12 @@ class ClasseurInfos extends Component {
                                 : <h3>{nom}</h3>
                             }
                         </Cell>
-                        <Cell className="medium-2 text-right">
-                            <a onClick={() => this.setState({edit: !this.state.edit})}>
+                        <Cell className="medium-4 text-right">
+                            <a onClick={() => this.setState({edit: !this.state.edit})} className="button">
                                 {
                                     edit
-                                        ? <i className="fi-x small"></i>
-                                        : <i className="fi-pencil small"></i>
+                                        ? "Annuler"
+                                        : "Modifier"
                                 }
                             </a>
                         </Cell>

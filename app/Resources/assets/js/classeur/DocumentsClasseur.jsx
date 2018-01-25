@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { array, func, number } from 'prop-types'
-import OnlyOffice from './OnlyOffice'
+import OnlyOffice from '../document/OnlyOffice'
 import Documents from './Documents'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
@@ -102,17 +102,40 @@ class DocumentsClasseur extends Component {
 
     render () {
         const { documents, currentDocument, revealDisplay } = this.state
+        const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'pdf']
+        const imageType = ['png', 'jpg', 'jpeg', 'gif']
+        let fileType
+        currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
 
         return (
             <div className="grid-x grid-y grid-frame">
 
-                { (currentDocument.repourl && revealDisplay === "block") &&
+                <div className="cell medium-9 height100 text-center">
+
+                { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
+                    <div className="reveal-full" style={{display: revealDisplay}}>
+                        <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                        <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
+                    </div>
+                }
+
+                { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "none") &&
+                    <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
+                }
+
+
+                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
                         <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
                         <OnlyOffice document={ currentDocument }/>
                     </div>
                 }
-                { (currentDocument.repourl  && revealDisplay === "none") && <OnlyOffice document={ currentDocument }/> }
+                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none") &&
+                    <OnlyOffice document={ currentDocument }/>
+                }
+
+                </div>
+
                 <Documents documents={ documents }
                            onClick={ this.handleClickDocument}
                            onDrop={ this.onDrop }

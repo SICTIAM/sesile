@@ -46,6 +46,7 @@ class OnlyOffice extends Component {
     }
 
     updateOnlyOfficeScript (document) {
+        console.log(Routing.generate('download_doc', {id: document.id}, true))
         this.setState({
             script: {
                 "document": {

@@ -7,10 +7,11 @@ import Login from './_components/Login'
 import AppRoute from './_utils/AppRoute'
 import i18n from './_utils/i18n'
 import Validator from 'validatorjs'
-import AppInfos from './_components/AppInfos'
 import SearchClasseurs from './_components/SearchClasseurs'
 import Note from './_components/Note'
+import Menu from './_components/Menu'
 import Moment from 'moment'
+import { Route } from 'react-router'
 Validator.useLang(window.localStorage.i18nextLng)
 Moment.locale(window.localStorage.i18nextLng)
 
@@ -85,15 +86,9 @@ class App extends Component {
                                 <SearchClasseurs/>
                             </div>
                             <div className="medium-2 cell"></div>
-                            <div className="medium-1 cell">
-                                <div className="ico-notif-classeur">
-                                    <span className="badge">5</span>
-                                </div>
-                            </div>
-                            <div className="medium-1 cell">
-                                <div className="ico-sign-classeur">
-                                    <span>2</span>
-                                </div>
+                            <div className="medium-2 cell text-center">
+                                <i className="fa fa-2x fa-comments"></i>
+                                <span className="badge">5</span>
                             </div>
                             <div className="medium-2 cell">
                                 <Login/>
@@ -102,35 +97,9 @@ class App extends Component {
                     </div>
                     <div className="cell medium-auto medium-cell-block-container">
                         <div className="grid-x height100">
-                            <div className="cell medium-1 medium-cell-block-y menu-left height100">
-                                <div className="grid-y grid-padding-y height100 align-middle">
-                                    <div className="cell auto">
-                                        <a href="#"><span className="fa ico-hamburger"></span></a>
-                                    </div>
-                                    <div className="cell auto">
-                                        <Link to={"/classeur/nouveau"}><span className="ico-new-classeur"></span></Link>
-                                    </div>
-                                    <div className="cell auto">
-                                        <Link to={"/classeurs/liste"}><span className="ico-sign-classeur"></span></Link>
-                                    </div>
-                                    <div className="cell auto">
-                                        <Link to={"/classeurs/valides"}><span className="ico-valid-classeur"></span></Link>
-                                    </div>
-                                    <div className="cell auto">
-                                        <Link to={"/classeurs/retractables"}><span className="ico-revert-classeur"></span></Link>
-                                    </div>
-                                    <div className="cell auto">
-                                        <Link to={"/classeurs/supprimes"}><span className="ico-refuse-classeur"></span></Link>
-                                    </div>
-                                    <div className="cell auto">
-                                        <a href="#"><span className="ico-notif"></span></a>
-                                    </div>
-                                    <div className="cell auto">
-                                        <Link to={"/documentations"}><span className="ico-help"></span></Link>
-                                    </div>
-                                    <AppInfos />
-                                </div>
-                            </div>
+
+                            <Route component={Menu} />
+
                             <div className="grid-y cell medium-11 medium-cell-block-y main">
                                 <Note/>
                                 <div className="grid-x grid-padding-x medium-11">

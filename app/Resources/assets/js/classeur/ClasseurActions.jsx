@@ -23,10 +23,8 @@ class ClasseurActions extends Component {
                     <h3 className="cell medium-12">{ t('common.classeurs.comments.name') }</h3>
                 </div>
 
-                <div className="grid-x grid-margin-x">
-                    <div className="cell medium-2">
-                        <span className="ico-comment"></span>
-                    </div>
+                <div className="grid-x grid-margin-x align-top text-center">
+                    <div className="cell medium-2 fa fa-comment"></div>
                     <Textarea
                         id="new-action"
                         name="newAction"
@@ -37,11 +35,9 @@ class ClasseurActions extends Component {
                 </div>
 
                 { actions && actions.map((action) =>
-                    <div className="grid-x grid-margin-x" key={action.id}>
-                        <div className="cell medium-2">
-                            <span className="ico-comment"></span>
-                        </div>
-                        <div className="cell medium-10">
+                    <div className="grid-x grid-margin-x align-top text-center" key={action.id}>
+                        <div className="cell medium-2 fa fa-comment"></div>
+                        <div className="cell medium-10 text-left">
                             <p>
                                 { action.action }
                                 <span className="text-bold"> { action.user_action._nom } { action.user_action._prenom }</span>
