@@ -27,6 +27,7 @@ class Classeur extends Component {
             type: {nom: ''},
             etape_classeurs: [],
             copy: [],
+            description: '',
             actions: []
         },
         user: {},

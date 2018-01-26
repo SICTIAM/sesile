@@ -2,7 +2,6 @@
 
 namespace Sesile\DocumentBundle\Controller;
 
-//use Sabre\VObject\Property\DateTime;
 use Sesile\DocumentBundle\Entity\DocumentDetachedSign;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,6 +19,9 @@ use Sesile\DocumentBundle\Classe\PJ;
 use Sesile\DocumentBundle\Entity\Document;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+/**
+ * @Route("/doc")
+ */
 class DocumentController extends Controller
 {
     /**
@@ -196,9 +198,6 @@ class DocumentController extends Controller
 
             // On valide la singature
             $doc->setSigned(true);
-
-            // On supprime le token pour plus que le doc soit DL
-            $doc->setToken(null);
 
             // On enregistre les données
             $em->flush();

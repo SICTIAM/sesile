@@ -55,7 +55,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="token", type="string", length=255, nullable=true)
-     *
+     * @Groups({"classeurById"})
      */
     private $token;
 
@@ -210,6 +210,7 @@ class Document
     public function __construct()
     {
         $this->histories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->token = hash('md5', random_bytes(10));
     }
 
     /**

@@ -6,25 +6,8 @@ class OnlyOffice extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            script: {
-                "document": {
-                    "fileType": "",
-                    "key": "",
-                    "title": "",
-                    "token": "",
-                    "url": "",
-                    "editorConfig": {
-                        "callbackUrl": "",
-                        "customization": {
-                            "logo": {
-                                "image": "http://sesile.fr/images/logos.svg",
-                                "imageEmbedded": "http://sesile.fr/images/logos.svg",
-                                "url": "http://sesile.fr"
-                            },
-                        }
-                    }
-                },
-            }
+            user: {},
+            script: {}
         }
     }
 
@@ -46,16 +29,30 @@ class OnlyOffice extends Component {
     }
 
     updateOnlyOfficeScript (document) {
-        console.log(Routing.generate('download_doc', {id: document.id}, true))
+        const { user } = this.props
         this.setState({
             script: {
-                "document": {
-                    "fileType": document.repourl.split('.').pop(),
-                    "key": document.repourl,
-                    "title": document.name,
-                    "url": Routing.generate('download_doc', {id: document.id}, true),
-                    "editorConfig": {
-                        "callbackUrl": Routing.generate('sesile_document_documentapi_onlyoffice', {id: document.id}),
+                document: {
+                    fileType: document.repourl.split('.').pop(),
+                    title: document.name,
+                    url: Routing.generate('download_jws_doc', {name: document.repourl, token: document.token}, true)
+                },
+                editorConfig: {
+                    callbackUrl: Routing.generate('sesile_document_documentapi_onlyoffice', {id: document.id}, true),
+                    customization: {
+                        forcesave: true,
+                        compactToolbar: true,
+                        logo: {
+                            image: "http://sesile.fr/images/logos.svg",
+                            imageEmbedded: "http://sesile.fr/images/logos.svg",
+                            url: "http://sesile.fr"
+                        },
+                    },
+                    lang: "fr-FR",
+                    mode: "edit",
+                    user: {
+                        id: user.id,
+                        name: user._prenom + " " + user._nom
                     }
                 }
             }
@@ -78,7 +75,8 @@ class OnlyOffice extends Component {
 }
 
 OnlyOffice.propsType = {
-    document: object
+    document: object,
+    user: object
 }
 
 export default OnlyOffice

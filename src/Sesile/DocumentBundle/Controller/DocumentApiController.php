@@ -50,8 +50,29 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
      * @param Document $document
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @return mixed
      */
     public function onlyOfficeAction (Request $request, Document $document) {
+
+        $data = [];
+        if ($content = $request->getContent()) {
+            $data = json_decode($content, true);
+        }
+
+
+        if ($data["status"] === 2 || $data["status"] === 6){
+            $downloadUri = $data["url"];
+
+            if (($new_data = file_get_contents($downloadUri))===FALSE){
+                $error['error'] = "Bad Response";
+            } else {
+                $path_for_save = $this->getParameter('upload')['fics'] . $document->getRepourl();
+                file_put_contents($path_for_save, $new_data, LOCK_EX);
+            }
+        }
+        $error['error'] = 0;
+
+        return $error;
     }
 
     /**

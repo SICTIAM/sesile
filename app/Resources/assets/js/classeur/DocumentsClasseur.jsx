@@ -18,11 +18,13 @@ class DocumentsClasseur extends Component {
         this.state = {
             documents: [],
             currentDocument: {},
-            revealDisplay: "none"
+            revealDisplay: "none",
+            user: {}
         }
     }
 
     componentDidMount() {
+        this.fetchUser()
         this.setState({
             documents: this.props.documents,
             currentDocument: this.props.documents[0]
@@ -100,9 +102,17 @@ class DocumentsClasseur extends Component {
         this.setState({revealDisplay: 'none'})
     }
 
+    fetchUser() {
+        fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(json => {
+                this.setState({user: json})
+            })
+    }
+
     render () {
-        const { documents, currentDocument, revealDisplay } = this.state
-        const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'pdf']
+        const { documents, currentDocument, revealDisplay, user } = this.state
+        const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'pdf', 'ppt', 'pptx']
         const imageType = ['png', 'jpg', 'jpeg', 'gif']
         let fileType
         currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
@@ -124,14 +134,14 @@ class DocumentsClasseur extends Component {
                 }
 
 
-                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
+                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" && user.id ) &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
                         <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
-                        <OnlyOffice document={ currentDocument }/>
+                        <OnlyOffice document={ currentDocument } user={user} />
                     </div>
                 }
-                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none") &&
-                    <OnlyOffice document={ currentDocument }/>
+                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none" && user.id) &&
+                    <OnlyOffice document={ currentDocument } user={user} />
                 }
 
                 </div>

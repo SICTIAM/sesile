@@ -44,7 +44,7 @@ class Classeur {
      * @Groups({"listClasseur", "classeurById"})
      *
      */
-    private $description;
+    private $description = '';
 
     /**
      * @var \DateTime
