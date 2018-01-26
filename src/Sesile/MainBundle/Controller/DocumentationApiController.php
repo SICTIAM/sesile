@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 
 /**
- * @Security("is_granted('ROLE_SUPER_ADMIN')")
+ * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
  * @Rest\Route("/apirest/documentation", options = { "expose" = true })
  */
 class DocumentationApiController extends Controller {
@@ -76,6 +76,7 @@ class DocumentationApiController extends Controller {
      * @Rest\Post("/newAide")
      * @param Request $request
      * @return Aide|JsonResponse
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function postAideAction(Request $request)
     {
@@ -106,6 +107,7 @@ class DocumentationApiController extends Controller {
      * @Rest\Post("/newPatch")
      * @param Request $request
      * @return JsonResponse|Patch
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function postPatchAction(Request $request)
     {
@@ -136,6 +138,7 @@ class DocumentationApiController extends Controller {
      * @param Request $request
      * @param Aide $aide
      * @return Aide|\Symfony\Component\Form\Form|JsonResponse
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function updateAideAction(Request $request, Aide $aide)
     {
@@ -169,6 +172,7 @@ class DocumentationApiController extends Controller {
      * @param Patch $patch
      * @return Patch|\Symfony\Component\Form\Form|JsonResponse
      * @ParamConverter("Aide", options={"mapping": {"id": "id"}})
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function updatePatchAction(Request $request, Patch $patch)
     {
@@ -202,6 +206,7 @@ class DocumentationApiController extends Controller {
      * @param Aide $aide
      * @return array|Aide[]|JsonResponse
      * @internal param $id
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function removeAideAction(Aide $aide) {
         if(empty($aide)) return new JsonResponse('',JsonResponse::HTTP_NOT_FOUND);
@@ -228,6 +233,7 @@ class DocumentationApiController extends Controller {
      * @param Patch $patch
      * @return array|Patch[]|JsonResponse
      * @internal param $id
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function removePatchAction(Patch $patch) {
         if(empty($patch)) return new JsonResponse('',JsonResponse::HTTP_NOT_FOUND);

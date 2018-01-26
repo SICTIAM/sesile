@@ -8,7 +8,8 @@ import { handleErrors } from '../_utils/Utils'
 
 class Helps extends Component {
     static contextTypes = {
-        t: func
+        t: func,
+        _addNotification: func
     }
 
     constructor(props) {
@@ -24,7 +25,7 @@ class Helps extends Component {
 
     fetchHelps () {
         const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_main_documentationapi_getallaides'), { credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_main_documentationapi_getallaide'), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(helps => this.setState({helps}))
@@ -37,7 +38,7 @@ class Helps extends Component {
     render() {
         const {t} = this.context
         const { helps } = this.state
-        const row = helps.map((help, key) => <DocumentationRow key={key} documentation={help} download_route="download_aide" />)
+        const row = helps.map((help, key) => <DocumentationRow key={key} documentation={help} download_route="sesile_main_documentationapi_showdocumentaide" />)
 
         return (
             <AccordionItem title={t('common.help_board.title_helps')} className="is-active">
