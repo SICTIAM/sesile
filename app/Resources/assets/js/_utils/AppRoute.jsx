@@ -1,30 +1,33 @@
 import React, { Component } from 'react'
 import {Route, Switch} from 'react-router-dom'
-import DashBoard from '../Dashboard/DashBoard'
-import ClasseurNew from '../classeur/ClasseurNew'
-import ClasseursList from '../classeur/ClasseursList'
-import ClasseursValid from '../classeur/ClasseursValid'
-import ClasseursRemove from '../classeur/ClasseursRemove'
-import Classeur from '../classeur/Classeur'
-import CircuitsValidation from '../admin/CircuitsValidation'
-import CircuitValidation from '../admin/CircuitValidation'
-import ClasseursRetract from "../classeur/ClasseursRetract"
-import Account from "../user/Account"
-import Certificate from '../user/Certificate'
-import HelpBoard from '../documentation/HelpBoard'
-import Groups from '../admin/Groups'
-import Group from '../admin/Group'
-import Users from '../admin/Users'
-import User from '../admin/User'
+
+import AdminRoute from './AdminRoute'
 import Emailing from '../admin/Emailing'
-import Notes from '../admin/Notes'
-import Note from '../admin/Note'
-import UserListClasseurs from '../admin/UserListClasseurs'
-import Types from '../admin/Types'
 import Collectivites from '../admin/Collectivites'
 import Collectivite from '../admin/Collectivite'
-import AdminHelpBoard from "../admin/Documentations";
-import AdminRoute from './AdminRoute'
+import CircuitsValidation from '../admin/CircuitsValidation'
+import CircuitValidation from '../admin/CircuitValidation'
+import Documentations from '../admin/Documentations'
+import Documentation from '../admin/Documentation'
+import Groups from '../admin/Groups'
+import Group from '../admin/Group'
+import Notes from '../admin/Notes'
+import Note from '../admin/Note'
+import Users from '../admin/Users'
+import User from '../admin/User'
+import UserListClasseurs from '../admin/UserListClasseurs'
+import Types from '../admin/Types'
+
+import Account from "../user/Account"
+import Certificate from '../user/Certificate'
+import Classeur from '../classeur/Classeur'
+import ClasseursList from '../classeur/ClasseursList'
+import ClasseursRemove from '../classeur/ClasseursRemove'
+import ClasseursRetract from "../classeur/ClasseursRetract"
+import ClasseursValid from '../classeur/ClasseursValid'
+import ClasseurNew from '../classeur/ClasseurNew'
+import DashBoard from '../Dashboard/DashBoard'
+import HelpBoard from '../documentation/HelpBoard'
 
 
 class AppRoute extends Component {
@@ -59,7 +62,7 @@ class AppRoute extends Component {
                 <AdminRoute exact={true} path={"/admin/utilisateurs"} component={Users} user={user} />
                 <AdminRoute exact={true} path={"/admin/collectivites"} component={Collectivites} user={user} />
                 <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
-                <AdminRoute exact={true} path={"/admin/documentations"} component={AdminHelpBoard} user={user} />
+                <AdminRoute exact={true} path={"/admin/documentations"} component={Documentations} user={user} superAdmin={true} />
                 <AdminRoute exact={true} path={"/admin/emailing"} component={Emailing} user={user} />
                 <AdminRoute exact={true} path={"/admin/notes"} component={Notes} user={user} />
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
@@ -79,6 +82,9 @@ class AppRoute extends Component {
                 )} />
                 <Route exact={true} path={"/admin/note/:noteId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={Note} user={user} match={match} />
+                )} />
+                <Route exact={true} path={"/admin/documentation/:type/:id?"} render={({match}) => (
+                    <AdminRoute exact={true} path={match.path} component={Documentation} user={user} match={match} superAdmin={true} />
                 )} />
             </Switch>
         )

@@ -1,9 +1,10 @@
 import React from 'react'
+import History from '../_utils/History'
 
 const AdminDetails = ({ className, title, subtitle, nom, children }) => 
     <div className={className}>
         <div id="admin-details" className="admin-details">
-            <h4 className="text-center text-bold">{title}</h4>
+            <h4 className="text-center text-bold text-uppercase">{title}</h4>
             <p className="text-center">{subtitle}</p>
             <div className="admin-details-name">
                 <span>{nom}</span>
@@ -56,4 +57,52 @@ const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey }
         </div>
     </div>
 
-export { AdminDetails, AdminDetailsWithInputField, SimpleContent, AccordionContent, AccordionItem, StepItem }
+const AdminPage = ({title, subtitle, className="", children}) =>
+    <div id="admin-details" className={"admin-details " + className}>
+        <h4 className="text-center text-bold text-uppercase">{title}</h4>
+        <p className="text-center">{subtitle}</p>
+        {children}
+    </div>
+
+const AdminList = ({title, headTitles, labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
+    const listHeadTitles = headTitles.map(headTitle => <div key={headTitle} className="cell medium-auto">{headTitle}</div>)
+    return(
+        <div className="cell medium-10 list-admin">
+            <div className="grid-x align-center-middle">
+                <div className="cell medium-auto">
+                    <h3>{title}</h3>
+                </div>
+                {(labelButton && addLink) &&
+                    <div className="cell medium-auto text-right">
+                        <button className="button" onClick={() => History.push(addLink)}>{labelButton}</button>
+                    </div>
+                }
+            </div>
+            <div className="grid-x grid-padding-x panel">
+                <div className="cell medium-12 panel-heading grid-x">
+                    {listHeadTitles}
+                </div>
+                {
+                    (listLength > 0) ? children :
+                    <div className="cell medium-12 panel-body">
+                        <div className="text-center">
+                            {emptyListMessage}
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    )
+}
+
+const AdminContainer = ({children}) => 
+    <div className="grid-x grid-margin-y align-center-middle">
+        {children}
+    </div>
+
+const AdminListRow = ({children, link}) =>
+    <div className="cell medium-12 panel-body grid-x align-center-middle">
+        {children}
+    </div>
+
+export { AdminDetails, AdminDetailsWithInputField, SimpleContent, AccordionContent, AccordionItem, StepItem, AdminPage, AdminList, AdminContainer, AdminListRow }

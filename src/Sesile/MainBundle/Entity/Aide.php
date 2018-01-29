@@ -3,8 +3,6 @@
 namespace Sesile\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,7 +25,7 @@ class Aide
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="Description", type="string", length=255)
      */
     private $description;
@@ -42,6 +40,7 @@ class Aide
 
     /**
      * @Assert\File(
+     *     maxSize = "20M",
      *     mimeTypes = {"application/pdf", "application/x-pdf"},
      *     mimeTypesMessage = "Please upload a valid PDF"
      * )
@@ -53,7 +52,6 @@ class Aide
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
-     *
      *
      */
     private $date;
@@ -97,71 +95,6 @@ class Aide
     }
 
 
-    public function getAbsolutePath()
-    {
-        return null === $this->path ? null : $this->getUploadDir() . '/' . $this->path;
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->path ? null : $this->getUploadDir() . '/' . $this->path;
-    }
-
-    protected function getUploadRootDir()
-    {
-        // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
-        return __DIR__ . '/../../../../web/uploads/docs/' . $this->getUploadDir();
-    }
-
-    protected function getUploadDir()
-    {
-        $upload = $GLOBALS['kernel']->getContainer()->getParameter('upload');
-        return $upload['fics'];
-    }
-
-
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preUpload()
-    {
-        if (null !== $this->file) {
-            // faites ce que vous voulez pour générer un nom unique
-            $this->path = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
-        }
-    }
-
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function upload()
-    {
-        if (null === $this->file) {
-            return;
-        }
-
-        // s'il y a une erreur lors du déplacement du fichier, une exception
-        // va automatiquement être lancée par la méthode move(). Cela va empêcher
-        // proprement l'entité d'être persistée dans la base de données si
-        // erreur il y a
-        $this->file->move($this->getUploadDir(), $this->path);
-
-        unset($this->file);
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath()) {
-            if(is_file($file))  unlink($file);
-        }
-    }
-
-
     /**
      * Set path
      *
@@ -193,6 +126,14 @@ class Aide
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function onPrePersistDate()
+    {
+        $this->date = new \DateTime();
     }
 
     /**

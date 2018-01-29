@@ -37,7 +37,7 @@ parameters:
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'
         logo_coll: '%kernel.root_dir%/../web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
-        fics: '%kernel.root_dir%/../web/uploads/docs/'
+        fics: '%kernel.project_dir%/web/uploads/docs/'
     ldap:
         dn_admin: cn=admin,dc=sictiam,dc=local
         dn_user: cn=Users,dc=sictiam,dc=local

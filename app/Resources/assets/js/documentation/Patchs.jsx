@@ -39,7 +39,7 @@ class Patchs extends Component {
     render() {
         const {t} = this.context
         const { patchs } = this.state
-        const row = patchs.map((patch, key) => <DocumentationRow key={key} documentation={patch} download_route="download_patch" />)
+        const row = patchs.map((patch, key) => <DocumentationRow key={key} documentation={patch} download_route="sesile_main_documentationapi_showdocumentpatch" />)
 
         return (
             <AccordionItem title={t('common.help_board.title_patchs')}>

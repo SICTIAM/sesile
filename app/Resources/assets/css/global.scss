@@ -297,8 +297,8 @@ html {
 
   .panel {
     background-color: #ffffff;
-    //color: #555769;
-    border-radius: 1em;
+    border-radius: 0.3em;
+    margin-bottom: 5em;
     .panel-heading {
       font-weight:700;
       font-size:1em;
@@ -551,7 +551,6 @@ html {
   }
 }
 .list-admin {
-  padding: 2em;
 
   .row-admin {
     cursor: pointer;
@@ -771,7 +770,7 @@ $list-group-margin: $global-margin;
 }
 
 .large{ font-size: 50px; line-height: 50px; }
-.medium { font-size: 35px; padding: 0 5px; }
+.medium { font-size: 1.6em;}
 .small { font-size: 20px; padding: 0 5px; }
 .text-uppercase{ text-transform: uppercase; }
 
@@ -989,5 +988,53 @@ label > input {
   input {
     cursor: pointer;
     background: #fefefe;
+  }
+}
+
+.icon-action {
+  cursor: pointer;
+  color: #4a4c63;
+  line-height: 0;
+  &:hover {
+    color: #ec5935;
+  }
+}
+
+.close-button-dropdown-confirmation {
+  color: #8a8a8a;
+  cursor: pointer;
+  right: 1rem;
+  top: 0.5rem;
+  font-size: 2em;
+  line-height: 1;
+}
+
+.dropdown-confirm-delete {
+  border-radius: 0.4;
+}
+
+.documentation-dropzone {
+  height: 10em;
+  border-width: 0.1em;
+  border-color: rgba(64, 66, 87, 1);
+  border-style: dashed;
+  border-radius: 0.3em;
+  text-align: center;
+  color: #404257;
+}
+
+.documentation-dropzone:hover {
+  background-color: rgba(64, 66, 87, 0.53);
+}
+
+.text-small { font-size: 0.8em; }
+
+.admin_search_input {
+  input {
+    background-color: #fff;
+    border-color: #d9d9d9 #ccc #b3b3b3;
+    border-radius: 0.3em;
+    border: 1px solid #ccc;
+    color: #333;
   }
 }

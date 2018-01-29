@@ -3,7 +3,7 @@
 namespace Sesile\MainBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,10 +17,7 @@ class PatchType extends AbstractType
         $builder
             ->add('description')
             ->add('version')
-            ->add('date', DateTimeType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd HH:mm'
-            ])
+            ->add('file', FileType::class)
         ;
     }
     

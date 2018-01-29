@@ -3,19 +3,24 @@ import PropTypes from 'prop-types'
 import { Route, Redirect } from 'react-router-dom'
 import MenuBarAdmin from '../_components/MenuBarAdmin'
 
-const AdminRoute = ({ component, exact = false, path, user, match }) => {
+const AdminRoute = ({ component, exact = false, path, user, match, superAdmin = false }) => {
     return(
         user !== null &&
         <Route
             exact={exact}
             path={path}
             render={props => (
-                (user.roles.find(role => role.includes("ADMIN")) !== undefined)
-                    ? <div>
+                user.roles.find(role => role.includes("ADMIN")) !== undefined && superAdmin === false ? 
+                    (<div>
                         <MenuBarAdmin user={ user }/>
                         {React.createElement(component, {user, match})}
-                      </div>
-                    : <Redirect to={{ pathname: '/login',  state: {from: props.location}}}/>
+                    </div> ) :  
+                    (user.roles.includes("ROLE_SUPER_ADMIN") ?
+                        (<div>
+                            <MenuBarAdmin user={ user }/>
+                            {React.createElement(component, {user, match})}
+                        </div>) :
+                        (<Redirect to='/tableau-de-bord'/>))
             )}
         />
     )
