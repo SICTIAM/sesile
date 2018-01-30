@@ -64,7 +64,7 @@ class AppRoute extends Component {
                 <AdminRoute exact={true} path={"/admin/types-classeur"} component={Types} user={user} />
                 <AdminRoute exact={true} path={"/admin/documentations"} component={Documentations} user={user} superAdmin={true} />
                 <AdminRoute exact={true} path={"/admin/emailing"} component={Emailing} user={user} />
-                <AdminRoute exact={true} path={"/admin/notes"} component={Notes} user={user} />
+                <AdminRoute exact={true} path={"/admin/notes"} component={Notes} user={user} superAdmin={true} />
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
                     <AdminRoute exact={true} path={match.path} component={Group} user={user} match={match} />                    
                 )} />
@@ -81,7 +81,7 @@ class AppRoute extends Component {
                     <AdminRoute exact={true} path={match.path} component={Collectivite} user={user} match={match} />
                 )} />
                 <Route exact={true} path={"/admin/note/:noteId?"} render={({match}) => (
-                    <AdminRoute exact={true} path={match.path} component={Note} user={user} match={match} />
+                    <AdminRoute exact={true} path={match.path} component={Note} user={user} match={match} superAdmin={true} />
                 )} />
                 <Route exact={true} path={"/admin/documentation/:type/:id?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={Documentation} user={user} match={match} superAdmin={true} />

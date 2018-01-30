@@ -226,7 +226,10 @@ class Documentation extends Component {
                                         classNameButton="primary"
                                         className="cell medium-12 text-right"
                                         onClick={this.saveDocumentation}
-                                        labelText={t('common.button.edit_save')}/>
+                                        labelText=
+                                            {this.props.match.params.id ? 
+                                                t('common.button.edit_save') : 
+                                                t('common.button.save')}/>
                                 </GridX>
                             </Cell>
                         </GridX>

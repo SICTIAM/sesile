@@ -37,6 +37,7 @@
             "yes": "Oui",
             "no": "Non",
             "title": "Titre",
+            "subtitle": "Sous-titre",
             "page": "Page",
             "visibility": "Visibilité",
             "actions": "Actions",
@@ -180,6 +181,7 @@
         },
         "label": {
             "which": "Lequel ?",
+            "which_female": "Laquel ?",
             "who": "Avec qui ?",
             "which_collectivite": "Quelle collectivité ?"
         },
@@ -324,16 +326,20 @@
             "fail_add": "L'emailing n'a pas être envoyé - erreur {{errorCode}}"
         },
         "notes": {
+            "title": "Rechercher une note",
             "name": "note",
             "name_plural": "notes",
-            "title": "notes",
+            "list_title": "Les notes",
             "complet_name": "Rédiger une note",
             "subtitle": "Puis envoyez à tous les utilisateurs",
-            "note_title": "Titre",
-            "note_title_placeholder": "Saisir un titre",
-            "note_subtitle": "Sous-titre",
-            "note_subtitle_placeholder": "Saisir un sous-titre",
-            "note_created": "créé le"
+            "placeholder_title": "Saisir un titre",
+            "placeholder_subtitle": "Saisir un sous-titre",
+            "succes_delete": "La note a été supprimée",
+            "error_delete": "Impossible de supprimer la note",
+            "search_by_title": "Recherche par titre",
+            "success_save": "La note a été enregistrée",
+            "error_save": "Impossible d'enregistrer la note",
+            "error_fetch": "Impossible de récuperer la note"
         },
         "roles_user": {
             "name": "role",

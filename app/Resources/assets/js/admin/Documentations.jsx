@@ -9,7 +9,7 @@ import ButtonConfirmDelete from '../_components/ButtonConfirmDelete'
 import { Input } from '../_components/Form'
 import { Cell, GridX } from '../_components/UI'
 import { basicNotification } from "../_components/Notifications"
-import { handleErrors } from '../_utils/Utils'
+import { handleErrors, DisplayLongText } from '../_utils/Utils'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
 
@@ -165,12 +165,7 @@ const RowDocumentEvo = ({patch, deletePatch}, {t}) => {
     return(
         <AdminListRow>
             <Cell className="medium-auto">
-                <span title={patch.description}>
-                    {(patch.description.length > 20) ?
-                        `${patch.description.substring(0, 20)}...` :
-                        patch.description
-                    }
-                </span>
+                <DisplayLongText text={patch.description} />
             </Cell>
             <Cell className="medium-auto">
                 {Moment(patch.date).format('LL')}
@@ -219,12 +214,7 @@ const RowDocumentHelp = ({help, deleteHelp}, {t}) => {
     return(
         <AdminListRow>
             <Cell className="medium-auto">
-                <span title={help.description}>
-                    {(help.description.length > 40) ?
-                        `${help.description.substring(0, 40)}...` :
-                        help.description
-                    }
-                </span>
+                <DisplayLongText text={help.description} maxSize={40} />
             </Cell>
             <Cell className="medium-auto">
                 {Moment(help.date).format('LL')}

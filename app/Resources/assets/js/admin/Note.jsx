@@ -1,52 +1,63 @@
 import React, { Component } from 'react'
-import { object, func, string } from 'prop-types'
+import { object, func } from 'prop-types'
 import { translate } from 'react-i18next'
+import Validator from 'validatorjs'
+
+import { basicNotification } from '../_components/Notifications'
+import { Button, Input, Form } from '../_components/Form'
+import { GridX, Cell } from '../_components/UI'
+import Editor from '../_components/Editor'
+import { SimpleContent, AdminDetails } from '../_components/AdminUI'
+import InputValidation from '../_components/InputValidation'
+
 import History from '../_utils/History'
 import { handleErrors } from '../_utils/Utils'
-import { basicNotification } from '../_components/Notifications'
-import { Button, Input } from '../_components/Form'
-import Editor from '../_components/Editor'
 
 class Note extends Component {
-
     static contextTypes = {
         t: func,
         _addNotification: func
     }
-
-    constructor() {
-        super()
-        this.state = {
-            note: {
-                title: '',
-                subtitle: ''
-            }
+    state = {
+        editState: false,
+        validator: new Validator(),
+        note: {
+            id: null,
+            title: '',
+            subtitle: '',
+            message: ''
         }
     }
-
-    componentDidMount() {
-        const { noteId } = this.props.match.params
-        noteId && this.fetchNote(noteId)
+    validationRules = {
+        title: 'required|string',
+        subtitle: 'required|string'
     }
-
+    componentDidMount() {
+        this.props.match.params.noteId && this.fetchNote(noteId)
+    }
     fetchNote(id) {
-        const { t } = this.context
+        const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_user_noteapi_getid', {id}), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(note => this.setState({note}))
-            .catch(error => this.context._addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable', {name:t('admin.notes.name'), errorCode: error.status}),
-                error.statusText)))
+            .catch(error => 
+                _addNotification(basicNotification(
+                    'error',
+                    t('admin.notes.error_fetch'))))
     }
-
-    handleSaveNote = () => {
-        const { noteId } = this.props.match.params
-        noteId ? this.updateNote() : this.addNewNote()
+    handleClickSave = () => {
+        const { note, validator } = this.state
+        const fields = {
+            title: note.title,
+            subtitle: note.subtitle,
+            message: note.message
+        }
+        if(this.formValidation(fields)) {
+            this.props.match.params.noteId ? this.updateNote(fields) : this.addNote(fields)
+        }
     }
-
-    updateNote = () => {
+    updateNote(fields) {
         const { t } = this.context
         const { note } = this.state
         fetch(Routing.generate('sesile_user_noteapi_update', {id: note.id}), {
@@ -55,151 +66,115 @@ class Note extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(({
-                title: note.title,
-                subtitle: note.subtitle,
-                message: note.message
-            })),
+            body: JSON.stringify(fields),
             credentials: 'same-origin'
         })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(note => {
-                this.setState({note})
-                this.context._addNotification(basicNotification(
-                    'success',
-                    t('admin.success.update', {name:t('admin.notes.title')})))
-            })
-            .catch(error => this.context._addNotification(basicNotification(
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(note => {
+            History.push("/admin/notes")
+            this.context._addNotification(basicNotification(
+                'success',
+                t('admin.notes.success_save')))
+        })
+        .catch(error => 
+            this.context._addNotification(basicNotification(
                 'error',
-                t('admin.error.not_updatable', {name:t('admin.notes.title'), errorCode: error.status}),
-                error.statusText)))
+                t('admin.notes.error_save'))))
     }
-
-    addNewNote = () => {
+    addNote(fields) {
         const { t } = this.context
-        const { note } = this.state
         fetch(Routing.generate('sesile_user_noteapi_post'), {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(({
-                title: note.title,
-                subtitle: note.subtitle,
-                message: note.message
-
-            })) ,
+            body: JSON.stringify(fields) ,
             credentials: 'same-origin'
         })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(note => {
-                this.context._addNotification(basicNotification(
-                    'success',
-                    t('admin.success.add', {name:t('admin.notes.title')})))
-                History.push(`/admin/note/${note.id}`)
-            })
-            .catch(error => this.context._addNotification(basicNotification(
-                'error',
-                t('admin.error.not_addable', {name:t('admin.notes.title'), errorCode: error.status}),
-                error.statusText)))
-    }
-
-    handleDeleteNote = () => {
-        const { t } = this.context
-        const { noteId } = this.props.match.params
-        fetch(Routing.generate('sesile_user_noteapi_remove', {id: noteId}), {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin'
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(note => {
+            History.push('/admin/notes')
+            this.context._addNotification(basicNotification(
+                'success',
+                t('admin.notes.success_save')))
         })
-            .then(handleErrors)
-            .then(() => {
-                this.context._addNotification(basicNotification(
-                    'success',
-                    t('admin.success.delete', {name:t('admin.notes.title')})
-                ))
-                History.push('/admin/notes')
-            })
-            .catch(error => this.context._addNotification(basicNotification(
+        .catch(error => 
+            this.context._addNotification(basicNotification(
                 'error',
-                t('admin.error.not_removable', {name:t('admin.notes.title'), errorCode: error.status}),
-                error.statusText)))
+                t('admin.notes.error_save'))))
     }
-
     handleChangeNote = (name, value) => {
         const { note } = this.state
         note[name] = value
-        this.setState({note})
+        this.setState({note, editState: true})
     }
-
+    formValidation = (fields) => {
+        const validator = new Validator(
+            fields, 
+            {title: this.validationRules.title, subtitle: this.validationRules.subtitle})
+        this.setState({validator})
+        if(validator.passes()) return true
+        else return false
+    }
     render () {
-
-        const { note } = this.state
         const { t } = this.context
-        const { noteId } = this.props.match.params
-
+        const { note, editState, validator } = this.state
         return (
-
-            <div className="grid-x">
-                <div className="admin-details medium-12 cell">
-                    <div className="grid-x admin-head-details">
-                        { t('admin.notes.complet_name') }
-                    </div>
-                    <div className="admin-content-details">
-
-                        <div className="grid-x align-center-middle">
-                            <Input id="title"
-                                   className="cell medium-11"
-                                   placeholder={ t('admin.notes.note_title_placeholder') }
-                                   labelText={ t('admin.notes.note_title') }
-                                   value={ note.title }
-                                   onChange={ this.handleChangeNote }
-                            />
-                        </div>
-                        <div className="grid-x align-center-middle">
-                            <Input id="subtitle"
-                                   className="cell medium-11"
-                                   placeholder={ t('admin.notes.note_subtitle_placeholder') }
-                                   labelText={ t('admin.notes.note_subtitle') }
-                                   value={ note.subtitle }
-                                   onChange={ this.handleChangeNote }
-                            />
-                        </div>
-                        <div className="grid-x align-center-middle">
-                            <Editor id="message"
+            <Form onSubmit={this.handleClickSave}>
+                <AdminDetails
+                    title={t('admin.details.title', {context: 'female', name: t('admin.notes.name')})}
+                    subtitle={t('admin.details.subtitle')} 
+                    nom={t('admin.notes.name')} >
+                    <SimpleContent>
+                        <GridX className="grid-padding-x grid-padding-y">
+                            <Cell className="medium-6">
+                                <InputValidation    
+                                    id="title"
+                                    type="text"
+                                    autoFocus={true}
+                                    labelText={t('common.label.title')}
+                                    value={note.title}
+                                    isValid={validator.passes() || true} 
+                                    errorMessage={validator.errors.get('title')}
+                                    onChange={this.handleChangeNote}
+                                    validationRule={this.validationRules.title}
+                                    placeholder={t('admin.notes.placeholder_title')}/>
+                            </Cell>
+                            <Cell className="medium-6">
+                                <InputValidation    
+                                    id="subtitle"
+                                    type="text"
+                                    labelText={t('common.label.subtitle')}
+                                    value={note.subtitle}
+                                    isValid={validator.passes() || true} 
+                                    errorMessage={validator.errors.get('subtitle')}
+                                    onChange={this.handleChangeNote}
+                                    validationRule={this.validationRules.subtitle}
+                                    placeholder={t('admin.notes.placeholder_subtitle')}/>
+                            </Cell>
+                            <Cell>
+                                <Editor 
+                                    id="message"
                                     label={t('admin.placeholder.message')}
-                                    className="cell medium-11"
-                                    value={ note.message }
-                                    handleChange={ this.handleChangeNote }
-                            />
-                        </div>
-                        <div className="grid-x align-center-middle grid-margin-y grid-padding-y">
-                            <Button id="delete-note"
-                                    className="cell medium-6 text-left"
-                                    classNameButton="alert"
-                                    onClick={ this.handleDeleteNote }
-                                    disabled={ !noteId }
-                                    labelText={t('common.button.delete')}
-                            />
-                            <Button id="add-note"
-                                    className="cell medium-5 text-right"
-                                    classNameButton=""
-                                    onClick={ this.handleSaveNote }
-                                    disabled={ !note.title.length }
-                                    labelText={t('common.button.save')}
-                            />
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
+                                    value={note.message}
+                                    handleChange={this.handleChangeNote}/>
+                            </Cell>
+                            <Button 
+                                disabled={!editState}
+                                classNameButton="primary"
+                                className="cell medium-12 text-right"
+                                onClick={this.handleClickSave}
+                                labelText=
+                                    {this.props.match.params.noteId ? 
+                                        t('common.button.edit_save') : 
+                                        t('common.button.save')}/>
+                        </GridX>
+                    </SimpleContent>
+                </AdminDetails>
+            </Form>
         )
     }
 }

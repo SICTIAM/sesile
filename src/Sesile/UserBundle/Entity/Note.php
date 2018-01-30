@@ -27,7 +27,7 @@ class Note
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string")
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      * @Serializer\Groups({"noteMaj"})
      */
     private $title;
@@ -35,7 +35,7 @@ class Note
     /**
      * @var string
      *
-     * @ORM\Column(name="subtitle", type="string", nullable=true)
+     * @ORM\Column(name="subtitle", type="string", length=255, nullable=false)
      * @Serializer\Groups({"noteMaj"})
      */
     private $subtitle;
