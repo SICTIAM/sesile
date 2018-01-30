@@ -34,9 +34,9 @@ export default class InputValidation extends Component {
                                         minDate={this.props.minDate}
                                         onBlur={this.validateValue}
                                         onChange={this.props.onChange}/>}
-                {(!this.state.isValid) && 
+                {(!this.state.isValid || this.props.isValid) && 
                     (<span style={{color:"red"}} className="text-small">
-                        {this.state.errorMessage}
+                        {this.state.errorMessage || this.props.errorMessage}
                     </span>)}
             </div>
         )

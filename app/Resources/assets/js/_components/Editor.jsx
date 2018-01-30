@@ -10,6 +10,9 @@ export default class Editor extends Component {
     label: string.isRequired,
     value: string
   }
+  static defaultProps = {
+    className: ''
+  }
 
   state = {
     value: RichTextEditor.createEmptyValue(),
@@ -31,7 +34,9 @@ export default class Editor extends Component {
   render () {
     return (
         <div className={this.props.className}>
-          <label>{this.props.label}</label>
+          <label className="text-bold">
+              {this.props.label}
+          </label>
           <RichTextEditor value={this.state.value} onChange={this.handleChange}/>
         </div>
     )

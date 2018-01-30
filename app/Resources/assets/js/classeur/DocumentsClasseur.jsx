@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { array, func, number } from 'prop-types'
-import OnlyOffice from './OnlyOffice'
+import OnlyOffice from '../document/OnlyOffice'
 import Documents from './Documents'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
@@ -18,11 +18,13 @@ class DocumentsClasseur extends Component {
         this.state = {
             documents: [],
             currentDocument: {},
-            revealDisplay: "none"
+            revealDisplay: "none",
+            user: {}
         }
     }
 
     componentDidMount() {
+        this.fetchUser()
         this.setState({
             documents: this.props.documents,
             currentDocument: this.props.documents[0]
@@ -100,19 +102,50 @@ class DocumentsClasseur extends Component {
         this.setState({revealDisplay: 'none'})
     }
 
+    fetchUser() {
+        fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(json => {
+                this.setState({user: json})
+            })
+    }
+
     render () {
-        const { documents, currentDocument, revealDisplay } = this.state
+        const { documents, currentDocument, revealDisplay, user } = this.state
+        const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'pdf', 'ppt', 'pptx']
+        const imageType = ['png', 'jpg', 'jpeg', 'gif']
+        let fileType
+        currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
 
         return (
             <div className="grid-x grid-y grid-frame">
 
-                { (currentDocument.repourl && revealDisplay === "block") &&
+                <div className="cell medium-9 height100 text-center">
+
+                { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
                         <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
-                        <OnlyOffice document={ currentDocument }/>
+                        <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
                     </div>
                 }
-                { (currentDocument.repourl  && revealDisplay === "none") && <OnlyOffice document={ currentDocument }/> }
+
+                { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "none") &&
+                    <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
+                }
+
+
+                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" && user.id ) &&
+                    <div className="reveal-full" style={{display: revealDisplay}}>
+                        <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                        <OnlyOffice document={ currentDocument } user={user} />
+                    </div>
+                }
+                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none" && user.id) &&
+                    <OnlyOffice document={ currentDocument } user={user} />
+                }
+
+                </div>
+
                 <Documents documents={ documents }
                            onClick={ this.handleClickDocument}
                            onDrop={ this.onDrop }

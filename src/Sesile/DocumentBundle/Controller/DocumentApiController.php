@@ -20,7 +20,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
 {
 
     /**
-     * @Rest\View("classeurById")
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("/{id}")
      * @param Document $document
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
@@ -32,7 +32,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Rest\View("classeurById")
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("s/classeur/{id}")
      * @param Classeur $classeur
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
@@ -44,18 +44,39 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Rest\View("classeurById")
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Post("/only-office/{id}")
      * @param Request $request
      * @param Document $document
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @return mixed
      */
     public function onlyOfficeAction (Request $request, Document $document) {
+
+        $data = [];
+        if ($content = $request->getContent()) {
+            $data = json_decode($content, true);
+        }
+
+
+        if ($data["status"] === 2 || $data["status"] === 6){
+            $downloadUri = $data["url"];
+
+            if (($new_data = file_get_contents($downloadUri))===FALSE){
+                $error['error'] = "Bad Response";
+            } else {
+                $path_for_save = $this->getParameter('upload')['fics'] . $document->getRepourl();
+                file_put_contents($path_for_save, $new_data, LOCK_EX);
+            }
+        }
+        $error['error'] = 0;
+
+        return $error;
     }
 
     /**
-     * @Rest\View("classeurById")
+     * @Rest\View("statusCode=Response::HTTP_CREATED", serializerGroups={"classeurById"})
      * @Rest\Post("/classeur/{id}")
      * @param Request $request
      * @param Classeur $classeur
@@ -95,7 +116,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
 
         if ($em->getRepository('SesileDocumentBundle:Document')->removeDocument($this->getParameter('upload')['fics'] . $document->getRepourl()) ) {
 
-            $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction($document->getClasseur(), "Suppression du document " . $document->getName(), $this->getUser());
+            $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction($document->getClasseur(), "Suppression du document " . $document->getName(), "", "", $this->getUser());
 
             $em->remove($document);
             $em->flush();

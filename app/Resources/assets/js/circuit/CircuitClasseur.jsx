@@ -23,7 +23,7 @@ class CircuitClasseur extends Component {
 
     render () {
 
-        const { etape_classeurs, user, addEtape, removeEtape, addUser, addGroup, editable, collectiviteId, removeUser, removeGroup } = this.props
+        const { etape_classeurs, user, etapeDeposante, addEtape, removeEtape, addUser, addGroup, editable, collectiviteId, removeUser, removeGroup } = this.props
         const { t } = this.context
 
         return (
@@ -32,13 +32,13 @@ class CircuitClasseur extends Component {
 
                     <div className="grid-x align-center-middle grid-margin-y">
                         <div className={ (editable ? "medium-1" : "medium-3") + " cell text-center"}>
-                            <div className="circle success text-success">1</div>
+                            <div className={ !etapeDeposante ? ("circle success") : ("circle gray") }>1</div>
                         </div>
                         <div className={ (editable ? "medium-2" : "medium-3") + " cell"}>
-                            <span className="text-success">{t('admin.circuit.depositor')}</span>
+                            <span className={ !etapeDeposante ? ("text-success text-bold") : ("text-gray text-bold")}>{t('admin.circuit.depositor')}</span>
                         </div>
                         <div className={ (editable ? "medium-6" : "medium-6") + " cell"}>
-                            <span className="text-success text-bold">{user._prenom} {user._nom}</span>
+                            <span className={ !etapeDeposante ? ("text-success text-bold") : ("text-gray text-bold")}>{user._prenom} {user._nom}</span>
                         </div>
                         { editable && <div className="cell medium-3"></div>}
                     </div>
@@ -57,7 +57,7 @@ class CircuitClasseur extends Component {
                                 { etape_classeur.users && etape_classeur.users.map((user, userKey) =>
                                     <div key={"user" + user.id}>
                                         {user._prenom} {user._nom} {
-                                           editable && !etape_classeur.etape_valide &&
+                                           editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
                                             <a onClick={() => removeUser(key, userKey)}><i className="fi-x"></i></a>
                                         }
                                     </div>
@@ -66,8 +66,8 @@ class CircuitClasseur extends Component {
                                 {etape_classeur.user_packs && etape_classeur.user_packs.map((user_pack, user_packKey) =>
                                     <div key={"userpack" + user_pack.id}>
                                         {user_pack.nom} {
-                                            editable && !etape_classeur.etape_valide
-                                            && <a onClick={() => removeGroup(key, user_packKey)}><i className="fi-x"></i></a>
+                                            editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
+                                            <a onClick={() => removeGroup(key, user_packKey)}><i className="fi-x"></i></a>
                                         }
                                     </div>
                                 )}
@@ -77,7 +77,7 @@ class CircuitClasseur extends Component {
                             {
                                 editable &&
                                 <div className="cell medium-3 text-right">
-                                    { !etape_classeur.etape_valide &&
+                                    { !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
                                         <div>
                                             <button className="button clear primary add-actions-etapes" type="button" data-toggle={"add-actions-etapes" + key}>
                                                 <i className="fi-plus"></i>
@@ -128,6 +128,7 @@ CircuitClasseur.PropTypes = {
     classeurId: PropTypes.number,
     etape_classeurs: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
+    etapeDeposante: PropTypes.number,
     addEtape: PropTypes.func,
     removeEtape: PropTypes.func,
     removeUser: PropTypes.func,

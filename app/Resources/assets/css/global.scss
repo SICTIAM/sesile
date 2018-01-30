@@ -24,7 +24,8 @@ $button-palette: map-merge($foundation-palette, (
 
 $title-color: #797c92;
 $sesile-color: (
-  dark-blue: #4a4c63
+  dark-blue: #4a4c63,
+  gray-blue: #404257
 );
 
 @import "./../../../../node_modules/foundation-icons/foundation-icons.scss";
@@ -33,6 +34,7 @@ $sesile-color: (
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 @import './../../../../node_modules/react-datepicker/dist/react-datepicker.css';
 @import './../../../../node_modules/react-select/dist/react-select.css';
+@import './../../../../node_modules/font-awesome/scss/font-awesome';
 
 
 @mixin my-icon ($url-image) {
@@ -66,6 +68,7 @@ $sesile-color: (
 }
 
 $font-color-primary: #ffffff;
+$sesile-primary: #fe5e3a;
 
 html {
   font-family: 'Open Sans', sans-serif;
@@ -83,7 +86,7 @@ html {
     color: #ffffff;
   }
   &.gray {
-    color: #404257;
+    color: map-get($sesile-color, 'gray-blue');
     font-weight: normal;
     font-size: 0.75em;
   }
@@ -95,7 +98,7 @@ html {
 }
 
 .header {
-  background-color: #404257;
+  background-color: map-get($sesile-color, 'gray-blue');
   color: $font-color-primary;
   font-family: 'Open Sans', sans-serif;
 
@@ -113,7 +116,7 @@ html {
 
   .logo {
     font-weight: 700;
-    background-color: #fe5e3a;
+    background-color: $sesile-primary;
     padding-top: 1em;
     padding-bottom: 1em;
     .logo-init {
@@ -128,18 +131,8 @@ html {
     }
   }
 
-  .ico-notif-classeur {
-    @include my-icon("../images/ico_notif.png");
-    span {
-      @include my-notification(#00a99d);
-    }
-
-  }
-  .ico-sign-classeur {
-    @include my-icon("../images/ico_cl_sign.png");
-    span {
-      @include my-notification(#fe5e3a);
-    }
+  .badge {
+    position: absolute;
   }
 
 
@@ -172,7 +165,7 @@ html {
       .user-name {
         font-weight:700;
         font-size: 1em;
-        color: #404257;
+        color: map-get($sesile-color, 'gray-blue');
       }
       .user-mail {
         font-weight:normal;
@@ -196,39 +189,109 @@ html {
 .menu-left {
   margin-top:1em;
   margin-bottom:1em;
+  a {
+    font-size: 0.75em;
+    color: map-get($sesile-color, 'dark-blue');
+    .fa {
+      color: map-get($sesile-color, 'gray-blue');
+    }
 
-  .ico-hamburger {
-    @include my-icon("../images/ico_hamburger.png");
-  }
-
-  .ico-new-classeur {
-    @include my-icon("../images/ico_menu_cl_new.png")
-  }
-  .ico-valid-classeur {
-    @include my-icon("../images/ico_menu_cl_valid.png")
-  }
-  .ico-sign-classeur {
-    @include my-icon("../images/ico_menu_cl_sign.png")
-  }
-  .ico-revert-classeur {
-    @include my-icon("../images/ico_menu_cl_revert.png")
-  }
-  .ico-refuse-classeur {
-    @include my-icon("../images/ico_menu_cl_refus.png")
-  }
-  .ico-refuse-classeur {
-    @include my-icon("../images/ico_menu_cl_refus.png")
-  }
-  .ico-notif {
-    @include my-icon("../images/ico_menu_notif.png")
-  }
-  .ico-help {
-    @include my-icon("../images/ico_menu_help.png")
+    &:hover, &.active, &:active {
+      .fa {
+        color: $sesile-primary;
+      }
+      color: $sesile-primary;
+    }
   }
 
 }
 
 .main {
+  h1 {
+    text-transform: uppercase;
+    font-size: 2em;
+  }
+
+  .list-classeurs, .list-classeurs a {
+    background-color: #fff;
+    color: map-get($sesile-color, 'dark-blue');
+    font-size:0.875em;
+
+    .classeur-name:hover {
+      color: #ec5935;
+    }
+
+    .tri-classeurs {
+      color: #87878c;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.6875em;
+    }
+    .arrow-down {
+      border-bottom: 0.8em solid #87878c;
+      margin-bottom:1em;
+      font-size: 1em;
+    }
+    .arrow-up {
+      border-top: 0.8em solid #87878c;
+      margin-top:1em;
+      font-size: 1em;
+    }
+    .title-sort {
+      margin-top: 0.8em;
+    }
+    .classeur {
+      border-bottom: solid 1px #a7a7a7;
+    }
+    .classeur:hover, .classeur:hover a {
+      background-color: #edf2f6;
+    }
+    .img-avatar {
+      margin-right:1em;
+    }
+    input[type=checkbox] {
+      margin: 1em 0;
+    }
+
+    .dropdown-pane-circuit {
+      font-size: 0.875em;
+      background-color: #edf2f6;
+      border-top: 0;
+      h3 {
+        color: $title-color;
+        font-size: 1em;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
+
+  }
+
+
+  .fa {
+    color: map-get($sesile-color, 'gray-blue');
+    font-size: 1.5em;
+    &.fa-comment {
+      transform: scaleX(-1);
+    }
+  }
+
+  .button-list {
+    a {
+      font-size: 1.5em;
+      &.fa {
+        color: lighten(map-get($sesile-color, 'gray-blue'), 30);
+      }
+
+      &:hover {
+        &.fa {
+          color: $sesile-primary;
+        }
+        color: $sesile-primary;
+      }
+    }
+  }
+
   .progress {
     border-radius: 1em;
     height: 0.7em;
@@ -237,29 +300,6 @@ html {
   }
   .progress-meter {
     border-radius: 1em;
-  }
-
-  .btn-add {
-    @include button-icon("../images/btn_add.png");
-  }
-  .btn-sign {
-    @include my-icon("../images/btn_sign.png");
-  }
-  .btn-valid {
-    @include my-icon("../images/btn_valid.png");
-  }
-  .btn-revert {
-    @include my-icon("../images/btn_revert.png");
-  }
-  .btn-refus {
-    @include my-icon("../images/btn_refus.png");
-  }
-  .btn-comment {
-      @include my-icon("../images/btn_notif.png");
-  }
-
-  .ico-comment {
-    @include my-icon("../images/ico_comment.png")
   }
 
   .btn-classeur-action {
@@ -348,58 +388,6 @@ html {
     margin-bottom: 20em;
   }
 
-  .list-classeurs, .list-classeurs a {
-    background-color: #fff;
-    color: map-get($sesile-color, 'dark-blue');
-    font-size:0.875em;
-
-    .classeur-name:hover {
-      color: #ec5935;
-    }
-
-    .tri-classeurs {
-      color: #87878c;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.6875em;
-    }
-    .arrow-down {
-      border-bottom: 0.8em solid #87878c;
-      margin-bottom:1em;
-      font-size: 1em;
-    }
-    .arrow-up {
-      border-top: 0.8em solid #87878c;
-      margin-top:1em;
-      font-size: 1em;
-    }
-    .classeur {
-      border-bottom: solid 1px #a7a7a7;
-    }
-    .classeur:hover, .classeur:hover a {
-      background-color: #edf2f6;
-    }
-    .img-avatar {
-      margin-right:1em;
-    }
-    input[type=checkbox] {
-      margin: 1em 0;
-    }
-
-    .dropdown-pane-circuit {
-      font-size: 0.875em;
-      background-color: #edf2f6;
-      border-top: 0;
-      h3 {
-        color: $title-color;
-        font-size: 1em;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-    }
-
-  }
-
 }
 
 .circuit-list {
@@ -424,7 +412,7 @@ html {
 
   .dropdown-add-actions {
     border: none;
-    background-color: #404257;
+    background-color: map-get($sesile-color, 'gray-blue');
     .dropdown-add-actions-text {
       color: $white;
       font-size: 0.875rem;
@@ -510,7 +498,7 @@ html {
   background: $white;
 
   .bold-info-details-classeur, h3 {
-    color: #404257;
+    color: map-get($sesile-color, 'gray-blue');
     font-weight: 700;
     font-size: 0.75em;
     text-transform: uppercase;
@@ -520,7 +508,7 @@ html {
   }
 
   .info-details-classeur {
-    color: #404257;
+    color: map-get($sesile-color, 'gray-blue');
     font-weight: normal;
     font-size: 0.875em;
     text-transform: capitalize;
@@ -537,6 +525,10 @@ html {
     .circuit-add {
       font-size: 1em;
     }
+  }
+
+  .imgPreview {
+    height: 100%;
   }
 
 }
@@ -563,7 +555,7 @@ html {
   .details-circuit-validation {
 
     .name-details-circuit-validation {
-      background-color: #fe5e3a;
+      background-color: $sesile-primary;
       border-top-left-radius: 0.5em;
       border-top-right-radius: 0.5em;
       text-transform: uppercase;
@@ -606,7 +598,7 @@ html {
 .parameters-user-group {
   .details-user-group {
     .name-details-user-group {
-      background-color: #fe5e3a;
+      background-color: $sesile-primary;
       border-top-left-radius: 0.5em;
       border-top-right-radius: 0.5em;
       padding: 1em;
@@ -660,7 +652,7 @@ html {
 
 .admin-details {
   .admin-head-details {
-    background-color: #fe5e3a;
+    background-color: $sesile-primary;
     border-top-left-radius: 0.5em;
     border-top-right-radius: 0.5em;
     font-weight: 700;
@@ -777,7 +769,7 @@ $list-group-margin: $global-margin;
 .admin-details {
   padding: 2em;
   .admin-details-name {
-    background-color: #fe5e3a;
+    background-color: $sesile-primary;
     border-top-left-radius: 0.5em;
     border-top-right-radius: 0.5em;
     text-transform: uppercase;
@@ -952,7 +944,7 @@ label > input {
 // Document
 .dropzone {
   background: $white;
-  border: dashed 0.2em #fe5e3a;
+  border: dashed 0.2em $sesile-primary;
   cursor: pointer;
 }
 

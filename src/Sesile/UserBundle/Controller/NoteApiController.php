@@ -81,7 +81,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
      * @Rest\View()
      * @Rest\Post("/")
      * @param Request $request
-     * @return Note
+     * @return JsonResponse
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function postAction(Request $request) {
@@ -89,13 +89,15 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
         $form = $this->createForm(NoteType::class, $note);
         $form->submit($request->request->all());
 
-        if ($form->isValid()){
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($note);
             $em->flush();
-        }
 
-        return $note;
+            return $note;
+        } else {
+            return new JsonResponse($form->getErrors(), Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**
@@ -145,15 +147,22 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
      * @Rest\Delete("/{id}")
      * @ParamConverter("note", options={"mapping": {"id": "id"}})
      * @param Note $note
-     * @return bool
+     * @return array|Note[]|JsonResponse
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function removeAction (Note $note) {
-
+        if (empty($note)) {
+            return new JsonResponse('', Response::HTTP_NOT_FOUND);
+        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($note);
         $em->flush();
 
-        return true;
+        $notes = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('SesileUserBundle:Note')
+            ->findAll();
+
+        return $notes;
     }
 }

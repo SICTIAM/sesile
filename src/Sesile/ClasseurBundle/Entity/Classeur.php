@@ -44,7 +44,7 @@ class Classeur {
      * @Groups({"listClasseur", "classeurById"})
      *
      */
-    private $description;
+    private $description = '';
 
     /**
      * @var \DateTime
@@ -215,6 +215,12 @@ class Classeur {
      * @var boolean
      * @Groups({"listClasseur", "classeurById"})
      */
+    private $refusable = false;
+
+    /**
+     * @var boolean
+     * @Groups({"listClasseur", "classeurById"})
+     */
     private $removable = false;
 
     /**
@@ -222,6 +228,12 @@ class Classeur {
      * @Groups({"listClasseur", "classeurById"})
      */
     private $deletable = false;
+
+    /**
+     * @var boolean
+     * @Groups({"listClasseur", "classeurById"})
+     */
+    private $etapeDeposante = false;
 
     /**
      * Get id
@@ -543,19 +555,13 @@ class Classeur {
         return $this->retractable;
     }
 
-    public function isSignable()
-    {
-        if($this->getType()->getId() == 2){
-        //if($this->getType()->getId() == 2 && $this->isAtLastValidant()){
-            $docs=$this->getDocuments();
-            foreach($docs as $doc){
-                if($doc->getType() == 'application/xml'){
-                    return true;
-                }
-            }
+    public function setRefusable(bool $refusable) {
+        $this->refusable = $refusable;
+        return $this;
+    }
 
-        }
-        return false;
+    public function getRefusable() {
+        return $this->refusable;
     }
 
     /**
@@ -605,6 +611,15 @@ class Classeur {
 
     public function getDeletable() {
         return $this->deletable;
+    }
+
+    public function setEtapeDeposante($etapeDeposante) {
+        $this->etapeDeposante = $etapeDeposante;
+        return $this;
+    }
+
+    public function getEtapeDeposante() {
+        return $this->etapeDeposante;
     }
 
     public function getXmlDocuments()

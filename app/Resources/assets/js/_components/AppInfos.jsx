@@ -25,7 +25,7 @@ class AppInfos extends Component {
     render() {
         const { t } = this.context
         return (
-            <div className=" cell auto app-infos text-uppercase">
+            <div className="cell shrink app-infos text-uppercase">
                 <div className="">
                     <a href={this.state.informations.contact_link} target="_blank">{t('footer.contact')}</a>
                 </div>
