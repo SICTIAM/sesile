@@ -20,7 +20,7 @@ class Note
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"noteMaj"})
+     * @Serializer\Groups({"noteMaj", "listNote", "detailsNote", "getLastNote"})
      */
     private $id;
 
@@ -28,7 +28,7 @@ class Note
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
-     * @Serializer\Groups({"noteMaj"})
+     * @Serializer\Groups({"noteMaj", "getLastNote", "listNote", "detailsNote"})
      */
     private $title;
 
@@ -36,7 +36,7 @@ class Note
      * @var string
      *
      * @ORM\Column(name="subtitle", type="string", length=255, nullable=false)
-     * @Serializer\Groups({"noteMaj"})
+     * @Serializer\Groups({"noteMaj", "getLastNote", "listNote", "detailsNote"})
      */
     private $subtitle;
 
@@ -44,7 +44,7 @@ class Note
      * @var string
      *
      * @ORM\Column(name="message", type="text", nullable=true)
-     * @Serializer\Groups({"noteMaj"})
+     * @Serializer\Groups({"noteMaj", "getLastNote", "detailsNote"})
      */
     private $message;
 
@@ -52,7 +52,7 @@ class Note
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime")
-     * @Serializer\Groups({"noteMaj"})
+     * @Serializer\Groups({"noteMaj", "listNote"})
      */
     private $created;
 

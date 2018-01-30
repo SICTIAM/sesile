@@ -24,8 +24,7 @@ class Note extends Component {
         note: {
             id: null,
             title: '',
-            subtitle: '',
-            message: ''
+            subtitle: ''
         }
     }
     validationRules = {
@@ -33,7 +32,8 @@ class Note extends Component {
         subtitle: 'required|string'
     }
     componentDidMount() {
-        this.props.match.params.noteId && this.fetchNote(noteId)
+        const { noteId } = this.props.match.params
+        noteId && this.fetchNote(noteId)
     }
     fetchNote(id) {
         const { t, _addNotification } = this.context
