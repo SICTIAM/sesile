@@ -21,7 +21,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
 {
 
     /**
-     * @Rest\View(serializerGroups={"noteMaj"})
+     * @Rest\View(serializerGroups={"listNote"})
      * @Rest\Get("s/")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
@@ -37,35 +37,36 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View(serializerGroups={"noteMaj"})
+     * @Rest\View(serializerGroups={"getLastNote"})
      * @Rest\Get("/last")
      */
     public function getLastAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $note = $em->getRepository('SesileUserBundle:Note')->findOneBy(
-            array(),
-            array('created' => 'DESC')
-        );
+        $note =
+            $em->getRepository('SesileUserBundle:Note')
+                ->findOneBy(
+                    array(),
+                    array('created' => 'DESC'));
 
-        $open = true;
+        $alreadyOpen = false;
 
-        if ($note && $note->getUsers()) {
+        if ($note && !empty($note->getUsers())) {
             foreach ($note->getUsers() as $user) {
                 if ($user->getId() == $this->getUser()->getId()) {
-                    $open = false;
+                    $alreadyOpen = true;
                 }
             }
         }
 
         return array(
-            'open' => $open,
+            'alreadyOpen' => $alreadyOpen,
             'note' => $note
         );
     }
 
     /**
-     * @Rest\View(serializerGroups={"noteMaj"})
+     * @Rest\View(serializerGroups={"detailsNote"})
      * @Rest\Get("/{id}")
      * @ParamConverter("Note", options={"mapping": {"id": "id"}})
      * @param Note $note
@@ -102,12 +103,12 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @Rest\View()
-     * @Rest\Post("/note-user/{id}")
+     * @Rest\Post("/readed/{id}")
      * @ParamConverter("note", options={"mapping": {"id": "id"}})
      * @param Note $note
      * @return Note
      */
-    public function postUserNoteAction(Note $note) {
+    public function readedAction(Note $note) {
 
         $user = $this->getUser();
 
