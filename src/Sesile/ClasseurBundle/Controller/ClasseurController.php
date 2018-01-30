@@ -906,29 +906,6 @@ class ClasseurController extends Controller {
 
     }
 
-
-    /**
-     * Edits an existing Classeur entity.
-     *
-     * @Route("/sign_pdf", name="classeur_valider_pdf")
-     * @Method("POST")
-     *
-     */
-    /*public function signPDFAction(Request $request)
-    {
-
-        var_dump("Welcome");
-        var_dump($request);
-        $em = $this->getDoctrine()->getManager();
-        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($request->get("id"));
-
-        if (!$classeur) {
-            throw $this->createNotFoundException('Unable to find Classeur entity.');
-        }
-
-    }*/
-
-
     /**
      * Edits an existing Classeur entity.
      *
@@ -1230,13 +1207,8 @@ class ClasseurController extends Controller {
                 throw $this->createNotFoundException('Unable to find Classeur entity.');
             }
 
-            // Test si le classeur est délégué
-            $isvalidator = $em->getRepository('SesileClasseurBundle:Classeur')->isDelegatedToUser($classeur, $user);
-
-
             // Validation du classeur
-            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur);
-            $classeur->setCircuit($user->getId());
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $user);
             $em->flush();
 
             // Ajout d'une action pour le classeur
@@ -1248,14 +1220,6 @@ class ClasseurController extends Controller {
             $action->setClasseur($classeur);
             $action->setUser($user);
             $action_libelle = "Signature";
-
-            // Si le user est un délégué alors on rajoute un de qui il a reçue sa délégation
-            if ($isvalidator) {
-                $delegators = $em->getRepository('SesileDelegationsBundle:Delegations')->getDelegantsForUser($user);
-                foreach ($delegators as $delegator) {
-                    $action_libelle .= " (Délégation reçue de " . $delegator->getDelegant()->getPrenom() . " " . $delegator->getDelegant()->getNom() . ")";
-                }
-            }
             $action->setAction($action_libelle);
             $em->persist($action);
             $em->flush();
@@ -1416,40 +1380,17 @@ class ClasseurController extends Controller {
     /**
      * Génération du fichier JNLP permettant l exécution de l application de signature
      *
-     * @Route("/jnlpsignerfiles/{id}/{role}", name="jnlpSignerFiles")
+     * @Route("/jnlpsignerfiles/{id}/{role}", name="jnlpSignerFiles", options = { "expose" = true })
      * @param Request $request
      * @param $id
      * @param null $role
      * @return Response
      */
-    public function jnlpSignerFilesAction(Request $request, $id, $role = null) {
+    public function jnlpSignerFilesAction($id, $role = null) {
 
-        // On recupere les ids des classeurs a signer
-        $ids = unserialize(urldecode($id));
-
-        // Connexion BDD
+        $ids = explode(",", urldecode($id));
         $em = $this->getDoctrine()->getManager();
-
-        // MAJ de l etat de la visibilité, nom, description, date de validation
-        $this->updateInfosClasseurs($request, $ids, $em);
-
-        return $this->generateJnlp($ids, $role);
-    }
-
-    /**
-     * Génération du JNLP
-     *
-     * @param $ids
-     * @param null $role
-     * @return Response
-     */
-    private function generateJnlp ($ids, $role = null) {
-
-        // Connexion BDD
-        $em = $this->getDoctrine()->getManager();
-
-        // User courant
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         // Infos JSON liste des fichiers
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findById($ids);
@@ -1482,7 +1423,6 @@ class ClasseurController extends Controller {
 
             $documentsJSON = array();
 
-
             foreach ($classeur->getDocuments() as $document) {
 
                 if(!$document->getSigned()) {
@@ -1492,7 +1432,10 @@ class ClasseurController extends Controller {
                     $typeDocument = $document->getType();
 
                     // Definition du type de document a transmettre au JWS
-                    if($typeDocument == "application/xml" && $classeur->getType()->getId() == 2) {
+                    if(
+                        ($typeDocument == "application/xml" || $typeDocument == "text/xml")
+                        && $classeur->getType()->getNom() == "Helios"
+                    ) {
                         $typeJWS = "xades-pes";
                     } else if($typeDocument == "application/xml") {
                         $typeJWS = "xades";

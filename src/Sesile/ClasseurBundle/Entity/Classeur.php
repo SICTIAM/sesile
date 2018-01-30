@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 use Sesile\UserBundle\Entity\EtapeClasseur;
+use Sesile\UserBundle\Entity\Groupe;
 use Sesile\UserBundle\Entity\User;
 
 /**
@@ -91,6 +92,14 @@ class Classeur {
     /**
      * @var integer
      *
+     * @ORM\ManyToOne(targetEntity="Sesile\UserBundle\Entity\Groupe")
+     * @ORM\JoinColumn(name="circuit_id", referencedColumnName="id")
+     */
+    private $circuit_id;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="ordreCircuit", type="integer"))
      * @Groups({"classeurById"})
      */
@@ -114,7 +123,7 @@ class Classeur {
     private $circuit;
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\DocumentBundle\Entity\Document", mappedBy="classeur")
+     * @ORM\OneToMany(targetEntity="Sesile\DocumentBundle\Entity\Document", mappedBy="classeur", cascade={"remove"})
      * @Groups({"classeurById"})
      */
     protected $documents;
@@ -142,7 +151,7 @@ class Classeur {
     private $copy;
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\EtapeClasseur", mappedBy="classeur", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="etapeClasseurs", referencedColumnName="id",nullable=true)
      * @Groups({"classeurById", "listClasseur"})
      *
@@ -156,14 +165,6 @@ class Classeur {
      * @Groups("classeur")
      */
     private $ordreEtape = 0;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="EtapeDeposante", type="integer")
-     * @Groups("classeur")
-     */
-    private $etapeDeposante;
 
     /**
      * @var string
@@ -188,6 +189,7 @@ class Classeur {
             'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
             'application/xml',
+            'text/xml',
             'text/plain'
     );
 
@@ -208,6 +210,18 @@ class Classeur {
      * @Groups({"listClasseur", "classeurById"})
      */
     private $retractable = false;
+
+    /**
+     * @var boolean
+     * @Groups({"listClasseur", "classeurById"})
+     */
+    private $removable = false;
+
+    /**
+     * @var boolean
+     * @Groups({"listClasseur", "classeurById"})
+     */
+    private $deletable = false;
 
     /**
      * Get id
@@ -311,7 +325,6 @@ class Classeur {
         else {
             $this->circuit = $circuit;
         }
-//        $this->circuit = $circuit;
 
         return $this;
     }
@@ -389,20 +402,6 @@ class Classeur {
     /**
      * @ORM\PrePersist
      */
-    public function setValidantValue()
-    {
-        if(strpos($this->circuit, ",") === false) {
-            $this->validant = $this->circuit;
-        }
-        else {
-            $circuit = explode(",", $this->circuit);
-            $this->validant = $circuit[0];
-        }
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
     public function setStatusValue()
     {
         $this->status = 1;
@@ -436,52 +435,6 @@ class Classeur {
         $this->actions = new ArrayCollection();
         $this->etapeClasseurs = new ArrayCollection();
     }
-
-
-    /**
-     *
-     * @return int l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
-     */
-
-    public function getPrevValidant()
-    {
-
-        $circuit = explode(",", $this->getCircuit());
-        $ordre =  $this->setOrdreMoins();
-        return ($this->getOrdreCircuit() > 0) ? $circuit[$ordre] : $this->getUser();
-    }
-
-
-    /**
-     *
-     * @return int l'id du prochain validant dans le circuit. 0 si le circuit est terminé
-     */
-    public function getNextValidant(\Doctrine\ORM\EntityManager $em)
-    {
-        $circuit = explode(",", $this->getCircuit());
-        $this->setOrdrePlus();
-        return ($this->getOrdreCircuit() < count($circuit)) ? $circuit[$this->getOrdreCircuit()] : 0;
-    }
-
-    /**
-     *
-     * @return int l'id du validant courant dans le circuit.
-     */
-    public function getCurrentValidant(\Doctrine\ORM\EntityManager $em)
-    {
-
-        $circuit = explode(",", $this->getCircuit());
-        $curr_validant = $circuit[$this->getOrdreCircuit()];
-        return $curr_validant;
-    }
-
-    public function getLastValidant() {
-        $circuit = explode(",", $this->getCircuit());
-        $idLastUser = end($circuit);
-
-        return $idLastUser;
-    }
-
 
     public function isAtLastValidant(){
 
@@ -519,18 +472,6 @@ class Classeur {
         return $count;
     }
 
-    public function valider(\Doctrine\ORM\EntityManager $em)
-    {
-        $this->setValidant($this->getNextValidant($em));
-        // le classeur est arrivé à la derniere étape, on le finalise
-        if ($this->getValidant() == 0) {
-            $this->setStatus(2);
-        } else {
-            $this->setStatus(1);
-        }
-    }
-
-
     public function soumettre()
     {
         $circuit = explode(",", $this->getCircuit());
@@ -547,34 +488,6 @@ class Classeur {
         $this->setCircuitZero('');
         $this->setOrdreValidant('');
         $this->setStatus(0);
-    }
-
-    public function retracter()
-    {
-
-        if(count(explode(',',$this->getOrdreValidant())) == 1)
-        {
-            $this->setOrdreZero();
-//        $this->setValidant($this->getPrevValidant());
-//        $this->setValidant($this->getUser());
-            $this->setCircuitZero('');
-            $this->setOrdreValidant('');
-            $this->setStatus(4);
-        }
-        else{
-
-            $this->setCircuitZero( substr($this->getCircuit(), 0, strrpos($this->getCircuit(), ',')) );
-            $this->setOrdreValidant( substr($this->getOrdreValidant(), 0, strrpos($this->getOrdreValidant(), ',')) );
-            $this->setOrdreEtape($this->setOrdreMoins());
-            $this->setStatus(4);
-        }
-
-    }
-
-    public function supprimer()
-    {
-        $this->setOrdreValidant('');
-        $this->setStatus(3);
     }
 
     public function isValidable($userid,  $validants) {
@@ -596,50 +509,13 @@ class Classeur {
         return (((in_array($validants, $userid)) || ($this->getUser() == $userid)) && $this->getStatus() != 3);
     }
 
-    public function isModifiableByDelegates($delegates, $validants){
-
-        $arrayid = array();
-        foreach($delegates as $d){
-            $arrayid[] = $d->getId();
-        }
-
-        return (( (in_array($validants, $arrayid) ) || (in_array($this->getUser(), $arrayid))) && $this->getStatus() != 3);
-
-    }
-
-    /**
-     * La fonction renvoie true or false pour les boutons retractable et l affichage des dossiers retractable
-     *
-     * @param $userid           : id du user courant + delegant
-     * @param $validants        : id des validants courant du classeur
-     * @param $prevValidants    : id des validants de l etape precedente du classeur
-     * @return bool             : true or false
-     */
-    public function isRetractableByDelegates($userid, $validants, $prevValidants) {
-      // var_dump('userId : ', $userid, 'prevValidants : ', $prevValidants, $this->getId(), '<br>');
-//var_dump($prevValidants);
-
-        if ( in_array($prevValidants, $userid)
-             && !in_array($userid[0], $validants)
-//            && !array_diff($userid, $validants)
-            && $this->getStatus() == 1
-        /*    && $this->getOrdreEtape() != 0 */
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public function getEtapeByOrdre (int $ordre) {
         foreach ($this->getEtapeClasseurs() as $etapeClasseur) {
             if($etapeClasseur->getOrdre() == $ordre) {
                 return $etapeClasseur;
             }
-            else {
-                return false;
-            }
         }
+        return false;
     }
 
     public function getPrevEtapeValidante() {
@@ -665,22 +541,6 @@ class Classeur {
 
     public function getRetractable() {
         return $this->retractable;
-    }
-
-    public function isSupprimable($userid)
-    {
-        return ($this->getUser() == $userid && $this->getStatus() != 3);
-    }
-
-    public function isSupprimableByDelegates($delegates){
-        $arrayid = array();
-
-        foreach($delegates as $d){
-            $arrayid[] = $d->getId();
-        }
-
-        return (in_array($this->getUser(), $arrayid) && $this->getStatus() != 3);
-
     }
 
     public function isSignable()
@@ -716,21 +576,35 @@ class Classeur {
 
 
     public function setSignableAndLastValidant($signableAndLastValidant) {
-
         $this->signableAndLastValidant = $signableAndLastValidant;
-
         return $this;
     }
 
     public function setValidable($validable) {
-
         $this->validable = $validable;
-
         return $this;
     }
 
     public function getValidable() {
         return $this->validable;
+    }
+
+    public function setRemovable($removable) {
+        $this->removable = $removable;
+        return $this;
+    }
+
+    public function getRemovable() {
+        return $this->removable;
+    }
+
+    public function setDeletable($deletable) {
+        $this->deletable = $deletable;
+        return $this;
+    }
+
+    public function getDeletable() {
+        return $this->deletable;
     }
 
     public function getXmlDocuments()
@@ -1058,29 +932,6 @@ class Classeur {
     }
 
     /**
-     * Set etapeDeposante
-     *
-     * @param string $etapeDeposante
-     * @return Classeur
-     */
-    public function setEtapeDeposante($etapeDeposante)
-    {
-        $this->etapeDeposante = $etapeDeposante;
-    
-        return $this;
-    }
-
-    /**
-     * Get etapeDeposante
-     *
-     * @return string 
-     */
-    public function getEtapeDeposante()
-    {
-        return $this->etapeDeposante;
-    }
-
-    /**
      * Set ordreValidant
      *
      * @param string $ordreValidant
@@ -1162,5 +1013,29 @@ class Classeur {
     public function getCopy()
     {
         return $this->copy;
+    }
+
+    /**
+     * Set circuitId
+     *
+     * @param Groupe $circuitId
+     *
+     * @return Classeur
+     */
+    public function setCircuitId(Groupe $circuitId = null)
+    {
+        $this->circuit_id = $circuitId;
+
+        return $this;
+    }
+
+    /**
+     * Get circuitId
+     *
+     * @return Groupe
+     */
+    public function getCircuitId()
+    {
+        return $this->circuit_id;
     }
 }

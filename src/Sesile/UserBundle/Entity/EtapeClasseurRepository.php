@@ -101,56 +101,43 @@ class EtapeClasseurRepository extends EntityRepository
      */
     public function findAllUsers(Classeur $classeur) {
 
-        $em = $this->getEntityManager();
-        $etapesGroupes = $em->getRepository('SesileUserBundle:EtapeClasseur')->findBy(array('classeur' => $classeur));
-       // $etapesGroupes = $classeur->getEtapeClasseurs();
         $users = array();
-        $usersId = array();
-//var_dump('ta race',$etapesGroupes);exit;
-        foreach ($etapesGroupes as $etapesGroupe) {
 
-            if($etapesGroupe->getUsers() !== null) {
-                $users = array_merge($users, $etapesGroupe->getUsers()->toArray());
-            }
-
-            $usersPacks = $etapesGroupe->getUserPacks();
-            foreach ($usersPacks as $usersPack) {
-                $users = array_merge($users, $usersPack->getUsers()->toArray());
-            }
+        foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
+            $users = array_merge($users, $this->getUsersForEtape($etapeClasseur));
         }
-        foreach ($users as $user) {
-            $usersId[] = $user->getId();
-        }
-        $usersId = array_unique($usersId);
 
-        return $usersId;
-
+        return array_unique($users);
     }
 
     public function findAllUsersAfterMe(Classeur $classeur) {
-        $em = $this->getEntityManager();
-        $etapesGroupes = $em->getRepository('SesileUserBundle:EtapeClasseur')->findBy(array('classeur' => $classeur));
+
         $users = array();
-        $usersId = array();
-        $etapeCourante = $classeur->getOrdreEtape();
 
-        foreach ($etapesGroupes as $k => $etapesGroupe) {
-            if($k < $etapeCourante) continue;
-            if ($etapesGroupe->getUsers() !== null) {
-                $users = array_merge($users, $etapesGroupe->getUsers()->toArray());
-            }
-
-            $usersPacks = $etapesGroupe->getUserPacks();
-            foreach ($usersPacks as $usersPack) {
-                $users = array_merge($users, $usersPack->getUsers()->toArray());
+        foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
+            if(!$etapeClasseur->getEtapeValide()) {
+                $users = array_merge($users, $this->getUsersForEtape($etapeClasseur));
             }
         }
-        foreach ($users as $user) {
-            $usersId[] = $user->getId();
-        }
-        $usersId = array_unique($usersId);
 
-        return $usersId;
+        return array_unique($users);
+    }
+
+
+    public function getUsersForEtape (EtapeClasseur $etapeClasseur) {
+
+        $users = array();
+
+        if ($etapeClasseur->getUsers() !== null) {
+            $users = array_merge($users, $etapeClasseur->getUsers()->toArray());
+        }
+
+        $usersPacks = $etapeClasseur->getUserPacks();
+        foreach ($usersPacks as $usersPack) {
+            $users = array_merge($users, $usersPack->getUsers()->toArray());
+        }
+
+        return $users;
     }
 
     /**

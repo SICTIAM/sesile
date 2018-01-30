@@ -45,7 +45,7 @@ $sesile-color: (
 
 @mixin button-icon ($url-image) {
   background: url($url-image) no-repeat transparent;
-  width: 16em;
+  padding-left: 3em;
   height: 3em;
   text-align: center;
   cursor: pointer;
@@ -260,6 +260,15 @@ html {
 
   .ico-comment {
     @include my-icon("../images/ico_comment.png")
+  }
+
+  .btn-classeur-action {
+    font-size: 2em;
+    color: darkgrey;
+    line-height: 2em;
+  }
+  .btn-classeur-action:hover {
+    color: grey;
   }
 
   background-color: #edf2f6;
@@ -830,7 +839,7 @@ $list-group-margin: $global-margin;
 }
 
 .react-autosuggest__input {
-  width: 240px;
+  width: 100%;
   height: 30px;
   padding: 10px 20px;
   font-family: 'Open Sans', sans-serif;

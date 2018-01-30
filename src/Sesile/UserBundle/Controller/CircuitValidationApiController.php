@@ -25,6 +25,7 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
      * @Rest\Get("s/{collectiviteId}")
      * @Rest\View(serializerGroups={"listCircuitByCollectivite"})
      * @ParamConverter("collectivite", options={"mapping": {"collectiviteId": "id"}})
+     * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
      */
     public function listByCollectiviteAction(Collectivite $collectivite)
@@ -36,6 +37,19 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
         } else {
             return new JsonResponse(['message' => "Denied Access"], Response::HTTP_NOT_FOUND);
         }
+    }
+
+    /**
+     * @Rest\Get("s_user/")
+     * @Rest\View(serializerGroups={"listCircuitByUser"})
+     * @return array|\Doctrine\Common\Collections\Collection
+     */
+    public function listByUserAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $circuits_id = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($this->getUser()->getId());
+        $circuits = $em->getRepository('SesileUserBundle:Groupe')->getCircuits($circuits_id, $this->getUser());
+        return $circuits;
     }
 
     /**

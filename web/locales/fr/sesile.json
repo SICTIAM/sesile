@@ -38,6 +38,7 @@
             "no": "Non",
             "title": "Titre",
             "page": "Page",
+            "visibility": "Visibilité",
             "actions": "Actions",
             "version": "Version"
         },
@@ -55,7 +56,6 @@
             "stats_title_name": "Type",
             "stats_title_total": "Total",
             "classeurs_add": "Création de classeur"
-
         },
         "classeurs": {
             "name": "classeur",
@@ -64,10 +64,18 @@
             "title_to_retract": "classeur retractable",
             "title_remove": "classeurs supprimable",
             "title_to_sign_plural": "classeurs à signer",
+            "title_add": "Création d'un nouveau classeur",
             "sort": "trier",
             "search": "Rechercher un classeur",
             "date_limit": "Date limite le",
             "classeur_name": "Nom du classeur",
+            "users_copy": "Utilisateurs en copie",
+            "users_copy_select": "Sélectionner les utilisateurs",
+            "error": {
+                "missing_input": "champs manquants",
+                "post": "Impossible de créer le classeur",
+                "no_circuits": "Vous ne faites partis d'aucun circuits"
+            },
             "status": {
               "name": "status",
               "refuse": "Refusé",
@@ -80,12 +88,18 @@
             "comments": {
               "name": "Commentaires du classeur"
             },
+            "label": {
+              "circuits": "Liste des circuits",
+              "types": "Type de classeur"
+            },
             "button": {
                 "add_classeur": "Nouveau classeur",
                 "valid_title": "Valider le classeur",
                 "sign_title": "Signer le classeur",
                 "revert_title": "Rétracter le classeur",
                 "refus_title": "Refuser le classeur",
+                "remove_title": "Retirer le classeur",
+                "delete_title": "Suprimer le classeur",
                 "comment_title": "Commenter le classeur"
             }
 
@@ -94,6 +108,7 @@
             "name": "document",
             "name_plural": "documents",
             "title_list": "liste de documents",
+            "title_preview": "Prévisualisation du document",
             "label_dropzone": "Déposer vos documents ici",
             "full_screen": "Voir en plein écran",
             "delete_document": "Supprimer le document",
@@ -191,11 +206,11 @@
         "circuit": {
             "name": "circuit",
             "name_plural": "circuits",
-            "complet_name": "circuit de validation",
+            "complet_name": "Circuit de validation",
             "depositor": "Déposant",
             "validator": "Validant",
             "applicant_step": "Etape {{ordre}} - Déposante",
-            "validat_step": "Etape {{ordre}} - Validante",
+            "validat_step": "Etape {{ordre}}",
             "add_step": "Ajouter une étape",
             "not_valid": "Circuit de validation non valide",
             "remove_step": "Supprimer l'étape",
@@ -335,7 +350,8 @@
         "deadline": "Date limite le",
         "users_in_copy": "Utilisateurs en copie",
         "success": {
-            "edit": "Le classeur à bien été modifié"
+            "edit": "Le classeur à bien été modifié",
+            "delete": "Le classeur à bien été supprimé"
         },
         "error": {
             "edit": "Impossible de modifier le classeur - erreur {{errorCode}}"

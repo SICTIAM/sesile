@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Moment from 'moment';
-import PropTypes from 'prop-types'
+import { func, object } from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Avatar } from '../_components/Form'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
@@ -11,7 +11,7 @@ class ClasseursRow extends Component {
 
     render(){
 
-        const classeur = this.props.classeur
+        const {classeur, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur} = this.props
 
         return (
             <div id={classeur.id} className="grid-x grid-padding-x grid-padding-y classeur align-middle">
@@ -41,7 +41,13 @@ class ClasseursRow extends Component {
                 <CircuitListClasseur classeurId={classeur.id} etape_classeurs={classeur.etape_classeurs} user={classeur.user} />
 
                 <div className="cell medium-2">
-                    <ClasseursButtonList classeur={classeur} />
+                    <ClasseursButtonList classeur={classeur}
+                                         validClasseur={validClasseur}
+                                         signClasseur={signClasseur}
+                                         revertClasseur={revertClasseur}
+                                         removeClasseur={removeClasseur}
+                                         deleteClasseur={deleteClasseur}
+                    />
                 </div>
                 <div className="cell medium-1 text-center">
                     <input type="checkbox" id={classeur.id} checked={classeur.checked || false} onChange={this.props.checkClasseur} className="checkClasseur" />
@@ -53,8 +59,12 @@ class ClasseursRow extends Component {
 }
 
 ClasseursRow.PropTypes = {
-    classeur: PropTypes.object.isRequired,
-    checkClasseur: PropTypes.func.isRequired
+    classeur: object.isRequired,
+    checkClasseur: func.isRequired,
+    validClasseur: func,
+    signClasseur: func,
+    removeClasseur: func,
+    deleteClasseur: func
 }
 
 export default ClasseursRow

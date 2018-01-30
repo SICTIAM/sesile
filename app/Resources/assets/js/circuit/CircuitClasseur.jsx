@@ -30,16 +30,6 @@ class CircuitClasseur extends Component {
             <div className="grid-x circuit-list">
                 <div className="cell medium-12">
 
-                    <div className="grid-x grid-margin-y">
-                        <div className="cell auto text-center"><div className="circle success text-success">1</div></div>
-                        { etape_classeurs ? (etape_classeurs.map((etape_classeur, key) =>
-                            <div className="cell auto text-center" key={"circuit-" + key}>
-                                <div className={ etape_classeur.etape_valide ? ("circle success") : ("circle gray") }>{key + 2}</div>
-                            </div>
-                        )) : (<div>{t('common.loading')}</div>)
-                        }
-                    </div>
-
                     <div className="grid-x align-center-middle grid-margin-y">
                         <div className={ (editable ? "medium-1" : "medium-3") + " cell text-center"}>
                             <div className="circle success text-success">1</div>
@@ -67,7 +57,7 @@ class CircuitClasseur extends Component {
                                 { etape_classeur.users && etape_classeur.users.map((user, userKey) =>
                                     <div key={"user" + user.id}>
                                         {user._prenom} {user._nom} {
-                                           editable &&
+                                           editable && !etape_classeur.etape_valide &&
                                             <a onClick={() => removeUser(key, userKey)}><i className="fi-x"></i></a>
                                         }
                                     </div>
@@ -76,7 +66,8 @@ class CircuitClasseur extends Component {
                                 {etape_classeur.user_packs && etape_classeur.user_packs.map((user_pack, user_packKey) =>
                                     <div key={"userpack" + user_pack.id}>
                                         {user_pack.nom} {
-                                            editable && <a onClick={() => removeGroup(key, user_packKey)}><i className="fi-x"></i></a>
+                                            editable && !etape_classeur.etape_valide
+                                            && <a onClick={() => removeGroup(key, user_packKey)}><i className="fi-x"></i></a>
                                         }
                                     </div>
                                 )}
@@ -134,7 +125,7 @@ class CircuitClasseur extends Component {
 }
 
 CircuitClasseur.PropTypes = {
-    classeurId: PropTypes.number.isRequired,
+    classeurId: PropTypes.number,
     etape_classeurs: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
     addEtape: PropTypes.func,

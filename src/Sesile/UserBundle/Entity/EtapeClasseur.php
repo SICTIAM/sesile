@@ -59,20 +59,20 @@ class EtapeClasseur
     /**
      * @var boolean
      *
-     * @ORM\Column(name="EtapeValidante", type="boolean", nullable=true, options={"default" = false})
+     * @ORM\Column(name="EtapeValidante", type="boolean", options={"default" = false})
      * @Groups({"listEtapeClasseur"})
      *
      */
-    private $etapeValidante;
+    private $etapeValidante = 0;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="etapeValide", type="boolean", nullable=true, options={"default" = false})
-     * @Groups({"listEtapeClasseur"})
+     * @ORM\Column(name="etapeValide", type="boolean", options={"default" = false})
+     * @Groups({"classeurById", "listClasseur", "listEtapeClasseur"})
      *
      */
-    private $etapeValide;
+    private $etapeValide = 0;
 
     /**
      * @var integer

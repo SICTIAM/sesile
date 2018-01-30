@@ -35,6 +35,7 @@ class ClasseurType extends AbstractType
                 'entry_type' => EtapeClasseurType::class,
                 'allow_delete' => true,
                 'allow_add' => true,
+                'by_reference' => false
             ))
         ;
     }

@@ -3,6 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Sesile\UserBundle\Entity\User;
 
 /**
  * ClasseurRepository
@@ -165,6 +166,8 @@ class ClasseurRepository extends EntityRepository {
         $classeurs = $this->isClasseursValidableByUser($classeurs, $userId);
         $classeurs = $this->isClasseursSignable($classeurs);
         $classeurs = $this->isClasseursRetractableByUser($classeurs, $userId);
+        $classeurs = $this->isClasseursRemovableByUser($classeurs, $userId);
+        $classeurs = $this->isClasseursDeletableByUser($classeurs, $userId);
         return $classeurs;
     }
 
@@ -172,7 +175,38 @@ class ClasseurRepository extends EntityRepository {
         $this->isClasseurValidableByUser($classeur, $userId);
         $this->isClasseurSignable($classeur);
         $this->isClasseurRetractableByUser($classeur, $userId);
+        $this->isClasseurRemovableByUser($classeur, $userId);
+        $this->isClasseurDeletableByUser($classeur, $userId);
         return $classeur;
+    }
+
+    public function isClasseursDeletableByUser (array $classeurs, $userId) {
+        foreach ($classeurs as $classeur) {
+            $this->isClasseurDeletableByUser($classeur, $userId);
+        }
+        return $classeurs;
+    }
+
+    public function isClasseurDeletableByUser (Classeur $classeur, $userId) {
+        $em = $this->getEntityManager();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneById($userId);
+        if($classeur->getStatus() === 3 && $user->hasRole('ROLE_ADMIN')) {
+            $classeur->setDeletable(true);
+        }
+    }
+
+    public function isClasseursRemovableByUser(array $classeurs, $userId) {
+        foreach ($classeurs as $classeur) {
+            $this->isClasseurRemovableByUser($classeur, $userId);
+        }
+        return $classeurs;
+    }
+    public function isClasseurRemovableByUser(Classeur $classeur, $userId) {
+        $em = $this->getEntityManager();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneById($userId);
+        if($classeur->getStatus() === 2 && $user->hasRole('ROLE_ADMIN')) {
+            $classeur->setRemovable(true);
+        }
     }
 
     public function isClasseursSignable(array $classeurs) {
@@ -255,6 +289,57 @@ class ClasseurRepository extends EntityRepository {
         return $classeur;
     }
 
+    /**
+     * Fonction permettant la mise a jour de la visibilite
+     *
+     * @param Classeur $classeur
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function setUserVisible(Classeur $classeur) {
+        $em = $this->getEntityManager();
+
+        switch ($classeur->getVisibilite()) {
+            // Privé soit le circuit
+            case 0:
+                $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
+                break;
+
+            // Public
+            case 1:
+                $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($classeur->getUser()->getCollectivite());
+                break;
+
+            // Privé à partir de moi
+            case 2:
+                $users = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsersAfterMe($classeur);
+                break;
+
+            // Pour le service organisationnel (et le circuit)
+            case 3:
+                $usersGroupe = $em->getRepository('SesileUserBundle:Groupe')->findUsers($classeur->getCircuitId());
+                $usersCircuit = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
+                $users = array_merge($usersGroupe, $usersCircuit);
+                break;
+        }
+
+        $users[] = $classeur->getUser();
+        if ($classeur->getCopy()) {
+            $users = array_merge($users, $classeur->getCopy());
+        }
+        $users = array_unique($users);
+        if ($classeur->getVisible()) {
+            $classeur->getVisible()->clear();
+        }
+
+        foreach ($users as $user) {
+            $classeur->addVisible($user);
+        }
+
+        $em->persist($classeur);
+        $em->flush();
+
+    }
+
 
     public function countClasseurToValidate($userid) {
 
@@ -270,22 +355,6 @@ class ClasseurRepository extends EntityRepository {
             ->getQuery()
             ->getResult()
             ;
-
-        /*$qb = $this
-            ->createQueryBuilder('c')
-            ->select('c.status', 'c.id')
-            ->where('c.status = :sta')
-            ->orWhere('c.status = :stat')
-            ->setParameter('sta', 1)
-            ->setParameter('stat', 4)
-        ;
-
-
-        // on retourne la requete
-        return $qb
-            ->getQuery()
-            ->getResult()
-            ;*/
     }
 
 
@@ -377,58 +446,54 @@ class ClasseurRepository extends EntityRepository {
     }
 
 
-
-    public function getPrevValidantForRetract(Classeur $classeur) {
-
-        $prevValidant = explode(',', $classeur->getCircuit());
-        $prevValidant = end($prevValidant);
-        if (!$prevValidant) {
-            $prevValidant = $classeur->getUser();
-        }
-
-        return $prevValidant;
-    }
-
     /**
-     * Fonction pour valider les classeurs
+     * Fonction pour valider un classeur
      *
      * @param Classeur $classeur
+     * @param User $user
      * @return Classeur
      */
-    public function validerClasseur (Classeur $classeur) {
+    public function validerClasseur (Classeur $classeur, User $user) {
 
-        $ordreEtape = $classeur->getOrdreEtape();
-        $ordreEtape++;
+        foreach ($classeur->getEtapeClasseurs() as $etape) {
 
+            if ($etape->getEtapeValidante()) {
+                $etape->setEtapeValide(1);
+                $etape->setEtapeValidante(0);
+                $etape->setUserValidant($user);
+            }
 
-        $em = $this->getEntityManager();
-        $currentEtape = $em->getRepository('SesileUserBundle:EtapeClasseur')->findBy(
-            array('classeur' => $classeur)
-        );
+            if (!$etape->getEtapeValide()) {
+                $etape->setEtapeValidante(1);
+                $classeur->setStatus(1);
+                break;
+            } else {
+                $classeur->setStatus(2);
+            }
 
-
-        /**
-         * Pour réucpérer le validant je récupère le dernier id de la liste getOrdreValidant
-         */
-        $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
-        $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
-
-
-        $nbEtapesClasseur = count($classeur->getEtapeClasseurs());
-
-
-        // Si c est la derniere etape
-        if($nbEtapesClasseur == $ordreEtape) {
-            $classeur->setStatus(2);
         }
-        else {
-            $classeur->setStatus(1);
-            $currentEtapeId = $currentEtape[$ordreEtape]->getId();
-            $classeur->setOrdreValidant($classeur->getOrdreValidant() . ',' . $currentEtapeId);
+        return $classeur;
+    }
+
+    public function retractClasseur (Classeur $classeur) {
+
+        $etapeValidante = $classeur->getEtapeValidante();
+
+        $newEtapeValidante = $classeur->getPrevEtapeValidante();
+        if ($newEtapeValidante) {
+            $newEtapeValidante->setEtapeValidante(1);
+            $newEtapeValidante->setEtapeValide(0);
+            $newEtapeValidante->setUserValidant(null);
         }
 
-        $classeur->setOrdreEtape($ordreEtape);
+        $etapeValidante->setEtapeValidante(0);
+        $classeur->setStatus(4);
+        return $classeur;
 
+    }
+
+    public function removeClasseur (Classeur $classeur) {
+        $classeur->setStatus(3);
         return $classeur;
     }
 

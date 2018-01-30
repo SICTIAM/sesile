@@ -59,31 +59,24 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
      * @Rest\Post("/classeur/{id}")
      * @param Request $request
      * @param Classeur $classeur
-     * @return array
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function uploadAction(Request $request, Classeur $classeur) {
 
         $em = $this->getDoctrine()->getManager();
-        $newDocuments = array();
 
         foreach ($request->files as $documents) {
 
-            foreach ($documents as $document) {
-
-                $newDocument = $em->getRepository('SesileDocumentBundle:Document')->uploadDocument(
-                    $document,
-                    $classeur,
-                    $this->getParameter('upload')['fics']
-                );
-
-                $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction($newDocument->getClasseur(),"Ajout du document " . $newDocument->getName(), $this->getUser());
-                $newDocuments[] = $newDocument;
-
-            }
+            $em->getRepository('SesileDocumentBundle:Document')->uploadDocuments(
+                $documents,
+                $classeur,
+                $this->getParameter('upload')['fics'],
+                $this->getUser()
+            );
         }
 
-        return $newDocuments;
+        return $classeur->getDocuments();
     }
 
 
@@ -100,7 +93,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($em->getRepository('SesileDocumentBundle:Document')->removeDocument($this->getParameter('upload')['fics']) . $document->getRepourl()) {
+        if ($em->getRepository('SesileDocumentBundle:Document')->removeDocument($this->getParameter('upload')['fics'] . $document->getRepourl()) ) {
 
             $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction($document->getClasseur(), "Suppression du document " . $document->getName(), $this->getUser());
 
