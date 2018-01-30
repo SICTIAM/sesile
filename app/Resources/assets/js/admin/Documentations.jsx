@@ -113,8 +113,8 @@ class Documentations extends Component {
     render() {
         const { t } = this.context
         const { filteredHelps, filteredPatchs } = this.state
-        const listDocumentEvo = filteredPatchs.map((patch,key) => <RowDocumentEvo key={patch.id} patch={patch} deletePatch={this.deletePatch} />)
-        const listDocumentHelp = filteredHelps.map((help,key) => <RowDocumentHelp key={help.id} help={help} deleteHelp={this.deleteHelp} />)
+        const listDocumentEvo = filteredPatchs.map((patch) => <RowDocumentEvo key={patch.id} patch={patch} deletePatch={this.deletePatch} />)
+        const listDocumentHelp = filteredHelps.map((help) => <RowDocumentHelp key={help.id} help={help} deleteHelp={this.deleteHelp} />)
         return (
             <AdminPage
                 title={t('admin.documentations.title')}
