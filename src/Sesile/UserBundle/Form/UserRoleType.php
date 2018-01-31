@@ -16,7 +16,6 @@ class UserRoleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id')
             ->add('user_roles')
             ->add('user')
         ;

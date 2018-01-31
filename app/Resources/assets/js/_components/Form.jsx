@@ -92,7 +92,7 @@ const Switch = ({ id, className, onChange, labelText, checked, activeText, inact
         <label htmlFor={id}>{labelText}</label>
         <div className="switch">
             <input className="switch-input" id={id} type="checkbox" name={id} checked={checked} onChange={e => onChange(e.target.name, e.target.checked)}/>
-            <label className="switch-paddle" htmlFor="active">
+            <label className="switch-paddle" htmlFor={id}>
                 <span className="switch-active" aria-hidden="true">{activeText}</span>
                 <span className="switch-inactive" aria-hidden="true">{inactiveText}</span>
             </label>

@@ -27,6 +27,12 @@ class UserType extends AbstractType
             ->add('roles')
             ->add('enabled')
             ->add('apiactivated')
+            ->add('userrole', CollectionType::class, array(
+                'entry_type'    => UserRoleType::class,
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'by_reference'  => false
+            ))
         ;
     }
 

@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import PropTypes, { object, func } from 'prop-types'
+import { object, func } from 'prop-types'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { escapedValue } from '../_utils/Search'
 import { basicNotification } from '../_components/Notifications'
 import SelectCollectivite from '../_components/SelectCollectivite'
+import {handleErrors} from '../_utils/Utils'
+import ButtonConfirmDelete from '../_components/ButtonConfirmDelete'
 
 class Users extends Component {
 
@@ -25,13 +27,6 @@ class Users extends Component {
         }
     }
 
-    handleErrors(response) {
-        if (response.ok) {
-            return response
-        }
-        throw response
-    }
-
     componentDidMount() {
         if(this.props.user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
         this.fetchUsers(this.props.user.collectivite.id)
@@ -40,7 +35,7 @@ class Users extends Component {
     fetchUsers (id) {
         const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_user_userapi_userscollectivite', {id}), { credentials: 'same-origin'})
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(json => this.setState({users: json, filteredUsers: json}))
             .then(() => {
@@ -78,7 +73,7 @@ class Users extends Component {
     handleChangeSearchUser = (fieldSearch) => {
         this.setState({fieldSearch})
         const regex = escapedValue(fieldSearch, this.state.filteredUsers, this.state.users)
-        const filteredUsers = this.state.users.filter(user => regex.test(user._prenom.concat(user._nom)))
+        const filteredUsers = this.state.users.filter(user => regex.test(user._prenom && user._prenom.concat(user._nom)))
         this.setState({filteredUsers})
     }
 
@@ -164,10 +159,16 @@ const UserRow = ({ User, handleDeleteUser}, {t}) => {
             <div className="cell medium-3">
                 {User.email}
             </div>
-            <div className="cell medium-3">
-                <Link to={`/admin/${User.collectivite.id}/utilisateur/${User.id}`} className="button primary" >{t('common.button.edit')}</Link>
-                <Link to={`/admin/${User.collectivite.id}/classeurs/${User.id}`} className="button secondary" >{t('common.classeur', {count: 2})}</Link>
-                <button className="button alert" onClick={() => handleDeleteUser(User.id)}>{t('common.button.delete')}</button>
+            <div className="cell medium-3 grid-x align-middle">
+                <Link to={`/admin/${User.collectivite.id}/utilisateur/${User.id}`} className="fa fa-pencil icon-action cell medium-4 text-center" title={t('common.button.edit')} ></Link>
+                <Link to={`/admin/${User.collectivite.id}/classeurs/${User.id}`} className="fa fa-th-list icon-action cell medium-4 text-center" title={t('common.classeur', {count: 2})}></Link>
+                <ButtonConfirmDelete
+                    id={User.id}
+                    dataToggle={`delete-confirmation-update-${User.id}`}
+                    onConfirm={handleDeleteUser}
+                    content={t('common.confirm_deletion_item')}
+                    className="cell medium-4 text-center"
+                />
             </div>
         </div>
     )

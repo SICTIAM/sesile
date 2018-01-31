@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes, { array, number, bool, func } from 'prop-types'
 import { translate } from 'react-i18next'
+import { handleErrors } from '../_utils/Utils'
 import RolesUser from './RolesUser'
 import History from '../_utils/History'
 import { basicNotification } from '../_components/Notifications'
-import AvatarForm from "../user/AvatarForm"
-import SignatureForm from "../user/SignatureForm"
+import AvatarForm from '../user/AvatarForm'
+import SignatureForm from '../user/SignatureForm'
+import {Switch} from '../_components/Form'
 
 class User extends Component {
 
@@ -44,13 +46,6 @@ class User extends Component {
         }
     }
 
-    handleErrors(response) {
-        if (response.ok) {
-            return response
-        }
-        throw response
-    }
-
     componentDidMount() {
         this.fetchCollectivites()
         if(this.props.user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
@@ -66,7 +61,7 @@ class User extends Component {
     fetchUser(id) {
         const { t, _addNotification } = this.context
         fetch(Routing.generate("sesile_user_userapi_get", {id}), {credentials: 'same-origin'})
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(json => {
                 json.collectivite = json.collectivite.id
@@ -81,7 +76,7 @@ class User extends Component {
     fetchCollectivites () {
         const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_main_collectiviteapi_getall'), { credentials: 'same-origin'})
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(collectivites => this.setState({collectivites}))
             .catch(error => _addNotification(basicNotification(
@@ -114,11 +109,16 @@ class User extends Component {
 
         user['roles'] = newRoles
         this.setState({user})
-
     }
+
+    handleChangeUserRole = (key, role) => this.setState(prevState => prevState.user.userrole[key].user_roles = role)
+    handleRemoveUserRole = (key) => this.setState(prevState => prevState.user.userrole.splice(key, 1))
+    handleAddUserRole = () => this.setState(prevState => prevState.user.userrole.push({user_roles: '', user: this.state.userId}))
 
     handleClickSave = () => {
         const { user } = this.state
+        user.userrole.map((role, key) => this.setState(prevState => prevState.user.userrole[key].user = this.state.userId))
+
         const field = {
             _nom: user._nom,
             _prenom: user._prenom,
@@ -130,7 +130,8 @@ class User extends Component {
             enabled: user.enabled,
             apiactivated: user.apiactivated,
             roles: user.roles,
-            collectivite: user.collectivite
+            collectivite: user.collectivite,
+            userrole: user.userrole
         }
 
         if (this.state.userId) {
@@ -152,9 +153,10 @@ class User extends Component {
             body: JSON.stringify(user),
             credentials: 'same-origin'
         })
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => {
                 if(response.ok === true) {
+                    this.fetchUser(id)
                     _addNotification(basicNotification(
                         'success',
                         t('admin.success.update', {name: t('admin.user.name')}),
@@ -179,7 +181,7 @@ class User extends Component {
             body: JSON.stringify(user),
             credentials: 'same-origin'
         })
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(response => {
                 _addNotification(basicNotification(
@@ -213,12 +215,7 @@ class User extends Component {
         const {user,collectivites}  = this.state
         const roles = this.state.roles
         const userId = this.props.match.params.userId
-
-        const rolesSelect = roles && roles.map((role,key) =>
-            {
-                return <option value={role} key={key}>{role}</option>
-            }
-        )
+        const rolesSelect = roles && roles.map((role,key) => <option value={role} key={key}>{role}</option>)
 
         return (
             <div className="grid-x">
@@ -238,7 +235,7 @@ class User extends Component {
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     {
                                         user.id &&
-                                        <AvatarForm user={user} styleClass={"medium-2 cell"} />
+                                        <AvatarForm user={user} styleClass="medium-2 cell text-center" />
                                     }
 
                                     <div className="medium-10 cell">
@@ -268,12 +265,13 @@ class User extends Component {
                                         </div>
                                         <div className="grid-x grid-padding-x grid-padding-y">
                                             <CollectivitesMap collectivites={collectivites} collectiviteId={user.collectivite} isSuperAdmin={this.state.isSuperAdmin} handleChangeField={this.handleChangeField} />
-                                            <div className="medium-6 cell">
-                                                <label>
-                                                    {t('admin.user.placeholder_enable')}
-                                                    <input type="checkbox" name="enabled" checked={user.enabled || false} onChange={(e) => this.handleChangeField(e.target.name, e.target.checked)} />
-                                                </label>
-                                            </div>
+                                            <Switch id="enabled"
+                                                    className="cell medium-6"
+                                                    labelText={t('admin.user.placeholder_enable')}
+                                                    checked={user.enabled}
+                                                    onChange={this.handleChangeField}
+                                                    activeText={t('common.label.yes')}
+                                                    inactiveText={t('common.label.no')}/>
                                         </div>
                                     </div>
                                 </div>
@@ -292,7 +290,7 @@ class User extends Component {
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     {
                                         user.id &&
-                                        <SignatureForm user={user} styleClass={"medium-6 cell"} />
+                                        <SignatureForm user={user} styleClass="medium-6 cell text-center" />
                                     }
 
                                     <div className="medium-6 cell">
@@ -343,6 +341,26 @@ class User extends Component {
                             </div>
                         </div>
 
+                        { (userId) &&
+                            <div>
+                                <hr/>
+                                <div className="grid-x grid-margin-x grid-padding-x">
+                                    <div className="medium-12 cell">
+                                        <h3>{t('admin.user.subtitle_role')}</h3>
+                                    </div>
+                                </div>
+
+                                <div className="grid-x grid-margin-x grid-padding-x">
+                                    <RolesUser roles={ Object.assign([], user.userrole) }
+                                               changeUserRole={ this.handleChangeUserRole }
+                                               removeUserRole={ this.handleRemoveUserRole }
+                                               addUserRole={ this.handleAddUserRole }
+                                    />
+                                </div>
+                            </div>
+                        }
+
+
                         <hr/>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
@@ -360,11 +378,13 @@ class User extends Component {
                                             </select>
                                         </label>
                                     </div>
-                                    <div className="medium-6 cell">
-                                        <label>{t('admin.user.label_api_enable')}
-                                            <input type="checkbox" name="apiactivated" checked={user.apiactivated || false} onChange={(e) => this.handleChangeField(e.target.name, e.target.checked)} />
-                                        </label>
-                                    </div>
+                                    <Switch id="apiactivated"
+                                            className="cell medium-6"
+                                            labelText={t('admin.user.label_api_enable')}
+                                            checked={user.apiactivated}
+                                            onChange={this.handleChangeField}
+                                            activeText={t('common.label.yes')}
+                                            inactiveText={t('common.label.no')}/>
                                 </div>
                                 {
                                     (userId) &&
@@ -389,22 +409,6 @@ class User extends Component {
                             </div>
                         </div>
 
-
-                        {(userId) &&
-                            <div>
-                                <hr/>
-                                <div className="grid-x grid-margin-x grid-padding-x">
-                                    <div className="medium-12 cell">
-                                        <h3>{t('admin.user.subtitle_role')}</h3>
-                                    </div>
-                                </div>
-
-                                <div className="grid-x grid-margin-x grid-padding-x">
-                                    <RolesUser user={userId} />
-                                </div>
-                            </div>
-                        }
-
                     </div>
                 </div>
             </div>
@@ -422,13 +426,8 @@ export default translate(['sesile'])(User)
 
 const CollectivitesMap = ({collectivites, collectiviteId, isSuperAdmin, handleChangeField}, {t}) => {
 
-    const collectiviteOptions = collectivites && collectivites.map(collectivite =>
-        {
-            if (collectivite.active) {
-                return <option value={collectivite.id} key={collectivite.id}>{collectivite.nom}</option>
-            }
-        }
-    )
+    const collectiviteOptions = collectivites && collectivites.filter(collectivite => collectivite.active)
+        .map(collectivite => <option value={collectivite.id} key={collectivite.id}>{collectivite.nom}</option>)
 
     return (
         isSuperAdmin &&

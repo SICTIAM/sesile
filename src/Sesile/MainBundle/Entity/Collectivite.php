@@ -28,7 +28,8 @@ class Collectivite
      * @Serializer\Groups({"currentUser",
      *                      "getAllCollectivite",
      *                      "getCollectiviteById",
-     *                      "listUsers"
+     *                      "listUsers",
+     *                      "UserId"
      *     })
      */
     private $id;
@@ -40,7 +41,8 @@ class Collectivite
      * @Serializer\Groups({"currentUser",
      *                      "getAllCollectivite",
      *                      "getCollectiviteById",
-     *                      "listUsers"
+     *                      "listUsers",
+     *                      "UserId"
      * })
      */
     private $nom;

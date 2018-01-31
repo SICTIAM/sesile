@@ -160,7 +160,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"UserId"})
      * @Rest\Get("/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
@@ -204,7 +204,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"UserId"})
      * @Rest\Delete("/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
@@ -235,7 +235,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"UserId"})
      * @Rest\Post("/avatar/{id}")
      * @param Request $request
      * @param User $user
@@ -263,7 +263,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"UserId"})
      * @Rest\Delete("/avatar_remove/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
@@ -281,7 +281,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"UserId"})
      * @Rest\Post("/signature/{id}")
      * @param Request $request
      * @param User $user
@@ -309,7 +309,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"UserId"})
      * @Rest\Delete("/signature_remove/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
@@ -327,7 +327,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"UserId"})
      * @Rest\Put("/{id}")
      * @param Request $request
      * @param User $user
@@ -351,7 +351,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
             return $user;
         }
         else {
-            return $form;
+            return new JsonResponse(['message' => 'Impossible de mettre à jour l\'utilisateur'], Response::HTTP_NOT_MODIFIED);
         }
     }
 

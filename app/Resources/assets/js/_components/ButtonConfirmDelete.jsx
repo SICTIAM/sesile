@@ -26,7 +26,7 @@ class ButtonConfirmDelete extends Component {
     render() {
         const { t } = this.context
         return (
-            <div id={`container-${this.props.dataToggle}`}>
+            <div id={`container-${this.props.dataToggle}`} className={this.props.className}>
                 <button data-toggle={this.props.dataToggle}>
                     <i className="fi-trash medium icon-action" title={t('common.button.delete')}></i>
                 </button>
@@ -67,6 +67,7 @@ ButtonConfirmDelete.protoTypes = {
     content: string.isRequired,
     onConfirm: func.isRequired,
     dataToggle: string,
+    className: string
 }
 
 export default translate(['sesile'])(ButtonConfirmDelete)
