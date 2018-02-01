@@ -67,6 +67,7 @@ class Classeur {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", fetch="EAGER")
      * @ORM\JoinColumn(name="type", referencedColumnName="id")
+     * @ORM\OrderBy({"nom": "ASC"})
      * @Groups({"classeurById"})
      *
      */

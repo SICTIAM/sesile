@@ -188,6 +188,7 @@ class Collectivite
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", mappedBy="collectivites")
+     * @ORM\OrderBy({"nom": "ASC"})
      * @Serializer\Exclude()
      */
     private $types;
