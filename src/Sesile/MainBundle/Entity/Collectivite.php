@@ -28,7 +28,8 @@ class Collectivite
      * @Serializer\Groups({"currentUser",
      *                      "getAllCollectivite",
      *                      "getCollectiviteById",
-     *                      "listUsers"
+     *                      "listUsers",
+     *                      "UserId"
      *     })
      */
     private $id;
@@ -40,7 +41,8 @@ class Collectivite
      * @Serializer\Groups({"currentUser",
      *                      "getAllCollectivite",
      *                      "getCollectiviteById",
-     *                      "listUsers"
+     *                      "listUsers",
+     *                      "UserId"
      * })
      */
     private $nom;
@@ -186,6 +188,7 @@ class Collectivite
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\ClasseurBundle\Entity\TypeClasseur", mappedBy="collectivites")
+     * @ORM\OrderBy({"nom": "ASC"})
      * @Serializer\Exclude()
      */
     private $types;

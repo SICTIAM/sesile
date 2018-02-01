@@ -4470,6 +4470,10 @@ react-i18next@^6.0.0:
     react "^15.6.1"
     react-dom "^15.6.1"
 
+react-iframe@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-iframe/-/react-iframe-1.1.0.tgz#fe0ac2eee934750ddd3fce1993fc97a967711d69"
+
 react-input-autosize@^2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.1.2.tgz#a3dc11a5517c434db25229925541309de3f7a8f5"

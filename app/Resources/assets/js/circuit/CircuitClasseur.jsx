@@ -21,6 +21,26 @@ class CircuitClasseur extends Component {
         $(".add-actions-etapes").foundation()
     }
 
+    currentCircleClassName (etape_classeur) {
+        if(etape_classeur.etape_valide) {
+            return "success text-success"
+        } else if(etape_classeur.etape_validante) {
+            return "warning text-warning"
+        } else {
+            return "gray text-gray"
+        }
+    }
+
+    currentTextClassName (etape_classeur) {
+        if(etape_classeur.etape_valide) {
+            return "text-success"
+        } else if(etape_classeur.etape_validante) {
+            return "text-warning"
+        } else {
+            return "text-gray"
+        }
+    }
+
     render () {
 
         const { etape_classeurs, user, etapeDeposante, addEtape, removeEtape, addUser, addGroup, editable, collectiviteId, removeUser, removeGroup } = this.props
@@ -32,13 +52,13 @@ class CircuitClasseur extends Component {
 
                     <div className="grid-x align-center-middle grid-margin-y">
                         <div className={ (editable ? "medium-1" : "medium-3") + " cell text-center"}>
-                            <div className={ !etapeDeposante ? ("circle success") : ("circle gray") }>1</div>
+                            <div className={ etapeDeposante ? ("circle warning text-warning") : ("circle success text-success") }>1</div>
                         </div>
                         <div className={ (editable ? "medium-2" : "medium-3") + " cell"}>
-                            <span className={ !etapeDeposante ? ("text-success text-bold") : ("text-gray text-bold")}>{t('admin.circuit.depositor')}</span>
+                            <span className={ etapeDeposante ? ("text-warning text-bold") : ("text-success text-bold")}>{t('admin.circuit.depositor')}</span>
                         </div>
                         <div className={ (editable ? "medium-6" : "medium-6") + " cell"}>
-                            <span className={ !etapeDeposante ? ("text-success text-bold") : ("text-gray text-bold")}>{user._prenom} {user._nom}</span>
+                            <span className={ etapeDeposante ? ("text-warning text-bold") : ("text-success text-bold") }>{user._prenom} {user._nom}</span>
                         </div>
                         { editable && <div className="cell medium-3"></div>}
                     </div>
@@ -46,13 +66,13 @@ class CircuitClasseur extends Component {
                     { etape_classeurs && etape_classeurs.map((etape_classeur, key) =>
                         <div key={"etape_classeur-" + key} className="grid-x align-center-middle grid-margin-y">
                             <div className={ (editable ? "medium-1" : "medium-3") + " cell text-center"}>
-                                <div className={ etape_classeur.etape_valide ? ("circle success") : ("circle gray") }>{key + 2}</div>
+                                <div className={ this.currentCircleClassName(etape_classeur) + " circle" }>{key + 2}</div>
                             </div>
                             <div className={ (editable ? "medium-2" : "medium-3") + " cell"}>
-                                <span className={ etape_classeur.etape_valide ? ("text-success text-bold") : ("text-gray text-bold")}>{t('admin.circuit.validator')}</span>
+                                <span className={ this.currentTextClassName (etape_classeur) + " text-bold" }>{t('admin.circuit.validator')}</span>
                             </div>
                             <div className={ (editable ? "medium-6" : "medium-6") + " cell"}>
-                                <span className={ etape_classeur.etape_valide ? ("text-success text-bold") : ("text-gray text-bold") }>
+                                <span className={ this.currentTextClassName (etape_classeur) + " text-bold"  }>
 
                                 { etape_classeur.users && etape_classeur.users.map((user, userKey) =>
                                     <div key={"user" + user.id}>

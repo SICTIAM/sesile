@@ -37,7 +37,8 @@ class User extends BaseUser {
      *                      "searchUser",
      *                      "userRole",
      *                      "listUsers",
-     *                      "classeurById"})
+     *                      "classeurById",
+     *                      "UserId"})
      *     })
      *
      */
@@ -56,7 +57,8 @@ class User extends BaseUser {
      *                      "currentUser",
      *                      "userPack",
      *                      "searchUser",
-     *                      "listUsers"
+     *                      "listUsers",
+     *                      "UserId"
      *      })
      */
     protected $Nom;
@@ -74,7 +76,8 @@ class User extends BaseUser {
      *                      "currentUser",
      *                      "userPack",
      *                      "searchUser",
-     *                      "listUsers"
+     *                      "listUsers",
+     *                      "UserId"
      *      })
      *
      */
@@ -85,7 +88,8 @@ class User extends BaseUser {
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      * @Serializer\Groups({"listClasseur",
-     *                      "currentUser"})
+     *                      "currentUser",
+     *                      "UserId"})
      */
     protected $path;
 
@@ -104,7 +108,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="pathSignature", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"classeurById", "currentUser"})
+     * @Serializer\Groups({"classeurById", "currentUser", "UserId"})
      */
     protected $pathSignature;
 
@@ -121,8 +125,7 @@ class User extends BaseUser {
     /**
      * @var string
      * @ORM\Column(name="qualite", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"classeurById",
-     *                     "currentUser"})
+     * @Serializer\Groups({"classeurById", "currentUser", "UserId"})
      */
     protected $qualite;
 
@@ -130,7 +133,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="ville", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $ville;
 
@@ -138,7 +141,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="code_postal", type="string", length=6, nullable=true)
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $cp;
 
@@ -146,7 +149,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="pays", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $pays;
 
@@ -154,7 +157,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="departement", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $departement;
 
@@ -168,8 +171,7 @@ class User extends BaseUser {
     /**
      * @var
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\UserRole", mappedBy="user", cascade={"remove", "persist"}, orphanRemoval=true)
-     * @Serializer\Groups({"classeurById",
-     *                      "currentUser"})
+     * @Serializer\Groups({"classeurById", "currentUser", "UserId"})
      */
     private $userrole;
 
@@ -177,6 +179,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="apitoken", type="string", length=40, nullable=true)
+     * @Serializer\Groups({"UserId"})
      */
     protected $apitoken;
 
@@ -185,6 +188,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="apisecret", type="string", length=40, nullable=true)
+     * @Serializer\Groups({"UserId"})
      */
     protected $apisecret;
 
@@ -193,6 +197,7 @@ class User extends BaseUser {
      * @var boolean
      *
      * @ORM\Column(name="apiactivated", type="boolean", nullable=true, options={"default" = false})
+     * @Serializer\Groups({"UserId"})
      */
     protected $apiactivated;
 
@@ -201,7 +206,7 @@ class User extends BaseUser {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
      * @ORM\JoinColumn(name="collectivite", referencedColumnName="id")
-     * @Serializer\Groups({"currentUser", "listUsers"})
+     * @Serializer\Groups({"currentUser", "listUsers", "UserId"})
      *
      */
     protected $collectivite;
@@ -258,25 +263,25 @@ class User extends BaseUser {
 
     /**
      * @var array
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $roles;
 
     /**
      * @var array
-     * @Serializer\Groups({"currentUser", "searchUser", "listUsers"})
+     * @Serializer\Groups({"currentUser", "searchUser", "listUsers", "UserId"})
      */
     protected $email;
 
     /**
      * @var array
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $username;
 
     /**
      * @var array
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $enabled;
 

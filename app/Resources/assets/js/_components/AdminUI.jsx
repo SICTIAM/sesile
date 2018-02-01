@@ -35,11 +35,11 @@ const AccordionContent = ({children}) =>
         {children}
     </ul>
 
-const AccordionItem = ({ className, title, children }) =>
+const AccordionItem = ({ className, title, children, classNameChild }) =>
     <li className={"accordion-item " + className} data-accordion-item>
         <a className="accordion-title admin-details-accordion-title">{title}</a>
         <div className="accordion-content" data-tab-content >
-            <div className="grid-x grid-padding-x grid-padding-y">
+            <div className={"grid-x grid-padding-x grid-padding-y " + classNameChild }>
                 {children}
             </div>
         </div>

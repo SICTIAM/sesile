@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { object, string, func } from 'prop-types'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
+import { handleErrors } from '../_utils/Utils'
+import {InputFile} from '../_components/Form'
 
 class SignatureForm extends Component {
 
@@ -20,30 +22,24 @@ class SignatureForm extends Component {
         }
     }
 
-    handleErrors(response) {
-        if (response.ok) {
-            return response
-        }
-        throw response
-    }
-
     componentWillMount() {
         const { user } = this.props
         this.setState({user: user})
     }
 
 
-    putFileSignature = (image, userId) => {
+    putFileSignature = (image) => {
         const { t, _addNotification } = this.context
+        const { user } = this.state
         let formData  = new FormData()
         formData.append('signatures', image)
 
-        fetch(Routing.generate("sesile_user_userapi_uploadsignature", {id: userId}), {
+        fetch(Routing.generate("sesile_user_userapi_uploadsignature", {id: user.id}), {
             method: 'POST',
             body: formData,
             credentials: 'same-origin'
         })
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(user => {
                 _addNotification(basicNotification(
@@ -68,7 +64,7 @@ class SignatureForm extends Component {
             },
             credentials: 'same-origin'
         })
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(user => {
                 _addNotification(basicNotification(
@@ -97,8 +93,18 @@ class SignatureForm extends Component {
                         <img className="medium-4 cell" src={"/uploads/signatures/" + user.path_signature} />
                     </div>
                 }
-                <input type="file" onChange={(e) => this.putFileSignature(e.target.files[0], user.id)} />
-                { user.path_signature && <button className="button alert text-uppercase" onClick={() => this.deleteFileSignature(user.id)}>{t('common.button.delete')}</button>}
+                <div className="grid-x">
+
+                    <InputFile  id="add_signature_img"
+                                className="cell medium-6"
+                                labelText={user.path ? t('common.button.change_img') : t('common.button.upload_img')}
+                                accept="image/png,image/jpeg"
+                                onChange={this.putFileSignature}/>
+
+                    <div className="cell medium-6">
+                        { user.path_signature && <button className="button alert text-uppercase" onClick={() => this.deleteFileSignature(user.id)}>{t('common.button.delete')}</button>}
+                    </div>
+                </div>
             </div>
         )
     }

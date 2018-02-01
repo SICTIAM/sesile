@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { object, string, func } from 'prop-types'
 import UserAvatar from 'react-user-avatar'
+import { handleErrors } from '../_utils/Utils'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
+import {InputFile} from '../_components/Form'
 
 class AvatarForm extends Component {
 
@@ -21,29 +23,23 @@ class AvatarForm extends Component {
         }
     }
 
-    handleErrors(response) {
-        if (response.ok) {
-            return response
-        }
-        throw response
-    }
-
     componentWillMount() {
         const { user } = this.props
         this.setState({user: user})
     }
 
-    putFile = (image, userId) => {
+    putFile = (image) => {
         const { t, _addNotification } = this.context
+        const { user } = this.state
         let formData  = new FormData()
         formData.append('path', image)
 
-        fetch(Routing.generate("sesile_user_userapi_uploadavatar", {id: userId}), {
+        fetch(Routing.generate("sesile_user_userapi_uploadavatar", {id: user.id}), {
             method: 'POST',
             body: formData,
             credentials: 'same-origin'
         })
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(user => {
                 _addNotification(basicNotification(
@@ -68,7 +64,7 @@ class AvatarForm extends Component {
             },
             credentials: 'same-origin'
         })
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(user => {
                 _addNotification(basicNotification(
@@ -94,11 +90,16 @@ class AvatarForm extends Component {
                 <div>
                     {
                         user.path ?
-                            <UserAvatar size="100" name={ user._prenom } src={"/uploads/avatars/" + user.path}/>
+                            <UserAvatar size="100" name={ user._prenom } src={"/uploads/avatars/" + user.path} className=" float-center" />
                             : <UserAvatar size="100" name={ user._prenom } className="txt-avatar"/>
 
                     }
-                    <input type="file" name="file" onChange={(e) => this.putFile(e.target.files[0], user.id)}/>
+                    <InputFile  id="add_avatar_img"
+                                className="cell medium-2"
+                                labelText={user.path ? t('common.button.change_img') : t('common.button.upload_img')}
+                                accept="image/png,image/jpeg"
+                                onChange={this.putFile}/>
+
                     {user.path && <button className="button alert text-uppercase"
                                           onClick={() => this.deleteFile(user.id)}>{t('common.button.delete')}</button>}
                 </div>

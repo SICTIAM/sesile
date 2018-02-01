@@ -28,7 +28,7 @@ class ClasseurNew extends Component {
         classeur: {
             nom: '',
             validation: Moment(),
-            visibility: 0,
+            visibility: 3,
             description: ''
         },
         user: {},
