@@ -16,7 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Rest\Route("/apirest/user_pack", options = { "expose" = true })
- * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
  */
 class UserPackApiController extends FOSRestController implements ClassResourceInterface
 {
@@ -24,18 +23,21 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Get("s/{collectiviteId}")
      * @ParamConverter("collectivite", options={"mapping": {"collectiviteId": "id"}})
+     * @param Collectivite $collectivite
+     * @return \Doctrine\Common\Collections\Collection|UserPack
      */
     public function getByCollectiviteAction(Collectivite $collectivite)
     {
         $this->get('logger')->info('Get group by collectivite {id}', array('id' => $collectivite->getId()));
-        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite->getId());
+//        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite->getId());
+        return $collectivite->getUserPacks();
     }
 
     /**
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @return array
      * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Get("s")
-     *
      */
     public function getAllAction()
     {
@@ -43,6 +45,7 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Get("/{id}")
      * @ParamConverter("UserPack", options={"mapping": {"id": "id"}})
@@ -57,6 +60,7 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
 
 
     /**
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\View("statusCode=Response::HTTP_CREATED", serializerGroups={"userPack"})
      * @Rest\Post("")
      * @ParamConverter("UserPack")
@@ -84,6 +88,7 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
 
 
     /**
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\View()
      * @Rest\Delete("/{id}")
      * @ParamConverter("UserPack", options={"mapping": {"id": "id"}})
@@ -100,6 +105,7 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Put("/{id}")
      * @param Request $request
