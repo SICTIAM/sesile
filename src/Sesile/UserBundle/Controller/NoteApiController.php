@@ -79,7 +79,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"detailsNote"})
      * @Rest\Post("/")
      * @param Request $request
      * @return JsonResponse
@@ -102,7 +102,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"detailsNote"})
      * @Rest\Post("/readed/{id}")
      * @ParamConverter("note", options={"mapping": {"id": "id"}})
      * @param Note $note
@@ -122,7 +122,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"detailsNote"})
      * @Rest\Put("/{id}")
      * @ParamConverter("note", options={"mapping": {"id": "id"}})
      * @param Request $request
@@ -144,7 +144,7 @@ class NoteApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"listNote"})
      * @Rest\Delete("/{id}")
      * @ParamConverter("note", options={"mapping": {"id": "id"}})
      * @param Note $note

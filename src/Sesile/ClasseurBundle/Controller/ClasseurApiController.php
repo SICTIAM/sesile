@@ -216,6 +216,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
             if ($form->isValid()) {
 
                 $em = $this->getDoctrine()->getManager();
+                $em->getRepository('SesileClasseurBundle:Classeur')->setUserVisible($classeur);
 
                 foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
                     $etapeClasseur->setClasseur($classeur);
@@ -232,10 +233,10 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 $em->persist($classeur);
                 $em->flush();
 
-                return $classeur;
+                return $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
             }
             else {
-                return $form;
+                return new JsonResponse($form->getErrors(), Response::HTTP_BAD_REQUEST);
             }
         } else {
             return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);

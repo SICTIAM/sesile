@@ -327,7 +327,7 @@ class ClasseurRepository extends EntityRepository {
         }
 
         $users[] = $classeur->getUser();
-        if ($classeur->getCopy()) {
+        if (is_array($classeur->getCopy())) {
             $users = array_merge($users, $classeur->getCopy());
         }
         $users = array_unique($users);

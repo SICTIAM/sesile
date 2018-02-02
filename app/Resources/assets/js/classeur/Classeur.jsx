@@ -88,10 +88,6 @@ class Classeur extends Component {
         }}))
 
         fields.etapeClasseurs = etape_classeurs
-        this.putClasseurSubmit(fields)
-    }
-
-    putClasseurSubmit (fields) {
         fetch(Routing.generate('sesile_classeur_classeurapi_update', {id: this.state.classeur.id}), {
             method: 'PATCH',
             headers: {
@@ -103,7 +99,7 @@ class Classeur extends Component {
         })
         .then(handleErrors)
         .then(response => response.json())
-        .then(json => this.setState({classeur: json}))
+        .then(classeur => this.setState({classeur}))
         .then(this.context._addNotification(basicNotification(
                 'success',
                 this.context.t('classeur.success.edit'))))

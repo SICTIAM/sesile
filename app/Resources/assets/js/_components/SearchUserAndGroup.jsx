@@ -41,7 +41,7 @@ class SearchUserAndGroup extends Component {
     findGroup = value => {
         const { groups } = this.state
         const regex = escapedValue(value, groups)
-        this.setSuggestions('Groupes', groups.filter(group => regex.test(group.nom) && !this.props.step.user_packs.find(user_pack => group.id === user_pack.id)))
+        groups.length !== 0 && this.setSuggestions('Groupes', groups.filter(group => regex.test(group.nom) && !this.props.step.user_packs.find(user_pack => group.id === user_pack.id)))
     }
 
     fetchGroups = (collectiviteId) => {
@@ -50,7 +50,7 @@ class SearchUserAndGroup extends Component {
         .then(json => this.setState({groups: json}))
     }
 
-    getSuggestionValue = suggestion => suggestion.users ? suggestion.nom : suggestion._prenom + " " + suggestion._nom
+    getSuggestionValue = suggestion => suggestion && (suggestion.users ? suggestion.nom : suggestion._prenom + " " + suggestion._nom)
 
     renderSuggestion = suggestion =>
         <span>
