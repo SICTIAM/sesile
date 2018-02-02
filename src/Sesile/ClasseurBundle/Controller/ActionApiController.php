@@ -8,11 +8,14 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sesile\ClasseurBundle\Form\ActionType;
 use Sesile\ClasseurBundle\Form\ClasseurType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Rest\Route("/apirest/classeur/action", options = { "expose" = true })
+ * @Rest\Route("/apirest/action", options = { "expose" = true })
  */
 class ActionApiController extends FOSRestController implements ClassResourceInterface
 {
@@ -31,18 +34,34 @@ class ActionApiController extends FOSRestController implements ClassResourceInte
     }
 
     /**
-     * @Rest\View("statusCode=Response::HTTP_CREATED")
+     * @Rest\View("statusCode=Response::HTTP_CREATED", serializerGroups={"classeurById"})
      * @Rest\Post("/new/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Request $request
      * @param Classeur $classeur
-     * @param $comment
      * @internal param Request $request
+     * @return Action|JsonResponse
      */
-    public function postAction (Classeur $classeur, $comment)
+    public function postAction (Request $request, Classeur $classeur)
     {
-        // TODO security improve : user must have the good right to post
-        $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:Action')
-            ->addDocumentAction($classeur, "Commentaire", "", $comment, $this->getUser());
+        $action = new Action();
+
+        $form = $this->createForm(ActionType::class, $action);
+        $form->submit($request->request->all());
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $action->setClasseur($classeur);
+            $action->setUser($this->getUser());
+            $action->setUsername($this->getUser()->getPrenom() . " " . $this->getUser()->getNom());
+            $em->persist($action);
+            $em->flush();
+
+            return $action;
+        }
+        else {
+            return new JsonResponse(['message' => 'Impossible d\'ajouter un commentaire'], Response::HTTP_NOT_MODIFIED);
+        }
     }
 
 

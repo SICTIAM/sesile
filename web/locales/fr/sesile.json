@@ -95,7 +95,9 @@
 
             },
             "comments": {
-              "name": "Commentaires du classeur"
+              "name": "Commentaires du classeur",
+              "new": "Nouveau commentaire",
+              "submit": "Ajouter un commentaire"
             },
             "label": {
               "circuits": "Liste des circuits",

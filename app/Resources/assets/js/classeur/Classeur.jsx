@@ -31,9 +31,7 @@ class Classeur extends Component {
             actions: []
         },
         user: {},
-        newAction: {
-            action: ''
-        }
+        action: ''
     }
 
     componentWillReceiveProps(nextProps) {
@@ -56,22 +54,32 @@ class Classeur extends Component {
             .then(json => this.setState({classeur: json}))
     }
 
-    putClasseur = (fields) => {
-
+    postAction = () => {
         const { classeur } = this.state
-
-        if (this.state.newAction.action) {
-            const actions = classeur.actions
-
-            Object.assign(actions, actions.map(action => { return {
-                username: action.username,
-                action: action.action,
-                user_action: action.user_action.id
-            }}))
-            actions.push(this.state.newAction)
-            fields.actions = actions
+        if (this.state.action) {
+            fetch(Routing.generate('sesile_classeur_actionapi_post', {id: classeur.id}), {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: this.state.action
+                }),
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(action => {
+                this.setState(prevState => {
+                    prevState.classeur.actions.unshift(action)
+                    prevState.action = ''
+                })
+            })
         }
+    }
 
+    putClasseur = (fields) => {
+        const { classeur } = this.state
         const etape_classeurs = classeur.etape_classeurs
         Object.assign(etape_classeurs, classeur.etape_classeurs.map(etape_classeur => { return {
             ordre: etape_classeur.ordre,
@@ -105,16 +113,7 @@ class Classeur extends Component {
                         error.statusText)))
     }
 
-    addComment = (name,value) => {
-        const {user} = this.state
-        let newAction = {
-            action: value,
-            username: user._nom + " " + this.state.user._prenom,
-            user_action: user.id
-        }
-        this.setState(preState => preState.newAction = newAction)
-
-    }
+    addComment = (name,value) => this.setState(prevState => prevState.action = value)
 
     reOrderSteps() {
         this.setState((prevState) => {
@@ -264,7 +263,7 @@ class Classeur extends Component {
                                     }
 
                                     <div className="grid-x">
-                                        { classeur.copy.length > 0 &&
+                                        { classeur.copy && classeur.copy.length > 0 &&
                                         <Cell className="medium-12">
                                             <UserInCopy users={classeur.copy} />
                                         </Cell>
@@ -274,7 +273,12 @@ class Classeur extends Component {
                             </div>
 
                             <div className="grid-x grid-padding-y">
-                                <ClasseurActions actions={classeur.actions} classeur={classeur.id} addComment={this.addComment} />
+                                <ClasseurActions actions={Object.assign([], classeur.actions)}
+                                                 action={this.state.action}
+                                                 classeur={classeur.id}
+                                                 addComment={this.addComment}
+                                                 submitComment={this.postAction}
+                                />
                             </div>
                         </div>
                     </div>

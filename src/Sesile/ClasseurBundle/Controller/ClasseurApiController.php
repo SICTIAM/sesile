@@ -188,7 +188,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Patch("/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Request $request
