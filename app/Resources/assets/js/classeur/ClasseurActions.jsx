@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { func, array, number } from 'prop-types'
-import { Textarea } from '../_components/Form'
+import { func, array, number, string } from 'prop-types'
+import {Button, Textarea} from '../_components/Form'
 import { translate } from 'react-i18next'
 
 class ClasseurActions extends Component {
@@ -14,7 +14,7 @@ class ClasseurActions extends Component {
 
     render() {
 
-        const { actions, addComment } = this.props
+        const { actions, action, addComment, submitComment } = this.props
         const { t } = this.context
 
         return (
@@ -28,9 +28,18 @@ class ClasseurActions extends Component {
                     <Textarea
                         id="new-action"
                         name="newAction"
-                        placeholder="Nouveau commentaire"
+                        placeholder={ t('common.classeurs.comments.new') }
                         onChange={addComment}
                         className="cell medium-10"
+                        value={action}
+                    />
+                </div>
+
+                <div className="grid-x grid-margin-x align-top text-center">
+                    <div className="cell medium-2"></div>
+                    <Button labelText={ t('common.classeurs.comments.submit') }
+                            className="cell medium-10 text-right"
+                            onClick={submitComment}
                     />
                 </div>
 
@@ -53,8 +62,10 @@ class ClasseurActions extends Component {
 
 ClasseurActions.propsType = {
     actions: array,
+    action: string,
     classeur: number,
-    addComment: func
+    addComment: func,
+    submitComment: func
 }
 
 export default translate(['sesile'])(ClasseurActions)

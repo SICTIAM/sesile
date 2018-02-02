@@ -15,9 +15,7 @@ class ActionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username')
             ->add('action')
-            ->add('user_action')
         ;
     }
     

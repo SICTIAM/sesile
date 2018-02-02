@@ -25,12 +25,12 @@ class ClasseurType extends AbstractType
                 'format' => 'yyyy-MM-dd HH:mm'
             ])
             ->add('description')
-            ->add('actions', CollectionType::class, array(
+            /*->add('actions', CollectionType::class, array(
                 'entry_type' => ActionType::class,
                 'entry_options' => array('label' => false),
                 'allow_add' => true,
                 'by_reference' => false
-            ))
+            ))*/
             ->add('etapeClasseurs', CollectionType::class, array(
                 'entry_type' => EtapeClasseurType::class,
                 'allow_delete' => true,
