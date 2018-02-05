@@ -40,7 +40,3 @@ services:
             image: phpmyadmin/phpmyadmin
             ports:
                 - "8080:80"
-    onlyoffice:
-        image: onlyoffice/documentserver
-        ports:
-          - "8081:80"
