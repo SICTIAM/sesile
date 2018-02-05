@@ -49,7 +49,7 @@ class ClasseurActions extends Component {
                         <div className="cell medium-10 text-left">
                             <p>
                                 { action.action }
-                                <span className="text-bold"> { action.user_action._nom } { action.user_action._prenom }</span>
+                                <span className="text-author"> par { action.user_action._prenom } { action.user_action._nom }</span>
                             </p>
                         </div>
                     </div>

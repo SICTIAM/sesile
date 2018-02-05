@@ -415,19 +415,16 @@ html {
       border: solid 0.3em $alert-color;
     }
   }
-
-  .dropdown-add-actions {
-    border: none;
-    background-color: map-get($sesile-color, 'gray-blue');
-    .dropdown-add-actions-text {
-      color: $white;
-      font-size: 0.875rem;
-      text-transform: none;
-      font-weight: bold;
-    }
+  .padding-cell {
+    padding-top: 0.3em;
   }
 }
 
+.text-author {
+  font-style: italic;
+  font-size: 0.8em;
+  font-weight: 700;
+}
 .text-bold {
   font-weight:700;
 }
@@ -839,7 +836,7 @@ $list-group-margin: $global-margin;
 .react-autosuggest__input {
   width: 100%;
   height: 30px;
-  padding: 10px 20px;
+  padding: 0.5em;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
   font-size: 16px;
