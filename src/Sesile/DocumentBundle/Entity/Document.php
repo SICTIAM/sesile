@@ -136,6 +136,23 @@ class Document
     }
 
     /**
+     * Get short name
+     *
+     * @return string
+     */
+    public function getShortName()
+    {
+        $nbMaxCharacters = 40;
+        $name = $this->name;
+        $extension = explode('.', $name);
+        $extension = strtolower(end($extension));
+        if (strlen($name) > $nbMaxCharacters) {
+            return substr($name, 0, $nbMaxCharacters) . '....' . $extension;
+        }
+        return $this->name;
+    }
+
+    /**
      * Set repourl
      *
      * @param string $repourl

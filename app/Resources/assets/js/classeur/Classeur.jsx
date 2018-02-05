@@ -133,7 +133,12 @@ class Classeur extends Component {
         this.reOrderSteps()
     }
 
-    handleEditClasseur = (edit) => this.setState(state => state.editClasseur = edit)
+    handleEditClasseur = (edit) => {
+        if (!edit) {
+            this.getClasseur(this.state.classeur.id)
+        }
+        this.setState(state => state.editClasseur = edit)
+    }
     handleRemoveEtape = (stepKey) => {
         this.setState(prevState => prevState.classeur.etape_classeurs.splice(stepKey,1))
         this.reOrderSteps()

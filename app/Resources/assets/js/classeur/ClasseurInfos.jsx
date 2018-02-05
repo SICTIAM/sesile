@@ -67,7 +67,9 @@ class ClasseurInfos extends Component {
                         <Cell className="medium-4 text-right">
                             {
                                 editable && !edit &&
-                                <a onClick={() => handleEditClasseur(!edit)} className="button">{t('common.button.modify')}</a>
+                                <a onClick={() => handleEditClasseur(!edit)} className="button">
+                                    { t('common.button.modify') }
+                                </a>
                             }
                         </Cell>
                     </GridX>
@@ -117,8 +119,11 @@ class ClasseurInfos extends Component {
 
                     {edit &&
                     <div className="grid-x grid-margin-x grid-padding-x">
+                        <div className="cell medium-4">
+                            { <a onClick={() => handleEditClasseur(!edit)} className="float-left">{ t('common.button.cancel') }</a> }
+                        </div>
                         <Button id="submit-classeur-infos"
-                                className="cell medium-12"
+                                className="cell medium-8"
                                 classNameButton="float-right"
                                 onClick={this.saveClasseurInfos}
                                 labelText={t('common.button.edit_save')}/>
