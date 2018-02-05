@@ -184,7 +184,7 @@
             "delete": "Suppression de {{name}}"
         },
         "placeholder": {
-            "type_user_name": "Entrez le nom d'un utilisateur...",
+            "type_user_name": "Entrez le nom d'un utilisateur",
             "name": "Nom du {{name}}",
             "type_name": "Entrez le nom du {{name}}...",
             "type_userName_or_groupName": "Groupe ou utilisateur...",
@@ -272,7 +272,11 @@
             "label_api_key": "Clé API",
             "label_api_secret": "Secret API",
             "label_role_user": "Role",
-            "placeholder_role_user": "Role de l'utilisateur"
+            "placeholder_role_user": "Role de l'utilisateur",
+            "first_name_and_name": "Prénom Nom",
+            "search_by_first_name_and_name": "Recherche par nom et prénom",
+            "succes_delete": "L'utilisateur a été supprimé",
+            "error_delete": "Impossible de supprimer l'utilisateur"
         },
         "collectivite": {
             "title": "Rechercher une collectivité",
@@ -297,6 +301,7 @@
             "success_edit": "La collectivité a bien été bien modifier",
             "success_upload_avatar": "L'image a été correctement chargée",
             "state": "Etat",
+            "select_collectivite": "Sélectionner une collectivité",
             "error": {
               "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
               "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
