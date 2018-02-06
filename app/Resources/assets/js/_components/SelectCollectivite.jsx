@@ -38,7 +38,6 @@ class SelectCollectivite extends Component {
     render() {
         const { t } = this.context
         const { currentCollectivite, collectivites } = this.state
-        const options = collectivites.map((collectivite, key) => <option key={key} value={collectivite.id} disabled={!collectivite.active ? true : false}>{collectivite.nom}</option>)
         return (
             <label htmlFor="collectivites_select">
                 <span  className="text-bold">{t('admin.label.which_collectivite')}</span>

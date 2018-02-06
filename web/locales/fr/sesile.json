@@ -167,6 +167,7 @@
         "title": "Rechercher un {{name}}",
         "subtitle": "Puis accéder aux paramétres",
         "associated_users": "Utilisateurs associés",
+        "associated_group": "Groupes associés",
         "users_list": "Liste d'utilisateurs",
         "button": {
             "save": "Ajouter le {{name}}",
@@ -239,7 +240,13 @@
             "add_step": "Ajouter une étape",
             "not_valid": "Circuit de validation non valide",
             "remove_step": "Supprimer l'étape",
-            "validation_conditions": "Vérifier que le circuit contient un \"nom\", au moins un \"type\" et que les étapes contiennent au moins un groupe et/ou plusieurs utilisateurs"
+            "validation_conditions": "Vérifier que le circuit contient un \"nom\", au moins un \"type\" et que les étapes contiennent au moins un groupe et/ou plusieurs utilisateurs",
+            "which_circuit": "Quel circuit ?",
+            "circuit_list": "Liste de circuits",
+            "add_circuit": "Ajouter un circuit",
+            "success_delete": "Le circuit a été supprimé",
+            "error_delete": "Une erreur est survenue à la suppression du circuit",
+            "error_fetch_list": "Une erreur est survenue à la récupération des circuits"
         },
         "user_pack": {
             "name": "groupe utilisateur",
