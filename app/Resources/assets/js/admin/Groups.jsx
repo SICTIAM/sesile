@@ -1,117 +1,132 @@
 import React, { Component }from 'react'
-import PropTypes from 'prop-types'
-import Link from 'react-router-dom'
+import { object, array, func, any } from 'prop-types'
+import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import History from '../_utils/History'
-import { escapedValue } from '../_utils/Search'
+
+import { AdminList, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
+import ButtonConfirmDelete from '../_components/ButtonConfirmDelete'
+import { Input } from '../_components/Form'
+import { basicNotification } from '../_components/Notifications'
+import { Cell, GridX } from '../_components/UI'
 import SelectCollectivite from '../_components/SelectCollectivite'
 
-const { object, array, func, any } = PropTypes
+import { escapedValue } from '../_utils/Search'
+import { handleErrors, DisplayLongText } from "../_utils/Utils"
 
 class Groups extends Component {
-
     static contextTypes = {
-        t: func
+        t: func,
+        _addNotification: func
     }
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            currentCollectiviteId: null,
-            isSuperAdmin: false,
-            groups: [],
-            filteredGroups: [],
-            groupName: '',
-            userName: ''
-        }
+    state = {
+        collectiviteId: null,
+        isSuperAdmin: false,
+        groups: [],
+        filteredGroups: [],
+        groupName: '',
+        userName: ''
     }
-
     componentDidMount() {
         const user = this.props.user
-        this.setState({currentCollectiviteId: user.collectivite.id})
+        this.setState({collectiviteId: user.collectivite.id})
         this.getListGroupe(user.collectivite.id)
         if(user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
     }
-
-    getListGroupe(id) {
-        fetch(Routing.generate('sesile_user_userpackapi_getbycollectivite', {collectiviteId: id}), {credentials: 'same-origin'})
+    handleClickDelete = (id) => {
+        const { t, _addNotification } = this.context
+        fetch(Routing.generate("sesile_user_userpackapi_remove", {id, collectiviteId: this.state.collectiviteId}), {
+            method: 'DELETE',
+            credentials: 'same-origin'
+        })
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(groups => {
+            _addNotification(
+                basicNotification(
+                    'success',
+                    t('admin.group.success_delete')))
+            this.setState({groups, filteredGroups: groups})})
+        .catch(() =>
+            _addNotification(
+                basicNotification(
+                    'error',
+                    t('admin.group.error_delete'))))
+    }
+    getListGroupe(collectiviteId) {
+        fetch(
+            Routing.generate(
+                'sesile_user_userpackapi_getbycollectivite',
+                {collectiviteId}),
+            {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => this.setState({groups: json, filteredGroups: json}))
     }
-
-    handleChangeCollectivite = (currentCollectiviteId) => {
-        this.setState({currentCollectiviteId, userName: '', groupName: ''})
-        this.getListGroupe(currentCollectiviteId)
+    handleChangeCollectivite = (collectiviteId) => {
+        this.setState({collectiviteId, userName: '', groupName: ''})
+        this.getListGroupe(collectiviteId)
     }
-
-    handleSearchByUserName = (userName) => {
+    handleSearchByUserName = (key, userName) => {
         this.setState({userName})
         const regex = escapedValue(userName, this.state.filteredGroups, this.state.groups)
-        const filteredGroups = this.state.groups.filter(group => regex.test(group.users.map(user => user._nom)))
+        const filteredGroups =
+            this.state.groups.filter(group => regex.test(group.users.map(user => user._nom)))
         this.setState({filteredGroups})
     }
-
-    handleSearchByGroupName = (groupName) => {
+    handleSearchByGroupName = (key, groupName) => {
         this.setState({groupName})
         const regex = escapedValue(groupName, this.state.filteredGroups, this.state.groups)
         const filteredGroups = this.state.groups.filter(group => regex.test(group.nom))
         this.setState({filteredGroups})
     }
-    
-    
     render() {
         const { t } = this.context
-        const user = this.props.user 
-        const { currentCollectiviteId, isSuperAdmin, filteredGroups, groupName, userName } = this.state
-        const listFilteredGroups = filteredGroups.map((group, key) => <GroupRow key={key} group={group} collectiviteId={currentCollectiviteId} />)
+        const listFilteredGroups = this.state.filteredGroups.map((group, key) =>
+            <RowGroup
+                key={key}
+                group={group}
+                collectiviteId={this.state.collectiviteId}
+                handleClickDelete={this.handleClickDelete} />)
         return (
-            <div className="user-group">
-                <h4 className="text-center text-bold">{t('admin.title', {name: t('admin.group.complet_name')})}</h4>
-                <p className="text-center">{t('admin.subtitle')}</p>
-                <div className="grid-x align-center-middle">
-                    <div className="cell medium-6">
-                        <div className="grid-x grid-padding-x">
-                            <div className="auto cell">
-                                <label htmlFor="name-search-admin">{t('admin.label.which')}</label>
-                                <input id="name-search-admin"
-                                    placeholder={t('admin.placeholder.type_name', {name: t('admin.group.name')})}
-                                    type="text" 
-                                    value={groupName}
-                                    onChange={(e) => this.handleSearchByGroupName(e.target.value)} />
-                            </div>
-                            <div className="auto cell">
-                                <label htmlFor="user-search-admin">{t('admin.label.who')}</label>
-                                <input id="user-search-admin"
-                                    placeholder={t('admin.placeholder.type_user_name')}
-                                    type="text" 
-                                    value={userName}
-                                    onChange={(e) => this.handleSearchByUserName(e.target.value)}/>
-                            </div>
-                            {isSuperAdmin &&
-                                <div className="auto cell">
-                                    <SelectCollectivite currentCollectiviteId={currentCollectiviteId} 
-                                                        handleChange={this.handleChangeCollectivite} />
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div className="cell medium-10 list-admin">
-                        <div className="grid-x grid-padding-x panel">
-                            <div className="cell medium-12 panel-heading grid-x">
-                                <div className="cell medium-4">{t('admin.group.name')}</div>
-                                <div className="cell medium-8">{t('admin.associated_users')}</div>
-                            </div>
-                            {(listFilteredGroups.length > 0) ? listFilteredGroups :
-                                <div className="cell medium-12 panel-body">
-                                    <div className="text-center">
-                                        {t('common.no_results', {name: t('admin.group.name')})}
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <AdminPage
+                title={t('admin.title', {name: t('admin.group.name')})}
+                subtitle={t('admin.subtitle')}>
+                <AdminContainer>
+                    <Cell className="medium-6">
+                        <GridX className="grid-padding-x align-center-middle">
+                            <Input
+                                className="cell medium-auto"
+                                labelText={t('admin.group.which_group')}
+                                value={this.state.groupName}
+                                onChange={this.handleSearchByGroupName}
+                                placeholder={t('common.search_by_name')}
+                                type="text"/>
+                            <Input
+                                className="cell medium-auto"
+                                labelText={t('admin.user.which_user')}
+                                value={this.state.userName}
+                                onChange={this.handleSearchByUserName}
+                                placeholder={t('common.search_by_name')}
+                                type="text"/>
+                            {this.state.isSuperAdmin &&
+                                <Cell className="medium-auto">
+                                    <SelectCollectivite
+                                        currentCollectiviteId={this.state.collectiviteId}
+                                        handleChange={this.handleChangeCollectivite} />
+                                </Cell>}
+                        </GridX>
+                    </Cell>
+                    <AdminList
+                        title={t('admin.group.groups_list')}
+                        listLength={listFilteredGroups.length}
+                        labelButton={t('admin.group.add_group')}
+                        addLink={`/admin/${this.state.collectiviteId}/groupe`}
+                        headTitles={[t('common.label.name'), t('admin.associated_users'), t('common.label.actions')]}
+                        headGrid={['medium-3', 'medium-auto', 'medium-2']}
+                        emptyListMessage={t('common.no_results', {name: t('admin.group.name')})}>
+                        {listFilteredGroups}
+                    </AdminList>
+                </AdminContainer>
+            </AdminPage>
         )
     }
 }
@@ -122,22 +137,41 @@ Groups.PropTypes = {
 
 export default translate(['sesile'])(Groups)
 
-const GroupRow = ({ group, collectiviteId }) => {
-    const arrayNoms = []
-    group.users.map(user => arrayNoms.unshift(user._nom))
-    return (
-        <div className="cell medium-12 panel-body grid-x row-admin" onClick={() => History.push(`${collectiviteId}/groupe/${group.id}`)}>
-            <div className="cell medium-4 text-uppercase">
-                {group.nom}
-            </div>
-            <div className="cell medium-8 text-uppercase">
-                {arrayNoms.join(' | ')}
-            </div>
-        </div>
-    )
-}
+const RowGroup = ({group, collectiviteId, handleClickDelete}, {t}) =>
+    <AdminListRow>
+        <Cell className="medium-3">
+            <DisplayLongText text={group.nom} maxSize={30}/>
+        </Cell>
+        <Cell className="medium-auto">
+            <DisplayLongText
+                text={group.users.map(user => user._nom).join(' | ')}
+                title={group.users.map(user => `${user._prenom} ${user._nom}`).join('\n')}
+                maxSize={100}/>
+        </Cell>
+        <Cell className="medium-2">
+            <GridX>
+                <Cell className="medium-auto">
+                    <Link
+                        to={`/admin/${collectiviteId}/groupe/${group.id}`}
+                        className="fa fa-pencil icon-action"
+                        title={t('common.button.edit')}/>
+                </Cell>
+                <Cell className="medium-auto">
+                    <ButtonConfirmDelete
+                        id={group.id}
+                        dataToggle={`delete-confirmation-update-${group.id}`}
+                        onConfirm={handleClickDelete}
+                        content={t('common.confirm_deletion_item')}/>
+                </Cell>
+            </GridX>
+        </Cell>
+    </AdminListRow>
 
-GroupRow.propTypes = {
+RowGroup.propTypes = {
     group: object.isRequired,
     collectiviteId: any.isRequired
+}
+
+RowGroup.contextTypes = {
+    t: func
 }

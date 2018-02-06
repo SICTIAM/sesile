@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
+ * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
  * @Rest\Route("/apirest/user_pack", options = { "expose" = true })
  */
 class UserPackApiController extends FOSRestController implements ClassResourceInterface
@@ -34,7 +35,7 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
      * @return array
      * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Get("s")
@@ -45,7 +46,6 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Get("/{id}")
      * @ParamConverter("UserPack", options={"mapping": {"id": "id"}})
@@ -60,7 +60,6 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
 
 
     /**
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\View("statusCode=Response::HTTP_CREATED", serializerGroups={"userPack"})
      * @Rest\Post("")
      * @ParamConverter("UserPack")
@@ -88,13 +87,13 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
 
 
     /**
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\View()
-     * @Rest\Delete("/{id}")
+     * @Rest\Delete("/{id}/{collectiviteId}")
      * @ParamConverter("UserPack", options={"mapping": {"id": "id"}})
      * @param UserPack $userpack
+     * @param $collectiviteId
      */
-    public function removeAction(UserPack $userpack)
+    public function removeAction(UserPack $userpack, $collectiviteId)
     {
         $this->get('logger')->info('Remove group {name}', array('name' => $userpack->getNom()));
         if($userpack) {
@@ -102,10 +101,10 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
             $em->remove($userpack);
             $em->flush();
         }
+        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectiviteId);
     }
 
     /**
-     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Put("/{id}")
      * @param Request $request

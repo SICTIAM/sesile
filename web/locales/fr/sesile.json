@@ -160,13 +160,14 @@
             "title_video": "Vidéo",
             "view_button": "Voir le document"
         },
-        "consult_document": "Voir le document"
+        "consult_document": "Voir le document",
+        "search_by_name": "Recherche par nom"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
         "subtitle": "Puis accéder aux paramétres",
         "associated_users": "Utilisateurs associés",
-        "users_list": "Liste des utilisateurs",
+        "users_list": "Liste d'utilisateurs",
         "button": {
             "save": "Ajouter le {{name}}",
             "send": "Envoyer"
@@ -208,7 +209,11 @@
             "name_plural": "groupes",
             "complet_name": "groupe d'utilisateurs",
             "complet_name_plural": "groupes d'utilisateurs",
-            "success_delete": "Le groupe a bien été supprimé"
+            "success_delete": "Le groupe a été supprimé",
+            "error_delete": "Une erreur est survenue lors de la suppression du groupe",
+            "add_group": "Ajouter un Groupe",
+            "groups_list": "Liste de groupes",
+            "which_group": "Quel groupe ?"
         },
         "type": {
             "name": "type",
@@ -276,7 +281,8 @@
             "first_name_and_name": "Prénom Nom",
             "search_by_first_name_and_name": "Recherche par nom et prénom",
             "succes_delete": "L'utilisateur a été supprimé",
-            "error_delete": "Impossible de supprimer l'utilisateur"
+            "error_delete": "Impossible de supprimer l'utilisateur",
+            "which_user": "Quel utilisateur ?"
         },
         "collectivite": {
             "title": "Rechercher une collectivité",

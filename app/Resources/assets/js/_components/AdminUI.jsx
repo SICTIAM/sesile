@@ -64,8 +64,13 @@ const AdminPage = ({title, subtitle, className="", children}) =>
         {children}
     </div>
 
-const AdminList = ({title, headTitles, labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
-    const listHeadTitles = headTitles.map(headTitle => <div key={headTitle} className="cell medium-auto">{headTitle}</div>)
+const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
+    const listHeadTitles = headTitles.map((headTitle, index) =>
+        <div
+            key={headTitle}
+            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : 'cell medium-auto' }>
+            {headTitle}
+        </div>)
     return(
         <div className="cell medium-10 list-admin">
             <div className="grid-x align-center-middle">
