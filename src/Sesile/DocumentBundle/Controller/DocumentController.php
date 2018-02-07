@@ -468,12 +468,17 @@ class DocumentController extends Controller
         $path = $this->container->getParameter('upload')['fics'];
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($this->getUser()->getId());
 
+        $response = new Response();
+        if(!is_file($path . $doc->getRepourl())) {
+            $response->setContent("No file");
+            $response->setStatusCode(204);
+            return $response;
+        }
+
         // Ecriture de l'hitorique du document
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
-
-        $response = new Response();
 
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', mime_content_type($path . $doc->getRepourl()));
