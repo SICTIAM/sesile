@@ -24,16 +24,9 @@ class PES
         $this->signataire = $signataire;
         $this->dateSign = $dateSign;
         foreach ($tabBord as $bordereau) {
-
-            $id = $bordereau->BlocBordereau->IdBord->attributes()[0];
-//var_dump((string)$bordereau->type);
-            //Formatage Date Emission
-            $dateEmWFormat = $bordereau->BlocBordereau->DteBordEm->attributes()[0];
-            list($y, $m, $d) = explode('-', $dateEmWFormat);
-
-            $dateEm = $d . '/' . $m . '/' . $y;
-
-            $nbPiece = $bordereau->BlocBordereau->NbrPce->attributes()[0];
+            $id = (int)$bordereau->BlocBordereau->IdBord->attributes()[0];
+            $dateEm = new \DateTime($bordereau->BlocBordereau->DteBordEm->attributes()[0]);
+            $nbPiece = (int)$bordereau->BlocBordereau->NbrPce->attributes()[0];
 
             if ((string)$bordereau->type === 'Depense') {
                 $tmpHT = doubleval($bordereau->BlocBordereau->MtBordHT->attributes()[0]);
@@ -43,26 +36,16 @@ class PES
             }
 
             $mtBordHT = number_format($tmpHT, 2, ',', ' ');
-
             $tmpCumulAnnuel = doubleval($bordereau->BlocBordereau->MtCumulAnnuel->attributes()[0]);
-
             $mtCumulAnnuel = number_format($tmpCumulAnnuel, 2, ',', ' ');
-
-
-            $exercice = $bordereau->BlocBordereau->Exer->attributes()[0];
-
-            $type = $bordereau->BlocBordereau->TypBord->attributes()[0];
-
+            $exercice = (int)$bordereau->BlocBordereau->Exer->attributes()[0];
+            $type = (string)$bordereau->BlocBordereau->TypBord->attributes()[0];
 
             $tabPiece = array();
             foreach ($bordereau->Piece as $piece) {
                 $tabPiece[] = $piece;
-
             }
-//var_dump($bordereau->type,$id);
             $this->listBord[] = new Bordereau($id, $dateEm, $nbPiece, $mtBordHT, $mtCumulAnnuel, $exercice, $type, $tabPiece, (string)$bordereau->type, $listPJ);
-            //exit;
-            //error_log(print_r('TEST'));
         }
     }
 } 

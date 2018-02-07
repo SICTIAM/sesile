@@ -4,7 +4,6 @@ import { translate } from 'react-i18next'
 import ClasseurInfos from './ClasseurInfos'
 import { handleErrors } from '../_utils/Utils'
 import { basicNotification } from '../_components/Notifications'
-import { GridX, Cell } from '../_components/UI'
 import DocumentsClasseur from './DocumentsClasseur'
 import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
@@ -222,7 +221,7 @@ class Classeur extends Component {
                         <div className="cell medium-8 details-classeur">
                             {
                                 classeur.documents &&
-                                <DocumentsClasseur documents={classeur.documents} classeurId={classeur.id} />
+                                <DocumentsClasseur documents={classeur.documents} classeurId={classeur.id} classeurType={classeur.type} />
                             }
                         </div>
                         <div className="cell medium-4 cell-block-y details-classeur">
