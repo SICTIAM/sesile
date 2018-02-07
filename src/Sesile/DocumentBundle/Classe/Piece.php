@@ -24,8 +24,6 @@ class Piece
     public $mtTTC;
     public $listePJs = array();
 
-    //public $listPJ=array();
-
     function __construct($id, $civilite, $nom, $prenom, $objet,$imputation, $mtHT, $mtTVA, $mtTTC, $tabPJ, $tabPJ2)
     {
 
@@ -38,21 +36,15 @@ class Piece
         $this->mtTVA = $mtTVA;
         $this->mtTTC = $mtTTC;
         $this->imputations = $imputation;
-        //  error_log(count($tabPJ));
         foreach ($tabPJ as $pj) {
-            $idPJ = $pj->IdUnique->attributes()[0];
-            $nomPJ = $pj->NomPJ->attributes()[0];
+            $idPJ = (string)$pj->IdUnique->attributes()[0];
+            $nomPJ = (string)$pj->NomPJ->attributes()[0];
             foreach ($tabPJ2 as $fic) {
-                $fromlpj = $fic->IdUnique->attributes()[0];
-                $test = $fromlpj[0];
-                //     error_log($fromlpj.' '.$idPJ);
+                $fromlpj = (string)$fic->IdUnique->attributes()[0];
                 if (strcmp($fromlpj, $idPJ) == 0) {
-
-                    $this->listePJs[] = new PJ($idPJ, $nomPJ, $fic->Contenu->Fichier);
+                    $this->listePJs[] = new PJ($idPJ, $nomPJ);
                 }
             }
-
-
         }
     }
 } 

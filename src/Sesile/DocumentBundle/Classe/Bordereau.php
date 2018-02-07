@@ -72,9 +72,9 @@ class Bordereau
         foreach ($listPieces as $piece) {
 
             if (isset($piece->BlocPiece->InfoPce)) {
-                $idP = $piece->BlocPiece->InfoPce->IdPce->attributes()[0];
+                $idP = (int)$piece->BlocPiece->InfoPce->IdPce->attributes()[0];
             } else {
-                $idP = $piece->BlocPiece->IdPce->attributes()[0];
+                $idP = (int)$piece->BlocPiece->IdPce->attributes()[0];
             }
 
             $tabPJs = array();
@@ -91,7 +91,7 @@ class Bordereau
                     foreach ($piece->BlocPiece->PJRef as $pj) {
                         $tabPJs[] = $pj;
                     }
-                } else if (isset($piece->LigneDePiece->BlocLignePiece->InfoLignePiece->PJRef)) {
+                } elseif (isset($piece->LigneDePiece->BlocLignePiece->InfoLignePiece->PJRef)) {
                     foreach ($piece->LigneDePiece->BlocLignePiece->InfoLignePiece->PJRef as $pj) {
                         $tabPJs[] = $pj;
                     }
@@ -105,22 +105,25 @@ class Bordereau
             $tabImput = array();
             foreach ($piece->LigneDePiece as $LignePiece) {
                 if (isset($LignePiece->Tiers->InfoTiers->Civilite)) {
-                    $civilite = $LignePiece->Tiers->InfoTiers->Civilite->attributes()[0];
+                    $civilite = (string)$LignePiece->Tiers->InfoTiers->Civilite->attributes()[0];
                 } else {
                     $civilite = '';
 
                 }
-                $nom = $LignePiece->Tiers->InfoTiers->Nom->attributes()[0];
+                if (isset($LignePiece->Tiers->InfoTiers->Nom)) {
+                    $nom = (string)$LignePiece->Tiers->InfoTiers->Nom->attributes()[0];
+                } else {
+                    $nom = '';
+                }
 
                 if (isset($LignePiece->Tiers->InfoTiers->Prenom)) {
-                    $prenom = $LignePiece->Tiers->InfoTiers->Prenom->attributes()[0];
+                    $prenom = (string)$LignePiece->Tiers->InfoTiers->Prenom->attributes()[0];
                 } else {
                     $prenom = '';
 
                 }
-                //  $tabPJs = array();
                 if ($typePES === 'Depense') {
-                    $imputation = $LignePiece->BlocLignePiece->InfoLignePce->Nature->attributes()[0];
+                    $imputation = (string)$LignePiece->BlocLignePiece->InfoLignePce->Nature->attributes()[0];
                     if(isset($LignePiece->BlocLignePiece->InfoLignePce->Fonction)){
                         $imputation .= '.'.$LignePiece->BlocLignePiece->InfoLignePce->Fonction->attributes()[0];
                     }
@@ -129,14 +132,12 @@ class Bordereau
                     }
                     $tmpHT = doubleval($LignePiece->BlocLignePiece->InfoLignePce->MtHT->attributes()[0]);
                     $tmpTVA = doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->TVAIntraCom->attributes()[0]);
-//                    if(isset($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA))
-                    if(isset($LignePiece->BlocLignePiece->InfoLignePce->MtTVA))
-                    {
-//                        $tmpTVA += doubleval($piece->LigneDePiece->BlocLignePiece->InfoLignePce->MtTVA->attributes()[0]);
+                    if(isset($LignePiece->BlocLignePiece->InfoLignePce->MtTVA)) {
                         $tmpTVA += doubleval($LignePiece->BlocLignePiece->InfoLignePce->MtTVA->attributes()[0]);
                     }
-                } else {
-                    $imputation = $LignePiece->BlocLignePiece->InfoLignePiece->Nature->attributes()[0];
+                }
+                else {
+                    $imputation = (string)$LignePiece->BlocLignePiece->InfoLignePiece->Nature->attributes()[0];
                     if(isset($LignePiece->BlocLignePiece->InfoLignePiece->Fonction)){
                         $imputation .= '.'.$LignePiece->BlocLignePiece->InfoLignePiece->Fonction->attributes()[0];
                     }
@@ -166,7 +167,6 @@ class Bordereau
 
                 $totTTC += $mtTTCNum;
 
-                //  $mtTTC = number_format($mtTTCNum, 2, ',', ' ');
 
             }
 
@@ -175,7 +175,7 @@ class Bordereau
             $formatTVA = number_format($totTVA, 2, ',', ' ');
             $formatTTC = number_format($totTTC, 2, ',', ' ');
 
-            $this->listPieces[] = new Piece($idP, $civilite, $nom, $prenom, $objet,$tabImput, $formatHT, $formatTVA, $formatTTC, $tabPJs, $tabPJ2);
+            $this->listPieces[] = new Piece($idP, $civilite, $nom, $prenom, (string)$objet, $tabImput, $formatHT, $formatTVA, $formatTTC, $tabPJs, $tabPJ2);
         }
     }
 }

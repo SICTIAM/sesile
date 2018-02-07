@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { array, func, number } from 'prop-types'
+import { array, func, number, object } from 'prop-types'
 import OnlyOffice from '../document/OnlyOffice'
 import Documents from './Documents'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import { handleErrors } from '../_utils/Utils'
+import Helios from '../document/Helios'
 
 class DocumentsClasseur extends Component {
 
@@ -112,15 +113,17 @@ class DocumentsClasseur extends Component {
 
     render () {
         const { documents, currentDocument, revealDisplay, user } = this.state
+        const { classeurType } = this.props
         const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'pdf', 'ppt', 'pptx']
         const imageType = ['png', 'jpg', 'jpeg', 'gif']
+        const heliosType = ['xml']
         let fileType
         currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
 
         return (
             <div className="grid-x grid-y grid-frame">
 
-                <div className="cell medium-9 height100 text-center">
+                <div className="cell medium-9">
 
                 { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
@@ -128,9 +131,18 @@ class DocumentsClasseur extends Component {
                         <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
                     </div>
                 }
-
                 { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "none") &&
                     <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
+                }
+
+                { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "none" && classeurType.nom === "Helios" &&
+                    <Helios document={ currentDocument } />
+                }
+                { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "block" && classeurType.nom === "Helios" &&
+                    <div className="reveal-full" style={{display: revealDisplay}}>
+                        <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                        <Helios document={ currentDocument } />
+                    </div>
                 }
 
 
@@ -159,7 +171,8 @@ class DocumentsClasseur extends Component {
 
 DocumentsClasseur.propTypes = {
     documents: array,
-    classeurId: number
+    classeurId: number,
+    classeurType: object
 }
 
 export default translate(['sesile'])(DocumentsClasseur)

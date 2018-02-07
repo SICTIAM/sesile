@@ -4,7 +4,6 @@ import { translate } from 'react-i18next'
 import ClasseurInfos from './ClasseurInfos'
 import { handleErrors } from '../_utils/Utils'
 import { basicNotification } from '../_components/Notifications'
-import { GridX, Cell } from '../_components/UI'
 import DocumentsClasseur from './DocumentsClasseur'
 import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
@@ -31,7 +30,8 @@ class Classeur extends Component {
             actions: []
         },
         user: {},
-        action: ''
+        action: '',
+        editClasseur: false
     }
 
     componentWillReceiveProps(nextProps) {
@@ -81,6 +81,7 @@ class Classeur extends Component {
     putClasseur = (fields) => {
         const { classeur } = this.state
         const etape_classeurs = classeur.etape_classeurs
+        this.setState({editClasseur: false})
         Object.assign(etape_classeurs, classeur.etape_classeurs.map(etape_classeur => { return {
             ordre: etape_classeur.ordre,
             users: etape_classeur.users.map(user => user.id),
@@ -132,6 +133,12 @@ class Classeur extends Component {
         this.reOrderSteps()
     }
 
+    handleEditClasseur = (edit) => {
+        if (!edit) {
+            this.getClasseur(this.state.classeur.id)
+        }
+        this.setState(state => state.editClasseur = edit)
+    }
     handleRemoveEtape = (stepKey) => {
         this.setState(prevState => prevState.classeur.etape_classeurs.splice(stepKey,1))
         this.reOrderSteps()
@@ -188,7 +195,8 @@ class Classeur extends Component {
 
     render() {
         const { t } = this.context
-        const { classeur, user } = this.state
+        const { classeur, user, editClasseur } = this.state
+        const editable = !!(classeur.validable && editClasseur)
 
         return (
             <div className="grid-y grid-frame">
@@ -218,7 +226,7 @@ class Classeur extends Component {
                         <div className="cell medium-8 details-classeur">
                             {
                                 classeur.documents &&
-                                <DocumentsClasseur documents={classeur.documents} classeurId={classeur.id} />
+                                <DocumentsClasseur documents={classeur.documents} classeurId={classeur.id} classeurType={classeur.type} />
                             }
                         </div>
                         <div className="cell medium-4 cell-block-y details-classeur">
@@ -233,6 +241,8 @@ class Classeur extends Component {
                                                 handleChangeClasseur={this.handleChangeClasseur}
                                                 putClasseur={this.putClasseur}
                                                 editable={classeur.validable}
+                                                handleEditClasseur={this.handleEditClasseur}
+                                                edit={editClasseur}
                                 />
                             </div>
 
@@ -247,7 +257,7 @@ class Classeur extends Component {
                                                              etape_classeurs={classeur.etape_classeurs}
                                                              user={classeur.user}
                                                              etapeDeposante={classeur.etape_deposante}
-                                                             editable={classeur.validable}
+                                                             editable={editable}
                                                              addEtape={this.handleAddEtape}
                                                              addUser={this.addUser}
                                                              addGroup={this.addGroup}
@@ -257,16 +267,13 @@ class Classeur extends Component {
                                                              collectiviteId={user.collectivite.id}
                                             />
                                     }
-
-                                    <div className="grid-x">
-                                        { classeur.copy && classeur.copy.length > 0 &&
-                                        <Cell className="medium-12">
-                                            <UserInCopy users={classeur.copy} />
-                                        </Cell>
-                                        }
-                                    </div>
                                 </div>
                             </div>
+
+
+                            { classeur.copy && classeur.copy.length > 0 &&
+                                <UserInCopy users={classeur.copy} />
+                            }
 
                             <div className="grid-x grid-padding-y">
                                 <ClasseurActions actions={Object.assign([], classeur.actions)}
@@ -291,17 +298,17 @@ Classeur.propTypes = {
 }
 
 const UserInCopy = ({users}, {t}) => {
-    const listUsers = users.map(user => <Cell className="medium-12" key={user.id}>{ user._prenom + " " + user._nom }</Cell>)
+    const listUsers = users.map(user => <li className="medium-12" key={user.id}>{ user._prenom + " " + user._nom }</li>)
     return (
-        <div className="grid-x grid-margin-x">
-            <Cell className="medium-12 name-details-classeur">
-                {t('classeur.users_in_copy')}
-            </Cell>
-            <Cell className="medium-12">
-                <GridX>
-                    {listUsers}
-                </GridX>
-            </Cell>
+        <div className="grid-x grid-padding-y">
+            <div className="cell medium-12">
+                <div className="grid-x">
+                    <h3 className="cell medium-12">{t('classeur.users_in_copy')}</h3>
+                </div>
+                <div className="grid-x">
+                    <ul>{listUsers}</ul>
+                </div>
+            </div>
         </div>
     )
 }

@@ -13,12 +13,10 @@ class PJ
 
     public $id;
     public $nom;
-    public $content;
 
-    function __construct($id, $nom, $content)
+    function __construct($id, $nom)
     {
         $this->id = $id;
         $this->nom = $nom;
-        $this->content = $content;
     }
 }

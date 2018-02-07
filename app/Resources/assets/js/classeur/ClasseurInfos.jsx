@@ -21,10 +21,7 @@ class ClasseurInfos extends Component {
             nom: ''
         },
         description: '',
-        editable: false
-    }
-
-    state = {
+        editable: false,
         edit: false
     }
 
@@ -44,13 +41,11 @@ class ClasseurInfos extends Component {
         const validation = new Validator(fields, this.validationRules)
         if(validation.passes() && this.props.id) {
             this.props.putClasseur(fields)
-            this.setState({edit: false})
         }
     }
 
     render() {
-        const { nom, validation, creation, type, description, status, handleChangeClasseur, editable } = this.props
-        const { edit } = this.state
+        const { nom, validation, creation, type, description, status, handleChangeClasseur, editable, edit, handleEditClasseur } = this.props
         const { t } = this.context
         const { i18nextLng } = window.localStorage
         return (
@@ -59,7 +54,7 @@ class ClasseurInfos extends Component {
                 <Form onSubmit={this.saveClasseurInfos}>
                     <GridX>
                         <Cell className="medium-8 name-details-classeur">
-                            { edit ? <InputValidation    id="nom"
+                            { edit ? <InputValidation   id="nom"
                                                         type="text"
                                                         labelText={t('common.label.name')}
                                                         value={nom}
@@ -71,13 +66,9 @@ class ClasseurInfos extends Component {
                         </Cell>
                         <Cell className="medium-4 text-right">
                             {
-                                editable &&
-                                <a onClick={() => this.setState({edit: !this.state.edit})} className="button">
-                                    {
-                                        edit
-                                            ? "Annuler"
-                                            : "Modifier"
-                                    }
+                                editable && !edit &&
+                                <a onClick={() => handleEditClasseur(!edit)} className="button">
+                                    { t('common.button.modify') }
                                 </a>
                             }
                         </Cell>
@@ -128,8 +119,11 @@ class ClasseurInfos extends Component {
 
                     {edit &&
                     <div className="grid-x grid-margin-x grid-padding-x">
+                        <div className="cell medium-4">
+                            { <a onClick={() => handleEditClasseur(!edit)} className="float-left">{ t('common.button.cancel') }</a> }
+                        </div>
                         <Button id="submit-classeur-infos"
-                                className="cell medium-12"
+                                className="cell medium-8"
                                 classNameButton="float-right"
                                 onClick={this.saveClasseurInfos}
                                 labelText={t('common.button.edit_save')}/>
