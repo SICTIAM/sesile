@@ -32,6 +32,8 @@ class ClasseurRepository extends EntityRepository {
             ->getResult()
         ;
 
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
+
         return $classeurs;
     }
 
@@ -252,7 +254,7 @@ class ClasseurRepository extends EntityRepository {
         $validantUserId = null;
         if ($etapeValidante){
             $etapeRetractable = $em->getRepository('SesileUserBundle:EtapeClasseur')->getPreviousEtape($etapeValidante);
-            if ($etapeRetractable) {
+            if ($etapeRetractable && $etapeRetractable->getUserValidant()) {
                 $validantUserId = $etapeRetractable->getUserValidant()->getId();
             }
         }
