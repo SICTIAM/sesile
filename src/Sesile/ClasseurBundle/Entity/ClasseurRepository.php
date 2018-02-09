@@ -39,7 +39,7 @@ class ClasseurRepository extends EntityRepository {
 
     public function getClasseursVisibles ($userId, $sort, $order, $limit, $start) {
 
-        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+        ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
         $classeurs =  $this
             ->createQueryBuilder('c')
@@ -64,7 +64,7 @@ class ClasseurRepository extends EntityRepository {
 
     public function getClasseursValidable ($classeursId, $sort, $order, $limit, $start, $userId) {
 
-        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+        ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
         $status = array(0,1,4);
 
@@ -93,7 +93,7 @@ class ClasseurRepository extends EntityRepository {
 
     public function getClasseursRetractable ($classeursId, $sort, $order, $limit, $start, $userId) {
 
-        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+        ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
         $status = 1;
 
@@ -122,7 +122,7 @@ class ClasseurRepository extends EntityRepository {
 
     public function getClasseursremovable ($userId, $sort, $order, $limit, $start) {
 
-        ($sort == "user.nom") ? $sort = "u.Nom" : $sort = "c.".$sort;
+        ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
         $status = 3;
 

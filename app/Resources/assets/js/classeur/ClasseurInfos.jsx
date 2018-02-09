@@ -7,6 +7,7 @@ import { Button, Form, Textarea } from '../_components/Form'
 import InputValidation from '../_components/InputValidation'
 import { Cell, GridX } from '../_components/UI'
 import ClasseurProgress from './ClasseurProgress'
+import ClasseurStatus from './ClasseurStatus'
 
 class ClasseurInfos extends Component {
 
@@ -81,7 +82,7 @@ class ClasseurInfos extends Component {
                         </Cell>
                         <Cell className="medium-6">
                             <span className="info-details-classeur">{t('common.classeurs.status.name')} </span>
-                            <StatusClasseur status={status} className="bold-info-details-classeur" />
+                            <ClasseurStatus status={status} className="bold-info-details-classeur" />
                         </Cell>
                     </GridX>
 
@@ -136,32 +137,3 @@ class ClasseurInfos extends Component {
 }
 
 export default translate(['sesile'])(ClasseurInfos)
-
-const StatusClasseur = ({status, className}, {t}) => {
-    let statusName
-    switch (status) {
-        case 0:
-            statusName = "refuse"
-            break
-        case 1:
-            statusName = "pending"
-            break
-        case 2:
-            statusName = "finish"
-            break
-        case 3:
-            statusName = "remote"
-            break
-        case 4:
-            statusName = "retract"
-            break
-    }
-
-    return (
-        <span className={className}>{statusName && t('common.classeurs.status.' + statusName)}</span>
-    )
-}
-
-StatusClasseur.contextTypes = {
-    t: func
-}

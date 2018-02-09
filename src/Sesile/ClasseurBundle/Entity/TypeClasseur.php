@@ -27,7 +27,7 @@ class TypeClasseur
     /**
      * @var string
      * @ORM\Column(name="nom", type="string", length=255)
-     * @Serializer\Groups({"getByIdCircuit", "classeurById", "listCircuitByUser"})
+     * @Serializer\Groups({"getByIdCircuit", "classeurById", "listCircuitByUser", "listClasseur"})
      */
     private $nom;
 
