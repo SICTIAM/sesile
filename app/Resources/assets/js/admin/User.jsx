@@ -7,7 +7,7 @@ import History from '../_utils/History'
 import { basicNotification } from '../_components/Notifications'
 import AvatarForm from '../user/AvatarForm'
 import SignatureForm from '../user/SignatureForm'
-import {Switch} from '../_components/Form'
+import {Input, Switch, Select, Textarea} from '../_components/Form'
 
 class User extends Component {
 
@@ -252,16 +252,20 @@ class User extends Component {
                                             }
                                         </div>
                                         <div className="grid-x grid-padding-x grid-padding-y">
-                                            <div className="medium-6 cell">
-                                                <label>{t('admin.user.label_firstname')}
-                                                    <input name="_prenom" value={user._prenom} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} placeholder={t('admin.user.placeholder_firstname')} />
-                                                </label>
-                                            </div>
-                                            <div className="medium-6 cell">
-                                                <label>{t('admin.user.label_name')}
-                                                    <input name="_nom" value={user._nom} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} placeholder={t('admin.user.placeholder_name')} />
-                                                </label>
-                                            </div>
+                                            <Input  id="_prenom"
+                                                    className="cell medium-6"
+                                                    labelText={t('admin.user.label_firstname')}
+                                                    onChange={this.handleChangeField}
+                                                    value={user._prenom || ''}
+                                                    type="text"
+                                            />
+                                            <Input  id="_nom"
+                                                    className="cell medium-6"
+                                                    labelText={t('admin.user.label_name')}
+                                                    onChange={this.handleChangeField}
+                                                    value={user._nom || ''}
+                                                    type="text"
+                                            />
                                         </div>
                                         <div className="grid-x grid-padding-x grid-padding-y">
                                             <CollectivitesMap collectivites={collectivites} collectiviteId={user.collectivite} isSuperAdmin={this.state.isSuperAdmin} handleChangeField={this.handleChangeField} />
@@ -293,15 +297,12 @@ class User extends Component {
                                         <SignatureForm user={user} styleClass="medium-6 cell text-center" />
                                     }
 
-                                    <div className="medium-6 cell">
-                                        <div className="grid-x grid-padding-x grid-padding-y">
-                                            <div className="medium-12 cell">
-                                                <label>{t('admin.user.label_quality')}
-                                                    <textarea name="qualite" value={user.qualite || ''} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} />
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <Textarea id="qualite"
+                                              name="qualite"
+                                              className="cell medium-6"
+                                              labelText={t('admin.user.label_quality')}
+                                              value={user.qualite || ''}
+                                              onChange={this.handleChangeField}/>
                                 </div>
                             </div>
                         </div>
@@ -315,28 +316,36 @@ class User extends Component {
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <div className="grid-x grid-padding-x align-center-middle">
-                                    <div className="medium-6 cell">
-                                        <label>{t('admin.user.label_zip')}
-                                            <input name="cp" value={user.cp || ''} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} placeholder={t('admin.user.placeholder_zip')} />
-                                        </label>
-                                    </div>
-                                    <div className="medium-6 cell">
-                                        <label>{t('admin.user.label_city')}
-                                            <input name="ville" value={user.ville || ''} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} placeholder={t('admin.user.placeholder_zip')} />
-                                        </label>
-                                    </div>
+                                    <Input  id="cp"
+                                            className="cell medium-6"
+                                            labelText={t('admin.user.label_zip')}
+                                            onChange={this.handleChangeField}
+                                            value={user.cp || ''}
+                                            type="text"
+                                    />
+                                    <Input  id="ville"
+                                            className="cell medium-6"
+                                            labelText={t('admin.user.label_city')}
+                                            onChange={this.handleChangeField}
+                                            value={user.ville || ''}
+                                            type="text"
+                                    />
                                 </div>
                                 <div className="grid-x grid-padding-x grid-padding-y">
-                                    <div className="medium-6 cell">
-                                        <label>{t('admin.user.label_department')}
-                                            <input name="departement" value={user.departement || ''} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} placeholder={t('admin.user.placeholder_department')} />
-                                        </label>
-                                    </div>
-                                    <div className="medium-6 cell">
-                                        <label>{t('admin.user.label_country')}
-                                            <input name="pays" value={user.pays || ''} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} placeholder={t('admin.user.placeholder_country')} />
-                                        </label>
-                                    </div>
+                                    <Input  id="departement"
+                                            className="cell medium-6"
+                                            labelText={t('admin.user.label_department')}
+                                            onChange={this.handleChangeField}
+                                            value={user.departement || ''}
+                                            type="text"
+                                    />
+                                    <Input  id="pays"
+                                            className="cell medium-6"
+                                            labelText={t('admin.user.label_country')}
+                                            onChange={this.handleChangeField}
+                                            value={user.pays || ''}
+                                            type="text"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -431,19 +440,13 @@ const CollectivitesMap = ({collectivites, collectiviteId, isSuperAdmin, handleCh
 
     return (
         isSuperAdmin &&
-        <div className="medium-6 cell">
-            {
-                <div>
-                    <label>{t('admin.collectivite.name')}
-                        <select name="collectivite"
-                                value={collectiviteId}
-                                onChange={(e) => handleChangeField(e.target.name, e.target.value)}>
-                            {collectiviteOptions}
-                        </select>
-                    </label>
-                </div>
-            }
-        </div>
+        <Select id="collectivite"
+                value={collectiviteId}
+                className={"medium-6 cell"}
+                label={t('admin.collectivite.name')}
+                onChange={handleChangeField}>
+            {collectiviteOptions}
+        </Select>
     )
 }
 

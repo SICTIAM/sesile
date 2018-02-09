@@ -90,8 +90,8 @@ class AvatarForm extends Component {
                 <div>
                     {
                         user.path ?
-                            <UserAvatar size="100" name={ user._prenom } src={"/uploads/avatars/" + user.path} className=" float-center" />
-                            : <UserAvatar size="100" name={ user._prenom } className="txt-avatar"/>
+                            <UserAvatar size="100" name={ user._prenom || user._nom || '' } src={"/uploads/avatars/" + user.path} className=" float-center" />
+                            : <UserAvatar size="100" name={ user._prenom || user._nom || '' } className="txt-avatar"/>
 
                     }
                     <InputFile  id="add_avatar_img"
