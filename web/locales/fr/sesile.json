@@ -115,7 +115,12 @@
               "finish": "Finalisé",
               "remote": "Retiré",
               "retract": "Retracté"
-
+            },
+            "pagination" : {
+                "previous": "Précédent",
+                "next": "Suivant",
+                "page": "page",
+                "current": "Vous êtes sur la page"
             },
             "comments": {
               "name": "Commentaires du classeur",
@@ -140,6 +145,8 @@
                 "name": "Nom",
                 "current_user": "Nom intervenant",
                 "create_date": "Date de dépôt",
+                "status": "Status",
+                "type": "Type",
                 "limit_date": "Date limite",
                 "actions": "Actions",
                 "select": "Sélection"
