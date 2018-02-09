@@ -8,12 +8,19 @@ import { basicNotification } from '../_components/Notifications'
 import AvatarForm from '../user/AvatarForm'
 import SignatureForm from '../user/SignatureForm'
 import {Input, Switch, Select, Textarea} from '../_components/Form'
+import InputValidation from '../_components/InputValidation'
+import Validator from "validatorjs";
 
 class User extends Component {
 
     static contextTypes = {
         t: func,
         _addNotification: func
+    }
+
+    validationRules = {
+        _nom: 'required',
+        _prenom: 'required'
     }
 
     constructor(props) {
@@ -117,6 +124,7 @@ class User extends Component {
 
     handleClickSave = () => {
         const { user } = this.state
+        const { t, _addNotification } = this.context
         user.userrole.map((role, key) => this.setState(prevState => prevState.user.userrole[key].user = this.state.userId))
 
         const field = {
@@ -134,11 +142,19 @@ class User extends Component {
             userrole: user.userrole
         }
 
-        if (this.state.userId) {
-            this.putUser(field, this.state.userId)
+        const validation = new Validator(field, this.validationRules)
+
+        if (validation.passes()) {
+            if (this.state.userId) {
+                this.putUser(field, this.state.userId)
+            } else {
+                field['email'] = user.email
+                this.createUser(field)
+            }
         } else {
-            field['email'] = user.email
-            this.createUser(field)
+            _addNotification(basicNotification(
+                'error',
+                t('admin.error.add', {name: t('common.classeurs.name'), errorCode: t('common.classeurs.error.missing_input')})))
         }
     }
 
@@ -252,19 +268,23 @@ class User extends Component {
                                             }
                                         </div>
                                         <div className="grid-x grid-padding-x grid-padding-y">
-                                            <Input  id="_prenom"
-                                                    className="cell medium-6"
-                                                    labelText={t('admin.user.label_firstname')}
-                                                    onChange={this.handleChangeField}
-                                                    value={user._prenom || ''}
-                                                    type="text"
+                                            <InputValidation    id="_prenom"
+                                                                type="text"
+                                                                className="cell medium-6"
+                                                                labelText={[t('admin.user.label_firstname'), <span key="required" className="text-alert"> * </span>]}
+                                                                value={user._prenom || ''}
+                                                                onChange={this.handleChangeField}
+                                                                validationRule={this.validationRules._nom}
+                                                                placeholder={t('common.classeurs.classeur_name')}
                                             />
-                                            <Input  id="_nom"
-                                                    className="cell medium-6"
-                                                    labelText={t('admin.user.label_name')}
-                                                    onChange={this.handleChangeField}
-                                                    value={user._nom || ''}
-                                                    type="text"
+                                            <InputValidation    id="_nom"
+                                                                type="text"
+                                                                className="cell medium-6"
+                                                                labelText={[t('common.label.name'), <span key="required" className="text-alert"> * </span>]}
+                                                                value={user._nom || ''}
+                                                                onChange={this.handleChangeField}
+                                                                validationRule={this.validationRules._nom}
+                                                                placeholder={t('common.classeurs.classeur_name')}
                                             />
                                         </div>
                                         <div className="grid-x grid-padding-x grid-padding-y">
@@ -398,12 +418,12 @@ class User extends Component {
                                 {
                                     (userId) &&
                                     <div className="grid-x grid-padding-x grid-padding-y">
-                                        <div className="medium-6 cell">
+                                        <div className="admin_search_input medium-6 cell">
                                             <label>{t('admin.user.label_api_key')}
                                                 <input name="apitoken" value={user.apitoken} />
                                             </label>
                                         </div>
-                                        <div className="medium-6 cell">
+                                        <div className="admin_search_input medium-6 cell">
                                             <label>{t('admin.user.label_api_secret')}
                                                 <input name="apisecret" value={user.apisecret} />
                                             </label>
