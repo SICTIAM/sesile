@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
-import { object } from 'prop-types'
+import {func, object} from 'prop-types'
+import { translate } from 'react-i18next'
 
 class OnlyOffice extends Component {
+
+    static contextTypes = {
+        t: func
+    }
 
     constructor(props) {
         super(props)
@@ -65,10 +70,12 @@ class OnlyOffice extends Component {
     }
 
     render () {
-
+        const { t } = this.context
         return (
             <div className="cell medium-9 height100" key={this.props.document.id} id="modal-root" >
-                <div id="placeholder"></div>
+                <div id="placeholder" className="text-center">
+                    <h3>{t('common.documents.no_preview')}</h3>
+                </div>
             </div>
         )
     }
@@ -79,4 +86,4 @@ OnlyOffice.propsType = {
     user: object
 }
 
-export default OnlyOffice
+export default translate('sesile')(OnlyOffice)
