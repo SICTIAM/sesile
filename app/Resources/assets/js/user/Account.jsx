@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import {func} from 'prop-types'
 import { translate } from 'react-i18next'
+import { handleErrors } from '../_utils/Utils'
 import { basicNotification } from '../_components/Notifications'
 import AvatarForm from "./AvatarForm"
 import SignatureForm from "./SignatureForm"
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom'
 
 class Account extends Component {
 
@@ -31,20 +32,22 @@ class Account extends Component {
     }
 
     fetchUser() {
+        const { t, _addNotification } = this.context
         fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
+            .then(handleErrors)
             .then(response => response.json())
-            .then(json => {
-                this.setState({user: json})
-            })
+            .then(user => this.setState({user}))
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_extractable_list', {name: t('admin.user.name'), errorCode: error.status}),
+                error.statusText)))
     }
 
     fetchCertificate() {
         fetch(Routing.generate("sesile_user_userapi_getcertificate"), {credentials: 'same-origin'})
+            .then(handleErrors)
             .then(response => response.json())
-            .then(certificate => {
-                console.log(certificate)
-                this.setState({certificate})
-            })
+            .then(certificate => this.setState({certificate}))
     }
 
     handleChangeField = (field, value) => {

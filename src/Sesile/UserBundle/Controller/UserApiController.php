@@ -102,7 +102,6 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         if ($request->get('HTTP_X_SSL_CLIENT_SHA1')) {
 
             $certificate = array();
-            $certificate['HTTP_X_SSL_CLIENT_SHA1'] = $request->get('HTTP_X_SSL_CLIENT_SHA1');
             $certificate['HTTP_X_SSL_CLIENT_M_SERIAL'] = $request->get('HTTP_X_SSL_CLIENT_M_SERIAL');
             $certificate['HTTP_X_SSL_CLIENT_I_DN'] = $request->get('HTTP_X_SSL_CLIENT_I_DN');
             $certificate['HTTP_X_SSL_CLIENT_S_DN_CN'] = $request->get('HTTP_X_SSL_CLIENT_S_DN_CN');
