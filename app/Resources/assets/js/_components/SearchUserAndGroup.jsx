@@ -87,7 +87,8 @@ class SearchUserAndGroup extends Component {
         const inputProps = {
             placeholder: this.props.placeholder,
             value,
-            onChange: this.handleChange
+            onChange: this.handleChange,
+            autoFocus: this.props.step.autoFocus
         }
 
         return (
