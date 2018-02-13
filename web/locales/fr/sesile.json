@@ -30,7 +30,7 @@
         },
         "label": {
             "enabled": "Active",
-            "disabled": "inactive",
+            "disabled": "Inactive",
             "name": "Nom",
             "description" :"Description",
             "date" :"Date",
@@ -324,15 +324,17 @@
             "success_upload_avatar": "L'image a été correctement chargée",
             "state": "Etat",
             "select_collectivite": "Sélectionner une collectivité",
+            "collectivites_list": "Liste de collectivités",
             "error": {
-              "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
-              "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
-              "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
-              "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
-              "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
-              "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
-              "field_delay_required": "La durée des classeurs est requise",
-              "visa_title": "Le titre du VISA est requis"
+                "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
+                "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
+                "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
+                "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
+                "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
+                "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
+                "field_delay_required": "La durée des classeurs est requise",
+                "visa_title": "Le titre du VISA est requis",
+                "fetch_list": "Une erreur est survenue à la récupération des collectivités"
             },
             "mail": {
               "new_classeur": "Mail nouveau classeur",
