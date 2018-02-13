@@ -22,7 +22,7 @@ class MenuBarAdmin extends Component {
                 {isSuperAdmin &&
                     <li><Link to={"/admin/documentations"} className="button gray btn-user-conf"><span>{t('common.help_board.title')}</span></Link></li>}
                 {isSuperAdmin &&
-                    <li><Link to={"/admin/emailing"} className="button gray btn-user-conf"><span>{t('admin.emailing.title')}</span></Link></li>}
+                    <li><Link to={"/admin/emailing"} className="button gray btn-user-conf"><span>{t('admin.emailing.name')}</span></Link></li>}
                 {isSuperAdmin &&
                     <li><Link to={"/admin/notes"} className="button gray btn-user-conf"><span>{t('admin.notes.name', {context: 'plural'})}</span></Link></li>}
             </ul>

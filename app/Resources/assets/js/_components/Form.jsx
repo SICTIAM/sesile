@@ -65,9 +65,13 @@ const InputFile = ({ id, className, labelText, accept, onChange}) =>
         <input type="file" id={id} className="show-for-sr" accept={accept} onChange={e => onChange(e.target.files[0])} />
     </div>
 
-const Button = ({ id, className, classNameButton, labelText, onClick, disabled }) =>
+const Button = ({ id, className, classNameButton, labelText, onClick, disabled, loading=null }) =>
     <div className={className}>
-        <button id={id} className={classNameButton + " button"} disabled={disabled} onClick={() => onClick()}>{labelText}</button>
+        <button id={id} className={classNameButton + " button"} disabled={disabled} onClick={() => onClick()}>
+            {`${labelText} `}
+            {(loading) &&
+                <i className='fa fa-spinner fa-spin' style={{fontSize: '1.1em', color: 'white'}} />}
+        </button>
     </div>
 
 const ButtonConfirm = ({ id, className, labelButton, confirmationText, labelConfirmButton, handleClickConfirm, disabled }) =>

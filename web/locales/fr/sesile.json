@@ -366,11 +366,14 @@
             }
         },
         "emailing": {
-            "title": "Emailing",
-            "complet_name": "Rédiger un emailing",
-            "subtitle": "Puis envoyez à tous les utilisateurs",
-            "success_add": "L'emailing a bien été envoyé",
-            "fail_add": "L'emailing n'a pas être envoyé - erreur {{errorCode}}"
+            "name": "Emailing",
+            "title": "Diffuser un message",
+            "subtitle": "À tous les utilisateurs",
+            "success_sending": "Le message a été envoyé",
+            "error_sending": "Une erreur est survenue lors de la diffusion du message",
+            "write_an_message": "Rédiger le message",
+            "type_subject": "Saisir un sujet",
+            "subject": "Sujet"
         },
         "notes": {
             "title": "Rechercher une note",
