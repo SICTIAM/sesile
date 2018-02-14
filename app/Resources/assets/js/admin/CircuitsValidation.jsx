@@ -1,177 +1,195 @@
 import React, { Component } from 'react'
-import { func, object, number, string } from 'prop-types'
+import { func, object, number } from 'prop-types'
+import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import { handleErrors } from '../_utils/Utils'
+
+
+import { AdminList, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
+import ButtonConfirmDelete from '../_components/ButtonConfirmDelete'
+import { Input } from '../_components/Form'
 import { basicNotification } from '../_components/Notifications'
-import History from '../_utils/History'
-import { escapedValue } from '../_utils/Search'
+import { Cell, GridX } from '../_components/UI'
 import SelectCollectivite from '../_components/SelectCollectivite'
-import { Button, Input } from '../_components/Form'
+
+import { escapedValue } from '../_utils/Search'
+import { handleErrors, DisplayLongText } from "../_utils/Utils"
 
 class CircuitsValidation extends Component {
-
     static contextTypes = {
         t: func,
         _addNotification: func
     }
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            circuits: [],
-            filteredCircuits: [],
-            collectivites: [],
-            filteredCollectivites: [],
-            currentCollectiviteId: '',
-            userName: '',
-            circuitName: '',
-            isSuperAdmin: false
-        }
+    state = {
+        circuits: [],
+        filteredCircuits: [],
+        collectiviteId: '',
+        userName: '',
+        circuitName: '',
+        isSuperAdmin: false
     }
-
     componentDidMount() {
         const user = this.props.user
-        this.setState({currentCollectiviteId: user.collectivite.id})
-
-        this.fetchCircuitsValidations(user.collectivite.id)
-        if(user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
-            this.fetchCollectivites()
-            this.setState({isSuperAdmin: true})
-        }
+        this.handleChangeCollectivite(user.collectivite.id)
+        if(user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
     }
-
-    fetchCollectivites() {
-        fetch(Routing.generate('sesile_main_collectiviteapi_getall'), {credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(json => this.setState({collectivites: json}))
-    }
-
     fetchCircuitsValidations(collectiviteId) {
-        fetch(Routing.generate('sesile_user_circuitvalidationapi_listbycollectivite', {collectiviteId}) , { credentials: 'same-origin'})
+        fetch(
+            Routing.generate(
+                'sesile_user_circuitvalidationapi_listbycollectivite',
+                {collectiviteId}) ,
+            {credentials: 'same-origin'})
+            .then(handleErrors)
             .then(response => response.json())
             .then(json => this.setState({circuits: json, filteredCircuits: json}))
+            .catch(() =>
+                this.context._addNotification(basicNotification(
+                    'error',
+                    t('admin.circuit.error_fetch_list'))))
     }
-
-    handleChangeUserName(userName) {
+    handleClickDelete = (id) => {
+        const { t, _addNotification} = this.context
+        fetch(
+            Routing.generate(
+                "sesile_user_circuitvalidationapi_remove",
+                {id, collectiviteId: this.state.collectiviteId}),
+            {method: 'DELETE', credentials: 'same-origin'})
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(circuits => {
+            _addNotification(basicNotification(
+                'success',
+                t('admin.circuit.success_delete')))
+            this.setState({circuits, filteredCircuits: circuits})})
+        .catch(() =>
+            _addNotification(basicNotification(
+                'error',
+                t('admin.circuit.error_delete'))))
+    }
+    handleChangeUserName = (key, userName) => {
         this.setState({userName})
         const regex = escapedValue(userName, this.state.filteredCircuits, this.state.circuits)
         let filteredCircuits = this.state.circuits.filter(circuit =>
                                  regex.test(circuit.etape_groupes.map(groupe => groupe.users.map(user => user._nom))))
         this.setState({filteredCircuits})
     }
-
-    handleChangeCircuitName(circuitName) {
+    handleChangeCircuitName = (key, circuitName) => {
         this.setState({circuitName})
         const regex = escapedValue(circuitName, this.state.filteredCircuits, this.state.circuits)
         const filteredCircuits = this.state.circuits.filter(circuit => regex.test(circuit.nom))
         this.setState({filteredCircuits})
     }
-
-    handleChangeCollectivite = (currentCollectiviteId) => {
-        this.setState({currentCollectiviteId, userName: '', circuitName: ''}) 
-        this.fetchCircuitsValidations(currentCollectiviteId)
+    handleChangeCollectivite = (collectiviteId) => {
+        this.setState({collectiviteId, userName: '', circuitName: ''})
+        this.fetchCircuitsValidations(collectiviteId)
     }
-
     render () {
         const { t } = this.context
-        const { newValidationcircuit, isSuperAdmin, currentCollectiviteId } = this.state
         const listCircuits = this.state.filteredCircuits.map((circuit) =>
-            <ValidationCircuitRow  key={circuit.id} circuit={circuit} onClick={this.props.onClick} collectiviteId={currentCollectiviteId} />
-        )
+            <RowCircuit
+                key={circuit.id}
+                circuit={circuit}
+                collectiviteId={this.state.collectiviteId}
+                handleClickDelete={this.handleClickDelete} />)
         return (
-            <div className="circuit-validation">
-                <h4 className="text-center text-bold">{t('admin.title', {name: t('admin.circuit.complet_name')})}</h4>
-                <p className="text-center">{t('admin.subtitle')}</p>
-                <div className="grid-x align-center-middle">
-                    <div className="cell medium-6">
-                        <div className="grid-x grid-padding-x">
-                            <div className="auto cell">
-                                <label htmlFor="name-search-admin">{t('admin.label.which')}</label>
-                                <input id="name-search-admin"
-                                       value={this.state.circuitName}
-                                       onChange={(event) => this.handleChangeCircuitName(event.target.value)}
-                                       placeholder={t('admin.placeholder.type_name', {name: t('admin.circuit.name')})}
-                                       type="text" />
-                            </div>
-                            <div className="auto cell">
-                                <label htmlFor="user-search-admin">{t('admin.label.who')}</label>
-                                <input id="user-search-admin"
-                                       value={this.state.userName}
-                                       onChange={(event) => this.handleChangeUserName(event.target.value)}
-                                       placeholder={t('admin.placeholder.type_user_name')}
-                                       type="text" />
-                            </div>
-                            {isSuperAdmin &&
-                                <div className="auto cell">
-                                    <SelectCollectivite currentCollectiviteId={currentCollectiviteId} handleChange={this.handleChangeCollectivite} />
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div className="cell medium-10 list-admin">
-                        <div className="grid-x grid-padding-x panel">
-                            <div className="cell medium-12 panel-heading grid-x">
-                                <div className="cell medium-4">{t('admin.circuit.name')}</div>
-                                <div className="cell medium-8">{t('admin.associated_users')}</div>
-                            </div>
-                            <AddValidationCircuitRow currentCollectiviteId={currentCollectiviteId} />
-                            {
-                                (listCircuits.length > 0) ? listCircuits :
-                                <div className="cell medium-12 panel-body">
-                                    <div className="text-center">
-                                        {t('common.no_results', {name: t('admin.circuit.name')})}
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-    )
+            <AdminPage
+                title={t('admin.title', {name: t('admin.circuit.name')})}
+                subtitle={t('admin.subtitle')}>
+                <AdminContainer>
+                    <Cell className="medium-6">
+                        <GridX className="grid-padding-x align-center-middle">
+                            <Input
+                                className="cell medium-auto"
+                                labelText={t('admin.circuit.which_circuit')}
+                                value={this.state.circuitName}
+                                onChange={this.handleChangeCircuitName}
+                                placeholder={t('common.search_by_name')}
+                                type="text"/>
+                            <Input
+                                className="cell medium-auto"
+                                labelText={t('admin.user.which_user')}
+                                value={this.state.userName}
+                                onChange={this.handleChangeUserName}
+                                placeholder={t('common.search_by_name')}
+                                type="text"/>
+                            {this.state.isSuperAdmin &&
+                            <Cell className="medium-auto">
+                                <SelectCollectivite
+                                    currentCollectiviteId={this.state.collectiviteId}
+                                    handleChange={this.handleChangeCollectivite} />
+                            </Cell>}
+                        </GridX>
+                    </Cell>
+                    <AdminList
+                        title={t('admin.circuit.circuit_list')}
+                        listLength={listCircuits.length}
+                        labelButton={t('admin.circuit.add_circuit')}
+                        addLink={`/admin/${this.state.collectiviteId}/circuit-de-validation`}
+                        headTitles={[t('common.label.name'), t('admin.associated_users'), t('admin.associated_group'), t('common.label.actions')]}
+                        headGrid={['medium-2', 'medium-auto', 'medium-auto', 'medium-2']}
+                        emptyListMessage={t('common.no_results', {name: t('admin.circuit.name')})}>
+                        {listCircuits}
+                    </AdminList>
+                </AdminContainer>
+            </AdminPage>
+        )
     }
-}
-
-CircuitsValidation.PropTypes = {
-    onClick: func.isRequired
 }
 
 export default translate(['sesile'])(CircuitsValidation)
 
-const ValidationCircuitRow = ({circuit, collectiviteId}) => {
-    const arrayNoms = []
-    circuit.etape_groupes.map((etape_groupe, index) => {
-        etape_groupe.users.map(user => arrayNoms.unshift(user._nom))
-        etape_groupe.user_packs.map(user_pack => arrayNoms.unshift(user_pack.nom))
-    })
+const RowCircuit = ({circuit, collectiviteId, handleClickDelete}, {t}) => {
+    const etapeGroupes = circuit.etape_groupes
+    const usersPackName = []
+    etapeGroupes.map(etapeGroupe => etapeGroupe.user_packs.map(userPack => usersPackName.unshift(userPack.nom)))
     return (
-        <div className="cell medium-12 panel-body grid-x row-admin" onClick={() => History.push(`${collectiviteId}/circuit-de-validation/${circuit.id}`)}>
-            <div className="cell medium-4">
-                {circuit.nom}
-            </div>
-            <div className="cell medium-8">
-                {arrayNoms.join(' | ')}
-            </div>
-        </div>
+        <AdminListRow>
+            <Cell className="medium-2">
+                <DisplayLongText text={circuit.nom} maxSize={20}/>
+            </Cell>
+            <Cell className="medium-auto">
+                <DisplayLongText
+                    text=
+                        {etapeGroupes.map(etapeGroupe =>
+                            etapeGroupe.users.map(user => user._nom).join(' | ')).join(' | ')}
+                    title=
+                        {etapeGroupes.map(etapeGroupe =>
+                            etapeGroupe.users.map(user =>
+                                `${user._prenom} ${user._nom}`).join('\n')).join('\n______\n')}
+                    maxSize={30}/>
+            </Cell>
+            <Cell className="medium-auto">
+                <DisplayLongText
+                    text={usersPackName.join(' | ')}
+                    title={usersPackName.join('\n')}
+                    maxSize={30}/>
+            </Cell>
+            <Cell className="medium-2">
+                <GridX>
+                    <Cell className="medium-auto">
+                        <Link
+                            to={`/admin/${collectiviteId}/circuit-de-validation/${circuit.id}`}
+                            className="fa fa-pencil icon-action"
+                            title={t('common.button.edit')}/>
+                    </Cell>
+                    <Cell className="medium-auto">
+                        <ButtonConfirmDelete
+                            id={circuit.id}
+                            dataToggle={`delete-confirmation-update-${circuit.id}`}
+                            onConfirm={handleClickDelete}
+                            content={t('common.confirm_deletion_item')}/>
+                    </Cell>
+                </GridX>
+            </Cell>
+        </AdminListRow>
     )
 }
 
-ValidationCircuitRow.propTypes = {
+RowCircuit.propTypes = {
     circuit: object.isRequired,
-    collectiviteId: number.isRequired
+    collectiviteId: number.isRequired,
+    handleClickDelete: func.isRequired
 }
 
-const AddValidationCircuitRow = ({ currentCollectiviteId }, {t}) => {
-
-    return (
-        <div className="cell medium-12 panel-body row-admin">
-            <Button id="add-circuit"
-                    className="text-right"
-                    onClick={() => History.push(`${currentCollectiviteId}/circuit-de-validation/`)}
-                    labelText={t('common.button.add')}/>
-        </div>
-    )
-}
-
-AddValidationCircuitRow.contextTypes = {
+RowCircuit.contextTypes = {
     t: func
 }

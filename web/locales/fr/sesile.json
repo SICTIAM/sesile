@@ -53,7 +53,7 @@
         },
         "label": {
             "enabled": "Active",
-            "disabled": "inactive",
+            "disabled": "Inactive",
             "name": "Nom",
             "description" :"Description",
             "date" :"Date",
@@ -190,13 +190,16 @@
             "title_video": "Vidéo",
             "view_button": "Voir le document"
         },
-        "consult_document": "Voir le document"
+        "consult_document": "Voir le document",
+        "search_by_name": "Recherche par nom",
+        "type_a_name": "Saisir un nom"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
         "subtitle": "Puis accéder aux paramétres",
         "associated_users": "Utilisateurs associés",
-        "users_list": "Liste des utilisateurs",
+        "associated_group": "Groupes associés",
+        "users_list": "Liste d'utilisateurs",
         "button": {
             "save": "Ajouter le {{name}}",
             "send": "Envoyer"
@@ -214,7 +217,7 @@
             "delete": "Suppression de {{name}}"
         },
         "placeholder": {
-            "type_user_name": "Entrez le nom d'un utilisateur...",
+            "type_user_name": "Entrez le nom d'un utilisateur",
             "name": "Nom du {{name}}",
             "type_name": "Entrez le nom du {{name}}...",
             "type_userName_or_groupName": "Groupe ou utilisateur...",
@@ -238,14 +241,26 @@
             "name_plural": "groupes",
             "complet_name": "groupe d'utilisateurs",
             "complet_name_plural": "groupes d'utilisateurs",
-            "success_delete": "Le groupe a bien été supprimé"
+            "success_delete": "Le groupe a été supprimé",
+            "error_delete": "Une erreur est survenue lors de la suppression du groupe",
+            "add_group": "Ajouter un Groupe",
+            "groups_list": "Liste de groupes",
+            "which_group": "Quel groupe ?"
         },
         "type": {
             "name": "type",
             "name_plural": "types",
             "complet_name": "type de classeurs",
             "complet_name_plural": "types de classeurs",
-            "help_text_add_type": "Saisir un nom pour ajouter un nouveau type"
+            "help_text_add_type": "Saisir un nom pour ajouter un nouveau type",
+            "title_add_type": "Ajout d'un type",
+            "list_editable_type": "Liste des types modifiable",
+            "list_not_editable_type": "Liste des types non modifiable",
+            "error_save": "Une erreur est survenue à l'enregistrement du type",
+            "error_delete": "Une erreur est survenue à la suppression du type",
+            "error_fetch_list": "Une erreur est survenue à la récupération des types",
+            "success_save": "Le type a été enregistré",
+            "success_delete": "Le type a été supprimé"
         },
         "etape": {
             "name": "étape",
@@ -264,7 +279,13 @@
             "add_step": "Ajouter une étape",
             "not_valid": "Circuit de validation non valide",
             "remove_step": "Supprimer l'étape",
-            "validation_conditions": "Vérifier que le circuit contient un \"nom\", au moins un \"type\" et que les étapes contiennent au moins un groupe et/ou plusieurs utilisateurs"
+            "validation_conditions": "Vérifier que le circuit contient un \"nom\", au moins un \"type\" et que les étapes contiennent au moins un groupe et/ou plusieurs utilisateurs",
+            "which_circuit": "Quel circuit ?",
+            "circuit_list": "Liste de circuits",
+            "add_circuit": "Ajouter un circuit",
+            "success_delete": "Le circuit a été supprimé",
+            "error_delete": "Une erreur est survenue à la suppression du circuit",
+            "error_fetch_list": "Une erreur est survenue à la récupération des circuits"
         },
         "user_pack": {
             "name": "groupe utilisateur",
@@ -302,7 +323,12 @@
             "label_api_key": "Clé API",
             "label_api_secret": "Secret API",
             "label_role_user": "Role",
-            "placeholder_role_user": "Role de l'utilisateur"
+            "placeholder_role_user": "Role de l'utilisateur",
+            "first_name_and_name": "Prénom Nom",
+            "search_by_first_name_and_name": "Recherche par nom et prénom",
+            "succes_delete": "L'utilisateur a été supprimé",
+            "error_delete": "Impossible de supprimer l'utilisateur",
+            "which_user": "Quel utilisateur ?"
         },
         "collectivite": {
             "title": "Rechercher une collectivité",
@@ -327,15 +353,18 @@
             "success_edit": "La collectivité a bien été bien modifier",
             "success_upload_avatar": "L'image a été correctement chargée",
             "state": "Etat",
+            "select_collectivite": "Sélectionner une collectivité",
+            "collectivites_list": "Liste de collectivités",
             "error": {
-              "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
-              "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
-              "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
-              "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
-              "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
-              "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
-              "field_delay_required": "La durée des classeurs est requise",
-              "visa_title": "Le titre du VISA est requis"
+                "upload_avatar": "Impossible de charger votre image - erreur {{errorCode}}",
+                "delete_avatar": "Impossible de supprimer votre image - erreur {{errorCode}}",
+                "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
+                "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
+                "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
+                "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
+                "field_delay_required": "La durée des classeurs est requise",
+                "visa_title": "Le titre du VISA est requis",
+                "fetch_list": "Une erreur est survenue à la récupération des collectivités"
             },
             "mail": {
               "new_classeur": "Mail nouveau classeur",
@@ -367,11 +396,14 @@
             }
         },
         "emailing": {
-            "title": "Emailing",
-            "complet_name": "Rédiger un emailing",
-            "subtitle": "Puis envoyez à tous les utilisateurs",
-            "success_add": "L'emailing a bien été envoyé",
-            "fail_add": "L'emailing n'a pas être envoyé - erreur {{errorCode}}"
+            "name": "Emailing",
+            "title": "Diffuser un message",
+            "subtitle": "À tous les utilisateurs",
+            "success_sending": "Le message a été envoyé",
+            "error_sending": "Une erreur est survenue lors de la diffusion du message",
+            "write_an_message": "Rédiger le message",
+            "type_subject": "Saisir un sujet",
+            "subject": "Sujet"
         },
         "notes": {
             "title": "Rechercher une note",

@@ -154,12 +154,15 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
 
     /**
      * @Rest\View()
-     * @Rest\Delete("/{id_groupe}")
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
+     * @Rest\Delete("/{id}/{collectiviteId}")
      * @param Groupe $groupe
      * @return bool|JsonResponse
-     * @ParamConverter("groupe", options={"mapping": {"id_groupe" : "id"}})
+     * @ParamConverter("groupe", options={"mapping": {"id" : "id"}})
+     * @ParamConverter("collectivite", options={"mapping": {"collectiviteId": "id"}})
+     * @param Collectivite $collectivite
      */
-    public function removeAction(Groupe $groupe)
+    public function removeAction(Groupe $groupe, Collectivite $collectivite)
     {
         if (empty($groupe)) {
             return new JsonResponse(['message' => 'Circuit de validation inexistant'], Response::HTTP_NOT_FOUND);
@@ -180,7 +183,8 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
             $em->remove($groupe);
             $em->flush();
 
-            return true;
+            $circuits = $em->getRepository('SesileUserBundle:Groupe')->findByCollectivite($collectivite);
+            return $circuits;
         } else {
             return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);
         }

@@ -38,12 +38,19 @@ class SelectCollectivite extends Component {
     render() {
         const { t } = this.context
         const { currentCollectivite, collectivites } = this.state
-        const options = collectivites.map((collectivite, key) => <option key={key} value={collectivite.id} disabled={!collectivite.active ? true : false}>{collectivite.nom}</option>)
         return (
-            <div >
-                <label htmlFor="collectivites_select">{t('admin.label.which_collectivite')}</label>
-                <Select id="collectivites_select" value={currentCollectivite} wrapperStyle={{marginBottom : "1em"}} valueKey="id" labelKey="nom" options={collectivites} onChange={this.handleChange} />
-            </div>
+            <label htmlFor="collectivites_select">
+                <span  className="text-bold">{t('admin.label.which_collectivite')}</span>
+                <Select 
+                    id="collectivites_select"
+                    placeholder={t('admin.collectivite.select_collectivite')}
+                    value={currentCollectivite} 
+                    wrapperStyle={{marginBottom : "0.65em"}} 
+                    valueKey="id" 
+                    labelKey="nom" 
+                    options={collectivites} 
+                    onChange={this.handleChange} />
+            </label>
         )
     }
 }

@@ -1,96 +1,75 @@
 import React, { Component } from 'react'
-import PropTypes, { object, func } from 'prop-types'
+import { object, func } from 'prop-types'
+import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import History from '../_utils/History'
-import { escapedValue } from '../_utils/Search'
+
+import { AdminList, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
+import { Input } from '../_components/Form'
 import { basicNotification } from '../_components/Notifications'
+import { Cell, GridX } from '../_components/UI'
+
+import { escapedValue } from '../_utils/Search'
+import { handleErrors, DisplayLongText } from "../_utils/Utils"
 
 class Collectivites extends Component {
-
     static contextTypes = {
         t: func,
         _addNotification: func
     }
-
-    constructor(props) {
-        super(props)
-         this.state = {
-             collectivites: [],
-             filteredCollectivites: [],
-             collectiviteName: ''
-         }
+    state = {
+     collectivites: [],
+     filteredCollectivites: [],
+     collectiviteName: ''
     }
-
-    handleErrors(response) {
-        if (response.ok) {
-            return response
-        }
-        throw response  
-    }
-
     componentDidMount() {
         this.fetchCollectivites()
     }
-    
-
     fetchCollectivites() {
-        const { t } = this.context
+        const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_main_collectiviteapi_getall'), {credentials: 'same-origin'})
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => this.setState({collectivites: json, filteredCollectivites: json}))
-        .catch(error => this.context._addNotification(basicNotification('error', 
-                                                                        t('admin.error.not_extractable_list',
-                                                                        {name: t('admin.collectivite.name', {count: 2}), errorCode: error.status}), 
-                                                                        error.statusText)))
+        .catch(() =>
+            _addNotification(basicNotification('error', t('admin.collectivite.error.fetch_list'))))
     }
-
-    handleSearchByCollectiviteName(collectiviteName) {
+    handleSearchByCollectiviteName = (key, collectiviteName) => {
         this.setState({collectiviteName})
         const regex = escapedValue(collectiviteName, this.state.filteredCollectivites, this.state.collectivites)
         const filteredCollectivites = this.state.collectivites.filter(collectivite=> regex.test(collectivite.nom))
         this.setState({filteredCollectivites})
     }
-
     render() {
         const { t } = this.context
-        const { filteredCollectivites, collectiviteName } = this.state
-        const listFilteredCollectivites = filteredCollectivites.map((collectivite, key) => <CollectiviteRow key={key} collectivite={collectivite} />)
+        const listFilteredCollectivites =
+            this.state.filteredCollectivites.map((collectivite, key) =>
+                <RowCollectivite key={key} collectivite={collectivite} />)
         return (
-            <div className="user-group">
-                <h4 className="text-center text-bold">{t('admin.collectivite.title')}</h4>
-                <p className="text-center">{t('admin.subtitle')}</p>
-
-                <div className="grid-x align-center-middle">
-                    <div className="cell medium-6">
-                        <div className="grid-x grid-padding-x">
-                            <div className="auto cell">
-                                <label htmlFor="name-search-admin">{t('admin.collectivite.which')}</label>
-                                <input id="name-search-admin"
-                                    placeholder={t('admin.collectivite.type_name')}
-                                    type="text" 
-                                    value={collectiviteName}
-                                    onChange={(e) => this.handleSearchByCollectiviteName(e.target.value)} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="cell medium-10 list-admin">
-                        <div className="grid-x grid-padding-x panel">
-                            <div className="cell medium-12 panel-heading grid-x">
-                                <div className="cell medium-4">{t('admin.collectivite.name')}</div>
-                                <div className="cell medium-8">{t('admin.collectivite.state')}</div>
-                            </div>
-                            {(listFilteredCollectivites.length > 0) ? listFilteredCollectivites :
-                                <div className="cell medium-12 panel-body">
-                                    <div className="text-center">
-                                        {t('admin.collectivite.no_results')}
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <AdminPage
+                title={t('admin.collectivite.title')}
+                subtitle={t('admin.subtitle')}>
+                <AdminContainer>
+                    <Cell className="medium-6">
+                        <GridX className="grid-padding-x align-center-middle">
+                            <Input
+                                className="cell medium-auto"
+                                labelText={t('admin.collectivite.which')}
+                                value={this.state.collectiviteName}
+                                onChange={this.handleSearchByCollectiviteName}
+                                placeholder={t('common.search_by_name')}
+                                type="text"/>
+                        </GridX>
+                    </Cell>
+                    <AdminList
+                        title={t('admin.collectivite.collectivites_list')}
+                        listLength={listFilteredCollectivites.length}
+                        headTitles={[t('common.label.name'), t('admin.collectivite.state'), t('common.label.actions')]}
+                        headGrid={['medium-auto', 'medium-auto', 'medium-2']}
+                        emptyListMessage={t('admin.collectivite.no_results')}>
+                        {listFilteredCollectivites}
+                    </AdminList>
+                </AdminContainer>
+            </AdminPage>
         )
     }
 }
@@ -101,23 +80,30 @@ Collectivites.propTypes = {
 
 export default translate(['sesile'])(Collectivites)
 
-const CollectiviteRow = ({ collectivite }, {t}) => {
-    return (
-        <div className="cell medium-12 panel-body grid-x row-admin" onClick={() => History.push(`collectivite/${collectivite.id}`)}>
-            <div className="cell medium-4 text-uppercase">
-                {collectivite.nom}
-            </div>
-            <div className="cell medium-6 text-uppercase">
-                {(collectivite.active) ? t('common.label.enabled') : t('common.label.disabled')}
-            </div>
-        </div>
-    )
-}
+const RowCollectivite = ({collectivite}, {t}) =>
+    <AdminListRow>
+        <Cell className="medium-auto">
+            <DisplayLongText text={collectivite.nom} maxSize={100}/>
+        </Cell>
+        <Cell className="medium-auto">
+            {(collectivite.active) ? t('common.label.enabled') : t('common.label.disabled')}
+        </Cell>
+        <Cell className="medium-2">
+            <GridX>
+                <Cell className="medium-auto">
+                    <Link
+                        to={`collectivite/${collectivite.id}`}
+                        className="fa fa-pencil icon-action"
+                        title={t('common.button.edit')}/>
+                </Cell>
+            </GridX>
+        </Cell>
+    </AdminListRow>
 
-CollectiviteRow.propTypes = {
+RowCollectivite.propTypes = {
     collectivite: object.isRequired
 }
 
-CollectiviteRow.contextTypes = {
-    t: func 
+RowCollectivite.contextTypes = {
+    t: func
 }

@@ -5,8 +5,8 @@ const handleErrors = (response) => {
     else throw response
 }
 
-const DisplayLongText = ({text, className = "", maxSize = 20}) => 
-    <span className={className} title={text}>
+const DisplayLongText = ({text, className = "", maxSize = 20, title = ''}) =>
+    <span className={className} title={title || text}>
         {text.length > maxSize ?
             (`${text.substring(0, maxSize)}...`) :
             (text)

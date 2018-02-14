@@ -5,7 +5,9 @@ const AdminDetails = ({ className, title, subtitle, nom, children }) =>
     <div className={className}>
         <div id="admin-details" className="admin-details">
             <h4 className="text-center text-bold text-uppercase">{title}</h4>
-            <p className="text-center">{subtitle}</p>
+            <p className="text-center">
+                <em>{subtitle}</em>
+            </p>
             <div className="admin-details-name">
                 <span>{nom}</span>
             </div>
@@ -60,12 +62,19 @@ const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey }
 const AdminPage = ({title, subtitle, className="", children}) =>
     <div id="admin-details" className={"admin-details " + className}>
         <h4 className="text-center text-bold text-uppercase">{title}</h4>
-        <p className="text-center">{subtitle}</p>
+        <p className="text-center">
+            <em>{subtitle}</em>
+        </p>
         {children}
     </div>
 
-const AdminList = ({title, headTitles, labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
-    const listHeadTitles = headTitles.map(headTitle => <div key={headTitle} className="cell medium-auto">{headTitle}</div>)
+const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
+    const listHeadTitles = headTitles.map((headTitle, index) =>
+        <div
+            key={headTitle}
+            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : 'cell medium-auto' }>
+            {headTitle}
+        </div>)
     return(
         <div className="cell medium-10 list-admin">
             <div className="grid-x align-center-middle">
