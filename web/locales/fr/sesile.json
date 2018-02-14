@@ -164,7 +164,8 @@
             "btn_origin": "original",
             "btn_visa": "visa",
             "btn_signature": "signature",
-            "btn_both": "visa + signature"
+            "btn_both": "visa + signature",
+            "no_preview": "Aucune prévisualisation possible"
         },
         "user": {
             "certificate" : "certificat",

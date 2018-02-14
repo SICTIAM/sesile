@@ -592,28 +592,32 @@ html {
 }
 
 .step-item{
+  border-radius: 0.3em;
+  background: $light-gray;
+  padding: 0.3em;
+
+  button {
+    cursor: pointer;
+  }
+
+  .name-step-item {
+    font-weight: 700;
+  }
+
+  .content-step-item {
+    background: white;
     border-radius: 0.3em;
-    background: $light-gray;
-    padding: 0.3em;
-
-    .name-step-item {
-      font-weight: 700;
+    color: $dark-gray;
+    ul {
+      padding:0.5em;
     }
-
-    .content-step-item {
-      background: white;
-      border-radius: 0.3em;
+    a {
       color: $dark-gray;
-      ul {
-        padding:0.5em;
-      }
-      a {
-        color: $dark-gray;
-        float: right;
-        margin-right: 0.3em;
-      }
+      float: right;
+      margin-right: 0.3em;
     }
   }
+}
 
 .parameters-user-group {
   .details-user-group {

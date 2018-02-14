@@ -122,7 +122,8 @@ class Classeur extends Component {
         const etape_classeur = {
             ordre: null,
             user_packs: [],
-            users: []
+            users: [],
+            autoFocus: true
         }
         if (stepKey === null) {
             this.setState((prevState) => {prevState.classeur.etape_classeurs.push(etape_classeur)})

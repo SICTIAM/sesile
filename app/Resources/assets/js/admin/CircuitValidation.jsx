@@ -176,7 +176,7 @@ class CircuitValidation extends Component {
 
     handleChangeCircuit = (key, value) => this.setState(prevState => {circuit: prevState.circuit[key] = value})
 
-    handleClickAddStep = () => this.setState(prevState => prevState.circuit.etape_groupes.push({ordre: this.state.circuit.etape_groupes.length, user_packs:[], users:[]}))
+    handleClickAddStep = () => this.setState(prevState => prevState.circuit.etape_groupes.push({ordre: this.state.circuit.etape_groupes.length, user_packs:[], users:[], autoFocus: true}))
 
     handleClickDeleteStep = (stepKey) => {
         this.setState(prevState => {

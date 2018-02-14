@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import {func} from 'prop-types'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
+import { handleErrors } from '../_utils/Utils'
+import Moment from 'moment'
 
 class Certificate extends Component {
 
@@ -27,19 +29,21 @@ class Certificate extends Component {
     }
 
     fetchUser() {
+        const { t, _addNotification } = this.context
         fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
+            .then(handleErrors)
             .then(response => response.json())
-            .then(json => {
-                this.setState({user: json})
-            })
+            .then(user => this.setState({user}))
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_extractable_list', {name: t('admin.user.name'), errorCode: error.status}),
+                error.statusText)))
     }
 
     fetchCertificate() {
         fetch(Routing.generate("sesile_user_userapi_getcertificate"), {credentials: 'same-origin'})
             .then(response => response.json())
-            .then(certificate => {
-                this.setState({certificate})
-            })
+            .then(certificate => this.setState({certificate}))
     }
 
     render () {
@@ -64,7 +68,7 @@ class Certificate extends Component {
                             {t('common.user.certificate_serial')}
                         </div>
                         <div className="medium-8 cell">
-                            2A841CF28C8DB0C294EF7B55C7B3390BC6A1F8E1
+                            { certificate.HTTP_X_SSL_CLIENT_M_SERIAL }
                         </div>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x">
@@ -72,7 +76,7 @@ class Certificate extends Component {
                             {t('common.user.certificate_transmitter')}
                         </div>
                         <div className="medium-8 cell">
-                            /C=FR/ST=Alpes-Maritimes/L=Vallauris/O=SICTIAM/CN=Certificats SICTIAM/emailAddress=internet@sictiam.fr
+                            { certificate.HTTP_X_SSL_CLIENT_I_DN }
                         </div>
                     </div>
 
@@ -85,19 +89,19 @@ class Certificate extends Component {
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.common_name')}</div>
-                                <div className="medium-6">Frédéric Laussinot</div>
+                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_S_DN_CN }</div>
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.organisation')}</div>
-                                <div className="medium-6">SICTIAM</div>
+                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_S_DN_O }</div>
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.organisation_unit')}</div>
-                                <div className="medium-6">SICTIAM</div>
+                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_S_DN_OU }</div>
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.email')}</div>
-                                <div className="medium-6">f.laussinot@sictiam.fr</div>
+                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_S_DN_EMAIL }</div>
                             </div>
                         </div>
 
@@ -109,15 +113,15 @@ class Certificate extends Component {
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.common_name')}</div>
-                                <div className="medium-6">Certificats SICTIAM</div>
+                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_I_DN_CN }</div>
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.organisation')}</div>
-                                <div className="medium-6">SICTIAM</div>
+                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_I_DN_O }</div>
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.email')}</div>
-                                <div className="medium-6">internet@sictiam.fr</div>
+                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_I_DN_EMAIL }</div>
                             </div>
                         </div>
 
@@ -129,11 +133,11 @@ class Certificate extends Component {
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.from')}</div>
-                                <div className="medium-6">25/08/2016 à 15:14:34</div>
+                                <div className="medium-6">{ Moment(certificate.HTTP_X_SSL_CLIENT_NOT_BEFORE).format('LL') }</div>
                             </div>
                             <div className="grid-x">
                                 <div className="medium-6">{t('common.user.to')}</div>
-                                <div className="medium-6">11/02/2019 à 14:14:34</div>
+                                <div className="medium-6">{ Moment(certificate.HTTP_X_SSL_CLIENT_NOT_AFTER).format('LL') }</div>
                             </div>
                         </div>
 

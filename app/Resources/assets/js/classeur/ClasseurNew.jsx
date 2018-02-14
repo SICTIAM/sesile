@@ -135,7 +135,7 @@ class ClasseurNew extends Component {
     handleChangeType = (name, value) => this.setState(prevState => {prevState.type = this.state.circuit.types.find(type => type.id === parseInt(value))})
     handleChangeClasseur = (key, value) => this.setState(prevState => {prevState.classeur[key] = value})
     handleChangeLimitDate = (date) => this.handleChangeClasseur('validation', date)
-    handleClickAddStep = () => this.setState(prevState => prevState.circuit.etape_groupes.push({ordre: this.state.circuit.etape_groupes.length, user_packs:[], users:[]}))
+    handleClickAddStep = () => this.setState(prevState => prevState.circuit.etape_groupes.push({ordre: this.state.circuit.etape_groupes.length, user_packs:[], users:[], autoFocus: true}))
     handleClickDeleteStep = (stepKey) => {
         this.setState(prevState => {
             prevState.circuit.etape_groupes.forEach((etape_groupe, key) => {if(key > stepKey) etape_groupe.ordre-- })

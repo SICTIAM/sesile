@@ -67,7 +67,9 @@ const CircuitValidationStepList = SortableContainer(({steps, collectiviteId, han
             {listStep}
             <Cell className="medium-3">
                 <GridX className="step-item">
-                    <button className="btn-add" type={"button"} onClick={() => handleClickAddStep()}>{labelButtonAddStep}</button>
+                    <button type={"button"} onClick={() => handleClickAddStep()}>
+                        <i className="fi-plus"></i> {labelButtonAddStep}
+                    </button>
                 </GridX>
             </Cell>
         </GridX>
@@ -100,8 +102,8 @@ class CircuitValidationStep extends Component {
     render() {
         const { t } = this.context
         const { stepKey, step, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser } = this.props
-        const listUsers = step.users && step.users.map((user, key) => <li key={key}>{user._prenom + " " + user._nom}<a onClick={e => handleClickDeleteUser(stepKey, key)}>x</a></li>)
-        const listGroups = step.user_packs && step.user_packs.map((group, key) => <li key={key}>{group.nom}<a onClick={e => handleClickDeleteGroup(stepKey, key)}>x</a></li>)
+        const listUsers = step.users && step.users.map((user, key) => <li key={key}>{user._prenom + " " + user._nom}<a onClick={() => handleClickDeleteUser(stepKey, key)}>x</a></li>)
+        const listGroups = step.user_packs && step.user_packs.map((group, key) => <li key={key}>{group.nom}<a onClick={() => handleClickDeleteGroup(stepKey, key)}>x</a></li>)
 
         return (
             <StepItem   stepKey={stepKey}
@@ -113,10 +115,7 @@ class CircuitValidationStep extends Component {
                     {listUsers}
                     {listGroups && listGroups.length > 0 && <li><strong className="text-uppercase">{t('admin.group.name', {count: listGroups.length})}</strong></li>}
                     {listGroups}
-                    {this.state.inputDisplayed ?
-                        <SearchUserAndGroup placeholder={t('admin.placeholder.type_userName_or_groupName')} addGroup={addGroup} addUser={addUser} stepKey={stepKey} step={step} collectiviteId={collectiviteId} /> :
-                        <li><button className="btn-add" type={"button"} onClick={() => this.setState({inputDisplayed: true})}>{t('common.button.add_user')}</button></li>
-                    }
+                    <SearchUserAndGroup placeholder={t('admin.placeholder.type_userName_or_groupName')} addGroup={addGroup} addUser={addUser} stepKey={stepKey} step={step} collectiviteId={collectiviteId} />
                 </ul>
             </StepItem>
         )
