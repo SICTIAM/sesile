@@ -27,7 +27,7 @@ class DocumentationRow extends Component {
                     <div className="medium-3 cell">{ Moment(documentation.date).format('LL') }</div>
                     <div className="medium-3 cell">
                         { documentation.path &&
-                            <Link to={ Routing.generate(download_route, {id: documentation.id}) } className="button primary" target="_blank">{ t('common.help_board.view_button') }</Link>
+                            <Link to={ Routing.generate(download_route, {id: documentation.id}) } className="button primary hollow" target="_blank">{ t('common.help_board.view_button') }</Link>
                         }
                     </div>
                 </div>

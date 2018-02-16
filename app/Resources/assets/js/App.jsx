@@ -74,33 +74,26 @@ class App extends Component {
                 <div className="grid-x grid-y medium-grid-frame grid-frame">
                     <div className="cell header medium-cell-block-container cell-block-container">
                         <div className="grid-x align-middle align-center">
-                            <div className="medium-1 cell">
-                                <div className="logo text-center">
-                                    <Link to={'/tableau-de-bord'}>
-                                        <div className="logo-init">S</div>
-                                        <div className="logo-name">sesile</div>
-                                    </Link>
-                                </div>
+                            <div className="medium-2 small-6 cell logo text-center">
+                                <Link to={'/tableau-de-bord'}>
+                                    <img src="/images/logo_sesile.png" />
+                                </Link>
                             </div>
-                            <div className="medium-5 cell">
+                            <div className="medium-5 cell show-for-medium">
                                 <SearchClasseurs/>
                             </div>
-                            <div className="medium-2 cell"></div>
-                            <div className="medium-2 cell text-center">
-                                <i className="fa fa-2x fa-comments"></i>
-                                <span className="badge">5</span>
-                            </div>
-                            <div className="medium-2 cell">
+                            <div className="medium-3 cell show-for-medium"></div>
+                            <div className="medium-2 cell small-6">
                                 <Login/>
                             </div>
                         </div>
                     </div>
-                    <div className="cell medium-auto medium-cell-block-container">
+                    <div className="cell medium-auto">
                         <div className="grid-x height100">
 
                             <Route component={Menu} />
 
-                            <div className="grid-y cell medium-11 medium-cell-block-y main">
+                            <div className="cell medium-10 medium-cell-block-y main">
                                 <Note/>
                                 <div className="grid-x grid-padding-x medium-11">
                                     <div className="cell medium-12">

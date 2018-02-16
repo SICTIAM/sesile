@@ -167,7 +167,7 @@ class Types extends Component {
                                     </Cell>
                                     <Cell className="medium-6 text-right">
                                         <button
-                                            className="button primary text-uppercase"
+                                            className="button primary hollow text-uppercase"
                                             disabled={this.state.disabledButtonAdd}
                                             onClick={() => this.createType()}>
                                             {t('common.button.save')}

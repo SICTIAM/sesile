@@ -433,8 +433,8 @@ class User extends Component {
 
                             </div>
                             <div className="medium-12 cell">
-                                <button className="button float-right text-uppercase" onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
-                                {(userId) && <button className="alert button float-right text-uppercase" onClick={() => this.handleClickDelete(user.id)}>{t('common.button.delete')}</button>}
+                                <button className="button float-right hollow text-uppercase" onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
+                                {(userId) && <button className="alert button float-right hollow text-uppercase" onClick={() => this.handleClickDelete(user.id)}>{t('common.button.delete')}</button>}
                             </div>
                         </div>
 
