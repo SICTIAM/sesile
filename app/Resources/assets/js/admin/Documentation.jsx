@@ -3,7 +3,6 @@ import { func } from 'prop-types'
 import { translate } from 'react-i18next'
 import Dropzone from 'react-dropzone'
 import Validator from 'validatorjs'
-import { Redirect } from 'react-router-dom'
 
 import { AdminDetails, SimpleContent } from '../_components/AdminUI'
 import { Form, Button } from '../_components/Form'
@@ -208,7 +207,7 @@ class Documentation extends Component {
                                     onDropAccepted={files => this.handleDropFile(files)}>
                                     {<GridX>
                                         <Cell>
-                                            <i className="fi-page-pdf large"></i>
+                                            <i className="fa fa-file-pdf-o"></i>
                                         </Cell>
                                         <DisplayFileName documentation={documentation} onClick={this.handleRemoveFile} />
                                             <Cell className="text-small">

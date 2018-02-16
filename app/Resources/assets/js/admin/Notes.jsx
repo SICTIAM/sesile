@@ -109,7 +109,7 @@ const RowNote = ({note, deleteNote}, {t}) => {
             <Cell className="medium-auto">
                 <GridX>
                     <Cell className="medium-auto">
-                        <i  className="fi-pencil medium icon-action" 
+                        <i  className="fa fa-pencil icon-action"
                             title={t('common.button.edit')} 
                             onClick={() => History.push(`/admin/note/${note.id}`)} >
                         </i>

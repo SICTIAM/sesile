@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { translate } from 'react-i18next'
-import {array, func, object, number} from 'prop-types'
+import {func, object} from 'prop-types'
 
 
 class DocumentPreview extends Component {
@@ -20,28 +20,20 @@ class DocumentPreview extends Component {
     render () {
 
         const { t } = this.context
-        const { document, id, removeDocument }  = this.props
+        const { documents, onClick }  = this.props
 
         return (
-            <div className="cell medium-6">
-                <div className="grid-x">
-                    <div className="cell medium-11">
-                        <DocumentType document={document} />
-                    </div>
-                    <div className="cell medium-1">
-                        <span className="fi-x badge alert" onClick={() => removeDocument(id)} title={ t('common.documents.delete_document')}></span>
-                    </div>
-                </div>
-                <div className="grid-x">
-                    <div className="cell medium-12">
-                        {document.name}
-                    </div>
-                </div>
-                <div className="grid-x">
-                    <div className="cell medium-12 text-center">
-                        {this.bytesToSize(document.size)}
-                    </div>
-                </div>
+            <div className="cell medium-11 text-left">
+                { documents.map(file => file ?
+                    <p key={file.name}>
+                        { (file.name.length > 20)
+                            ? `...${file.name.substring(file.name.length -20, file.name.length)}`
+                            : file.name
+                        }
+                        &nbsp;- {this.bytesToSize(file.size)}
+                        <a style={{color: 'red', width: 0.1, height: 0.1}} onClick={(e) => onClick(e)} title={t('common.button.remove')}> x</a></p>
+                    : t('common.drop_file_here'))
+                }
             </div>
         )
     }
@@ -54,19 +46,6 @@ DocumentPreview.contextTypes = {
 DocumentPreview.propTypes = {
     document: object,
     onClick: func,
-    id: number,
-    removeDocument: func,
-    displayReveal: func
 }
 
 export default translate('sesile')(DocumentPreview)
-
-
-const DocumentType = ({document}) => {
-
-    return (
-        (document.type.indexOf('image/') !== -1)
-            ? <img src={document.preview}/>
-            : <div className="text-center"><span className="fi-page document-ico"></span></div>
-    )
-}

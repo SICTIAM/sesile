@@ -132,7 +132,13 @@ class ClasseurNew extends Component {
     }
 
     handleChangeCircuit = (name, value) => this.setState(prevState => {prevState.circuit = this.state.circuits.find(circuit => circuit.id === parseInt(value))})
-    handleChangeType = (name, value) => this.setState(prevState => {prevState.type = this.state.circuit.types.find(type => type.id === parseInt(value))})
+    handleChangeType = (name, value) => {
+        const type = this.state.circuit.types.find(type => type.id === parseInt(value))
+        this.setState(prevState => {prevState.type = type})
+        if (type.nom === "Helios" && (this.state.documents.length > 0 || this.state.documents.find(document => document.type !== 'text/xml'))) {
+            this.setState(prevState => prevState.documents = [this.state.documents.find(document => document.type === 'text/xml')])
+        }
+    }
     handleChangeClasseur = (key, value) => this.setState(prevState => {prevState.classeur[key] = value})
     handleChangeLimitDate = (date) => this.handleChangeClasseur('validation', date)
     handleClickAddStep = () => this.setState(prevState => prevState.circuit.etape_groupes.push({ordre: this.state.circuit.etape_groupes.length, user_packs:[], users:[], autoFocus: true}))
@@ -154,7 +160,11 @@ class ClasseurNew extends Component {
     }
     handleSelectChange = (users_copy) => this.setState({ users_copy })
     onDrop = (documents) => this.setState(prevState => prevState.documents = [...this.state.documents, ...documents])
-    removeDocument = (key) => this.setState(prevState => prevState.documents.splice(key, 1))
+    removeDocument = (key) => {
+        key.preventDefault()
+        key.stopPropagation()
+        this.setState(prevState => prevState.documents.splice(key, 1))
+    }
 
     render() {
         const { circuits, circuit, type, classeur, user, documents, users_copy } = this.state
@@ -172,7 +182,7 @@ class ClasseurNew extends Component {
 
                 <div className="grid-x grid-padding-y">
                     <div className="cell medium-12 text-center">
-                        <h1>{t('common.classeurs.title_add')}</h1>
+                        <h2>{t('common.classeurs.title_add')}</h2>
                     </div>
                 </div>
 
@@ -188,7 +198,7 @@ class ClasseurNew extends Component {
                                         <div className="cell medium-12">
                                             <div className="grid-x grid-margin-x grid-padding-x">
                                                 <div className="cell medium-12">
-                                                    <h2>{t('common.classeurs.title_infos')}</h2>
+                                                    <h3>{t('common.classeurs.title_infos')}</h3>
                                                 </div>
                                             </div>
                                             <div className="grid-x grid-margin-x grid-padding-x">
@@ -248,7 +258,7 @@ class ClasseurNew extends Component {
                                     <div className="cell medium-12">
                                         <div className="grid-x grid-margin-x grid-padding-x">
                                             <div className="cell medium-12">
-                                                <h2>{t('admin.circuit.complet_name')}</h2>
+                                                <h3>{t('admin.circuit.complet_name')}</h3>
                                             </div>
                                         </div>
                                         <div className="grid-x grid-margin-x grid-padding-x">
@@ -275,7 +285,7 @@ class ClasseurNew extends Component {
                                     <div className="cell medium-12">
                                         <div className="grid-x grid-margin-x grid-padding-x">
                                             <div className="cell medium-12">
-                                                <h2>{t('common.classeurs.users_copy')}</h2>
+                                                <h3>{t('common.classeurs.users_copy')}</h3>
                                             </div>
                                         </div>
                                         <div className="grid-x grid-margin-x grid-padding-x">
@@ -308,20 +318,12 @@ class ClasseurNew extends Component {
                     </div>
 
 
-                    <div className="cell medium-4 cell-block-y details-classeur">
-                        <div className="grid-x grid-padding-y">
-                            <div className="cell medium-12">
-                                <div className="grid-x">
-                                    <h3 className="cell medium-12">{t('common.documents.title_preview')}</h3>
-                                </div>
-
-                                <DocumentsNew documents={ Object.assign([],documents) }
-                                              onDrop={this.onDrop}
-                                              removeDocument={this.removeDocument}
-                                              typeClasseur={ type }
-                                />
-                            </div>
-                        </div>
+                    <div className="cell medium-4">
+                        <DocumentsNew documents={ Object.assign([],documents) }
+                                      onDrop={this.onDrop}
+                                      removeDocument={this.removeDocument}
+                                      typeClasseur={ type }
+                        />
                     </div>
 
                 </div>

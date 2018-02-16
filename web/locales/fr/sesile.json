@@ -97,7 +97,7 @@
             "title_remove": "classeurs supprimable",
             "title_to_sign_plural": "classeurs à signer",
             "title_add": "Création d'un nouveau classeur",
-            "title_infos": "Informations du classeur",
+            "title_infos": "Informations générales",
             "sort": "trier",
             "search": "Rechercher un classeur",
             "date_limit": "Date limite le",
@@ -158,7 +158,7 @@
             "name": "document",
             "name_plural": "documents",
             "title_list": "liste de documents",
-            "title_preview": "Prévisualisation du document",
+            "title_preview": "Documents",
             "label_dropzone": "Déposer vos documents ici",
             "full_screen": "Voir en plein écran",
             "delete_document": "Supprimer le document",
@@ -166,7 +166,11 @@
             "btn_visa": "visa",
             "btn_signature": "signature",
             "btn_both": "visa + signature",
-            "no_preview": "Aucune prévisualisation possible"
+            "no_preview": "Aucune prévisualisation possible",
+            "error": {
+                "file_acceptation_rules": "Les fichiers doivent être au bon format et d'une taille maximum de 100 Mo",
+                "file_acceptation_rules_helios": "Le classeur ne doit comporter qu'un seul fichier PES. La taille maximum du fichier est 100 Mo"
+            }
         },
         "user": {
             "certificate" : "certificat",
