@@ -177,7 +177,7 @@ const RowDocumentEvo = ({patch, deletePatch}, {t}) => {
                 <GridX>
                     <Cell className="medium-auto">
                         <i 
-                            className="fi-pencil medium icon-action" 
+                            className="fa fa-pencil icon-action"
                             title={t('common.button.edit')} 
                             onClick={() => History.push(`/admin/documentation/mise-a-jour/${patch.id}`)} >
                         </i>
@@ -189,7 +189,7 @@ const RowDocumentEvo = ({patch, deletePatch}, {t}) => {
                                     'sesile_main_documentationapi_showdocumentpatch', 
                                     {id: patch.id})}
                             target="_blank"
-                            className="fi-page-pdf medium icon-action" 
+                            className="fa fa-file-pdf-o icon-action"
                             title={t('common.consult_document')}>
                         </Link>
                     </Cell>
@@ -223,7 +223,7 @@ const RowDocumentHelp = ({help, deleteHelp}, {t}) => {
                 <GridX>
                     <Cell className="medium-auto">
                         <i 
-                            className="fi-pencil medium icon-action" 
+                            className="fa fa-pencil icon-action"
                             title={t('common.button.edit')} 
                             onClick={() => History.push(`/admin/documentation/aide/${help.id}`)} >
                         </i>
@@ -235,7 +235,7 @@ const RowDocumentHelp = ({help, deleteHelp}, {t}) => {
                                     'sesile_main_documentationapi_showdocumentaide', 
                                     {id: help.id})}
                             target="_blank"
-                            className="fi-page-pdf medium icon-action" 
+                            className="fa fa-file-pdf-o medium icon-action"
                             title={t('common.consult_document')}>
                         </Link>
                     </Cell>

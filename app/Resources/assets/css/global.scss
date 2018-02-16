@@ -183,11 +183,11 @@ html {
 }
 
 .main {
-  h1 {
+  h2 {
     font-size: 2em;
     font-family: 'Raleway', sans-serif;
   }
-  h2 {
+  h3 {
     font-size: 1.5em;
     font-family: 'Raleway', sans-serif;
   }
@@ -1020,10 +1020,8 @@ label > input {
 }
 
 .documentation-dropzone {
-  height: 10em;
-  border-width: 0.1em;
-  border-color: rgba(64, 66, 87, 1);
-  border-style: dashed;
+  min-height: 10em;
+  border: rgba(64, 66, 87, 1) 0.1em dashed;
   border-radius: 0.3em;
   text-align: center;
   color: #404257;
