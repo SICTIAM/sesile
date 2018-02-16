@@ -168,154 +168,162 @@ class ClasseurNew extends Component {
             : listTypes = ""
 
         return(
-            <div className="grid-y grid-frame">
-                <div className="cell medium-12 grid-y">
+            <div className="cell medium-12">
 
-
-                    <div className="grid-x medium-12 grid-margin-x grid-padding-x">
-
-                        <div className="cell medium-8 cell-block-y details-classeur">
-
-                            <div className="grid-x grid-margin-x grid-padding-x">
-                                <div className="cell medium-12">
-                                    <h1>{t('common.classeurs.title_add')}</h1>
-                                </div>
-                            </div>
-                            { circuit.id &&
-                                <Form onSubmit={this.saveClasseur}>
-                                    <div className="grid-x grid-margin-x grid-padding-x">
-                                        <Select id="circuits"
-                                                className="cell medium-6"
-                                                label={t('common.classeurs.label.circuits')}
-                                                value={circuit.id}
-                                                onChange={this.handleChangeCircuit}
-                                                children={listCircuits}
-                                        />
-                                        <Select id="types"
-                                                className="cell medium-6"
-                                                label={t('common.classeurs.label.types')}
-                                                value={type.id}
-                                                onChange={this.handleChangeType}
-                                                children={listTypes}
-                                        />
-                                    </div>
-                                    <div className="grid-x grid-margin-x grid-padding-x">
-                                        <InputValidation    id="nom"
-                                                            type="text"
-                                                            className="cell medium-6"
-                                                            labelText={t('common.label.name')}
-                                                            value={classeur.nom}
-                                                            onChange={this.handleChangeClasseur}
-                                                            validationRule={this.validationRules.nom}
-                                                            placeholder={t('common.classeurs.classeur_name')}
-                                        />
-                                        <InputValidation   id="validation"
-                                                           type="date"
-                                                           className="cell medium-6"
-                                                           value={Moment(classeur.validation)}
-                                                           labelText={t('common.classeurs.date_limit')}
-                                                           readOnly={true}
-                                                           locale={i18nextLng}
-                                                           validationRule={this.validationRules.validation}
-                                                           onChange={this.handleChangeLimitDate}
-                                                           minDate={Moment()}
-                                        />
-                                    </div>
-
-                                    <div className="grid-x grid-margin-x grid-padding-x">
-                                        <Visibility visibility={classeur.visibility} handleChangeClasseur={this.handleChangeClasseur} />
-                                    </div>
-
-                                    <div className="grid-x grid-margin-x grid-padding-x">
-                                        <Textarea id="classeur-description"
-                                                  name="description"
-                                                  className="cell medium-12"
-                                                  labelText={t('common.label.description')}
-                                                  value={classeur.description}
-                                                  onChange={this.handleChangeClasseur}/>
-                                    </div>
-
-                                    <div className="grid-x grid-margin-x grid-padding-x">
-                                        <div className="cell medium-12">
-                                            <div className="grid-x">
-                                                <div className="cell medium-12">
-                                                    <h2>{t('admin.circuit.complet_name')}</h2>
-                                                </div>
-                                            </div>
-                                            <div className="grid-x">
-                                                <div className="cell medium-12">
-                                                    { (circuit.etape_groupes && user.collectivite) &&
-                                                    <CircuitValidationSteps  steps={Object.assign([], circuit.etape_groupes)}
-                                                                             collectiviteId={user.collectivite.id}
-                                                                             onSortEnd={this.onSortEnd}
-                                                                             handleClickDeleteUser={this.handleClickDeleteUser}
-                                                                             handleClickDeleteGroup={this.handleClickDeleteGroup}
-                                                                             handleClickDeleteStep={this.handleClickDeleteStep}
-                                                                             handleClickAddStep={this.handleClickAddStep}
-                                                                             addUser={this.addUser}
-                                                                             addGroup={this.addGroup}
-                                                    />
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid-x grid-margin-x grid-padding-x">
-                                        <div className="cell medium-12">
-                                            <div className="grid-x">
-                                                <div className="cell medium-12">
-                                                    <h2>{t('common.classeurs.users_copy')}</h2>
-                                                </div>
-                                            </div>
-                                            <div className="grid-x">
-                                                    {
-                                                        (user.collectivite && user.collectivite.id) &&
-                                                        <UsersCopy currentCollectiviteId={user.collectivite.id}
-                                                                   handleChange={this.handleSelectChange}
-                                                                   className="cell medium-12"
-                                                                   users_copy={users_copy}
-                                                        />
-                                                    }
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid-x grid-margin-x grid-padding-x grid-margin-y grid-padding-y">
-                                        <div className="cell medium-12">
-                                            <Button id="submit-classeur-infos"
-                                                    className="cell medium-12"
-                                                    classNameButton="float-right"
-                                                    onClick={this.saveClasseur}
-                                                    labelText={t('common.button.save')}
-                                                    disabled={!this.state.edit}
-                                            />
-                                        </div>
-                                    </div>
-
-                                </Form>
-                            }
-                        </div>
-
-
-                        <div className="cell medium-4 cell-block-y details-classeur">
-                            <div className="grid-x grid-padding-y">
-                                <div className="cell medium-12">
-                                    <div className="grid-x">
-                                        <h3 className="cell medium-12">{t('common.documents.title_preview')}</h3>
-                                    </div>
-
-                                    <DocumentsNew documents={ Object.assign([],documents) }
-                                                  onDrop={this.onDrop}
-                                                  removeDocument={this.removeDocument}
-                                                  typeClasseur={ type }
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-
+                <div className="grid-x grid-padding-y">
+                    <div className="cell medium-12 text-center">
+                        <h1>{t('common.classeurs.title_add')}</h1>
                     </div>
+                </div>
+
+
+                <div className="grid-x medium-12 grid-margin-x">
+
+                    <div className="cell medium-8">
+
+                        {circuit.id &&
+                            <div>
+                                <Form onSubmit={this.saveClasseur}>
+                                    <div className="grid-x panel grid-padding-y">
+                                        <div className="cell medium-12">
+                                            <div className="grid-x grid-margin-x grid-padding-x">
+                                                <div className="cell medium-12">
+                                                    <h2>{t('common.classeurs.title_infos')}</h2>
+                                                </div>
+                                            </div>
+                                            <div className="grid-x grid-margin-x grid-padding-x">
+                                                <Select id="circuits"
+                                                        className="cell medium-6"
+                                                        label={t('common.classeurs.label.circuits')}
+                                                        value={circuit.id}
+                                                        onChange={this.handleChangeCircuit}
+                                                        children={listCircuits}
+                                                />
+                                                <Select id="types"
+                                                        className="cell medium-6"
+                                                        label={t('common.classeurs.label.types')}
+                                                        value={type.id}
+                                                        onChange={this.handleChangeType}
+                                                        children={listTypes}
+                                                />
+                                            </div>
+                                            <div className="grid-x grid-margin-x grid-padding-x">
+                                                <InputValidation id="nom"
+                                                                 type="text"
+                                                                 className="cell medium-6"
+                                                                 labelText={t('common.label.name')}
+                                                                 value={classeur.nom}
+                                                                 onChange={this.handleChangeClasseur}
+                                                                 validationRule={this.validationRules.nom}
+                                                                 placeholder={t('common.classeurs.classeur_name')}
+                                                />
+                                                <InputValidation id="validation"
+                                                                 type="date"
+                                                                 className="cell medium-6"
+                                                                 value={Moment(classeur.validation)}
+                                                                 labelText={t('common.classeurs.date_limit')}
+                                                                 readOnly={true}
+                                                                 locale={i18nextLng}
+                                                                 validationRule={this.validationRules.validation}
+                                                                 onChange={this.handleChangeLimitDate}
+                                                                 minDate={Moment()}
+                                                />
+                                            </div>
+                                            <div className="grid-x grid-margin-x grid-padding-x">
+                                                <Visibility visibility={classeur.visibility} handleChangeClasseur={this.handleChangeClasseur} />
+                                            </div>
+                                            <div className="grid-x grid-margin-x grid-padding-x">
+                                                <Textarea id="classeur-description"
+                                                          name="description"
+                                                          className="cell medium-12"
+                                                          labelText={t('common.label.description')}
+                                                          value={classeur.description}
+                                                          onChange={this.handleChangeClasseur}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Form>
+
+                                <div className="grid-x panel grid-padding-y">
+                                    <div className="cell medium-12">
+                                        <div className="grid-x grid-margin-x grid-padding-x">
+                                            <div className="cell medium-12">
+                                                <h2>{t('admin.circuit.complet_name')}</h2>
+                                            </div>
+                                        </div>
+                                        <div className="grid-x grid-margin-x grid-padding-x">
+                                            <div className="cell medium-12">
+                                                { (circuit.etape_groupes && user.collectivite) &&
+                                                <CircuitValidationSteps  steps={Object.assign([], circuit.etape_groupes)}
+                                                                         collectiviteId={user.collectivite.id}
+                                                                         onSortEnd={this.onSortEnd}
+                                                                         handleClickDeleteUser={this.handleClickDeleteUser}
+                                                                         handleClickDeleteGroup={this.handleClickDeleteGroup}
+                                                                         handleClickDeleteStep={this.handleClickDeleteStep}
+                                                                         handleClickAddStep={this.handleClickAddStep}
+                                                                         addUser={this.addUser}
+                                                                         addGroup={this.addGroup}
+                                                />
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div className="grid-x panel grid-padding-y">
+                                    <div className="cell medium-12">
+                                        <div className="grid-x grid-margin-x grid-padding-x">
+                                            <div className="cell medium-12">
+                                                <h2>{t('common.classeurs.users_copy')}</h2>
+                                            </div>
+                                        </div>
+                                        <div className="grid-x grid-margin-x grid-padding-x">
+                                            {
+                                                (user.collectivite && user.collectivite.id) &&
+                                                <UsersCopy currentCollectiviteId={user.collectivite.id}
+                                                           handleChange={this.handleSelectChange}
+                                                           className="cell medium-12"
+                                                           users_copy={users_copy}
+                                                />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid-x grid-margin-x grid-padding-x grid-margin-y grid-padding-y">
+                                    <div className="cell medium-12">
+                                        <Button id="submit-classeur-infos"
+                                                className="cell medium-12"
+                                                classNameButton="float-right hollow"
+                                                onClick={this.saveClasseur}
+                                                labelText={t('common.button.save')}
+                                                disabled={!this.state.edit}
+                                        />
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+
+
+                    <div className="cell medium-4 cell-block-y details-classeur">
+                        <div className="grid-x grid-padding-y">
+                            <div className="cell medium-12">
+                                <div className="grid-x">
+                                    <h3 className="cell medium-12">{t('common.documents.title_preview')}</h3>
+                                </div>
+
+                                <DocumentsNew documents={ Object.assign([],documents) }
+                                              onDrop={this.onDrop}
+                                              removeDocument={this.removeDocument}
+                                              typeClasseur={ type }
+                                />
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         )

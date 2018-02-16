@@ -123,7 +123,7 @@ class CircuitClasseur extends Component {
                         editable &&
                         <div className="grid-x align-center-middle grid-padding-x">
                             <button type="button" className="button clear primary" onClick={() => addEtape(null)}>
-                                <i className="fi-plus"> {t('admin.circuit.add_step')}</i>
+                                <i className="fa fa-plus"> {t('admin.circuit.add_step')}</i>
                             </button>
                         </div>
                     }

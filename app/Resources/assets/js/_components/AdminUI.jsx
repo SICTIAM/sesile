@@ -83,7 +83,7 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
                 </div>
                 {(labelButton && addLink) &&
                     <div className="cell medium-auto text-right">
-                        <button className="button" onClick={() => History.push(addLink)}>{labelButton}</button>
+                        <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
                     </div>
                 }
             </div>

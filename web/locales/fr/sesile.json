@@ -71,7 +71,7 @@
             "disconnection": "Déconnexion",
             "account_parameter": "paramètre du compte",
             "account_change": "changer de compte",
-            "admin": "admin",
+            "admin": "administration",
             "new_classeur": "Créer un classeur",
             "list_classeur": "Liste des classeurs",
             "validate_classeur": "Classeurs à valider",
@@ -97,6 +97,7 @@
             "title_remove": "classeurs supprimable",
             "title_to_sign_plural": "classeurs à signer",
             "title_add": "Création d'un nouveau classeur",
+            "title_infos": "Informations du classeur",
             "sort": "trier",
             "search": "Rechercher un classeur",
             "date_limit": "Date limite le",
@@ -197,7 +198,7 @@
     },
     "admin": {
         "title": "Rechercher un {{name}}",
-        "subtitle": "Puis accéder aux paramétres",
+        "subtitle": "Puis accéder aux paramètres",
         "associated_users": "Utilisateurs associés",
         "associated_group": "Groupes associés",
         "users_list": "Liste d'utilisateurs",
@@ -376,7 +377,7 @@
         "documentations": {
             "name": "documentation",
             "title": "Rechercher un document",
-            "subtitle": "Puis accéder aux paramétres",
+            "subtitle": "Puis accéder aux paramètres",
             "list_update_title": "Les documents de mise à jour",
             "list_help_title": "Les documents d'aide",
             "help": "Document d'aide",
@@ -447,6 +448,7 @@
     "footer": {
         "contact": "Contact",
         "general_conditions": "CGU",
-        "version": "Version {{version}}"
+        "version": "Version {{version}}",
+        "love": "Créé avec ❤ par le SICTIAM"
     }
 }

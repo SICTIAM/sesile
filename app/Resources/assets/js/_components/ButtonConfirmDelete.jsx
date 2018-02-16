@@ -44,12 +44,12 @@ class ButtonConfirmDelete extends Component {
                         <Cell>
                             <GridX>
                                 <Cell className="medium-6">
-                                    <button className="button" onClick={e => $(`#${this.props.dataToggle}`).foundation('close')}>
+                                    <button className="button hollow" onClick={e => $(`#${this.props.dataToggle}`).foundation('close')}>
                                         {t('common.button.cancel')}
                                     </button>
                                 </Cell>
                                 <Cell className="medium-6 text-right">
-                                    <button className="button alert" onClick={() => this.onConfirm()} >
+                                    <button className="button alert hollow" onClick={() => this.onConfirm()} >
                                         {t('common.button.confirm')}
                                     </button>
                                 </Cell>

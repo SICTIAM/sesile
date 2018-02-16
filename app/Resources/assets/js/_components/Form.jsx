@@ -67,7 +67,7 @@ const InputFile = ({ id, className, labelText, accept, onChange}) =>
 
 const Button = ({ id, className, classNameButton, labelText, onClick, disabled, loading=null }) =>
     <div className={className}>
-        <button id={id} className={classNameButton + " button"} disabled={disabled} onClick={() => onClick()}>
+        <button id={id} className={classNameButton + " button hollow"} disabled={disabled} onClick={() => onClick()}>
             {`${labelText} `}
             {(loading) &&
                 <i className='fa fa-spinner fa-spin' style={{fontSize: '1.1em', color: 'white'}} />}
@@ -76,7 +76,7 @@ const Button = ({ id, className, classNameButton, labelText, onClick, disabled, 
 
 const ButtonConfirm = ({ id, className, labelButton, confirmationText, labelConfirmButton, handleClickConfirm, disabled }) =>
     <div className={className}>
-        <button className="alert button" disabled={disabled} data-toggle={id}>{labelButton}</button>
+        <button className="alert button hollow" disabled={disabled} data-toggle={id}>{labelButton}</button>
         <div className="dropdown-pane" id={id} data-dropdown data-auto-focus="true"> 
             <button className="close-button" type="button" onClick={e => $("#" + id).foundation('close')}>
                 <span aria-hidden="true">&times;</span>
@@ -85,7 +85,7 @@ const ButtonConfirm = ({ id, className, labelButton, confirmationText, labelConf
                 <span>{confirmationText}</span>
             </div>
             <Button className="medium-6 columns"
-                    classNameButton="alert"
+                    classNameButton="alert hollow"
                     labelText={labelConfirmButton}
                     onClick={handleClickConfirm}/>
         </div>

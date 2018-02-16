@@ -68,7 +68,7 @@ const CircuitValidationStepList = SortableContainer(({steps, collectiviteId, han
             <Cell className="medium-3">
                 <GridX className="step-item">
                     <button type={"button"} onClick={() => handleClickAddStep()}>
-                        <i className="fi-plus"></i> {labelButtonAddStep}
+                        <i className="fa fa-plus"></i> {labelButtonAddStep}
                     </button>
                 </GridX>
             </Cell>

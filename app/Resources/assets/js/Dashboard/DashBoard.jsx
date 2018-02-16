@@ -69,7 +69,7 @@ class DashBoard extends Component {
             <div className="grid-x">
 
                 <div className="cell medium-12">
-                    <div className="grid-x grid-margin-x grid-padding-x align-top align-center">
+                    <div className="grid-x grid-margin-x grid-padding-x align-top align-center grid-padding-y">
                         <div className="cell medium-12 text-center">
                             <h1>{ t('common.dashboard.title') }</h1>
                         </div>
@@ -92,7 +92,7 @@ class DashBoard extends Component {
                                             { t('common.user.certificate_validity', {count: 5}) }
                                         </div>
                                         <div className="cell medium-4 text-justify">
-                                            <Link className="button primary" to="https://www.sictiam.fr/certificat-electronique/" target="_blank">{ t('common.button.certificate_order') }</Link>
+                                            <Link className="button primary hollow" to="https://www.sictiam.fr/certificat-electronique/" target="_blank">{ t('common.button.certificate_order') }</Link>
                                         </div>
                                     </div>
                                 </div>

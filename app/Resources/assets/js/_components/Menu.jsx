@@ -37,68 +37,79 @@ class Menu extends Component {
         const { classeurs } = this.state
 
         return (
-            <div className="cell medium-1 medium-cell-block-y menu-left grid-y" role="navigation">
+            <div className="cell medium-2 menu-left grid-x" role="navigation">
 
-                <NavLink to="/classeur/nouveau" className="cell auto grid-y">
-                    <div className="grid-x text-center cell medium-6 align-bottom">
-                        <i className="cell medium-12 fa fa-3x fa-pencil-square-o"></i>
+                <div className="cell medium-12">
+                    <div className="title-bar" data-responsive-toggle="left-menu" data-hide-for="medium">
+                        <button className="menu-icon" type="button" data-toggle="left-menu"></button>
+                        <div className="title-bar-title">Menu</div>
                     </div>
-                    <div className="grid-x text-center cell medium-6">
-                        <div className="cell medium-12">{ t('common.menu.new_classeur') }</div>
+                    <div id="left-menu">
+                        <div className="top-bar-left">
+                            <ul className="dropdown menu vertical icons icon-right" data-dropdown-menu>
+                                <li>
+                                    <NavLink to="/classeur/nouveau" className="grid-x align-middle">
+                                        <div className="cell medium-10 small-11">{ t('common.menu.new_classeur') }</div>
+                                        <div className="cell medium-2 small-1"><i className="fa fa-2x fa-pencil-square-o"></i></div>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/classeurs/liste" className="grid-x align-middle">
+                                        <div className="cell medium-10 small-11">{ t('common.menu.validate_classeur') }</div>
+                                        <div className="cell medium-2 small-1">
+                                            <i className="fa fa-2x fa-th-list"></i>
+                                            <span className="badge">{classeurs.length}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/classeurs/valides" className="grid-x align-middle">
+                                        <div className="cell medium-10 small-11">{ t('common.menu.list_classeur') }</div>
+                                        <div className="cell medium-2 small-1">
+                                            <i className="fa fa-2x fa-check-square-o"></i>
+                                            <span className="badge">{classeurs.filter(classeur => classeur.validable).length}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/classeurs/retractables" className="grid-x align-middle">
+                                        <div className="cell medium-10 small-11">{ t('common.menu.retractable_classeur') }</div>
+                                        <div className="cell medium-2 small-1">
+                                            <i className="fa fa-2x fa-repeat"></i>
+                                            <span className="badge">{classeurs.filter(classeur => classeur.retractable).length}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/classeurs/supprimes" className="grid-x align-middle">
+                                        <div className="cell medium-10 small-11">{ t('common.menu.deletable_classeur') }</div>
+                                        <div className="cell medium-2 small-1">
+                                            <i className="fa fa-2x fa-close"></i>
+                                            <span className="badge">{classeurs.filter(classeur => classeur.deletable).length}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/tableau-de-bord/stats" className="grid-x align-middle">
+                                        <div className="cell medium-10 small-11">{ t('common.menu.stats') }</div>
+                                        <div className="cell medium-2 small-1">
+                                            <i className="fa fa-2x fa-pie-chart"></i>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/documentations" className="grid-x align-middle">
+                                        <div className="cell medium-10 small-11">{ t('common.menu.help') }</div>
+                                        <div className="cell medium-2 small-1">
+                                            <i className="fa fa-2x fa-question-circle-o"></i>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </NavLink>
-                <NavLink to="/classeurs/liste" className="cell auto grid-y">
-                    <div className="grid-x text-center cell medium-6 align-bottom align-center">
-                        <i className="cell medium-12 fa fa-3x fa-th-list"></i>
-                        <span className="badge">{classeurs.length}</span>
-                    </div>
-                    <div className="grid-x text-center cell medium-6">
-                        <div className="cell medium-12">{ t('common.menu.list_classeur') }</div>
-                    </div>
-                </NavLink>
-                <NavLink to="/classeurs/valides" className="cell auto grid-y">
-                    <div className="grid-x text-center cell medium-6 align-bottom align-center">
-                        <i className="cell medium-12 fa fa-3x fa-check-square-o"></i>
-                        <span className="badge">{classeurs.filter(classeur => classeur.validable).length}</span>
-                    </div>
-                    <div className="grid-x text-center cell medium-6">
-                        <div className="cell medium-12">{ t('common.menu.validate_classeur') }</div>
-                    </div>
-                </NavLink>
-                <NavLink to={"/classeurs/retractables"} className="cell auto grid-y">
-                    <div className="grid-x text-center cell medium-6 align-bottom align-center">
-                        <i className="cell medium-12 fa fa-3x fa-repeat"></i>
-                        <span className="badge">{classeurs.filter(classeur => classeur.retractable).length}</span>
-                    </div>
-                    <div className="grid-x text-center cell medium-6">
-                        <div className="cell medium-12">{ t('common.menu.retractable_classeur') }</div>
-                    </div>
-                </NavLink>
-                <NavLink to={"/classeurs/supprimes"} className="cell auto grid-y">
-                    <div className="grid-x text-center cell medium-6 align-bottom align-center">
-                        <i className="cell medium-12 fa fa-3x fa-close"></i>
-                        <span className="badge">{classeurs.filter(classeur => classeur.deletable).length}</span>
-                    </div>
-                    <div className="grid-x text-center cell medium-6">
-                        <div className="cell medium-12">{ t('common.menu.deletable_classeur') }</div>
-                    </div>
-                </NavLink>
-                <NavLink to={"/tableau-de-bord/stats"} className="cell auto grid-y">
-                    <div className="grid-x text-center cell medium-6 align-bottom">
-                        <i className="cell medium-12 fa fa-3x fa-pie-chart"></i>
-                    </div>
-                    <div className="grid-x text-center cell medium-6">
-                        <div className="cell medium-12">{ t('common.menu.stats') }</div>
-                    </div>
-                </NavLink>
-                <NavLink to={"/documentations"} className="cell auto grid-y">
-                    <div className="grid-x text-center cell medium-6 align-bottom">
-                        <i className="cell medium-12 fa fa-3x fa-question-circle-o"></i>
-                    </div>
-                    <div className="grid-x text-center cell medium-6">
-                        <div className="cell medium-12">{ t('common.menu.help') }</div>
-                    </div>
-                </NavLink>
+                </div>
+
                 <AppInfos />
 
             </div>
