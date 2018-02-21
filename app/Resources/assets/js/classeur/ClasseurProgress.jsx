@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Moment from 'moment/moment'
 import { translate } from 'react-i18next'
-import {func, string, number} from 'prop-types'
+import {func, string, number, bool} from 'prop-types'
 
 
 class ClasseurProgress extends Component {
@@ -10,10 +10,14 @@ class ClasseurProgress extends Component {
         t: func
     }
 
+    static defaultProps = {
+        edit: false
+    }
+
     render() {
 
         const { t } = this.context
-        const { creation, validation, status } = this.props
+        const { creation, validation, status, edit } = this.props
         const creationDate = Moment(creation)
         const validationDate = Moment(validation)
         const diffToday = validationDate.diff(Moment(), 'days')
@@ -32,17 +36,33 @@ class ClasseurProgress extends Component {
             percentProgress = 100 - diffToday / diffToCreation * 100
         }
 
-        return (
-            <div className="classeur-progress">
-                <span className={"text-" + classProgress}>{t('classeur.deadline')}&nbsp;
-                    <span className="text-bold">{Moment(validationDate).format('L')}</span>
-                </span>
+        let className = ''
+        if (edit) className = " grid-margin-x grid-padding-x"
 
-                { status !== 2 &&
-                    <div className={classProgress +" progress"}>
-                        <div className="progress-meter" style={{width: percentProgress + '%'}}></div>
+        return (
+            <div className="grid-x classeur-progress">
+                <div className="cell medium-12">
+                    <div className={"grid-x" + className }>
+                        <div className="cell medium-6">
+                            <span className={"text-" + classProgress}>{t('classeur.deadline')}</span>
+                        </div>
+                        <div className="cell medium-6">
+                            <span className={"text-" + classProgress}>
+                                <span className="text-bold">{Moment(validationDate).format('L')}</span>
+                            </span>
+                        </div>
                     </div>
-                }
+                    <div className={"grid-x" + className }>
+                        <div className="cell medium-12">
+                            { status !== 2 &&
+                            <div className={classProgress +" progress"}>
+                                <div className="progress-meter" style={{width: percentProgress + '%'}}></div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
             </div>
         )
     }
@@ -51,7 +71,8 @@ class ClasseurProgress extends Component {
 ClasseurProgress.PropTypes = {
     creation: string.isRequired,
     validation: string.isRequired,
-    status: number
+    status: number,
+    edit: bool
 }
 
 export default translate(['sesile'])(ClasseurProgress)

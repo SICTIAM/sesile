@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {func, object} from 'prop-types'
+import {func, object, bool} from 'prop-types'
 import { translate } from 'react-i18next'
 
 class OnlyOffice extends Component {
@@ -71,8 +71,14 @@ class OnlyOffice extends Component {
 
     render () {
         const { t } = this.context
+        const { revealDisplay } = this.props
+        let className
+        revealDisplay
+            ? className = "height100"
+            : className = "only-office-height"
+
         return (
-            <div className="cell medium-9 height100" key={this.props.document.id} id="modal-root" >
+            <div className={"cell medium-12 " + className } key={this.props.document.id} id="modal-root" >
                 <div id="placeholder" className="text-center">
                     <h3>{t('common.documents.no_preview')}</h3>
                 </div>
@@ -83,7 +89,8 @@ class OnlyOffice extends Component {
 
 OnlyOffice.propsType = {
     document: object,
-    user: object
+    user: object,
+    revealDisplay: bool
 }
 
 export default translate('sesile')(OnlyOffice)

@@ -6,8 +6,9 @@ import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import { handleErrors } from '../_utils/Utils'
 import Helios from '../document/Helios'
+import DocumentsNew from '../document/DocumentsNew'
 
-class DocumentsClasseur extends Component {
+class DocumentsView extends Component {
 
     static contextTypes = {
         t: func,
@@ -76,7 +77,9 @@ class DocumentsClasseur extends Component {
             })
     }
 
-    removeDocument = (id) => {
+    removeDocument = (e, id) => {
+        e.preventDefault()
+        e.stopPropagation()
         fetch(Routing.generate('sesile_document_documentapi_remove', {id}), {
             method: 'DELETE',
             headers: {
@@ -91,11 +94,15 @@ class DocumentsClasseur extends Component {
             })
     }
 
-    handleClickDocument = (id) => {
+    handleClickDocument = (e, id) => {
+        e.preventDefault()
+        e.stopPropagation()
         this.fetchDocument(id)
     }
 
-    displayReveal = (id) => {
+    displayReveal = (e, id) => {
+        e.preventDefault()
+        e.stopPropagation()
         this.setState({revealDisplay: 'block'})
         this.fetchDocument(id)
     }
@@ -121,13 +128,11 @@ class DocumentsClasseur extends Component {
         currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
 
         return (
-            <div className="grid-x grid-y grid-frame">
-
-                <div className="cell medium-9">
-
+        <div className="">
+            <div className="grid-x panel grid-padding-y">
                 { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
-                        <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                        <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
                         <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
                     </div>
                 }
@@ -140,7 +145,7 @@ class DocumentsClasseur extends Component {
                 }
                 { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "block" && classeurType.nom === "Helios" &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
-                        <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                        <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
                         <Helios document={ currentDocument } />
                     </div>
                 }
@@ -148,31 +153,34 @@ class DocumentsClasseur extends Component {
 
                 { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" && user.id ) &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
-                        <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
-                        <OnlyOffice document={ currentDocument } user={user} />
+                        <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                        <OnlyOffice document={ currentDocument } user={user} revealDisplay={true} />
                     </div>
                 }
                 { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none" && user.id) &&
-                    <OnlyOffice document={ currentDocument } user={user} />
+                    <OnlyOffice document={ currentDocument } user={user} revealDisplay={false} />
                 }
+            </div>
 
-                </div>
-
-                <Documents documents={ documents }
-                           onClick={ this.handleClickDocument}
-                           onDrop={ this.onDrop }
-                           removeDocument={this.removeDocument}
-                           displayReveal={this.displayReveal}
+            <div className="">
+                <DocumentsNew documents={documents}
+                              onClick={this.handleClickDocument}
+                              onDrop={ this.onDrop }
+                              removeDocument={this.removeDocument}
+                              displayReveal={this.displayReveal}
+                              typeClasseur={classeurType}
                 />
             </div>
+        </div>
+
         )
     }
 }
 
-DocumentsClasseur.propTypes = {
+DocumentsView.propTypes = {
     documents: array,
     classeurId: number,
     classeurType: object
 }
 
-export default translate(['sesile'])(DocumentsClasseur)
+export default translate(['sesile'])(DocumentsView)

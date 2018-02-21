@@ -21,21 +21,21 @@ class HeliosInfos extends Component {
 
         return (
             <div>
-                <div className="grid-x">
+                <div className="grid-x grid-padding-x grid-margin-x">
                     <div className="cell medium-3 text-bold">{t('common.helios.voucher')}</div>
 
                     <Select id="vouchers"
                             value={voucher.id}
-                            className="medium-9 cell"
+                            className="medium-6 cell"
                             onChange={handleChangeVouchers}>
                         {ListVouchers}
                     </Select>
                 </div>
-                <div className="grid-x">
+                <div className="grid-x grid-padding-x grid-margin-x">
                     <div className="cell medium-3 text-bold">{t('common.helios.budget')}</div>
                     <div className="cell medium-9">{ pes.budget }</div>
                 </div>
-                <div className="grid-x">
+                <div className="grid-x grid-padding-x grid-margin-x">
                     <div className="cell medium-3 text-bold">{t('common.helios.signing')}</div>
                     <div className="cell medium-9">
                         { pes.signataire ? pes.signataire : t('common.helios.no_signing') }

@@ -45,7 +45,7 @@ class DocumentsNew extends Component {
     render () {
 
         const { t } = this.context
-        const { documents, onDrop, removeDocument }  = this.props
+        const { documents, onDrop, removeDocument, onClick, displayReveal }  = this.props
         const { disabled, accept, multiple, fileRule } = this.state
 
         return (
@@ -70,18 +70,25 @@ class DocumentsNew extends Component {
                                     this.setState({dropFileError: fileRule})}
                                 onDropAccepted={files => onDrop(files)}>
                                 {
-                                    <GridX className="align-center">
-                                        <Cell>
-                                            <i className="fa fa-file"></i>
-                                        </Cell>
-                                        <DocumentPreview documents={documents} onClick={removeDocument} />
-                                        <Cell className="medium-11 text-small">
-                                            { (this.state.dropFileError)
-                                                ? <span className="text-alert">{this.state.dropFileError}</span>
-                                                : <span>{fileRule}</span>
-                                            }
-                                        </Cell>
-                                    </GridX>
+                                    <Cell>
+                                        <GridX className="align-center grid-margin-y grid-padding-y">
+                                            <Cell><i className="fa fa-file"></i></Cell>
+                                        </GridX>
+
+                                        <GridX className="align-center">
+                                            <DocumentPreview documents={documents} remove={removeDocument} onClick={onClick} displayReveal={displayReveal} />
+                                        </GridX>
+
+                                        <GridX className="align-center">
+                                            <Cell className="medium-11 text-small">
+                                                { (this.state.dropFileError)
+                                                    ? <span className="text-alert">{this.state.dropFileError}</span>
+                                                    : <span>{fileRule}</span>
+                                                }
+                                            </Cell>
+                                        </GridX>
+
+                                    </Cell>
                                 }
                             </Dropzone>
                         </div>
@@ -106,23 +113,3 @@ DocumentsNew.propTypes = {
 }
 
 export default translate('sesile')(DocumentsNew)
-
-const DisplayFileName = ({documents, onClick}, {t}) => {
-    return (
-        <Cell className="align-left text-left">
-            { documents.map(file => file ?
-                <p key={file.name}>
-                    { (file.name.length > 20)
-                        ? `...${file.name.substring(file.name.length -20, file.name.length)} `
-                        : file.name
-                    }
-                    <a style={{color: 'red', width: 0.1, height: 0.1}} onClick={(e) => onClick(e)} title={t('common.button.remove')}> x</a></p>
-                : t('common.drop_file_here'))
-            }
-        </Cell>
-    )
-}
-
-DisplayFileName.contextTypes = {
-    t: func
-}

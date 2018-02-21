@@ -47,86 +47,94 @@ class CircuitClasseur extends Component {
         const { t } = this.context
 
         return (
-            <div className="grid-x circuit-list">
+            <div className="grid-x panel grid-padding-y">
                 <div className="cell medium-12">
-
-                    <div className="grid-x align-top grid-margin-y">
-                        <div className="medium-2 cell text-center">
-                            <div className={ etapeDeposante ? ("circle warning text-warning") : ("circle success text-success") }>1</div>
-                        </div>
-                        <div className="medium-3 cell">
-                            <span className={ etapeDeposante ? ("text-warning text-bold") : ("text-success text-bold")}>{t('admin.circuit.depositor')}</span>
-                        </div>
-                        <div className="medium-7 cell">
-                            <span className={ etapeDeposante ? ("text-warning text-bold") : ("text-success text-bold") }>{user._prenom} {user._nom}</span>
-                        </div>
+                    <div className="grid-x grid-margin-x grid-padding-x">
+                        <h3 className="cell medium-12">{t('admin.circuit.complet_name')}</h3>
                     </div>
+                    <div className="grid-x grid-margin-x grid-padding-x circuit-list">
+                        <div className="cell medium-12">
 
-                    { etape_classeurs && etape_classeurs.map((etape_classeur, key) =>
-                        <div key={"etape_classeur-" + key} >
-                            <div className="grid-x align-top grid-margin-y">
+                            <div className="grid-x align-middle grid-margin-y">
                                 <div className="medium-2 cell text-center">
-                                    <div className={ this.currentCircleClassName(etape_classeur) + " circle" }>{key + 2}</div>
+                                    <div className={ etapeDeposante ? ("circle warning text-warning") : ("circle success text-success") }>1</div>
                                 </div>
-                                <div className="medium-3 cell padding-cell">
-                                    <span className={ this.currentTextClassName (etape_classeur) + " text-bold" }>{t('admin.circuit.validator')}</span>
+                                <div className="medium-3 cell">
+                                    <span className={ etapeDeposante ? ("text-warning text-bold") : ("text-success text-bold")}>{t('admin.circuit.depositor')}</span>
                                 </div>
-                                <div className="medium-7 cell padding-cell">
-                                    <span className={ this.currentTextClassName (etape_classeur) + " text-bold"  }>
-
-                                    { etape_classeur.users && etape_classeur.users.filter(user => user.id).map((user, userKey) =>
-                                        <div key={"user" + user.id}>
-                                            {user._prenom} {user._nom} {
-                                               editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
-                                                <a onClick={() => removeUser(key, userKey)}><i className="fa fa-times icon-action"></i></a>
-                                            }
-                                        </div>
-                                    )}
-
-                                    {etape_classeur.user_packs && etape_classeur.user_packs.map((user_pack, user_packKey) =>
-                                        <div key={"userpack" + user_pack.id}>
-                                            {user_pack.nom} {
-                                                editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
-                                                <a onClick={() => removeGroup(key, user_packKey)}><i className="fa fa-times icon-action"></i></a>
-                                            }
-                                        </div>
-                                    )}
-                                    </span>
+                                <div className="medium-7 cell">
+                                    <span className={ etapeDeposante ? ("text-warning text-bold") : ("text-success text-bold") }>{user._prenom} {user._nom}</span>
                                 </div>
                             </div>
 
-                            { editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
-                            <div className="grid-x align-top">
+                            { etape_classeurs && etape_classeurs.map((etape_classeur, key) =>
+                                <div key={"etape_classeur-" + key} className="grid-x align-top grid-padding-y grid-margin-y">
+                                    <div className="medium-2 cell text-center">
+                                        <div className={ this.currentCircleClassName(etape_classeur) + " circle" }>{key + 2}</div>
+                                    </div>
+                                    <div className="medium-3 cell">
+                                        <span className={ this.currentTextClassName (etape_classeur) + " text-bold" }>{t('admin.circuit.validator')}</span>
+                                    </div>
+                                    <div className="cell medium-7">
+                                        <div className="grid-x">
+                                            { editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
+                                            <div className="cell medium-10">
+                                                <SearchUserAndGroup placeholder={t('admin.placeholder.type_userName_or_groupName')}
+                                                                    addGroup={addGroup}
+                                                                    addUser={addUser}
+                                                                    stepKey={key}
+                                                                    step={etape_classeur}
+                                                                    collectiviteId={collectiviteId}
+                                                />
+                                            </div>
+                                            }
+                                            { editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
+                                                <div className="cell medium-2">
+                                                    <button type="button" className="button clear primary" onClick={() => removeEtape(key)} title={t('admin.circuit.remove_step')}>
+                                                        <i className="fa fa-minus icon-action"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
 
-                                <div className="cell medium-2"></div>
-                                <div className="cell medium-3">
-                                    <button type="button" className="button clear primary" onClick={() => removeEtape(key)} title={t('admin.circuit.remove_step')}>
-                                        <i className="fa fa-minus icon-action"></i>
+                                        <div className="grid-x align-top align-right">
+                                            <div className="medium-12 cell">
+                                                <span className={ this.currentTextClassName (etape_classeur) + " text-bold"  }>
+                                                { etape_classeur.users && etape_classeur.users.filter(user => user.id).map((user, userKey) =>
+                                                    <div key={"user" + user.id}>
+                                                        {user._prenom} {user._nom} {
+                                                        editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
+                                                        <a onClick={() => removeUser(key, userKey)}><i className="fa fa-times icon-action"></i></a>
+                                                    }
+                                                    </div>
+                                                )}
+                                                {etape_classeur.user_packs && etape_classeur.user_packs.map((user_pack, user_packKey) =>
+                                                    <div key={"userpack" + user_pack.id}>
+                                                        {user_pack.nom} {
+                                                        editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
+                                                        <a onClick={() => removeGroup(key, user_packKey)}><i className="fa fa-times icon-action"></i></a>
+                                                    }
+                                                    </div>
+                                                )}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                )
+                            }
+
+                            {
+                                editable &&
+                                <div className="grid-x align-center-middle grid-padding-x">
+                                    <button className="button small hollow primary" onClick={() => addEtape(null)}>
+                                        <span className="fa fa-plus"></span>{t('admin.circuit.add_step')}
                                     </button>
                                 </div>
-                                <div className="cell medium-7 text-center">
-                                    <SearchUserAndGroup placeholder={t('admin.placeholder.type_userName_or_groupName')}
-                                                        addGroup={addGroup}
-                                                        addUser={addUser}
-                                                        stepKey={key}
-                                                        step={etape_classeur}
-                                                        collectiviteId={collectiviteId}
-                                    />
-                                </div>
-                            </div>
                             }
                         </div>
-                        )
-                    }
-
-                    {
-                        editable &&
-                        <div className="grid-x align-center-middle grid-padding-x">
-                            <button type="button" className="button clear primary" onClick={() => addEtape(null)}>
-                                <i className="fa fa-plus"> {t('admin.circuit.add_step')}</i>
-                            </button>
-                        </div>
-                    }
+                    </div>
                 </div>
             </div>
         )
