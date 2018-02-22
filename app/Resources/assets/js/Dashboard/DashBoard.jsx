@@ -76,18 +76,18 @@ class DashBoard extends Component {
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x align-top align-center">
                         <div className="cell medium-5">
-                            <Classeurs classeurs={ lastClasseurs } title={ t('common.dashboard.last_classeurs')} displayButtons={false} />
+                            <Classeurs classeurs={ lastClasseurs } title={ t('common.dashboard.last_classeurs')} />
                         </div>
 
                         <div className="cell medium-5">
-                            <Classeurs classeurs={ urgentClasseurs } title={ t('common.dashboard.urgent_classeurs')} displayButtons={false} />
+                            <Classeurs classeurs={ urgentClasseurs } title={ t('common.dashboard.urgent_classeurs')} />
 
-                            <div className="grid-x grid-padding-x panel list-dashboard">
-                                <div className="cell medium-12 panel-heading">
-                                    { t('common.user.certificate_info')}
-                                </div>
-                                <div className="cell medium-12 panel-body">
-                                    <div className="grid-x align-middle">
+                            <div className="grid-x grid-padding-x panel">
+                                <div className="cell medium-12">
+                                    <div className="grid-x panel-heading grid-padding-x align-middle">
+                                        <div className="cell medium-12">{ t('common.user.certificate_info')}</div>
+                                    </div>
+                                    <div className="grid-x panel-body grid-padding-x dashboard-title align-middle">
                                         <div className="cell medium-8 text-bold">
                                             { t('common.user.certificate_validity', {count: 5}) }
                                         </div>

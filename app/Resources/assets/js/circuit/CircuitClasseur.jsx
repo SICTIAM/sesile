@@ -68,7 +68,7 @@ class CircuitClasseur extends Component {
                             </div>
 
                             { etape_classeurs && etape_classeurs.map((etape_classeur, key) =>
-                                <div key={"etape_classeur-" + key} className="grid-x align-top grid-padding-y grid-margin-y">
+                                <div key={"etape_classeur-" + key} className="grid-x align-middle grid-margin-y">
                                     <div className="medium-2 cell text-center">
                                         <div className={ this.currentCircleClassName(etape_classeur) + " circle" }>{key + 2}</div>
                                     </div>
@@ -97,7 +97,7 @@ class CircuitClasseur extends Component {
                                             }
                                         </div>
 
-                                        <div className="grid-x align-top align-right">
+                                        <div className="grid-x align-middle align-right">
                                             <div className="medium-12 cell">
                                                 <span className={ this.currentTextClassName (etape_classeur) + " text-bold"  }>
                                                 { etape_classeur.users && etape_classeur.users.filter(user => user.id).map((user, userKey) =>

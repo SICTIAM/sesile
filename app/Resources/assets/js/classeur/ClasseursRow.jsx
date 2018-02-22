@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { func, object } from 'prop-types'
+import { func, object, int } from 'prop-types'
 import { Link } from 'react-router-dom'
 import CircuitListClasseur from '../circuit/CircuitListClasseur'
 import ClasseursButtonList from './ClasseursButtonList'
@@ -21,7 +21,7 @@ class ClasseursRow extends Component {
             : validUsers = classeur.user._prenom + " " + classeur.user._nom
 
         return (
-            <div id={classeur.id} className="grid-x grid-padding-x classeur align-middle">
+            <div id={classeur.id} className="grid-x grid-padding-x panel-body align-middle">
 
                 <Link className="classeur-name cell medium-2 text-bold" to={`/classeur/${classeur.id}`}>
                     {classeur.nom}

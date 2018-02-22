@@ -178,9 +178,7 @@ html {
   }
 
   .list-classeurs, .list-classeurs a {
-    background-color: #fff;
     color: map-get($sesile-color, 'dark-blue');
-    font-size:0.875em;
 
     .dropdown-valign {
       margin-top: 1em;
@@ -191,28 +189,23 @@ html {
     }
 
     .tri-classeurs {
-      color: #87878c;
       font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.6875em;
+      font-size: 0.875em;
     }
     .arrow-down {
       border-bottom: 0.8em solid #87878c;
       margin-bottom:1em;
-      font-size: 1em;
+      font-size: 0.6em;
     }
     .arrow-up {
       border-top: 0.8em solid #87878c;
       margin-top:1em;
-      font-size: 1em;
+      font-size: 0.6em;
     }
     .title-sort {
       margin-top: 0.8em;
     }
-    .classeur {
-      border-bottom: solid 1px #a7a7a7;
-    }
-    .classeur:hover, .classeur:hover a {
+    .panel-body:hover, .panel-body:hover a {
       background-color: #edf2f6;
     }
     .img-avatar {
@@ -225,12 +218,15 @@ html {
     .dropdown-pane-circuit {
       font-size: 0.875em;
       background-color: #edf2f6;
-      border-top: 0;
+      border-bottom: 0;
       h3 {
         color: $title-color;
         font-size: 1em;
         font-weight: 700;
         text-transform: uppercase;
+      }
+      .panel {
+        background-color: #edf2f6;
       }
     }
 
@@ -328,8 +324,12 @@ html {
       font-size:0.875em;
       font-weight:normal;
       border-top: solid 1px #a7a7a7;
-      padding-top:1em;
-      padding-bottom:1em;
+    }
+    .dashboard-title {
+      padding: 1em 0;
+    }
+    .dashboard-content {
+      padding: 0.3em 0;
     }
     .panel-body-no-padding {
       color: map-get($sesile-color, 'dark-blue');
@@ -359,10 +359,6 @@ html {
       font-size: 0.875em;
       text-transform: uppercase;
     }
-  }
-
-  .list-classeurs {
-    margin-bottom: 20em;
   }
 
   .admin-content-details .UserAvatar > div {
@@ -1019,4 +1015,14 @@ label > input {
     color: #333;
     height: 2.21em;
   }
+}
+
+.pagination li a, .pagination .current, .pagination a:hover {
+  padding: 0.3em;
+  min-width: 2.1em;
+  text-align: center;
+}
+
+.pagination .current, .pagination a:hover {
+  border-radius: 50%;
 }

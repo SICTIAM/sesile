@@ -77,17 +77,18 @@ class ClasseurPagination extends Component {
         }
 
         return (
-            <div className="grid-x align-middle">
+            <div className="grid-x align-top">
+                <div className="cell medium-2"></div>
+                <ul className="cell medium-8 pagination text-center" role="navigation" aria-label="Pagination">
+                    {
+                        pagesDisplay.map(pageDisplay => pageDisplay)
+                    }
+                </ul>
                 <Select id="limit"
                         value={limit}
                         className="cell medium-2"
                         onChange={changeLimit}
                         children={listLimit} />
-                <ul className="cell medium-10 pagination text-right" role="navigation" aria-label="Pagination">
-                    {
-                        pagesDisplay.map(pageDisplay => pageDisplay)
-                    }
-                </ul>
             </div>
         )
     }

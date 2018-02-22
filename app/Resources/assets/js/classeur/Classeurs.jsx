@@ -134,15 +134,15 @@ class Classeurs extends Component {
                     />
                 }
 
-                <div className="grid-x grid-margin-x grid-padding-x align-middle">
+                <div className="grid-x grid-margin-x panel align-middle">
                     <div className="cell medium-12 list-classeurs">
-                        <div className="grid-x grid-padding-x tri-classeurs">
+                        <div className="grid-x grid-padding-x align-middle tri-classeurs">
                             <div className="cell medium-2">
                                 {t('common.classeurs.sort_label.name')}
                                 <button onClick={() => this.listClasseurs('nom', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                                 <button onClick={() => this.listClasseurs('nom', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                             </div>
-                            <div className="cell medium-2 title-sort text-center">
+                            <div className="cell medium-2 text-center">
                                 {t('common.classeurs.sort_label.current_user')}
                             </div>
                             <div className="cell medium-2 text-center">
@@ -155,7 +155,7 @@ class Classeurs extends Component {
                                 <button onClick={() => this.listClasseurs('type', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                                 <button onClick={() => this.listClasseurs('type', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                             </div>
-                            <div className="cell medium-2">
+                            <div className="cell medium-2 text-center">
                                 {t('common.classeurs.sort_label.limit_date')}
                                 <button onClick={() => this.listClasseurs('validation', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                                 <button onClick={() => this.listClasseurs('validation', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
