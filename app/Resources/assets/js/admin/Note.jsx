@@ -4,7 +4,7 @@ import { translate } from 'react-i18next'
 import Validator from 'validatorjs'
 
 import { basicNotification } from '../_components/Notifications'
-import { Button, Input, Form } from '../_components/Form'
+import { Button, Form } from '../_components/Form'
 import { GridX, Cell } from '../_components/UI'
 import Editor from '../_components/Editor'
 import { SimpleContent, AdminDetails } from '../_components/AdminUI'
@@ -33,7 +33,9 @@ class Note extends Component {
     }
     componentDidMount() {
         const { noteId } = this.props.match.params
-        noteId && this.fetchNote(noteId)
+        noteId
+            ? this.fetchNote(noteId)
+            : this.setState(prevState => prevState.note.message = '')
     }
     fetchNote(id) {
         const { t, _addNotification } = this.context

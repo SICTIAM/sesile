@@ -13,10 +13,20 @@ class Note extends Component {
         isOpen: false
     }
     componentDidMount() {
-        fetch(Routing.generate('sesile_user_noteapi_getlast'), {credentials: 'same-origin'})
-        .then(response => response.json())
-        .then(note => {if(note.note) this.setState({note: note, isOpen: !note.alreadyOpen})})
+        this.interval = setInterval(() => this.fetchUserNote(), 4000)
+        this.fetchUserNote()
     }
+
+    componentWillUnmount () {
+        clearInterval(this.interval)
+    }
+
+    fetchUserNote () {
+        fetch(Routing.generate('sesile_user_noteapi_getlast'), {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(note => {if(note.note) this.setState({note: note, isOpen: !note.alreadyOpen})})
+    }
+
     updateUserNote() {
         const { id } = this.state.note.note
         fetch(Routing.generate('sesile_user_noteapi_readed', {id}), {
