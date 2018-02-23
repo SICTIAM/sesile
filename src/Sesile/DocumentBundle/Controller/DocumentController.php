@@ -644,21 +644,25 @@ class DocumentController extends Controller
         $path = $this->container->getParameter('upload')['fics'];
 
         // On recupere le dernier utilisateur ayant validé le classeur
-        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($doc->getClasseur()->getLastValidant());
+        $lastUser = $em->getRepository('SesileUserBundle:EtapeClasseur')->getLastValidant($doc->getClasseur());
 
-        /* SetaPDF */
-        $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
+        if ($lastUser) {
+            /* SetaPDF */
+            $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(),
-            $absSign,
-            $ordSign,
-            $city->getPageSignature(),
-            $imageSignature,
-            $lastUser,
-            $doc->getClasseur()->getId(),
-            $path
-        );
-        /* FIN SetaPDF */
+            $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(),
+                $absSign,
+                $ordSign,
+                $city->getPageSignature(),
+                $imageSignature,
+                $lastUser,
+                $doc->getClasseur()->getId(),
+                $path
+            );
+            /* FIN SetaPDF */
+        }
+
+        return new JsonResponse(array("error" => "pas de validant"));
     }
 
     /**
@@ -671,8 +675,7 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         // Ecriture de l'hitorique du document
-        $id_user = $this->getUser()->getId();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        $user = $this->getUser();
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
@@ -681,26 +684,30 @@ class DocumentController extends Controller
         $path = $this->container->getParameter('upload')['fics'];
 
         // On recupere le dernier utilisateur ayant validé le classeur
-        $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($doc->getClasseur()->getLastValidant());
-        $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
-        /* SetaPDF */
+        $lastUser = $em->getRepository('SesileUserBundle:EtapeClasseur')->getLastValidant($doc->getClasseur());
+        if ($lastUser) {
+            $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
+            /* SetaPDF */
 
-        $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL(
-            $doc->getRepourl(),
-            $doc->getClasseur()->getId(),
-            $absVisa,
-            $ordVisa,
-            $absSign,
-            $ordSign,
-            $city->getPageSignature(),
-            true,
-            $imageSignature,
-            $city->getTitreVisa(),
-            $city->getCouleurVisa(),
-            $lastUser,
-            $path
-        );
-        /* FIN SetaPDF */
+            $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL(
+                $doc->getRepourl(),
+                $doc->getClasseur()->getId(),
+                $absVisa,
+                $ordVisa,
+                $absSign,
+                $ordSign,
+                $city->getPageSignature(),
+                true,
+                $imageSignature,
+                $city->getTitreVisa(),
+                $city->getCouleurVisa(),
+                $lastUser,
+                $path
+            );
+            /* FIN SetaPDF */
+        }
+
+        return new JsonResponse(array("error" => "pas de validant"));
     }
 
 
@@ -821,7 +828,7 @@ class DocumentController extends Controller
                 }
                 else {
                     $city = $user->getCollectivite();
-                    $lastUser = $em->getRepository('SesileUserBundle:User')->findOneById($doc->getClasseur()->getLastValidant());
+                    $lastUser = $em->getRepository('SesileUserBundle:EtapeClasseur')->getLastValidant($doc->getClasseur());
                     $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
 

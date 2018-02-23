@@ -173,6 +173,11 @@ html {
     height: auto;
   }
 
+  .document-name hr {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   .react-datepicker-wrapper, .react-datepicker__input-container {
     width: 100%;
   }
@@ -232,6 +237,9 @@ html {
 
   }
 
+  .text-circuit-center {
+    padding-top: 1.3em;
+  }
 
   .fa {
     font-size: 1.5em;
@@ -507,10 +515,6 @@ html {
     .circuit-add {
       font-size: 1em;
     }
-  }
-
-  .imgPreview {
-    height: 100%;
   }
 
 }

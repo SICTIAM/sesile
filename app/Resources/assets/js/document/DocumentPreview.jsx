@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { translate } from 'react-i18next'
-import {func, object} from 'prop-types'
+import {func, object, number} from 'prop-types'
 
 
 class DocumentPreview extends Component {
 
     static contextTypes = {
         t: func
+    }
+
+    componentDidUpdate () {
+        $('#download-documents').foundation()
     }
 
     bytesToSize(bytes) {
@@ -29,7 +33,7 @@ class DocumentPreview extends Component {
     render () {
 
         const { t } = this.context
-        const { documents, remove, onClick, displayReveal }  = this.props
+        const { documents, remove, onClick, displayReveal, statusClasseur }  = this.props
 
         return (
             <div className="cell medium-11 text-left">
@@ -47,17 +51,35 @@ class DocumentPreview extends Component {
                         }
 
                         { file.id &&
-                            <div className="cell medium-1">
+                            <div className="cell medium-1 text-center">
                                 <i className="icon-action fa fa-arrows-alt" onClick={(e) => displayReveal(e, file.id)} aria-hidden="true"></i>
                             </div>
                         }
 
                         { file.id && file.type === "application/pdf" &&
                         <div className="cell medium-5 document-name">
-                            <a className="button" href={Routing.generate('download_doc', {id: file.id})} target="_blank">{ t('common.documents.btn_origin')}</a>
-                            <a className="button" href={Routing.generate('download_doc_visa', {id: file.id})} target="_blank">{ t('common.documents.btn_visa')}</a>
-                            <a className="button" href={Routing.generate('download_doc_sign', {id: file.id})} target="_blank">{ t('common.documents.btn_signature')}</a>
-                            <a className="button" href={Routing.generate('download_doc_all', {id: file.id})} target="_blank">{ t('common.documents.btn_both')}</a>
+                            <div className="grid-x align-center-middle" id="download-documents" data-toggle="documents-infos">
+                                <ul className="dropdown menu" data-dropdown-menu>
+                                    <li>
+                                        <a href="#" className="button primary hollow">Téléchargement du document</a>
+                                        <ul className="menu">
+                                            <li><a className="button secondary clear" href={Routing.generate('download_doc', {id: file.id})} target="_blank">{ t('common.documents.btn_origin')}</a></li>
+                                            { statusClasseur === 2 &&
+                                                <div>
+                                                    <hr/>
+                                                    <li><a className="button secondary clear" href={Routing.generate('download_doc_visa', {id: file.id})} target="_blank">{ t('common.documents.btn_visa')}</a></li>
+                                                    <hr/>
+                                                    <li><a className="button secondary clear" href={Routing.generate('download_doc_sign', {id: file.id})} target="_blank">{ t('common.documents.btn_signature')}</a></li>
+                                                    <hr/>
+                                                    <li><a className="button secondary clear" href={Routing.generate('download_doc_all', {id: file.id})} target="_blank">{ t('common.documents.btn_both')}</a></li>
+                                                </div>
+                                            }
+
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+
                         </div>
                         }
                         <div className="cell medium-1 text-center">
@@ -79,7 +101,8 @@ DocumentPreview.propTypes = {
     document: object,
     remove: func,
     onClick: func,
-    displayReveal: func
+    displayReveal: func,
+    statusClasseur: number
 }
 
 export default translate('sesile')(DocumentPreview)

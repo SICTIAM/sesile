@@ -14,6 +14,25 @@ use Sesile\ClasseurBundle\Entity\Classeur;
 class EtapeClasseurRepository extends EntityRepository
 {
 
+    public function getLastValidant(Classeur $classeur)
+    {
+        $etapeClasseur = $this->createQueryBuilder('ec')
+            ->where('ec.classeur = :classeur')
+            ->andWhere('ec.etapeValide = true')
+            ->setParameter('classeur', $classeur)
+            ->orderBy('ec.ordre', 'DESC')
+            ->setMaxResults('1')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+        $etapeClasseur
+            ? $userValidant = $etapeClasseur->getUserValidant()
+            : $userValidant = null;
+
+        return $userValidant;
+    }
+
     public function getClasseurValidate($user, $type) {
         $classeurs =  $this
             ->createQueryBuilder('ec')

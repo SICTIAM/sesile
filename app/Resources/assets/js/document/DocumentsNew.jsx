@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import Dropzone from 'react-dropzone'
-import {array, func, string, object} from 'prop-types'
+import {array, func, string, object, bool} from 'prop-types'
 import DocumentPreview from './DocumentPreview'
 import {Cell, GridX} from '../_components/UI'
 
@@ -22,30 +22,31 @@ class DocumentsNew extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { t } = this.context
-        const { typeClasseur, documents } = nextProps
+        const { typeClasseur, documents, editClasseur } = nextProps
 
-        if (typeClasseur.nom === "Helios" && documents.length > 0 ) {
-            this.setState({disabled: true, multiple: false})
+        if (typeClasseur.nom === "Helios" && documents.length > 0 || !editClasseur) {
+            this.setState({disabled: true})
+        }
+        else if (!editClasseur){
+            this.setState({disabled: true})
         }
         else {
-            this.setState({disabled: false, multiple: true})
+            this.setState({disabled: false})
         }
 
         if (typeClasseur && typeClasseur.nom === "Helios") {
             this.setState({accept: 'text/xml', multiple: false})
+            this.setState({fileRule: t('common.documents.error.file_acceptation_rules_helios')})
         } else {
             this.setState({accept: 'image/*, application/*, text/*', multiple: true})
+            this.setState({fileRule: t('common.documents.error.file_acceptation_rules')})
         }
-
-        (typeClasseur.nom === "Helios") ?
-            this.setState({fileRule: t('common.documents.error.file_acceptation_rules_helios')})
-            : this.setState({fileRule: t('common.documents.error.file_acceptation_rules')})
     }
 
     render () {
 
         const { t } = this.context
-        const { documents, onDrop, removeDocument, onClick, displayReveal }  = this.props
+        const { documents, onDrop, removeDocument, onClick, displayReveal, statusClasseur }  = this.props
         const { disabled, accept, multiple, fileRule } = this.state
 
         return (
@@ -57,7 +58,7 @@ class DocumentsNew extends Component {
                             <h3>{t('common.documents.title_preview')}</h3>
                         </div>
                     </div>
-                    <div className="grid-x grid-margin-x grid-padding-x">
+                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                         <div className="cell medium-12">
                             <Dropzone
                                 className="documentation-dropzone grid-x align-middle align-center"
@@ -76,10 +77,6 @@ class DocumentsNew extends Component {
                                         </GridX>
 
                                         <GridX className="align-center">
-                                            <DocumentPreview documents={documents} remove={removeDocument} onClick={onClick} displayReveal={displayReveal} />
-                                        </GridX>
-
-                                        <GridX className="align-center">
                                             <Cell className="medium-11 text-small">
                                                 { (this.state.dropFileError)
                                                     ? <span className="text-alert">{this.state.dropFileError}</span>
@@ -93,6 +90,14 @@ class DocumentsNew extends Component {
                             </Dropzone>
                         </div>
                     </div>
+
+                    <GridX className="align-center grid-padding-y">
+                        <DocumentPreview documents={documents}
+                                         remove={removeDocument}
+                                         onClick={onClick}
+                                         displayReveal={displayReveal}
+                                         statusClasseur={statusClasseur} />
+                    </GridX>
                 </div>
             </div>
         )
@@ -109,7 +114,8 @@ DocumentsNew.propTypes = {
     onDrop: func,
     removeDocument: func,
     displayReveal: func,
-    typeClasseur: object.isRequired
+    typeClasseur: object.isRequired,
+    editClasseur: bool
 }
 
 export default translate('sesile')(DocumentsNew)

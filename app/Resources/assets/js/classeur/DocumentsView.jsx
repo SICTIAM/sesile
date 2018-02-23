@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { array, func, number, object } from 'prop-types'
+import { array, func, number, object, bool } from 'prop-types'
 import OnlyOffice from '../document/OnlyOffice'
-import Documents from './Documents'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import { handleErrors } from '../_utils/Utils'
@@ -120,7 +119,7 @@ class DocumentsView extends Component {
 
     render () {
         const { documents, currentDocument, revealDisplay, user } = this.state
-        const { classeurType } = this.props
+        const { classeurType, status, editClasseur } = this.props
         const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'pdf', 'ppt', 'pptx']
         const imageType = ['png', 'jpg', 'jpeg', 'gif']
         const heliosType = ['xml']
@@ -137,7 +136,9 @@ class DocumentsView extends Component {
                     </div>
                 }
                 { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "none") &&
-                    <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
+                    <div className="cell medium-12">
+                        <img src={"./../uploads/docs/" + currentDocument.repourl} />
+                    </div>
                 }
 
                 { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "none" && classeurType.nom === "Helios" &&
@@ -162,15 +163,15 @@ class DocumentsView extends Component {
                 }
             </div>
 
-            <div className="">
-                <DocumentsNew documents={documents}
-                              onClick={this.handleClickDocument}
-                              onDrop={ this.onDrop }
-                              removeDocument={this.removeDocument}
-                              displayReveal={this.displayReveal}
-                              typeClasseur={classeurType}
-                />
-            </div>
+            <DocumentsNew documents={documents}
+                          onClick={this.handleClickDocument}
+                          onDrop={ this.onDrop }
+                          removeDocument={this.removeDocument}
+                          displayReveal={this.displayReveal}
+                          typeClasseur={classeurType}
+                          statusClasseur={status}
+                          editClasseur={editClasseur}
+            />
         </div>
 
         )
@@ -180,7 +181,9 @@ class DocumentsView extends Component {
 DocumentsView.propTypes = {
     documents: array,
     classeurId: number,
-    classeurType: object
+    classeurType: object,
+    status: number,
+    editClasseur: bool
 }
 
 export default translate(['sesile'])(DocumentsView)

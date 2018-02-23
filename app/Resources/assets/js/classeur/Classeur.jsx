@@ -213,7 +213,12 @@ class Classeur extends Component {
                         <div className="cell medium-8">
                             {
                                 classeur.documents &&
-                                <DocumentsView documents={classeur.documents} classeurId={classeur.id} classeurType={classeur.type} />
+                                <DocumentsView documents={classeur.documents}
+                                               classeurId={classeur.id}
+                                               classeurType={classeur.type}
+                                               status={classeur.status}
+                                               editClasseur={classeur.validable}
+                                />
                             }
                         </div>
                         <div className="cell medium-4">

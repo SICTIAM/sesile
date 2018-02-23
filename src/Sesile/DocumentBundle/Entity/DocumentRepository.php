@@ -220,26 +220,32 @@ class DocumentRepository extends EntityRepository
         $translateY = $this->calcYVisa($translateY);
 
         $em = $this->getEntityManager();
-        $actions = $em->getRepository('SesileClasseurBundle:Action')->findBy(array(
-            'classeur' => $classeurId,
-            'action' => array('Validation', 'Classeur finalisé', 'Signature')
-        ));
+        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($classeurId);
+        $etapesClasseur = $classeur->getEtapeClasseurs();
 
-        foreach ($actions as $action) {
+        foreach ($etapesClasseur as $etapeClasseur) {
             // Trouver le bon utilisateur et recuperer sa qualite
-            if($action->getUserAction() && $action->getUserAction()->getQualite()) {
-                // Si la qualite + le nom de l utilisateur fait plus de 40 caractères on rajoute des sauts de ligne
-                if(strlen($action->getUsername() . $action->getUserAction()->getQualite()) >= 40) {
-                    $role = ",\n" . $action->getUserAction()->getQualite() . ",\n";
-                } else {
-                    $role = ", " . $action->getUserAction()->getQualite() . ", ";
-                }
-            }
-            else {
-                $role = '';
-            }
+            if ($etapeClasseur->getEtapeValide()) {
+                if($etapeClasseur->getUserValidant() && $etapeClasseur->getUserValidant()->getQualite()) {
+                    // Si la qualite + le nom de l utilisateur fait plus de 40 caractères on rajoute des sauts de ligne
+                    (strlen($etapeClasseur->getUserValidant()->getUsername() . $etapeClasseur->getUserValidant()->getQualite()) >= 40)
+                        ? $role = ",\n" . $etapeClasseur->getUserValidant()->getQualite() . ",\n"
+                        : $role = ", " . $etapeClasseur->getUserValidant()->getQualite() . ", ";
 
-            $texteStamp .= "\n" . $action->getUsername() . $role . ' le ' . $action->getDate()->format('d/m/Y à H:i');
+                } else {
+                    $role = '';
+                }
+
+                ($etapeClasseur->getUserValidant())
+                    ? $userValidant = $etapeClasseur->getUserValidant()
+                    : $userValidant = '';
+
+                ($etapeClasseur->getDate())
+                    ? $date = ' le ' . $etapeClasseur->getDate()->format('d/m/Y à H:i')
+                    : $date = '';
+
+                $texteStamp .= "\n" . $userValidant . $role . $date;
+            }
         }
 
         // Color convert

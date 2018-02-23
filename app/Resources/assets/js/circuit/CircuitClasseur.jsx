@@ -55,7 +55,7 @@ class CircuitClasseur extends Component {
                     <div className="grid-x grid-margin-x grid-padding-x circuit-list">
                         <div className="cell medium-12">
 
-                            <div className="grid-x align-middle grid-margin-y">
+                            <div className="grid-x align-middle grid-padding-y">
                                 <div className="medium-2 cell text-center">
                                     <div className={ etapeDeposante ? ("circle warning text-warning") : ("circle success text-success") }>1</div>
                                 </div>
@@ -68,14 +68,14 @@ class CircuitClasseur extends Component {
                             </div>
 
                             { etape_classeurs && etape_classeurs.map((etape_classeur, key) =>
-                                <div key={"etape_classeur-" + key} className="grid-x align-middle grid-margin-y">
+                                <div key={"etape_classeur-" + key} className="grid-x align-top grid-padding-y">
                                     <div className="medium-2 cell text-center">
                                         <div className={ this.currentCircleClassName(etape_classeur) + " circle" }>{key + 2}</div>
                                     </div>
-                                    <div className="medium-3 cell">
+                                    <div className="medium-3 cell text-circuit-center">
                                         <span className={ this.currentTextClassName (etape_classeur) + " text-bold" }>{t('admin.circuit.validator')}</span>
                                     </div>
-                                    <div className="cell medium-7">
+                                    <div className="cell medium-7 text-circuit-center">
                                         <div className="grid-x">
                                             { editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
                                             <div className="cell medium-10">
@@ -97,7 +97,7 @@ class CircuitClasseur extends Component {
                                             }
                                         </div>
 
-                                        <div className="grid-x align-middle align-right">
+                                        <div className="grid-x align-top align-right">
                                             <div className="medium-12 cell">
                                                 <span className={ this.currentTextClassName (etape_classeur) + " text-bold"  }>
                                                 { etape_classeur.users && etape_classeur.users.filter(user => user.id).map((user, userKey) =>
@@ -127,10 +127,12 @@ class CircuitClasseur extends Component {
 
                             {
                                 editable &&
-                                <div className="grid-x align-center-middle grid-padding-x">
-                                    <button className="button small hollow primary" onClick={() => addEtape(null)}>
-                                        <span className="fa fa-plus"></span>{t('admin.circuit.add_step')}
-                                    </button>
+                                <div className="grid-x align-center-middle grid-padding-x grid-margin-y">
+                                    <div className="cell medium-10 text-center">
+                                        <button className="button small hollow primary" onClick={() => addEtape(null)}>
+                                            <span className="fa fa-plus"></span>{t('admin.circuit.add_step')}
+                                        </button>
+                                    </div>
                                 </div>
                             }
                         </div>

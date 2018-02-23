@@ -85,6 +85,14 @@ class EtapeClasseur
     private $userValidant;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", options={"default": 0})
+     *
+     */
+    private $date;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -269,6 +277,37 @@ class EtapeClasseur
     public function getEtapeValide()
     {
         return $this->etapeValide;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return EtapeClasseur
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setDateValue()
+    {
+        $this->date = new \DateTime();
     }
 
     /**
