@@ -638,4 +638,19 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
+    public function findDelayedClasseursByUser($userId) {
+        $classeurs =  $this
+            ->createQueryBuilder('c')
+            ->select('c.id, c.nom, c.validation')
+            ->andWhere('c.validation <= :date')
+            ->setParameter('date', 'now()')
+            ->andWhere('c.user = :userId')
+            ->setParameter('userId', $userId)
+            ->andWhere('c.status = 0 OR c.status = 1 OR c.status = 4')
+            ->getQuery()
+            ->getResult();
+
+        return $classeurs;
+    }
+
 }
