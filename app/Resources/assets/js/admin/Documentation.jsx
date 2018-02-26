@@ -17,6 +17,7 @@ class Documentation extends Component {
         editState: false,
         files: [],
         dropFileError: '',
+        sending: false,
         documentation: {
             id: null,
             description: '',
@@ -85,6 +86,7 @@ class Documentation extends Component {
             const data = new FormData()
             if(fields.file.name != this.state.documentation.path) data.append('file', fields.file)
             data.append('description', fields.description)
+            this.setState({sending: true, editState: false})
             fetch(
                 Routing.generate(
                     `sesile_main_documentationapi_${(this.props.match.params.id) ? 'updateaide' : 'postaide' }`, 
@@ -104,6 +106,7 @@ class Documentation extends Component {
                     basicNotification(
                         'error',
                         this.context.t('admin.documentations.error.save'))))
+            .finally(() => this.setState({sending: false, editState: true}))
         } else this.validationErrorFile(validation)
     }
     saveOrUpdatePatch() {
@@ -120,6 +123,7 @@ class Documentation extends Component {
             if(fields.file.name != this.state.documentation.path) data.append('file', fields.file)
             data.append('version', fields.version)
             data.append('description', fields.description)
+            this.setState({sending: true, editState: false})
             fetch(
                 Routing.generate(
                     `sesile_main_documentationapi_${(this.props.match.params.id) ? 'updatepatch' : 'postpatch' }`, 
@@ -139,6 +143,7 @@ class Documentation extends Component {
                     basicNotification(
                         'error',
                         this.context.t('admin.documentations.error.save'))))
+            .finally(() => this.setState({sending: false, editState: true}))
         } else this.validationErrorFile(validation)
     }
     handleChangeDocumentation = (key, value) => {
@@ -228,7 +233,8 @@ class Documentation extends Component {
                                         labelText=
                                             {this.props.match.params.id ? 
                                                 t('common.button.edit_save') : 
-                                                t('common.button.save')}/>
+                                                t('common.button.save')}
+                                        loading={this.state.sending}/>
                                 </GridX>
                             </Cell>
                         </GridX>

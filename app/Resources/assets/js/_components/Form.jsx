@@ -70,7 +70,7 @@ const Button = ({ id, className, classNameButton, labelText, onClick, disabled, 
         <button id={id} className={classNameButton + " button hollow"} disabled={disabled} onClick={() => onClick()}>
             {`${labelText} `}
             {(loading) &&
-                <i className='fa fa-spinner fa-spin' style={{fontSize: '1.1em', color: 'white'}} />}
+                <i className='fa fa-spinner fa-spin' style={{fontSize: '1.1em', color: '#34a3fc'}} />}
         </button>
     </div>
 
