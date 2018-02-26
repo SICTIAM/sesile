@@ -42,20 +42,16 @@ class MenuBar extends Component {
             <div className="user-log" data-toggle="user-infos">
                 {
                     user.id ?
-                        <ul className="dropdown menu" data-dropdown-menu>
+                        <ul className="dropdown menu align-center" data-dropdown-menu>
                             <li>
-                                <a href="#" className="button primary hollow">
+                                <a href="#" className="button primary hollow user-complete-name">
                                     <div className="grid-x align-middle">
-                                        <div className="cell medium-3 align-center">
-                                            {
-                                                user.path ?
-                                                    <UserAvatar size="30" name={user._prenom} src={"/uploads/avatars/" + user.path} />
-                                                    : <UserAvatar size="30" name={user._prenom} className="txt-avatar" />
-                                            }
-                                        </div>
-                                        <div className="cell medium-9">
-                                            { user._prenom + ' ' + user._nom }
-                                        </div>
+                                        {
+                                            user.path ?
+                                                <UserAvatar size="20" name={user._prenom} src={"/uploads/avatars/" + user.path} />
+                                                : <UserAvatar size="20" name={user._prenom} className="txt-avatar" />
+                                        }
+                                        &nbsp; { user._prenom + ' ' + user._nom }
                                     </div>
                                 </a>
                                 <ul className="menu">

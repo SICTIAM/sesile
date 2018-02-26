@@ -69,7 +69,7 @@
         "menu": {
             "connection": "Connexion",
             "disconnection": "Déconnexion",
-            "account_parameter": "paramètre du compte",
+            "account_parameter": "Profil",
             "account_change": "changer de compte",
             "admin": "administration",
             "new_classeur": "Créer un classeur",
@@ -99,7 +99,7 @@
             "title_add": "Création d'un nouveau classeur",
             "title_infos": "Informations générales",
             "sort": "trier",
-            "search": "Rechercher un classeur",
+            "search": "Une recherche ?",
             "date_limit": "Date limite le",
             "classeur_name": "Nom du classeur",
             "users_copy": "Utilisateurs en copie",
