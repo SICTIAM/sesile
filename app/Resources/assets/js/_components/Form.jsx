@@ -59,18 +59,18 @@ const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, l
         </label>
     </div>
 
-const InputFile = ({ id, className, labelText, accept, onChange}) => 
+const InputFile = ({ id, className, labelText, accept, onChange}) =>
     <div className={className}>
         <label htmlFor={id} className="button">{labelText}</label>
         <input type="file" id={id} className="show-for-sr" accept={accept} onChange={e => onChange(e.target.files[0])} />
     </div>
 
-const Button = ({ id, className, classNameButton, labelText, onClick, disabled, loading=null }) =>
+const Button = ({ id, className, classNameButton, labelText, onClick, disabled, loading=null, styleLoading=null}) =>
     <div className={className}>
         <button id={id} className={classNameButton + " button hollow"} disabled={disabled} onClick={() => onClick()}>
             {`${labelText} `}
             {(loading) &&
-                <i className='fa fa-spinner fa-spin' style={{fontSize: '1.1em', color: '#34a3fc'}} />}
+                <i className='fa fa-spinner fa-spin' style={styleLoading || {fontSize: '1.1em', color: '#34a3fc'}} />}
         </button>
     </div>
 
