@@ -33,7 +33,7 @@ class DocumentationApiController extends Controller {
         return $this->getDoctrine()
             ->getManager()
             ->getRepository('SesileMainBundle:Aide')
-            ->findAll();
+            ->findBy(array(), array('date' => 'DESC'));
     }
 
     /**
@@ -46,7 +46,7 @@ class DocumentationApiController extends Controller {
         return $this->getDoctrine()
             ->getManager()
             ->getRepository('SesileMainBundle:Patch')
-            ->findAll();
+            ->findBy(array(), array('date' => 'DESC'));
     }
 
     /**
