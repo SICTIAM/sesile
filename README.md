@@ -55,6 +55,16 @@ Access to phMyAdmin [http://sesile.dev:8080](http://sesile.dev:8080) or nginx do
 
 Open [http://sesile.dev]() or ip adress docker nginx `sudo echo $(sudo docker network inspect bridge | grep Gateway | grep -o -E '[0-9\.]+')`
 
+### Cron Jobs
+* Think about setting up these cron jobs :
+
+    - `* * * * * php /var/www/symfony/app/console sesile:user:delayedClasseurs`
+
+### Sesile command list
+
+* Notify users when their classeurs are delayed : `php app/console sesile:user:delayedClasseurs`
+
+
 ### Utils links
 * [Webpack encore](http://symfony.com/doc/current/frontend.html) /  API to integrate Webpack into your Symfony application
 * [ReactBundle](https://github.com/Limenius/ReactBundle/blob/master/Resources/doc/index.md) / server and client-side React rendering 

@@ -188,3 +188,8 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+    sesile.command.delayed_classeurs:
+        class: Sesile\UserBundle\Command\NotificationDelayedClasseurCommand
+        tags:
+            -  { name: console.command }
+        arguments: ["@monolog.logger.request","@doctrine.orm.entity_manager" , '@service_container', '@mailer']

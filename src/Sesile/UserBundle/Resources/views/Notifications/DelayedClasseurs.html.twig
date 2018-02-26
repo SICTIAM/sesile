@@ -1,0 +1,19 @@
+Bonjour {{ user.prenom }} {{ user.nom }},<br><br>
+
+{% if classeurs|length > 1 %}
+    Les classeurs suivants arrivent à la date limite de validation:<br><br>
+    <ul>
+        {% for classeur in classeurs %}
+            <li>
+                <a href={{  absolute_url("/classeur/#{classeur.id}") }}>
+                    {{ classeur.nom }}
+                </a>
+                - {{ classeur.validation|date('d/m/Y') }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>
+        Le classeur <a href={{  absolute_url("/classeur/#{classeurs[0].id}") }}>{{ classeurs[0].nom }}</a> arrive à la date limite de validation.
+    </p>
+{% endif %}
