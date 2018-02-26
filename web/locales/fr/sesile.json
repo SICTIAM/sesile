@@ -169,7 +169,7 @@
             "no_preview": "Aucune prévisualisation possible",
             "error": {
                 "file_acceptation_rules": "Les fichiers doivent être au bon format et d'une taille maximum de 100 Mo",
-                "file_acceptation_rules_helios": "Le classeur ne doit comporter qu'un seul fichier PES. La taille maximum du fichier est 100 Mo"
+                "file_acceptation_rules_helios": "Le classeur ne doit comporter qu'un seul fichier PES au format xml. La taille maximum du fichier est 100 Mo"
             }
         },
         "user": {

@@ -15,51 +15,35 @@ class Classeurs extends Component {
         t: func
     }
 
-    static defaultProps = {
-        displayButtons: true
-    }
-
     render () {
 
-        const { classeurs, title, displayButtons } = this.props
+        const { classeurs, title } = this.props
         const { t } = this.context
 
         return (
-            <div className="grid-x grid-padding-x panel list-dashboard">
-                <div className="cell medium-12 panel-heading">{ title }</div>
-                <div className="cell medium-12 panel-body">
-                    <div className="grid-x">
+            <div className="grid-x grid-padding-x panel">
+                <div className="cell medium-12">
+                    <div className="grid-x panel-heading align-middle ">
+                        <div className="cell medium-12">{ title }</div>
+                    </div>
+                    <div className="grid-x grid-padding-x panel-body dashboard-title">
                         <div className="cell auto text-bold">{ t('common.classeurs.sort_label.name') }</div>
                         <div className="cell auto text-bold">{ t('common.classeurs.sort_label.limit_date') }</div>
-                        {
-                            displayButtons &&
-                            <div className="cell auto text-bold">{ t('common.classeurs.sort_label.actions') }</div>
-                        }
-
                     </div>
-                </div>
-
-                {
-                    classeurs &&
+                    {
+                        classeurs &&
                         classeurs.map((classeur) => (
-                            <Link to={`/classeur/${classeur.id}`} className="cell medium-12 panel-body" key={classeur.id}>
-                                <div className="grid-x align-middle">
-                                    <div className="cell auto text-bold">
-                                        { classeur.nom }
-                                    </div>
-                                    <div className="cell auto text-justify">
-                                        <ClasseurProgress creation={classeur.creation} validation={classeur.validation} />
-                                    </div>
-                                    {
-                                        displayButtons &&
-                                        <div className="cell auto">
-                                            <ClasseursButtonList classeur={classeur} />
-                                        </div>
-                                    }
+                            <Link to={`/classeur/${classeur.id}`} className="grid-x panel-body grid-padding-x align-middle dashboard-content" key={classeur.id}>
+                                <div className="cell auto text-bold">
+                                    { classeur.nom }
+                                </div>
+                                <div className="cell auto text-justify">
+                                    <ClasseurProgress creation={classeur.creation} validation={classeur.validation} />
                                 </div>
                             </Link>
                         ))
-                }
+                    }
+                </div>
 
             </div>
         )
@@ -68,8 +52,7 @@ class Classeurs extends Component {
 
 Classeurs.propTypes = {
     classeurs: array.isRequired,
-    title: string,
-    displayButtons: bool
+    title: string
 }
 
 export default translate('sesile')(Classeurs)

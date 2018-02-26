@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { object, func } from 'prop-types'
 import { translate } from 'react-i18next'
-import { Link } from 'react-router-dom'
 import Moment from 'moment'
 
 import { AdminList, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
@@ -66,13 +65,15 @@ class Notes extends Component {
                 title={t('admin.notes.title')}
                 subtitle={t('admin.subtitle')}>
                 <AdminContainer>
-                    <Input
-                        className="cell medium-6 align-center-middle"
-                        labelText={t('admin.label.which', {context: 'female'})}
-                        value={this.state.valueSearchByTitle}
-                        onChange={this.searchNoteByTitle}
-                        placeholder={t('admin.notes.search_by_title')}
-                        type="text"/>
+                    <div className="grid-x cell medium-12 align-center">
+                        <Input
+                            className="cell medium-6 align-center-middle"
+                            labelText={t('admin.label.which', {context: 'female'})}
+                            value={this.state.valueSearchByTitle}
+                            onChange={this.searchNoteByTitle}
+                            placeholder={t('admin.notes.search_by_title')}
+                            type="text"/>
+                    </div>
                     <AdminList
                         title={t('admin.notes.list_title')}
                         listLength={listNote.length}

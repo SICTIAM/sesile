@@ -4,7 +4,7 @@ import { translate } from 'react-i18next'
 import ClasseurInfos from './ClasseurInfos'
 import { handleErrors } from '../_utils/Utils'
 import { basicNotification } from '../_components/Notifications'
-import DocumentsClasseur from './DocumentsClasseur'
+import DocumentsView from './DocumentsView'
 import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
 import CircuitClasseur from '../circuit/CircuitClasseur'
@@ -200,8 +200,8 @@ class Classeur extends Component {
         const editable = !!(classeur.validable && editClasseur)
 
         return (
-            <div className="grid-y grid-frame">
-                <div className="cell medium-12 grid-y">
+            <div className="grid-x details-classeur">
+                <div className="cell medium-12">
 
                     <div className="grid-x">
                         <div className="cell medium-12 text-center">
@@ -209,29 +209,34 @@ class Classeur extends Component {
                         </div>
                     </div>
 
-                    <div className="grid-x">
-                        <div className="cell medium-4"></div>
-                        <div className="cell medium-4">
-                            <ClasseursButtonList classeurs={[classeur]}
-                                                 validClasseur={this.validClasseurs}
-                                                 signClasseur={this.signClasseurs}
-                                                 revertClasseur={this.revertClasseurs}
-                                                 refuseClasseur={this.refuseClasseurs}
-                                                 removeClasseur={this.removeClasseurs}
-                                                 deleteClasseur={this.deleteClasseurs}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid-x medium-12 grid-margin-x grid-padding-x">
-                        <div className="cell medium-8 details-classeur">
+                    <div className="grid-x medium-12 grid-margin-x">
+                        <div className="cell medium-8">
                             {
                                 classeur.documents &&
-                                <DocumentsClasseur documents={classeur.documents} classeurId={classeur.id} classeurType={classeur.type} />
+                                <DocumentsView documents={classeur.documents}
+                                               classeurId={classeur.id}
+                                               classeurType={classeur.type}
+                                               status={classeur.status}
+                                               editClasseur={classeur.validable}
+                                />
                             }
                         </div>
-                        <div className="cell medium-4 cell-block-y details-classeur">
-                            <div className="grid-x grid-padding-y">
+                        <div className="cell medium-4">
+                            <div className="grid-x panel grid-padding-y">
+                                <div className="cell medium-12">
+                                    <ClasseursButtonList classeurs={[classeur]}
+                                                         validClasseur={this.validClasseurs}
+                                                         signClasseur={this.signClasseurs}
+                                                         revertClasseur={this.revertClasseurs}
+                                                         refuseClasseur={this.refuseClasseurs}
+                                                         removeClasseur={this.removeClasseurs}
+                                                         deleteClasseur={this.deleteClasseurs}
+                                                         display="edit"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid-x panel grid-padding-y">
                                 <ClasseurInfos  id={classeur.id}
                                                 nom={classeur.nom}
                                                 validation={classeur.validation}
@@ -244,45 +249,48 @@ class Classeur extends Component {
                                                 editable={classeur.validable}
                                                 handleEditClasseur={this.handleEditClasseur}
                                                 edit={editClasseur}
+                                                usersCopy={classeur.copy}
                                 />
                             </div>
 
-                            <div className="grid-x grid-padding-y">
-                                <div className="medium-12">
-                                    <div className="grid-x">
-                                        <h3 className="cell medium-12">{t('admin.circuit.complet_name')}</h3>
-                                    </div>
-                                    {
-                                        (classeur.id && classeur.user && user.collectivite) &&
-                                            <CircuitClasseur classeurId={classeur.id}
-                                                             etape_classeurs={classeur.etape_classeurs}
-                                                             user={classeur.user}
-                                                             etapeDeposante={classeur.etape_deposante}
-                                                             editable={editable}
-                                                             addEtape={this.handleAddEtape}
-                                                             addUser={this.addUser}
-                                                             addGroup={this.addGroup}
-                                                             removeEtape={this.handleRemoveEtape}
-                                                             removeUser={this.handleClickDeleteUser}
-                                                             removeGroup={this.handleClickDeleteGroup}
-                                                             collectiviteId={user.collectivite.id}
-                                            />
-                                    }
-                                </div>
-                            </div>
-
-
-                            { classeur.copy && classeur.copy.length > 0 &&
-                                <UserInCopy users={classeur.copy} />
+                            {
+                                (classeur.id && classeur.user && user.collectivite) &&
+                                    <CircuitClasseur classeurId={classeur.id}
+                                                     etape_classeurs={classeur.etape_classeurs}
+                                                     user={classeur.user}
+                                                     etapeDeposante={classeur.etape_deposante}
+                                                     editable={editable}
+                                                     addEtape={this.handleAddEtape}
+                                                     addUser={this.addUser}
+                                                     addGroup={this.addGroup}
+                                                     removeEtape={this.handleRemoveEtape}
+                                                     removeUser={this.handleClickDeleteUser}
+                                                     removeGroup={this.handleClickDeleteGroup}
+                                                     collectiviteId={user.collectivite.id}
+                                    />
                             }
 
-                            <div className="grid-x grid-padding-y">
+                            { classeur.actions &&
                                 <ClasseurActions actions={Object.assign([], classeur.actions)}
                                                  action={this.state.action}
                                                  classeur={classeur.id}
                                                  addComment={this.addComment}
                                                  submitComment={this.postAction}
                                 />
+                            }
+
+                            <div className="grid-x panel grid-padding-y">
+                                <div className="cell medium-12">
+                                    <ClasseursButtonList classeurs={[classeur]}
+                                                         validClasseur={this.validClasseurs}
+                                                         signClasseur={this.signClasseurs}
+                                                         revertClasseur={this.revertClasseurs}
+                                                         refuseClasseur={this.refuseClasseurs}
+                                                         removeClasseur={this.removeClasseurs}
+                                                         deleteClasseur={this.deleteClasseurs}
+                                                         display="edit"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -293,27 +301,3 @@ class Classeur extends Component {
 }
 
 export default translate(['sesile'])(Classeur)
-
-Classeur.propTypes = {
-    classeurId: PropTypes.string.isRequired
-}
-
-const UserInCopy = ({users}, {t}) => {
-    const listUsers = users.map(user => <li className="medium-12" key={user.id}>{ user._prenom + " " + user._nom }</li>)
-    return (
-        <div className="grid-x grid-padding-y">
-            <div className="cell medium-12">
-                <div className="grid-x">
-                    <h3 className="cell medium-12">{t('classeur.users_in_copy')}</h3>
-                </div>
-                <div className="grid-x">
-                    <ul>{listUsers}</ul>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-UserInCopy.contextTypes = {
-    t: func
-}

@@ -24,37 +24,6 @@ $sesile-color: (
 @import './../../../../node_modules/react-select/dist/react-select.css';
 @import './../../../../node_modules/font-awesome/scss/font-awesome';
 
-
-@mixin my-icon ($url-image) {
-  background: url($url-image) no-repeat transparent;
-  width: 50px;
-  height: 50px;
-  display: block;
-  margin: 0 auto;
-}
-
-@mixin button-icon ($url-image) {
-  background: url($url-image) no-repeat transparent;
-  padding-left: 3em;
-  height: 3em;
-  text-align: center;
-  cursor: pointer;
-}
-
-@mixin my-notification ($bg-color) {
-  background: $bg-color;
-  font-size:0.75em;
-  font-weight:700;
-  width: 2em;
-  height: 2em;
-  border-radius: 2em;
-  display: block;
-  text-align: center;
-  padding-top: 0.2em;
-  margin-left: 2.5em;
-  cursor: pointer;
-}
-
 $font-color-primary: #ffffff;
 $font-family-primary: 'Open Sans', sans-serif;
 $font-family-secondary: 'Raleway', sans-serif;
@@ -204,14 +173,17 @@ html {
     height: auto;
   }
 
+  .document-name hr {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   .react-datepicker-wrapper, .react-datepicker__input-container {
     width: 100%;
   }
 
   .list-classeurs, .list-classeurs a {
-    background-color: #fff;
     color: map-get($sesile-color, 'dark-blue');
-    font-size:0.875em;
 
     .dropdown-valign {
       margin-top: 1em;
@@ -222,28 +194,23 @@ html {
     }
 
     .tri-classeurs {
-      color: #87878c;
       font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.6875em;
+      font-size: 0.875em;
     }
     .arrow-down {
       border-bottom: 0.8em solid #87878c;
       margin-bottom:1em;
-      font-size: 1em;
+      font-size: 0.6em;
     }
     .arrow-up {
       border-top: 0.8em solid #87878c;
       margin-top:1em;
-      font-size: 1em;
+      font-size: 0.6em;
     }
     .title-sort {
       margin-top: 0.8em;
     }
-    .classeur {
-      border-bottom: solid 1px #a7a7a7;
-    }
-    .classeur:hover, .classeur:hover a {
+    .panel-body:hover, .panel-body:hover a {
       background-color: #edf2f6;
     }
     .img-avatar {
@@ -256,22 +223,28 @@ html {
     .dropdown-pane-circuit {
       font-size: 0.875em;
       background-color: #edf2f6;
-      border-top: 0;
+      border-bottom: 0;
       h3 {
         color: $title-color;
         font-size: 1em;
         font-weight: 700;
         text-transform: uppercase;
       }
+      .panel {
+        background-color: #edf2f6;
+      }
     }
 
   }
 
+  .text-circuit-center {
+    padding-top: 1.3em;
+  }
 
   .fa {
-    color: map-get($sesile-color, 'gray-blue');
     font-size: 1.5em;
     &.fa-comment {
+      color: map-get($sesile-color, 'gray-blue');
       transform: scaleX(-1);
     }
   }
@@ -288,6 +261,14 @@ html {
           color: $sesile-primary;
         }
         color: $sesile-primary;
+      }
+    }
+  }
+
+  .classeur-edit {
+    .button-list {
+      .fa {
+        padding: 0.3em;
       }
     }
   }
@@ -351,8 +332,12 @@ html {
       font-size:0.875em;
       font-weight:normal;
       border-top: solid 1px #a7a7a7;
-      padding-top:1em;
-      padding-bottom:1em;
+    }
+    .dashboard-title {
+      padding: 1em 0;
+    }
+    .dashboard-content {
+      padding: 0.3em 0;
     }
     .panel-body-no-padding {
       color: map-get($sesile-color, 'dark-blue');
@@ -382,10 +367,6 @@ html {
       font-size: 0.875em;
       text-transform: uppercase;
     }
-  }
-
-  .list-classeurs {
-    margin-bottom: 20em;
   }
 
   .admin-content-details .UserAvatar > div {
@@ -458,8 +439,8 @@ html {
 }
 
 .fa {
-  color: white;
-  width: 1rem; // makes the width of icon labels equal
+  //color: white;
+  //width: 1rem; // makes the width of icon labels equal
 }
 
 .img-avatar {
@@ -504,23 +485,11 @@ html {
 
 .details-classeur {
 
-  background: $white;
-
-  h2 {
+  .bold-info-details-classeur {
     color: map-get($sesile-color, 'gray-blue');
     font-weight: 700;
-    font-size: 1.25em;
+    font-size: 0.875em;
     text-transform: uppercase;
-  }
-
-  .bold-info-details-classeur, h3 {
-    color: map-get($sesile-color, 'gray-blue');
-    font-weight: 700;
-    font-size: 0.75em;
-    text-transform: uppercase;
-  }
-  h3 {
-    margin: 0.5em 0 1em;
   }
 
   .info-details-classeur {
@@ -530,10 +499,15 @@ html {
     text-transform: capitalize;
   }
 
+  .button-list {
+    .fa {
+      padding: 0.3em;
+    }
+  }
+
   .classeur-progress {
-    font-weight: 700;
-    font-size: 0.75em;
-    text-transform: uppercase;
+    font-size: 0.875em;
+    text-transform: capitalize;
   }
 
   .circuit-list {
@@ -541,10 +515,6 @@ html {
     .circuit-add {
       font-size: 1em;
     }
-  }
-
-  .imgPreview {
-    height: 100%;
   }
 
 }
@@ -785,6 +755,14 @@ $list-group-margin: $global-margin;
 .medium { font-size: 1.6em;}
 .small { font-size: 20px; padding: 0 5px; }
 .text-uppercase{ text-transform: uppercase; }
+
+.grid-margin-bottom {
+  margin-bottom: 2em;
+}
+
+.only-office-height {
+  min-height: 800px;
+}
 
 .admin-details {
   padding: 2em;
@@ -1041,4 +1019,14 @@ label > input {
     color: #333;
     height: 2.21em;
   }
+}
+
+.pagination li a, .pagination .current, .pagination a:hover {
+  padding: 0.3em;
+  min-width: 2.1em;
+  text-align: center;
+}
+
+.pagination .current, .pagination a:hover {
+  border-radius: 50%;
 }

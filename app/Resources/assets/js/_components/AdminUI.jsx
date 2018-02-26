@@ -88,17 +88,19 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
                 }
             </div>
             <div className="grid-x grid-padding-x panel">
-                <div className="cell medium-12 panel-heading grid-x">
-                    {listHeadTitles}
-                </div>
-                {
-                    (listLength > 0) ? children :
-                    <div className="cell medium-12 panel-body">
-                        <div className="text-center">
-                            {emptyListMessage}
-                        </div>
+                <div className="cell medium-12">
+                    <div className="panel-heading grid-x grid-padding-x">
+                        {listHeadTitles}
                     </div>
-                }
+                    {
+                        (listLength > 0) ? children :
+                            <div className="grid-x grid-padding-x panel-body dashboard-title">
+                                <div className="cell medium-12 text-center">
+                                    {emptyListMessage}
+                                </div>
+                            </div>
+                    }
+                </div>
             </div>
         </div>
     )
@@ -110,7 +112,7 @@ const AdminContainer = ({children}) =>
     </div>
 
 const AdminListRow = ({children, link}) =>
-    <div className="cell medium-12 panel-body grid-x align-center-middle">
+    <div className="grid-x grid-padding-x panel-body dashboard-title">
         {children}
     </div>
 

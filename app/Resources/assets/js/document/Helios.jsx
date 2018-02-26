@@ -55,11 +55,11 @@ class Helios extends Component {
         const { pes, voucher, pj, revealDisplay } = this.state
 
         return (
-            <div className="cell medium-9 text-left cell-block-y" key={this.props.document.id}>
+            <div className="cell medium-12 text-left cell-block-y" key={this.props.document.id}>
                 {
                     pj &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
-                        <div className="fi-x reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                        <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
                         <object data={pj} type="application/pdf" width="100%" height="100%"></object>
                     </div>
                 }
