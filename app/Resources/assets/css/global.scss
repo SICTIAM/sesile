@@ -1030,3 +1030,6 @@ label > input {
 .pagination .current, .pagination a:hover {
   border-radius: 50%;
 }
+.button[disabled].primary {
+  opacity:0.7;
+}
