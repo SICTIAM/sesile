@@ -251,7 +251,11 @@ class User extends Component {
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     {
                                         user.id &&
-                                        <AvatarForm user={user} styleClass="medium-2 cell text-center" />
+                                        <AvatarForm
+                                            user={user}
+                                            styleClass="medium-2 cell text-center"
+                                            tyleClass={"medium-4 cell"}
+                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
                                     }
 
                                     <div className="medium-10 cell">
@@ -314,7 +318,11 @@ class User extends Component {
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     {
                                         user.id &&
-                                        <SignatureForm user={user} styleClass="medium-6 cell text-center" />
+                                        <SignatureForm
+                                            user={user}
+                                            styleClass="medium-6 cell text-center"
+                                            tyleClass={"medium-4 cell"}
+                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
                                     }
 
                                     <Textarea id="qualite"
