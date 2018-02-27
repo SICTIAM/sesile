@@ -75,23 +75,23 @@ class DashBoard extends Component {
                         </div>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x align-top align-center">
-                        <div className="cell medium-5">
+                        <div className="cell large-5 medium-12">
                             <Classeurs classeurs={ lastClasseurs } title={ t('common.dashboard.last_classeurs')} />
                         </div>
 
-                        <div className="cell medium-5">
+                        <div className="cell large-5 medium-12">
                             <Classeurs classeurs={ urgentClasseurs } title={ t('common.dashboard.urgent_classeurs')} />
 
                             <div className="grid-x grid-padding-x panel">
                                 <div className="cell medium-12">
                                     <div className="grid-x panel-heading grid-padding-x align-middle">
-                                        <div className="cell medium-12">{ t('common.user.certificate_info')}</div>
+                                        <div className="cell medium-12 text-center medium-text-left">{ t('common.user.certificate_info')}</div>
                                     </div>
                                     <div className="grid-x panel-body grid-padding-x dashboard-title align-middle">
-                                        <div className="cell medium-8 text-bold">
+                                        <div className="cell medium-8 small-12 text-center medium-text-left text-bold">
                                             { t('common.user.certificate_validity', {count: 5}) }
                                         </div>
-                                        <div className="cell medium-4 text-justify">
+                                        <div className="cell medium-4 small-12 text-center medium-text-right">
                                             <Link className="button primary hollow" to="https://www.sictiam.fr/certificat-electronique/" target="_blank">{ t('common.button.certificate_order') }</Link>
                                         </div>
                                     </div>

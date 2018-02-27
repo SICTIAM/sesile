@@ -58,7 +58,7 @@ class DocumentsNew extends Component {
                             <h3>{t('common.documents.title_preview')}</h3>
                         </div>
                     </div>
-                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y show-for-large">
                         <div className="cell medium-12">
                             <Dropzone
                                 className="documentation-dropzone grid-x align-middle align-center"

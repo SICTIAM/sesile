@@ -33,7 +33,7 @@ const SimpleContent = ({className, children}) =>
     </div>
 
 const AccordionContent = ({children}) =>
-    <ul className="accordion" data-responsive-accordion-tabs="accordion medium-tabs large-accordion">
+    <ul className="accordion" data-responsive-accordion-tabs="accordion large-accordion">
         {children}
     </ul>
 

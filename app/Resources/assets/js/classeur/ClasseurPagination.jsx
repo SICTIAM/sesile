@@ -67,8 +67,8 @@ class ClasseurPagination extends Component {
         }
         for (let page = 0; page < pages; page++ ) {
             (currentPage === page)
-                ? pagesDisplay.push(<li key={page} className="current">{page + 1}</li>)
-                : pagesDisplay.push(<li key={page}><a href="#" onClick={() => changePage(page)} aria-label={ t('common.classeurs.pagination.page') + " " + page + 1}>{page + 1}</a></li>)
+                ? pagesDisplay.push(<li key={page} className="current show-for-large">{page + 1}</li>)
+                : pagesDisplay.push(<li key={page} className="show-for-large"><a href="#" onClick={() => changePage(page)} aria-label={ t('common.classeurs.pagination.page') + " " + page + 1}>{page + 1}</a></li>)
         }
         if (currentPage === Math.ceil(pages) -1) {
             pagesDisplay.push(<li key="next" className="pagination-next disabled">{ t('common.classeurs.pagination.next')} <span className="show-for-sr">{ t('common.classeurs.pagination.page')}</span></li>)
@@ -77,7 +77,7 @@ class ClasseurPagination extends Component {
         }
 
         return (
-            <div className="grid-x align-top">
+            <div className="grid-x align-top grid-padding-y">
                 <div className="cell medium-2"></div>
                 <ul className="cell medium-8 pagination text-center" role="navigation" aria-label="Pagination">
                     {

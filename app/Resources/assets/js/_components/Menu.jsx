@@ -18,67 +18,93 @@ class Menu extends Component {
         const { t } = this.context
 
         return (
-            <div className="cell medium-2 menu-left grid-x" role="navigation">
+            <div className="menu-left cell medium-12 grid-y" role="navigation">
 
-                <div className="cell medium-12">
-                    <div className="title-bar" data-responsive-toggle="left-menu" data-hide-for="medium">
-                        <button className="menu-icon" type="button" data-toggle="left-menu"></button>
-                        <div className="title-bar-title">Menu</div>
-                    </div>
+                <div className="cell medium-auto">
                     <div id="left-menu">
                         <div className="top-bar-left">
                             <ul className="dropdown menu vertical icons icon-right" data-dropdown-menu>
                                 <li>
                                     <NavLink to="/classeur/nouveau" className="grid-x align-middle">
-                                        <div className="cell medium-10 small-11">{ t('common.menu.new_classeur') }</div>
-                                        <div className="cell medium-2 small-1"><i className="fa fa-2x fa-pencil-square-o"></i></div>
+                                        <div className="cell small-12">
+                                            <div className="grid-x text-center large-text-left align-middle">
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.new_classeur') }</div>
+                                                <div className="cell small-12 small-order-1 large-2 large-order-2">
+                                                    <i className="fa fa-pencil-square-o"></i>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/classeurs/liste" className="grid-x align-middle">
-                                        <div className="cell medium-10 small-11">{ t('common.menu.list_classeur') }</div>
-                                        <div className="cell medium-2 small-1">
-                                            <i className="fa fa-2x fa-th-list"></i>
+                                        <div className="cell small-12">
+                                            <div className="grid-x text-center large-text-left align-middle">
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.list_classeur') }</div>
+                                                <div className="cell small-12 small-order-1 large-2 large-order-2">
+                                                    <i className="fa fa-th-list"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/classeurs/valides" className="grid-x align-middle">
-                                        <div className="cell medium-10 small-11">{ t('common.menu.validate_classeur') }</div>
-                                        <div className="cell medium-2 small-1">
-                                            <i className="fa fa-2x fa-check-square-o"></i>
+                                        <div className="cell small-12">
+                                            <div className="grid-x text-center large-text-left align-middle">
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.validate_classeur') }</div>
+                                                <div className="cell small-12 small-order-1 large-2 large-order-2">
+                                                    <i className="fa fa-check-square-o"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/classeurs/retractables" className="grid-x align-middle">
-                                        <div className="cell medium-10 small-11">{ t('common.menu.retractable_classeur') }</div>
-                                        <div className="cell medium-2 small-1">
-                                            <i className="fa fa-2x fa-repeat"></i>
+                                        <div className="cell small-12">
+                                            <div className="grid-x text-center large-text-left align-middle">
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.retractable_classeur') }</div>
+                                                <div className="cell small-12 small-order-1 large-2 large-order-2">
+                                                    <i className="fa fa-repeat"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/classeurs/supprimes" className="grid-x align-middle">
-                                        <div className="cell medium-10 small-11">{ t('common.menu.deletable_classeur') }</div>
-                                        <div className="cell medium-2 small-1">
-                                            <i className="fa fa-2x fa-close"></i>
+                                        <div className="cell small-12">
+                                            <div className="grid-x text-center large-text-left align-middle">
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.deletable_classeur') }</div>
+                                                <div className="cell small-12 small-order-1 large-2 large-order-2">
+                                                    <i className="fa fa-close"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/tableau-de-bord/stats" className="grid-x align-middle">
-                                        <div className="cell medium-10 small-11">{ t('common.menu.stats') }</div>
-                                        <div className="cell medium-2 small-1">
-                                            <i className="fa fa-2x fa-pie-chart"></i>
+                                        <div className="cell small-12">
+                                            <div className="grid-x text-center large-text-left align-middle">
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.stats') }</div>
+                                                <div className="cell small-12 small-order-1 large-2 large-order-2">
+                                                    <i className="fa fa-pie-chart"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/documentations" className="grid-x align-middle">
-                                        <div className="cell medium-10 small-11">{ t('common.menu.help') }</div>
-                                        <div className="cell medium-2 small-1">
-                                            <i className="fa fa-2x fa-question-circle-o"></i>
+                                        <div className="cell small-12">
+                                            <div className="grid-x text-center large-text-left align-middle">
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.help') }</div>
+                                                <div className="cell small-12 small-order-1 large-2 large-order-2">
+                                                    <i className="fa fa-question-circle-o"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                     </NavLink>
                                 </li>

@@ -23,24 +23,24 @@ class ClasseursRow extends Component {
         return (
             <div id={classeur.id} className="grid-x grid-padding-x panel-body align-middle">
 
-                <Link className="classeur-name cell medium-2 text-bold" to={`/classeur/${classeur.id}`}>
+                <Link className="classeur-name cell small-6 medium-5 large-2 text-bold" to={`/classeur/${classeur.id}`}>
                     {classeur.nom}
                 </Link>
-                <Link className="cell medium-2 text-bold text-center" to={`/classeur/${classeur.id}`}>
+                <Link className="cell large-2 text-bold text-center show-for-large" to={`/classeur/${classeur.id}`}>
                     { validUsers }
                 </Link>
-                <Link className="cell medium-2 text-bold text-center" to={`/classeur/${classeur.id}`}>
+                <Link className="cell large-2 text-bold text-center show-for-large" to={`/classeur/${classeur.id}`}>
                     <ClasseurStatus status={classeur.status} />
                 </Link>
-                <Link className="cell medium-1 text-bold text-center" to={`/classeur/${classeur.id}`}>
+                <Link className="cell large-1 text-bold text-center show-for-large" to={`/classeur/${classeur.id}`}>
                     { classeur.type.nom }
                 </Link>
-                <div className="cell medium-2 dropdown-valign" data-toggle={"example-dropdown-" + classeur.id}>
+                <div className="cell small-6 medium-5 large-2 dropdown-valign" data-toggle={"example-dropdown-" + classeur.id}>
                     <ClasseurProgress creation={classeur.creation} validation={classeur.validation} />
                 </div>
                 <CircuitListClasseur classeurId={classeur.id} etape_classeurs={classeur.etape_classeurs} user={classeur.user} />
 
-                <div className="cell medium-2">
+                <div className="cell large-2 show-for-large">
                     <ClasseursButtonList classeurs={[classeur]}
                                          validClasseur={validClasseur}
                                          signClasseur={signClasseur}
@@ -50,7 +50,7 @@ class ClasseursRow extends Component {
                                          deleteClasseur={deleteClasseur}
                     />
                 </div>
-                <div className="cell medium-1 text-center">
+                <div className="cell medium-2 large-1 show-for-medium text-center">
                     <input type="checkbox" id={classeur.id} checked={classeur.checked || false} onChange={this.props.checkClasseur} className="checkClasseur" />
                 </div>
             </div>

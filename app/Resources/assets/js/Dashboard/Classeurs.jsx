@@ -24,7 +24,7 @@ class Classeurs extends Component {
             <div className="grid-x grid-padding-x panel">
                 <div className="cell medium-12">
                     <div className="grid-x panel-heading align-middle ">
-                        <div className="cell medium-12">{ title }</div>
+                        <div className="cell medium-12 text-center medium-text-left">{ title }</div>
                     </div>
                     <div className="grid-x grid-padding-x panel-body dashboard-title">
                         <div className="cell auto text-bold">{ t('common.classeurs.sort_label.name') }</div>

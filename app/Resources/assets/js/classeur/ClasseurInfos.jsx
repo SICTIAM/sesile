@@ -51,109 +51,113 @@ class ClasseurInfos extends Component {
         const listUsers = usersCopy.map(user => <li className="medium-12" key={user.id}>{ user._prenom + " " + user._nom }</li>)
 
         return (
-            <div className="cell medium-12">
+            <div className="grid-x panel grid-padding-y">
+                <div className="cell small-12">
 
-                <Form onSubmit={this.saveClasseurInfos}>
-                    <GridX className="grid-margin-x grid-padding-x">
-                        <Cell className="medium-8 name-details-classeur">
-                            { edit ? <InputValidation   id="nom"
-                                                        type="text"
-                                                        value={nom}
-                                                        onChange={handleChangeClasseur}
-                                                        validationRule={this.validationRules.nom}
-                                                        placeholder={t('common.classeurs.classeur_name')}/>
-                                : <h3>{nom}</h3>
-                            }
-                        </Cell>
-                        <Cell className="medium-4 text-right">
-                            {
-                                editable && !edit &&
-                                <a onClick={() => handleEditClasseur(!edit)} className="button hollow">
-                                    { t('common.button.modify') }
-                                </a>
-                            }
-                        </Cell>
-                    </GridX>
+                    <Form onSubmit={this.saveClasseurInfos}>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell className="medium-8 name-details-classeur">
+                                { edit ? <InputValidation   id="nom"
+                                                            type="text"
+                                                            value={nom}
+                                                            onChange={handleChangeClasseur}
+                                                            validationRule={this.validationRules.nom}
+                                                            placeholder={t('common.classeurs.classeur_name')}/>
+                                    : <h3>{nom}</h3>
+                                }
+                            </Cell>
+                            <Cell className="medium-4 text-right">
+                                {
+                                    editable && !edit &&
+                                    <a onClick={() => handleEditClasseur(!edit)} className="button hollow">
+                                        { t('common.button.modify') }
+                                    </a>
+                                }
+                            </Cell>
+                        </GridX>
 
-                    <GridX className="grid-margin-x grid-padding-x">
-                        <Cell className="medium-6">
-                            <span className="info-details-classeur">{t('admin.type.name')}</span>
-                        </Cell>
-                        <Cell className="medium-6">
-                            <span className="bold-info-details-classeur">{type.nom}</span>
-                        </Cell>
-                    </GridX>
-                    <GridX className="grid-margin-x grid-padding-x">
-                        <Cell className="medium-6">
-                            <span className="info-details-classeur">{t('classeur.deposited')}</span>
-                        </Cell>
-                        <Cell className="medium-6">
-                            <span className="bold-info-details-classeur">{Moment(creation).format('L')}</span>
-                        </Cell>
-                    </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell className="small-6">
+                                <span className="info-details-classeur">{t('admin.type.name')}</span>
+                            </Cell>
+                            <Cell className="small-6">
+                                <span className="bold-info-details-classeur">{type.nom}</span>
+                            </Cell>
+                        </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell className="small-6">
+                                <span className="info-details-classeur">{t('classeur.deposited')}</span>
+                            </Cell>
+                            <Cell className="small-6">
+                                <span className="bold-info-details-classeur">{Moment(creation).format('L')}</span>
+                            </Cell>
+                        </GridX>
 
-                    <GridX>
-                        <Cell className="medium-12">
-                            <ClasseurProgress creation={creation} validation={validation} status={status} edit={true} />
-                        </Cell>
-                    </GridX>
+                        <GridX>
+                            <Cell className="small-12">
+                                <ClasseurProgress creation={creation} validation={validation} status={status} edit={true} />
+                            </Cell>
+                        </GridX>
 
-                    <GridX className="grid-margin-x grid-padding-x">
-                        <Cell className="medium-12">
-                            {edit && <InputValidation   id="validation"
-                                                        type="date"
-                                                        value={Moment(validation)}
-                                                        readOnly={true}
-                                                        locale={i18nextLng}
-                                                        validationRule={this.validationRules.validation}
-                                                        onChange={this.handleChangeLimitDate}/>
-                            }
-                        </Cell>
-                    </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell className="small-12">
+                                {edit && <InputValidation   id="validation"
+                                                            type="date"
+                                                            value={Moment(validation)}
+                                                            readOnly={true}
+                                                            locale={i18nextLng}
+                                                            validationRule={this.validationRules.validation}
+                                                            onChange={this.handleChangeLimitDate}/>
+                                }
+                            </Cell>
+                        </GridX>
 
-                    <GridX className="grid-margin-x grid-padding-x align-middle">
-                        <Cell className="medium-6">
-                            <span className="info-details-classeur">{t('classeur.users_in_copy')}</span>
-                        </Cell>
-                        <Cell className="medium-6">
-                            <span className="bold-info-details-classeur">{listUsers}</span>
-                        </Cell>
-                    </GridX>
-
-                    {(description || edit) &&
-                    <GridX className="grid-margin-x grid-padding-x">
-                        <Cell>
-                            <span className="info-details-classeur">{t('common.label.description')}</span>
-                        </Cell>
-                    </GridX>
-                    }
-
-                    {(description || edit) &&
-                    <GridX className="grid-margin-x grid-padding-x">
-                        <Cell>
-                            {edit ? <Textarea id="classeur-description"
-                                              name="description"
-                                              value={description || ''}
-                                              onChange={handleChangeClasseur}/>
-                                : <p className="bold-info-details-classeur">{description}</p>
-                            }
-                        </Cell>
-                    </GridX>
-                    }
-
-                    {edit &&
-                    <div className="grid-x grid-margin-x grid-padding-x align-middle">
-                        <div className="cell medium-4">
-                            { <a onClick={() => handleEditClasseur(!edit)} className="float-left">{ t('common.button.cancel') }</a> }
-                        </div>
-                        <Button id="submit-classeur-infos"
-                                className="cell medium-8"
-                                classNameButton="float-right"
-                                onClick={this.saveClasseurInfos}
-                                labelText={t('common.button.edit_save')}/>
-                    </div>
+                        { usersCopy.length > 0 &&
+                        <GridX className="grid-margin-x grid-padding-x align-middle">
+                            <Cell className="small-6">
+                                <span className="info-details-classeur">{t('classeur.users_in_copy')}</span>
+                            </Cell>
+                            <Cell className="small-6">
+                                <span className="bold-info-details-classeur">{listUsers}</span>
+                            </Cell>
+                        </GridX>
                         }
-                </Form>
+
+                        {(description || edit) &&
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell>
+                                <span className="info-details-classeur">{t('common.label.description')}</span>
+                            </Cell>
+                        </GridX>
+                        }
+
+                        {(description || edit) &&
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell>
+                                {edit ? <Textarea id="classeur-description"
+                                                  name="description"
+                                                  value={description || ''}
+                                                  onChange={handleChangeClasseur}/>
+                                    : <p className="bold-info-details-classeur">{description}</p>
+                                }
+                            </Cell>
+                        </GridX>
+                        }
+
+                        {edit &&
+                        <div className="grid-x grid-margin-x grid-padding-x align-middle">
+                            <div className="cell small-6 medium-4">
+                                { <a onClick={() => handleEditClasseur(!edit)} className="float-left">{ t('common.button.cancel') }</a> }
+                            </div>
+                            <Button id="submit-classeur-infos"
+                                    className="cell small-6 medium-8"
+                                    classNameButton="float-right"
+                                    onClick={this.saveClasseurInfos}
+                                    labelText={t('common.button.edit_save')}/>
+                        </div>
+                            }
+                    </Form>
+                </div>
             </div>
         )
     }

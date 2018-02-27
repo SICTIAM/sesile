@@ -71,35 +71,46 @@ class App extends Component {
     render () {
         return (
             <I18nextProvider i18n={i18n}>
-                <div className="grid-x grid-y medium-grid-frame grid-frame">
-                    <div className="cell header medium-cell-block-container cell-block-container">
-                        <div className="grid-x align-center-middle">
-                            <div className="medium-2 small-6 cell logo text-center">
-                                <Link to={'/tableau-de-bord'}>
-                                    <img src="/images/logo_sesile.png" />
-                                </Link>
-                            </div>
-                            <div className="medium-3 cell show-for-medium">
-                                <SearchClasseurs/>
-                            </div>
-                            <div className="medium-4 cell show-for-medium"></div>
-                            <div className="medium-2 cell small-6">
-                                <Login/>
-                            </div>
-                            <div className="medium-1 cell"></div>
-                        </div>
+                <div className="off-canvas-wrapper">
+                    <div className="off-canvas position-left hide-for-large grid-y" id="offCanvasLeft" data-off-canvas>
+                        <Route component={Menu} />
                     </div>
-                    <div className="cell medium-auto">
-                        <div className="grid-x height100">
+                    <div className="off-canvas-content" data-off-canvas-content>
+                        <div className="grid-x grid-y grid-frame">
+                            <div className="cell header">
+                                <div className="grid-x align-center-middle">
+                                    <div className="cell large-2 small-6 logo text-center">
+                                        <button type="button" className="button primary clear hide-for-large float-left" data-toggle="offCanvasLeft">
+                                            <i className="fa fa-2x fa-bars" aria-hidden="true"></i>
+                                        </button>
+                                        <Link to={'/tableau-de-bord'}>
+                                            <img src="/images/logo_sesile.png" />
+                                        </Link>
+                                    </div>
+                                    <div className="cell large-4 show-for-large">
+                                        <SearchClasseurs/>
+                                    </div>
+                                    <div className="cell large-3 show-for-large"></div>
+                                    <div className="cell large-3 small-6">
+                                        <Login/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cell auto grid-y">
+                                <div className="grid-x cell auto">
 
-                            <Route component={Menu} />
+                                    <div className="hide-for-medium-only hide-for-small-only cell large-2 grid-y">
+                                        <Route component={Menu} className="" />
+                                    </div>
 
-                            <div className="cell medium-10 medium-cell-block-y main">
-                                <Note/>
-                                <div className="grid-x grid-padding-x medium-11">
-                                    <div className="cell medium-12">
-                                        <NotificationSystem ref={n => this._notificationSystem = n} style= {this.notificationStyle} />
-                                        <AppRoute/>
+                                    <div className="cell large-10 medium-12 small-12 cell-block-y main">
+                                        <Note/>
+                                        <div className="grid-x grid-padding-x medium-11">
+                                            <div className="cell medium-12 small-12">
+                                                <NotificationSystem ref={n => this._notificationSystem = n} style={this.notificationStyle} />
+                                                <AppRoute/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

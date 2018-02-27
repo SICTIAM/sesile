@@ -134,33 +134,53 @@ class Classeurs extends Component {
                     />
                 }
 
+                        {
+                            (checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
+                            <div className="hide-for-large grid-x align-center-middle grid-padding-y">
+                                <div className="cell medium-8">
+                                    <div className="grid-x panel grid-padding-y">
+                                        <div className="cell medium-12">
+                                            <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)}
+                                                                 validClasseur={this.validClasseurs}
+                                                                 revertClasseur={this.revertClasseurs}
+                                                                 refuseClasseur={this.refuseClasseurs}
+                                                                 removeClasseur={this.removeClasseurs}
+                                                                 deleteClasseur={this.deleteClasseurs}
+                                                                 signClasseur={this.signClasseurs}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
                 <div className="grid-x grid-margin-x panel align-middle">
                     <div className="cell medium-12 list-classeurs">
-                        <div className="grid-x grid-padding-x align-middle tri-classeurs">
-                            <div className="cell medium-2">
+                        <div className="grid-x panel-heading grid-padding-x align-middle tri-classeurs">
+                            <div className="cell small-6 medium-5 large-2">
                                 {t('common.classeurs.sort_label.name')}
-                                <button onClick={() => this.listClasseurs('nom', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
-                                <button onClick={() => this.listClasseurs('nom', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
+                                <button onClick={() => this.listClasseurs('nom', 'ASC', limit, start)} className="button arrow-down show-for-large" type="button">&nbsp;</button>
+                                <button onClick={() => this.listClasseurs('nom', 'DESC', limit, start)} className="button arrow-up show-for-large" type="button">&nbsp;</button>
                             </div>
-                            <div className="cell medium-2 text-center">
+                            <div className="cell large-2 text-center show-for-large">
                                 {t('common.classeurs.sort_label.current_user')}
                             </div>
-                            <div className="cell medium-2 text-center">
+                            <div className="cell large-2 text-center show-for-large">
                                 {t('common.classeurs.sort_label.status')}
                                 <button onClick={() => this.listClasseurs('status', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                                 <button onClick={() => this.listClasseurs('status', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                             </div>
-                            <div className="cell medium-1 text-center">
+                            <div className="cell large-1 text-center show-for-large">
                                 {t('common.classeurs.sort_label.type')}
                                 <button onClick={() => this.listClasseurs('type', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
                                 <button onClick={() => this.listClasseurs('type', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                             </div>
-                            <div className="cell medium-2 text-center">
+                            <div className="cell small-6 medium-5 large-2 text-center">
                                 {t('common.classeurs.sort_label.limit_date')}
-                                <button onClick={() => this.listClasseurs('validation', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
-                                <button onClick={() => this.listClasseurs('validation', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
+                                <button onClick={() => this.listClasseurs('validation', 'ASC', limit, start)} className="button arrow-down show-for-large" type="button">&nbsp;</button>
+                                <button onClick={() => this.listClasseurs('validation', 'DESC', limit, start)} className="button arrow-up show-for-large" type="button">&nbsp;</button>
                             </div>
-                            <div className="cell medium-2 title-sort">
+                            <div className="cell large-2 title-sort show-for-large">
                                 {
                                     (checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
                                         <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)}
@@ -173,8 +193,7 @@ class Classeurs extends Component {
                                         />
                                 }
                             </div>
-                            <div className="cell medium-1 text-center">
-                                {t('common.classeurs.sort_label.select')}<br/>
+                            <div className="cell medium-2 large-1 show-for-medium text-center">
                                 <input value={checkedAll} onClick={() => this.checkAllClasseurs()} type="checkbox" />
                             </div>
                         </div>

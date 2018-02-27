@@ -203,21 +203,35 @@ class Classeur extends Component {
         return (
             <GridX className="details-classeur">
                 <Cell>
-                    <GridX>
+                    <GridX className="grid-margin-y grid-padding-y">
                         <Cell>
-                            <GridX className="align-center-middle">
-                                <Cell className="medium-11 text-center">
+                            <GridX className="align-middle align-right">
+                                <Cell className="large-10 medium-8 small-12 text-center">
                                     <h1>{classeur.nom}</h1>
                                 </Cell>
-                                <Cell className="medium-auto text-right">
+                                <Cell className="large-1 medium-2 small-12 text-center medium-text-right">
                                     <ClasseurStatus status={classeur.status}/>
                                 </Cell>
                             </GridX>
                         </Cell>
                     </GridX>
 
-                    <div className="grid-x medium-12 grid-margin-x">
-                        <div className="cell medium-8">
+                    <div className="grid-x panel grid-padding-y hide-for-large">
+                        <div className="cell large-12">
+                            <ClasseursButtonList classeurs={[classeur]}
+                                                 validClasseur={this.validClasseurs}
+                                                 signClasseur={this.signClasseurs}
+                                                 revertClasseur={this.revertClasseurs}
+                                                 refuseClasseur={this.refuseClasseurs}
+                                                 removeClasseur={this.removeClasseurs}
+                                                 deleteClasseur={this.deleteClasseurs}
+                                                 display="edit"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid-x grid-margin-x">
+                        <div className="cell large-8 small-12">
                             {
                                 classeur.documents &&
                                 <DocumentsView documents={Object.assign([], classeur.documents)}
@@ -228,9 +242,9 @@ class Classeur extends Component {
                                 />
                             }
                         </div>
-                        <div className="cell medium-4">
-                            <div className="grid-x panel grid-padding-y">
-                                <div className="cell medium-12">
+                        <div className="cell large-4 small-12">
+                            <div className="grid-x panel grid-padding-y show-for-large">
+                                <div className="cell large-12">
                                     <ClasseursButtonList classeurs={[classeur]}
                                                          validClasseur={this.validClasseurs}
                                                          signClasseur={this.signClasseurs}
@@ -243,22 +257,20 @@ class Classeur extends Component {
                                 </div>
                             </div>
 
-                            <div className="grid-x panel grid-padding-y">
-                                <ClasseurInfos  id={classeur.id}
-                                                nom={classeur.nom}
-                                                validation={classeur.validation}
-                                                type={classeur.type}
-                                                creation={classeur.creation}
-                                                status={classeur.status}
-                                                description={classeur.description}
-                                                handleChangeClasseur={this.handleChangeClasseur}
-                                                putClasseur={this.putClasseur}
-                                                editable={classeur.validable}
-                                                handleEditClasseur={this.handleEditClasseur}
-                                                edit={editClasseur}
-                                                usersCopy={classeur.copy}
-                                />
-                            </div>
+                            <ClasseurInfos  id={classeur.id}
+                                            nom={classeur.nom}
+                                            validation={classeur.validation}
+                                            type={classeur.type}
+                                            creation={classeur.creation}
+                                            status={classeur.status}
+                                            description={classeur.description}
+                                            handleChangeClasseur={this.handleChangeClasseur}
+                                            putClasseur={this.putClasseur}
+                                            editable={classeur.validable}
+                                            handleEditClasseur={this.handleEditClasseur}
+                                            edit={editClasseur}
+                                            usersCopy={classeur.copy}
+                            />
 
                             {
                                 (classeur.id && classeur.user && user.collectivite) &&
@@ -287,7 +299,7 @@ class Classeur extends Component {
                             }
 
                             <div className="grid-x panel grid-padding-y">
-                                <div className="cell medium-12">
+                                <div className="cell large-12">
                                     <ClasseursButtonList classeurs={[classeur]}
                                                          validClasseur={this.validClasseurs}
                                                          signClasseur={this.signClasseurs}

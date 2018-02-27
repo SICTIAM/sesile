@@ -167,7 +167,6 @@ html {
   margin-top:1em;
   margin-bottom:1em;
   li a {
-    font-size: 0.75em;
     color: map-get($sesile-color, 'dark-blue');
     .fa {
       color: map-get($sesile-color, 'gray-blue');
@@ -178,6 +177,24 @@ html {
         color: $sesile-primary;
       }
       color: $sesile-primary;
+    }
+  }
+
+  @include breakpoint(medium down) {
+    li a {
+      font-size: 1em;
+      .fa {
+        font-size: 3em;
+      }
+    }
+  }
+
+  @include breakpoint(large up) {
+    li a {
+      font-size: 0.75em;
+      .fa {
+        font-size: 2em;
+      }
     }
   }
 
@@ -285,6 +302,10 @@ html {
       color: map-get($sesile-color, 'gray-blue');
       transform: scaleX(-1);
     }
+  }
+
+  .ico-video {
+    font-size: 5em;
   }
 
   .button-list {
@@ -534,7 +555,6 @@ html {
     color: map-get($sesile-color, 'gray-blue');
     font-weight: normal;
     font-size: 0.875em;
-    text-transform: capitalize;
   }
 
   .button-list {
@@ -804,7 +824,6 @@ $list-group-margin: $global-margin;
 }
 
 .admin-details {
-  padding: 2em;
   .admin-details-name {
     background-color: $sesile-primary;
     border-top-left-radius: 0.5em;
@@ -859,12 +878,17 @@ $list-group-margin: $global-margin;
   font-size: 0.55em;
   font-weight: 700;
   color: map-get($sesile-color, 'dark-blue');
+  padding-bottom: 3em;
   a {
     color: map-get($sesile-color, 'dark-blue');
     &:hover, &.active, &:active {
       color: $sesile-primary;
     }
   }
+}
+
+.off-canvas {
+  background: white;
 }
 
 .react-autosuggest__container {

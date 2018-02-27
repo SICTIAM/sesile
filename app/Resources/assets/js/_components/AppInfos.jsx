@@ -25,21 +25,27 @@ class AppInfos extends Component {
     render() {
         const { t } = this.context
         return (
-            <div className="cell medium-12 align-self-bottom app-infos text-uppercase show-for-medium">
+            <div className="cell shrink align-self-bottom app-infos text-uppercase">
                 <div className="grid-x align-center">
                     <div className="cell medium-8"><img src="/images/logo_sictiam.png" /></div>
                 </div>
-                <div className="">
-                    <a href={this.state.informations.contact_link} target="_blank">{t('footer.contact')}</a>
+                <div className="grid-x align-center">
+                    <div className="cell medium-12">
+                        <a href={this.state.informations.contact_link} target="_blank">{t('footer.contact')}</a>
+                    </div>
                 </div>
-                <div className="">
-                    <Link to="">{t('footer.general_conditions')}</Link>
+                <div className="grid-x align-center">
+                    <div className="cell medium-12">
+                        <Link to="">{t('footer.general_conditions')}</Link>
+                    </div>
                 </div>
-                <div className="">
-                    <Link to="/documentations">{t('footer.version', {version: this.state.informations.version})}</Link>
+                <div className="grid-x align-center">
+                    <div className="cell medium-12">
+                        <Link to="/documentations">{t('footer.version', {version: this.state.informations.version})}</Link>
+                    </div>
                 </div>
-                <div className="align-center">
-                    {t('footer.love')}
+                <div className="grid-x align-center">
+                    <div className="cell medium-12">{t('footer.love')}</div>
                 </div>
             </div>
         )
