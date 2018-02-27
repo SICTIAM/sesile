@@ -38,7 +38,15 @@ class Helios extends Component {
     static contextTypes = { t: func }
 
     componentDidMount () {
-        fetch(Routing.generate("sesile_document_documentapi_helios", {id: this.props.document.id}), {credentials: 'same-origin'})
+        this.fetchHelios(this.props.document.id)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.fetchHelios(nextProps.document.id)
+    }
+
+    fetchHelios (id) {
+        fetch(Routing.generate("sesile_document_documentapi_helios", {id}), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(pes => this.setState({pes: pes, voucher: pes.vouchers[0]}))
     }

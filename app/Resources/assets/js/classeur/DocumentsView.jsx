@@ -32,6 +32,10 @@ class DocumentsView extends Component {
         })
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({documents: nextProps.documents, currentDocument: nextProps.documents[0]})
+    }
+
     fetchDocuments() {
         const { t, _addNotification } = this.context
         const { classeurId } = this.props
@@ -147,7 +151,7 @@ class DocumentsView extends Component {
                 { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "block" && classeurType.nom === "Helios" &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
                         <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
-                        <Helios document={ currentDocument } />
+                        <Helios document={ Object.assign({}, currentDocument) } />
                     </div>
                 }
 

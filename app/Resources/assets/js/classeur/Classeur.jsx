@@ -195,7 +195,6 @@ class Classeur extends Component {
     }
 
     render() {
-        const { t } = this.context
         const { classeur, user, editClasseur } = this.state
         const editable = !!(classeur.validable && editClasseur)
 
@@ -213,9 +212,9 @@ class Classeur extends Component {
                         <div className="cell medium-8">
                             {
                                 classeur.documents &&
-                                <DocumentsView documents={classeur.documents}
+                                <DocumentsView documents={Object.assign([], classeur.documents)}
                                                classeurId={classeur.id}
-                                               classeurType={classeur.type}
+                                               classeurType={Object.assign({}, classeur.type)}
                                                status={classeur.status}
                                                editClasseur={classeur.validable}
                                 />

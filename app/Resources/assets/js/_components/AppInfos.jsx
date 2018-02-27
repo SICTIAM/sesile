@@ -39,7 +39,7 @@ class AppInfos extends Component {
                     <Link to="/documentations">{t('footer.version', {version: this.state.informations.version})}</Link>
                 </div>
                 <div className="align-center">
-                    <a href="https://www.sictiam.fr" target="_blank">{t('footer.love')}</a>
+                    {t('footer.love')}
                 </div>
             </div>
         )

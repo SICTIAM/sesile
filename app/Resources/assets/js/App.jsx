@@ -73,19 +73,20 @@ class App extends Component {
             <I18nextProvider i18n={i18n}>
                 <div className="grid-x grid-y medium-grid-frame grid-frame">
                     <div className="cell header medium-cell-block-container cell-block-container">
-                        <div className="grid-x align-middle align-center">
+                        <div className="grid-x align-center-middle">
                             <div className="medium-2 small-6 cell logo text-center">
                                 <Link to={'/tableau-de-bord'}>
                                     <img src="/images/logo_sesile.png" />
                                 </Link>
                             </div>
-                            <div className="medium-5 cell show-for-medium">
+                            <div className="medium-3 cell show-for-medium">
                                 <SearchClasseurs/>
                             </div>
-                            <div className="medium-3 cell show-for-medium"></div>
+                            <div className="medium-4 cell show-for-medium"></div>
                             <div className="medium-2 cell small-6">
                                 <Login/>
                             </div>
+                            <div className="medium-1 cell"></div>
                         </div>
                     </div>
                     <div className="cell medium-auto">

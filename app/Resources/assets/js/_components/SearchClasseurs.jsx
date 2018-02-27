@@ -65,15 +65,18 @@ class SearchClasseurs extends Component {
         const { filteredClasseurs, nomClasseur } = this.state
 
         return (
-            <div className="autocomplete">
-                <input type="search"
+            <div className="autocomplete input-group admin_search_input">
+
+                <input className="input-group-field"
+                       type="search"
                        name="sesile-search input-autocomplete"
-                       className="sesile-search"
                        placeholder={t('common.classeurs.search')}
                        value={ nomClasseur }
                        onChange={ this.searchClasseurs }
                        tabIndex="0"
                 />
+                <span className="input-group-label"><i className="fa fa-search"></i></span>
+
                 {
                     filteredClasseurs.length > 0 &&
                     <ListClasseurs filteredClasseurs={ filteredClasseurs }
