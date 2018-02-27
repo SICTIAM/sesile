@@ -7,7 +7,6 @@ import { Button, Form, Textarea } from '../_components/Form'
 import InputValidation from '../_components/InputValidation'
 import { Cell, GridX } from '../_components/UI'
 import ClasseurProgress from './ClasseurProgress'
-import ClasseurStatus from './ClasseurStatus'
 
 class ClasseurInfos extends Component {
 
@@ -84,16 +83,6 @@ class ClasseurInfos extends Component {
                             <span className="bold-info-details-classeur">{type.nom}</span>
                         </Cell>
                     </GridX>
-
-                    <GridX className="grid-margin-x grid-padding-x">
-                        <Cell className="medium-6">
-                            <span className="info-details-classeur">{t('common.classeurs.status.name')}</span>
-                        </Cell>
-                        <Cell className="medium-6">
-                            <ClasseurStatus status={status} className="bold-info-details-classeur" />
-                        </Cell>
-                    </GridX>
-
                     <GridX className="grid-margin-x grid-padding-x">
                         <Cell className="medium-6">
                             <span className="info-details-classeur">{t('classeur.deposited')}</span>

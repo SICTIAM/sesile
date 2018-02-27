@@ -1,47 +1,51 @@
 import React, { Component } from 'react'
-import { func, array, number, string } from 'prop-types'
+import { func, number, string } from 'prop-types'
 import { translate } from 'react-i18next'
 
 class ClasseurStatus extends Component {
     static contextTypes = {
         t: func
     }
-
+    static defaultProps = {
+        status: null
+    }
     constructor(props) {
         super(props)
     }
-
+    status = Object.freeze({
+        0: 'refused',
+        1: 'pending',
+        2: 'finished',
+        3: 'withdrawn',
+        4: 'retracted'
+    })
+    statusColorClass = Object.freeze({
+        0: 'alert',
+        1: 'warning',
+        2: 'success',
+        3: 'secondary',
+        4: 'primary'
+    })
     render() {
         const { t } = this.context
-        const { status, className } = this.props
-
-        let statusName
-        switch (status) {
-            case 0:
-                statusName = "refuse"
-                break
-            case 1:
-                statusName = "pending"
-                break
-            case 2:
-                statusName = "finish"
-                break
-            case 3:
-                statusName = "remote"
-                break
-            case 4:
-                statusName = "retract"
-                break
-        }
-
         return (
-            <span className={className}>{statusName && t('common.classeurs.status.' + statusName)}</span>
+            this.props.status >= 0 &&
+            <span
+                className={
+                    `label
+                    round radius
+                    text-bold
+                    text-uppercase
+                    ${this.statusColorClass[this.props.status]}
+                    ${this.props.className || ''}`}>
+                {t(`common.classeurs.status.${this.status[this.props.status]}`)}
+            </span>
         )
     }
 }
 
 ClasseurStatus.propsType = {
-    status: number,
+    status: number.isRequired,
     className: string
 }
 
