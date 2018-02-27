@@ -5,6 +5,7 @@ import { handleErrors } from '../_utils/Utils'
 import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import {InputFile} from '../_components/Form'
+import { Cell, GridX } from "../_components/UI"
 
 class AvatarForm extends Component {
 
@@ -87,21 +88,42 @@ class AvatarForm extends Component {
 
         return(
             <div className={styleClass}>
-                <div>
-                    {
-                        user.path ?
-                            <UserAvatar size="100" name={ user._prenom || user._nom || '' } src={"/uploads/avatars/" + user.path} className=" float-center" />
-                            : <UserAvatar size="100" name={ user._prenom || user._nom || '' } className="txt-avatar"/>
-
-                    }
-                    <InputFile  id="add_avatar_img"
-                                className="cell medium-2"
-                                labelText={user.path ? t('common.button.change_img') : t('common.button.upload_img')}
-                                accept="image/png,image/jpeg"
-                                onChange={this.putFile}/>
-
-                    {user.path && <button className="button alert text-uppercase"
-                                          onClick={() => this.deleteFile(user.id)}>{t('common.button.delete')}</button>}
+                <div className="grid-x grid-padding-x">
+                    <div className="cell medium-12">
+                        <div className="grid-y grid-margin-y">
+                            <div className="cell medium-12">
+                                {user.path ?
+                                    <UserAvatar size="100" name={ user._prenom || user._nom || '' } src={"/uploads/avatars/" + user.path} className=" float-center" />
+                                    : <UserAvatar size="100" name={ user._prenom || user._nom || '' } className="txt-avatar"/>
+                                }
+                            </div>
+                            <div className="cell medium-12">
+                                <p className="help-text">{this.props.helpText}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="cell medium-12">
+                        <div className="grid-x">
+                            <Cell className="medium-6">
+                                <InputFile
+                                    id="add_avatar_img"
+                                    className="cell medium-auto"
+                                    labelText={user.path ? t('common.button.change_img') : t('common.button.upload_img')}
+                                    accept="image/png,image/jpeg"
+                                    onChange={this.putFile}/>
+                            </Cell>
+                            <Cell className="medium-6">
+                                {user.path &&
+                                    <div className="cell medium-auto">
+                                        <button
+                                            className="button alert text-uppercase"
+                                            onClick={() => this.deleteFile(user.id)}>
+                                            {t('common.button.delete')}
+                                        </button>
+                                    </div>}
+                            </Cell>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

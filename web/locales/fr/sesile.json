@@ -198,7 +198,8 @@
         },
         "consult_document": "Voir le document",
         "search_by_name": "Recherche par nom",
-        "type_a_name": "Saisir un nom"
+        "type_a_name": "Saisir un nom",
+        "file_acceptation_rules": "Le fichier doit être au format {{types}} et d'une taille maximum de {{sizeMax}}"
     },
     "admin": {
         "title": "Rechercher un {{name}}",

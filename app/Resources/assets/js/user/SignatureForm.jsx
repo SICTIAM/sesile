@@ -4,6 +4,7 @@ import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import { handleErrors } from '../_utils/Utils'
 import {InputFile} from '../_components/Form'
+import { Cell, GridX } from "../_components/UI"
 
 class SignatureForm extends Component {
 
@@ -87,23 +88,36 @@ class SignatureForm extends Component {
 
         return(
             <div className={styleClass}>
-                {
-                    user.path_signature &&
-                    <div className="grid-x grid-padding-x align-center-middle">
-                        <img className="medium-4 cell" src={"/uploads/signatures/" + user.path_signature} />
-                    </div>
-                }
-                <div className="grid-x">
+                <div className="grid-x grid-margin-x">
+                    <Cell>
+                        <div className="grid-y grid-margin-y">
+                            {user.path_signature &&
+                                <Cell className="align-center-middle">
+                                    <img src={"/uploads/signatures/" + user.path_signature} />
+                                </Cell>}
+                            <Cell>
+                                <p className="help-text">{this.props.helpText}</p>
+                            </Cell>
+                        </div>
+                    </Cell>
+                    <Cell>
+                        <div className="grid-x grid-margin-x">
+                            <InputFile  id="add_signature_img"
+                                        className="cell medium-6"
+                                        labelText={user.path ? t('common.button.change_img') : t('common.button.upload_img')}
+                                        accept="image/png,image/jpeg"
+                                        onChange={this.putFileSignature}/>
+                            {user.path_signature &&
+                                <Cell className="medium-6">
 
-                    <InputFile  id="add_signature_img"
-                                className="cell medium-6"
-                                labelText={user.path ? t('common.button.change_img') : t('common.button.upload_img')}
-                                accept="image/png,image/jpeg"
-                                onChange={this.putFileSignature}/>
-
-                    <div className="cell medium-6">
-                        { user.path_signature && <button className="button alert text-uppercase" onClick={() => this.deleteFileSignature(user.id)}>{t('common.button.delete')}</button>}
-                    </div>
+                                        <button
+                                            className="button alert text-uppercase"
+                                            onClick={() => this.deleteFileSignature(user.id)}>
+                                            {t('common.button.delete')}
+                                        </button>
+                                </Cell>}
+                        </div>
+                    </Cell>
                 </div>
             </div>
         )

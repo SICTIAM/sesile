@@ -126,7 +126,10 @@ class Account extends Component {
                             <div className="grid-x grid-padding-x align-center-middle">
 
                                 { userId &&
-                                    <AvatarForm user={user} styleClass={"medium-4 cell"} />
+                                    <AvatarForm
+                                        user={user}
+                                        styleClass={"medium-4 cell"}
+                                        helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
                                 }
 
                                 <div className="medium-8 cell">
@@ -160,7 +163,10 @@ class Account extends Component {
 
                                 {
                                     userId &&
-                                    <SignatureForm user={user} styleClass={"medium-4 cell"} />
+                                    <SignatureForm
+                                        user={user}
+                                        styleClass={"medium-4 cell"}
+                                        helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
                                 }
 
                                 <div className="medium-8 cell">
