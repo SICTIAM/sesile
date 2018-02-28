@@ -20,6 +20,10 @@ $sesile-color: (
   gray-blue: #404257
 );
 
+$label-color: #FFFFFF;
+$label-color-alt: #FFFFFF;
+$label-radius: 0.3em;
+
 @import "./../../../../node_modules/foundation-sites/scss/foundation";
 @include foundation-everything(true);
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700|Raleway:400,700|Work+Sans:400,700');

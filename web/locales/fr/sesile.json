@@ -111,11 +111,11 @@
             },
             "status": {
               "name": "status",
-              "refuse": "Refusé",
+              "refused": "Refusé",
               "pending": "En cours",
-              "finish": "Finalisé",
-              "remote": "Retiré",
-              "retract": "Retracté"
+              "finished": "Finalisé",
+              "withdrawn": "Retiré",
+              "retracted": "Retracté"
             },
             "pagination" : {
                 "previous": "Précédent",

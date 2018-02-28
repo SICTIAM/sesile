@@ -9,6 +9,8 @@ import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
 import CircuitClasseur from '../circuit/CircuitClasseur'
 import History from '../_utils/History'
+import ClasseurStatus from './ClasseurStatus'
+import { Cell, GridX } from "../_components/UI"
 
 class Classeur extends Component {
 
@@ -199,14 +201,20 @@ class Classeur extends Component {
         const editable = !!(classeur.validable && editClasseur)
 
         return (
-            <div className="grid-x details-classeur">
-                <div className="cell medium-12">
-
-                    <div className="grid-x">
-                        <div className="cell medium-12 text-center">
-                            <h1>{ classeur.nom }</h1>
-                        </div>
-                    </div>
+            <GridX className="details-classeur">
+                <Cell>
+                    <GridX>
+                        <Cell>
+                            <GridX className="align-center-middle">
+                                <Cell className="medium-11 text-center">
+                                    <h1>{classeur.nom}</h1>
+                                </Cell>
+                                <Cell className="medium-auto text-right">
+                                    <ClasseurStatus status={classeur.status}/>
+                                </Cell>
+                            </GridX>
+                        </Cell>
+                    </GridX>
 
                     <div className="grid-x medium-12 grid-margin-x">
                         <div className="cell medium-8">
@@ -293,8 +301,8 @@ class Classeur extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </Cell>
+            </GridX>
         )
     }
 }
