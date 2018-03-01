@@ -44,7 +44,7 @@ class DocumentPreview extends Component {
                                 { this.fileName(file.name) }
                             </div>
                             :
-                            <div className="cell small-11" >
+                            <div className="cell small-10" >
                                 { this.fileName(file.name) }
                                 { file.size && ' - ' + this.bytesToSize(file.size) }
                             </div>
