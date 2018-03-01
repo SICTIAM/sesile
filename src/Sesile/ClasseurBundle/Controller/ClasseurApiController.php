@@ -11,6 +11,7 @@ use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\ClasseurBundle\Form\ClasseurPostType;
 use Sesile\ClasseurBundle\Form\ClasseurType;
+use Sesile\ClasseurBundle\Service\ActionMailer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -177,7 +178,8 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
             $em->flush();
 
-            $this->sendCreationMail($classeur);
+            $actionMailer = $this->get(ActionMailer::class);
+            $actionMailer->sendNotificationClasseur($classeur);
 
             return $classeur;
         }
@@ -194,6 +196,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param Request $request
      * @param Classeur $classeur
      * @return Classeur|\Symfony\Component\Form\Form|JsonResponse
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function updateAction (Request $request, Classeur $classeur)
     {
@@ -258,6 +261,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
 
+        $actionMailer = $this->get(ActionMailer::class);
+        $actionMailer->sendNotificationClasseur($classeur);
+
         return $classeur;
     }
 
@@ -271,8 +277,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
     public function signClasseurAction (Classeur $classeur) {
 
         $em = $this->getDoctrine()->getManager();
-//        $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
-        $em->flush();
         $this->signClasseur(array($classeur));
 
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
@@ -313,6 +317,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
 
+        $actionMailer = $this->get(ActionMailer::class);
+        $actionMailer->sendNotificationClasseur($classeur);
+
         return $classeur;
     }
 
@@ -352,82 +359,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         return new JsonResponse(['message' => "Classeur remove"], Response::HTTP_OK);
     }
-
-
-    private function sendMail($sujet, $to, $body) {
-        $message = \Swift_Message::newInstance();
-        // Pour l integration de l image du logo dans le mail
-        $html = explode("**logo_coll**", $body);
-        if($this->get('session')->get('logo') !== null && $this->container->getParameter('upload')['logo_coll'] !== null && !empty($html)) {
-            $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75" alt="Sesile">' . $html[1];
-        } else {
-            $htmlBody = $body;
-        }
-
-        // On rajoute les balises manquantes
-        $html_brkts_start = "<html><head></head><body>";
-        $html_brkts_end = "</body></html>";
-        $htmlBodyFinish = $html_brkts_start . $htmlBody . $html_brkts_end;
-
-        // Constitution du mail
-        $message->setSubject($sujet)
-            ->setFrom($this->container->getParameter('email_sender_address'))
-            ->setTo($to)
-            ->setBody($htmlBodyFinish)
-            ->setContentType('text/html');
-
-        // Envoie de l email
-        $this->get('mailer')->send($message);
-    }
-
-    private function sendCreationMail(Classeur $classeur) {
-        $em = $this->getDoctrine()->getManager();
-        $collectivite = $em->getRepository("SesileMainBundle:Collectivite")->find($this->getUser()->getCollectivite());
-        $d_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
-
-        $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
-        $template = $env->createTemplate($collectivite->getTextmailnew());
-        $template_html = array(
-            'deposant' => $d_user->getPrenom() . " " . $d_user->getNom(),
-            'role' => $d_user->getRole(),
-            'qualite' => $d_user->getQualite(),
-            'titre_classeur' => $classeur->getNom(),
-            'date_limite' => $classeur->getValidation(),
-            'type' => strtolower($classeur->getType()->getNom()),
-            "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost() . $this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">valider le classeur</a>'
-        );
-
-        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
-        foreach($validants as $validant) {
-            if ($validant != null) {
-                $this->sendMail(
-                    "SESILE - Nouveau classeur à valider",
-                    $validant->getEmail(),
-                    $template->render(
-                        array_merge($template_html, array('validant' => $validant->getPrenom() . " " . $validant->getNom()))
-                    )
-                );
-            }
-        }
-
-        // notification des users en copy
-        $usersCopy = $classeur->getCopy();
-        if ($usersCopy !== null && is_array($usersCopy)) {
-            foreach ($usersCopy as $userCopy) {
-                if($userCopy != null && !in_array($userCopy, $validants)) {
-                    $this->sendMail(
-                        "SESILE - Nouveau classeur déposé",
-                        $userCopy->getEmail(),
-                        $template->render(
-                            array_merge($template_html, array('validant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
-                        )
-                    );
-                }
-            }
-        }
-    }
-
-
 
     private function signClasseur ($ids, $role = null) {
 

@@ -22,7 +22,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Classeur controller.
- *
+ * @Route("/classeur")
  */
 class ClasseurController extends Controller {
 
@@ -34,12 +34,19 @@ class ClasseurController extends Controller {
      * @Method("GET")
      * @Template()
      */
-    public function dashboardAction() {
-        $user = $this->getUser();
-        return array(
-            "menu_color" => "bleu",
-            "user_version" => $user->getSesileVersion()
-        );
+    public function dashboardAction()
+    {
+    }
+
+    /**
+     * Displays a form to edit an existing Classeur entity.
+     *
+     * @Route("/{id}", name="classeur_edit", options={"expose"=true}, requirements={"id" = "\d+"})
+     * @Method({"GET", "POST"})
+     * @Template()
+     */
+    public function editAction($id)
+    {
     }
 
     /**
@@ -617,111 +624,6 @@ class ClasseurController extends Controller {
             "userGroupes"   => $circuits,
         );
     }
-
-
-    /**
-     * Displays a form to edit an existing Classeur entity.
-     *
-     * @Route("/{id}", name="classeur_edit", options={"expose"=true}, requirements={"id" = "\d+"})
-     * @Method({"GET", "POST"})
-     * @Template()
-     */
-    public function editAction($id) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $user = $this->getUser();
-
-        $entity = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
-
-        $usersdelegated = $em->getRepository('SesileDelegationsBundle:delegations')->getUsersWhoHasMeAsDelegate($this->getUser()->getId());
-        $isusersdelegated = $em->getRepository('SesileDelegationsBundle:delegations')->getUsersWhoHasMeAsDelegate($this->getUser()->getId());
-        $editDelegants = false;
-        foreach($usersdelegated as $userdelegated) {
-            $delegants[] = $userdelegated->getId();
-            if (in_array($entity, $userdelegated->getClasseurs()->toArray())) {
-                $editDelegants = true;
-            }
-        }
-
-        // Si le user n est pas un super admin ou un user avec des droits de delgations ou un user du circuit
-        if ((!in_array($entity, $user->getClasseurs()->toArray()) and !$editDelegants) && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->get('session')->getFlashBag()->add(
-                'error',
-                "Vous n'avez pas accès à ce classeur"
-            );
-            return $this->redirect($this->generateUrl('classeur'));
-        }
-        $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($entity);
-        $prevValidants = $em->getRepository('SesileClasseurBundle:Classeur')->getPrevValidant($entity);
-        $prevValidantRetract = $em->getRepository('SesileClasseurBundle:Classeur')->getPrevValidantForRetract($entity);
-
-        $users = $em->getRepository('SesileUserBundle:User')->findBy(array(
-            "collectivite" => $this->get("session")->get("collectivite"), 'enabled' => 1
-        ), array("Nom" => "ASC"));
-
-        // Definition des users pour le bouton retractable
-        $usersdelegated[] = $this->getUser();
-        $delegants[] = $this->getUser()->getId();
-
-        $validantsId = array();
-        foreach ($validants as $validant) {
-            $validantsId[] = $validant->getId();
-        }
-        foreach ($prevValidants as $prevValidant) {
-            $prevValidantsId[] = $prevValidant->getId();
-        }
-
-        // Definition si rétractation
-        $isRetractableByDelegates = $entity->isRetractableByDelegates($delegants, $validantsId, $prevValidantRetract);
-
-
-        // Test pour le validant courant
-        if ($entity->isValidableByDelegates($usersdelegated, $validants)) {
-            $currentValidant = array("id" => end($usersdelegated)->getId(), "nom" => end($usersdelegated)->getPrenom() . " " . end($usersdelegated)->getNom(), "path" => end($usersdelegated)->getPath());
-        }
-        else {
-            $currentValidant = '';
-        }
-
-        // Test Pour la délégation
-        if ($isusersdelegated and !in_array($this->getUser()->getId(), $validantsId)) {
-            $isDelegatedToMe = true;
-            $uservalidant = $usersdelegated[0];
-        } else {
-            $isDelegatedToMe = false;
-            $uservalidant = $this->getUser();
-        }
-
-
-        // Test pour savoir si le classeur est signable
-//        $isSignable = $entity->isSignable();
-        $isSignable = $entity->isSignableAndLastValidant();
-
-        // Test pour savoir si on peut signer le PDF
-        $isSignablePDF = $entity->isSignablePDF();
-
-
-        return array(
-            'validant'      => $validants,
-            'currentValidant' => $currentValidant,
-            'classeur'      => $entity,
-            'retractable'   => $isRetractableByDelegates,
-            'signable'      => $isSignable,
-            'signablePDF'   => $isSignablePDF,
-            'usersdelegated'=> $usersdelegated,
-            'isDelegatedToMe' => $isDelegatedToMe,
-            'uservalidant'  => $uservalidant,
-            "menu_color"    => "bleu",
-            'users'         => $users,
-            'classeursId'  => urlencode(serialize($entity->getId()))
-        );
-
-
-    }
-
-
-
 
     /**
      * Edits an existing Classeur entity.
