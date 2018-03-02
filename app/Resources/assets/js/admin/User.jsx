@@ -214,14 +214,18 @@ class User extends Component {
     }
 
     handleClickDelete = (id) => {
+        const { _addNotification } = this.context
         fetch(Routing.generate("sesile_user_userapi_remove", {id}), {
             method: 'DELETE',
             credentials: 'same-origin'
         })
+            .then(response => response.json())
             .then(response => {
-                if(response.ok === true) {
-                    History.push(`/admin/utilisateurs`)
-                }
+                _addNotification(
+                    basicNotification(
+                        response.status,
+                        response.message))
+                History.push(`/admin/utilisateurs`)
             })
     }
 

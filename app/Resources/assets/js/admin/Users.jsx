@@ -42,26 +42,20 @@ class Users extends Component {
                 error.statusText)))
     }
     handleDeleteUser = (id) => {
-        const { t, _addNotification } = this.context
+        const { _addNotification } = this.context
         const id_collectivite = this.state.collectiviteId
         fetch(Routing.generate("sesile_user_userapi_remove", {id}), {
             method: 'DELETE',
             credentials: 'same-origin'
         })
-        .then(handleErrors)
         .then(response => response.json())
         .then(response => {
             _addNotification(
                 basicNotification(
-                    'success',
-                    t('admin.user.succes_delete')))
+                    response.status,
+                    response.message))
             this.fetchUsers(id_collectivite)
         })
-        .catch(error => 
-            _addNotification(
-                basicNotification(
-                    'error',
-                    t('admin.user.error_delete'))))
     }
     handleChangeSearchUser = (key, fieldSearch) => {
         this.setState({fieldSearch})

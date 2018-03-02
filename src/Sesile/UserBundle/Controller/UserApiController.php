@@ -207,7 +207,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @Rest\Delete("/{id}")
      * @ParamConverter("User", options={"mapping": {"id": "id"}})
      * @param User $user
-     * @return User
+     * @return JsonResponse
      * @internal param $id
      */
     public function removeAction(User $user)
@@ -219,6 +219,20 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
             $em = $this->getDoctrine()->getManager();
             $dirPath = $this->getParameter('upload')['path'];
 
+            if ($user === $this->getUser()) {
+                return new JsonResponse([
+                    'status'    => 'error',
+                    'message'   => 'Suppression impossible : vous ne pouvez pas vous supprimer vous-même'],
+                    Response::HTTP_FORBIDDEN);
+            }
+
+            if ($em->getRepository('SesileUserBundle:User')->isUserInClasseurs($user)) {
+                return new JsonResponse([
+                    'status'    => 'error',
+                    'message'   => 'Suppression impossible : utilisateur présent dans un ou plusieurs classeurs'],
+                    Response::HTTP_FORBIDDEN);
+            }
+
             if ($user->getPathSignature()) {
                 $user->removeUploadSignature($this->getParameter('upload')['signatures']);
             }
@@ -228,7 +242,11 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
             $em->remove($user);
             $em->flush();
 
-            return $user;
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => 'Utilisateur supprimé'
+            ],
+                Response::HTTP_ACCEPTED);
         }
     }
 

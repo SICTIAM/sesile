@@ -122,56 +122,17 @@ class UserRepository extends EntityRepository {
 
     /**
      * Fonction pour savoir si un user est dans des classeurs
-     * https://www.youtube.com/watch?v=T1JOlxiEDXw
-     *
-     * @param $id
+     * @param User $user
      * @return bool
      */
-    public function isUserInClasseurs($id) {
+    public function isUserInClasseurs(User $user) {
         // On récupère tous les classeurs
         $em = $this->getEntityManager();
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->findAll();
 
-        // Pour chaque classeur
         foreach($classeurs as $classeur) {
-
-            // On récupère son déposant
-            $idUser = $classeur->getUser();
-
-            // Si l'user est déposant du classeur on retourne true
-            if($idUser == $id) return true;
-
-            // On récupère toutes ses étapes
-            $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
-            // Pour chaque étape
-            foreach($tabEtapeClasseur as $etapeClasseur){
-
-                // Si l'étape classeur n'exsite pas, on passe
-                if($etapeClasseur == null || $etapeClasseur == "") continue;
-
-                // On reconstruit l'objet EtapeClasseur à partir de l'id récupéré
-                $etape = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($etapeClasseur);
-
-                // On récupère les users
-                $users = $etape->getUsers()->toArray();
-
-                // On récupère tous les userPacks
-                $userPacks = $etape->getUserPacks();
-                // Pour chaque userPacks
-                foreach ($userPacks as $userPack) {
-                    // On récupère tous les entitées users
-                    $usersP = $userPack->getUsers();
-                    $users = array_merge($users, $usersP->toArray());
-                }
-                // On enlève les doublons
-                $users = array_unique($users);
-
-                // Pour chaque user
-                foreach($users as $user) {
-                    // // Si l'user fait partie du classeur on retourne true
-                    if($user->getId() == $id)  return true;
-                }
-            }
+            $usersClasseur = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
+            if (in_array($user, $usersClasseur)) return true;
         }
         return false;
     }
