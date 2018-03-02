@@ -87,7 +87,7 @@ class EtapeClasseur
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime", options={"default": 0})
+     * @ORM\Column(name="date", type="datetime")
      *
      */
     private $date;
