@@ -373,45 +373,12 @@ class ClasseurRepository extends EntityRepository {
      */
     public function getValidant(Classeur $classeur) {
         $em = $this->getEntityManager();
+        $etapeValidante = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneBy(array(
+            'classeur'  => $classeur,
+            'etapeValidante' => true
+        ));
 
-        $tabEtapeClasseur = explode(',',$classeur->getOrdreValidant());
-        $usersValidant = array();
-
-
-        /**
-        * Pour réucpérer le validant je récupère le dernier id de la liste getOrdreValidant
-        */
-
-        $etapeClasseurs = $em->getRepository('SesileUserBundle:EtapeClasseur')->findOneById($tabEtapeClasseur[count($tabEtapeClasseur)-1]);
-
-        if($etapeClasseurs !== null && $classeur->getStatus() != 2) {
-
-            $users = $etapeClasseurs->getUsers();
-
-            $userPacks = $etapeClasseurs->getUserPacks();
-            foreach ($userPacks as $userPack) {
-                $usersP = $userPack->getUsers();
-                $usersValidant = array_merge($usersValidant, $usersP->toArray());
-            }
-
-            if($users !== null) {
-                $usersValidant = array_merge($users->toArray(), $usersValidant);
-            }
-            $usersValidant = array_unique($usersValidant);
-
-        }
-        elseif ($classeur->getStatus() == 0
-            || ($classeur->getStatus() == 4 && $etapeClasseurs === null)
-        ) {
-            $user = $em->getRepository('SesileUserBundle:User')->findOneById($classeur->getUser());
-            $usersValidant[] = $user;
-        }
-        else {
-            $usersValidant = array();
-        }
-
-        return $usersValidant;
-
+        return $em->getRepository('SesileUserBundle:EtapeClasseur')->getUsersForEtape($etapeValidante);
     }
 
 
@@ -514,47 +481,6 @@ class ClasseurRepository extends EntityRepository {
         }
     }
 
-    /**
-     * Retourne l utilisateur qui doit valider, celui qui a les droits sur le classeur
-     *
-     * @param Classeur $classeur
-     * @param $user
-     * @return object
-     */
-    public function classeurValidator(Classeur $classeur, $user) {
-
-        $em = $this->getEntityManager();
-
-        $classeurValidants = $this->getValidant($classeur);
-
-        $classeurValidantsId = array();
-        foreach ($classeurValidants as $classeurValidant) {
-            $classeurValidantsId[] = $classeurValidant->getId();
-        }
-
-        $delegants = $em->getRepository('SesileDelegationsBundle:Delegations')->getDelegantsForUser($user);
-
-        $delegantsId = array();
-        foreach ($delegants as $delegant) {
-            $delegantsId[] = $delegant->getDelegant()->getId();
-        }
-
-        // Avec délégation
-        $userValidant = array_intersect($classeurValidantsId, $delegantsId);
-
-        if ($userValidant) {
-            $userValidant = $userValidant[0];
-            $validator = $em->getRepository('SesileUserBundle:User')->find($userValidant);
-        }
-        // Sans délégation
-        else {
-            $validator = $user;
-        }
-        var_dump($validator->getId(), $validator->getNom(), $validator->getPrenom());
-
-        return $validator;
-
-    }
 
     /**
      * Retourne true or false selon si le classeur est délégué ou pas

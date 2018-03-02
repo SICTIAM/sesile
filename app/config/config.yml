@@ -199,3 +199,4 @@ services:
         public: true
         arguments:
             $fromEmail: '%email_sender_address%'
+            $paths: '%upload%'
