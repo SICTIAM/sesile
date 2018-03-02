@@ -323,6 +323,7 @@ class ClasseurNew extends Component {
                                       onDrop={this.onDrop}
                                       removeDocument={this.removeDocument}
                                       typeClasseur={ type }
+                                      editClasseur={true}
                         />
                     </div>
 

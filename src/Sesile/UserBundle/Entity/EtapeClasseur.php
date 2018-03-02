@@ -131,6 +131,7 @@ class EtapeClasseur
     {
         $this->userPacks = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->date = new \DateTime();
     }
     
     /**

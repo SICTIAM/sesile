@@ -13,6 +13,7 @@ use Sesile\ClasseurBundle\Form\ClasseurType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Sesile\ClasseurBundle\Service\ActionMailer;
 
 /**
  * @Rest\Route("/apirest/action", options = { "expose" = true })
@@ -56,6 +57,9 @@ class ActionApiController extends FOSRestController implements ClassResourceInte
             $action->setUsername($this->getUser()->getPrenom() . " " . $this->getUser()->getNom());
             $em->persist($action);
             $em->flush();
+
+            $actionMailer = $this->get(ActionMailer::class);
+            $actionMailer->sendNotification($classeur, $action);
 
             return $action;
         }

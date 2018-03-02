@@ -120,7 +120,7 @@ class EtapeClasseurRepository extends EntityRepository
      */
     public function findAllUsers(Classeur $classeur) {
 
-        $users = array();
+        $users = array($classeur->getUser());
 
         foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
             $users = array_merge($users, $this->getUsersForEtape($etapeClasseur));
