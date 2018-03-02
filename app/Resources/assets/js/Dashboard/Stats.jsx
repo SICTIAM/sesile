@@ -43,27 +43,32 @@ class Stats extends Component {
         return (
             <div className="grid-x align-center">
 
-                <div className="cell medium-8">
-                    <div className="grid-x grid-margin-x grid-padding-x align-top align-center">
+                <div className="cell medium-12">
+                    <div className="grid-x grid-margin-x grid-padding-x align-top align-center grid-padding-y">
                         <div className="cell medium-12 text-center">
                             <h1>{ t('common.menu.stats')}</h1>
                         </div>
                     </div>
 
-                    <div className="grid-x grid-padding-x panel list-dashboard">
-                        <div className="cell medium-12 panel-heading">
-                            { t('common.dashboard.stats_classeurs_validate_by_type')}
-                        </div>
-                        <div className="cell medium-12 panel-body-no-padding">
-                            <Chart
-                                chartType="PieChart"
-                                data={statsType}
-                                options={{"is3D":true,"fontSize":14}}
-                                graph_id="statsType"
-                                width="100%"
-                                height="300px"
-                                legend_toggle
-                            />
+
+                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                        <div className="cell medium-12">
+                            <div className="grid-x grid-padding-x panel list-dashboard">
+                                <div className="cell medium-12 panel-heading">
+                                    { t('common.dashboard.stats_classeurs_validate_by_type')}
+                                </div>
+                                <div className="cell medium-12 panel-body-no-padding">
+                                    <Chart
+                                        chartType="PieChart"
+                                        data={statsType}
+                                        options={{"is3D":true,"fontSize":14}}
+                                        graph_id="statsType"
+                                        width="100%"
+                                        height="300px"
+                                        legend_toggle
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

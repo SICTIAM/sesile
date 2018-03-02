@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { func } from 'prop-types'
 import { translate } from 'react-i18next'
-import Iframe from 'react-iframe'
 import { AdminDetails, AccordionContent, AccordionItem} from "../_components/AdminUI";
 import Patchs from "./Patchs";
 import Helps from "./Helps";
@@ -40,17 +39,7 @@ const VideoContent = ({}, {t}) => {
 
     return(
         <AccordionItem title={t('common.help_board.title_video')} className="is-active" classNameChild="align-center">
-
-            <Iframe url="https://www.youtube.com/embed/ms-YYoaU4PE"
-                    width="560px"
-                    height="315px"
-                    id="youTube"
-                    className="medium-8 cell"
-                    display="initial"
-                    position="relative"
-                    allowFullScreen
-            />
-
+            <a href="https://www.youtube.com/playlist?list=PLN4SrkP6-6UVPVG5gNnldIhNBPuni1m1w" className="fa fa-youtube ico-video" target="_blank"></a>
         </AccordionItem>
     )
 }

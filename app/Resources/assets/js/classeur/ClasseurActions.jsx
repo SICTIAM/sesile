@@ -25,13 +25,13 @@ class ClasseurActions extends Component {
                     </div>
 
                     <div className="grid-x grid-margin-x grid-padding-x align-top text-center">
-                        <div className="cell medium-2"><span className="fa fa-comment"></span></div>
+                        <div className="cell medium-2 show-for-medium"><span className="fa fa-comment"></span></div>
                         <Textarea
                             id="new-action"
                             name="newAction"
                             placeholder={ t('common.classeurs.comments.new') }
                             onChange={addComment}
-                            className="cell medium-10"
+                            className="cell medium-10 small-12"
                             value={action}
                         />
                     </div>
@@ -46,11 +46,12 @@ class ClasseurActions extends Component {
 
                     { actions && actions.map((action) =>
                         <div className="grid-x grid-margin-x grid-padding-x align-top text-center" key={action.id}>
-                            <div className="cell medium-2"><span className="fa fa-comment"></span></div>
-                            <div className="cell medium-10 text-left">
+                            <div className="cell small-12 medium-2"><span className="fa fa-comment"></span></div>
+                            <div className="cell small-12 medium-10 text-left">
                                 <p>
                                     { action.action }
-                                    <span className="text-author"> par
+                                    <span className="text-author"> par </span>
+                                    <span className="text-author">
                                         { action.user_action
                                             ? action.user_action._prenom  + " " + action.user_action._nom
                                             : action.username
