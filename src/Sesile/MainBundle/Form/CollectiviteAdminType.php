@@ -34,6 +34,8 @@ class CollectiviteAdminType extends AbstractType
             ->remove('textmailnew')
             ->remove('textmailrefuse')
             ->remove('textmailwalid')
+            ->remove('textcopymailnew')
+            ->remove('textcopymailwalid')
             ->remove('message')
             ->remove('nom')
             ->remove('active')

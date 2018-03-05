@@ -116,6 +116,22 @@ class Collectivite
     private $textmailwalid;
 
     /**
+     * @var text
+     *
+     * @ORM\Column(name="textcopymailnew", type="string", length=3000, nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
+     */
+    private $textcopymailnew;
+
+    /**
+     * @var text
+     *
+     * @ORM\Column(name="textcopymailwalid", type="string", length=3000, nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"})
+     */
+    private $textcopymailwalid;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="abscissesVisa", type="integer",nullable=true)
@@ -533,6 +549,14 @@ class Collectivite
 <li>stockage de l'objet (document, preuve de signature, m&eacute;tadonn&eacute;es et historique de traitement) ou export vers un logiciel tiers</li>
 </ul>");
         }
+
+        if ($this->getTextcopymailnew() === null) {
+            $this->setTextcopymailnew("<p>Bonjour {{ en_copie }},</p><p>Un nouveau classeur pour lequel vous êtes en copie {{ titre_classeur }} vient d'être déposé par {{ deposant }}, pour validation à {{ validant }}, à la date du <strong>{{ date_limite | date('d/m/Y') }}.</strong></p><p>Vous pouvez visionner le classeur {{lien|raw}}</p><p>**logo_coll** {{ qualite }}<br>{{ validant }}</p>");
+        }
+
+        if ($this->getTextcopymailwalid() === null) {
+            $this->setTextcopymailwalid("<p>Bonjour {{ en_copie }},</p><p>Un nouveau classeur pour lequel vous êtes en copie {{ titre_classeur }} vient d'être validé par {{ validant }}.</p><p>Vous pouvez visionner le classeur {{lien|raw}}</p><p>**logo_coll** {{ qualite }}<br>{{ validant }}</p>");
+        }
     }
 
     /**
@@ -851,5 +875,53 @@ class Collectivite
     public function getTypes()
     {
         return $this->types;
+    }
+
+    /**
+     * Set textcopymailnew
+     *
+     * @param string $textcopymailnew
+     *
+     * @return Collectivite
+     */
+    public function setTextcopymailnew($textcopymailnew)
+    {
+        $this->textcopymailnew = $textcopymailnew;
+
+        return $this;
+    }
+
+    /**
+     * Get textcopymailnew
+     *
+     * @return string
+     */
+    public function getTextcopymailnew()
+    {
+        return $this->textcopymailnew;
+    }
+
+    /**
+     * Set textcopymailwalid
+     *
+     * @param string $textcopymailwalid
+     *
+     * @return Collectivite
+     */
+    public function setTextcopymailwalid($textcopymailwalid)
+    {
+        $this->textcopymailwalid = $textcopymailwalid;
+
+        return $this;
+    }
+
+    /**
+     * Get textcopymailwalid
+     *
+     * @return string
+     */
+    public function getTextcopymailwalid()
+    {
+        return $this->textcopymailwalid;
     }
 }
