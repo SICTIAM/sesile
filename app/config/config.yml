@@ -90,21 +90,36 @@ fos_user:
         address: sesile@sictiam.fr
         sender_name: SESILE
 
-be_simple_sso_auth:
-    admin_sso:
-        protocol:
-            id: cas
-            version: 2
-        server:
-            id: cas
-            login_url: https://devsso.sictiam.fr/login
-            logout_url: https://devsso.sictiam.fr/logout
-            validation_url: https://devsso.sictiam.fr/serviceValidate
-
+hwi_oauth:
+    # list of names of the firewalls in which this bundle is active, this setting MUST be set
+#    connect:
+#        account_connector: my.custom.user_provider
+    firewall_names: [secured_area]
+#    fosub:
+#        username_iterations: 30
+#        properties:
+#            ozwillo:    email
+    resource_owners:
+        ozwillo:
+            type:                oauth2
+            client_id:           2e771747-f906-4125-ba96-806553bc2ce2
+            client_secret:       ***REMOVED***
+            access_token_url:    https://accounts.ozwillo-preprod.eu/a/token
+            authorization_url:   https://accounts.ozwillo-preprod.eu/a/auth
+            infos_url:           https://accounts.ozwillo-preprod.eu/a/userinfo
+            scope:               "email openid profile"
+            paths:
+                identifier: sub
+                nickname:   nickname
+                realname:   name
+                email:      email
+            options:
+                use_basic_authorization: true
+                csrf: true
 
 parameters:
     informations:
-        version: 4.0-sprint9
+        version: 4.0-sprint10
         contact_link: http://support.sictiam.fr/declarer-un-incident/
     cas_server: devsso.sictiam.fr
     be_simple.sso_auth.client.option.curlopt_ssl_verifypeer.value: FALSE
@@ -190,6 +205,10 @@ sensio_framework_extra:
     request: { converters: true }
 
 services:
+    my.sesile.user_provider:
+        class: Sesile\UserBundle\Security\Core\User\MyFOSUBUserProvider
+        arguments: ['@fos_user.user_manager', { ozwillo: email }]
+
     sesile.tokens.action_listener:
         class: Sesile\ApiBundle\EventListener\TokenListener
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]

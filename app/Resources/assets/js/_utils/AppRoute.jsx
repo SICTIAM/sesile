@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {Route, Switch} from 'react-router-dom'
+import { object } from 'prop-types'
 
 import AdminRoute from './AdminRoute'
 import Emailing from '../admin/Emailing'
@@ -33,16 +34,13 @@ import HelpBoard from '../documentation/HelpBoard'
 
 
 class AppRoute extends Component {
-    state = {
-        user: null
+
+    static propTypes = {
+        user: object.isRequired
     }
-    componentDidMount() {
-        fetch(Routing.generate('sesile_user_userapi_getcurrent'), { credentials: 'same-origin' })
-            .then(response => response.json())
-            .then(json => this.setState({user : json}))
-    }
+
     render () {
-        const user = this.state.user
+        const { user } = this.props
         return (
             (!!user) &&
             <Switch>

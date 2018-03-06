@@ -20,6 +20,7 @@ class App extends Component {
     constructor() {
         super()
         this.state = {
+            user: {},
             isAuthenticated: null
         }
         this._notificationSystem = null
@@ -60,6 +61,7 @@ class App extends Component {
 
     componentDidMount() {
         $(document).foundation()
+        this.fetchUser()
     }
 
     _addNotification = (notification) => {
@@ -68,12 +70,21 @@ class App extends Component {
         }
     }
 
+    fetchUser() {
+        fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(user => {
+                this.setState({user})
+            })
+    }
+
     render () {
+        const { user } = this.state
         return (
             <I18nextProvider i18n={i18n}>
                 <div className="off-canvas-wrapper">
                     <div className="off-canvas position-left hide-for-large grid-y" id="offCanvasLeft" data-off-canvas>
-                        <Route component={Menu} />
+                        <Route render={routeProps => <Menu {...routeProps} user={user} />} />
                     </div>
                     <div className="off-canvas-content" data-off-canvas-content>
                         <div className="grid-x grid-y grid-frame">
@@ -88,7 +99,9 @@ class App extends Component {
                                         </Link>
                                     </div>
                                     <div className="cell large-4 show-for-large">
-                                        <SearchClasseurs/>
+                                        { user.id &&
+                                            <SearchClasseurs/>
+                                        }
                                     </div>
                                     <div className="cell large-3 show-for-large"></div>
                                     <div className="cell large-3 small-6">
@@ -100,15 +113,19 @@ class App extends Component {
                                 <div className="grid-x cell auto">
 
                                     <div className="hide-for-medium-only hide-for-small-only cell large-2 grid-y">
-                                        <Route component={Menu} className="" />
+                                        <Route render={routeProps => <Menu {...routeProps} user={user} />} />
                                     </div>
 
                                     <div className="cell large-10 medium-12 small-12 cell-block-y main">
-                                        <Note/>
+                                        { user.id &&
+                                            <Note/>
+                                        }
                                         <div className="grid-x grid-padding-x medium-11">
                                             <div className="cell medium-12 small-12">
                                                 <NotificationSystem ref={n => this._notificationSystem = n} style={this.notificationStyle} />
-                                                <AppRoute/>
+                                                {user.id &&
+                                                    <AppRoute user={user}/>
+                                                }
                                             </div>
                                         </div>
                                     </div>
