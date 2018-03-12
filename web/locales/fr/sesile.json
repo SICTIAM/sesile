@@ -173,6 +173,7 @@
             }
         },
         "user": {
+            "title" : "Profil",
             "certificate" : "certificat",
             "certificate_info" : "Information certificat",
             "certificate_validity" : "Votre certificat expire dans {{count}} jour",
@@ -187,7 +188,8 @@
             "transmitter_from": "émis par",
             "validity": "validité",
             "from": "émis le",
-            "to": "expire le"
+            "to": "expire le",
+            "upadate_account": "Modifier mon profil"
         },
         "help_board":{
             "title": "Documentations et aides",
@@ -303,6 +305,7 @@
             "name_plural": "utilisateurs",
             "subtitle_user": "Informations utilisateur",
             "subtitle_signature": "Informations signatures",
+            "subtitle_certificate": "Informations certificats",
             "subtitle_geo": "Informations géographiques",
             "subtitle_application": "Informations applications",
             "subtitle_role": "Rôles de l'utilisateur",

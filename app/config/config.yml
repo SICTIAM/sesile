@@ -123,6 +123,7 @@ parameters:
     majorversion: 4
 #    url_applet: signature.sesile.fr
     url_applet: signature.dev.sesile.fr
+    ozwillo_portal: portal.ozwillo-preprod.eu
     ovh_credential:
         application: ***REMOVED***
         secret: ***REMOVED***
