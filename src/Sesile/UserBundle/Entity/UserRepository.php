@@ -3,6 +3,8 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Sesile\MainBundle\Entity\Collectivite;
 
 /**
  * UserRepository
@@ -147,5 +149,24 @@ class UserRepository extends EntityRepository {
             ->setParameter('value', '%' .$value. '%')
             ->getQuery()
             ->getResult();
+    }
+
+
+    public function createUserFromOzwillo ($user, Request $request, Collectivite $collectivite) {
+        $em = $this->getEntityManager();
+        if (!$user) {
+            $user = new User();
+            $user->setEnabled(true);
+            $user->setUsername($request->get('user')['name']);
+            $user->setEmail($request->get('user')['email_address']);
+            $user->setPlainPassword('sictiam');
+        }
+
+        $user->setCollectivite($collectivite);
+        $user->addRole("ROLE_ADMIN");
+        $em->persist($user);
+
+        $em->flush();
+
     }
 }

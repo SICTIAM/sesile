@@ -50,6 +50,7 @@ parameters:
         environnement: demo.sesile
         zone: sictiam.fr
         target: dmzproxy.sictiam.fr.
+    ozwillo_secret: ***REMOVED***
     email_sender_address: sictiam@sesile.fr
 
 # Twig Configuration

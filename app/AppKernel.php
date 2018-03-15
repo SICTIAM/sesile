@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Sesile\ClasseurBundle\SesileClasseurBundle(),
             new Sesile\DocumentBundle\SesileDocumentBundle(),

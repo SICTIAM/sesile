@@ -39,6 +39,12 @@ twig:
         only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
+stof_doctrine_extensions:
+    default_locale: fr
+    orm:
+        default:
+            sluggable: true
+
 # Assetic Configuration
 assetic:
     debug:          '%kernel.debug%'
