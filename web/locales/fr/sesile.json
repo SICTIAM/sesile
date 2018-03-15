@@ -379,7 +379,9 @@
             "mail": {
               "new_classeur": "Mail nouveau classeur",
               "refused_classeur": "Mail classeur refusé",
-              "valid_classeur": "Mail classeur validé"
+              "valid_classeur": "Mail classeur validé",
+              "new_copy_classeur": "Mail nouveau classeur pour utilisateur en copie",
+              "valid_copy_classeur": "Mail classeur validé pour utilisateur en copie"
             }
         },
         "documentations": {

@@ -16,7 +16,8 @@ class CollectiviteEmailModels extends Component {
         message: 'required',
         textmailnew: 'required',
         textmailrefuse: 'required',
-        textmailwalid: 'required'
+        textmailwalid: 'required',
+        textcopymailnew: 'required'
     }
 
     saveCollectivite = () => {
@@ -25,7 +26,9 @@ class CollectiviteEmailModels extends Component {
             message: collectivite.message,
             textmailnew: collectivite.textmailnew,
             textmailrefuse: collectivite.textmailrefuse,
-            textmailwalid: collectivite.textmailwalid
+            textmailwalid: collectivite.textmailwalid,
+            textcopymailnew: collectivite.textcopymailnew,
+            textcopymailwalid: collectivite.textcopymailwalid
         }
         const validation = new Validator(fields, this.validationRules)
         if(validation.passes()) if(collectivite.id) putCollectivite(collectivite.id, fields)
@@ -34,6 +37,7 @@ class CollectiviteEmailModels extends Component {
     render() {
         const { t } = this.context
         const { collectivite, handleChange, editState } = this.props
+        console.log(collectivite.textcopymailnew)
         return (
             <AccordionItem title={t('admin.collectivite.mails_templates')}>
                 <Editor id="message" 
@@ -58,6 +62,18 @@ class CollectiviteEmailModels extends Component {
                         label={t('admin.collectivite.mail.valid_classeur')}
                         className="cell medium-6"
                         value={collectivite.textmailwalid}
+                        handleChange={handleChange}/>
+
+                <Editor id="textcopymailnew"
+                        label={t('admin.collectivite.mail.new_copy_classeur')}
+                        className="cell medium-6"
+                        value={collectivite.textcopymailnew}
+                        handleChange={handleChange}/>
+
+                <Editor id="textcopymailwalid"
+                        label={t('admin.collectivite.mail.valid_copy_classeur')}
+                        className="cell medium-6"
+                        value={collectivite.textcopymailwalid}
                         handleChange={handleChange}/>
                 {(collectivite.id) && 
                 <Button id="submit-mails"

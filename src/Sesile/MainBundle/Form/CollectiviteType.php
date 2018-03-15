@@ -22,6 +22,8 @@ class CollectiviteType extends AbstractType
             ->add('textmailnew')
             ->add('textmailrefuse')
             ->add('textmailwalid')
+            ->add('textcopymailnew')
+            ->add('textcopymailwalid')
             ->add('message')
             ->add('abscisses_visa')
             ->add('ordonnees_visa')

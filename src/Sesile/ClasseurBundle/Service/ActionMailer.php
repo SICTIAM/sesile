@@ -94,7 +94,7 @@ class ActionMailer
                     $subject,
                     $validant->getEmail(),
                     $template->render(
-                        array_merge($template_html, array('validant' => $validant->getPrenom() . " " . $validant->getNom()))
+                        array_merge($template_html, ['validant' => $validant->getPrenom() . " " . $validant->getNom()])
                     )
                 );
             }
@@ -102,14 +102,21 @@ class ActionMailer
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
-        if ($usersCopy !== null && is_array($usersCopy)) {
+        if ($usersCopy) {
+            $template_copy = $env->createTemplate($collectivite->getTextcopymailnew());
             foreach ($usersCopy as $userCopy) {
                 if($userCopy != null && !in_array($userCopy, $validants)) {
+
+                    $usersValidant = "";
+                    foreach($validants as $validant) {
+                        $usersValidant .= $validant->getPrenom() . " " . $validant->getNom() . " ";
+                    }
+
                     $this->sendMail(
                         $subject,
                         $userCopy->getEmail(),
-                        $template->render(
-                            array_merge($template_html, array('validant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                        $template_copy->render(
+                            array_merge($template_html, ['validant' => $usersValidant, "en_copie" => $userCopy->getPrenom() . " " . $userCopy->getNom()])
                         )
                     );
                 }
@@ -125,26 +132,27 @@ class ActionMailer
 
         $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
         $template = $env->createTemplate($currentUser->getCollectivite()->getTextMailwalid());
-        $template_html = array(
+        $template_html = [
             'validant' => $validant->getPrenom() . " " . $validant->getNom(),
             'role' => $validant->getRole(),
             'qualite' => $validant->getQualite(),
             'titre_classeur' => $classeur->getNom(),
             'date_limite' => $classeur->getValidation(),
             'type' => strtolower($classeur->getType()->getNom()),
-            'lien' => '<a href="' . $this->router->generate('classeur_edit', array('id' => $classeur->getId()), UrlGeneratorInterface::ABSOLUTE_URL) . '">voir le classeur</a>'
-        );
+            'lien' => '<a href="' . $this->router->generate('classeur_edit', ['id' => $classeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '">voir le classeur</a>'
+        ];
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
-        if ($usersCopy !== null && is_array($usersCopy)) {
+        if ($usersCopy) {
+            $template_copy = $env->createTemplate($currentUser->getCollectivite()->getTextcopymailwalid());
             foreach ($usersCopy as $userCopy) {
                 if ($userCopy != null && $userCopy != $classeur->getUser()) {
                     $this->sendMail(
                         $subject,
                         $userCopy->getEmail(),
-                        $template->render(
-                            array_merge($template_html, array('deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                        $template_copy->render(
+                            array_merge($template_html, ['deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()])
                         )
                     );
                 }
@@ -157,7 +165,7 @@ class ActionMailer
                 $subject,
                 $user->getEmail(),
                 $template->render(
-                    array_merge($template_html, array('deposant' => $user->getPrenom() . " " . $user->getNom()))
+                    array_merge($template_html, ["en_copie" => $user->getPrenom() . " " . $user->getNom()])
                 )
             );
         }
@@ -170,36 +178,36 @@ class ActionMailer
 
         $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
         $template = $env->createTemplate($currentUser->getCollectivite()->getTextmailrefuse());
-        $template_html = array(
+        $template_html = [
             'validant'  => $currentUser->getPrenom() . " " . $currentUser->getNom(),
             'role'      => $currentUser->getRole(),
             'qualite'   => $currentUser->getQualite(),
             'titre_classeur' => $classeur->getNom(),
             'date_limite' => $classeur->getValidation(),
             'type'      => strtolower($classeur->getType()->getNom()),
-            'lien'      => '<a href="' . $this->router->generate('classeur_edit', array('id' => $classeur->getId()), UrlGeneratorInterface::ABSOLUTE_URL) . '">voir le classeur</a>',
+            'lien'      => '<a href="' . $this->router->generate('classeur_edit', ['id' => $classeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '">voir le classeur</a>',
             'motif'     => $motif
-        );
+        ];
 
         if ($deposant != null) {
             $this->sendMail(
                 $subject,
                 $deposant->getEmail(),
                 $template->render(
-                    array_merge($template_html, array('deposant' => $deposant->getPrenom()." ".$deposant->getNom()))
+                    array_merge($template_html, ['deposant' => $deposant->getPrenom()." ".$deposant->getNom()])
                 )
             );
         }
 
         $usersCopy = $classeur->getCopy();
-        if ($usersCopy !== null && is_array($usersCopy)) {
+        if ($usersCopy) {
             foreach ($usersCopy as $userCopy) {
                 if ($userCopy != null && $userCopy != $deposant) {
                     $this->sendMail(
                         $subject,
                         $userCopy->getEmail(),
                         $template->render(
-                            array_merge($template_html, array('deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()))
+                            array_merge($template_html, ['deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()])
                         )
                     );
                 }
@@ -211,7 +219,7 @@ class ActionMailer
         $message = \Swift_Message::newInstance();
         // Pour l integration de l image du logo dans le mail
         $html = explode("**logo_coll**", $body);
-        if($this->user->getCollectivite()->getImage() !== null && $this->paths['logo_coll'] !== null && !empty($html)) {
+        if($this->user->getCollectivite()->getImage() !== null && $this->paths['logo_coll'] !== null && count($html) > 1) {
             $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->paths['logo_coll'] . $this->user->getCollectivite()->getImage())) . '" width="75" alt="Sesile">' . $html[1];
         } else {
             $htmlBody = $body;
