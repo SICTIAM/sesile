@@ -23,7 +23,7 @@ class Document
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"classeurById"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $id;
 
@@ -31,7 +31,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @Groups({"classeurById"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $name;
 
@@ -39,7 +39,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="repourl", type="string", length=1000)
-     * @Groups({"classeurById"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $repourl;
 
@@ -47,7 +47,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
-     * @Groups({"classeurById"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $type;
 
@@ -55,7 +55,7 @@ class Document
      * @var string
      *
      * @ORM\Column(name="token", type="string", length=255, nullable=true)
-     * @Groups({"classeurById"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     private $token;
 

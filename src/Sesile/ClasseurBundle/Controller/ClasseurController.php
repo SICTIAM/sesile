@@ -22,7 +22,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Classeur controller.
- * @Route("/classeur")
+ * @Route("/api/v3/classeur")
  */
 class ClasseurController extends Controller {
 
@@ -1288,7 +1288,7 @@ class ClasseurController extends Controller {
      * @param null $role
      * @return Response
      */
-    public function jnlpSignerFilesAction($id, $role = null) {
+        public function jnlpSignerFilesAction($id, $role = null) {
 
         $ids = explode(",", urldecode($id));
         $em = $this->getDoctrine()->getManager();

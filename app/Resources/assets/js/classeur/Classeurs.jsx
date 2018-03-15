@@ -6,6 +6,7 @@ import { translate } from 'react-i18next'
 import { handleErrors } from '../_utils/Utils'
 import { basicNotification } from '../_components/Notifications'
 import ClasseurPagination from './ClasseurPagination'
+import History from '../_utils/History'
 
 class Classeurs extends Component {
 
@@ -94,7 +95,7 @@ class Classeurs extends Component {
         classeurs.map(classeur => {
             ids.push(classeur.id)
         })
-        window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids)}))
+        History.push('/classeurs/previsualisation', {classeurs, user: this.props.user})
     }
     revertClasseurs = (classeurs) => { classeurs.map(classeur => {this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id)})}
     refuseClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_refuseclasseur', classeur.id) })}

@@ -26,6 +26,7 @@ import ClasseursRemove from '../classeur/ClasseursRemove'
 import ClasseursRetract from '../classeur/ClasseursRetract'
 import ClasseursValid from '../classeur/ClasseursValid'
 import ClasseurNew from '../classeur/ClasseurNew'
+import ClasseursPreview from '../classeur/ClasseursPreview'
 import DashBoard from '../Dashboard/DashBoard'
 import Stats from '../Dashboard/Stats'
 import HelpBoard from '../documentation/HelpBoard'
@@ -50,10 +51,11 @@ class AppRoute extends Component {
                 <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
                 <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />
                 <Route path={"/classeur/nouveau"} exact={true} component={ClasseurNew} user={user} />
-                <Route path={"/classeurs/liste"} exact={true} component={ClasseursList} />
-                <Route path={"/classeurs/valides"} exact={true} component={ClasseursValid} />
-                <Route path={"/classeurs/retractables"} exact={true} component={ClasseursRetract} />
-                <Route path={"/classeurs/supprimes"} exact={true} component={ClasseursRemove} />
+                <Route path={"/classeurs/liste"} exact={true} component={() => <ClasseursList user={user}/>} />
+                <Route path={"/classeurs/valides"} exact={true} component={() => <ClasseursValid user={user}/>} />
+                <Route path={"/classeurs/retractables"} exact={true} component={() => <ClasseursRetract user={user}/>} />
+                <Route path={"/classeurs/supprimes"} exact={true} component={() => <ClasseursRemove user={user}/>} />
+                <Route path={"/classeurs/previsualisation"} exact={true} component={ClasseursPreview} />
                 <Route path={"/documentations"} exact={true} component={HelpBoard} />
                 <Route path={"/tableau-de-bord/stats"} exact={true} component={Stats} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (

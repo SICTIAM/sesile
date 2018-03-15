@@ -125,7 +125,7 @@ class Classeur {
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\DocumentBundle\Entity\Document", mappedBy="classeur", cascade={"remove"})
-     * @Groups({"classeurById"})
+     * @Groups({"classeurById", "listClasseur"})
      */
     protected $documents;
 

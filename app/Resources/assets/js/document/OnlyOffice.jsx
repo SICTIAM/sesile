@@ -8,6 +8,10 @@ class OnlyOffice extends Component {
         t: func
     }
 
+    static defaultProps = {
+        edit: true
+    }
+
     constructor(props) {
         super(props)
         this.state = {
@@ -40,7 +44,10 @@ class OnlyOffice extends Component {
                 document: {
                     fileType: document.repourl.split('.').pop(),
                     title: document.name,
-                    url: Routing.generate('download_jws_doc', {name: document.repourl, token: document.token}, true)
+                    url: Routing.generate('download_jws_doc', {name: document.repourl, token: document.token}, true),
+                    permissions: {
+                        edit: this.props.edit
+                    },
                 },
                 editorConfig: {
                     callbackUrl: Routing.generate('sesile_document_documentapi_onlyoffice', {id: document.id}, true),

@@ -65,7 +65,7 @@ const InputFile = ({ id, className, labelText, accept, onChange}) =>
         <input type="file" id={id} className="show-for-sr" accept={accept} onChange={e => onChange(e.target.files[0])} />
     </div>
 
-const Button = ({ id, className, classNameButton, labelText, onClick, disabled, loading=null, styleLoading=null}) =>
+const Button = ({ id, className, classNameButton="", labelText, onClick, disabled, loading=null, styleLoading=null}) =>
     <div className={className}>
         <button id={id} className={classNameButton + " button hollow"} disabled={disabled} onClick={() => onClick()}>
             {`${labelText} `}
