@@ -116,7 +116,7 @@ class AvatarForm extends Component {
                                 {user.path &&
                                     <div className="cell medium-auto">
                                         <button
-                                            className="button alert text-uppercase"
+                                            className="button alert text-uppercase hollow"
                                             onClick={() => this.deleteFile(user.id)}>
                                             {t('common.button.delete')}
                                         </button>

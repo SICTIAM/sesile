@@ -26,7 +26,9 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @Rest\Get("/current")
      */
     public function getCurrentAction() {
-        return $this->getUser();
+        $user = $this->getUser();
+        $user->setOzwillo($this->container->getParameter('ozwillo_portal'));
+        return $user;
     }
 
     /**
@@ -356,7 +358,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         if (empty($user)) {
             return new JsonResponse(['message' => 'Utilisateur inexistant'], Response::HTTP_NOT_FOUND);
         }
-        $form = $this->createForm(UserEditType::class, $user);
+        $form = $this->createForm(UserType::class, $user);
         $form->submit($request->request->all());
 
         if ($form->isValid()) {

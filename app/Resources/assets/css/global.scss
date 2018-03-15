@@ -5,6 +5,7 @@ $foundation-palette: (
     success: #39922c,
     warning: #f48c4f,
     alert: #c82d2e,
+    ozwillo: #663399,
 );
 
 $button-palette: map-merge($foundation-palette, (
@@ -1099,4 +1100,9 @@ label > input {
 }
 .button[disabled].primary {
   opacity:0.7;
+}
+
+.image-button {
+  height: 1.5em;
+  margin-right: 1em;
 }

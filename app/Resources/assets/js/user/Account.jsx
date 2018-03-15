@@ -59,8 +59,6 @@ class Account extends Component {
     handleClickSave = () => {
         const { user } = this.state
         const field = {
-            _nom: user._nom,
-            _prenom: user._prenom,
             qualite: user.qualite,
             cp: user.cp,
             ville: user.ville,
@@ -108,96 +106,124 @@ class Account extends Component {
         const userId = user.id
 
         return (
-        <div className="grid-x">
-            <div className="admin-details medium-12 cell">
-                <div className="grid-x admin-head-details">
-                    {user._prenom + " " + user._nom + " - " + user.email}
-                    <i className="fi-pencil small medium-6 cell"></i>
-                </div>
-                <div className="admin-content-details">
+        <div className="grid-x align-center">
 
-                    <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-12 cell">
-                            <h3>{t('admin.user.subtitle_user')}</h3>
-                        </div>
+            <div className="cell medium-12">
+                <div className="grid-x grid-margin-x grid-padding-x align-top align-center grid-padding-y">
+                    <div className="cell medium-12 text-center">
+                        <h1>{t('common.user.title')}</h1>
                     </div>
-                    <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-12 cell">
-                            <div className="grid-x grid-padding-x align-center-middle">
+                </div>
+            </div>
 
-                                { userId &&
-                                    <AvatarForm
-                                        user={user}
-                                        styleClass={"medium-4 cell"}
-                                        helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
-                                }
 
-                                <div className="medium-8 cell">
-                                    <div className="grid-x grid-padding-x grid-padding-y">
-                                        <div className="medium-6 cell">
-                                            <label>{t('admin.user.label_firstname')}
-                                                <input name="_prenom" value={user._prenom} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} placeholder={t('admin.user.placeholder_firstname')} />
-                                            </label>
+            <div className="medium-12 cell">
+
+                <div className="grid-x panel grid-padding-y">
+                    <div className="cell medium-12">
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <h3>{t('admin.user.subtitle_user')}</h3>
+                            </div>
+                        </div>
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <div className="grid-x grid-padding-x align-center-middle">
+
+                                    { userId &&
+                                        <AvatarForm
+                                            user={user}
+                                            styleClass={"medium-6 cell"}
+                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
+                                    }
+
+                                    <div className="medium-6 cell">
+                                        <div className="grid-x grid-padding-y">
+                                            <div className="cell medium-6">{t('admin.user.label_name')}</div>
+                                            <div className="cell medium-6 text-bold">{user._nom}</div>
                                         </div>
-                                        <div className="medium-6 cell">
-                                            <label>{t('admin.user.label_name')}
-                                                <input name="_nom" value={user._nom} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} placeholder={t('admin.user.placeholder_name')} />
-                                            </label>
+                                        <div className="grid-x grid-padding-y">
+                                            <div className="cell medium-6">{t('admin.user.label_firstname')}</div>
+                                            <div className="cell medium-6 text-bold">{user._prenom}</div>
+                                        </div>
+                                        <div className="grid-x grid-padding-y">
+                                            <div className="cell medium-6">{t('admin.user.label_email')}</div>
+                                            <div className="cell medium-6 text-bold">{user.email}</div>
+                                        </div>
+                                        <div className="grid-x grid-padding-y">
+                                            <div className="cell medium-6"></div>
+                                            <div className="cell medium-6 text-bold">
+                                                <a href={ "https://" + user.ozwillo + "/my/profile"} target="_blank" className="button hollow ozwillo">
+                                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
+                                                    {t('common.user.upadate_account')}
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                        <hr/>
 
-                    <hr/>
-                    <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-12 cell">
-                            <h3>{t('admin.user.subtitle_signature')}</h3>
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <h3>{t('admin.user.subtitle_signature')}</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-12 cell">
-                            <div className="grid-x grid-padding-x align-center-middle">
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <div className="grid-x grid-padding-x align-center-middle">
 
+                                    {
+                                        userId &&
+                                        <SignatureForm
+                                            user={user}
+                                            styleClass="medium-6 cell"
+                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
+                                    }
+
+                                    <div className="medium-6 cell">
+                                        <div className="grid-x grid-padding-x grid-padding-y">
+                                            <div className="medium-8 cell">
+                                                <label>{t('admin.user.label_quality')}
+                                                    <textarea name="qualite" value={user.qualite} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="grid-x grid-padding-x align-center-middle">
+                                    <div className="cell medium-12">
+                                        <button className="button float-right text-uppercase hollow" onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <h3>{t('admin.user.subtitle_certificate')}</h3>
+                            </div>
+                        </div>
+
+                        <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                            <div className="medium-6 cell">
+                                <Link className="button float-left text-uppercase hollow" to="https://www.sictiam.fr/certificat-electronique/" target="_blank">{ t('common.button.certificate_order') }</Link>
+                            </div>
+                            <div className="medium-6 cell text-right">
                                 {
-                                    userId &&
-                                    <SignatureForm
-                                        user={user}
-                                        styleClass={"medium-4 cell"}
-                                        helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
+                                    this.state.certificate &&
+                                    <Link className="button text-uppercase hollow" to="/utilisateur/certificat-electronique">{ t('common.button.certificate_user') }</Link>
                                 }
-
-                                <div className="medium-8 cell">
-                                    <div className="grid-x grid-padding-x grid-padding-y">
-                                        <div className="medium-8 cell">
-                                            <label>{t('admin.user.label_quality')}
-                                                <textarea name="qualite" value={user.qualite} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} />
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
-                        <div className="medium-4 cell">
-                            <Link className="button float-left text-uppercase" to="https://www.sictiam.fr/certificat-electronique/" target="_blank">{ t('common.button.certificate_order') }</Link>
-                        </div>
-                        <div className="medium-4 cell">
-                            {
-                                this.state.certificate &&
-                                <Link className="button float-left text-uppercase" to="/utilisateur/certificat-electronique">{ t('common.button.certificate_user') }</Link>
-                            }
-                        </div>
-                        <div className="medium-4 cell">
-                            <button className="button float-right text-uppercase" onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
-                        </div>
-                    </div>
-
                 </div>
+
+
             </div>
         </div>
     )

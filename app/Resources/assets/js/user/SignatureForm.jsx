@@ -111,7 +111,7 @@ class SignatureForm extends Component {
                                 <Cell className="medium-6">
 
                                         <button
-                                            className="button alert text-uppercase"
+                                            className="button alert text-uppercase hollow"
                                             onClick={() => this.deleteFileSignature(user.id)}>
                                             {t('common.button.delete')}
                                         </button>

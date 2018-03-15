@@ -61,7 +61,7 @@ const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, l
 
 const InputFile = ({ id, className, labelText, accept, onChange}) =>
     <div className={className}>
-        <label htmlFor={id} className="button">{labelText}</label>
+        <label htmlFor={id} className="button hollow">{labelText}</label>
         <input type="file" id={id} className="show-for-sr" accept={accept} onChange={e => onChange(e.target.files[0])} />
     </div>
 

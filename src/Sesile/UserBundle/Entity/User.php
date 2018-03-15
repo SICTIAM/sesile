@@ -285,6 +285,11 @@ class User extends BaseUser {
      */
     protected $enabled;
 
+    /**
+     * @var string
+     * @Serializer\Groups({"currentUser"})
+     */
+    private $ozwillo;
 
     public function setPath($path) {
         return $this->path = $path;
@@ -1146,5 +1151,14 @@ class User extends BaseUser {
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    public function setOzwillo (string $ozwillo) {
+        $this->ozwillo = $ozwillo;
+        return $this;
+    }
+
+    public function getOzwillo () {
+        return $this->ozwillo;
     }
 }
