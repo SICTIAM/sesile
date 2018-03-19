@@ -14,6 +14,30 @@ use Sesile\MainBundle\Entity\Collectivite;
  */
 class UserRepository extends EntityRepository {
 
+    public function addUser(Collectivite $collectivite, $email, $username) {
+        $em = $this->getEntityManager();
+
+        if (strpos($username, ' ')) {
+            $nom = explode(' ', $username)[0];
+            $prenom = explode(' ', $username)[1];
+        } else {
+            $nom = $username;
+            $prenom = $username;
+        }
+
+        $user = new User();
+        $user->setUsername($email);
+        $user->setPrenom($nom);
+        $user->setNom($prenom);
+        $user->setEmail($email);
+        $user->setPassword(md5(uniqid(rand(), true)));
+        $user->setSesileVersion(0);
+        $user->setCollectivite($collectivite);
+        $user->setEnabled(true);
+
+        $em->persist($user);
+    }
+
     public function findByUserPacks($userPack) {
 
         return $this

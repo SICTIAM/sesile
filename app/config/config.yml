@@ -92,13 +92,7 @@ fos_user:
 
 hwi_oauth:
     # list of names of the firewalls in which this bundle is active, this setting MUST be set
-#    connect:
-#        account_connector: my.custom.user_provider
     firewall_names: [secured_area]
-#    fosub:
-#        username_iterations: 30
-#        properties:
-#            ozwillo:    email
     resource_owners:
         ozwillo:
             type:                oauth2
@@ -188,11 +182,10 @@ fos_js_routing:
 
 jms_serializer:
     metadata:
-        auto_detection: true
         directories:
-            FOSUserBundle:
-                path: "@SesileUserBundle/Resources/config/serializer/"
+            FOSUB:
                 namespace_prefix: "FOS\\UserBundle"
+                path: "%kernel.root_dir%/serializer/FOSUB"
 
 nelmio_api_doc:
     name: Sesile API

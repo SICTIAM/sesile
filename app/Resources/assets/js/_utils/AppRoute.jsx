@@ -17,6 +17,7 @@ import Note from '../admin/Note'
 import Users from '../admin/Users'
 import User from '../admin/User'
 import UserListClasseurs from '../admin/UserListClasseurs'
+import UsersOzwillo from '../admin/UsersOzwillo'
 import Types from '../admin/Types'
 
 import Account from "../user/Account"
@@ -72,6 +73,9 @@ class AppRoute extends Component {
                 )} />
                 <Route exact={true} path={"/admin/:collectiviteId/utilisateur/:userId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={User} user={user} match={match} />
+                )} />
+                <Route exact={true} path={"/admin/collectivite/:collectiviteId?/utilisateurs-ozwillo"} render={({match}) => (
+                    <AdminRoute exact={true} path={match.path} component={UsersOzwillo} user={user} match={match} />
                 )} />
                 <Route exact={true} path={"/admin/:collectiviteId/classeurs/:userId"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={UserListClasseurs} user={user} match={match} />

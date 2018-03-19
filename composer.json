@@ -25,7 +25,7 @@
         "friendsofsymfony/jsrouting-bundle": "2.0.x-dev",
         "friendsofsymfony/rest-bundle": "2.2.*",
         "nelmio/api-doc-bundle": "2.13.*",
-        "jms-serializer/serializer-bundle": "^1.1",
+        "jms-serializer/serializer-bundle": "1.1.1",
         "besimple/sso-auth-bundle": "@dev",
         "setasign/setapdf-stamper": "2.24.0.1049",
         "stof/doctrine-extensions-bundle": "^1.3",

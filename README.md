@@ -41,11 +41,18 @@ Requires a web server with :
 
 5. Populate database
 
-Sesile require 'collectivité' informations and a user, you must define this informations in Collectivite and User tables.
+Sesile require 'collectivité' informations and a user, you must define this informations in Ozwillo.
 
-The user to use in sesile must exist in the CAS.
+The user to use in sesile must exist in Ozwillo.
+The 'Collectivité' in sesile must exist in Ozwillo as a service
 
-[Mysql request example](https://forge.sictiam.fr/snippets/1)
+In Ozwillo, when you create your app you have to define informations : 
+ - Redirect uri: http://you-url/login/check-ozwillo
+ - Provisionning service: http://you-url/collectivite/new
+ - Update service: http://you-url/collectivite/update
+
+Ozwillo will give you back a secret token. You have to put it in your config.yml file :
+ - parameters.ozwillo_secret: your-ozwillo-secret
 
 Access to phMyAdmin [http://sesile.dev:8080](http://sesile.dev:8080) or nginx docker image ip adress with port 8080
 

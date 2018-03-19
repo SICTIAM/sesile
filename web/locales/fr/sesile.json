@@ -42,6 +42,7 @@
             "update": "Mettre à jour",
             "save": "Enregistrer",
             "edit": "Editer",
+            "list_ozwillo": "Ajouter des utilisateurs",
             "change_img": "Changer l'image",
             "upload_img": "Ajouter une image",
             "delete_img": "Supprimer l'image",
@@ -215,6 +216,7 @@
         "associated_users": "Utilisateurs associés",
         "associated_group": "Groupes associés",
         "users_list": "Liste d'utilisateurs",
+        "users_list_ozwillo": "Liste d'utilisateurs Ozwillo",
         "button": {
             "save": "Ajouter le {{name}}",
             "send": "Envoyer"
@@ -344,7 +346,11 @@
             "search_by_first_name_and_name": "Recherche par nom et prénom",
             "succes_delete": "L'utilisateur a été supprimé",
             "error_delete": "Impossible de supprimer l'utilisateur",
-            "which_user": "Quel utilisateur ?"
+            "which_user": "Quel utilisateur ?",
+            "ozwillo_title_user" : "Importer le compte",
+            "ozwillo_provisionning_users" : "Importer tous les comptes",
+            "ozwillo_provisionning_user" : "Importer le compte",
+            "ozwillo_user_is_present" : "L'utilisateur est déjà présent dans SESILE"
         },
         "collectivite": {
             "title": "Rechercher une collectivité",
