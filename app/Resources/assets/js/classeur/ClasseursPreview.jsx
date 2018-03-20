@@ -39,37 +39,47 @@ class ClasseursPreview extends Component {
                     user={this.props.location.state.user} />)
         return (
             <GridX className="details-classeur">
-                <Cell className="text-center">
-                    <h1 className="text">{t('common.sign_classeur', {count: this.state.classeurs.length})}</h1>
-                </Cell>
-                {this.state.classeurs.length > 1 &&
-                    <Cell>
-                        <GridX className="grid-padding-y">
+                <Cell>
+                    <GridX>
+                        <Cell className=" medium-12 text-center">
+                            <h1>{t('common.sign_classeur', {count: this.state.classeurs.length})}</h1>
+                        </Cell>
+                    </GridX>
+                    {this.state.classeurs.length > 1 &&
+                        <GridX>
                             <Cell>
-                                <GridX className="align-center-middle">
-                                    <Cell className="medium-10">
-                                        <h2>{t('common.sign_several_classeurs')}</h2>
+                                <GridX className="grid-padding-y">
+                                    <Cell>
+                                        <GridX className="align-center-middle">
+                                            <Cell className="medium-10">
+                                                <h2>{t('common.sign_several_classeurs')}</h2>
+                                            </Cell>
+                                            <Button
+                                                className="cell medium-2 text-right"
+                                                onClick={this.signClasseurs}
+                                                labelText={t('common.sign_classeur_plural')}/>
+                                        </GridX>
                                     </Cell>
-                                    <Button
-                                        className="cell medium-2 text-right"
-                                        onClick={this.signClasseurs}
-                                        labelText={t('common.sign_classeur_plural')}/>
+                                </GridX>
+                                <GridX>
+                                    <Cell className="medium-12 panel">
+                                        <ListClasseursToSign classeurs={this.state.classeurs} handleCheckClasseur={this.checkClasseur}/>
+                                    </Cell>
                                 </GridX>
                             </Cell>
-                            <Cell className="panel">
-                                <ListClasseursToSign classeurs={this.state.classeurs} handleCheckClasseur={this.checkClasseur}/>
-                            </Cell>
                         </GridX>
-                    </Cell>
-                }
-                <Cell>
-                    <GridX className="grid-margin-x">
-                        <Cell>
-                            <h2>{t('common.list_documents_by_classeur')}</h2>
-                        </Cell>
+                    }
+                    <GridX>
                         <Cell>
                             <GridX className="grid-margin-x">
-                                {documentsPreviewByClasseur}
+                                <Cell>
+                                    <h2>{t('common.list_documents_by_classeur')}</h2>
+                                </Cell>
+                                <Cell>
+                                    <GridX className="grid-margin-x">
+                                        {documentsPreviewByClasseur}
+                                    </GridX>
+                                </Cell>
                             </GridX>
                         </Cell>
                     </GridX>
@@ -139,7 +149,9 @@ const DocumentsPreviewByClasseur = ({classeur, user}, {t}) => {
                         </Cell>
                     </div>
                 </Cell>
-                <Cell className="panel">
+            </GridX>
+            <GridX>
+                <Cell className="medium-12 panel">
                     <GridX className="grid-margin-x grid-padding-x grid-padding-y">
                         {documentList}
                     </GridX>
@@ -163,6 +175,8 @@ const Preview = ({document, user}, {t}) => {
                         {document.name}
                     </h6>
                 </Cell>
+            </GridX>
+            <GridX>
                 {(acceptedTypeMime.includes(document.repourl.split('.').pop())) &&
                     <OnlyOffice document={document} user={user} revealDisplay={false} edit={false} />}
                 {(document.type === 'application/pdf') &&
