@@ -40,3 +40,12 @@ services:
             image: phpmyadmin/phpmyadmin
             ports:
                 - "8080:80"
+    onlyoffice:
+            image: onlyoffice/documentserver:latest
+            ports:
+                - 8081:80
+            stdin_open: true
+            volumes:
+                - ./logs/onlyoffice/logs:/var/log/onlyoffice
+                - ./.data/onlyoffice/data:/var/www/onlyoffice/Data
+                - ./.data/onlyoffice/lib:/var/lib/onlyoffice

@@ -201,7 +201,13 @@
         "consult_document": "Voir le document",
         "search_by_name": "Recherche par nom",
         "type_a_name": "Saisir un nom",
-        "file_acceptation_rules": "Le fichier doit être au format {{types}} et d'une taille maximum de {{sizeMax}}"
+        "file_acceptation_rules": "Le fichier doit être au format {{types}} et d'une taille maximum de {{sizeMax}}",
+        "sign_classeur": "Signer le classeur",
+        "sign_classeur_plural": "Signer les classeurs",
+        "sign_several_classeurs": "Signer plusieurs classeurs",
+        "list_documents_by_classeur": "Liste des documents par classeur",
+        "browser_not_support_pdf": "Votre navigateur ne supporte pas le format PDF",
+        "download_pdf": "Télécharger le PDF"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
