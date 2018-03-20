@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 
 /**
@@ -35,6 +36,18 @@ class Collectivite
     private $id;
 
     /**
+     * @ORM\OneToOne(targetEntity="Sesile\MainBundle\Entity\CollectiviteOzwillo", mappedBy="collectivite", cascade={"persist"})
+     */
+    private $ozwillo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="siren", type="string", length=10)
+     */
+    private $siren;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
@@ -51,6 +64,7 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="domain", type="string", length=255)
+     * @Gedmo\Slug(fields={"nom"}, separator="-", updatable=false, unique=false)
      * @Serializer\Groups({"currentUser",
      *                      "getAllCollectivite",
      *                      "getCollectiviteById"})
@@ -185,7 +199,7 @@ class Collectivite
      * @ORM\Column(name="pageSignature", type="integer", options={"default"=0})
      * @Serializer\Groups({"getCollectiviteById"})
      */
-    private $pageSignature;
+    private $pageSignature = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\User", mappedBy="collectivite")
@@ -875,6 +889,54 @@ class Collectivite
     public function getTypes()
     {
         return $this->types;
+    }
+
+    /**
+     * Set ozwillo
+     *
+     * @param \Sesile\MainBundle\Entity\CollectiviteOzwillo $ozwillo
+     *
+     * @return Collectivite
+     */
+    public function setOzwillo(\Sesile\MainBundle\Entity\CollectiviteOzwillo $ozwillo = null)
+    {
+        $this->ozwillo = $ozwillo;
+
+        return $this;
+    }
+
+    /**
+     * Get ozwillo
+     *
+     * @return \Sesile\MainBundle\Entity\CollectiviteOzwillo
+     */
+    public function getOzwillo()
+    {
+        return $this->ozwillo;
+    }
+
+    /**
+     * Set siren
+     *
+     * @param string $siren
+     *
+     * @return Collectivite
+     */
+    public function setSiren($siren)
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    /**
+     * Get siren
+     *
+     * @return string
+     */
+    public function getSiren()
+    {
+        return $this->siren;
     }
 
     /**

@@ -252,7 +252,7 @@ class User extends BaseUser {
      * 
      * @ORM\Column(name="sesile_version", type="float")
      */
-    private $sesileVersion;
+    private $sesileVersion = 0;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\Note", inversedBy="users", cascade={"persist"})

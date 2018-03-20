@@ -3,6 +3,7 @@
 namespace Sesile\MainBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * CollectiviteRepository
@@ -24,6 +25,34 @@ class CollectiviteRepository extends EntityRepository {
                 $imageName
             );
         }
+        return $collectivite;
+    }
+
+
+    public function createCollectiviteFromOzwillo(Request $request) {
+
+        $siren = substr(strrchr($request->get('organization')['dc_id'], "/"), 1, 9);
+        $em = $this->getEntityManager();
+
+        $collectiviteOzwillo = new CollectiviteOzwillo();
+        $collectivite = new Collectivite();
+        $collectiviteOzwillo->setInstanceId($request->get('instance_id'));
+        $collectiviteOzwillo->setClientId($request->get('client_id'));
+        $collectiviteOzwillo->setClientSecret($request->get('client_secret'));
+        $collectiviteOzwillo->setInstanceRegistrationUri($request->get('instance_registration_uri'));
+        $collectiviteOzwillo->setDcId($request->get('organization')['dc_id']);
+        $collectiviteOzwillo->setServiceId($request->get('instance_id'));
+        $collectiviteOzwillo->setDestructionSecret(base64_encode(random_bytes(10)));
+        $collectiviteOzwillo->setStatusChangedSecret(base64_encode(random_bytes(10)));
+        $collectiviteOzwillo->setCollectivite($collectivite);
+        $collectivite->setNom($request->get('organization')['name']);
+        $collectivite->setSiren($siren);
+        $collectivite->setActive(true);
+        $collectivite->setOzwillo($collectiviteOzwillo);
+
+        $em->persist($collectivite);
+        $em->flush();
+
         return $collectivite;
     }
 }
