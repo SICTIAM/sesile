@@ -252,10 +252,10 @@ const DisplayFileName = ({documentation, onClick}, {t}) => {
     return (
         <Cell className="text-bold">
             {(documentation.file) ?
-                <p key={file.name}>
-                {(file.name.length > 20) ? 
-                    `...${file.name.substring(file.name.length -20, file.name.length)} `: 
-                    file.name} 
+                <p key={file.name} title={file.name}>
+                {(file.name.split('.').shift().length > 30) ?
+                    `${file.name.split('.').shift().substring(0,30)}...${file.name.split('.').pop()} `:
+                    file.name}
                 <a style={{color: 'red', width: 0.1, height: 0.1}} onClick={(e) => onClick(e)} title={t('common.button.remove')}> x</a></p> :
                 t('common.drop_file_here')}
         </Cell>
