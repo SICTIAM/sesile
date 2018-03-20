@@ -35,7 +35,7 @@ class Note
     /**
      * @var string
      *
-     * @ORM\Column(name="subtitle", type="string", length=255, nullable=false)
+     * @ORM\Column(name="subtitle", type="string", length=255, nullable=true)
      * @Serializer\Groups({"noteMaj", "getLastNote", "listNote", "detailsNote"})
      */
     private $subtitle;
