@@ -22,7 +22,7 @@ class Bordereau
     public $type;
     public $listPieces = array();
 
-    function __construct($id, $dateEm, $nbPiece, $mtBordHT, $mtCumulAnnuel, $exercice, $type, $listPieces, $typePES, $tabPJ2)
+    function __construct($id, $dateEm, $nbPiece, $mtBordHT, $mtCumulAnnuel, $exercice, $type, $listPieces, $typePes, $tabPJ2)
     {
         $this->id = $id;
         $this->dateEm = $dateEm;
@@ -30,7 +30,7 @@ class Bordereau
         $this->mtBordHT = $mtBordHT;
         $this->mtCumulAnnuel = $mtCumulAnnuel;
         $this->exercice = $exercice;
-        if ($typePES === 'Depense') {
+        if ($typePes === 'Depense') {
             switch ($type) {
                 case '01':
                     $this->type = 'Ordinaire';
@@ -78,7 +78,7 @@ class Bordereau
             }
 
             $tabPJs = array();
-            if ($typePES === 'Depense') {
+            if ($typePes === 'Depense') {
                 $objet = $piece->BlocPiece->InfoPce->Obj->attributes()[0];
                 if (isset($piece->BlocPiece->InfoPce->PJRef)) {
                     foreach ($piece->BlocPiece->InfoPce->PJRef as $pj) {
@@ -122,7 +122,7 @@ class Bordereau
                     $prenom = '';
 
                 }
-                if ($typePES === 'Depense') {
+                if ($typePes === 'Depense') {
                     $imputation = (string)$LignePiece->BlocLignePiece->InfoLignePce->Nature->attributes()[0];
                     if(isset($LignePiece->BlocLignePiece->InfoLignePce->Fonction)){
                         $imputation .= '.'.$LignePiece->BlocLignePiece->InfoLignePce->Fonction->attributes()[0];
@@ -163,11 +163,9 @@ class Bordereau
 
                 $totTVA += $tmpTVA;
                 //Calcul du TTC
-                $mtTTCNum = tofloat($mtHT) + tofloat($mtTVA);
+                $mtTTCNum = $this->tofloat($mtHT) + $this->tofloat($mtTVA);
 
                 $totTTC += $mtTTCNum;
-
-
             }
 
 
@@ -178,21 +176,21 @@ class Bordereau
             $this->listPieces[] = new Piece($idP, $civilite, $nom, $prenom, (string)$objet, $tabImput, $formatHT, $formatTVA, $formatTTC, $tabPJs, $tabPJ2);
         }
     }
-}
 
-function tofloat($num)
-{
-    $dotPos = strrpos($num, '.');
-    $commaPos = strrpos($num, ',');
-    $sep = (($dotPos > $commaPos) && $dotPos) ? $dotPos :
-        ((($commaPos > $dotPos) && $commaPos) ? $commaPos : false);
+    private function tofloat($num)
+    {
+        $dotPos = strrpos($num, '.');
+        $commaPos = strrpos($num, ',');
+        $sep = (($dotPos > $commaPos) && $dotPos) ? $dotPos :
+            ((($commaPos > $dotPos) && $commaPos) ? $commaPos : false);
 
-    if (!$sep) {
-        return floatval(preg_replace("/[^0-9]/", "", $num));
+        if (!$sep) {
+            return floatval(preg_replace("/[^0-9]/", "", $num));
+        }
+
+        return floatval(
+            preg_replace("/[^0-9]/", "", substr($num, 0, $sep)) . '.' .
+            preg_replace("/[^0-9]/", "", substr($num, $sep + 1, strlen($num)))
+        );
     }
-
-    return floatval(
-        preg_replace("/[^0-9]/", "", substr($num, 0, $sep)) . '.' .
-        preg_replace("/[^0-9]/", "", substr($num, $sep + 1, strlen($num)))
-    );
 }

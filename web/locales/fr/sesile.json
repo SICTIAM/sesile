@@ -18,7 +18,7 @@
             "attachment_list": "Liste des pièces",
             "attachment_number": "N°Piece",
             "creditor": "Créancier Référence bancaire",
-            "expenditure_type": "Nature de la dépense",
+            "type_pjs": "Nature de la ",
             "imputation": "Imputation",
             "amount_ht": "Montant HT",
             "amount_tva": "Montant TVA",

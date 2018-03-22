@@ -53,8 +53,10 @@ class Helios extends Component {
 
     handleChangeVouchers = (name, value) => this.setState(prevState => prevState.voucher = this.state.pes.vouchers.find(voucher => voucher.id == value))
     handleClickPJ = (name, value) => {
-        const pj = this.state.voucher.list_pieces.find(piece => piece.liste_p_js.find(pj => pj.id == value)).liste_p_js.find(pj => pj.id == value)
-        this.setState({pj: Routing.generate("sesile_document_documentapi_getpj", {id: this.props.document.id, pejid: pj.id, pejname: pj.nom}, true), revealDisplay: 'block'})
+        if (value) {
+            const pj = this.state.voucher.list_pieces.find(piece => piece.liste_p_js.find(pj => pj.id == value)).liste_p_js.find(pj => pj.id == value)
+            this.setState({pj: Routing.generate("sesile_document_documentapi_getpj", {id: this.props.document.id, pejid: pj.id, pejname: pj.nom}, true), revealDisplay: 'block'})
+        }
     }
 
     hideRevealDisplay = () => this.setState({revealDisplay: 'none'})
@@ -79,7 +81,7 @@ class Helios extends Component {
                     />
 
                     <HeliosVoucher voucher={voucher} />
-                    <HeliosPJs pjs={voucher.list_pieces} handleClickPJ={this.handleClickPJ} />
+                    <HeliosPJs pjs={voucher.list_pieces} handleClickPJ={this.handleClickPJ} typePes={pes.type_pes_name || ''} />
                 </div>
 
             </div>
