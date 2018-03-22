@@ -29,7 +29,7 @@ class Note extends Component {
     }
     validationRules = {
         title: 'required|string',
-        subtitle: 'required|string'
+        subtitle: 'string'
     }
     componentDidMount() {
         const { noteId } = this.props.match.params
