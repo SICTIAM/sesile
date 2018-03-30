@@ -26,7 +26,9 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @Rest\Get("/current")
      */
     public function getCurrentAction() {
-        return $this->getUser();
+        $user = $this->getUser();
+        $user->setOzwillo($this->container->getParameter('ozwillo_portal'));
+        return $user;
     }
 
     /**

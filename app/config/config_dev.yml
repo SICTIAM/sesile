@@ -27,30 +27,31 @@ monolog:
 assetic:
     use_controller: true
 
+hwi_oauth:
+    # list of names of the firewalls in which this bundle is active, this setting MUST be set
+    firewall_names: [secured_area]
+    resource_owners:
+        ozwillo:
+            type:                ozwillo
+            client_id:           2e771747-f906-4125-ba96-806553bc2ce2
+            client_secret:       ***REMOVED***
+            access_token_url:    https://accounts.ozwillo-preprod.eu/a/token
+            authorization_url:   https://accounts.ozwillo-preprod.eu/a/auth
+            infos_url:           https://accounts.ozwillo-preprod.eu/a/userinfo
+
 parameters:
-    cas_server: devsso.sictiam.fr
-    cas_port: 389
-    cas_path: /
-    cas_protocol: '2.0'
     upload:
         path: '%kernel.root_dir%/../web/uploads/avatars/'
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'
         logo_coll: '%kernel.root_dir%/../web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         fics: '%kernel.project_dir%/web/uploads/docs/'
-    ldap:
-        dn_admin: cn=admin,dc=sictiam,dc=local
-        dn_user: cn=Users,dc=sictiam,dc=local
-        password: WcJa37BI
-    domain_parse:
-        default: sesile-react
-        dbname: sictiam
     url_applet: signature.dev.sesile.fr
     ovh:
         environnement: demo.sesile
         zone: sictiam.fr
         target: dmzproxy.sictiam.fr.
-    ozwillo_secret: ***REMOVED***
+    ozwillo_secret: )Ve*^e-JEr%d32g!-DV.x2s$oBwjr,|/
     email_sender_address: sictiam@sesile.fr
 
 # Twig Configuration

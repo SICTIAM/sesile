@@ -17,11 +17,9 @@ class UsersOzwillo extends Component {
         usersOzwillo: [],
         collectiviteId: parseInt(this.props.match.params.collectiviteId),
         fieldSearch: '',
-        infos: '',
-        isSuperAdmin: false
+        infos: ''
     }
     componentDidMount() {
-        if(this.props.user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
         this.fetchUsersOzwillo(this.state.collectiviteId)
     }
     fetchUsersOzwillo (id) {
@@ -39,6 +37,7 @@ class UsersOzwillo extends Component {
     }
 
     handleAddUser = (user) => {
+        const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_user_userapi_postuser', {id: this.state.collectiviteId}), {
             method: 'post',
             headers: {
@@ -51,10 +50,16 @@ class UsersOzwillo extends Component {
             }),
             credentials: 'same-origin'
         })
+            .then(handleErrors)
             .then(() => this.fetchUsersOzwillo(this.state.collectiviteId))
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.add_user', {errorCode: error.status}),
+                error.statusText)))
     }
 
     handleAddUsers = () => {
+        const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_user_userapi_postusers', {id: this.state.collectiviteId}), {
             method: 'post',
             headers: {
@@ -63,7 +68,12 @@ class UsersOzwillo extends Component {
             },
             credentials: 'same-origin'
         })
+            .then(handleErrors)
             .then(() => this.fetchUsersOzwillo(this.state.collectiviteId))
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.add_user_plural', {errorCode: error.status}),
+                error.statusText)))
     }
 
     render() {

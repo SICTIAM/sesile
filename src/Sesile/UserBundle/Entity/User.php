@@ -259,7 +259,7 @@ class User extends BaseUser {
      * 
      * @ORM\Column(name="sesile_version", type="float")
      */
-    private $sesileVersion;
+    private $sesileVersion = 0;
 
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\Note", inversedBy="users", cascade={"persist"})
@@ -291,6 +291,12 @@ class User extends BaseUser {
      * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $enabled;
+
+    /**
+     * @var string
+     * @Serializer\Groups({"currentUser"})
+     */
+    private $ozwilloUrl;
 
 
     public function setPath($path) {
@@ -1177,5 +1183,29 @@ class User extends BaseUser {
     public function getOzwilloId()
     {
         return $this->ozwilloId;
+    }
+
+    /**
+     * Set ozwilloId
+     *
+     * @param string $ozwilloUrl
+     *
+     * @return User
+     */
+    public function setOzwillo (string $ozwilloUrl)
+    {
+        $this->ozwilloUrl = $ozwilloUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get ozwilloId
+     *
+     * @return string
+     */
+    public function getOzwillo ()
+    {
+        return $this->ozwilloUrl;
     }
 }

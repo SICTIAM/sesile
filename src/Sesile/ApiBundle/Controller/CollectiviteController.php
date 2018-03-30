@@ -5,6 +5,7 @@ namespace Sesile\ApiBundle\Controller;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,8 +126,8 @@ class CollectiviteController extends Controller
             'target_audience' => "PUBLIC_BODY",
             'visibility' => "VISIBLE",
             'access_control' => "RESTRICTED",
-            'service_uri' => $this->generateUrl('sesile_main_default_app', array(), UrlGeneratorInterface::ABSOLUTE_URL),
-            'redirect_uris' => [$this->generateUrl('sesile_main_default_app', array(), UrlGeneratorInterface::ABSOLUTE_URL)]
+            'service_uri' => $this->urlRegistrationToKernel($collectivite, $this->generateUrl('sesile_main_default_app')),
+            'redirect_uris' => [$this->urlRegistrationToKernel($collectivite, $this->generateUrl('ozwillo_login'))]
         ];
         $jsonResponse->instance_id = $collectivite->getOzwillo()->getInstanceId();
         $jsonResponse->destruction_uri = $this->generateUrl('sesile_api_collectivite_delete', array('id' => $collectivite->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
@@ -136,6 +137,10 @@ class CollectiviteController extends Controller
         $jsonResponse->services = $services;
 
         return $jsonResponse;
+    }
+
+    private function urlRegistrationToKernel(Collectivite $collectivite, $path) {
+        return 'https://' . $collectivite->getDomain() . '.' . $this->getParameter('domain') . $path;
     }
 
     private function checkSignature(String $requestBody, String $xHubSignature, String $secret) {

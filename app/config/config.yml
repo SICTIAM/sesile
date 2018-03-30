@@ -71,6 +71,15 @@ doctrine:
         auto_generate_proxy_classes: '%kernel.debug%'
         auto_mapping: true
 
+# Ozwillo Oauth2
+hwi_oauth:
+    firewall_names: [secured_area]
+    resource_owners:
+        ozwillo:
+            type:                ozwillo
+            client_id:           2e771747-f906-4125-ba96-806553bc2ce2
+            client_secret:       ***REMOVED***
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: '%mailer_transport%'
@@ -90,46 +99,17 @@ fos_user:
         address: sesile@sictiam.fr
         sender_name: SESILE
 
-hwi_oauth:
-    # list of names of the firewalls in which this bundle is active, this setting MUST be set
-    firewall_names: [secured_area]
-    resource_owners:
-        ozwillo:
-            type:                oauth2
-            client_id:           2e771747-f906-4125-ba96-806553bc2ce2
-            client_secret:       ***REMOVED***
-            access_token_url:    https://accounts.ozwillo-preprod.eu/a/token
-            authorization_url:   https://accounts.ozwillo-preprod.eu/a/auth
-            infos_url:           https://accounts.ozwillo-preprod.eu/a/userinfo
-            scope:               "email openid profile"
-            paths:
-                identifier: sub
-                nickname:   nickname
-                realname:   name
-                email:      email
-            options:
-                use_basic_authorization: true
-                csrf: true
-
 parameters:
+    domain: sesile.fr
     informations:
         version: 4.0-sprint10
         contact_link: http://support.sictiam.fr/declarer-un-incident/
-    cas_server: devsso.sictiam.fr
-    be_simple.sso_auth.client.option.curlopt_ssl_verifypeer.value: FALSE
     upload:
         path: '%kernel.project_dir%/web/uploads/avatars/'
         fics: '%kernel.project_dir%/web/uploads/docs/'
         logo_coll: '%kernel.project_dir%/web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'
-    ldap:
-        dn_admin: cn=admin,dc=sictiam,dc=local
-        dn_user: cn=Users,dc=sictiam,dc=local
-        password: WcJa37BI
-    domain_parse:
-        default: sesile
-        dbname: sictiam
     build:
         repository: "git@gitlab.sictiam.fr:sesile/sesile.git"
         branch: master
@@ -199,6 +179,8 @@ sensio_framework_extra:
 
 services:
     my.sesile.user_provider:
+        autowire: true
+        autoconfigure: true
         class: Sesile\UserBundle\Security\Core\User\MyFOSUBUserProvider
         arguments: ['@fos_user.user_manager', { ozwillo: email }]
 

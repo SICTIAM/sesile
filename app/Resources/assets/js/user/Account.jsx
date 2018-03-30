@@ -153,7 +153,7 @@ class Account extends Component {
                                         <div className="grid-x grid-padding-y">
                                             <div className="cell medium-6"></div>
                                             <div className="cell medium-6 text-bold">
-                                                <a href={ "https://" + user.ozwillo + "/my/profile"} target="_blank" className="button hollow ozwillo">
+                                                <a href={ "https://" + user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
                                                     <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
                                                     {t('common.user.upadate_account')}
                                                 </a>

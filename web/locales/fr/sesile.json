@@ -226,7 +226,9 @@
             "not_extractable": "Impossible de récuperer {{name}} - erreur {{errorCode}}",
             "add": "Impossible de créer le {{name}} - erreur {{errorCode}}",
             "not_updatable": "Impossible de mettre à jour le {{name}} - erreur {{errorCode}}",
-            "not_removable": "Impossible de supprimer le {{name}} - erreur {{errorCode}}"
+            "not_removable": "Impossible de supprimer le {{name}} - erreur {{errorCode}}",
+            "add_user": "Impossible d'ajouter l'utilisateur - erreur {{errorCode}}",
+            "add_user_plural": "Impossible d'ajouter l'utilisateur - erreur {{errorCode}}"
         },
         "success": {
             "add": "Ajout de {{name}}",
