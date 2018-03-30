@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\DocumentBundle\Entity\Document;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sesile\DocumentBundle\Classe\PES;
 use Symfony\Component\HttpFoundation\Response;
@@ -137,9 +138,9 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
      * @Rest\Get("/helios/{id}")
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @param Document $document
+     * @return PES|JsonResponse
      * @internal param Document $document
      * @internal param $id
-     * @return array
      */
     public function heliosAction(Document $document)
     {
@@ -148,11 +149,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
         $em = $this->getDoctrine()->getManager();
 
         if (!in_array($classeur, $user->getClasseurs()->toArray()) && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->get('session')->getFlashBag()->add(
-                'error',
-                "Vous n'avez pas accès à ce classeur"
-            );
-            return false;
+            return new JsonResponse(['message' => 'Vous n\'avez pas accès à ce classeur'], Response::HTTP_FORBIDDEN);
         }
 
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Visualisation du document par " . $user->getPrenom() . " " . $user->getNom(), null);
@@ -163,69 +160,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
             $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
             $xml = simplexml_load_string($str, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
 
-            $arrayPJ = array();
-            if (isset($xml->PES_PJ)) {
-                foreach ($xml->PES_PJ->PJ as $pj) {
-                    $arrayPJ[] = $pj;
-                }
-            }
-
-            $arrayBord = array();
-            if (isset($xml->PES_DepenseAller)) {
-                foreach ($xml->PES_DepenseAller->Bordereau as $Bord) {
-                    $Bord->type = 'Depense';
-                    $arrayBord[] = $Bord;
-                }
-            }
-            if (isset($xml->PES_RecetteAller)) {
-                foreach ($xml->PES_RecetteAller->Bordereau as $Bord) {
-                    $Bord->type = 'Recette';
-                    $arrayBord[] = $Bord;
-                }
-            }
-            if(!isset($xml->PES_RecetteAller) && !isset($xml->PES_DepenseAller)) {
-                return array('isPJ' => true);
-            }
-
-
-            if (isset($xml->PES_DepenseAller) && count($xml->PES_DepenseAller->Bordereau->Signature)) {
-                //si on a une signature  on récupère le certificat
-                $sign = $xml->PES_DepenseAller->Bordereau->Signature->KeyInfo->X509Data->X509Certificate;
-                $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
-                //on récupère un tableau contenant les infos du certificat
-                $tab = openssl_x509_parse($x509);
-                $subject = $tab['subject'];
-                $Signataire = $subject['CN'];
-
-                //on récupère la date de signature (il y a surement plus simple)
-                $date = $xml->PES_DepenseAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
-
-            } elseif(isset($xml->PES_RecetteAller) && count($xml->PES_RecetteAller->Bordereau->Signature)) {
-                //si on a une signature  on récupère le certificat
-                $sign = $xml->PES_RecetteAller->Bordereau->Signature->KeyInfo->X509Data->X509Certificate;
-                $x509 = '-----BEGIN CERTIFICATE-----' . chr(10) . $sign . chr(10) . '-----END CERTIFICATE-----';
-                //on récupère un tableau contenant les infos du certificat
-                $tab = openssl_x509_parse($x509);
-                $subject = $tab['subject'];
-                $Signataire = $subject['CN'];
-
-                //on récupère la date de signature (il y a surement plus simple)
-                $date = $xml->PES_RecetteAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
-
-            }
-            else{
-                $Signataire = '';
-                $date = '';
-            }
-
-            $PES = new PES($xml->EnTetePES->LibelleColBud->attributes()[0], $Signataire, $date, $arrayBord, $arrayPJ);
-
-            return array(
-                'budget' => (string)$PES->budget,
-                'signatory' => utf8_decode($PES->signataire),
-                'dateSign' => $PES->dateSign,
-                'vouchers' => $PES->listBord
-            );
+            return new PES($xml);
         }
 
         return new JsonResponse(['message' => 'Impossible de récupérer le document'], Response::HTTP_NO_CONTENT);

@@ -9,7 +9,7 @@ class HeliosPJs extends Component {
 
     render () {
         const { t } = this.context
-        const { pjs, handleClickPJ } = this.props
+        const { pjs, handleClickPJ, typePes } = this.props
 
         return (
             <div>
@@ -26,7 +26,7 @@ class HeliosPJs extends Component {
                             <tr>
                                 <th>{ t('common.helios.attachment_number') }</th>
                                 <th>{ t('common.helios.creditor') }</th>
-                                <th>{ t('common.helios.expenditure_type') }</th>
+                                <th>{ t('common.helios.type_pjs') + ' ' + typePes }</th>
                                 <th>{ t('common.helios.imputation') }</th>
                                 <th>{ t('common.helios.amount_ht') }</th>
                                 <th>{ t('common.helios.amount_tva') }</th>
@@ -54,6 +54,7 @@ class HeliosPJs extends Component {
                                             <Select id="pj"
                                                     onChange={handleClickPJ}
                                             >
+                                                <option></option>
                                                 { pj.liste_p_js.map(liste_p_j => <option key={liste_p_j.id} value={liste_p_j.id}>{liste_p_j.nom}</option>)}
                                             </Select>
                                         }
