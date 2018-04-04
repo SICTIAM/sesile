@@ -79,7 +79,7 @@ class MenuBar extends Component {
                             </li>
                         </ul>
                     :
-                    <a href="/login" className="button primary hollow">{ t('connection') }</a>
+                    <a href="/connect/ozwillo" className="button primary hollow">{ t('common.menu.connection') }</a>
                 }
             </div>
         )

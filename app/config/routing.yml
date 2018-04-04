@@ -1,3 +1,15 @@
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /connect
+
+hwi_oauth_connect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
+    prefix:   /connect
+
+#hwi_oauth_login:
+#    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+#    prefix:   /login
+
 sesile_main:
     resource: "@SesileMainBundle/Controller/"
     type:     annotation
@@ -42,7 +54,6 @@ sesile_admin:
 sesile_document:
     resource: "@SesileDocumentBundle/Controller/"
     type:     annotation
-#    prefix:   /doc/
 
 sesile_api:
     resource: "@SesileApiBundle/Controller/"
@@ -92,15 +103,17 @@ fos_user_change_password:
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
-login:
-    path:   /tableau-de-bord
-
-login_check:
-    path:   /login_check
-
+#login:
+#    path:   /tableau-de-bord
+#
+#login_check:
+#    path:   /login_check
+#
 logout:
     path:   /logout
 
+ozwillo_login:
+    path: /login/check-ozwillo
 
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"

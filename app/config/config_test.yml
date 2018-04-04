@@ -1,16 +1,16 @@
 imports:
     - { resource: config_dev.yml }
 
-be_simple_sso_auth:
-    admin_sso:
-        protocol:
-            id: cas
-            version: 2
-        server:
-            id: cas
-            login_url: https://sso.sictiam.fr/login
-            logout_url: https://sso.sictiam.fr/logout
-            validation_url: https://sso.sictiam.fr/serviceValidate
+hwi_oauth:
+    firewall_names: [secured_area]
+    resource_owners:
+        ozwillo:
+            type:                ozwillo
+            client_id:           cb6cb63b-b904-490b-9a54-6782d6f127c8
+            client_secret:       EB0MUa6wZZkRDlwP2rZFliJxV9vO2zma2swD90INUNI
+            access_token_url:    https://accounts.ozwillo-preprod.eu/a/token
+            authorization_url:   https://accounts.ozwillo-preprod.eu/a/auth
+            infos_url:           https://accounts.ozwillo-preprod.eu/a/userinfo
 
 framework:
     test: ~
@@ -26,6 +26,7 @@ web_profiler:
 swiftmailer:
     disable_delivery: true
 parameters:
+    domain: sesile.fr
     database_driver: pdo_mysql
     database_host: 127.0.0.1
     database_port: null
@@ -33,7 +34,3 @@ parameters:
     database_user: root
     database_password: ***REMOVED***
     secret: ***REMOVED***
-    ldap:
-        dn_admin: cn=admin,dc=sictiam,dc=fr
-        dn_user: cn=Users,dc=sictiam,dc=fr
-        password: oP1U88zz

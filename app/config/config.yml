@@ -71,6 +71,15 @@ doctrine:
         auto_generate_proxy_classes: '%kernel.debug%'
         auto_mapping: true
 
+# Ozwillo Oauth2
+hwi_oauth:
+    firewall_names: [secured_area]
+    resource_owners:
+        ozwillo:
+            type:                ozwillo
+            client_id:           2e771747-f906-4125-ba96-806553bc2ce2
+            client_secret:       ***REMOVED***
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: '%mailer_transport%'
@@ -90,37 +99,17 @@ fos_user:
         address: sesile@sictiam.fr
         sender_name: SESILE
 
-be_simple_sso_auth:
-    admin_sso:
-        protocol:
-            id: cas
-            version: 2
-        server:
-            id: cas
-            login_url: https://devsso.sictiam.fr/login
-            logout_url: https://devsso.sictiam.fr/logout
-            validation_url: https://devsso.sictiam.fr/serviceValidate
-
-
 parameters:
+    domain: sesile.fr
     informations:
-        version: 4.0-sprint9
+        version: 4.0-sprint10
         contact_link: http://support.sictiam.fr/declarer-un-incident/
-    cas_server: devsso.sictiam.fr
-    be_simple.sso_auth.client.option.curlopt_ssl_verifypeer.value: FALSE
     upload:
         path: '%kernel.project_dir%/web/uploads/avatars/'
         fics: '%kernel.project_dir%/web/uploads/docs/'
         logo_coll: '%kernel.project_dir%/web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'
-    ldap:
-        dn_admin: cn=admin,dc=sictiam,dc=local
-        dn_user: cn=Users,dc=sictiam,dc=local
-        password: WcJa37BI
-    domain_parse:
-        default: sesile
-        dbname: sictiam
     build:
         repository: "git@gitlab.sictiam.fr:sesile/sesile.git"
         branch: master
@@ -173,11 +162,10 @@ fos_js_routing:
 
 jms_serializer:
     metadata:
-        auto_detection: true
         directories:
-            FOSUserBundle:
-                path: "@SesileUserBundle/Resources/config/serializer/"
+            FOSUB:
                 namespace_prefix: "FOS\\UserBundle"
+                path: "%kernel.root_dir%/serializer/FOSUB"
 
 nelmio_api_doc:
     name: Sesile API
@@ -190,6 +178,12 @@ sensio_framework_extra:
     request: { converters: true }
 
 services:
+    my.sesile.user_provider:
+        autowire: true
+        autoconfigure: true
+        class: Sesile\UserBundle\Security\Core\User\MyFOSUBUserProvider
+        arguments: ['@fos_user.user_manager', { ozwillo: email }]
+
     sesile.tokens.action_listener:
         class: Sesile\ApiBundle\EventListener\TokenListener
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]

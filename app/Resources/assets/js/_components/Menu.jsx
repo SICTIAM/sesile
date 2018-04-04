@@ -16,6 +16,7 @@ class Menu extends Component {
 
     render() {
         const { t } = this.context
+        const { user } = this.props
 
         return (
             <div className="menu-left cell medium-12 grid-y" role="navigation">
@@ -23,7 +24,8 @@ class Menu extends Component {
                 <div className="cell medium-auto">
                     <div id="left-menu">
                         <div className="top-bar-left">
-                            <ul className="dropdown menu vertical icons icon-right" data-dropdown-menu>
+                            { user.id &&
+                                <ul className="dropdown menu vertical icons icon-right" data-dropdown-menu>
                                 <li>
                                     <NavLink to="/classeur/nouveau" className="grid-x align-middle">
                                         <div className="cell small-12">
@@ -109,6 +111,7 @@ class Menu extends Component {
                                     </NavLink>
                                 </li>
                             </ul>
+                            }
                         </div>
                     </div>
                 </div>

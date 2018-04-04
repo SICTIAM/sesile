@@ -92,6 +92,12 @@ const RowCollectivite = ({collectivite}, {t}) =>
             <GridX>
                 <Cell className="medium-auto">
                     <Link
+                        to={`collectivite/${collectivite.id}/utilisateurs-ozwillo`}
+                        className="fa fa-users icon-action"
+                        title={t('common.button.list_ozwillo')}/>
+                </Cell>
+                <Cell className="medium-auto">
+                    <Link
                         to={`collectivite/${collectivite.id}`}
                         className="fa fa-pencil icon-action"
                         title={t('common.button.edit')}/>

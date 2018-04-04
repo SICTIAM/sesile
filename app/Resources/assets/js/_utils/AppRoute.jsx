@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {Route, Switch} from 'react-router-dom'
+import { object } from 'prop-types'
 
 import AdminRoute from './AdminRoute'
 import Emailing from '../admin/Emailing'
@@ -16,6 +17,7 @@ import Note from '../admin/Note'
 import Users from '../admin/Users'
 import User from '../admin/User'
 import UserListClasseurs from '../admin/UserListClasseurs'
+import UsersOzwillo from '../admin/UsersOzwillo'
 import Types from '../admin/Types'
 
 import Account from "../user/Account"
@@ -33,16 +35,13 @@ import HelpBoard from '../documentation/HelpBoard'
 
 
 class AppRoute extends Component {
-    state = {
-        user: null
+
+    static propTypes = {
+        user: object.isRequired
     }
-    componentDidMount() {
-        fetch(Routing.generate('sesile_user_userapi_getcurrent'), { credentials: 'same-origin' })
-            .then(response => response.json())
-            .then(json => this.setState({user : json}))
-    }
+
     render () {
-        const user = this.state.user
+        const { user } = this.props
         return (
             (!!user) &&
             <Switch>
@@ -74,6 +73,9 @@ class AppRoute extends Component {
                 )} />
                 <Route exact={true} path={"/admin/:collectiviteId/utilisateur/:userId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={User} user={user} match={match} />
+                )} />
+                <Route exact={true} path={"/admin/collectivite/:collectiviteId?/utilisateurs-ozwillo"} render={({match}) => (
+                    <AdminRoute exact={true} path={match.path} component={UsersOzwillo} user={user} match={match} />
                 )} />
                 <Route exact={true} path={"/admin/:collectiviteId/classeurs/:userId"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={UserListClasseurs} user={user} match={match} />

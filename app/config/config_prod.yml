@@ -1,18 +1,16 @@
 imports:
     - { resource: config.yml }
 
-be_simple_sso_auth:
-    admin_sso:
-        protocol:
-            id: cas
-            version: 2
-        server:
-            id: cas
-            login_url: https://sso.sictiam.fr/login
-            logout_url: https://sso.sictiam.fr/logout
-            validation_url: https://sso.sictiam.fr/serviceValidate
+hwi_oauth:
+    firewall_names: [secured_area]
+    resource_owners:
+        ozwillo:
+            type:                ozwillo
+            client_id:           2e771747-f906-4125-ba96-806553bc2ce2
+            client_secret:       ***REMOVED***
 
 parameters:
+    domain: sesile.fr
     database_driver: pdo_mysql
     database_host: 127.0.0.1
     database_port: null
@@ -20,14 +18,6 @@ parameters:
     database_user: root
     database_password: ***REMOVED***
     secret: ***REMOVED***
-    cas_server: sso.sictiam.fr
-    cas_port: 389
-    cas_path: /
-    cas_protocol: '2.0'
-    ldap:
-        dn_admin: cn=admin,dc=sictiam,dc=fr
-        dn_user: cn=Users,dc=sictiam,dc=fr
-        password: oP1U88zz
     domain_parse:
         default: sesile
         dbname: sictiam
@@ -43,7 +33,6 @@ parameters:
         logo_coll: '%kernel.root_dir%/../web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'
-    majorversion: 3
     ovh_credential:
         application: ***REMOVED***
         secret: ***REMOVED***

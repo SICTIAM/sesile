@@ -94,6 +94,13 @@ class User extends BaseUser {
     protected $path;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="ozwilloId", type="string", length=255, nullable=true)
+     */
+    protected $ozwilloId;
+
+    /**
      * @Assert\Image(
      *
      *      mimeTypesMessage = "Ce fichier n'est pas une image",
@@ -289,7 +296,8 @@ class User extends BaseUser {
      * @var string
      * @Serializer\Groups({"currentUser"})
      */
-    private $ozwillo;
+    private $ozwilloUrl;
+
 
     public function setPath($path) {
         return $this->path = $path;
@@ -1153,12 +1161,51 @@ class User extends BaseUser {
         return $this->notes;
     }
 
-    public function setOzwillo (string $ozwillo) {
-        $this->ozwillo = $ozwillo;
+    /**
+     * Set ozwilloId
+     *
+     * @param string $ozwilloId
+     *
+     * @return User
+     */
+    public function setOzwilloId($ozwilloId)
+    {
+        $this->ozwilloId = $ozwilloId;
+
         return $this;
     }
 
-    public function getOzwillo () {
-        return $this->ozwillo;
+    /**
+     * Get ozwilloId
+     *
+     * @return string
+     */
+    public function getOzwilloId()
+    {
+        return $this->ozwilloId;
+    }
+
+    /**
+     * Set ozwilloId
+     *
+     * @param string $ozwilloUrl
+     *
+     * @return User
+     */
+    public function setOzwillo (string $ozwilloUrl)
+    {
+        $this->ozwilloUrl = $ozwilloUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get ozwilloId
+     *
+     * @return string
+     */
+    public function getOzwillo ()
+    {
+        return $this->ozwilloUrl;
     }
 }

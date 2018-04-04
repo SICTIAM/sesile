@@ -32,6 +32,17 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
+     * @Rest\View()
+     * @Rest\Get("/ozwillo/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @param Collectivite $collectivite
+     * @return array
+     */
+    public function ozwilloAction(Collectivite $collectivite) {
+        return $this->getOzwilloUsers($collectivite);
+    }
+
+    /**
      * @Rest\View(serializerGroups={"listUsers"})
      * @Rest\Get("s/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
@@ -173,14 +184,34 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         return $user;
     }
 
+    /**
+     * @Rest\View("statusCode=Response::HTTP_CREATED")
+     * @Rest\Post("/new/{id}/all")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @param Collectivite $collectivite
+     * @return User|JsonResponse
+     */
+    public function postUsersAction(Collectivite $collectivite)
+    {
+        $users = $this->getOzwilloUsers($collectivite);
+        foreach ($users as $user) {
+            $em = $this->getDoctrine()->getManager();
+            $em->getRepository('SesileUserBundle:User')->addUser($collectivite, $user['user_email_address'], $user['user_name']);
+            $em->flush();
+        }
+
+        return $this->getOzwilloUsers($collectivite);
+    }
 
     /**
      * @Rest\View("statusCode=Response::HTTP_CREATED")
-     * @Rest\Post("/new")
+     * @Rest\Post("/new/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Request $request
-     * @return User|\Symfony\Component\Form\Form
+     * @param Collectivite $collectivite
+     * @return User|JsonResponse
      */
-    public function postUserAction(Request $request)
+    public function postUserAction(Request $request, Collectivite $collectivite)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -189,17 +220,13 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $user->setUsername($request->request->get('email'));
-            $user->setPassword(md5(uniqid(rand(), true)));
-            $user->setSesileVersion(0);
-
-            $em->persist($user);
+            $em->getRepository('SesileUserBundle:User')->addUser($collectivite, $request->request->get('email'), $request->request->get('username'));
             $em->flush();
 
-            return $user;
+            return new JsonResponse('Utilisateur créé', Response::HTTP_ACCEPTED);
         }
         else {
-            return $form;
+            return new JsonResponse('Impossiblde de créer l\'utilisateur', Response::HTTP_NOT_MODIFIED);
         }
     }
 
@@ -358,7 +385,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         if (empty($user)) {
             return new JsonResponse(['message' => 'Utilisateur inexistant'], Response::HTTP_NOT_FOUND);
         }
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserEditType::class, $user);
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
@@ -382,6 +409,33 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
     private function convert_date_certificate($date) {
         return $validDate = \DateTime::createFromFormat('ymdHisT', $date);
+    }
+
+    private function getOzwilloUsers(Collectivite $collectivite) {
+
+        $instanceId = $collectivite->getOzwillo()->getInstanceId();
+        $accessToken = $this->get('security.token_storage')->getToken()->getAccessToken();
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', 'https://kernel.ozwillo-preprod.eu/apps/acl/instance/' . $instanceId,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                ],
+            ]
+        );
+
+        $ozwilloUsers = json_decode($response->getBody(), true);
+        $users = $collectivite->getUsers();
+        $usersImport = [];
+
+        foreach ($ozwilloUsers as $ozwilloUser) {
+            if (!in_array($ozwilloUser['user_email_address'], $users->toArray())) {
+                $usersImport[] = $ozwilloUser;
+            }
+        }
+
+        return $usersImport;
     }
 
 }

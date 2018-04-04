@@ -16,25 +16,23 @@ security:
             pattern:    ^/
             anonymous: true
             provider: webservice
-            trusted_sso:
-                manager: admin_sso
-                provider: webservice
-                login_action: false #BeSimpleSsoAuthBundle:TrustedSso:login
-                logout_action: false #BeSimpleSsoAuthBundle:TrustedSso:logout
-                create_users: false
-                created_users_roles: [ROLE_USER, ROLE_ADMIN]
-#                default_target_path: index
-                always_use_default_target_path: false
-                login_path: /tableau-de-bord
-                check_path: /
-            logout:
-                path: /logout
+            logout: ~
+            oauth:
+                resource_owners:
+                    ozwillo:  "/login/check-ozwillo"
+                login_path:   /
+                use_forward:  false
+                failure_path: /
+                oauth_user_provider:
+                    service: my.sesile.user_provider
 
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN]
 
     access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/web/uploads/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/uploadfile, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/doc/notifymodif, roles: IS_AUTHENTICATED_ANONYMOUSLY}
@@ -47,7 +45,7 @@ security:
         - { path: ^/apirest/users/isauthenticated, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/apirest/document/only-office, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/tableau-de-bord, roles: ROLE_USER }
         - { path: ^/collectivite, roles: ROLE_SUPER_ADMIN }
         - { path: ^/mailing, roles: ROLE_SUPER_ADMIN }
         - { path: ^/user, roles: ROLE_ADMIN }

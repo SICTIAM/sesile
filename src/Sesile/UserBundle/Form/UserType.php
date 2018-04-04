@@ -15,21 +15,8 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('collectivite')
-            ->add('qualite')
-            ->add('cp')
-            ->add('ville')
-            ->add('departement')
-            ->add('pays')
-            ->add('roles')
-            ->add('enabled')
-            ->add('apiactivated')
-            ->add('userrole', CollectionType::class, array(
-                'entry_type'    => UserRoleType::class,
-                'allow_add'     => true,
-                'allow_delete'  => true,
-                'by_reference'  => false
-            ))
+            ->add('email')
+            ->add('username')
         ;
     }
 
