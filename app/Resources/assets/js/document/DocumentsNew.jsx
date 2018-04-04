@@ -48,7 +48,6 @@ class DocumentsNew extends Component {
         const { t } = this.context
         const { documents, onDrop, removeDocument, onClick, displayReveal, statusClasseur }  = this.props
         const { disabled, accept, multiple, fileRule } = this.state
-
         return (
 
             <div className="grid-x panel grid-padding-y">
@@ -58,39 +57,40 @@ class DocumentsNew extends Component {
                             <h3>{t('common.documents.title_preview')}</h3>
                         </div>
                     </div>
-                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y show-for-large">
-                        <div className="cell medium-12">
-                            <Dropzone
-                                className="documentation-dropzone grid-x align-middle align-center"
-                                accept={accept}
-                                multiple={multiple}
-                                name="file"
-                                disabled={disabled}
-                                maxSize={104857600}
-                                onDropRejected={(files) =>
-                                    this.setState({dropFileError: fileRule})}
-                                onDropAccepted={files => onDrop(files)}>
-                                {
-                                    <Cell>
-                                        <GridX className="align-center grid-margin-y grid-padding-y">
-                                            <Cell><i className="fa fa-file"></i></Cell>
-                                        </GridX>
+                    {statusClasseur !== 2 &&
+                        <div className="grid-x grid-margin-x grid-padding-x grid-padding-y show-for-large">
+                            <div className="cell medium-12">
+                                <Dropzone
+                                    className="documentation-dropzone grid-x align-middle align-center"
+                                    accept={accept}
+                                    multiple={multiple}
+                                    name="file"
+                                    disabled={disabled}
+                                    maxSize={104857600}
+                                    onDropRejected={(files) =>
+                                        this.setState({dropFileError: fileRule})}
+                                    onDropAccepted={files => onDrop(files)}>
+                                    {
+                                        <Cell>
+                                            <GridX className="align-center grid-margin-y grid-padding-y">
+                                                <Cell><i className="fa fa-file"></i></Cell>
+                                            </GridX>
 
-                                        <GridX className="align-center">
-                                            <Cell className="medium-11 text-small">
-                                                { (this.state.dropFileError)
-                                                    ? <span className="text-alert">{this.state.dropFileError}</span>
-                                                    : <span>{fileRule}</span>
-                                                }
-                                            </Cell>
-                                        </GridX>
+                                            <GridX className="align-center">
+                                                <Cell className="medium-11 text-small">
+                                                    { (this.state.dropFileError)
+                                                        ? <span className="text-alert">{this.state.dropFileError}</span>
+                                                        : <span>{fileRule}</span>
+                                                    }
+                                                </Cell>
+                                            </GridX>
 
-                                    </Cell>
-                                }
-                            </Dropzone>
+                                        </Cell>
+                                    }
+                                </Dropzone>
+                            </div>
                         </div>
-                    </div>
-
+                    }
                     <GridX className="align-center grid-padding-y">
                         <DocumentPreview documents={documents}
                                          remove={removeDocument}
