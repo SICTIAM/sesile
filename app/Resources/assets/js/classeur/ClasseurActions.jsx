@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { func, array, number, string } from 'prop-types'
 import {Button, Textarea} from '../_components/Form'
 import { translate } from 'react-i18next'
+import Moment from 'moment/moment'
 
 class ClasseurActions extends Component {
     static contextTypes = {
@@ -49,13 +50,13 @@ class ClasseurActions extends Component {
                             <div className="cell small-12 medium-2"><span className="fa fa-comment"></span></div>
                             <div className="cell small-12 medium-10 text-left">
                                 <p>
-                                    { action.action }
-                                    <span className="text-author"> par </span>
-                                    <span className="text-author">
-                                        { action.user_action
+                                    { action.action } <span className="text-author">{ t('common.classeurs.comments.from') } {
+                                        action.user_action
                                             ? action.user_action._prenom  + " " + action.user_action._nom
                                             : action.username
-                                        }</span>
+                                    }</span>
+                                    <span className="text-date"> { t('common.classeurs.comments.the') } { Moment(action.date).format('Do MMMM YYYY à HH:mm:ss') }
+                                    </span>
                                 </p>
                             </div>
                         </div>

@@ -127,7 +127,9 @@
             "comments": {
               "name": "Commentaires du classeur",
               "new": "Nouveau commentaire",
-              "submit": "Ajouter un commentaire"
+              "submit": "Ajouter un commentaire",
+              "from": "par",
+              "the": "le"
             },
             "label": {
               "circuits": "Liste des circuits",
