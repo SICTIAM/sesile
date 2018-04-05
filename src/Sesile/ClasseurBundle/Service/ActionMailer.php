@@ -102,7 +102,7 @@ class ActionMailer
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
-        if ($usersCopy) {
+        if ($usersCopy && $collectivite->getTextcopymailnew()) {
             $template_copy = $env->createTemplate($collectivite->getTextcopymailnew());
             foreach ($usersCopy as $userCopy) {
                 if($userCopy != null && !in_array($userCopy, $validants)) {
@@ -144,7 +144,7 @@ class ActionMailer
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
-        if ($usersCopy) {
+        if ($usersCopy && $currentUser->getCollectivite()->getTextcopymailwalid()) {
             $template_copy = $env->createTemplate($currentUser->getCollectivite()->getTextcopymailwalid());
             foreach ($usersCopy as $userCopy) {
                 if ($userCopy != null && $userCopy != $classeur->getUser()) {
