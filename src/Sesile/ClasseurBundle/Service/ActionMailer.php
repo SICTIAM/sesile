@@ -2,6 +2,7 @@
 
 namespace Sesile\ClasseurBundle\Service;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\ORM\EntityManagerInterface;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\Classeur;
@@ -216,10 +217,14 @@ class ActionMailer
     }
 
     private function sendMail($sujet, $to, $body) {
+        $html = null;
         $message = \Swift_Message::newInstance();
+        $fileSystem = new Filesystem();
+        $logoExists = $fileSystem->exists($this->paths['logo_coll'] . $this->user->getCollectivite()->getImage());
         // Pour l integration de l image du logo dans le mail
-        $html = explode("**logo_coll**", $body);
-        if($this->user->getCollectivite()->getImage() !== null && $this->paths['logo_coll'] !== null && count($html) > 1) {
+        if($logoExists) $html = explode("**logo_coll**", $body);
+
+        if($this->user->getCollectivite()->getImage() !== null && $this->paths['logo_coll'] !== null && count($html) > 1 && $logoExists) {
             $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->paths['logo_coll'] . $this->user->getCollectivite()->getImage())) . '" width="75" alt="Sesile">' . $html[1];
         } else {
             $htmlBody = $body;
