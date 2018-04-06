@@ -65,7 +65,7 @@ class Groupe {
     /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="circuitsCopy", cascade={"persist"})
      * @ORM\JoinTable(name="Circuit_copy")
-     * @Serializer\Groups({"getByIdCircuit"})
+     * @Serializer\Groups({"getByIdCircuit", "listCircuitByUser"})
      */
     private $usersCopy;
 
