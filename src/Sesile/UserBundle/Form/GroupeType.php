@@ -2,6 +2,7 @@
 
 namespace Sesile\UserBundle\Form;
 
+use function Sodium\add;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -27,6 +28,10 @@ class GroupeType extends AbstractType
                 'entry_type' => EtapeGroupeType::class,
                 'allow_delete' => true,
                 'allow_add' => true,
+            ))
+            ->add('usersCopy', EntityType::class, array(
+                'class' => 'SesileUserBundle:User',
+                'multiple' => true
             ))
         ;
     }

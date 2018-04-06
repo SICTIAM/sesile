@@ -38,7 +38,7 @@ class UsersCopy extends Component {
 
         return (
             <div className={className}>
-                <label htmlFor="users_copy_select">{t('common.classeurs.users_copy')}</label>
+                <label htmlFor="users_copy_select" className="text-bold">{t('common.classeurs.users_copy')}</label>
                 <Select id="users_copy_select"
                         value={users_copy}
                         multi

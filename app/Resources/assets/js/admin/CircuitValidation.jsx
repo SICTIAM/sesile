@@ -6,9 +6,10 @@ import { handleErrors } from '../_utils/Utils'
 import History from '../_utils/History'
 import { basicNotification } from '../_components/Notifications'
 import { AdminDetailsWithInputField, SimpleContent } from '../_components/AdminUI'
-import { Button, ButtonConfirm } from '../_components/Form'
+import { Button } from '../_components/Form'
 import { GridX, Cell } from '../_components/UI'
 import CircuitValidationSteps from '../circuit/CircuitValidationSteps'
+import UsersCopy from '../classeur/UsersCopy'
 
 class CircuitValidation extends Component {
 
@@ -22,7 +23,8 @@ class CircuitValidation extends Component {
             id: 0,
             nom: '',
             etape_groupes: [],
-            types: []
+            types: [],
+            users_copy: []
         },
         classeurTypes: [],
         collectiviteId: ''
@@ -40,7 +42,14 @@ class CircuitValidation extends Component {
         fetch(Routing.generate('sesile_user_circuitvalidationapi_getbyid', {id}), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
-            .then(json => this.setState({circuit: json}))
+            .then(json => {
+                    this.setState({circuit: json})
+                    const usersCopy = this.state.circuit.users_copy.map(user => {
+                        return {label: user._prenom + " " + user._nom, value: user.id}
+                    })
+                    this.handleUsersCopyChange(usersCopy)
+                }
+            )
             .catch(error => this.context._addNotification(basicNotification(
                 'error',
                 this.context.t('admin.error.not_extractable_list', {name: this.context.t('admin.circuit.complet_name'), errorCode: error.status}),
@@ -76,7 +85,8 @@ class CircuitValidation extends Component {
                 nom: circuit.nom,
                 collectivite: this.state.collectiviteId,
                 types: circuit.types.map(type => type.id),
-                etapeGroupes: etape_groupes
+                etapeGroupes: etape_groupes,
+                usersCopy: circuit.users_copy.map(user => user.value)
             }
             if(circuit.id) this.putCircuitValidation(circuit.id, fields)
             else this.postCircuitValidation(fields)
@@ -101,18 +111,16 @@ class CircuitValidation extends Component {
         })
         .then(handleErrors)
         .then(response => response.json())
-        .then(json => {
-            this.setState({circuit: json})
+        .then(() => {
             _addNotification(basicNotification(
                 'success',
-                t('admin.success.add', {name:t('admin.circuit.complet_name')}))
-            )
-            History.push(`/admin/${this.state.collectiviteId}/circuit-de-validation/${json.id}`)
+                t('admin.circuit.success_save')))
+            History.push(`/admin/circuits-de-validation`)
         })
-        .catch(error => _addNotification(basicNotification(
-            'error',
-            t('admin.error.add', {name:t('admin.circuit.complet_name'), errorCode: error.status}),
-            error.statusText)))
+        .catch(() =>
+            _addNotification(basicNotification(
+                'error',
+                t('admin.circuit.error_save'))))
     }
 
     putCircuitValidation = (id, fields) => {
@@ -128,44 +136,17 @@ class CircuitValidation extends Component {
         })
             .then(handleErrors)
             .then(response => response.json())
-            .then((json) => {
-                this.setState({circuit: json})
-                _addNotification(basicNotification(
-                    'success',
-                    t('admin.success.update', {name:t('admin.circuit.complet_name')}))
-                )
-            })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_updatable', {name:t('admin.circuit.complet_name'), errorCode: error.status}),
-                error.statusText)))
-    }
-
-    removeCircuitValidation = () => {
-        const { id } = this.state.circuit
-        const { t, _addNotification} = this.context
-        fetch(Routing.generate('sesile_user_circuitvalidationapi_remove', {id_groupe: id}), {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin'
-        })
-            .then(handleErrors)
             .then(() => {
                 _addNotification(basicNotification(
                     'success',
-                    t('admin.success.delete', {name:t('admin.circuit.complet_name')}))
-                )
+                    t('admin.circuit.success_save')))
                 History.push(`/admin/circuits-de-validation`)
             })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_removable', {name:t('admin.circuit.complet_name'), errorCode: error.status}),
-                error.statusText)))
+            .catch(() =>
+                _addNotification(basicNotification(
+                    'error',
+                    t('admin.circuit.error_save'))))
     }
-
     handleChangeClasseurType = (event) => {
         const target = event.target
         const { circuit, classeurTypes } = this.state
@@ -199,10 +180,15 @@ class CircuitValidation extends Component {
         this.setState(prevState => {circuit: prevState.circuit.etape_groupes.forEach((etape_groupe, key) => { etape_groupe.ordre = key })})
         this.setState({circuit})
     }
+    handleUsersCopyChange = (users_copy) => {
+        const { circuit } = this.state
+        circuit.users_copy = users_copy
+        this.setState({circuit})
+    }
 
     render() {
         const { t } = this.context
-        const { circuit, collectiviteId } = this.state
+        const { circuit } = this.state
         const listClasseurTypes = this.state.classeurTypes.map(classeurType =>  <ClasseurTypeCheckbox   key={classeurType.id}
                                                                                                         classeurType={classeurType}
                                                                                                         circuit={this.state.circuit}
@@ -217,13 +203,20 @@ class CircuitValidation extends Component {
                                         handleChangeName={this.handleChangeCircuit}
                                         placeholder={t('admin.placeholder.name', {name: t('admin.circuit.name')})} >
                 <SimpleContent>
+                    <GridX className="grid-padding-y">
+                        {<UsersCopy
+                            currentCollectiviteId={parseInt(this.props.match.params.collectiviteId)}
+                            handleChange={this.handleUsersCopyChange}
+                            className="cell medium-12"
+                            users_copy={circuit.users_copy}/>}
+                    </GridX>
                     <GridX>
                         <Cell className="medium-2">
                             <GridX>
                                 <Cell className="medium-12">
-                                    <span>{t('admin.type.name', {count: 2})}</span>
+                                    <label htmlFor="type-list" className="text-bold text-capitalize">{t('admin.type.name', {count: 2})}</label>
                                 </Cell>
-                                <Cell className="medium-12">
+                                <Cell id="type-list" className="medium-12">
                                     {listClasseurTypes}
                                 </Cell>
                             </GridX>
@@ -231,11 +224,11 @@ class CircuitValidation extends Component {
                         <Cell className="medium-10">
                             <GridX>
                                 <Cell className="medium-12">
-                                    <span>{t('admin.circuit.complet_name')}</span>
+                                    <label htmlFor="circuit-validation" className="text-bold">{t('admin.circuit.complet_name')}</label>
                                 </Cell>
-                                <Cell className="medium-12">
+                                <Cell id="circuit-validation" className="medium-12">
                                     <CircuitValidationSteps steps={Object.assign([], circuit.etape_groupes)}
-                                                            collectiviteId={collectiviteId}
+                                                            collectiviteId={this.props.match.params.collectiviteId}
                                                             onSortEnd={this.onSortEnd}
                                                             handleClickDeleteUser={this.handleClickDeleteUser}
                                                             handleClickDeleteGroup={this.handleClickDeleteGroup}
@@ -249,16 +242,14 @@ class CircuitValidation extends Component {
                         </Cell>
                     </GridX>
                     <GridX className="grid-padding-y">
-                        <ButtonConfirm  id="confirm_delete"
-                                        className="cell medium-10 text-right"
-                                        handleClickConfirm={this.removeCircuitValidation}
-                                        labelButton={t('common.button.delete')}
-                                        confirmationText={"Voulez-vous le supprimer ?"}
-                                        labelConfirmButton={t('common.button.confirm')}/>
-                        <Button id="submit-infos"
-                                className="cell medium-2 text-right"
-                                onClick={this.sendCircuitValidation}
-                                labelText={t('common.button.edit_save')}/>
+                        <Button
+                            id="submit-infos"
+                            className="cell medium-12 text-right"
+                            onClick={this.sendCircuitValidation}
+                            labelText=
+                                {this.props.match.params.circuitId ?
+                                    t('common.button.edit_save') :
+                                    t('common.button.save')}/>
                     </GridX>
                 </SimpleContent>
             </AdminDetailsWithInputField>

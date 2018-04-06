@@ -231,6 +231,12 @@ class User extends BaseUser {
     private $classeursCopy;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\Groupe", mappedBy="usersCopy", cascade={"persist"})
+     * @Exclude()
+     */
+    private $circuitsCopy;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\UserPack", mappedBy="users", cascade={"persist"})
      * @Exclude()
      */
@@ -1017,6 +1023,40 @@ class User extends BaseUser {
     public function getClasseursCopy()
     {
         return $this->classeursCopy;
+    }
+
+    /**
+     * Add classeursCopy
+     *
+     * @param \Sesile\UserBundle\Entity\Groupe $circuitsCopy
+     *
+     * @return User
+     */
+    public function addCircuitsCopy(Groupe $circuitsCopy)
+    {
+        $this->circuitsCopy[] = $circuitsCopy;
+
+        return $this;
+    }
+
+    /**
+     * Remove circuitsCopy
+     *
+     * @param \Sesile\UserBundle\Entity\Groupe $circuitsCopy
+     */
+    public function removeCircuitsCopy(Groupe $circuitsCopy)
+    {
+        $this->circuitsCopy->removeElement($circuitsCopy);
+    }
+
+    /**
+     * Get circuitsCopy
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCircuitsCopy()
+    {
+        return $this->circuitsCopy;
     }
 
     /**

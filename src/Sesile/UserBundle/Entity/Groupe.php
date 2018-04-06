@@ -61,6 +61,14 @@ class Groupe {
      */
     private $creation;
 
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", inversedBy="circuitsCopy", cascade={"persist"})
+     * @ORM\JoinTable(name="Circuit_copy")
+     * @Serializer\Groups({"getByIdCircuit"})
+     */
+    private $usersCopy;
+
     /**
      * Get id
      *
@@ -209,5 +217,40 @@ class Groupe {
     public function getCreation()
     {
         return $this->creation;
+    }
+
+
+    /**
+     * Add usersCopy
+     *
+     * @param User $usersCopy
+     *
+     * @return Groupe
+     */
+    public function addUsersCopy(User $usersCopy)
+    {
+        $this->usersCopy[] = $usersCopy;
+
+        return $this;
+    }
+
+    /**
+     * Remove usersCopy
+     *
+     * @param User $usersCopy
+     */
+    public function removeUsersCopy(User $usersCopy)
+    {
+        $this->usersCopy->removeElement($usersCopy);
+    }
+
+    /**
+     * Get usersCopy
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsersCopy()
+    {
+        return $this->usersCopy;
     }
 }
