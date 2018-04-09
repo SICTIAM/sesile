@@ -4,6 +4,7 @@ import ClasseursButtonList from './ClasseursButtonList'
 import ClasseursRow from './ClasseursRow'
 import { translate } from 'react-i18next'
 import { handleErrors } from '../_utils/Utils'
+import { refusClasseur, actionClasseur } from '../_utils/Classeur'
 import { basicNotification } from '../_components/Notifications'
 import ClasseurPagination from './ClasseurPagination'
 import History from '../_utils/History'
@@ -88,7 +89,7 @@ class Classeurs extends Component {
         this.setState({classeurs})
     }
 
-    validClasseurs = (classeurs) => { classeurs.map(classeur => {this.actionClasseur('sesile_classeur_classeurapi_validclasseur', classeur.id)})}
+    validClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_validclasseur', classeur.id, 'PUT', 'list')})}
     signClasseurs = (classeurs) => {
         let ids
         ids = []
@@ -97,25 +98,10 @@ class Classeurs extends Component {
         })
         History.push('/classeurs/previsualisation', {classeurs, user: this.props.user})
     }
-    revertClasseurs = (classeurs) => { classeurs.map(classeur => {this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id)})}
-    refuseClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_refuseclasseur', classeur.id) })}
-    removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
-    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
-    actionClasseur (url, id, method = 'PUT') {
-        fetch(Routing.generate(url, {id}),
-            {
-                method: method,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin'
-            })
-            .then(this.handleErrors)
-            .then(() => {
-                this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
-            })
-    }
+    revertClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id, 'PUT', 'list')})}
+    refuseClasseurs = (classeurs, motif) => { classeurs.map(classeur => { refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif, 'list') })}
+    removeClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_removeclasseur', classeur.id, 'PUT', 'list') })}
+    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE', 'list') })}
 
     render(){
         const { classeurs, limit, start, checkedAll } = this.state
@@ -140,7 +126,7 @@ class Classeurs extends Component {
                             <div className="hide-for-large grid-x align-center-middle grid-padding-y">
                                 <div className="cell medium-8">
                                     <div className="grid-x panel grid-padding-y">
-                                        <div className="cell medium-12">
+                                        <div className="cell medium-12 classeur-button-list">
                                             <ClasseursButtonList classeurs={classeurs.filter(classeur => classeur.checked)}
                                                                  validClasseur={this.validClasseurs}
                                                                  revertClasseur={this.revertClasseurs}
@@ -148,6 +134,7 @@ class Classeurs extends Component {
                                                                  removeClasseur={this.removeClasseurs}
                                                                  deleteClasseur={this.deleteClasseurs}
                                                                  signClasseur={this.signClasseurs}
+                                                                 id={"button-lists-small"}
                                             />
                                         </div>
                                     </div>
@@ -191,6 +178,7 @@ class Classeurs extends Component {
                                                              removeClasseur={this.removeClasseurs}
                                                              deleteClasseur={this.deleteClasseurs}
                                                              signClasseur={this.signClasseurs}
+                                                             id={"button-lists-large"}
                                         />
                                 }
                             </div>

@@ -195,6 +195,14 @@ class Classeur {
     );
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="motifRefus", type="string", length=255, nullable=true)
+     * @Groups("classeur")
+     */
+    private $motifRefus;
+
+    /**
      * @var boolean
      * @Groups({"listClasseur", "classeurById"})
      */
@@ -1053,5 +1061,29 @@ class Classeur {
     public function getCircuitId()
     {
         return $this->circuit_id;
+    }
+
+    /**
+     * Set motifRefus
+     *
+     * @param string $motifRefus
+     *
+     * @return Classeur
+     */
+    public function setMotifRefus($motifRefus)
+    {
+        $this->motifRefus = $motifRefus;
+
+        return $this;
+    }
+
+    /**
+     * Get motifRefus
+     *
+     * @return string
+     */
+    public function getMotifRefus()
+    {
+        return $this->motifRefus;
     }
 }

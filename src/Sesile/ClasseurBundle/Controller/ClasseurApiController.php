@@ -306,13 +306,14 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Put("/action/refuse/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param Request $request
      * @param Classeur $classeur
      * @return Classeur
      */
-    public function refuseClasseurAction (Classeur $classeur) {
+    public function refuseClasseurAction (Request $request, Classeur $classeur) {
 
         $em = $this->getDoctrine()->getManager();
-        $em->getRepository('SesileClasseurBundle:Classeur')->refuseClasseur($classeur);
+        $em->getRepository('SesileClasseurBundle:Classeur')->refuseClasseur($classeur, $request->request->get('motif'));
         $em->flush();
 
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());

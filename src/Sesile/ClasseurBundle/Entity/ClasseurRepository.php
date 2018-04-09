@@ -470,9 +470,10 @@ class ClasseurRepository extends EntityRepository {
         return $classeur;
     }
 
-    public function refuseClasseur (Classeur $classeur) {
+    public function refuseClasseur (Classeur $classeur, $motif = '') {
 
         $classeur->setStatus(0);
+        $classeur->setMotifRefus($motif);
         $etapesClasseur = $classeur->getEtapeClasseurs();
         foreach ($etapesClasseur as $etapeClasseur) {
             $etapeClasseur->setEtapeValidante(false);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { object, array, func, number, string }from 'prop-types'
 import { translate } from 'react-i18next'
+import {Textarea} from '../_components/Form'
 
 class ClasseursButtonList extends Component {
 
@@ -9,12 +10,27 @@ class ClasseursButtonList extends Component {
     }
 
     static defaultProps = {
-        display: "list"
+        display: "list",
+        dropdownPosition: "bottom"
+    }
+
+    state = {
+        textRefus: ''
+    }
+
+    componentDidMount() {
+        $('.btn-refuser-' + this.props.id).foundation()
+    }
+
+    handleTextrefus = (name, value) => {
+        this.setState({textRefus: value})
     }
 
     render () {
 
-        const { classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur, display } = this.props
+        const { textRefus } = this.state
+        const { classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur, display, id, dropdownPosition } = this.props
+        const { t } = this.context
 
         return (
 
@@ -40,7 +56,24 @@ class ClasseursButtonList extends Component {
                 <div className="cell auto">
                     {
                         classeurs && !classeurs.filter(classeur => !classeur.refusable).length &&
-                        <ButtonRefuse classeurs={ classeurs } refuseClasseur={ refuseClasseur } display={display} />
+                        <div className={"btn-refuser-" + id}>
+                            {   display === "list"
+                                ? <a data-toggle={id} title={t('common.classeurs.button.refus_title')}
+                                     className="fa fa-minus-circle"/>
+                                : <button data-toggle={id} title={t('common.classeurs.button.refus_title')}
+                                          className="fa fa-minus-circle alert button hollow"/>
+                            }
+                            <div className="dropdown-pane" data-position={dropdownPosition} data-alignment="right" id={id} data-dropdown data-auto-focus="true">
+                                <Textarea id={id}
+                                          name="text-refus"
+                                          value={ textRefus }
+                                          placeholder={t('common.classeurs.button.refus_text')}
+                                          onChange={this.handleTextrefus}
+                                />
+                                <button onClick={() => refuseClasseur(classeurs, textRefus)} title={t('common.classeurs.button.refus_title')} className="alert button hollow" >{t('common.classeurs.button.refus_title')}</button>
+                            </div>
+                        </div>
+
                     }
                 </div>
                 <div className="cell auto">
@@ -69,7 +102,9 @@ ClasseursButtonList.PropTypes = {
     removeClasseur: func,
     deleteClasseur: func,
     signClasseur: func,
-    display: string
+    display: string,
+    id: string.isRequired,
+    dropdownPosition: string
 }
 
 export default translate(['sesile'])(ClasseursButtonList)
@@ -137,18 +172,4 @@ ButtonDelete.contextTypes = { t: func }
 ButtonDelete.propTypes = {
     classeurs: array,
     deleteClasseur: func
-}
-
-
-const ButtonRefuse = ({classeurs, refuseClasseur, display}, {t}) => {
-    return(
-        display === "list"
-            ? <a onClick={() => refuseClasseur(classeurs)} title={ t('common.classeurs.button.refus_title') } className="fa fa-minus-circle"></a>
-            : <button onClick={() => refuseClasseur(classeurs)} title={ t('common.classeurs.button.refus_title') } className="fa fa-minus-circle alert button hollow"></button>
-    )
-}
-ButtonRefuse.contextTypes = { t: func }
-ButtonRefuse.propTypes = {
-    classeurs: array,
-    refuseClasseur: func
 }
