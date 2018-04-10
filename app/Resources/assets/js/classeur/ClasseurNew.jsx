@@ -61,6 +61,10 @@ class ClasseurNew extends Component {
                     History.push(`/`)
                 }
                 this.setState({circuits: circuits, circuit: circuits[0], type:circuits[0].types[0]})
+                const usersCopy = this.state.circuit.users_copy.map(user => {
+                    return {label: user._prenom + " " + user._nom, value: user.id}
+                })
+                this.handleSelectChange(usersCopy)
             })
     }
 
@@ -131,7 +135,14 @@ class ClasseurNew extends Component {
                 error.statusText)))
     }
 
-    handleChangeCircuit = (name, value) => this.setState(prevState => {prevState.circuit = this.state.circuits.find(circuit => circuit.id === parseInt(value))})
+    handleChangeCircuit = (name, value) => {
+        const circuit = this.state.circuits.find(circuit => circuit.id === parseInt(value))
+        this.setState({circuit})
+        const usersCopy = circuit.users_copy.map(user => {
+            return {label: user._prenom + " " + user._nom, value: user.id}
+        })
+        this.handleSelectChange(usersCopy)
+    }
     handleChangeType = (name, value) => {
         const type = this.state.circuit.types.find(type => type.id === parseInt(value))
         this.setState(prevState => {prevState.type = type})

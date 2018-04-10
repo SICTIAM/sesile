@@ -71,7 +71,7 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
     }
 
     /**
-     * @Rest\PUT("/{id}")
+     * @Rest\Put("/{id}")
      * @Rest\View(serializerGroups={"getByIdCircuit"})
      * @param Request $request
      * @param Groupe $groupe
@@ -94,7 +94,7 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
             }
 
             $form = $this->createForm(GroupeType::class, $groupe);
-            $form->submit($request->request->all());
+            $form->submit($request->request->all(), false);
 
             if ($form->isValid()) {
 

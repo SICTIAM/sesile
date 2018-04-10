@@ -28,6 +28,10 @@ class GroupeType extends AbstractType
                 'allow_delete' => true,
                 'allow_add' => true,
             ))
+            ->add('usersCopy', EntityType::class, array(
+                'class' => 'SesileUserBundle:User',
+                'multiple' => true
+            ))
         ;
     }
 

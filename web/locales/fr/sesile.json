@@ -306,7 +306,9 @@
             "add_circuit": "Ajouter un circuit",
             "success_delete": "Le circuit a été supprimé",
             "error_delete": "Une erreur est survenue à la suppression du circuit",
-            "error_fetch_list": "Une erreur est survenue à la récupération des circuits"
+            "error_fetch_list": "Une erreur est survenue à la récupération des circuits",
+            "error_save": "Une erreur est survenue à la sauvegarde du circuit",
+            "success_save": "Le circuit de validation a été enregitré"
         },
         "user_pack": {
             "name": "groupe utilisateur",
