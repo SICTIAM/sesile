@@ -8,9 +8,9 @@ import DocumentsView from './DocumentsView'
 import ClasseurActions from './ClasseurActions'
 import ClasseursButtonList from './ClasseursButtonList'
 import CircuitClasseur from '../circuit/CircuitClasseur'
-import History from '../_utils/History'
+import { refusClasseur, actionClasseur } from '../_utils/Classeur'
 import ClasseurStatus from './ClasseurStatus'
-import { Cell, GridX } from "../_components/UI"
+import { Cell, GridX } from '../_components/UI'
 
 class Classeur extends Component {
 
@@ -152,7 +152,7 @@ class Classeur extends Component {
     addUser = (stepKey, user) => this.setState(prevState => prevState.classeur.etape_classeurs[stepKey].users.push(user))
     handleChangeClasseur = (key, value) => this.setState(prevState => {classeur: prevState.classeur[key] = value })
 
-    validClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_validclasseur', classeur.id) })}
+    validClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_validclasseur', classeur.id) })}
     signClasseurs = (classeurs) => {
         let ids
         ids = []
@@ -161,40 +161,10 @@ class Classeur extends Component {
         })
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids)}))
     }
-    revertClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_retractclasseur', classeur.id) })}
-    refuseClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_refuseclasseur', classeur.id) })}
-    removeClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
-    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { this.actionClasseur('sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
-    actionClasseur (url, id, method = 'PUT') {
-        fetch(Routing.generate(url, {id}),
-            {
-                method: method,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin'
-            })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(classeur => this.setState({classeur}))
-            .then(() => {
-                if (method === 'PUT') {
-                    this.context._addNotification(basicNotification(
-                        'success',
-                        this.context.t('classeur.success.edit')))
-                } else {
-                    this.context._addNotification(basicNotification(
-                        'success',
-                        this.context.t('classeur.success.delete')))
-                    History.push(`/classeurs/supprimes`)
-                }
-            })
-            .catch(error => this.context._addNotification(basicNotification(
-                'error',
-                this.context.t('classeur.error.edit', {errorCode: error.status}),
-                error.statusText)))
-    }
+    revertClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id) })}
+    refuseClasseurs = (classeurs, motif) => { classeurs.map(classeur => { refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif) })}
+    removeClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
+    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
 
     render() {
         const { classeur, user, editClasseur } = this.state
@@ -217,17 +187,21 @@ class Classeur extends Component {
                     </GridX>
 
                     <div className="grid-x panel grid-padding-y hide-for-large">
-                        <div className="cell large-12">
-                            <ClasseursButtonList classeurs={[classeur]}
-                                                 validClasseur={this.validClasseurs}
-                                                 signClasseur={this.signClasseurs}
-                                                 revertClasseur={this.revertClasseurs}
-                                                 refuseClasseur={this.refuseClasseurs}
-                                                 removeClasseur={this.removeClasseurs}
-                                                 deleteClasseur={this.deleteClasseurs}
-                                                 display="edit"
-                            />
-                        </div>
+                        {
+                            classeur.id &&
+                            <div className="cell large-12">
+                                <ClasseursButtonList classeurs={[classeur]}
+                                                     validClasseur={this.validClasseurs}
+                                                     signClasseur={this.signClasseurs}
+                                                     revertClasseur={this.revertClasseurs}
+                                                     refuseClasseur={this.refuseClasseurs}
+                                                     removeClasseur={this.removeClasseurs}
+                                                     deleteClasseur={this.deleteClasseurs}
+                                                     display="edit"
+                                                     id={"button-list-" + classeur.id}
+                                />
+                            </div>
+                        }
                     </div>
 
                     <div className="grid-x grid-margin-x">
@@ -244,17 +218,21 @@ class Classeur extends Component {
                         </div>
                         <div className="cell large-4 small-12">
                             <div className="grid-x panel grid-padding-y show-for-large">
-                                <div className="cell large-12">
-                                    <ClasseursButtonList classeurs={[classeur]}
-                                                         validClasseur={this.validClasseurs}
-                                                         signClasseur={this.signClasseurs}
-                                                         revertClasseur={this.revertClasseurs}
-                                                         refuseClasseur={this.refuseClasseurs}
-                                                         removeClasseur={this.removeClasseurs}
-                                                         deleteClasseur={this.deleteClasseurs}
-                                                         display="edit"
-                                    />
-                                </div>
+                                {
+                                    classeur.id &&
+                                    <div className="cell large-12">
+                                        <ClasseursButtonList classeurs={[classeur]}
+                                                             validClasseur={this.validClasseurs}
+                                                             signClasseur={this.signClasseurs}
+                                                             revertClasseur={this.revertClasseurs}
+                                                             refuseClasseur={this.refuseClasseurs}
+                                                             removeClasseur={this.removeClasseurs}
+                                                             deleteClasseur={this.deleteClasseurs}
+                                                             display="edit"
+                                                             id={"button-list-top-" + classeur.id}
+                                        />
+                                    </div>
+                                }
                             </div>
 
                             <ClasseurInfos  id={classeur.id}
@@ -299,17 +277,22 @@ class Classeur extends Component {
                             }
 
                             <div className="grid-x panel grid-padding-y">
-                                <div className="cell large-12">
-                                    <ClasseursButtonList classeurs={[classeur]}
-                                                         validClasseur={this.validClasseurs}
-                                                         signClasseur={this.signClasseurs}
-                                                         revertClasseur={this.revertClasseurs}
-                                                         refuseClasseur={this.refuseClasseurs}
-                                                         removeClasseur={this.removeClasseurs}
-                                                         deleteClasseur={this.deleteClasseurs}
-                                                         display="edit"
-                                    />
-                                </div>
+                                {
+                                    classeur.id &&
+                                    <div className="cell large-12">
+                                        <ClasseursButtonList classeurs={[classeur]}
+                                                             validClasseur={this.validClasseurs}
+                                                             signClasseur={this.signClasseurs}
+                                                             revertClasseur={this.revertClasseurs}
+                                                             refuseClasseur={this.refuseClasseurs}
+                                                             removeClasseur={this.removeClasseurs}
+                                                             deleteClasseur={this.deleteClasseurs}
+                                                             display="edit"
+                                                             id={"button-list-bottom-" + classeur.id}
+                                                             dropdownPosition="top"
+                                        />
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>

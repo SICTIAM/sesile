@@ -141,6 +141,7 @@
                 "sign_title": "Signer le classeur",
                 "revert_title": "Rétracter le classeur",
                 "refus_title": "Refuser le classeur",
+                "refus_text": "Motif du refus",
                 "remove_title": "Retirer le classeur",
                 "delete_title": "Suprimer le classeur",
                 "comment_title": "Commenter le classeur"

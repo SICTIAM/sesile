@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { func } from 'prop-types'
+import {func, number, array} from 'prop-types'
 import { translate } from 'react-i18next'
 import Moment from 'moment'
 import Validator from 'validatorjs'
@@ -12,6 +12,10 @@ class ClasseurInfos extends Component {
 
     static contextTypes = { 
         t: func
+    }
+
+    static proptypes = {
+        usersCopy: array.isRequired
     }
 
     defaultProps = {

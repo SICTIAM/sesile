@@ -48,6 +48,7 @@ class ClasseursRow extends Component {
                                          refuseClasseur={refuseClasseur}
                                          removeClasseur={removeClasseur}
                                          deleteClasseur={deleteClasseur}
+                                         id={"button-list-" + classeur.id}
                     />
                 </div>
                 <div className="cell medium-2 large-1 show-for-medium text-center">

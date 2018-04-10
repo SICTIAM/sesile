@@ -58,13 +58,13 @@ class ActionMailer
 
     }
 
-    public function sendNotificationClasseur(Classeur $classeur, $motif="") {
+    public function sendNotificationClasseur(Classeur $classeur) {
         if ($classeur->getStatus() === 2) {
             $this->sendValidationMail($classeur);
         } else if ($classeur->getStatus() === 1) {
             $this->sendCreationMail($classeur);
         } else if ($classeur->getStatus() === 0) {
-            $this->sendRefusMail($classeur, $motif);
+            $this->sendRefusMail($classeur);
         } else {
             return false;
         }
@@ -172,7 +172,7 @@ class ActionMailer
         }
     }
 
-    private function sendRefusMail(Classeur $classeur, $motif = "") {
+    private function sendRefusMail(Classeur $classeur) {
         $currentUser = $this->user;
         $deposant = $classeur->getUser();
         $subject = "SESILE - Classeur refusé";
@@ -187,7 +187,7 @@ class ActionMailer
             'date_limite' => $classeur->getValidation(),
             'type'      => strtolower($classeur->getType()->getNom()),
             'lien'      => '<a href="' . $this->router->generate('classeur_edit', ['id' => $classeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '">voir le classeur</a>',
-            'motif'     => $motif
+            'motif'     => $classeur->getMotifRefus()
         ];
 
         if ($deposant != null) {
