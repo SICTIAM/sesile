@@ -63,9 +63,10 @@ class Helios extends Component {
 
     render () {
         const { pes, voucher, pj, revealDisplay } = this.state
+        const { t } = this.context
 
         return (
-            <div className="cell medium-12 text-left cell-block-y" key={this.props.document.id}>
+            <div className="cell medium-12 text-left cell-block-y helios" key={this.props.document.id}>
                 {
                     pj &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
@@ -74,13 +75,22 @@ class Helios extends Component {
                     </div>
                 }
 
-                 <div>
+                <div className="grid-x grid-margin-x grid-padding-x panel">
+                    <div className="cell medium-12">
+                        <h2><i className="fa fa-eye"></i> {t('common.helios.title')}</h2>
+                    </div>
+                </div>
+
+                 <div className="grid-x panel grid-margin-x grid-padding-x">
                     <HeliosInfos pes={pes}
                                  voucher={voucher}
                                  handleChangeVouchers={this.handleChangeVouchers}
                     />
-
+                 </div>
+                <div className="grid-x panel grid-margin-x grid-padding-x">
                     <HeliosVoucher voucher={voucher} />
+                </div>
+                <div className="grid-x">
                     <HeliosPJs pjs={voucher.list_pieces} handleClickPJ={this.handleClickPJ} typePes={pes.type_pes_name || ''} />
                 </div>
 

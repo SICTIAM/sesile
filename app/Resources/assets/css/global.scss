@@ -1112,6 +1112,20 @@ label > input {
   margin-right: 1em;
 }
 
+.helios {
+  font-size: 0.75em;
+  overflow-x: hidden;
+
+  select {
+    margin-bottom: 0;
+  }
+  h3, h2 {
+    text-transform: uppercase;
+    .fa {
+      font-size: 1em;
+    }
+  }
+}
 .text-capitalize {
   text-transform: capitalize;
 }

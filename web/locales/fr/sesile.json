@@ -11,6 +11,7 @@
         "drop_file_here": "Déposer le fichier ici",
         "file_is_required": "Le fichier est requis",
         "helios": {
+            "title": "Visualiseur de fichier PES",
             "voucher": "Bordereau",
             "budget": "Budget",
             "signing": "Signature",

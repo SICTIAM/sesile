@@ -12,14 +12,14 @@ class HeliosPJs extends Component {
         const { pjs, handleClickPJ, typePes } = this.props
 
         return (
-            <div>
-                <div className="grid-x grid-padding-x grid-margin-x">
+            <div className="cell medium-12">
+                <div className="grid-x grid-margin-x grid-padding-x">
                     <div className="cell medium-12">
-                        <h2>{ t('common.helios.attachment_list') }</h2>
+                        <h3><span className="fa fa-caret-right"></span> { t('common.helios.attachment_list') }</h3>
                     </div>
                 </div>
 
-                <div className="grid-x grid-padding-x grid-margin-x">
+                <div className="grid-x">
                     <div className="cell medium-12">
                         <table>
                         <thead>
