@@ -20,8 +20,8 @@ class HeliosInfos extends Component {
         const ListVouchers = pes.vouchers.map(option => <option key={option.id} value={option.id}>{option.id}</option>)
 
         return (
-            <div>
-                <div className="grid-x grid-padding-x grid-margin-x">
+            <div className="cell medium-12">
+                <div className="grid-x align-middle">
                     <div className="cell medium-3 text-bold">{t('common.helios.voucher')}</div>
 
                     <Select id="vouchers"
@@ -31,11 +31,11 @@ class HeliosInfos extends Component {
                         {ListVouchers}
                     </Select>
                 </div>
-                <div className="grid-x grid-padding-x grid-margin-x">
+                <div className="grid-x">
                     <div className="cell medium-3 text-bold">{t('common.helios.budget')}</div>
                     <div className="cell medium-9">{ pes.budget }</div>
                 </div>
-                <div className="grid-x grid-padding-x grid-margin-x">
+                <div className="grid-x">
                     <div className="cell medium-3 text-bold">{t('common.helios.signing')}</div>
                     <div className="cell medium-9">
                         { pes.signataire ? pes.signataire : t('common.helios.no_signing') }
