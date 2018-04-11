@@ -15,7 +15,7 @@ class ClasseursPreview extends Component {
         classeurs: []
     }
     componentDidMount() {
-        this.setState({classeurs: this.props.location.state.classeurs})
+        this.setState({classeurs: this.props.location.state.classeurs, user: this.props.location.state.user})
     }
     checkClasseur = (id, checked) => {
         const classeurs = this.state.classeurs
@@ -36,7 +36,7 @@ class ClasseursPreview extends Component {
                 <DocumentsPreviewByClasseur
                     key={key}
                     classeur={classeur}
-                    user={this.props.location.state.user} />)
+                    user={this.state.user} />)
         return (
             <GridX className="details-classeur">
                 <Cell>
