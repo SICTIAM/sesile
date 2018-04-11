@@ -12,10 +12,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\ClasseurBundle\Form\ClasseurPostType;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Service\ActionMailer;
+use Sesile\UserBundle\Entity\UserRole;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -269,23 +271,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View(serializerGroups={"classeurById"})
-     * @Rest\Put("/action/sign/{id}")
-     * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
-     * @param Classeur $classeur
-     * @return Classeur
-     */
-    public function signClasseurAction (Classeur $classeur) {
-
-        $em = $this->getDoctrine()->getManager();
-        $this->signClasseur(array($classeur));
-
-        $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
-
-        return $classeur;
-    }
-
-    /**
-     * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Put("/action/retract/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Classeur $classeur
@@ -361,9 +346,17 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         return new JsonResponse(['message' => "Classeur remove"], Response::HTTP_OK);
     }
 
-    private function signClasseur ($ids, $role = null) {
-
-        // Connexion BDD
+    /**
+     * Génération du fichier JNLP permettant l exécution de l application de signature
+     *
+     * @Route("/jnlpsignerfiles/{id}/{role}", name="jnlpSignerFiles")
+     * @param Request $request
+     * @param $id
+     * @param null $role
+     * @return Response
+     */
+    public function jnlpSignerFilesAction($id, $role = null) {
+        $ids = explode(",", urldecode($id));
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
@@ -462,32 +455,86 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         $url_applet = 'http://' . $this->container->getParameter('url_applet') . '/jws/sesile-jws-signer.jar';
 
-        $contentSigner = '<?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="' . $this->generateUrl('jnlpSignerFiles', array('id' => urlencode(serialize($ids)), 'role' => $role), UrlGeneratorInterface::ABSOLUTE_URL) . '">
-  <information>
-    <title>SESILE JWS Signer</title>
-    <vendor>SICTIAM</vendor>
-    <homepage href="' . $url_applet . '"/>
-    <description>Application de de signature de documents</description>
-    <description kind="short">Application de signatures</description>
-    <offline-allowed/>
-  </information>
-<security><all-permissions /></security>
-  <resources>
-    <j2se version="1.8" initial-heap-size="128m" max-heap-size="1024m"/>
-    <jar href="' . $url_applet . '"/>
-  </resources>
-  <application-desc >';
+        $contentSigner =
+            '<?xml version="1.0" encoding="utf-8"?>
+                <jnlp spec="1.0+" codebase="' . $this->generateUrl('jnlpSignerFiles', array('id' => urlencode(serialize($ids)), 'role' => $role), UrlGeneratorInterface::ABSOLUTE_URL) . '">
+                  <information>
+                    <title>SESILE JWS Signer</title>
+                    <vendor>SICTIAM</vendor>
+                    <homepage href="' . $url_applet . '"/>
+                    <description>Application de de signature de documents</description>
+                    <description kind="short">Application de signatures</description>
+                    <offline-allowed/>
+                  </information>
+                <security><all-permissions /></security>
+                  <resources>
+                    <j2se version="1.8" initial-heap-size="128m" max-heap-size="1024m"/>
+                    <jar href="' . $url_applet . '"/>
+                  </resources>
+                  <application-desc >';
 
         foreach ($arguments as $argument) {
             $contentSigner .= '<argument>' . $argument . '</argument>';
         }
 
         $contentSigner .= '</application-desc>
-</jnlp>';
+        </jnlp>';
         $response->setContent($contentSigner);
 
         return $response;
 
+    }
+
+    /**
+     * Valider_et_signer an existing Classeur entity from JWS.
+     *
+     * @Rest\Get("/valider_classeur_jws/{id}/{user_id}/{valid}", name="valider_classeur_jws")
+     *
+     */
+    public function valider_classeur_jws(Request $request, $id, $user_id, $valid = -1)
+    {
+
+        if($valid == 1) {
+
+            // Connexion BDD
+            $em = $this->getDoctrine()->getManager();
+
+            // Récup de l entité classeur et user
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->find($id);
+            $user = $em->getRepository('SesileUserBundle:User')->findOneById($user_id);
+
+            // Test si le classeur exite
+            if (!$classeur) {
+                throw $this->createNotFoundException('Unable to find Classeur entity.');
+            }
+
+            // Validation du classeur
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $user);
+            $em->flush();
+
+            // Ajout d'une action pour le classeur
+            $action = new Action();
+
+            $commentaire = "Classeur signé.";
+            $action->setCommentaire($commentaire);
+
+            $action->setClasseur($classeur);
+            $action->setUser($user);
+            $action_libelle = "Signature";
+            $action->setAction($action_libelle);
+            $em->persist($action);
+            $em->flush();
+
+            // Envoie du mail de confirmation
+            $this->sendValidationMail($classeur, $user);
+
+            return new JsonResponse(array("classeur_valid" => "1"));
+        }
+        elseif ($valid == 0) {
+            return new JsonResponse(array("classeur_valid" => "0"));
+        }
+        else {
+            return new JsonResponse(array("classeur_valid" => "-1"));
+        }
     }
 }
