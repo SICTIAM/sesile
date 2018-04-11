@@ -19,6 +19,7 @@ class ClasseursButtonList extends Component {
     }
 
     componentDidMount() {
+        $('.btn-sign-' + this.props.id).foundation()
         $('.btn-refuser-' + this.props.id).foundation()
     }
 
@@ -29,7 +30,7 @@ class ClasseursButtonList extends Component {
     render () {
 
         const { textRefus } = this.state
-        const { classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur, display, id, dropdownPosition } = this.props
+        const { classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur, display, id, dropdownPosition, user } = this.props
         const { t } = this.context
 
         return (
@@ -44,7 +45,32 @@ class ClasseursButtonList extends Component {
                 <div className="cell auto">
                     {
                         classeurs && !classeurs.filter(classeur => !classeur.signable_and_last_validant).length &&
-                        <ButtonSign classeurs={ classeurs } sign={ signClasseur } display={display} />
+                        <div className={"btn-sign-" + id}>
+                            { display === "list"
+                                ? <a title={t('common.classeurs.button.sign_title')}
+                                     className="fa fa-pencil" onClick={() => signClasseur(classeurs)} />
+                                : <div className="user-log">
+                                    <button data-toggle={id + 'sign'} title={t('common.classeurs.button.refus_title')}
+                                            className="fa fa-pencil success button hollow"/>
+
+                                    <div className="dropdown-pane" data-position={dropdownPosition} data-alignment="center" id={id + 'sign'} data-dropdown>
+                                        { (user && user.userrole && user.userrole.length > 0)
+                                            ? user.userrole.map(role => (
+                                                <li key={role.id}>
+                                                    <button onClick={() => signClasseur(classeurs, role.id)}
+                                                            title={role.user_roles}
+                                                            className="button secondary clear">
+                                                        {role.user_roles}
+                                                    </button>
+                                                </li>
+                                                )
+                                            )
+                                            : t('common.classeurs.button.no_roles')
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     }
                 </div>
                 <div className="cell auto">
@@ -120,19 +146,6 @@ ButtonValid.contextTypes = { t: func }
 ButtonValid.propTypes = {
     classeurs: array,
     valid: func
-}
-
-const ButtonSign = ({classeurs, sign, display}, {t}) => {
-    return(
-        display === "list"
-            ? <a onClick={() => sign(classeurs)} title={ t('common.classeurs.button.sign_title') } className="fa fa-pencil"></a>
-            : <button onClick={() => sign(classeurs)} title={ t('common.classeurs.button.sign_title') } className="fa fa-pencil success button hollow"></button>
-    )
-}
-ButtonSign.contextTypes = { t: func }
-ButtonSign.propTypes = {
-    classeurs: array,
-    sign: func
 }
 
 const ButtonRevert = ({classeurs, revert, display}, {t}) => {

@@ -3,7 +3,6 @@ import { func } from 'prop-types'
 import { translate } from 'react-i18next'
 
 import { Cell, GridX } from '../_components/UI'
-import { Button } from '../_components/Form'
 import OnlyOffice from '../document/OnlyOffice'
 import Helios from '../document/Helios'
 
@@ -17,26 +16,30 @@ class ClasseursPreview extends Component {
     componentDidMount() {
         this.setState({classeurs: this.props.location.state.classeurs, user: this.props.location.state.user})
     }
+    componentDidUpdate() {
+        $('.sign-role-list').foundation()
+    }
     checkClasseur = (id, checked) => {
         const classeurs = this.state.classeurs
         classeurs[classeurs.findIndex(classeur => classeur.id === id)].checked = !checked
         this.setState({classeurs})
     }
-    signClasseurs = () => {
+    signClasseurs = (role = '') => {
         let idClasseursToSign = []
         this.state.classeurs.map(classeur => {
             if(classeur.checked) idClasseursToSign.push(classeur.id)
         })
-        window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(idClasseursToSign)}))
+        window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(idClasseursToSign), role: role}))
     }
     render() {
         const { t } = this.context
+        const { user } = this.state
         const documentsPreviewByClasseur =
             this.state.classeurs.map((classeur, key) =>
                 <DocumentsPreviewByClasseur
                     key={key}
                     classeur={classeur}
-                    user={this.state.user} />)
+                    user={user} />)
         return (
             <GridX className="details-classeur">
                 <Cell>
@@ -51,13 +54,29 @@ class ClasseursPreview extends Component {
                                 <GridX className="grid-padding-y">
                                     <Cell>
                                         <GridX className="align-center-middle">
-                                            <Cell className="medium-10">
+                                            <Cell className="medium-8">
                                                 <h2>{t('common.sign_several_classeurs')}</h2>
                                             </Cell>
-                                            <Button
-                                                className="cell medium-2 text-right"
-                                                onClick={this.signClasseurs}
-                                                labelText={t('common.sign_classeur_plural')}/>
+                                            <div className="cell medium-4 text-right sign-role-list">
+                                                <button className="button hollow left-button-group arrow-only" data-toggle="button-classeurs-sign">
+                                                    {t('common.sign_classeur_plural')} <i className="fa fa-caret-down"></i>
+                                                </button>
+                                                <div className="dropdown-pane" data-position="bottom" data-alignment="center" id="button-classeurs-sign" data-dropdown>
+                                                    { (user && user.userrole && user.userrole.length > 0)
+                                                        ? user.userrole.map(role => (
+                                                            <li key={role.id} className="text-right">
+                                                                <a onClick={() => this.signClasseurs(role.id)}
+                                                                        title={role.user_roles}
+                                                                        className="button secondary clear">
+                                                                    {t('common.classeurs.button.role_as')} {role.user_roles}
+                                                                </a>
+                                                            </li>
+                                                            )
+                                                        )
+                                                        : t('common.classeurs.button.no_roles')
+                                                    }
+                                                </div>
+                                            </div>
                                         </GridX>
                                     </Cell>
                                 </GridX>
@@ -137,16 +156,29 @@ const DocumentsPreviewByClasseur = ({classeur, user}, {t}) => {
             <GridX className="grid-padding-y">
                 <Cell>
                     <div id={classeur.nom} className="grid-x align-center-middle">
-                        <Cell className="medium-10">
+                        <Cell className="medium-8">
                             <h3>{classeur.nom}</h3>
                         </Cell>
-                        <Cell className="medium-2 text-right">
-                            <a
-                                className="button hollow"
-                                href={Routing.generate('jnlpSignerFiles', {id: classeur.id})}>
-                                {t('common.sign_classeur')}
-                            </a>
-                        </Cell>
+                        <div className="cell medium-4 text-right sign-role-list">
+                            <button className="button hollow left-button-group arrow-only" data-toggle={`button-classeur-${classeur.id}-sign`}>
+                                {t('common.sign_classeur')} <i className="fa fa-caret-down"></i>
+                            </button>
+                            <div className="dropdown-pane" data-position="bottom" data-alignment="center" id={`button-classeur-${classeur.id}-sign`} data-dropdown>
+                                { (user && user.userrole && user.userrole.length > 0)
+                                    ? user.userrole.map(role => (
+                                            <li key={role.id} className="text-right">
+                                                <a href={Routing.generate('jnlpSignerFiles', {id: classeur.id, role: role.id})}
+                                                   title={role.user_roles}
+                                                   className="button secondary clear">
+                                                    {t('common.classeurs.button.role_as')} {role.user_roles}
+                                                </a>
+                                            </li>
+                                        )
+                                    )
+                                    : t('common.classeurs.button.no_roles')
+                                }
+                            </div>
+                        </div>
                     </div>
                 </Cell>
             </GridX>

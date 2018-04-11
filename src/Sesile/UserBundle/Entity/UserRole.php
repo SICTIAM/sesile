@@ -19,14 +19,14 @@ class UserRole
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"userRole"})
+     * @Groups({"userRole", "currentUser"})
      */
     private $id;
 
     /**
      * @var string
      * @ORM\Column(name="userRoles", type="string", length=150)
-     * @Groups({"userRole", "UserId"})
+     * @Groups({"userRole", "UserId", "currentUser"})
      */
     private $userRoles;
 

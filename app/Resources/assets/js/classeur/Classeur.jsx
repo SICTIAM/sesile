@@ -153,13 +153,13 @@ class Classeur extends Component {
     handleChangeClasseur = (key, value) => this.setState(prevState => {classeur: prevState.classeur[key] = value })
 
     validClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_validclasseur', classeur.id) })}
-    signClasseurs = (classeurs) => {
+    signClasseurs = (classeurs, role = '') => {
         let ids
         ids = []
         classeurs.map(classeur => {
             ids.push(classeur.id)
         })
-        window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids)}))
+        window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids), role: role}))
     }
     revertClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id) })}
     refuseClasseurs = (classeurs, motif) => { classeurs.map(classeur => { refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif) })}
@@ -199,6 +199,7 @@ class Classeur extends Component {
                                                      deleteClasseur={this.deleteClasseurs}
                                                      display="edit"
                                                      id={"button-list-" + classeur.id}
+                                                     user={user}
                                 />
                             </div>
                         }
@@ -230,6 +231,7 @@ class Classeur extends Component {
                                                              deleteClasseur={this.deleteClasseurs}
                                                              display="edit"
                                                              id={"button-list-top-" + classeur.id}
+                                                             user={user}
                                         />
                                     </div>
                                 }
@@ -290,6 +292,7 @@ class Classeur extends Component {
                                                              display="edit"
                                                              id={"button-list-bottom-" + classeur.id}
                                                              dropdownPosition="top"
+                                                             user={user}
                                         />
                                     </div>
                                 }
