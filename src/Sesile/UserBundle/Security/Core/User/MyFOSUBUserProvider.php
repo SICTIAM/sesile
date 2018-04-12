@@ -8,15 +8,18 @@ use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseFOSUBProvider;
 use Sesile\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
+use FOS\UserBundle\Util\TokenGenerator;
 
 class MyFOSUBUserProvider extends BaseFOSUBProvider
 {
     protected $em;
+    protected $tokenGenerator;
 
-    public function __construct(UserManagerInterface $userManager, array $properties, EntityManagerInterface $em)
+    public function __construct(UserManagerInterface $userManager, array $properties, EntityManagerInterface $em, TokenGenerator $tokenGenerator)
     {
         parent::__construct($userManager, $properties);
         $this->em = $em;
+        $this->tokenGenerator = $tokenGenerator;
     }
 
     /**
@@ -64,6 +67,7 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
             $user->setNom($data['family_name']);
             $user->setPrenom($data['given_name']);
             $user->setEmail($userEmail);
+            $user->setPassword(substr($this->tokenGenerator->generateToken(), 0, 10));
             $user->setEnabled(true);
             $user->setCollectivite($ozwilloCollectivite->getCollectivite());
 
