@@ -323,6 +323,12 @@ html {
         color: $sesile-primary;
       }
     }
+    .dropdown-pane {
+      width: auto;
+    }
+    li {
+      list-style-type: none;
+    }
   }
 
   .classeur-edit {
@@ -1128,4 +1134,15 @@ label > input {
 }
 .text-capitalize {
   text-transform: capitalize;
+}
+
+.sign-role-list {
+  list-style-type: none;
+
+  li a.button {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 0.9em;
+    text-transform: unset;
+  }
 }

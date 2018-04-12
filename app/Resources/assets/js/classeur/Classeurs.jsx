@@ -135,6 +135,7 @@ class Classeurs extends Component {
                                                                  deleteClasseur={this.deleteClasseurs}
                                                                  signClasseur={this.signClasseurs}
                                                                  id={"button-lists-small"}
+                                                                 user={this.props.user}
                                             />
                                         </div>
                                     </div>
@@ -179,6 +180,7 @@ class Classeurs extends Component {
                                                              deleteClasseur={this.deleteClasseurs}
                                                              signClasseur={this.signClasseurs}
                                                              id={"button-lists-large"}
+                                                             user={this.props.user}
                                         />
                                 }
                             </div>
@@ -199,6 +201,7 @@ class Classeurs extends Component {
                                                   removeClasseur={this.removeClasseurs}
                                                   deleteClasseur={this.deleteClasseurs}
                                                   signClasseur={this.signClasseurs}
+                                                  user={this.props.user}
                                     />
                                 )
                             ) : (<div>{ t('common.loading') }</div>)

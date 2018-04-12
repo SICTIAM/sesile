@@ -49,6 +49,7 @@ class ClasseursRow extends Component {
                                          removeClasseur={removeClasseur}
                                          deleteClasseur={deleteClasseur}
                                          id={"button-list-" + classeur.id}
+                                         user={this.props.user}
                     />
                 </div>
                 <div className="cell medium-2 large-1 show-for-medium text-center">
