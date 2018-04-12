@@ -133,84 +133,6 @@ class DocumentController extends Controller
         return new JsonResponse($doc->getSigned());
     }
 
-    /**
-     * @Route("/uploaddocument/{id}/{token}", name="upload_document_fron_jws")
-     *
-     */
-    public function uploadDocumentAction(Request $request, $id, $token = null) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        // Récupération des variables
-        $uploadedfile = $request->files->get('upload-file');
-        $path = $this->container->getParameter('upload')['fics'];
-
-
-        // Verification des paramètres
-        if (empty($uploadedfile)) {
-            return new JsonResponse(array("error" => "nothinguploaded"));
-        }
-
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneById($id);
-
-        // Vérification que le document existe
-        if (empty($doc)) {
-            return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
-        }
-
-        // Vérification du token
-        if ($doc->getToken() !== null && $doc->getToken() == $token && file_exists($path . $doc->getRepourl())) {
-
-            // On renomme le document pour indiquer qu il est signéz
-            $ancienNom = $doc->getName();
-            $path_parts = pathinfo($ancienNom);
-            $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
-
-            $typeDocument = $doc->getType();
-
-            // Si le document renvoyé est signature détachée
-            // Dans le cas d un CADES
-            if ($typeDocument != "application/xml" && $typeDocument != "application/pdf") {
-
-                $dateToday = new \DateTime();
-
-                $docSignNom = $path_parts['filename'] . '-sign';
-                $path_doc = pathinfo($doc->getRepourl());
-                $documentSignedURL = $path_doc['filename'] . '-sign-' . $dateToday->format('YmdHis');
-                // Upload du nouveau fichier
-                $uploadedfile->move($path, $documentSignedURL);
-                $documentSign = new DocumentDetachedSign();
-                $documentSign->setName($docSignNom);
-                $documentSign->setRepourl($documentSignedURL);
-                $documentSign->setDocument($doc);
-                $em->persist($documentSign);
-
-            }
-            // Dans les autres cas : pades, xades, xades-pes
-            else {
-                unlink($path . $doc->getRepourl());
-
-                // Upload du nouveau fichier
-                $uploadedfile->move($path, $doc->getRepourl());
-                // On enregistre le nouveau nom
-                $doc->setName($nouveauNom);
-            }
-
-            // On valide la singature
-            $doc->setSigned(true);
-
-            // On enregistre les données
-            $em->flush();
-            return new JsonResponse(array("error" => "ok", "url" => $path . $doc->getRepourl()));
-
-        } else {
-            unlink($uploadedfile->getRealPath());
-
-            return new JsonResponse(array("error" => "nodocumentwiththisname"));
-
-        }
-
-    }
 
 
     /**
@@ -550,33 +472,6 @@ class DocumentController extends Controller
         return $response;
     }
 
-    /**
-     * @Route("/downloadJWS/{name}/{token}", name="download_jws_doc",  options={"expose"=true})
-     *
-     */
-    public function downloadJWSAction(Request $request, $name, $token = null)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $doc = $em->getRepository('SesileDocumentBundle:Document')->findOneBy(array('repourl' => $name));
-
-        $path = $this->container->getParameter('upload')['fics'];
-
-        if($doc->getToken() !== null && $doc->getToken() == $token) {
-            $response = new Response();
-
-            $response->headers->set('Cache-Control', 'private');
-            $response->headers->set('Content-type', mime_content_type($path . $doc->getRepourl()));
-            $response->headers->set('Content-Disposition', 'attachment; filename="' . $doc->getName() . '"');
-            $response->headers->set('Content-Length', filesize($path . $doc->getRepourl()));
-
-            $response->setContent(file_get_contents($path . $doc->getRepourl()));
-
-            return $response;
-        } else {
-            return new JsonResponse(array("Requete invalide" => "0"));
-        }
-
-    }
 
     /**
      * @Route("/download_visa/{id}/{absVisa}/{ordVisa}", name="download_doc_visa",  options={"expose"=true})
