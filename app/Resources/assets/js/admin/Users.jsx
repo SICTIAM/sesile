@@ -98,7 +98,6 @@ class Users extends Component {
                         title={t('admin.users_list')}
                         listLength={listUser.length}
                         labelButton={t('common.button.add_user')}
-                        addLink={`/admin/${this.state.collectiviteId}/utilisateur`}
                         headTitles={[t('admin.user.first_name_and_name'), t('admin.collectivite.name'), t('admin.user.label_email'), t('common.label.actions')]}
                         emptyListMessage={t('common.no_results', {name: t('admin.user.name')})}>
                             {listUser}

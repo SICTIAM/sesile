@@ -354,6 +354,7 @@
             "placeholder_role_user": "Role de l'utilisateur",
             "first_name_and_name": "Prénom Nom",
             "search_by_first_name_and_name": "Recherche par nom et prénom",
+            "succes_update": "L'utilisateur {{name}} a été modifié",
             "succes_delete": "L'utilisateur a été supprimé",
             "error_delete": "Impossible de supprimer l'utilisateur",
             "which_user": "Quel utilisateur ?",
