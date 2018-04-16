@@ -257,7 +257,7 @@
         },
         "label": {
             "which": "Lequel ?",
-            "which_female": "Laquel ?",
+            "which_female": "Laquelle ?",
             "who": "Avec qui ?",
             "which_collectivite": "Quelle collectivité ?"
         },
@@ -279,8 +279,8 @@
             "complet_name_plural": "types de classeurs",
             "help_text_add_type": "Saisir un nom pour ajouter un nouveau type",
             "title_add_type": "Ajout d'un type",
-            "list_editable_type": "Liste des types modifiable",
-            "list_not_editable_type": "Liste des types non modifiable",
+            "list_editable_type": "Liste des types modifiables",
+            "list_not_editable_type": "Liste des types non modifiables",
             "error_save": "Une erreur est survenue à l'enregistrement du type",
             "error_delete": "Une erreur est survenue à la suppression du type",
             "error_fetch_list": "Une erreur est survenue à la récupération des types",
