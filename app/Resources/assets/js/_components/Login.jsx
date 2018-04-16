@@ -11,25 +11,21 @@ class MenuBar extends Component {
     }
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             user: {
                 collectivite: {}
             }
-        };
+        }
     }
 
-    componentDidMount() {
-        this.fetchUser()
+    componentWillReceiveProps(nextProps) {
+        this.setState({user: nextProps.user})
+
     }
 
-    fetchUser() {
-        fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(json => {
-                this.setState({user: json})
-                $('.user-log').foundation()
-            })
+    componentDidUpdate() {
+        $('.user-log').foundation()
     }
 
     render(){
@@ -62,13 +58,16 @@ class MenuBar extends Component {
                                         </Link>
                                     </li>
                                     <hr/>
-                                    <li>
-                                        <Link to="/admin/circuits-de-validation" className="button secondary clear">
-                                            <i className="fa fa-cogs"></i>
-                                            { t('common.menu.admin') }
-                                        </Link>
-                                    </li>
-                                    <hr/>
+                                    {(user.roles.find(role => role.includes("ADMIN"))) &&
+                                        <div>
+                                            <li>
+                                                <Link to="/admin/circuits-de-validation" className="button secondary clear">
+                                                    <i className="fa fa-cogs"></i>
+                                                    { t('common.menu.admin') }
+                                                </Link>
+                                            </li>
+                                            <hr/>
+                                        </div>}
                                     <li>
                                         <a href="/logout" className="button secondary clear">
                                             <i className="fa fa-sign-out"></i>

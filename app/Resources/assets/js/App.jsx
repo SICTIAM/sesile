@@ -105,7 +105,7 @@ class App extends Component {
                                     </div>
                                     <div className="cell large-3 show-for-large"></div>
                                     <div className="cell large-3 small-6">
-                                        <Login/>
+                                        <Login user={this.state.user}/>
                                     </div>
                                 </div>
                             </div>
