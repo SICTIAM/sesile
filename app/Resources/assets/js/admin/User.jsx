@@ -117,7 +117,9 @@ class User extends Component {
 
     handleClickSave = () => {
         const { user } = this.state
-        user.userrole.map((role, key) => this.setState(prevState => prevState.user.userrole[key].user = this.state.userId))
+        const { t, _addNotification } = this.context
+        const id = this.state.userId
+        user.userrole.map((role, key) => this.setState(prevState => prevState.user.userrole[key].user = id))
 
         const field = {
             qualite: user.qualite,
@@ -132,23 +134,13 @@ class User extends Component {
             userrole: user.userrole
         }
 
-        if (this.state.userId) {
-            this.putUser(field, this.state.userId)
-        } else {
-            field['email'] = user.email
-            this.createUser(field)
-        }
-    }
-
-    putUser = (user, id) => {
-        const { t, _addNotification } = this.context
         fetch(Routing.generate("sesile_user_userapi_updateuser", {id}), {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify(field),
             credentials: 'same-origin'
         })
             .then(handleErrors)
@@ -158,7 +150,7 @@ class User extends Component {
                     _addNotification(basicNotification(
                         'success',
                         t('admin.success.update', {name: t('admin.user.name')}),
-                        t('admin.success.update', {name: t('admin.user.name')})
+                        t('admin.user.succes_update', {name: user._prenom + ' ' + user._nom})
                     ))
                 }
             })
@@ -166,33 +158,6 @@ class User extends Component {
                 'error',
                 t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
                 error.statusText)))
-    }
-
-    createUser = (user) => {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate("sesile_user_userapi_postuser"), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-            credentials: 'same-origin'
-        })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(response => {
-                _addNotification(basicNotification(
-                    'success',
-                    t('admin.success.add', {name: t('admin.user.name'), errorCode: response.status}),
-                    response.statusText))
-                History.push(`/admin/${response.collectivite.id}/utilisateur/${response.id}`)
-            })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.add', {name: t('admin.user.name'), errorCode: error.status}),
-                error.statusText)))
-
     }
 
     handleClickDelete = (id) => {
@@ -210,7 +175,6 @@ class User extends Component {
                 History.push(`/admin/utilisateurs`)
             })
     }
-
 
     render() {
         const { t } = this.context
