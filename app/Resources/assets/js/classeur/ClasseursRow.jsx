@@ -27,7 +27,9 @@ class ClasseursRow extends Component {
                     {classeur.nom}
                 </Link>
                 <Link className="cell large-2 text-bold text-center show-for-large" to={`/classeur/${classeur.id}`}>
-                    { validUsers }
+                    { classeur.status !== 2 &&
+                        validUsers
+                    }
                 </Link>
                 <Link className="cell large-2 text-bold text-center show-for-large" to={`/classeur/${classeur.id}`}>
                     <ClasseurStatus status={classeur.status} />
