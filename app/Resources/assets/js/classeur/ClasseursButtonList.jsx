@@ -50,7 +50,7 @@ class ClasseursButtonList extends Component {
                                 ? <a title={t('common.classeurs.button.sign_title')}
                                      className="fa fa-pencil" onClick={() => signClasseur(classeurs)} />
                                 : <div className="user-log">
-                                    <button data-toggle={id + 'sign'} title={t('common.classeurs.button.refus_title')}
+                                    <button data-toggle={id + 'sign'} title={t('common.classeurs.button.sign_title')}
                                             className="fa fa-pencil success button hollow"/>
 
                                     <div className="dropdown-pane" data-position={dropdownPosition} data-alignment="center" id={id + 'sign'} data-dropdown>
