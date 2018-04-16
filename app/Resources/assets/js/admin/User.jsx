@@ -206,21 +206,18 @@ class User extends Component {
                                     }
 
                                     <div className="medium-6 cell">
-                                        <div className="grid-x grid-padding-x grid-padding-y">
-                                            {
-                                                (user.id) &&
-                                                <div className="medium-12 cell">
-                                                    {user.email}
-                                                </div>
-                                            }
+                                        {(user.id) &&
+                                            <div className="grid-x grid-padding-y">
+                                                <span className="cell medium-6 text-bold">{t('admin.user.label_email')}</span>
+                                                <div className="cell medium-6">{user.email}</div>
+                                            </div>}
+                                        <div className="grid-x grid-padding-y">
+                                            <span className="cell medium-6 text-bold">{t('admin.user.label_name')}</span>
+                                            <div className="cell medium-6">{user._nom}</div>
                                         </div>
-                                        <div className="grid-x grid-padding-x grid-padding-y">
-                                            {
-                                                (user.id) &&
-                                                <div className="medium-12 cell">
-                                                    {user._prenom} {user._nom}
-                                                </div>
-                                            }
+                                        <div className="grid-x grid-padding-y">
+                                            <span className="cell medium-6 text-bold">{t('admin.user.label_firstname')}</span>
+                                            <div className="cell medium-6">{user._prenom}</div>
                                         </div>
                                         <div className="grid-x grid-padding-x grid-padding-y">
                                             <CollectivitesMap collectivites={collectivites} collectiviteId={user.collectivite} isSuperAdmin={this.state.isSuperAdmin} handleChangeField={this.handleChangeField} />
@@ -340,7 +337,7 @@ class User extends Component {
                             <div className="medium-12 cell">
                                 <div className="grid-x grid-padding-x align-center-middle">
                                     <div className="medium-6 cell">
-                                        <label>{t('admin.user.label_role_app')}
+                                        <label className="text-bold">{t('admin.user.label_role_app')}
                                             <select name="roles" value={this.state.user.roles || []} onChange={(e) => this.handleChangeRoles(e.target.options)} multiple>
                                                 {rolesSelect}
                                             </select>
@@ -358,12 +355,12 @@ class User extends Component {
                                     (userId) &&
                                     <div className="grid-x grid-padding-x grid-padding-y">
                                         <div className="admin_search_input medium-6 cell">
-                                            <label>{t('admin.user.label_api_key')}
+                                            <label className="text-bold">{t('admin.user.label_api_key')}
                                                 <input name="apitoken" value={user.apitoken} />
                                             </label>
                                         </div>
                                         <div className="admin_search_input medium-6 cell">
-                                            <label>{t('admin.user.label_api_secret')}
+                                            <label className="text-bold">{t('admin.user.label_api_secret')}
                                                 <input name="apisecret" value={user.apisecret} />
                                             </label>
                                         </div>
