@@ -139,16 +139,16 @@ class Account extends Component {
 
                                     <div className="medium-6 cell">
                                         <div className="grid-x grid-padding-y">
-                                            <div className="cell medium-6">{t('admin.user.label_name')}</div>
-                                            <div className="cell medium-6 text-bold">{user._nom}</div>
+                                            <span className="cell medium-6 text-bold">{t('admin.user.label_name')}</span>
+                                            <div className="cell medium-6">{user._nom}</div>
                                         </div>
                                         <div className="grid-x grid-padding-y">
-                                            <div className="cell medium-6">{t('admin.user.label_firstname')}</div>
-                                            <div className="cell medium-6 text-bold">{user._prenom}</div>
+                                            <span className="cell medium-6 text-bold">{t('admin.user.label_firstname')}</span>
+                                            <div className="cell medium-6">{user._prenom}</div>
                                         </div>
                                         <div className="grid-x grid-padding-y">
-                                            <div className="cell medium-6">{t('admin.user.label_email')}</div>
-                                            <div className="cell medium-6 text-bold">{user.email}</div>
+                                            <span className="cell medium-6 text-bold">{t('admin.user.label_email')}</span>
+                                            <div className="cell medium-6">{user.email}</div>
                                         </div>
                                         <div className="grid-x grid-padding-y">
                                             <div className="cell medium-6"></div>
@@ -186,7 +186,8 @@ class Account extends Component {
                                     <div className="medium-6 cell">
                                         <div className="grid-x grid-padding-x grid-padding-y">
                                             <div className="medium-8 cell">
-                                                <label>{t('admin.user.label_quality')}
+                                                <label>
+                                                    <span className="text-bold">{t('admin.user.label_quality')}</span>
                                                     <textarea name="qualite" value={user.qualite} onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} />
                                                 </label>
                                             </div>

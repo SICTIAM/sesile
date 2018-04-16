@@ -44,7 +44,7 @@ class ClasseurProgress extends Component {
                 <div className="cell small-12">
                     <div className={"grid-x" + className }>
                         <div className="cell small-6">
-                            <span className={"text-" + classProgress}>{t('classeur.deadline')}</span>
+                            <span className={"text-bold text-" + classProgress}>{t('classeur.deadline')}</span>
                         </div>
                         <div className="cell small-6">
                             <span className={"text-" + classProgress}>

@@ -42,7 +42,7 @@ const Input = (props) =>
 const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, labelText, helpText, children }) =>
     <div className={className}>
         <label>
-            {labelText}
+            <span className="text-bold text-capitalize">{labelText}</span>
             <textarea   id={id}
                         name={name}
                         placeholder={placeholder}
@@ -93,7 +93,7 @@ const ButtonConfirm = ({ id, className, labelButton, confirmationText, labelConf
 
 const Switch = ({ id, className, onChange, labelText, checked, activeText, inactiveText }) =>
     <div className={ className + " checkbox"}>
-        <label htmlFor={id}>{labelText}</label>
+        <label htmlFor={id} className="text-bold">{labelText}</label>
         <div className="switch">
             <input className="switch-input" id={id} type="checkbox" name={id} checked={checked} onChange={e => onChange(e.target.name, e.target.checked)}/>
             <label className="switch-paddle" htmlFor={id}>
@@ -115,7 +115,7 @@ const Avatar = ({ className, size = 100, nom, fileName }) =>
 
 const Select = ({ id, className, label, value, onChange, children }) =>
     <div className={className}>
-        <label htmlFor={id}>{label}</label>
+        <label htmlFor={id} className="text-bold text-capitalize">{label}</label>
         <select id={id} value={value} onChange={(e) => onChange(id, e.target.value)} >
             {children}
         </select>

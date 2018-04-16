@@ -82,18 +82,26 @@ class ClasseurInfos extends Component {
 
                         <GridX className="grid-margin-x grid-padding-x">
                             <Cell className="small-6">
-                                <span className="info-details-classeur">{t('admin.type.name')}</span>
+                                <label htmlFor="classeur-info-type" className="text-capitalize text-bold">
+                                    {t('admin.type.name')}
+                                </label>
                             </Cell>
                             <Cell className="small-6">
-                                <span className="bold-info-details-classeur">{type.nom}</span>
+                                <span id="classeur-info-type" className="bold-info-details-classeur">
+                                    {type.nom}
+                                </span>
                             </Cell>
                         </GridX>
                         <GridX className="grid-margin-x grid-padding-x">
                             <Cell className="small-6">
-                                <span className="info-details-classeur">{t('classeur.deposited')}</span>
+                                <label htmlFor="classeur-info-creation" className="text-bold">
+                                    {t('classeur.deposited')}
+                                </label>
                             </Cell>
                             <Cell className="small-6">
-                                <span className="bold-info-details-classeur">{Moment(creation).format('L')}</span>
+                                <span id="classeur-info-creation" className="bold-info-details-classeur">
+                                    {Moment(creation).format('L')}
+                                </span>
                             </Cell>
                         </GridX>
 
@@ -119,10 +127,14 @@ class ClasseurInfos extends Component {
                         { usersCopy.length > 0 &&
                         <GridX className="grid-margin-x grid-padding-x align-middle">
                             <Cell className="small-6">
-                                <span className="info-details-classeur">{t('classeur.users_in_copy')}</span>
+                                <label htmlFor="classeur-info-users-in-copy" className="text-bold">
+                                    {t('classeur.users_in_copy')}
+                                </label>
                             </Cell>
                             <Cell className="small-6">
-                                <span className="bold-info-details-classeur">{listUsers}</span>
+                                <span id="classeur-info-users-in-copy" className="bold-info-details-classeur">
+                                    {listUsers}
+                                </span>
                             </Cell>
                         </GridX>
                         }
