@@ -37,7 +37,6 @@ class CollectiviteEmailModels extends Component {
     render() {
         const { t } = this.context
         const { collectivite, handleChange, editState } = this.props
-        console.log(collectivite.textcopymailnew)
         return (
             <AccordionItem title={t('admin.collectivite.mails_templates')}>
                 <Editor id="message" 

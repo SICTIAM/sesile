@@ -179,7 +179,7 @@ class Documentation extends Component {
                                             type="text"
                                             className=""
                                             autoFocus={true}
-                                            labelText={t('common.label.description')}
+                                            labelText={`${t('common.label.description')} *`}
                                             value={documentation.description} 
                                             onChange={this.handleChangeDocumentation}
                                             validationRule={this.validationRules.description}
@@ -191,7 +191,7 @@ class Documentation extends Component {
                                                 id="version"
                                                 type="text"
                                                 className=""
-                                                labelText={t('common.label.version')}
+                                                labelText={`${t('common.label.version')} *`}
                                                 value={documentation.version} 
                                                 onChange={this.handleChangeDocumentation}
                                                 validationRule={this.validationRules.version}

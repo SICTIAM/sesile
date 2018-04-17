@@ -158,7 +158,7 @@ class Types extends Component {
                                         <InputValidation
                                             id="nom"
                                             type="text"
-                                            labelText={t('common.label.name')}
+                                            labelText={`${t('common.label.name')} *`}
                                             helpText={t('admin.type.help_text_add_type')}
                                             value={this.state.nom}
                                             onChange={this.handleChangeAddField}

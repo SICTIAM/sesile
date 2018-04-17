@@ -89,7 +89,7 @@ class Emailing extends Component {
                                     id="sujet"
                                     type="text"
                                     autoFocus={true}
-                                    labelText={t('admin.emailing.subject')}
+                                    labelText={`${t('admin.emailing.subject')} *`}
                                     value={this.state.sujet}
                                     isValid={this.state.validator.passes() || true}
                                     errorMessage={this.state.validator.errors.get('sujet')}
@@ -100,7 +100,7 @@ class Emailing extends Component {
                             <Cell>
                                 <Editor
                                     id="message"
-                                    label={t('admin.placeholder.message')}
+                                    label={`${t('admin.placeholder.message')} *`}
                                     value={this.state.message}
                                     handleChange={this.handleChangeMessage}/>
                             </Cell>

@@ -62,7 +62,7 @@ class CollectiviteVisa extends Component {
                         <InputValidation    id="titre_visa"
                                             type="text"  
                                             className={"medium-12 cell"}
-                                            labelText={t('common.label.title')}
+                                            labelText={`${t('common.label.title')} *`}
                                             value={titre_visa} 
                                             onChange={handleChange}
                                             validationRule={this.validationRules.titre_visa}
