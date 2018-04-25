@@ -137,7 +137,7 @@ class Group extends Component {
             this.state.group.users.map(userGroup => users = users.filter(user => user.id !== userGroup.id))
             this.setState({users})
         })
-    }, 800, true)
+    }, 800)
 
     render() {
         const { t } = this.context
@@ -175,7 +175,7 @@ class Group extends Component {
                                         <li><button className={"btn-add"} type={"button"} onClick={this.addUser}>{t('common.button.add_user')}</button></li>
                                     </ul>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
                         <Cell>
                             <GridX className="grid-margin-x">

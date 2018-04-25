@@ -17,7 +17,7 @@ class SearchUser extends Component {
             let users = json
             this.setState({users})
         })
-    }, 800, true)
+    }, 800)
 
     handleChangeSearchUser = (value) => {
         this.setState({inputSearchUser: value})

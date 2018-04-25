@@ -36,7 +36,7 @@ class SearchUserAndGroup extends Component {
         fetch(Routing.generate('sesile_user_userapi_findbynomorprenom', {value, collectiviteId: this.props.collectiviteId}), {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => this.setSuggestions('Utilisateurs', json.filter(userReceived => !this.props.step.users.find(user => userReceived.id === user.id))))
-    } , 500, true)
+    } , 500)
 
     findGroup = value => {
         const { groups } = this.state
