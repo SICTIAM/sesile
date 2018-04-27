@@ -214,7 +214,7 @@ class CircuitValidation extends Component {
                         <Cell className="medium-2">
                             <GridX>
                                 <Cell className="medium-12">
-                                    <label htmlFor="type-list" className="text-bold text-capitalize">{t('admin.type.name', {count: 2})}</label>
+                                    <label htmlFor="type-list" className="text-bold text-capitalize">{`${t('admin.type.name', {count: 2})} *`}</label>
                                 </Cell>
                                 <Cell id="type-list" className="medium-12">
                                     {listClasseurTypes}
@@ -224,7 +224,7 @@ class CircuitValidation extends Component {
                         <Cell className="medium-10">
                             <GridX>
                                 <Cell className="medium-12">
-                                    <label htmlFor="circuit-validation" className="text-bold">{t('admin.circuit.complet_name')}</label>
+                                    <label htmlFor="circuit-validation" className="text-bold">{`${t('admin.circuit.complet_name')} *`}</label>
                                 </Cell>
                                 <Cell id="circuit-validation" className="medium-12">
                                     <CircuitValidationSteps steps={Object.assign([], circuit.etape_groupes)}

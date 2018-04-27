@@ -14,7 +14,10 @@ export default class InputValidation extends Component {
     render() {
         return (
             <div className={this.props.className}>
-                {(this.props.type === 'text' || '' || undefined) &&
+                {(this.props.type === 'text' ||
+                    this.props.type === 'number' ||
+                    this.props.type === '' ||
+                    this.props.type === undefined) &&
                     <Input  id={this.props.id}
                             autoFocus={this.props.autoFocus}
                             labelText={this.props.labelText}

@@ -215,14 +215,14 @@ class ClasseurNew extends Component {
                                             <div className="grid-x grid-margin-x grid-padding-x">
                                                 <Select id="circuits"
                                                         className="cell medium-6"
-                                                        label={t('common.classeurs.label.circuits')}
+                                                        label={`${t('common.classeurs.label.circuits')} *`}
                                                         value={circuit.id}
                                                         onChange={this.handleChangeCircuit}
                                                         children={listCircuits}
                                                 />
                                                 <Select id="types"
                                                         className="cell medium-6"
-                                                        label={t('common.classeurs.label.types')}
+                                                        label={`${t('common.classeurs.label.types')} *`}
                                                         value={type.id}
                                                         onChange={this.handleChangeType}
                                                         children={listTypes}
@@ -232,7 +232,7 @@ class ClasseurNew extends Component {
                                                 <InputValidation id="nom"
                                                                  type="text"
                                                                  className="cell medium-6"
-                                                                 labelText={t('common.label.name')}
+                                                                 labelText={`${t('common.label.name')} *`}
                                                                  value={classeur.nom}
                                                                  onChange={this.handleChangeClasseur}
                                                                  validationRule={this.validationRules.nom}
@@ -242,7 +242,7 @@ class ClasseurNew extends Component {
                                                                  type="date"
                                                                  className="cell medium-6"
                                                                  value={Moment(classeur.validation)}
-                                                                 labelText={t('common.classeurs.date_limit')}
+                                                                 labelText={`${t('common.classeurs.date_limit')} *`}
                                                                  readOnly={true}
                                                                  locale={i18nextLng}
                                                                  validationRule={this.validationRules.validation}
@@ -357,7 +357,7 @@ const Visibility = ({visibility, handleChangeClasseur}, {t}) => {
     return (
         <Select id="visibility"
                 className="cell medium-6"
-                label={t('common.label.visibility')}
+                label={`${t('common.label.visibility')} *`}
                 value={visibility}
                 onChange={handleChangeClasseur}
                 children={listVisibilities}

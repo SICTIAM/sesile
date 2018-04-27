@@ -123,7 +123,7 @@ const Select = ({ id, className, label, value, onChange, children }) =>
 
 const InputDatePicker = ({id, className, date, label, onChange, i18nextLng, onBlur, readOnly=false, minDate, maxDate}) =>
     <div className={className}>
-        <label htmlFor={id}>{label}</label>
+        <label htmlFor={id} className="text-bold">{label}</label>
         <DatePicker id={id}
                     selected={ date }
                     onChange={ onChange }

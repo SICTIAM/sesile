@@ -54,7 +54,7 @@ class DocumentsNew extends Component {
                 <div className="cell medium-12">
                     <div className="grid-x grid-margin-x grid-padding-x">
                         <div className="cell medium-12">
-                            <h3>{t('common.documents.title_preview')}</h3>
+                            <h3>{`${t('common.documents.title_preview')} *`}</h3>
                         </div>
                     </div>
                     {statusClasseur !== 2 &&

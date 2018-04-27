@@ -137,7 +137,7 @@ class Note extends Component {
                                     id="title"
                                     type="text"
                                     autoFocus={true}
-                                    labelText={t('common.label.title')}
+                                    labelText={`${t('common.label.title')} *`}
                                     value={note.title}
                                     isValid={validator.passes() || true} 
                                     errorMessage={validator.errors.get('title')}

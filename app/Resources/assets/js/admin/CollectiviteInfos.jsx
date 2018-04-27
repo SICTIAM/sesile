@@ -115,7 +115,7 @@ class CollectiviteInfos extends Component {
                         <InputValidation    id="nom"
                                             type="text"  
                                             className={"medium-12 cell"}
-                                            labelText={t('common.label.name')}
+                                            labelText={`${t('common.label.name')} *`}
                                             value={nom} 
                                             onChange={handleChange}
                                             validationRule={this.validationRules.nom}
@@ -124,7 +124,7 @@ class CollectiviteInfos extends Component {
                         <InputValidation    id="delete_classeur_after"
                                             type="number"
                                             className={"medium-12 cell"}
-                                            labelText={t('admin.collectivite.classeur_delay')}
+                                            labelText={`${t('admin.collectivite.classeur_delay')} *`}
                                             value={delete_classeur_after} 
                                             onChange={handleChange}
                                             placeholder={t('admin.collectivite.placeholder_delay')}

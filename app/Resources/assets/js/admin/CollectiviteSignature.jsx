@@ -58,7 +58,7 @@ class CollectiviteSignature extends Component {
                         <Select id="page_signature"
                                 value={page_signature} 
                                 className={"medium-12 cell"}
-                                label={t('common.label.page')}
+                                label={`${t('common.label.page')} *`}
                                 onChange={handleChange}>
                             {ListPageSignature}
                         </Select>
