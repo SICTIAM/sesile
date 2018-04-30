@@ -46,7 +46,6 @@ class CollectiviteApiController extends Controller
      */
     public function getOrganisationList()
     {
-//        $data = $this->getDoctrine()->getRepository(Collectivite::class)->getCollectivitesList();
         return new JsonResponse($this->get('collectivite.manager')->getCollectivitesList(), Response::HTTP_OK);
     }
 

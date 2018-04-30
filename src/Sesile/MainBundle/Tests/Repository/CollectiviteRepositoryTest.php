@@ -57,7 +57,6 @@ class CollectiviteRepositoryTest extends WebTestCase
     public function testGetCollectivitesListShouldThrowExceptionOnError()
     {
         $collectiviteRepository = $this->createMock(CollectiviteRepository::class);
-//        $collectiviteRepository = $this->createPartialMock(CollectiviteRepository::class, ['getCollectivitesList']);
 //        $collectiviteRepository = $this->getMockBuilder(CollectiviteRepository::class)
 //            ->disableOriginalConstructor()
 //            ->setMethods(
@@ -67,11 +66,6 @@ class CollectiviteRepositoryTest extends WebTestCase
         $collectiviteRepository->expects(self::once())
             ->method('getCollectivitesList')
             ->willThrowException(new \Exception('ERROR'));
-//
-//        $objectManager = $this->createMock(ObjectManager::class);
-//        $objectManager->expects($this->any())
-//            ->method('getRepository')
-//            ->willReturn($collectiviteRepository);
 
         $entityManager = $this->createMock(EntityManager::class);
         $entityManager->expects($this->any())
