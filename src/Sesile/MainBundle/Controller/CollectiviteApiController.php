@@ -39,6 +39,28 @@ class CollectiviteApiController extends Controller
     }
 
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @Rest\View(serializerGroups={"getAllCollectivite"})
+     * @Rest\Get("/list")
+     * @return JsonResponse
+     */
+    public function getOrganisationList()
+    {
+        $data = $this->getDoctrine()->getRepository(Collectivite::class)->getCollectivitesList();
+        return new JsonResponse($data, Response::HTTP_OK);
+//        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+//
+//            return $this->getDoctrine()
+//                ->getManager()
+//                ->getRepository('SesileMainBundle:Collectivite')
+//                ->findAll();
+//        } else {
+//            return array($this->getUser()->getCollectivite());
+//        }
+
+    }
+
+    /**
      * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Get("/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
