@@ -46,18 +46,8 @@ class CollectiviteApiController extends Controller
      */
     public function getOrganisationList()
     {
-        $data = $this->getDoctrine()->getRepository(Collectivite::class)->getCollectivitesList();
-        return new JsonResponse($data, Response::HTTP_OK);
-//        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-//
-//            return $this->getDoctrine()
-//                ->getManager()
-//                ->getRepository('SesileMainBundle:Collectivite')
-//                ->findAll();
-//        } else {
-//            return array($this->getUser()->getCollectivite());
-//        }
-
+//        $data = $this->getDoctrine()->getRepository(Collectivite::class)->getCollectivitesList();
+        return new JsonResponse($this->get('collectivite.manager')->getCollectivitesList(), Response::HTTP_OK);
     }
 
     /**
