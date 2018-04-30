@@ -23,14 +23,27 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   '%database_driver_test%'
+        host:     '%database_host_test%'
+        port:     '%database_port_test%'
+        dbname:   '%database_name_test%'
+        user:     '%database_user_test%'
+        password: '%database_password_test%'
+        charset:  UTF8
+
+liip_functional_test: ~
+
 swiftmailer:
     disable_delivery: true
 parameters:
     domain: sesile.fr
     database_driver: pdo_mysql
-    database_host: 127.0.0.1
+    database_host: '%database_host_test%'
     database_port: null
-    database_name: sesiledemo
-    database_user: root
-    database_password: ***REMOVED***
+    database_name: '%database_name_test%'
+    database_user: '%database_user_test%'
+    database_password: '%database_password_test%'
     secret: ***REMOVED***
