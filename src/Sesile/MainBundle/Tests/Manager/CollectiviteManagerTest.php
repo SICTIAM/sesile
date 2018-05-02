@@ -5,6 +5,8 @@ namespace Sesile\MainBundle\Tests\Manager;
 
 use Doctrine\ORM\EntityManager;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Psr\Log\LoggerInterface;
+use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\CollectiviteRepository;
 use Sesile\MainBundle\Manager\CollectiviteManager;
 
@@ -18,10 +20,15 @@ class CollectiviteManagerTest extends WebTestCase
      * @var EntityManager
      */
     protected $em;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     protected function setUp()
     {
         $this->em = $this->createMock(EntityManager::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
     }
 
     public function testGetCollectiviteList()
@@ -39,11 +46,14 @@ class CollectiviteManagerTest extends WebTestCase
                     ['nom' => 'test organisation', 'domain' => 'casa'],
                 ]
             );
-        $collectiviteManager = new CollectiviteManager($this->em);
+        $collectiviteManager = new CollectiviteManager($this->em, $this->logger);
         $result = $collectiviteManager->getCollectivitesList();
-        self::assertCount(2, $result);
-        self::assertEquals('Sictiam Collectivité', $result[0]['nom']);
-        self::assertEquals('sictiam', $result[0]['domain']);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertCount(2, $result->getData());
+        $data = $result->getData();
+        self::assertEquals('Sictiam Collectivité', $data[0]['nom']);
+        self::assertEquals('sictiam', $data[0]['domain']);
     }
 
     public function testGetCollectiviteListWillReturnEmptyArrayWhenExceptionIsThrown()
@@ -56,9 +66,11 @@ class CollectiviteManagerTest extends WebTestCase
         $repository->expects(self::once())
             ->method('getCollectivitesList')
             ->willThrowException(new \Exception('ERROR'));
-        $collectiviteManager = new CollectiviteManager($this->em);
+        $collectiviteManager = new CollectiviteManager($this->em, $this->logger);
         $result = $collectiviteManager->getCollectivitesList();
-        self::assertCount(0, $result);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertFalse($result->isSuccess());
+        self::assertNull($result->getData());
     }
 
 }

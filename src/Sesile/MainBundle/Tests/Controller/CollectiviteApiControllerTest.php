@@ -6,6 +6,8 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
+use Sesile\MainBundle\Domain\Message;
+use Sesile\MainBundle\Manager\CollectiviteManager;
 
 /**
  * Class CollectiviteApiControllerTest
@@ -35,5 +37,20 @@ class CollectiviteApiControllerTest extends WebTestCase
         self::assertCount(1, $content);
         self::assertEquals('Sictiam Collectivité', $content[0]['nom']);
         self::assertEquals('sictiam', $content[0]['domain']);
+    }
+
+    public function testGetAllOrganisationsShouldReturnErrorCodeWhenErrorIsThrown()
+    {
+        $collectiviteManager = $this->getMockBuilder(CollectiviteManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $collectiviteManager->expects(self::once())
+            ->method('getCollectivitesList')
+            ->willReturn(new Message(false, null, []));
+
+        $client = $this->makeClient();
+        $client->getContainer()->set('collectivite.manager', $collectiviteManager);
+        $crawler = $client->request('GET', '/apirest/collectivite/list');
+        $this->assertStatusCode(500, $client);
     }
 }

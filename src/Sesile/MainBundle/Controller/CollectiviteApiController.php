@@ -46,7 +46,12 @@ class CollectiviteApiController extends Controller
      */
     public function getOrganisationList()
     {
-        return new JsonResponse($this->get('collectivite.manager')->getCollectivitesList(), Response::HTTP_OK);
+        $result = $this->get('collectivite.manager')->getCollectivitesList();
+        if (true === $result->isSuccess()) {
+            return new JsonResponse($result->getData(), Response::HTTP_OK);
+        }
+
+        return new JsonResponse($result->getData(), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

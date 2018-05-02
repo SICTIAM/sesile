@@ -5,6 +5,7 @@ namespace Sesile\MainBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
+use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
 
 /**
@@ -35,15 +36,18 @@ class CollectiviteManager
     /**
      * Get an array of all organisations (aka collectivité)
      *
-     * @return array
+     * @return Message
      */
     public function getCollectivitesList()
     {
         try {
-            return $this->em->getRepository(Collectivite::class)->getCollectivitesList();
+            $data = $this->em->getRepository(Collectivite::class)->getCollectivitesList();
+
+            return new Message(true, $data);
         } catch (\Exception $e) {
             $this->logger->error(sprintf('[CollectiviteManager]/getCollectivitesList error: %s', $e->getMessage()));
-            return [];
+
+            return new Message(false, null, [$e->getMessage()]);
         }
 
     }
