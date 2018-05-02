@@ -24,22 +24,20 @@ class DefaultController extends Controller
     {
         return $this->render('app.html.twig');
     }
+
     /**
      * Return true if on main domain name (from config.yml parameters.domain)
-     * returns false if on subdomain
      *
-     * @Route("/domain/control")
+     * @Route("/domain/main")
      * @Template()
      */
     public function mainDomainAction(Request $request)
     {
-//        $url = parse_url($request->server->get('HTTP_HOST'));
         $url = $request->server->get('HTTP_HOST');
-        $subdomain = str_replace('.'. $this->getParameter('domain'), '' , $url);
-        if ($subdomain == $url) {
+        $parsedUrl = parse_url($url);
+        if ((isset($parsedUrl['path']) && $this->getParameter('domain') == $parsedUrl['path']) || isset($parsedUrl['host']) && $this->getParameter('domain') == $parsedUrl['host']) {
             return new JsonResponse(['main' => true, 'mainDomain' => $this->getParameter('domain'), 'currentDomain' => $request->server->get('HTTP_HOST')], Response::HTTP_OK);
         }
-
         return new JsonResponse(['main' => false, 'mainDomain' => $this->getParameter('domain'), 'currentDomain' => $request->server->get('HTTP_HOST')], Response::HTTP_OK);
     }
 
