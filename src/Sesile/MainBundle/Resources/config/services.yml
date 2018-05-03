@@ -1,0 +1,7 @@
+services:
+    collectivite.manager:
+        class: Sesile\MainBundle\Manager\CollectiviteManager
+        autowire: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@logger'

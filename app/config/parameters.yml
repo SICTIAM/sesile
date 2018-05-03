@@ -14,7 +14,6 @@ parameters:
     database_password_test: sictiam
     mailer_transport: smtp
     mailer_host: ***REMOVED***
-    mailer_port: 25
     mailer_user: null
     mailer_password: null
     locale: fr

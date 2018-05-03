@@ -39,6 +39,22 @@ class CollectiviteApiController extends Controller
     }
 
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @Rest\View(serializerGroups={"getAllCollectivite"})
+     * @Rest\Get("/list")
+     * @return JsonResponse
+     */
+    public function getOrganisationList()
+    {
+        $result = $this->get('collectivite.manager')->getCollectivitesList();
+        if (true === $result->isSuccess()) {
+            return new JsonResponse($result->getData(), Response::HTTP_OK);
+        }
+
+        return new JsonResponse($result->getData(), Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
      * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Get("/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
