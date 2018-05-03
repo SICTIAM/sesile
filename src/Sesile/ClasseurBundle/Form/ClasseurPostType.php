@@ -31,6 +31,7 @@ class ClasseurPostType extends AbstractType
                 'class' => 'SesileUserBundle:User',
                 'multiple' => true
             ))
+            ->add('collectivite')
         ;
     }
 

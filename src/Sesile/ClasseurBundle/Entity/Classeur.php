@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sesile\UserBundle\Entity\Groupe;
 use Sesile\UserBundle\Entity\User;
@@ -174,6 +175,15 @@ class Classeur {
      * @Groups("classeur")
      */
     private $ordreValidant;
+
+    /**
+     * @var int
+     *
+     * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite")
+     * @ORM\JoinColumn(name="collectivite_id", referencedColumnName="id")
+     *
+     */
+    protected $collectivite;
 
     /**
      * @var array
@@ -1085,5 +1095,25 @@ class Classeur {
     public function getMotifRefus()
     {
         return $this->motifRefus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCollectivite()
+    {
+        return $this->collectivite;
+    }
+
+    /**
+     * @param Collectivite $collectivite
+     *
+     * @return Classeur
+     */
+    public function setCollectivite(Collectivite $collectivite = null)
+    {
+        $this->collectivite = $collectivite;
+
+        return $this;
     }
 }
