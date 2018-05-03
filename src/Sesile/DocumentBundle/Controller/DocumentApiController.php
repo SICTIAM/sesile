@@ -208,6 +208,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @Route("/downloadJWS/{name}/{token}", name="download_jws_doc")
      *
      */
@@ -236,6 +237,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @Route("/uploaddocument/{id}/{token}", name="upload_document_fron_jws")
      *
      */

@@ -15,7 +15,7 @@ class deleteClasseursCommand extends ContainerAwareCommand
         $this
             ->setName('classeur:delete:date')
             ->setDescription('Suppression des circuits depuis zéro jusqu\'à une date définie.')
-//            ->addArgument('dateCreated', InputArgument::REQUIRED, 'Jusqu\'à quelle date voulez-vous suppimer les classeurs en cours ?')
+            ->addArgument('dateCreated', InputArgument::REQUIRED, 'Jusqu\'à quelle date voulez-vous suppimer les classeurs en cours ?')
         ;
     }
 
@@ -25,15 +25,15 @@ class deleteClasseursCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dialog = $this->getHelper('dialog');
+        //$dialog = $this->getHelper('dialog');
 
-        $dateCreation = $dialog->ask(
+        /*$dateCreation = $dialog->ask(
             $output,
             'Entrez la date de création SVP (2015-01-01) : ',
             '2015-01-01'
-        );
+        );*/
 
-//        $dateCreation = $input->getArgument('dateCreated');
+        $dateCreation = $input->getArgument('dateCreated');
         $date = new \DateTime($dateCreation);
         $em = $this->getContainer()->get('doctrine')->getManager();
 
