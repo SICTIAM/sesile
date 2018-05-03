@@ -84,11 +84,6 @@ class ClasseurPagination extends Component {
                         pagesDisplay.map(pageDisplay => pageDisplay)
                     }
                 </ul>
-                <Select id="limit"
-                        value={limit}
-                        className="cell medium-2"
-                        onChange={changeLimit}
-                        children={listLimit} />
             </div>
         )
     }

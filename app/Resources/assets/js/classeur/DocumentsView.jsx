@@ -75,9 +75,7 @@ class DocumentsView extends Component {
             credentials: 'same-origin'
         })
             .then(response => response.json())
-            .then(() => {
-                this.fetchDocuments()
-            })
+            .then(documents => this.setState({documents}))
     }
 
     removeDocument = (e, id) => {
@@ -132,6 +130,15 @@ class DocumentsView extends Component {
 
         return (
         <div className="">
+            <DocumentsNew
+                documents={documents}
+                onClick={this.handleClickDocument}
+                onDrop={ this.onDrop }
+                removeDocument={this.removeDocument}
+                displayReveal={this.displayReveal}
+                typeClasseur={classeurType}
+                statusClasseur={status}
+                editClasseur={editClasseur}/>
             <div className="grid-x panel grid-padding-y">
                 { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                     <div className="reveal-full" style={{display: revealDisplay}}>
@@ -166,16 +173,6 @@ class DocumentsView extends Component {
                     <OnlyOffice document={ currentDocument } user={user} revealDisplay={false} />
                 }
             </div>
-
-            <DocumentsNew documents={documents}
-                          onClick={this.handleClickDocument}
-                          onDrop={ this.onDrop }
-                          removeDocument={this.removeDocument}
-                          displayReveal={this.displayReveal}
-                          typeClasseur={classeurType}
-                          statusClasseur={status}
-                          editClasseur={editClasseur}
-            />
         </div>
 
         )

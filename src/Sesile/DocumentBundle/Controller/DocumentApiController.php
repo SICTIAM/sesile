@@ -44,6 +44,10 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
      */
     public function getByClasseurAction(Classeur $classeur)
     {
+        foreach ($classeur->getDocuments() as $document) {
+            $fileSize = filesize($this->getParameter('upload')['fics'] . $document->getRepourl());
+            $document->setSize($fileSize);
+        }
         return $classeur->getDocuments();
     }
 
@@ -99,6 +103,11 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
                 $this->getParameter('upload')['fics'],
                 $this->getUser()
             );
+        }
+
+        foreach ($classeur->getDocuments() as $document) {
+            $fileSize = filesize($this->getParameter('upload')['fics'] . $document->getRepourl());
+            $document->setSize($fileSize);
         }
 
         return $classeur->getDocuments();

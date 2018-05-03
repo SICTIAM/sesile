@@ -67,8 +67,11 @@ const CircuitValidationStepList = SortableContainer(({steps, collectiviteId, han
             {listStep}
             <Cell className="medium-3">
                 <GridX className="step-item">
-                    <button type={"button"} onClick={() => handleClickAddStep()}>
-                        <i className="fa fa-plus"></i> {labelButtonAddStep}
+                    <button type="button" onClick={() => handleClickAddStep()}>
+                        <i className="fa fa-plus-circle icon-size"></i>
+                        <span className="text-bold" style={{color: '#444'}}>
+                            {labelButtonAddStep}
+                        </span>
                     </button>
                 </GridX>
             </Cell>
@@ -102,8 +105,38 @@ class CircuitValidationStep extends Component {
     render() {
         const { t } = this.context
         const { stepKey, step, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser } = this.props
-        const listUsers = step.users && step.users.map((user, key) => <li key={key}>{user._prenom + " " + user._nom}<a onClick={() => handleClickDeleteUser(stepKey, key)}>x</a></li>)
-        const listGroups = step.user_packs && step.user_packs.map((group, key) => <li key={key}>{group.nom}<a onClick={() => handleClickDeleteGroup(stepKey, key)}>x</a></li>)
+        const listUsers =
+            step.users && step.users.map((user, key) =>
+                <li key={key} className="text-wrap" title={user._prenom + " " + user._nom}>
+                    <div className="grid-x clearfix">
+                        <div className="cell small-10 medium-10 text-truncate">
+                            <span>
+                                {user._prenom + " " + user._nom}
+                            </span>
+                        </div>
+                        <div className="cell small-2 medium-2 float-right">
+                            <a onClick={() => handleClickDeleteUser(stepKey, key)}>
+                                <i className="fa fa-times step-item-hover" style={{fontSize: '1em'}}></i>
+                            </a>
+                        </div>
+                    </div>
+                </li>)
+        const listGroups =
+            step.user_packs && step.user_packs.map((group, key) =>
+                <li key={key} className="text-wrap" title={group.nom}>
+                    <div className="grid-x">
+                        <div className="cell small-10 medium-10 text-truncate">
+                            <span>
+                                {group.nom}
+                            </span>
+                        </div>
+                        <div className="cell small-2 medium-2">
+                            <a onClick={() => handleClickDeleteGroup(stepKey, key)}>
+                                <i className="fa fa-times step-item-hover" style={{fontSize: '1em'}}></i>
+                            </a>
+                        </div>
+                    </div>
+                </li>)
 
         return (
             <StepItem   stepKey={stepKey}
@@ -111,9 +144,11 @@ class CircuitValidationStep extends Component {
                         handleClickDeleteStep={handleClickDeleteStep}
                         title={t('admin.circuit.validat_step', {ordre:stepKey + 1})}>
                 <ul className="no-bullet">
-                    {listUsers && listUsers.length > 0 && <li><strong className="text-uppercase">{t('admin.user.name', {count: listUsers.length})}</strong></li>}
+                    {listUsers && listUsers.length > 0 &&
+                        <li className="text-capitalize text-bold text-truncate">{t('admin.user.name', {count: listUsers.length})}</li>}
                     {listUsers}
-                    {listGroups && listGroups.length > 0 && <li><strong className="text-uppercase">{t('admin.group.name', {count: listGroups.length})}</strong></li>}
+                    {listGroups && listGroups.length > 0 &&
+                        <li className="text-capitalize text-bold text-truncate">{t('admin.group.name', {count: listGroups.length})}</li>}
                     {listGroups}
                     <SearchUserAndGroup placeholder={t('admin.placeholder.type_userName_or_groupName')} addGroup={addGroup} addUser={addUser} stepKey={stepKey} step={step} collectiviteId={collectiviteId} />
                 </ul>

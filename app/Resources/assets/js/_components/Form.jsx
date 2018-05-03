@@ -28,7 +28,8 @@ const Input = (props) =>
                     type={props.type}
                     name={props.id}
                     value={props.value}
-                    placeholder={props.placeholder}  
+                    placeholder={props.placeholder}
+                    readOnly={props.readOnly}
                     onChange={e => {
                         let { value, name } = e.target
                         if(props.type === 'number') value = parseInt(value)
@@ -39,12 +40,13 @@ const Input = (props) =>
         </label>
     </div>
 
-const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, labelText, helpText, children }) =>
+const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, labelText, helpText, children, style }) =>
     <div className={className}>
         <label>
             <span className="text-bold text-capitalize">{labelText}</span>
             <textarea   id={id}
                         name={name}
+                        style={style}
                         placeholder={placeholder}
                         onChange={e => {
                             let { value } = e.target
@@ -115,7 +117,7 @@ const Avatar = ({ className, size = 100, nom, fileName }) =>
 
 const Select = ({ id, className, label, value, onChange, children }) =>
     <div className={className}>
-        <label htmlFor={id} className="text-bold text-capitalize">{label}</label>
+        <label htmlFor={id} className="text-bold">{label}</label>
         <select id={id} value={value} onChange={(e) => onChange(id, e.target.value)} >
             {children}
         </select>

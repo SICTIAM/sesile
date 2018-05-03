@@ -30,16 +30,11 @@ class ClasseurStatus extends Component {
         const { t } = this.context
         return (
             this.props.status >= 0 &&
-            <span
-                className={
-                    `label
-                    round radius
-                    text-bold
-                    text-uppercase
-                    ${this.statusColorClass[this.props.status]}
-                    ${this.props.className || ''}`}>
+            <div
+                className={`ui ${this.statusColorClass[this.props.status]} ribbon label labelStatus`}
+                style={{color: '#fff'}}>
                 {t(`common.classeurs.status.${this.status[this.props.status]}`)}
-            </span>
+            </div>
         )
     }
 }

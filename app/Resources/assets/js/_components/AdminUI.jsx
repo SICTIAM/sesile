@@ -50,8 +50,8 @@ const AccordionItem = ({ className, title, children, classNameChild }) =>
 const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey }) =>
     <div className={className}>
         <div className="grid-x step-item">
-            <div className="medium-12 cell name-step-item">
-            {title}<a className="float-right" style={{color: "red"}} onClick={e => handleClickDeleteStep(stepKey)}>x</a>
+            <div className="medium-12 cell name-step-item" style={{color: '#444'}}>
+            {title}<a className="float-right" onClick={e => handleClickDeleteStep(stepKey)}><i className="fa fa-times-circle icon-size"></i></a>
             </div>
             <div className="medium-12 cell content-step-item">
                 {children}

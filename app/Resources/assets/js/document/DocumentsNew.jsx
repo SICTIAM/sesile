@@ -4,6 +4,7 @@ import Dropzone from 'react-dropzone'
 import {array, func, string, object, bool} from 'prop-types'
 import DocumentPreview from './DocumentPreview'
 import {Cell, GridX} from '../_components/UI'
+import { BytesToSize } from '../_utils/Utils'
 
 
 class DocumentsNew extends Component {
@@ -48,6 +49,39 @@ class DocumentsNew extends Component {
         const { t } = this.context
         const { documents, onDrop, removeDocument, onClick, displayReveal, statusClasseur }  = this.props
         const { disabled, accept, multiple, fileRule } = this.state
+        const docs = this.props.documents.map((document, key) =>
+            <div
+                key={key}
+                className=""
+                style={{
+                    width: '290px',
+                    display: 'inline-block',
+                    marginRight: '1em',
+                    marginBottom: '1em',
+                    boxShadow: '0 1px 2px 0 rgba(34, 36, 38, 0.15)',
+                    borderRadius: '0.28571429rem',
+                    border: '1px solid rgba(34, 36, 38, 0.15'}}>
+                <div className="grid-x" title={document.name} style={{padding: '0.5em'}}>
+                    <div className="cell medium-2 align-middle" style={{display: 'flex'}}>
+                        <i className="fa fa-file-o" style={{fontSize: '2em'}}></i>
+                    </div>
+                    <div className="cell medium-9">
+                        <GridX>
+                            <Cell className="text-truncate">
+                                <span className="text-bold" style={{fontSize: '0.9em'}}>{document.name}</span>
+                            </Cell>
+                        </GridX>
+                        <GridX>
+                            <Cell>
+                                <span style={{fontSize: '1em', color: 'rgba(0,0,0,0.4)'}}>{`${BytesToSize(document.size)} - ${document.name.split('.').pop()}`}</span>
+                            </Cell>
+                        </GridX>
+                    </div>
+                    <Cell className="medium-1">
+                        <i className="fa fa-times hover-red" onClick={(e) => removeDocument(e, document.id)} style={{fontSize: '1em'}}/>
+                    </Cell>
+                </div>
+            </div>)
         return (
 
             <div className="grid-x panel grid-padding-y">
@@ -58,7 +92,7 @@ class DocumentsNew extends Component {
                         </div>
                     </div>
                     {statusClasseur !== 2 &&
-                        <div className="grid-x grid-margin-x grid-padding-x grid-padding-y show-for-large">
+                        <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="cell medium-12">
                                 <Dropzone
                                     className="documentation-dropzone grid-x align-middle align-center"
@@ -91,12 +125,12 @@ class DocumentsNew extends Component {
                             </div>
                         </div>
                     }
-                    <GridX className="align-center grid-padding-y">
-                        <DocumentPreview documents={documents}
-                                         remove={removeDocument}
-                                         onClick={onClick}
-                                         displayReveal={displayReveal}
-                                         statusClasseur={statusClasseur} />
+                    <GridX className="grid-margin-x grid-padding-x grid-padding-y">
+                        <Cell>
+                            <div className="">
+                                {docs}
+                            </div>
+                        </Cell>
                     </GridX>
                 </div>
             </div>

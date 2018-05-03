@@ -148,26 +148,18 @@ class Classeurs extends Component {
                         <div className="grid-x panel-heading grid-padding-x align-middle tri-classeurs">
                             <div className="cell small-6 medium-5 large-2">
                                 {t('common.classeurs.sort_label.name')}
-                                <button onClick={() => this.listClasseurs('nom', 'ASC', limit, start)} className="button arrow-down show-for-large" type="button">&nbsp;</button>
-                                <button onClick={() => this.listClasseurs('nom', 'DESC', limit, start)} className="button arrow-up show-for-large" type="button">&nbsp;</button>
                             </div>
                             <div className="cell large-2 text-center show-for-large">
                                 {t('common.classeurs.sort_label.current_user')}
                             </div>
                             <div className="cell large-2 text-center show-for-large">
                                 {t('common.classeurs.sort_label.status')}
-                                <button onClick={() => this.listClasseurs('status', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
-                                <button onClick={() => this.listClasseurs('status', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                             </div>
                             <div className="cell large-1 text-center show-for-large">
                                 {t('common.classeurs.sort_label.type')}
-                                <button onClick={() => this.listClasseurs('type', 'ASC', limit, start)} className="button arrow-down" type="button">&nbsp;</button>
-                                <button onClick={() => this.listClasseurs('type', 'DESC', limit, start)} className="button arrow-up" type="button">&nbsp;</button>
                             </div>
                             <div className="cell small-6 medium-5 large-2 text-center">
                                 {t('common.classeurs.sort_label.limit_date')}
-                                <button onClick={() => this.listClasseurs('validation', 'ASC', limit, start)} className="button arrow-down show-for-large" type="button">&nbsp;</button>
-                                <button onClick={() => this.listClasseurs('validation', 'DESC', limit, start)} className="button arrow-up show-for-large" type="button">&nbsp;</button>
                             </div>
                             <div className="cell large-2 title-sort show-for-large">
                                 {

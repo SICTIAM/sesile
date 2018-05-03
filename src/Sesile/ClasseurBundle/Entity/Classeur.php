@@ -110,7 +110,7 @@ class Classeur {
      * @var int
      * 0 = privé, 1 = public, 2 = prive a partir de moi, 3 = service organisationnel (et le circuit)
      * @ORM\Column(name="visibilite", type="integer")
-     * @Groups({"classeur"})
+     * @Groups({"classeur", "classeurById"})
      *
      */
     private $visibilite;

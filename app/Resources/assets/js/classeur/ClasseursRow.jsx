@@ -31,8 +31,8 @@ class ClasseursRow extends Component {
                         validUsers
                     }
                 </Link>
-                <Link className="cell large-2 text-bold text-center show-for-large" to={`/classeur/${classeur.id}`}>
-                    <ClasseurStatus status={classeur.status} />
+                <Link className="cell large-2 text-bold text-center show-for-large text-uppercase" to={`/classeur/${classeur.id}`}>
+                    {classeur.status}
                 </Link>
                 <Link className="cell large-1 text-bold text-center show-for-large" to={`/classeur/${classeur.id}`}>
                     { classeur.type.nom }

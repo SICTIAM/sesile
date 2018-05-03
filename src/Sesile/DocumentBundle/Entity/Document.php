@@ -101,6 +101,12 @@ class Document
      */
     private $classeur;
 
+    /**
+     * @var integer
+     * @Groups({"classeurById"})
+     */
+    protected $size;
+
 
     /**
      * Get id
@@ -419,5 +425,21 @@ class Document
     public function getDownloaded()
     {
         return $this->downloaded;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function setSize(int $size)
+    {
+        $this->size = $size;
     }
 }

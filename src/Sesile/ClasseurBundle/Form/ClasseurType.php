@@ -31,6 +31,7 @@ class ClasseurType extends AbstractType
                 'allow_add' => true,
                 'by_reference' => false
             ))*/
+            ->add('visibilite')
             ->add('etapeClasseurs', CollectionType::class, array(
                 'entry_type' => EtapeClasseurType::class,
                 'allow_delete' => true,
