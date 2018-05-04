@@ -28,7 +28,6 @@ class SesileWebTestCase extends WebTestCase
     protected function logIn(UserInterface $user)
     {
         $session = $this->client->getContainer()->get('session');
-
         // the firewall context defaults to the firewall name
         $firewallContext = 'secured_area';
         $ozwilloAccessToken = [
@@ -39,7 +38,7 @@ class SesileWebTestCase extends WebTestCase
             "id_token" => "eyJhbGciOiJSUzI1NiIsImtpZCI6Im9hc2lzLm9wZW5pZC1jb25uZWN0LnB1YmxpYy1rZXkifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLm96d2lsbG8tcHJlcHJvZC5ldS8iLCJzdWIiOiJjYmI2N2IxZC02M",
         ];
 
-        $token = new OAuthToken($ozwilloAccessToken, array('ROLE_ADMIN'));
+        $token = new OAuthToken($ozwilloAccessToken, array($user->getRoles()[0]));
         $token->setUser($user);
 
         $session->set('_security_'.$firewallContext, serialize($token));

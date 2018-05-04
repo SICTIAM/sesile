@@ -50,7 +50,6 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
             ->setValidation(new \DateTime('2018-06-03 11:36'))
             ->setVisibilite(1)
             ->addCopy($this->getReference('user-two'))
-            ->setCreation(new \DateTime('2018-05-03 11:36'))
             ;
         $manager->persist($etapeClasseur);
         $manager->persist($classeur);

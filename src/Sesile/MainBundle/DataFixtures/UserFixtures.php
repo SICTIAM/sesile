@@ -18,6 +18,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
 {
     const USER_ONE_REFERENCE = 'user-one';
     const USER_TWO_REFERENCE = 'user-two';
+    const USER_SUPER_REFERENCE = 'user-super';
 
     /**
      * @var ContainerInterface
@@ -60,6 +61,20 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         // Update the user
         $userManager->updateUser($user2, true);
         $this->addReference(self::USER_TWO_REFERENCE, $user2);
+
+        // Create our user and set details
+        $superUser = $userManager->createUser();
+        $superUser->setUsername('super');
+        $superUser->setEmail('super@domain.com');
+        $superUser->setPlainPassword('password');
+        //$user->setPassword('3NCRYPT3D-V3R51ON');
+        $superUser->setEnabled(true);
+        $superUser->setRoles(array('ROLE_SUPER_ADMIN'));
+        $superUser->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+
+        // Update the user
+        $userManager->updateUser($user2, true);
+        $this->addReference(self::USER_SUPER_REFERENCE, $superUser);
     }
 
     /**
