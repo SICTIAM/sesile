@@ -208,7 +208,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ||
-            $this->getUser()->getId() == $classeur->getUser()) {
+            $this->getUser()->getId() == $classeur->getUser()->getId()) {
 
             $etapeClasseurs = new ArrayCollection();
             foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {
