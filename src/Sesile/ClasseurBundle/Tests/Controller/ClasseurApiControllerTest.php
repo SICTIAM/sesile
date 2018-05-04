@@ -5,6 +5,7 @@ namespace Sesile\ClasseurBundle\Tests\Controller;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\MainBundle\DataFixtures\CircuitValidationFixtures;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\TypeClasseurFixtures;
@@ -52,7 +53,7 @@ class ClasseurApiControllerTest extends WebTestCase
                 ["ordre" => "1", "users" => [$user->getId()]],
             ],
             'nom' => "test2",
-            'type' => $typeClasseur->getID(),
+            'type' => $typeClasseur->getId(),
             'user' => $user->getId(),
             'validation' => "2018-05-03 11:36",
             'visibilite' => "0",
@@ -79,7 +80,22 @@ class ClasseurApiControllerTest extends WebTestCase
             ),
             'the "Content-Type" header is "application/json"' // optional message shown on failure
         );
-
+        /**
+         * check database data
+         */
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager->clear();
+        $data = $entityManager->getRepository(Classeur::class)->findOneBy(['nom' => 'test2']);
+        self::assertInstanceOf(Classeur::class, $data);
+        self::assertEquals('test2', $data->getNom());
+        self::assertEquals("test", $data->getDescription());
+        self::assertEquals($circuitValidation->getId(), $data->getCircuitId()->getId());
+        self::assertEquals($user->getId(), $data->getCopy()->first()->getId());
+        self::assertEquals($typeClasseur->getId(), $data->getType()->getId());
+        self::assertEquals($user->getId(), $data->getUser()->getId());
+        self::assertEquals("2018-05-03 11:36", $data->getValidation()->format('Y-m-d H:i'));
+        self::assertEquals(0, $data->getVisibilite());
+        self::assertEquals($collectivite->getId(), $data->getCollectivite()->getId());
     }
 
     private function logIn()
