@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sesile\ClasseurBundle\Entity\TypeClasseur;
+use Sesile\UserBundle\Entity\EtapeGroupe;
 use Sesile\UserBundle\Entity\Groupe;
 
 /**
@@ -24,6 +25,13 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
      */
     public function load(ObjectManager $manager)
     {
+        $etapeGroup = new EtapeGroupe();
+        $etapeGroup
+            ->setOrdre(1)
+            ->addUser($this->getReference('user-one'))
+            ->addUserPack($this->getReference('user-pack-one'))
+        ;
+
         $group = new Groupe();
         $group
             ->setNom('Circuit de validation')
@@ -32,8 +40,12 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
             ;
         $type = $this->getReference(TypeClasseurFixtures::CLASSEUR_TYPE_ONE_REFERENCE);
         $group->addType($type);
+        $group->addEtapeGroupe($etapeGroup);
+
         $manager->persist($type);
         $manager->persist($group);
+        $etapeGroup->setGroupe($group);
+        $manager->persist($etapeGroup);
         $manager->flush();
         $this->addReference(self::CIRCUIT_VALIDATION_REFERENCE, $group);
     }

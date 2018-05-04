@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserFixtures extends Fixture implements DependentFixtureInterface, ContainerAwareInterface
 {
     const USER_ONE_REFERENCE = 'user-one';
+    const USER_TWO_REFERENCE = 'user-two';
 
     /**
      * @var ContainerInterface
@@ -45,6 +46,20 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         // Update the user
         $userManager->updateUser($user, true);
         $this->addReference(self::USER_ONE_REFERENCE, $user);
+
+        // Create our user and set details
+        $user2 = $userManager->createUser();
+        $user2->setUsername('username2');
+        $user2->setEmail('email2@domain.com');
+        $user2->setPlainPassword('password2');
+        //$user->setPassword('3NCRYPT3D-V3R51ON');
+        $user2->setEnabled(true);
+        $user2->setRoles(array('ROLE_USER'));
+        $user2->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+
+        // Update the user
+        $userManager->updateUser($user2, true);
+        $this->addReference(self::USER_TWO_REFERENCE, $user2);
     }
 
     /**
