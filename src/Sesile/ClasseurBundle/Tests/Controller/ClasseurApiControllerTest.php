@@ -11,12 +11,12 @@ use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\TypeClasseurFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\DataFixtures\UserPackFixtures;
+use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
 use Sesile\UserBundle\Entity\User;
 use Symfony\Component\BrowserKit\Cookie;
 
-class ClasseurApiControllerTest extends WebTestCase
+class ClasseurApiControllerTest extends SesileWebTestCase
 {
-    private $client = null;
     /**
      * @var ReferenceRepository
      */
@@ -33,12 +33,12 @@ class ClasseurApiControllerTest extends WebTestCase
                 CircuitValidationFixtures::class,
             ]
         )->getReferenceRepository();
-        $this->client = static::createClient();
+        parent::setUp();
     }
 
-    public function testList()
+    public function testPostAction()
     {
-        $this->logIn();
+        $this->logIn($this->fixtures->getReference('user-one'));
         $typeClasseur = $this->fixtures->getReference('classeur-type-one');
         $user = $this->fixtures->getReference('user-one');
         $circuitValidation = $this->fixtures->getReference('circuit-validation');
@@ -96,30 +96,6 @@ class ClasseurApiControllerTest extends WebTestCase
         self::assertEquals("2018-05-03 11:36", $data->getValidation()->format('Y-m-d H:i'));
         self::assertEquals(0, $data->getVisibilite());
         self::assertEquals($collectivite->getId(), $data->getCollectivite()->getId());
-    }
-
-    private function logIn()
-    {
-        $session = $this->client->getContainer()->get('session');
-
-        // the firewall context defaults to the firewall name
-        $firewallContext = 'secured_area';
-        $ozwilloAccessToken = [
-            "access_token" => "eyJpZCI6ImQ2NGNlMzE4LTU0NjYtNDIwYi1hZDFjLTkzZTU3OGE1NTQ5MS9Tc0ktYlhNOG1RS3RaQnBwdXdzM0JRIiwiaWF0IjoxNTI1MzYzODMwLjk2NDAwMDAwMCwiZXhwIjoxNTI1MzY3NDMwLjk2NDAwMDAw",
-            "token_type" => "Bearer",
-            "expires_in" => 3600,
-            "scope" => "openid profile email",
-            "id_token" => "eyJhbGciOiJSUzI1NiIsImtpZCI6Im9hc2lzLm9wZW5pZC1jb25uZWN0LnB1YmxpYy1rZXkifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLm96d2lsbG8tcHJlcHJvZC5ldS8iLCJzdWIiOiJjYmI2N2IxZC02M",
-        ];
-
-        $token = new OAuthToken($ozwilloAccessToken, array('ROLE_ADMIN'));
-        $token->setUser($this->fixtures->getReference('user-one'));
-
-        $session->set('_security_'.$firewallContext, serialize($token));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
     }
 
 }
