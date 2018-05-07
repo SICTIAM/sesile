@@ -42,6 +42,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         //$user->setPassword('3NCRYPT3D-V3R51ON');
         $user->setEnabled(true);
         $user->setRoles(array('ROLE_ADMIN'));
+        //$user->setApitoken("token_" . md5(uniqid(rand(), true)))
+        $user->setApitoken('token_09b7cedb5f9a6df29468b9ddf490ed70');
+        //$this->setApisecret("secret_" . md5(uniqid(rand(), true)))
+        $user->setApisecret('secret_abf9411ade3787a8e668ac534f97cf1a');
+        $user->setApiactivated(true);
         $user->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
         // Update the user
@@ -56,6 +61,9 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         //$user->setPassword('3NCRYPT3D-V3R51ON');
         $user2->setEnabled(true);
         $user2->setRoles(array('ROLE_USER'));
+        $user2->setApitoken('token_91186cb2457c4ce2d8d4a45893211a4b');
+        $user2->setApisecret('secret_ef316bf44b62815f29c5f81fbf92f5c0');
+        $user2->setApiactivated(true);
         $user2->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
         // Update the user

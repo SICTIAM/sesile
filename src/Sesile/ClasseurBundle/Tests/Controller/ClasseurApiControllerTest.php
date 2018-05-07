@@ -222,6 +222,60 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         self::assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testListAllAction()
+    {
+        $this->logIn($this->fixtures->getReference('user-one'));
+
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf('apirest/classeurs/list/all')/*,
+            array(),
+            array(),
+            array(
+                'HTTP_token' => 'token_09b7cedb5f9a6df29468b9ddf490ed70',
+                'HTTP_secret' => 'secret_abf9411ade3787a8e668ac534f97cf1a'
+            )*/
+        );
+
+        /**
+         * Attention le controlleur vie le TokenListener ne fait aucun control de token.
+         * pour controller vraiment, faudra faire ajouter dans le header le HTTP_toket et HTTP_secret
+         * et dans le controller : implements TokenAuthenticatedController
+         */
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent());
+        self::assertCount(1, $data);
+    }
+
+    public function testListAllClasseursShouldFailIfNoCollectiviteIsGiven()
+    {
+        $this->logIn($this->fixtures->getReference('user-one'));
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf('apirest/org//classeurs/list/all', $collectivite->getId())
+        );
+
+        self::assertEquals(404, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testListAllActionShouldReturn403WhenNotLogged()
+    {
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf('apirest/classeurs/list/all', $collectivite->getId())
+        );
+
+        /**
+         * Attention le controlleur redirige ver le root url du projet. donc on a un 302.
+         * pour controller vraiment, faudra faire ajouter dans le header le HTTP_toket et HTTP_secret
+         */
+        self::assertEquals(302, $this->client->getResponse()->getStatusCode());
+    }
+
     private function getFormData()
     {
         $typeClasseur = $this->fixtures->getReference('classeur-type-one');

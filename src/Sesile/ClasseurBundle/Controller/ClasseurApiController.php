@@ -7,6 +7,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sesile\ApiBundle\Controller\TokenAuthenticatedController;
 use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\ClasseurBundle\Form\ClasseurPostType;
@@ -29,6 +30,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("s/list/all")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function listAllAction()
     {

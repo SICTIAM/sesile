@@ -40,6 +40,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
             ;
         $classeur = new Classeur();
         $classeur
+            ->addVisible($this->getReference('user-one'))
             ->setUser($this->getReference('user-one'))
             ->setCircuitId($this->getReference('circuit-validation'))
             ->setCollectivite($this->getReference('collectivite-one'))
