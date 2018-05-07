@@ -107,65 +107,60 @@ class Account extends Component {
 
         return (
         <div className="grid-x align-center">
-
             <div className="cell medium-12">
                 <div className="grid-x grid-margin-x grid-padding-x align-top align-center grid-padding-y">
                     <div className="cell medium-12 text-center">
-                        <h1>{t('common.user.title')}</h1>
+                        <h2>{t('common.user.title')}</h2>
                     </div>
                 </div>
             </div>
-
-
-            <div className="medium-12 cell">
-
-                <div className="grid-x panel grid-padding-y">
-                    <div className="cell medium-12">
-                        <div className="grid-x grid-margin-x grid-padding-x">
-                            <div className="medium-12 cell">
-                                <h3>{t('admin.user.subtitle_user')}</h3>
-                            </div>
-                        </div>
-                        <div className="grid-x grid-margin-x grid-padding-x">
-                            <div className="medium-12 cell">
-                                <div className="grid-x grid-padding-x align-center-middle">
-
-                                    { userId &&
-                                        <AvatarForm
-                                            user={user}
-                                            styleClass={"medium-6 cell"}
-                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
-                                    }
-
-                                    <div className="medium-6 cell">
-                                        <div className="grid-x grid-padding-y">
-                                            <span className="cell medium-6 text-bold">{t('admin.user.label_name')}</span>
-                                            <div className="cell medium-6">{user._nom}</div>
-                                        </div>
-                                        <div className="grid-x grid-padding-y">
-                                            <span className="cell medium-6 text-bold">{t('admin.user.label_firstname')}</span>
-                                            <div className="cell medium-6">{user._prenom}</div>
-                                        </div>
-                                        <div className="grid-x grid-padding-y">
-                                            <span className="cell medium-6 text-bold">{t('admin.user.label_email')}</span>
-                                            <div className="cell medium-6">{user.email}</div>
-                                        </div>
-                                        <div className="grid-x grid-padding-y">
-                                            <div className="cell medium-6"></div>
-                                            <div className="cell medium-6 text-bold">
-                                                <a href={ "https://" + user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
-                                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
-                                                    {t('common.user.upadate_account')}
-                                                </a>
-                                            </div>
-                                        </div>
+            <div className="medium-12 cell panel">
+                <div className="grid-x grid-margin-x grid-padding-x">
+                    <div className="medium-12 cell">
+                        <h3>{t('admin.user.subtitle_user')}</h3>
+                    </div>
+                </div>
+                <div className="grid-x grid-margin-x grid-padding-x">
+                    <div className="medium-12 cell">
+                        <div className="grid-x grid-padding-x align-center-middle">
+                            {userId &&
+                            <AvatarForm
+                                user={user}
+                                styleClass={"medium-6 cell"}
+                                helpText={
+                                    t('common.file_acceptation_rules',
+                                        {types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>}
+                            <div className="medium-6 cell">
+                                <div className="grid-x grid-padding-y">
+                                    <span className="cell medium-6 text-bold">{t('admin.user.label_name')}</span>
+                                    <div className="cell medium-6">{user._nom}</div>
+                                </div>
+                                <div className="grid-x grid-padding-y">
+                                    <span className="cell medium-6 text-bold">{t('admin.user.label_firstname')}</span>
+                                    <div className="cell medium-6">{user._prenom}</div>
+                                </div>
+                                <div className="grid-x grid-padding-y">
+                                    <span className="cell medium-6 text-bold">{t('admin.user.label_email')}</span>
+                                    <div className="cell medium-6">{user.email}</div>
+                                </div>
+                                <div className="grid-x grid-padding-y">
+                                    <div className="cell medium-6"></div>
+                                    <div className="cell medium-6 text-bold">
+                                        <a href={ "https://" + user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
+                                            <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
+                                            {t('common.user.upadate_account')}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                </div>
+            </div>
+            <div className="medium-12 cell">
+                <div className="grid-x panel grid-padding-y">
+                    <div className="cell medium-12">
                         <hr/>
-
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_signature')}</h3>
@@ -174,15 +169,11 @@ class Account extends Component {
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <div className="grid-x grid-padding-x align-center-middle">
-
-                                    {
-                                        userId &&
+                                    {userId &&
                                         <SignatureForm
                                             user={user}
                                             styleClass="medium-6 cell"
-                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
-                                    }
-
+                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>}
                                     <div className="medium-6 cell">
                                         <div className="grid-x grid-padding-x grid-padding-y">
                                             <div className="medium-8 cell">
@@ -201,30 +192,32 @@ class Account extends Component {
                                 </div>
                             </div>
                         </div>
-
                         <hr/>
-
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_certificate')}</h3>
                             </div>
                         </div>
-
                         <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="medium-6 cell">
-                                <Link className="button float-left text-uppercase hollow" to="https://www.sictiam.fr/certificat-electronique/" target="_blank">{ t('common.button.certificate_order') }</Link>
+                                <Link
+                                    className="button float-left text-uppercase hollow"
+                                    to="https://www.sictiam.fr/certificat-electronique/"
+                                    target="_blank">
+                                    {t('common.button.certificate_order')}
+                                </Link>
                             </div>
                             <div className="medium-6 cell text-right">
-                                {
-                                    this.state.certificate &&
-                                    <Link className="button text-uppercase hollow" to="/utilisateur/certificat-electronique">{ t('common.button.certificate_user') }</Link>
-                                }
+                                {this.state.certificate &&
+                                    <Link
+                                        className="button text-uppercase hollow"
+                                        to="/utilisateur/certificat-electronique">
+                                        { t('common.button.certificate_user') }
+                                    </Link>}
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     )

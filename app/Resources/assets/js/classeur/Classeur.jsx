@@ -137,16 +137,27 @@ class Classeur extends Component {
         this.setState(prevState => prevState.classeur.etape_classeurs.splice(stepKey,1))
         this.reOrderSteps()
     }
-    handleClickDeleteUser = (stepKey, userId) => this.setState(prevState => {prevState.classeur.etape_classeurs[stepKey].users.splice(userId, 1)})
-    handleClickDeleteGroup = (stepKey, groupId) => this.setState(prevState => {prevState.classeur.etape_classeurs[stepKey].user_packs.splice(groupId, 1)})
-    addGroup = (stepKey, group) => this.setState(prevState => prevState.classeur.etape_classeurs[stepKey].user_packs.push(group))
-    addUser = (stepKey, user) => this.setState(prevState => prevState.classeur.etape_classeurs[stepKey].users.push(user))
+    handleClickDeleteUser = (stepKey, userId) => {
+        this.setState(prevState => {prevState.classeur.etape_classeurs[stepKey].users.splice(userId, 1)})
+    }
+    handleClickDeleteGroup = (stepKey, groupId) => {
+        this.setState(prevState => {prevState.classeur.etape_classeurs[stepKey].user_packs.splice(groupId, 1)})
+    }
+    addGroup = (stepKey, group) => {
+        this.setState(prevState => prevState.classeur.etape_classeurs[stepKey].user_packs.push(group))
+    }
+    addUser = (stepKey, user) => {
+        this.setState(prevState => prevState.classeur.etape_classeurs[stepKey].users.push(user))
+    }
     handleChangeClasseur = (key, value) => {
         console.log(key, value)
         this.setState(prevState => {classeur: prevState.classeur[key] = value })
     }
-
-    validClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_validclasseur', classeur.id) })}
+    validClasseurs = (classeurs) => {
+        classeurs.map(classeur => {
+            actionClasseur(this, 'sesile_classeur_classeurapi_validclasseur', classeur.id)
+        })
+    }
     signClasseurs = (classeurs, role = '') => {
         let ids
         ids = []
@@ -155,10 +166,26 @@ class Classeur extends Component {
         })
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids), role: role}))
     }
-    revertClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id) })}
-    refuseClasseurs = (classeurs, motif) => { classeurs.map(classeur => { refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif) })}
-    removeClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_removeclasseur', classeur.id) })}
-    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE') })}
+    revertClasseurs = (classeurs) => {
+        classeurs.map(classeur => {
+            actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id)
+        })
+    }
+    refuseClasseurs = (classeurs, motif) => {
+        classeurs.map(classeur => {
+            refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif)
+        })
+    }
+    removeClasseurs = (classeurs) => {
+        classeurs.map(classeur => {
+            actionClasseur(this, 'sesile_classeur_classeurapi_removeclasseur', classeur.id)
+        })
+    }
+    deleteClasseurs = (classeurs) => {
+        classeurs.map(classeur => {
+            actionClasseur(this, 'sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE')
+        })
+    }
 
     render() {
         const { classeur, user, editClasseur } = this.state
@@ -193,18 +220,18 @@ class Classeur extends Component {
                     </div>
 
                     <div className="grid-x grid-margin-x">
-                        <div className="cell large-8 small-12">
+                        <div className="cell large-8 medium-8 small-12">
                             {
                                 classeur.documents &&
-                                <DocumentsView documents={Object.assign([], classeur.documents)}
-                                               classeurId={classeur.id}
-                                               classeurType={Object.assign({}, classeur.type)}
-                                               status={classeur.status}
-                                               editClasseur={classeur.validable}
-                                />
+                                <DocumentsView
+                                    documents={Object.assign([], classeur.documents)}
+                                    classeurId={classeur.id}
+                                    classeurType={Object.assign({}, classeur.type)}
+                                    status={classeur.status}
+                                    editClasseur={classeur.validable}/>
                             }
                         </div>
-                        <div className="cell large-4 small-12">
+                        <div className="cell large-4 medium-8 small-12">
                             <div className="grid-x panel grid-padding-y show-for-large">
                                 {
                                     classeur.id &&
@@ -244,7 +271,7 @@ class Classeur extends Component {
                                                  etape_classeurs={classeur.etape_classeurs}
                                                  user={classeur.user}
                                                  etapeDeposante={classeur.etape_deposante}
-                                                 editable={true}
+                                                 editable={classeur.validable}
                                                  putClasseur={this.putClasseur}
                                                  addEtape={this.handleAddEtape}
                                                  addUser={this.addUser}

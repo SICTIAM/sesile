@@ -99,9 +99,8 @@ class App extends Component {
                                         </Link>
                                     </div>
                                     <div className="cell large-4 show-for-large">
-                                        { user.id &&
-                                            <SearchClasseurs/>
-                                        }
+                                        {user.id &&
+                                            <SearchClasseurs/>}
                                     </div>
                                     <div className="cell large-3 show-for-large"></div>
                                     <div className="cell large-3 small-6">
@@ -111,21 +110,18 @@ class App extends Component {
                             </div>
                             <div className="cell auto grid-y">
                                 <div className="grid-x cell auto">
-
                                     <div className="hide-for-medium-only hide-for-small-only cell large-2 grid-y" style={{backgroundColor: '#f4f4f4'}}>
                                         <Route render={routeProps => <Menu {...routeProps} user={user} />} />
                                     </div>
-
-                                    <div className="cell large-10 medium-12 small-12 cell-block-y main">
-                                        { user.id &&
-                                            <Note/>
-                                        }
+                                    <div
+                                        style={{paddingLeft: '2.5%', paddingRight: '2.5%'}}
+                                        className="cell large-10 medium-12 small-12 cell-block-y main">
+                                        {user.id && <Note/>}
                                         <div className="grid-x grid-padding-x medium-11">
                                             <div className="cell medium-12 small-12">
                                                 <NotificationSystem ref={n => this._notificationSystem = n} style={this.notificationStyle} />
                                                 {user.id &&
-                                                    <AppRoute user={user}/>
-                                                }
+                                                    <AppRoute user={user}/>}
                                             </div>
                                         </div>
                                     </div>

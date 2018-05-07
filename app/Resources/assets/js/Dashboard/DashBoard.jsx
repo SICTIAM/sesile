@@ -67,21 +67,18 @@ class DashBoard extends Component {
 
         return (
             <div className="grid-x">
-
                 <div className="cell medium-12">
                     <div className="grid-x grid-margin-x grid-padding-x align-top align-center grid-padding-y">
                         <div className="cell medium-12 text-center">
-                            <h1>{ t('common.dashboard.title') }</h1>
+                            <h2>{ t('common.dashboard.title') }</h2>
                         </div>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x align-top align-center">
-                        <div className="cell large-5 medium-12">
-                            <Classeurs classeurs={ lastClasseurs } title={ t('common.dashboard.last_classeurs')} />
+                        <div className="cell large-6 medium-12">
+                            <Classeurs classeurs={lastClasseurs} title={t('common.dashboard.last_classeurs')} />
                         </div>
-
-                        <div className="cell large-5 medium-12">
-                            <Classeurs classeurs={ urgentClasseurs } title={ t('common.dashboard.urgent_classeurs')} />
-
+                        <div className="cell large-6 medium-12">
+                            <Classeurs classeurs={urgentClasseurs} title={t('common.dashboard.urgent_classeurs')} />
                             <div className="grid-x grid-padding-x panel">
                                 <div className="cell medium-12">
                                     <div className="grid-x panel-heading grid-padding-x align-middle">
@@ -97,7 +94,6 @@ class DashBoard extends Component {
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

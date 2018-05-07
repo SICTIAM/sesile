@@ -4,7 +4,7 @@ import History from '../_utils/History'
 const AdminDetails = ({ className, title, subtitle, nom, children }) => 
     <div className={className}>
         <div id="admin-details" className="admin-details">
-            <h4 className="text-center text-bold text-uppercase">{title}</h4>
+            <h2 className="text-center">{title}</h2>
             <p className="text-center">
                 <em>{subtitle}</em>
             </p>
@@ -18,7 +18,7 @@ const AdminDetails = ({ className, title, subtitle, nom, children }) =>
 const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName, handleChangeName, placeholder, children }) => 
     <div className={className}>
         <div id="admin-details-input" className="admin-details">
-            <h4 className="text-center text-bold">{title}</h4>
+            <h2 className="text-center">{title}</h2>
             <p className="text-center">{subtitle}</p>
             <div className="admin-details-name">
                 <input name={inputName} value={nom} onChange={(e) => handleChangeName(e.target.name, e.target.value)} placeholder={placeholder} autoFocus={true}/>

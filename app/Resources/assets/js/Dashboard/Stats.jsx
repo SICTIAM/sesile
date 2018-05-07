@@ -46,7 +46,7 @@ class Stats extends Component {
                 <div className="cell medium-12">
                     <div className="grid-x grid-margin-x grid-padding-x align-top align-center grid-padding-y">
                         <div className="cell medium-12 text-center">
-                            <h1>{ t('common.menu.stats')}</h1>
+                            <h2>{ t('common.menu.stats')}</h2>
                         </div>
                     </div>
 

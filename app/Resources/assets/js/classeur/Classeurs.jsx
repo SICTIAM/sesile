@@ -108,7 +108,7 @@ class Classeurs extends Component {
         const { t } = this.context
 
         return (
-            <div>
+            <div className="cell medium-12 head-list-classeurs">
                 {
                     classeurs &&
                     <ClasseurPagination limit={limit}

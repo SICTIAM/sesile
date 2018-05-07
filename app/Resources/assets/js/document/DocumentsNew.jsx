@@ -43,6 +43,10 @@ class DocumentsNew extends Component {
             this.setState({fileRule: t('common.documents.error.file_acceptation_rules')})
         }
     }
+    isHeliosAndNewClasseur = () => {
+        return this.props.classeurId && this.props.typeClasseur.nom === "Helios"
+    }
+    isNewClasseur = () => this.props.classeurId
 
     render () {
 
@@ -65,7 +69,7 @@ class DocumentsNew extends Component {
                     <div className="cell medium-2 align-middle" style={{display: 'flex'}}>
                         <i className="fa fa-file-o" style={{fontSize: '2em'}}></i>
                     </div>
-                    <div className="cell medium-9">
+                    <div className="cell medium-auto">
                         <GridX>
                             <Cell className="text-truncate">
                                 <span className="text-bold" style={{fontSize: '0.9em'}}>{document.name}</span>
@@ -77,9 +81,33 @@ class DocumentsNew extends Component {
                             </Cell>
                         </GridX>
                     </div>
+                    {!this.isHeliosAndNewClasseur() &&
                     <Cell className="medium-1">
-                        <i className="fa fa-times hover-red" onClick={(e) => removeDocument(e, document.id)} style={{fontSize: '1em'}}/>
-                    </Cell>
+                        <i
+                            className="fa fa-times hover-red"
+                            onClick={(e) => removeDocument(e, document.id)}
+                            style={{fontSize: '1em'}}/>
+                    </Cell>}
+                </div>
+                <hr style={{margin: 0}}/>
+                <div className="grid-x">
+                    <div
+                        className="cell medium-auto align-center doc-action-button"
+                        style={{display: 'flex'}}>
+                        <i className="fa fa-expand" style={{padding: '5px'}}/>
+                    </div>
+                    <div
+                        className="cell medium-auto align-center doc-action-button"
+                        style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2'}}>
+                        <i className="fa fa-download" style={{padding: '5px'}}/>
+                    </div>
+                    <div
+                        className={
+                            `cell medium-auto align-center doc-action-button ${!this.isHeliosAndNewClasseur() && 'disabled'}`}
+                        style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2'}}
+                        onClick={(e) => removeDocument(e, document.id)}>
+                        <i className="fa fa-trash" style={{padding: '5px'}}/>
+                    </div>
                 </div>
             </div>)
         return (
@@ -88,14 +116,14 @@ class DocumentsNew extends Component {
                 <div className="cell medium-12">
                     <div className="grid-x grid-margin-x grid-padding-x">
                         <div className="cell medium-12">
-                            <h3>{`${t('common.documents.title_preview')} *`}</h3>
+                            <h3>{t('common.documents.title_preview')}</h3>
                         </div>
                     </div>
                     {statusClasseur !== 2 &&
                         <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="cell medium-12">
                                 <Dropzone
-                                    className="documentation-dropzone grid-x align-middle align-center"
+                                    className="documentation-dropzone disabled grid-x align-middle align-center"
                                     accept={accept}
                                     multiple={multiple}
                                     name="file"

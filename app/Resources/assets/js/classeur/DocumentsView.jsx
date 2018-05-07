@@ -129,52 +129,53 @@ class DocumentsView extends Component {
         currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
 
         return (
-        <div className="">
-            <DocumentsNew
-                documents={documents}
-                onClick={this.handleClickDocument}
-                onDrop={ this.onDrop }
-                removeDocument={this.removeDocument}
-                displayReveal={this.displayReveal}
-                typeClasseur={classeurType}
-                statusClasseur={status}
-                editClasseur={editClasseur}/>
-            <div className="grid-x panel grid-padding-y">
-                { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
-                    <div className="reveal-full" style={{display: revealDisplay}}>
-                        <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
-                        <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
-                    </div>
-                }
-                { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "none") &&
-                    <div className="cell medium-12">
-                        <img src={"./../uploads/docs/" + currentDocument.repourl} />
-                    </div>
-                }
+            <div>
+                <DocumentsNew
+                    documents={documents}
+                    onClick={this.handleClickDocument}
+                    onDrop={ this.onDrop }
+                    removeDocument={this.removeDocument}
+                    displayReveal={this.displayReveal}
+                    typeClasseur={classeurType}
+                    statusClasseur={status}
+                    classeurId={this.props.classeurId}
+                    editClasseur={editClasseur}
+                    isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}/>
+                <div className="grid-x panel grid-padding-y">
+                    { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
+                        <div className="reveal-full" style={{display: revealDisplay}}>
+                            <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                            <img src={"./../uploads/docs/" + currentDocument.repourl} className="imgPreview" />
+                        </div>
+                    }
+                    { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "none") &&
+                        <div className="cell medium-12">
+                            <img src={"./../uploads/docs/" + currentDocument.repourl} />
+                        </div>
+                    }
 
-                { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "none" && classeurType.nom === "Helios" &&
-                    <Helios document={ currentDocument } />
-                }
-                { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "block" && classeurType.nom === "Helios" &&
-                    <div className="reveal-full" style={{display: revealDisplay}}>
-                        <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
-                        <Helios document={ Object.assign({}, currentDocument) } />
-                    </div>
-                }
+                    { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "none" && classeurType.nom === "Helios" &&
+                        <Helios document={ currentDocument } />
+                    }
+                    { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "block" && classeurType.nom === "Helios" &&
+                        <div className="reveal-full" style={{display: revealDisplay}}>
+                            <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                            <Helios document={ Object.assign({}, currentDocument) } />
+                        </div>
+                    }
 
 
-                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" && user.id ) &&
-                    <div className="reveal-full" style={{display: revealDisplay}}>
-                        <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
-                        <OnlyOffice document={ currentDocument } user={user} revealDisplay={true} />
-                    </div>
-                }
-                { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none" && user.id) &&
-                    <OnlyOffice document={ currentDocument } user={user} revealDisplay={false} />
-                }
+                    { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" && user.id ) &&
+                        <div className="reveal-full" style={{display: revealDisplay}}>
+                            <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
+                            <OnlyOffice document={ currentDocument } user={user} revealDisplay={true} />
+                        </div>
+                    }
+                    { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none" && user.id) &&
+                        <OnlyOffice document={ currentDocument } user={user} revealDisplay={false} />
+                    }
+                </div>
             </div>
-        </div>
-
         )
     }
 }

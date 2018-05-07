@@ -218,6 +218,7 @@ html {
     font-family: $font-family;
     font-weight: 700;
     color: $sesile-color-3;
+    text-transform: uppercase;
   }
   h3 {
     font-size: 1.5em;
@@ -393,6 +394,7 @@ html {
       text-transform: uppercase;
       padding-top:1.5em;
       padding-bottom:1em;
+      color: $sesile-color-1;
     }
     .panel-body {
       color: map-get($sesile-color, 'dark-blue');
@@ -1103,7 +1105,6 @@ label > input {
 }
 
 .documentation-dropzone {
-  min-height: 10em;
   border: rgba(64, 66, 87, 1) 0.1em dashed;
   border-radius: 0.3em;
   text-align: center;
@@ -1112,6 +1113,14 @@ label > input {
 
 .documentation-dropzone:hover {
   background-color: rgba(64, 66, 87, 0.53);
+}
+
+.documentation-dropzone.disabled {
+  color: rgba(138, 138, 137, 0.58);
+}
+
+.documentation-dropzone.disabled:hover {
+  background-color: white;
 }
 
 .text-small { font-size: 0.8em; }
@@ -1173,7 +1182,7 @@ label > input {
 .panel h3:after {
   content:' ';
   display:block;
-  border:1.2px solid $sesile-color-1;
+  border:solid 1px;
 }
 
 .hover-red:hover {
@@ -1270,7 +1279,7 @@ select {
 }
 
 .fa.success {
-  color: map-get($foundation-palette, 'success')!important;
+  color: map-get($foundation-palette, 'success');
 }
 
 .fa.success:hover {
@@ -1278,7 +1287,7 @@ select {
 }
 
 .fa.warning {
-  color: map-get($foundation-palette, 'warning')!important;
+  color: map-get($foundation-palette, 'warning');
 }
 
 .fa.warning:hover {
@@ -1286,7 +1295,7 @@ select {
 }
 
 .fa.alert {
-  color: map-get($foundation-palette, 'alert')!important;
+  color: map-get($foundation-palette, 'alert');
 }
 
 .fa.alert:hover {
@@ -1294,7 +1303,7 @@ select {
 }
 
 .fa.primary {
-  color: map-get($foundation-palette, 'primary')!important;
+  color: map-get($foundation-palette, 'primary');
 }
 
 .fa.primary:hover {
@@ -1302,7 +1311,7 @@ select {
 }
 
 .fa.secondary {
-  color: map-get($foundation-palette, 'secondary')!important;
+  color: map-get($foundation-palette, 'secondary');
 }
 
 .fa.secondary:hover {
@@ -1310,5 +1319,21 @@ select {
 }
 
 .fa.disabled {
+  color: rgba(138, 138, 137, 0.58);
+}
+
+.doc-action-button {
+  cursor: pointer;
+  font-size: 0.85em;
+  color: #404257;
+}
+
+.doc-action-button:hover {
+  background-color: #f4f4f4;
+}
+
+.doc-action-button.disabled {
+  cursor: none;
+  font-size: 0.85em;
   color: rgba(138, 138, 137, 0.58);
 }

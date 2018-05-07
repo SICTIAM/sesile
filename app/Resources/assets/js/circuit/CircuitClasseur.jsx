@@ -88,7 +88,9 @@ class CircuitClasseur extends Component {
                                     borderRadius: '0.285714rem',
                                     border: '1px solid',
                                     padding: '0.5em'}}>
-                                <div className="text-center" style={{display: 'inline-block', width: '10%'}}>
+                                <div
+                                    className="text-center"
+                                    style={{display: 'inline-block', width: '10%'}}>
                                     <div
                                         className={
                                             this.props.etapeDeposante ?
@@ -97,7 +99,9 @@ class CircuitClasseur extends Component {
                                         1
                                     </div>
                                 </div>
-                                <div className="text-uppercase" style={{display: 'inline-block', width: '25%'}}>
+                                <div
+                                    className="text-uppercase"
+                                    style={{display: 'inline-block', width: '30%', margin: '5px'}}>
                                     <span
                                         className=
                                             {this.props.etapeDeposante ?
@@ -123,7 +127,7 @@ class CircuitClasseur extends Component {
                                     style={{
                                         color: '#34a3fc',
                                         fontSize: '1.2em',
-                                        marginBottom: '10px',
+                                        marginBottom: '20px',
                                         width: '100%',
                                         display: 'flex',
                                         boxShadow: 'rgba(34, 36, 38, 0.15) 0px 1px 2px 0px',
@@ -133,8 +137,7 @@ class CircuitClasseur extends Component {
                                         cursor: 'pointer'}}
                                     onClick={() => this.props.addEtape(null)}>
                                     <i
-                                        className="fa fa-plus-circle hollow primary text-bold"
-                                        style={{}}/>
+                                        className="fa fa-plus-circle hollow primary text-bold"/>
                                     <span style={{marginLeft: '0.5em'}}>
                                         {t('admin.circuit.add_step')}
                                     </span>
@@ -206,17 +209,21 @@ const StepCircuit = ({
                     {stepKey + 2}
                 </div>
             </div>
-            <div style={{display: 'inline-block', width: '25%'}}>
+            <div style={{display: 'inline-block', width: '30%', margin: '5px'}}>
                 <span
                     className={`${currentTextClassName(etape_classeur)} text-uppercase text-bold`}>
                     {t('admin.circuit.validator')}
                 </span>
             </div>
-            <div className="align-right" style={{width: `${isLastStep(etape_classeur) ? '60%' : '65%'}`}}>
+            <div
+                className="align-right"
+                style={{
+                    width: `${isLastStep(etape_classeur) ? '60%' : '65%'}`,
+                    marginTop:`${isLastStep(etape_classeur) ? '1.5em' : '0em'}`}}>
                 <div className={`${currentTextClassName(etape_classeur)} text-bold`}>
                     {etape_classeur.users && etape_classeur.users.filter(user => user.id).map((user, userKey) =>
-                        <div key={"user" + user.id} style={{display: 'inline-block', width: '83%'}}>
-                            <div style={{display: 'inline-block', width: '80%'}}>
+                        <div key={"user" + user.id} style={{display: 'inline-block', width: '100%'}}>
+                            <div style={{display: 'inline-block', width: '90%'}}>
                                 {user._prenom} {user._nom}
                             </div>
                             {editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
@@ -227,8 +234,8 @@ const StepCircuit = ({
                             </div>}
                         </div>)}
                     {etape_classeur.user_packs && etape_classeur.user_packs.map((user_pack, user_packKey) =>
-                        <div key={"userpack" + user_pack.id} style={{display: 'inline-block', width: '83%'}}>
-                            <div style={{display: 'inline-block', width: '80%'}}>
+                        <div key={"userpack" + user_pack.id} style={{display: 'inline-block', width: '100%'}}>
+                            <div style={{display: 'inline-block', width: '90%'}}>
                                 {user_pack.nom}
                             </div>
                             {editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&

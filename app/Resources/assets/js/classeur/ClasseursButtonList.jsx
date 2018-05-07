@@ -45,14 +45,15 @@ class ClasseursButtonList extends Component {
                     <div className={"btn-sign-" + id}>
                         {this.actionEnabled('signable_and_last_validant') ?
                             display === "list" ?
-                                <a title={t('common.classeurs.button.sign_title')}
-                                    className="fa fa-pencil" onClick={() => signClasseur(classeurs)} /> :
+                                <a
+                                    title={t('common.classeurs.button.sign_title')}
+                                    className="fa fa-edit success hollow" onClick={() => signClasseur(classeurs)} /> :
                                 <div className="user-log">
                                     <button
                                         style={{border: 'none'}}
                                         data-toggle={id + 'sign'}
                                         title={t('common.classeurs.button.sign_title')}
-                                        className="fa fa-pencil success button hollow"/>
+                                        className="fa fa-edit success button hollow"/>
                                     <div
                                         className="dropdown-pane"
                                         data-position={dropdownPosition}
@@ -71,44 +72,52 @@ class ClasseursButtonList extends Component {
                                             t('common.classeurs.button.no_roles')}
                                     </div>
                                 </div> :
-                            <i title={t('common.classeurs.button.sign_title')} className="fa fa-pencil disabled" />}
+                            <i title={t('common.classeurs.button.sign_title')} className="fa fa-edit disabled hollow" />}
                     </div>
                 </div>
                 <div className="cell auto">
                     <ButtonRevert classeurs={ classeurs } revert={ revertClasseur } enabled={this.actionEnabled('retractable')} />
                 </div>
                 <div className="cell auto">
-                    {
-                        classeurs && !classeurs.filter(classeur => !classeur.refusable).length &&
+                    {this.actionEnabled('refusable') ?
                         <div className={"btn-refuser-" + id}>
-                            {   <a data-toggle={id} title={t('common.classeurs.button.refus_title')}
-                                     className="fa fa-minus-circle alert hollow"/>
-                            }
-                            <div className="dropdown-pane" data-position={dropdownPosition} data-alignment="right" id={id} data-dropdown data-auto-focus="true">
-                            <Textarea id={id}
-                                      name="text-refus"
-                                      value={ textRefus }
-                                      placeholder={t('common.classeurs.button.refus_text')}
-                                      onChange={this.handleTextrefus}/>
-                                <button onClick={() => refuseClasseur(classeurs, textRefus)} title={t('common.classeurs.button.refus_title')} className="alert button hollow" >{t('common.classeurs.button.refus_title')}</button>
+                            <a
+                                data-toggle={id} title={t('common.classeurs.button.refus_title')}
+                                className="fa fa-minus-circle alert hollow"/>
+                            <div
+                                id={id}
+                                className="dropdown-pane"
+                                data-position={dropdownPosition}
+                                data-alignment="right"
+                                data-dropdown data-auto-focus="true">
+                                <Textarea
+                                    id={id}
+                                    name="text-refus"
+                                    value={ textRefus }
+                                    placeholder={t('common.classeurs.button.refus_text')}
+                                    onChange={this.handleTextrefus}/>
+                                <button
+                                    onClick={() => refuseClasseur(classeurs, textRefus)}
+                                    title={t('common.classeurs.button.refus_title')}
+                                    className="alert button hollow" >
+                                    {t('common.classeurs.button.refus_title')}
+                                </button>
                             </div>
-                        </div>
-
-                    }
+                        </div> :
+                        <i title={t('common.classeurs.button.refus_title')} className="fa fa-minus-circle disabled" />}
                 </div>
                 <div className="cell auto">
-                    {
-                        classeurs && !classeurs.filter(classeur => !classeur.removable).length &&
-                        <ButtonRemove classeurs={ classeurs } remove={ removeClasseur } display={display} />
-                    }
+                    <ButtonRemove
+                        classeurs={classeurs}
+                        remove={removeClasseur}
+                        enabled={this.actionEnabled('removable')} />
                 </div>
                 <div className="cell auto">
-                    {
-                        classeurs && !classeurs.filter(classeur => !classeur.deletable).length &&
-                        <ButtonDelete classeurs={ classeurs } deleteClasseur={ deleteClasseur } display={display} />
-                    }
+                    <ButtonDelete
+                        classeurs={classeurs}
+                        deleteClasseur={deleteClasseur}
+                        enabled={this.actionEnabled('deletable')} />
                 </div>
-
             </div>
         )
     }
@@ -132,8 +141,11 @@ export default translate(['sesile'])(ClasseursButtonList)
 const ButtonValid = ({classeurs, valid, enabled}, {t}) => {
     return(
         enabled ?
-            <a onClick={() => valid(classeurs)} title={ t('common.classeurs.button.valid_title') } className="fa fa-check success hollow"></a> :
-            <i title={ t('common.classeurs.button.valid_title') } className="fa fa-check disabled hollow"></i>
+            <a
+                onClick={() => valid(classeurs)}
+                title={t('common.classeurs.button.valid_title')}
+                className="fa fa-check success hollow"/> :
+            <i title={t('common.classeurs.button.valid_title')} className="fa fa-check disabled hollow"/>
     )
 }
 ButtonValid.contextTypes = { t: func }
@@ -145,8 +157,11 @@ ButtonValid.propTypes = {
 const ButtonRevert = ({classeurs, revert, enabled}, {t}) => {
     return(
         enabled ?
-            <a onClick={() => revert(classeurs)} title={ t('common.classeurs.button.revert_title') } className="fa fa-repeat warning hollow"></a> :
-            <i title={ t('common.classeurs.button.revert_title') } className="fa fa-repeat disabled hollow"></i>
+            <a
+                onClick={() => revert(classeurs)}
+                title={ t('common.classeurs.button.revert_title') }
+                className="fa fa-repeat warning hollow"/> :
+            <i title={ t('common.classeurs.button.revert_title') } className="fa fa-repeat disabled hollow"/>
     )
 }
 ButtonRevert.contextTypes = { t: func }
@@ -155,8 +170,14 @@ ButtonRevert.propTypes = {
     revert: func
 }
 
-const ButtonRemove = ({classeurs, remove, display}, {t}) => {
-    return(<a onClick={() => remove(classeurs)} title={ t('common.classeurs.button.remove_title') } className="fa fa-times alert hollow"></a>
+const ButtonRemove = ({classeurs, remove, enabled}, {t}) => {
+    return(
+        enabled ?
+            <a
+                onClick={() => remove(classeurs)}
+                title={t('common.classeurs.button.remove_title')}
+                className="fa fa-times alert hollow"/> :
+            <i title={t('common.classeurs.button.remove_title')} className="fa fa-times disabled hollow"/>
     )
 }
 ButtonRemove.contextTypes = { t: func }
@@ -165,8 +186,14 @@ ButtonRemove.propTypes = {
     remove: func
 }
 
-const ButtonDelete = ({classeurs, deleteClasseur, display}, {t}) => {
-    return(<a onClick={() => deleteClasseur(classeurs)}  title={ t('common.classeurs.button.delete_title') } className="fa fa-trash alert hollow"></a>
+const ButtonDelete = ({classeurs, deleteClasseur, enabled}, {t}) => {
+    return(
+        enabled ?
+            <a
+                onClick={() => deleteClasseur(classeurs)}
+                title={t('common.classeurs.button.delete_title')}
+                className="fa fa-trash alert hollow"/> :
+            <i title={t('common.classeurs.button.delete_title')} className="fa fa-trash disabled hollow"/>
     )
 }
 ButtonDelete.contextTypes = { t: func }
