@@ -255,7 +255,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         $collectivite = $this->fixtures->getReference('collectivite-one');
         $this->client->request(
             'GET',
-            sprintf('apirest/org//classeurs/list/all', $collectivite->getId())
+            'apirest/classeurs/list/all'
         );
 
         self::assertEquals(404, $this->client->getResponse()->getStatusCode());

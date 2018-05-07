@@ -34,6 +34,7 @@ class UserRepository extends EntityRepository {
         $user->setSesileVersion(0);
         $user->setCollectivite($collectivite);
         $user->setEnabled(true);
+        $user->addCollectivity($collectivite);
 
         $em->persist($user);
     }
