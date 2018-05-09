@@ -194,4 +194,32 @@ class UserRepository extends EntityRepository {
         $em->flush();
 
     }
+
+    /**
+     * check if user has a collectivity.
+     * based on the ozwillo collectivite client_id
+     *
+     * @param $userId
+     * @param $ozwilloCollectivityClientId
+     *
+     * @return bool
+     */
+    public function userHasOzwilloCollectivity($userId, $ozwilloCollectivityClientId)
+    {
+        $result = $this
+            ->createQueryBuilder('U')
+            ->select('U.id as userId, U.username, C.id as collectivityId, O.clientId')
+            ->join('U.collectivities', 'C')
+            ->leftJoin('C.ozwillo', 'O')
+            ->where('O.clientId = :clientId')
+            ->andWhere('U.id = :userId')
+            ->setParameter('clientId', $ozwilloCollectivityClientId)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getArrayResult();
+        if (count($result) > 0) {
+            return true;
+        }
+        return false;
+    }
 }

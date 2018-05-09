@@ -51,6 +51,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         $user->setApisecret('secret_abf9411ade3787a8e668ac534f97cf1a');
         $user->setApiactivated(true);
         $user->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        $user->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
         // Update the user
         $userManager->updateUser($user, true);
@@ -70,6 +71,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         $user2->setApisecret('secret_ef316bf44b62815f29c5f81fbf92f5c0');
         $user2->setApiactivated(true);
         $user2->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        $user2->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
         // Update the user
         $userManager->updateUser($user2, true);
@@ -86,6 +88,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         $superUser->setEnabled(true);
         $superUser->setRoles(array('ROLE_SUPER_ADMIN'));
         $superUser->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        $superUser->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
         // Update the user
         $userManager->updateUser($superUser, true);
