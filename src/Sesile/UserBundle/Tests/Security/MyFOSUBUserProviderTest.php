@@ -190,6 +190,11 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         self::assertEquals('nice-client-id', $newCollectivity->getOzwillo()->getClientId());
     }
 
+    public function testLoadUserByOAuthUserResponseShouldThrowExceptionIfOzwilloCollectiviteNotFoundForClientId()
+    {
+
+    }
+
     protected function createUserResponseMock()
     {
         //\HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
