@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 
 /**
  * Class CollectiviteManager
@@ -46,6 +47,50 @@ class CollectiviteManager
             return new Message(true, $data);
         } catch (\Exception $e) {
             $this->logger->error(sprintf('[CollectiviteManager]/getCollectivitesList error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+    }
+
+
+    /**
+     * check if user has a collectivity.
+     * based on the ozwillo collectivite client_id
+     *
+     * @param $userId
+     * @param $ozwilloCollectivityClientId
+     *
+     * @return Message
+     */
+    public function userHasOzwilloCollectivity($userId, $ozwilloCollectivityClientId)
+    {
+        try {
+            $data = $this->em->getRepository(CollectiviteOzwillo::class)->userHasOzwilloCollectivity(
+                $userId,
+                $ozwilloCollectivityClientId
+            );
+
+            return new Message(true, $data);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/userHasOzwilloCollectivity error: %s', $e->getMessage()));
+
+            return new Message(false, false, [$e->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $clientId unique ozwillo collectivite id
+     *
+     * @return Message
+     */
+    public function getOzwilloCollectivityByClientId($clientId)
+    {
+        try {
+            $data = $this->em->getRepository(CollectiviteOzwillo::class)->findOneByClientId($clientId);
+
+            return new Message(true, $data);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/getOzwilloCollectivityByClientId error: %s', $e->getMessage()));
 
             return new Message(false, null, [$e->getMessage()]);
         }
