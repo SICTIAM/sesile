@@ -8,7 +8,11 @@ use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
 use Sesile\UserBundle\Entity\User;
 
-class UserControllerTest extends SesileWebTestCase
+/**
+ * Class UserApiControllerTest
+ * @package Sesile\UserBundle\Tests\Controller
+ */
+class UserApiControllerTest extends SesileWebTestCase
 {
     /**
      * @var ReferenceRepository
