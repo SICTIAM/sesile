@@ -10,4 +10,32 @@ namespace Sesile\MainBundle\Repository;
  */
 class CollectiviteOzwilloRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * check if user has a collectivity.
+     * based on the ozwillo collectivite client_id
+     *
+     * @param $userId
+     * @param $ozwilloCollectivityClientId
+     *
+     * @return bool
+     */
+    public function userHasOzwilloCollectivity($userId, $ozwilloCollectivityClientId)
+    {
+        $result = $this
+            ->createQueryBuilder('O')
+            ->select('U.id as userId, U.username, C.id as collectivityId, O.clientId')
+            ->leftJoin('O.collectivite', 'C')
+            ->join('C.users', 'U')
+            ->where('O.clientId = :clientId')
+            ->andWhere('U.id = :userId')
+            ->setParameter('clientId', $ozwilloCollectivityClientId)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getArrayResult();
+        if (count($result) > 0) {
+            return true;
+        }
+        return false;
+    }
 }
