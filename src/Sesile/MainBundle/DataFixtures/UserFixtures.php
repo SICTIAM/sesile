@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,6 +37,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
 
         // Create our user and set details
         $user = $userManager->createUser();
+        $user->setNom('nom1');
+        $user->setPrenom('prenom1');
         $user->setUsername('username');
         $user->setEmail('email@domain.com');
         $user->setPlainPassword('password');
@@ -55,6 +58,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
 
         // Create our user and set details
         $user2 = $userManager->createUser();
+        $user->setNom('nom2');
+        $user->setPrenom('prenom');
         $user2->setUsername('username2');
         $user2->setEmail('email2@domain.com');
         $user2->setPlainPassword('password2');
@@ -72,6 +77,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
 
         // Create our user and set details
         $superUser = $userManager->createUser();
+        $user->setNom('super nom');
+        $user->setPrenom('super prenom');
         $superUser->setUsername('super');
         $superUser->setEmail('super@domain.com');
         $superUser->setPlainPassword('password');
@@ -81,7 +88,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         $superUser->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
         // Update the user
-        $userManager->updateUser($user2, true);
+        $userManager->updateUser($superUser, true);
         $this->addReference(self::USER_SUPER_REFERENCE, $superUser);
     }
 
