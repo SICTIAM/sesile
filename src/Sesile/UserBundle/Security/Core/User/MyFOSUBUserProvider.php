@@ -59,6 +59,7 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
         if (null === $user) {
             $username = $response->getRealName();
             $client_id = $response->getResourceOwner()->getOption('client_id');
+            //$client_id is the unique id for a collectivite
             $ozwilloCollectivite = $this->em->getRepository('SesileMainBundle:CollectiviteOzwillo')->findOneByClientId($client_id);
 
             $user = new User();
@@ -69,7 +70,10 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
             $user->setEmail($userEmail);
             $user->setPassword(substr($this->tokenGenerator->generateToken(), 0, 10));
             $user->setEnabled(true);
+            //leave for legacy - @todo remove this line when refactoring
             $user->setCollectivite($ozwilloCollectivite->getCollectivite());
+            //add the colelctivite to the user ref_collecitvite_user table
+            $user->addCollectivity($ozwilloCollectivite->getCollectivite());
 
             // ... save user to database
             $this->userManager->updateUser($user);
