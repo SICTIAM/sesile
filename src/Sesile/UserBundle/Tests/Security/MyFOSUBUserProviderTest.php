@@ -134,6 +134,62 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         self::assertEquals('ozwillo-client-id', $collectivity->getOzwillo()->getClientId());
     }
 
+
+    /**
+     * Après que l'utilisateur a effectué le login sur ozwillo depuis une nouvelle collectivite
+     * on test que on a bien attribué la nouvelle collectivite à l'utilisateur et que on a mis à jours
+     * le nom, prenom et l'identifiant ozwillo
+     *
+     * la collectivité est determiné par le client_id de la collectivité
+     */
+    public function testLoadUserByOAuthUserResponseShouldUpdateAndAddNewCollectiviteIntoExistingUser()
+    {
+        $dbUser = $this->em->getRepository(User::class)->find($this->fixtures->getReference('user-one')->getId());
+        self::assertNull($dbUser->getOzwilloId());
+
+        $email = $this->fixtures->getReference('user-one')->getEmail();
+        $username = $this->fixtures->getReference('user-one')->getUsername();
+        $familyName = $this->fixtures->getReference('user-one')->getNom();
+        $givenName = $this->fixtures->getReference('user-one')->getPrenom();
+        $authData = $this->getAuthUserData($email, $familyName, $givenName);
+
+        /**
+         * get \HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse mock
+         */
+        $userProviderResponseMock = $this->createUserResponseMock();
+        $userProviderResponseMock
+            ->expects($this->once())
+            ->method('getResourceOwner')
+            ->will($this->returnValue($this->createResourceOwnerMock('nice-client-id')));
+
+        $userProviderResponseMock
+            ->expects($this->once())
+            ->method('getEmail')
+            ->will($this->returnValue($email));
+        $userProviderResponseMock
+            ->expects($this->never())
+            ->method('getRealName')
+            ->will($this->returnValue($username));
+        $userProviderResponseMock
+            ->expects($this->once())
+            ->method('getData')
+            ->will($this->returnValue($authData));
+
+        $result = $this->userProvider->loadUserByOAuthUserResponse($userProviderResponseMock);
+        self::assertInstanceOf(User::class, $result);
+
+        /**
+         * check database
+         */
+        $this->em->clear();
+        $dbUser = $this->em->getRepository(User::class)->find($this->fixtures->getReference('user-one')->getId());
+        self::assertEquals('cbb67b1d-612b-4a6e-b2c3-e1b215fe685a', $dbUser->getOzwilloId());
+        self::assertCount(2, $dbUser->getCollectivities());
+        $newCollectivity = $dbUser->getCollectivities()->last();
+        self::assertEquals($this->fixtures->getReference('collectivite-two')->getId(), $newCollectivity->getId());
+        self::assertEquals('nice-client-id', $newCollectivity->getOzwillo()->getClientId());
+    }
+
     protected function createUserResponseMock()
     {
         //\HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
@@ -165,8 +221,12 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         return $resourceOwnerMock;
     }
 
-    protected function getAuthUserData($email, $familyName, $givenName, $ozwilloUserId = 'cbb67b1d-612b-4a6e-b2c3-e1b215fe685a')
-    {
+    protected function getAuthUserData(
+        $email,
+        $familyName,
+        $givenName,
+        $ozwilloUserId = 'cbb67b1d-612b-4a6e-b2c3-e1b215fe685a'
+    ) {
         return [
             'name' => 'the name',
             'family_name' => $familyName,
