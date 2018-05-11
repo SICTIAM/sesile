@@ -49,7 +49,7 @@ class CollectiviteRepositoryTest extends WebTestCase
     public function testGetCollectivitesListShouldReturnArrayResultOnSuccess()
     {
         $result = $this->em->getRepository(Collectivite::class)->getCollectivitesList();
-        self::assertCount(1, $result);
+        self::assertCount(2, $result);
         self::assertEquals('Sictiam Collectivité', $result[0]['nom']);
         self::assertEquals('sictiam', $result[0]['domain']);
     }

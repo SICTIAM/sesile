@@ -34,7 +34,7 @@ class CollectiviteApiControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/apirest/collectivite/list');
         $this->assertStatusCode(200, $client);
         $content = json_decode($client->getResponse()->getContent(), true);
-        self::assertCount(1, $content);
+        self::assertCount(2, $content);
         self::assertEquals('Sictiam Collectivité', $content[0]['nom']);
         self::assertEquals('sictiam', $content[0]['domain']);
     }

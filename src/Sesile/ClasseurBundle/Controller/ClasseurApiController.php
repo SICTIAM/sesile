@@ -89,6 +89,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
+     * @param $orgId
      * @param null $sort
      * @param null $order
      * @param int $limit
@@ -96,21 +97,22 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param null $userId
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("s/retract/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     * @Rest\Get("/org/{orgId}/classeurs/retract/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
-    public function listRetractAction($sort = null, $order = null, $limit, $start, $userId = null)
+    public function listRetractAction($orgId, $sort = null, $order = null, $limit, $start, $userId = null)
     {
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $classeursId = $em->getRepository('SesileUserBundle:User')->getClasseurIdRetractableForUser($user);
-        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursRetractable($classeursId, $sort, $order, $limit, $start, $user->getId());
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursRetractable($orgId, $classeursId, $sort, $order, $limit, $start, $user->getId());
 
         return $classeurs;
 
     }
 
     /**
+     * @param $orgId
      * @param null $sort
      * @param null $order
      * @param int $limit
@@ -118,9 +120,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param null $userId
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("s/remove/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     * @Rest\Get("/org/{orgId}/classeurs/remove/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
-    public function listRemovableAction($sort = null, $order = null, $limit, $start, $userId = null)
+    public function listRemovableAction($orgId, $sort = null, $order = null, $limit, $start, $userId = null)
     {
         if (
             $userId === null
@@ -128,7 +130,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         ) $userId = $this->getUser()->getId();
 
         $em = $this->getDoctrine()->getManager();
-        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursremovable($userId, $sort, $order, $limit, $start);
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursremovable($orgId, $userId, $sort, $order, $limit, $start);
 
         return $classeurs;
 
@@ -141,6 +143,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param Classeur $classeur
      * @return Classeur
      * @internal param $id
+     * @todo add colelctivite condition
      */
     public function getByIdAction (Classeur $classeur)
     {

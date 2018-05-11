@@ -374,7 +374,64 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(2, $data);
+        self::assertCount(1, $data);
+        self::assertEquals($classeur->getId(), $data[0]['id']);
+    }
+
+    public function testListRetractActionShouldReturnAllClasseursThatCanBeRetractableByTheUser()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user);
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/api/v4/org/%s/classeurs/retract/%s/%s/%s/%s/%s',
+                $collectivite->getId(),
+                'id',
+                'DESC',
+                '15',
+                '0',
+                $user->getId()
+            )
+        );
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(1, $data);
+        self::assertEquals($classeur->getId(), $data[0]['id']);
+    }
+
+    public function testListRemovableActionShouldReturnAllClasseursThatCanBeRemovedByTheUser()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user);
+        $classeur = $this->fixtures->getReference('classeur-one');
+        //edit status (mock the action)
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $em->clear();
+        $classeur = $em->getRepository(Classeur::class)->find($classeur->getId());
+        $classeur->setStatus(3);
+        $em->flush();
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/api/v4/org/%s/classeurs/remove/%s/%s/%s/%s/%s',
+                $collectivite->getId(),
+                'id',
+                'DESC',
+                '15',
+                '0',
+                $user->getId()
+            )
+        );
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(1, $data);
+        self::assertEquals($classeur->getId(), $data[0]['id']);
     }
 
     private function getFormData()

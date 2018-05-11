@@ -107,8 +107,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
-//            ->andWhere('c.collectivite = :orgId')
-//            ->setParameter('orgId', $orgId)
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
@@ -122,7 +122,18 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
-    public function getClasseursRetractable ($classeursId, $sort, $order, $limit, $start, $userId) {
+    /**
+     * @param $orgId
+     * @param $classeursId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     * @param $userId
+     * @return array
+     */
+    public function getClasseursRetractable ($orgId, $classeursId, $sort, $order, $limit, $start, $userId)
+    {
 
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
@@ -138,6 +149,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
@@ -151,7 +164,18 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
-    public function getClasseursremovable ($userId, $sort, $order, $limit, $start) {
+    /**
+     * @param $orgId
+     * @param $userId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     *
+     * @return array
+     */
+    public function getClasseursremovable ($orgId, $userId, $sort, $order, $limit, $start)
+    {
 
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
@@ -167,6 +191,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
