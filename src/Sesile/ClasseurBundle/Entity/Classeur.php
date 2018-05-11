@@ -181,6 +181,7 @@ class Classeur {
      *
      * @ORM\ManyToOne(targetEntity="Sesile\MainBundle\Entity\Collectivite")
      * @ORM\JoinColumn(name="collectivite_id", referencedColumnName="id")
+     * @Groups({"listClasseur", "classeurById"})
      *
      */
     protected $collectivite;

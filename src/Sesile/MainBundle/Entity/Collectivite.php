@@ -32,7 +32,9 @@ class Collectivite
      *                      "getAllCollectivite",
      *                      "getCollectiviteById",
      *                      "listUsers",
-     *                      "UserId"
+     *                      "UserId",
+     *                      "listClasseur",
+     *                      "classeurById",
      *     })
      */
     private $id;

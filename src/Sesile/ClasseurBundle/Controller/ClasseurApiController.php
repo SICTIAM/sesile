@@ -22,21 +22,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * @Rest\Route("/apirest/classeur", options = { "expose" = true })
+ * @Rest\Route("/api/v4", options = { "expose" = true })
  */
 class ClasseurApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("s/list/all")
+     * @Rest\Get("/org/{orgId}/classeurs/list/all")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function listAllAction()
+    public function listAllAction($orgId)
     {
-
         $em = $this->getDoctrine()->getManager();
-        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getAllClasseursVisibles($this->getUser()->getId());
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getAllClasseursVisibles($orgId, $this->getUser()->getId());
 
         return $classeurs;
     }
@@ -49,9 +48,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param null $userId
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("s/list/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     * @Rest\Get("/org/{orgId}/classeurs/list/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
-    public function listAction($sort = null, $order = null, $limit, $start, $userId = null)
+    public function listAction($orgId, $sort = null, $order = null, $limit, $start, $userId = null)
     {
         if (
             $userId === null
@@ -59,7 +58,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         ) $userId = $this->getUser()->getId();
 
         $em = $this->getDoctrine()->getManager();
-        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisibles($userId, $sort, $order, $limit, $start);
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisibles($orgId, $userId, $sort, $order, $limit, $start);
 
         return $classeurs;
     }
@@ -152,7 +151,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View("statusCode=Response::HTTP_CREATED", serializerGroups={"classeurById"})
-     * @Rest\Post("/new")
+     * @Rest\Post("/classeur/new")
      * @param Request $request
      * @return Classeur|\Symfony\Component\Form\Form|JsonResponse
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -195,7 +194,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View(serializerGroups={"classeurById"})
-     * @Rest\Patch("/{id}")
+     * @Rest\Patch("/classeur/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param Request $request
      * @param Classeur $classeur

@@ -32,7 +32,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
                 UserPackFixtures::class,
                 TypeClasseurFixtures::class,
                 CircuitValidationFixtures::class,
-                ClasseurFixtures::class
+                ClasseurFixtures::class,
             ]
         )->getReferenceRepository();
         parent::setUp();
@@ -41,14 +41,20 @@ class ClasseurApiControllerTest extends SesileWebTestCase
     public function testPostAction()
     {
         $this->logIn($this->fixtures->getReference('user-one'));
+
+        $collectivite = $this->fixtures->getReference('collectivite-one');
         $formData = $this->getFormData();
         $postData = [
             'circuit_id' => $formData['circuitValidation']->getId(),
             'copy' => [$formData['user']->getId()],
             'description' => "test",
             'etapeClasseurs' => [
-                ["ordre" => "0", "users" => [$formData['user']->getId()], "user_packs" => [$formData['userPack']->getId()]],
-                ["ordre" => "1", "users" => [$formData['user']->getId()]]
+                [
+                    "ordre" => "0",
+                    "users" => [$formData['user']->getId()],
+                    "user_packs" => [$formData['userPack']->getId()],
+                ],
+                ["ordre" => "1", "users" => [$formData['user']->getId()]],
             ],
             'nom' => "The Name",
             'type' => $formData['typeClasseur']->getId(),
@@ -60,7 +66,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         $this->client->request(
             'POST',
-            '/apirest/classeur/new',
+            sprintf('/api/v4/classeur/new', $collectivite->getId()),
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
@@ -85,6 +91,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         $entityManager->clear();
         $data = $entityManager->getRepository(Classeur::class)->findOneBy(['nom' => 'The Name']);
         self::assertInstanceOf(Classeur::class, $data);
+//        var_dump($data->getVisible());exit;
         self::assertEquals('The Name', $data->getNom());
         self::assertEquals("test", $data->getDescription());
         self::assertEquals($formData['circuitValidation']->getId(), $data->getCircuitId()->getId());
@@ -95,7 +102,10 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         self::assertCount(2, $data->getEtapeClasseurs());
         self::assertEquals(0, $data->getEtapeClasseurs()->first()->getOrdre());
         self::assertEquals(1, $data->getEtapeClasseurs()->last()->getOrdre());
-        self::assertEquals($formData['user']->getId(), $data->getEtapeClasseurs()->first()->getUsers()->first()->getId());
+        self::assertEquals(
+            $formData['user']->getId(),
+            $data->getEtapeClasseurs()->first()->getUsers()->first()->getId()
+        );
 
         self::assertEquals($formData['user']->getId(), $data->getUser()->getId());
         self::assertEquals("2018-05-03 11:36", $data->getValidation()->format('Y-m-d H:i'));
@@ -111,7 +121,11 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         $postData = [
             'description' => "New Descirption",
             'etapeClasseurs' => [
-                ["ordre" => "0", "users" => [$formData['user']->getId()], "user_packs" => [$formData['userPack']->getId()]],
+                [
+                    "ordre" => "0",
+                    "users" => [$formData['user']->getId()],
+                    "user_packs" => [$formData['userPack']->getId()],
+                ],
                 ["ordre" => "1", "users" => [$formData['user']->getId()]],
                 ["ordre" => "2", "users" => [$formData['user']->getId()]],
             ],
@@ -120,7 +134,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         $this->client->request(
             'PATCH',
-            '/apirest/classeur/'.$classeur->getId(),
+            '/api/v4/classeur/'.$classeur->getId(),
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
@@ -154,7 +168,10 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         self::assertCount(3, $data->getEtapeClasseurs());
         self::assertEquals(0, $data->getEtapeClasseurs()->first()->getOrdre());
         self::assertEquals(2, $data->getEtapeClasseurs()->last()->getOrdre());
-        self::assertEquals($formData['user']->getId(), $data->getEtapeClasseurs()->first()->getUsers()->first()->getId());
+        self::assertEquals(
+            $formData['user']->getId(),
+            $data->getEtapeClasseurs()->first()->getUsers()->first()->getId()
+        );
 
 
         self::assertEquals($formData['user']->getId(), $data->getUser()->getId());
@@ -173,7 +190,11 @@ class ClasseurApiControllerTest extends SesileWebTestCase
             'copy' => [$formData['user']->getId()],
             'description' => "New Descirption",
             'etapeClasseurs' => [
-                ["ordre" => "0", "users" => [$formData['user']->getId()], "user_packs" => [$formData['userPack']->getId()]],
+                [
+                    "ordre" => "0",
+                    "users" => [$formData['user']->getId()],
+                    "user_packs" => [$formData['userPack']->getId()],
+                ],
                 ["ordre" => "1", "users" => [$formData['user']->getId()]],
                 ["ordre" => "2", "users" => [$formData['user']->getId()]],
             ],
@@ -187,7 +208,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         $this->client->request(
             'PATCH',
-            '/apirest/classeur/'.$classeur->getId(),
+            '/api/v4/classeur/'.$classeur->getId(),
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
@@ -204,7 +225,11 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         $postData = [
             'description' => "New Descirption",
             'etapeClasseurs' => [
-                ["ordre" => "0", "users" => [$formData['user']->getId()], "user_packs" => [$formData['userPack']->getId()]],
+                [
+                    "ordre" => "0",
+                    "users" => [$formData['user']->getId()],
+                    "user_packs" => [$formData['userPack']->getId()],
+                ],
                 ["ordre" => "1", "users" => [$formData['user']->getId()]],
                 ["ordre" => "2", "users" => [$formData['user']->getId()]],
             ],
@@ -213,7 +238,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         $this->client->request(
             'PATCH',
-            '/apirest/classeur/'.$classeur->getId(),
+            '/api/v4/classeur/'.$classeur->getId(),
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
@@ -225,11 +250,12 @@ class ClasseurApiControllerTest extends SesileWebTestCase
     public function testListAllAction()
     {
         $this->logIn($this->fixtures->getReference('user-one'));
-
+        $classeur = $this->fixtures->getReference('classeur-one');
         $collectivite = $this->fixtures->getReference('collectivite-one');
         $this->client->request(
             'GET',
-            sprintf('apirest/classeurs/list/all')/*,
+            sprintf('/api/v4/org/%s/classeurs/list/all', $collectivite->getId())/*
+
             array(),
             array(),
             array(
@@ -245,8 +271,11 @@ class ClasseurApiControllerTest extends SesileWebTestCase
          */
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $data = json_decode($this->client->getResponse()->getContent());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
         self::assertCount(1, $data);
+
+        self::assertEquals($classeur->getId(), $data[0]['id']);
+        self::assertEquals($classeur->getCollectivite()->getId(), $data[0]['collectivite']['id']);
     }
 
     public function testListAllClasseursShouldFailIfNoCollectiviteIsGiven()
@@ -255,7 +284,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         $collectivite = $this->fixtures->getReference('collectivite-one');
         $this->client->request(
             'GET',
-            'apirest/classeurs/list/all'
+            sprintf('api/v4/org/%s/classeurs/list/all', null)
         );
 
         self::assertEquals(404, $this->client->getResponse()->getStatusCode());
@@ -266,7 +295,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         $collectivite = $this->fixtures->getReference('collectivite-one');
         $this->client->request(
             'GET',
-            sprintf('apirest/classeurs/list/all', $collectivite->getId())
+            sprintf('api/v4/org/111/classeurs/list/all', $collectivite->getId())
         );
 
         /**
@@ -274,6 +303,54 @@ class ClasseurApiControllerTest extends SesileWebTestCase
          * pour controller vraiment, faudra faire ajouter dans le header le HTTP_toket et HTTP_secret
          */
         self::assertEquals(302, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testListActionForUserOneShouldReturnOneClasseur()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user);
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/api/v4/org/%s/classeurs/list/%s/%s/%s/%s/%s',
+                $collectivite->getId(),
+                'id',
+                'DESC',
+                '15',
+                '0',
+                $user->getId()
+            )
+        );
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(1, $data);
+        self::assertEquals($classeur->getId(), $data[0]['id']);
+    }
+
+    public function testListActionForSuperUserShouldReturnOnlySuperuserClasseursByCollectivity()
+    {
+        $superUser = $this->fixtures->getReference('user-super');
+        $this->logIn($superUser);
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/api/v4/org/%s/classeurs/list/%s/%s/%s/%s/%s',
+                $collectivite->getId(),
+                'id',
+                'DESC',
+                '15',
+                '0',
+                $superUser->getId()
+            )
+        );
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(0, $data);
     }
 
     private function getFormData()
@@ -291,7 +368,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
             'user2' => $user2,
             'circuitValidation' => $circuitValidation,
             'collectivite' => $collectivite,
-            'userPack' => $userPack
+            'userPack' => $userPack,
         ];
     }
 
