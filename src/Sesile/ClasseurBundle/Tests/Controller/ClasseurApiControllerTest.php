@@ -353,6 +353,30 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         self::assertCount(0, $data);
     }
 
+    public function testValidActionShouldReturnAllClasseursToBeValidatedByTheUser()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user);
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/api/v4/org/%s/classeurs/valid/%s/%s/%s/%s/%s',
+                $collectivite->getId(),
+                'id',
+                'DESC',
+                '15',
+                '0',
+                $user->getId()
+            )
+        );
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(2, $data);
+    }
+
     private function getFormData()
     {
         $typeClasseur = $this->fixtures->getReference('classeur-type-one');

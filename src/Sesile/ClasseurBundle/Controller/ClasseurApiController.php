@@ -64,6 +64,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
+     * @param $orgId
      * @param null $sort
      * @param null $order
      * @param int $limit
@@ -71,16 +72,16 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param null $userId
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
-     * @Rest\Get("s/valid/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     * @Rest\Get("/org/{orgId}/classeurs/valid/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
-    public function validAction($sort = null, $order = null, $limit, $start, $userId = null)
+    public function validAction($orgId, $sort = null, $order = null, $limit, $start, $userId = null)
     {
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-
+        //@todo MUST refactor!
         $classeursId = $em->getRepository('SesileUserBundle:User')->getClasseurIdValidableForUser($user);
-        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursValidable($classeursId, $sort, $order, $limit, $start, $user->getId());
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursValidable($orgId, $classeursId, $sort, $order, $limit, $start, $user->getId());
 
 
         return $classeurs;
@@ -166,6 +167,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->getRepository('SesileClasseurBundle:Classeur')->setUserVisible($classeur);
+            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
             $em->persist($classeur);
 
             foreach ($request->files as $documents) {
@@ -177,7 +179,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 );
             }
 
-            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
 
             $em->flush();
 

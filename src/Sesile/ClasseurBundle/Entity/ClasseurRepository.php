@@ -81,9 +81,18 @@ class ClasseurRepository extends EntityRepository {
         return $classeurs;
     }
 
-
-    public function getClasseursValidable ($classeursId, $sort, $order, $limit, $start, $userId) {
-
+    /**
+     * @param $orgId collectivite id
+     * @param $classeursId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     * @param $userId
+     * @return array
+     */
+    public function getClasseursValidable ($orgId, $classeursId, $sort, $order, $limit, $start, $userId)
+    {
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
         $status = array(0,1,4);
@@ -98,6 +107,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
+//            ->andWhere('c.collectivite = :orgId')
+//            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
@@ -449,7 +460,6 @@ class ClasseurRepository extends EntityRepository {
     public function validerClasseur (Classeur $classeur, User $user) {
 
         foreach ($classeur->getEtapeClasseurs() as $etape) {
-
             if ($etape->getEtapeValidante()) {
                 $etape->setEtapeValide(1);
                 $etape->setEtapeValidante(0);

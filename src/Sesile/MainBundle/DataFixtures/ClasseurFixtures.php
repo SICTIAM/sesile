@@ -32,12 +32,11 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
      */
     public function load(ObjectManager $manager)
     {
-        $superUser = $this->getReference('user-super');
+//        $superUser = $this->getReference('user-super');
         $userOne = $this->getReference('user-one');
         $userPackOne = $this->getReference('user-pack-one');
 
-        $etapeClasseur = self::aValidEtapeClasseur($userOne, $userPackOne, 1);
-        $etapeClasseur2 = self::aValidEtapeClasseur($userOne, $userPackOne, 2);
+        $etapeClasseur = self::aValidEtapeClasseur($userOne, $userPackOne, 1, true);
         $classeur = self::aValidClasseur(
             'Fixture Classeur',
             'Fixture Classeur Description',
@@ -54,6 +53,8 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
         $manager->flush();
         $this->addReference(self::CLASSEURS_REFERENCE, $classeur);
 
+        $etapeClasseur1 = self::aValidEtapeClasseur($userOne, $userPackOne, 1);
+        $etapeClasseur2 = self::aValidEtapeClasseur($userOne, $userPackOne, 2, true);
         //new classeur avec une nouvelle collectivite
         $classeur2 = self::aValidClasseur(
             'Another Classeur',
@@ -63,7 +64,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
             [$this->getReference('user-two')],
             $this->getReference('circuit-validation'),
             $this->getReference('collectivite-two'),
-            [$etapeClasseur, $etapeClasseur2],
+            [$etapeClasseur1, $etapeClasseur2],
             $this->getReference('classeur-type-one')
         );
         $manager->persist($classeur2);
@@ -83,7 +84,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
             [],
             $this->getReference('circuit-validation'),
             $this->getReference('collectivite-one'),
-            [$etapeClasseur, $etapeClasseur2],
+            [$etapeClasseur1, $etapeClasseur2],
             $this->getReference('classeur-type-one')
         );
         $manager->persist($classeur3);
@@ -101,6 +102,8 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
      * @param $collectivite
      * @param array $etapesClasseur
      * @param $classeurType
+     * @param int $status
+     *
      * @return Classeur
      */
     public static function aValidClasseur(
@@ -112,7 +115,8 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
         $circuitValidation,
         $collectivite,
         array $etapesClasseur = [],
-        $classeurType
+        $classeurType,
+        $status = 0
     ) {
         $classeur = new Classeur();
         $classeur
@@ -123,6 +127,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
             ->setNom($name)
             ->setType($classeurType)
             ->setValidation(new \DateTime('2018-06-03 11:36'))
+            ->setStatus($status)
             ->setVisibilite(1);
         foreach ($visibleToUsers as $user) {
             $classeur
@@ -144,15 +149,17 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
      * @param $user
      * @param $userPack
      * @param int $ordre
+     * @param bool $validante
      *
      * @return EtapeClasseur
      */
-    public static function aValidEtapeClasseur($user, $userPack, $ordre = 1)
+    public static function aValidEtapeClasseur($user, $userPack, $ordre = 1, $validante = false, $valide = false)
     {
         $etapeClasseur = new EtapeClasseur();
         $etapeClasseur
             ->addUser($user)
-            ->setEtapeValide(false)
+            ->setEtapeValidante($validante)
+            ->setEtapeValide($valide)
             ->setOrdre(1)
             ->setDate(new \DateTime())
             ->addUserPack($userPack);
