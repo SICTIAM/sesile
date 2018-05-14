@@ -434,6 +434,43 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         self::assertEquals($classeur->getId(), $data[0]['id']);
     }
 
+    public function testGetClasseurByIdShouldReturnSerializedClasseur()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user);
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/api/v4/org/%s/classeurs/%s',
+                $collectivite->getId(),
+                $classeur->getId()
+            )
+        );
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertEquals($classeur->getId(), $data['id']);
+        self::assertEquals($collectivite->getId(), $data['collectivite']['id']);
+    }
+
+    public function testGetClasseurByIdShouldReturn404WhenNotFound()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user);
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-two');
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/api/v4/org/%s/classeurs/%s',
+                $collectivite->getId(),
+                $classeur->getId()
+            )
+        );
+        self::assertEquals(404, $this->client->getResponse()->getStatusCode());
+    }
+
     private function getFormData()
     {
         $typeClasseur = $this->fixtures->getReference('classeur-type-one');

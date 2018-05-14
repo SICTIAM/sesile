@@ -138,16 +138,21 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View(serializerGroups={"classeurById"})
-     * @Rest\Get("/{id}")
+     * @Rest\Get("/org/{orgId}/classeurs/{classeurId}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
-     * @param Classeur $classeur
+     * @param string $orgId     id collectivite
+     * @param string $classeur  id classeur
+     *
      * @return Classeur
-     * @internal param $id
-     * @todo add colelctivite condition
      */
-    public function getByIdAction (Classeur $classeur)
+    public function getByIdAction ($orgId, $classeurId)
     {
-        $classeur = $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:Classeur')
+        $classeurRepository = $this->getDoctrine()->getManager()->getRepository(Classeur::class);
+        $classeur = $classeurRepository->findOneBy(['id' => $classeurId, 'collectivite' => $orgId]);
+        if (!$classeur) {
+        throw $this->createNotFoundException("Le Classeur n'a pas pu être trouvé");
+        }
+        $classeur = $classeurRepository
                         ->addClasseurValue($classeur, $this->getUser()->getId());
 
         return $classeur;
