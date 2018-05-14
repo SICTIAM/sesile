@@ -9,10 +9,6 @@ class ClasseursList extends Component {
         t: func
     }
 
-    constructor(props) {
-        super(props);
-    }
-
     render(){
         const { t } = this.context
 

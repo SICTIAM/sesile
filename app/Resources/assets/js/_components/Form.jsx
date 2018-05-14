@@ -115,10 +115,10 @@ const Avatar = ({ className, size = 100, nom, fileName }) =>
             <UserAvatar size={size} name={nom.charAt(0) || "S"} colors={['#fe5e3a', '#404257', '#34a3fc']}/>
         </div>
 
-const Select = ({ id, className, label, value, onChange, children }) =>
+const Select = ({ id, className, label, value, onChange, children, style = {} }) =>
     <div className={className}>
         <label htmlFor={id} className="text-bold">{label}</label>
-        <select id={id} value={value} onChange={(e) => onChange(id, e.target.value)} >
+        <select id={id} value={value} onChange={(e) => onChange(id, e.target.value)} style={style} >
             {children}
         </select>
     </div>

@@ -285,12 +285,12 @@ class ClasseurNew extends Component {
                                 </div>
                             </div>
                             <div className="cell medium-12">
-                                <DocumentsNew documents={ Object.assign([],documents) }
-                                              onDrop={this.onDrop}
-                                              removeDocument={this.removeDocument}
-                                              typeClasseur={ type }
-                                              editClasseur={true}
-                                />
+                                <DocumentsNew
+                                    documents={Object.assign([],documents)}
+                                    onDrop={this.onDrop}
+                                    removeDocument={this.removeDocument}
+                                    typeClasseur={type}
+                                    editClasseur={true}/>
                             </div>
                             <div className="grid-x panel grid-padding-y">
                                 <div className="cell medium-12">

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { func, array, number, string } from 'prop-types'
 import { translate } from 'react-i18next'
+
 import {basicNotification} from '../_components/Notifications'
 import {handleErrors} from '../_utils/Utils'
-import {Select} from '../_components/Form'
 
 class ClasseurPagination extends Component {
     static contextTypes = {
@@ -23,6 +23,18 @@ class ClasseurPagination extends Component {
         changeNextPage: func.isRequired,
         url: string
     }
+    previousAndNextButtonStyle = {
+        fontSize: '1.9em',
+        background: 'white',
+        cursor: 'pointer'
+    }
+    pageNumberButtonHoverStyle = {
+        minWidth: '2.1em',
+        textAlign: 'center',
+        borderRadius: '50%',
+        padding: '0.6em',
+        cursor: 'pointer'
+    }
 
     componentDidMount() {
         const { t, _addNotification } = this.context
@@ -39,10 +51,7 @@ class ClasseurPagination extends Component {
     render() {
         const { t } = this.context
         const { classeurs } = this.state
-        const { limit, start, changeLimit, changePage, changePreviousPage, changeNextPage, url } = this.props
-
-        const limits = [15,30,50,100]
-        const listLimit = limits.map(limit => <option key={limit} value={limit}>{limit}</option>)
+        const { limit, start, changePage, url } = this.props
 
         let pagesDisplay = []
         let pages
@@ -61,30 +70,57 @@ class ClasseurPagination extends Component {
 
         const currentPage = start/limit
         if (currentPage === 0) {
-            pagesDisplay.push(<li key="previous" className="pagination-previous disabled">{ t('common.classeurs.pagination.previous')} <span className="show-for-sr">{ t('common.classeurs.pagination.page')}</span></li>)
+            pagesDisplay.push(
+                <li key="previous" className="disabled">
+                    <span style={this.previousAndNextButtonStyle} className="fa fa-chevron-circle-left"/>
+                </li>)
         } else {
-            pagesDisplay.push(<li key="previous" className="pagination-previous"><a href="#" onClick={changePreviousPage} aria-label={ t('common.classeurs.pagination.previous')}>{ t('common.classeurs.pagination.previous')} <span className="show-for-sr">{ t('common.classeurs.pagination.page')}</span></a></li>)
+            pagesDisplay.push(
+            <li key="previous">
+                <button
+                    style={this.previousAndNextButtonStyle}
+                    className="fa fa-chevron-circle-left primary"
+                    onClick={() => this.props.changePreviousPage()}
+                    aria-label={t('common.classeurs.pagination.previous')}/>
+            </li>)
         }
         for (let page = 0; page < pages; page++ ) {
             (currentPage === page)
                 ? pagesDisplay.push(<li key={page} className="current show-for-large">{page + 1}</li>)
-                : pagesDisplay.push(<li key={page} className="show-for-large"><a href="#" onClick={() => changePage(page)} aria-label={ t('common.classeurs.pagination.page') + " " + page + 1}>{page + 1}</a></li>)
+                : pagesDisplay.push(
+                    <li key={page} className="show-for-large">
+                        <button
+                            style={this.pageNumberButtonHoverStyle}
+                            onClick={() => changePage(page)}
+                            aria-label={t('common.classeurs.pagination.page') + " " + page + 1}>
+                            {page + 1}
+                        </button>
+                    </li>)
         }
         if (currentPage === Math.ceil(pages) -1) {
-            pagesDisplay.push(<li key="next" className="pagination-next disabled">{ t('common.classeurs.pagination.next')} <span className="show-for-sr">{ t('common.classeurs.pagination.page')}</span></li>)
+            pagesDisplay.push(
+                <li key="next" className="disabled">
+                    <span style={this.previousAndNextButtonStyle} className="fa fa-chevron-circle-right"/>
+                </li>)
         } else {
-            pagesDisplay.push(<li key="next" className="pagination-next"><a href="#" onClick={changeNextPage} aria-label="common.classeurs.pagination.next">{ t('common.classeurs.pagination.next')} <span className="show-for-sr">{ t('common.classeurs.pagination.page')}</span></a></li>)
+            pagesDisplay.push(
+                <li key="next">
+                    <button
+                        style={this.previousAndNextButtonStyle}
+                        className="fa fa-chevron-circle-right primary"
+                        onClick={() => this.props.changeNextPage()}
+                        aria-label="common.classeurs.pagination.next"/>
+                </li>)
         }
 
         return (
-            <div className="grid-x align-top grid-padding-y">
-                <div className="cell medium-2"></div>
-                <ul className="cell medium-8 pagination text-center" role="navigation" aria-label="Pagination">
-                    {
-                        pagesDisplay.map(pageDisplay => pageDisplay)
-                    }
-                </ul>
-            </div>
+            <ul
+                style={{display: 'flex'}}
+                className="align-middle pagination float-right"
+                role="navigation"
+                aria-label="Pagination">
+                {pagesDisplay.map(pageDisplay => pageDisplay)}
+            </ul>
         )
     }
 }

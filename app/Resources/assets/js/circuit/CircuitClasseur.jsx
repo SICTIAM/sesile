@@ -67,12 +67,14 @@ class CircuitClasseur extends Component {
 
         return (
             <div className="grid-x panel grid-padding-y">
-                <div className="cell medium-12">
+                <div className="cell small-12 medium-12 large-12">
                     <div className="grid-x grid-margin-x grid-padding-x">
-                        <h3 className="cell medium-12">{t('admin.circuit.complet_name')}</h3>
+                        <h3 className="cell small-12 medium-12 large-12">
+                            {t('admin.circuit.complet_name')}
+                        </h3>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x circuit-list">
-                        <div className="cell medium-12">
+                        <div className="cell small-12 medium-12 large-12">
                             <div
                                 className={
                                     `align-middle
@@ -90,7 +92,7 @@ class CircuitClasseur extends Component {
                                     padding: '0.5em'}}>
                                 <div
                                     className="text-center"
-                                    style={{display: 'inline-block', width: '10%'}}>
+                                    style={{display: 'inline-block', width: '2.5rem'}}>
                                     <div
                                         className={
                                             this.props.etapeDeposante ?
@@ -101,10 +103,10 @@ class CircuitClasseur extends Component {
                                 </div>
                                 <div
                                     className="text-uppercase"
-                                    style={{display: 'inline-block', width: '30%', margin: '5px'}}>
+                                    style={{display: 'inline-block', width: '7rem', margin: '5px'}}>
                                     <span
-                                        className=
-                                            {this.props.etapeDeposante ?
+                                        className={
+                                            this.props.etapeDeposante ?
                                                 ("text-warning text-bold") :
                                                 ("text-success text-bold")}>
                                         {t('admin.circuit.depositor')}
@@ -136,8 +138,7 @@ class CircuitClasseur extends Component {
                                         padding: '0.5em',
                                         cursor: 'pointer'}}
                                     onClick={() => this.props.addEtape(null)}>
-                                    <i
-                                        className="fa fa-plus-circle hollow primary text-bold"/>
+                                    <i className="fa fa-plus-circle hollow primary text-bold"/>
                                     <span style={{marginLeft: '0.5em'}}>
                                         {t('admin.circuit.add_step')}
                                     </span>
@@ -204,12 +205,12 @@ const StepCircuit = ({
                 borderRadius: '0.285714rem',
                 border: '1px solid',
                 padding: '0.5em'}}>
-            <div className="text-center" style={{display: 'inline-block', width: '10%'}}>
+            <div className="text-center" style={{display: 'inline-block', width: '2.5rem'}}>
                 <div className={ currentCircleClassName(etape_classeur) + " circle" }>
                     {stepKey + 2}
                 </div>
             </div>
-            <div style={{display: 'inline-block', width: '30%', margin: '5px'}}>
+            <div style={{display: 'inline-block', width: '7rem', margin: '5px'}}>
                 <span
                     className={`${currentTextClassName(etape_classeur)} text-uppercase text-bold`}>
                     {t('admin.circuit.validator')}
@@ -247,7 +248,7 @@ const StepCircuit = ({
                         </div>)}
                 </div>
                 {isLastStep(etape_classeur) &&
-                <div style={{display: 'inline-block', width: '83%'}}>
+                <div style={{display: 'inline-block', width: '100%'}}>
                     <SearchUserAndGroup
                         placeholder={t('admin.placeholder.type_userName_or_groupName')}
                         addGroup={addGroup}
@@ -258,7 +259,7 @@ const StepCircuit = ({
                 </div>}
             </div>
             {isLastStep(etape_classeur) &&
-            <div className="align-self-top" style={{display: 'inline-block', width: '5%'}}>
+            <div className="align-self-top" style={{display: 'inline-block', width: '1rem'}}>
                 <i  className="fa fa-times-circle icon-action"
                     title={t('admin.circuit.remove_step')}
                     onClick={() => removeEtape(stepKey)}>

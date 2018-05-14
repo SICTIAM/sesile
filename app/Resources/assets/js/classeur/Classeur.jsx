@@ -150,7 +150,6 @@ class Classeur extends Component {
         this.setState(prevState => prevState.classeur.etape_classeurs[stepKey].users.push(user))
     }
     handleChangeClasseur = (key, value) => {
-        console.log(key, value)
         this.setState(prevState => {classeur: prevState.classeur[key] = value })
     }
     validClasseurs = (classeurs) => {
@@ -189,8 +188,6 @@ class Classeur extends Component {
 
     render() {
         const { classeur, user, editClasseur } = this.state
-        const editable = !!(classeur.validable && editClasseur)
-
         return (
             <GridX className="details-classeur">
                 <Cell>
@@ -220,7 +217,7 @@ class Classeur extends Component {
                     </div>
 
                     <div className="grid-x grid-margin-x">
-                        <div className="cell large-8 medium-8 small-12">
+                        <div className="cell large-8 medium-12 small-12">
                             {
                                 classeur.documents &&
                                 <DocumentsView
@@ -231,7 +228,7 @@ class Classeur extends Component {
                                     editClasseur={classeur.validable}/>
                             }
                         </div>
-                        <div className="cell large-4 medium-8 small-12">
+                        <div className="cell large-4 medium-12 small-12">
                             <div className="grid-x panel grid-padding-y show-for-large">
                                 {
                                     classeur.id &&

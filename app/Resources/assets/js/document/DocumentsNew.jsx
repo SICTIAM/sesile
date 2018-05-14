@@ -43,11 +43,13 @@ class DocumentsNew extends Component {
             this.setState({fileRule: t('common.documents.error.file_acceptation_rules')})
         }
     }
-    isHeliosAndNewClasseur = () => {
+    isHeliosAndExistingClasseur = () => {
         return this.props.classeurId && this.props.typeClasseur.nom === "Helios"
     }
-    isNewClasseur = () => this.props.classeurId
-
+    isHeliosAndHaveOneDocument = () => {
+        return this.props.typeClasseur.nom === "Helios" && this.props.documents.length === 1
+    }
+    isNewDocument = (document) => !document.id
     render () {
 
         const { t } = this.context
@@ -67,7 +69,7 @@ class DocumentsNew extends Component {
                     border: '1px solid rgba(34, 36, 38, 0.15'}}>
                 <div className="grid-x" title={document.name} style={{padding: '0.5em'}}>
                     <div className="cell medium-2 align-middle" style={{display: 'flex'}}>
-                        <i className="fa fa-file-o" style={{fontSize: '2em'}}></i>
+                        <i className="fa fa-file-o" style={{fontSize: '2em'}}/>
                     </div>
                     <div className="cell medium-auto">
                         <GridX>
@@ -77,41 +79,43 @@ class DocumentsNew extends Component {
                         </GridX>
                         <GridX>
                             <Cell>
-                                <span style={{fontSize: '1em', color: 'rgba(0,0,0,0.4)'}}>{`${BytesToSize(document.size)} - ${document.name.split('.').pop()}`}</span>
+                                <span style={{fontSize: '1em', color: 'rgba(0,0,0,0.4)'}}>
+                                    {`${BytesToSize(document.size)} - ${document.name.split('.').pop()}`}
+                                </span>
                             </Cell>
                         </GridX>
                     </div>
-                    {!this.isHeliosAndNewClasseur() &&
-                    <Cell className="medium-1">
-                        <i
-                            className="fa fa-times hover-red"
-                            onClick={(e) => removeDocument(e, document.id)}
-                            style={{fontSize: '1em'}}/>
-                    </Cell>}
                 </div>
                 <hr style={{margin: 0}}/>
                 <div className="grid-x">
                     <div
-                        className="cell medium-auto align-center doc-action-button"
+                        onClick={(e) => {if(!this.isNewDocument(document)) displayReveal(e, document.id)}}
+                        className={
+                            `cell medium-auto align-center
+                            doc-action-button
+                            ${this.isNewDocument(document) && 'disabled'}`}
                         style={{display: 'flex'}}>
                         <i className="fa fa-expand" style={{padding: '5px'}}/>
                     </div>
                     <div
                         className="cell medium-auto align-center doc-action-button"
                         style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2'}}>
-                        <i className="fa fa-download" style={{padding: '5px'}}/>
+                        <i className="fa fa-download"  style={{padding: '5px'}}/>
                     </div>
                     <div
                         className={
-                            `cell medium-auto align-center doc-action-button ${!this.isHeliosAndNewClasseur() && 'disabled'}`}
-                        style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2'}}
-                        onClick={(e) => removeDocument(e, document.id)}>
+                            `cell medium-auto align-center
+                             doc-action-button
+                             ${this.isHeliosAndExistingClasseur() && ' disabled'}`}
+                        style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2', cursor: 'pointer'}}
+                        onClick={(e) => {
+                            if(!this.isHeliosAndExistingClasseur()) removeDocument(e, document.id)
+                        }}>
                         <i className="fa fa-trash" style={{padding: '5px'}}/>
                     </div>
                 </div>
             </div>)
         return (
-
             <div className="grid-x panel grid-padding-y">
                 <div className="cell medium-12">
                     <div className="grid-x grid-margin-x grid-padding-x">
@@ -123,7 +127,10 @@ class DocumentsNew extends Component {
                         <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="cell medium-12">
                                 <Dropzone
-                                    className="documentation-dropzone disabled grid-x align-middle align-center"
+                                    className={
+                                        `documentation-dropzone
+                                        ${this.isHeliosAndHaveOneDocument() && 'disabled'}
+                                        grid-x align-middle align-center`}
                                     accept={accept}
                                     multiple={multiple}
                                     name="file"
@@ -132,27 +139,24 @@ class DocumentsNew extends Component {
                                     onDropRejected={(files) =>
                                         this.setState({dropFileError: fileRule})}
                                     onDropAccepted={files => onDrop(files)}>
-                                    {
-                                        <Cell>
-                                            <GridX className="align-center grid-margin-y grid-padding-y">
-                                                <Cell><i className="fa fa-file"></i></Cell>
-                                            </GridX>
-
-                                            <GridX className="align-center">
-                                                <Cell className="medium-11 text-small">
-                                                    { (this.state.dropFileError)
-                                                        ? <span className="text-alert">{this.state.dropFileError}</span>
-                                                        : <span>{fileRule}</span>
-                                                    }
-                                                </Cell>
-                                            </GridX>
-
-                                        </Cell>
-                                    }
+                                    {<Cell>
+                                        <GridX className="align-center grid-margin-y grid-padding-y">
+                                            <Cell>
+                                                <i className="fa fa-file"/>
+                                            </Cell>
+                                        </GridX>
+                                        <GridX className="align-center">
+                                            <Cell className="medium-11 text-small">
+                                                { (this.state.dropFileError)
+                                                    ? <span className="text-alert">{this.state.dropFileError}</span>
+                                                    : <span>{fileRule}</span>
+                                                }
+                                            </Cell>
+                                        </GridX>
+                                    </Cell>}
                                 </Dropzone>
                             </div>
-                        </div>
-                    }
+                        </div>}
                     <GridX className="grid-margin-x grid-padding-x grid-padding-y">
                         <Cell>
                             <div className="">

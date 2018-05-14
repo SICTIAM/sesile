@@ -5,18 +5,13 @@ import {func, string, number, bool} from 'prop-types'
 
 
 class ClasseurProgress extends Component {
-
     static contextTypes = {
         t: func
     }
-
     static defaultProps = {
         edit: false
     }
-
     render() {
-
-        const { t } = this.context
         const { creation, validation, status, edit } = this.props
         const creationDate = Moment(creation)
         const validationDate = Moment(validation)
@@ -36,33 +31,17 @@ class ClasseurProgress extends Component {
             percentProgress = 100 - diffToday / diffToCreation * 100
         }
 
-        let className = ''
-        if (edit) className = " grid-margin-x grid-padding-x"
-
         return (
             <div className="grid-x classeur-progress">
                 <div className="cell small-12">
-                    <div className={"grid-x" + className }>
-                        <div className="cell small-6">
-                            <span className={"text-bold text-" + classProgress}>{t('classeur.deadline')}</span>
-                        </div>
-                        <div className="cell small-6">
-                            <span className={"text-" + classProgress}>
-                                <span className="text-bold">{Moment(validationDate).format('L')}</span>
-                            </span>
-                        </div>
+                    <div className={`text-${classProgress} text-left`}>
+                        <span className="text-bold">{Moment(validationDate).format('L')}</span>
                     </div>
-                    <div className={"grid-x" + className }>
-                        <div className="cell medium-12">
-                            { status !== 2 &&
-                            <div className={classProgress +" progress"}>
-                                <div className="progress-meter" style={{width: percentProgress + '%'}}></div>
-                            </div>
-                            }
-                        </div>
-                    </div>
+                    { status !== 2 &&
+                    <div className={classProgress +" progress"}>
+                        <div className="progress-meter" style={{width: percentProgress + '%'}}/>
+                    </div>}
                 </div>
-
             </div>
         )
     }

@@ -249,10 +249,6 @@ html {
   .list-classeurs, .list-classeurs a {
     color: map-get($sesile-color, 'dark-blue');
 
-    .dropdown-valign {
-      margin-top: 1em;
-    }
-
     .classeur-name:hover {
       color: #ec5935;
     }
@@ -336,7 +332,8 @@ html {
 
   .progress {
     border-radius: 1em;
-    height: 0.7em;
+    height: 0.5em;
+    margin-bottom: 0;
     background-color: white;
     border: solid 1px #a7a7a7;
   }
@@ -392,8 +389,8 @@ html {
       font-weight:700;
       font-size:1em;
       text-transform: uppercase;
-      padding-top:1.5em;
-      padding-bottom:1em;
+      padding-top:0.5em;
+      padding-bottom:0.5em;
       color: $sesile-color-1;
     }
     .panel-body {
@@ -1183,6 +1180,7 @@ label > input {
   content:' ';
   display:block;
   border:solid 1px;
+  background: $sesile-color-1;
 }
 
 .hover-red:hover {
@@ -1333,7 +1331,7 @@ select {
 }
 
 .doc-action-button.disabled {
-  cursor: none;
+  cursor: default;
   font-size: 0.85em;
   color: rgba(138, 138, 137, 0.58);
 }

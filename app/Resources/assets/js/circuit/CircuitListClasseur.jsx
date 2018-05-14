@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import CircuitClasseur from './CircuitClasseur'
+import CircuitClasseurDropdown from './CircuitClasseurDropdown'
 
 class CircuitListClasseur extends Component {
 
@@ -13,7 +13,7 @@ class CircuitListClasseur extends Component {
 
         return (
             <div className="dropdown-pane dropdown-pane-circuit top" id={"example-dropdown-" + classeurId} data-dropdown data-hover="true" data-hover-pane="true">
-                <CircuitClasseur classeurId={classeurId} etape_classeurs={etape_classeurs} user={user} />
+                <CircuitClasseurDropdown classeurId={classeurId} etape_classeurs={etape_classeurs} user={user} />
             </div>
         )
     }
