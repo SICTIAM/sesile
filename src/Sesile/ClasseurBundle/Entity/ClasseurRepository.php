@@ -358,7 +358,6 @@ class ClasseurRepository extends EntityRepository {
      * @param Classeur $classeur
      * @throws \Doctrine\ORM\OptimisticLockException
      *
-     * @todo refactor $this->getUser()->getCollectivite()
      */
     public function setUserVisible(Classeur $classeur) {
         $em = $this->getEntityManager();
@@ -371,7 +370,7 @@ class ClasseurRepository extends EntityRepository {
 
             // Public
             case 1:
-                $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($classeur->getUser()->getCollectivite());
+                $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($classeur->getCollectivite());
                 break;
 
             // Privé à partir de moi

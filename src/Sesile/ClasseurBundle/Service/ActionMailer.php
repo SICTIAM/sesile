@@ -72,8 +72,7 @@ class ActionMailer
 
     private function sendCreationMail(Classeur $classeur) {
         $d_user = $classeur->getUser();
-        //@todo refactor $this->user->getCollectivite()
-        $collectivite = $this->user->getCollectivite();
+        $collectivite = $classeur->getCollectivite();
         $validants = $this->entityManager->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
         $subject = "SESILE - Nouveau classeur déposé";
 
@@ -97,7 +96,8 @@ class ActionMailer
                     $validant->getEmail(),
                     $template->render(
                         array_merge($template_html, ['validant' => $validant->getPrenom() . " " . $validant->getNom()])
-                    )
+                    ),
+                    $collectivite
                 );
             }
         }
@@ -119,7 +119,8 @@ class ActionMailer
                         $userCopy->getEmail(),
                         $template_copy->render(
                             array_merge($template_html, ['validant' => $usersValidant, "en_copie" => $userCopy->getPrenom() . " " . $userCopy->getNom()])
-                        )
+                        ),
+                        $collectivite
                     );
                 }
             }
@@ -133,8 +134,8 @@ class ActionMailer
         $subject = "SESILE - Classeur validé";
 
         $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
-        //@todo refactor $currentUser->getCollectivite()
-        $template = $env->createTemplate($currentUser->getCollectivite()->getTextMailwalid());
+        $collectivite = $classeur->getCollectivite();
+        $template = $env->createTemplate($collectivite->getTextMailwalid());
         $template_html = [
             'validant' => $validant->getPrenom() . " " . $validant->getNom(),
             'role' => $validant->getRole(),
@@ -147,9 +148,8 @@ class ActionMailer
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
-        //@todo refactor $currentUser->getCollectivite()
-        if ($usersCopy && $currentUser->getCollectivite()->getTextcopymailwalid()) {
-            $template_copy = $env->createTemplate($currentUser->getCollectivite()->getTextcopymailwalid());
+        if ($usersCopy && $collectivite->getTextcopymailwalid()) {
+            $template_copy = $env->createTemplate($collectivite->getTextcopymailwalid());
             foreach ($usersCopy as $userCopy) {
                 if ($userCopy != null && $userCopy != $classeur->getUser()) {
                     $this->sendMail(
@@ -157,7 +157,8 @@ class ActionMailer
                         $userCopy->getEmail(),
                         $template_copy->render(
                             array_merge($template_html, ['deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()])
-                        )
+                        ),
+                        $collectivite
                     );
                 }
             }
@@ -170,7 +171,8 @@ class ActionMailer
                 $user->getEmail(),
                 $template->render(
                     array_merge($template_html, ["en_copie" => $user->getPrenom() . " " . $user->getNom()])
-                )
+                ),
+                $collectivite
             );
         }
     }
@@ -181,8 +183,8 @@ class ActionMailer
         $subject = "SESILE - Classeur refusé";
 
         $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
-        //@todo refactor $currentUser->getCollectivite()
-        $template = $env->createTemplate($currentUser->getCollectivite()->getTextmailrefuse());
+        $collectivite = $classeur->getCollectivite();
+        $template = $env->createTemplate($collectivite->getTextmailrefuse());
         $template_html = [
             'validant'  => $currentUser->getPrenom() . " " . $currentUser->getNom(),
             'role'      => $currentUser->getRole(),
@@ -200,7 +202,8 @@ class ActionMailer
                 $deposant->getEmail(),
                 $template->render(
                     array_merge($template_html, ['deposant' => $deposant->getPrenom()." ".$deposant->getNom()])
-                )
+                ),
+                $collectivite
             );
         }
 
@@ -213,24 +216,23 @@ class ActionMailer
                         $userCopy->getEmail(),
                         $template->render(
                             array_merge($template_html, ['deposant' => $userCopy->getPrenom() . " " . $userCopy->getNom()])
-                        )
+                        ),
+                        $collectivite
                     );
                 }
             }
         }
     }
 
-    private function sendMail($sujet, $to, $body) {
+    private function sendMail($sujet, $to, $body, $collectivite) {
         $html = null;
         $message = \Swift_Message::newInstance();
         $fileSystem = new Filesystem();
-        //@todo refactor $this->user->getCollectivite()
-        $logoExists = $fileSystem->exists($this->paths['logo_coll'] . $this->user->getCollectivite()->getImage());
+        $logoExists = $fileSystem->exists($this->paths['logo_coll'] . $collectivite->getImage());
         // Pour l integration de l image du logo dans le mail
         if($logoExists) $html = explode("**logo_coll**", $body);
-        //@todo refactor $this->user->getCollectivite()
-        if($this->user->getCollectivite()->getImage() !== null && $this->paths['logo_coll'] !== null && count($html) > 1 && $logoExists) {
-            $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->paths['logo_coll'] . $this->user->getCollectivite()->getImage())) . '" width="75" alt="Sesile">' . $html[1];
+        if($collectivite->getImage() !== null && $this->paths['logo_coll'] !== null && count($html) > 1 && $logoExists) {
+            $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->paths['logo_coll'] . $collectivite->getImage())) . '" width="75" alt="Sesile">' . $html[1];
         } else {
             $htmlBody = $body;
         }
