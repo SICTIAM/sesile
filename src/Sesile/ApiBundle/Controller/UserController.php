@@ -96,6 +96,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
 
 
         //$entity = $em->getRepository('SesileUserBundle:User')->findAll();
+        //@todo refactor $user->getCollectivite()
         $entity = $em->getRepository('SesileUserBundle:User')->findByCollectivite($user->getCollectivite());
         $users = array();
         foreach ($entity as $e) {

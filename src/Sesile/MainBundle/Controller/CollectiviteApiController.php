@@ -33,6 +33,7 @@ class CollectiviteApiController extends Controller
                 ->getRepository('SesileMainBundle:Collectivite')
                 ->findAll();
         } else {
+            //@todo refactor $this->getUser()->getCollectivite()
             return array($this->getUser()->getCollectivite());
         }
 
@@ -103,7 +104,7 @@ class CollectiviteApiController extends Controller
         if (empty($collectivite)) {
             return new JsonResponse(['message' => 'Collectivité inexistante'], Response::HTTP_NOT_FOUND);
         }
-
+        //@todo refactor $this->getUser()->getCollectivite()
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
             $this->getUser()->getCollectivite() == $collectivite) {
 
@@ -128,7 +129,7 @@ class CollectiviteApiController extends Controller
         if (empty($collectivite)) {
             return new JsonResponse(['message' => 'Collectivité inexistante'], Response::HTTP_NOT_FOUND);
         }
-
+        //@todo refactor $this->getUser()->getCollectivite()
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
             $this->getUser()->getCollectivite() == $collectivite) {
 

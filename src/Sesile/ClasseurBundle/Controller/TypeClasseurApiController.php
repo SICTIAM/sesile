@@ -27,6 +27,8 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
+     * @todo refactor $this->getUser()->getCollectivite()
      */
     public function getAllSimpleAction(Collectivite $collectivite)
     {
@@ -44,6 +46,8 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
+     * @todo refactor $this->getUser()->getCollectivite()
      */
     public function getAllAction(Collectivite $collectivite)
     {

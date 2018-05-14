@@ -56,6 +56,7 @@ class EtapeClasseurApiController extends FOSRestController implements ClassResou
     public function getClasseursValidateByTypeAction()
     {
         $em = $this->getDoctrine()->getManager();
+        //@todo refactor $this->getUser()->getCollectivite()
         $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findBy(
             array('collectivites'   => $this->getUser()->getCollectivite()->getId())
         );

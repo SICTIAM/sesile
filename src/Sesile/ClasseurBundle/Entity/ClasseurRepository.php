@@ -357,6 +357,8 @@ class ClasseurRepository extends EntityRepository {
      *
      * @param Classeur $classeur
      * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @todo refactor $this->getUser()->getCollectivite()
      */
     public function setUserVisible(Classeur $classeur) {
         $em = $this->getEntityManager();

@@ -72,6 +72,7 @@ class ActionMailer
 
     private function sendCreationMail(Classeur $classeur) {
         $d_user = $classeur->getUser();
+        //@todo refactor $this->user->getCollectivite()
         $collectivite = $this->user->getCollectivite();
         $validants = $this->entityManager->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
         $subject = "SESILE - Nouveau classeur déposé";
@@ -132,6 +133,7 @@ class ActionMailer
         $subject = "SESILE - Classeur validé";
 
         $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
+        //@todo refactor $currentUser->getCollectivite()
         $template = $env->createTemplate($currentUser->getCollectivite()->getTextMailwalid());
         $template_html = [
             'validant' => $validant->getPrenom() . " " . $validant->getNom(),
@@ -145,6 +147,7 @@ class ActionMailer
 
         // notification des users en copy
         $usersCopy = $classeur->getCopy();
+        //@todo refactor $currentUser->getCollectivite()
         if ($usersCopy && $currentUser->getCollectivite()->getTextcopymailwalid()) {
             $template_copy = $env->createTemplate($currentUser->getCollectivite()->getTextcopymailwalid());
             foreach ($usersCopy as $userCopy) {
@@ -178,6 +181,7 @@ class ActionMailer
         $subject = "SESILE - Classeur refusé";
 
         $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
+        //@todo refactor $currentUser->getCollectivite()
         $template = $env->createTemplate($currentUser->getCollectivite()->getTextmailrefuse());
         $template_html = [
             'validant'  => $currentUser->getPrenom() . " " . $currentUser->getNom(),
@@ -220,10 +224,11 @@ class ActionMailer
         $html = null;
         $message = \Swift_Message::newInstance();
         $fileSystem = new Filesystem();
+        //@todo refactor $this->user->getCollectivite()
         $logoExists = $fileSystem->exists($this->paths['logo_coll'] . $this->user->getCollectivite()->getImage());
         // Pour l integration de l image du logo dans le mail
         if($logoExists) $html = explode("**logo_coll**", $body);
-
+        //@todo refactor $this->user->getCollectivite()
         if($this->user->getCollectivite()->getImage() !== null && $this->paths['logo_coll'] !== null && count($html) > 1 && $logoExists) {
             $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->paths['logo_coll'] . $this->user->getCollectivite()->getImage())) . '" width="75" alt="Sesile">' . $html[1];
         } else {

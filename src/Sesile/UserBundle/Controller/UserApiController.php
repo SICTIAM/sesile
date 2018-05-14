@@ -55,6 +55,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             return $collectivite->getUsers();
         } else {
+            //@todo refactor $this->getUser()->getCollectivite()
             return $this->getUser()->getCollectivite()->getUsers();
         }
     }
@@ -73,6 +74,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $users = $collectivite->getUsers();
         } else {
+            //@todo refactor $this->getUser()->getCollectivite()
             $users = $this->getUser()->getCollectivite()->getUsers();
         }
 
@@ -147,6 +149,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
             return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findAll();
         }
         else if($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            //@todo refactor $this->getUser()->getCollectivite()
             return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByCollectivite($this->getUser()->getCollectivite()->getId());
         }
         else {
@@ -166,6 +169,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
          //TODO: return just actif users
          $value = $paramFetcher->get('value');
          $collectiviteId = $paramFetcher->get('collectiviteId');
+         //@todo refactor $this->getUser()->getCollectivite()
          if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivite()->getId() == $collectiviteId) {
             return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByNameOrFirstName($value, $collectiviteId);
          }
@@ -241,6 +245,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
     public function removeAction(User $user)
     {
+        //@todo refactor $this->getUser()->getCollectivite()
         if ($user
             && ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
             || $this->getUser()->getCollectivite() == $user->getCollectivite())

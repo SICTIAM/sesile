@@ -50,6 +50,7 @@ class RouteListener {
                 // la restriction ne concerne pas les super_admin
                 if (!$this->authorization->isGranted('ROLE_SUPER_ADMIN')) {
                     $user = $this->context->getToken()->getUser();
+                    //@todo refactor $user->getCollectivite()
                     if($user->getCollectivite() != $collectivite) {
 
                         // Construction de la nouvelle URL
