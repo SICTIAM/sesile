@@ -16,6 +16,7 @@ class TypeClasseurFixtures extends Fixture implements DependentFixtureInterface
 {
 
     const CLASSEUR_TYPE_ONE_REFERENCE = 'classeur-type-one';
+    const CLASSEUR_TYPE_TWO_REFERENCE = 'classeur-type-two';
 
     /**
      * Load data fixtures with the passed EntityManager
@@ -31,8 +32,17 @@ class TypeClasseurFixtures extends Fixture implements DependentFixtureInterface
             ->setCreation(new \DateTime())
             ;
         $manager->persist($typeClasseur);
+
+        $typeClasseur2 = new TypeClasseur();
+        $typeClasseur2
+            ->setNom('The second collectivite type')
+            ->setCollectivites($this->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE))
+            ->setCreation(new \DateTime())
+            ;
+        $manager->persist($typeClasseur2);
         $manager->flush();
         $this->addReference(self::CLASSEUR_TYPE_ONE_REFERENCE, $typeClasseur);
+        $this->addReference(self::CLASSEUR_TYPE_TWO_REFERENCE, $typeClasseur2);
     }
 
 

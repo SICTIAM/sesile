@@ -27,6 +27,8 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
+     * @todo ceci ne retourne pas! est-il vraiment utilisé?
      */
     public function getAllSimpleAction(Collectivite $collectivite)
     {

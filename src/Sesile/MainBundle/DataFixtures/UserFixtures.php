@@ -50,7 +50,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         //$this->setApisecret("secret_" . md5(uniqid(rand(), true)))
         $user->setApisecret('secret_abf9411ade3787a8e668ac534f97cf1a');
         $user->setApiactivated(true);
-        $user->setOzwilloId('9a59a3ce-a84d-4f32-b31f-d058d0131892');
+        //ozwillo id null for testing reasons on ozwillo provider
+        $user->setOzwilloId(null);
         $user->setRole('Développeur');
         $user->setVille('Nice');
         $user->setCp('06000');
