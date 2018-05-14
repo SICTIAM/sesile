@@ -41,7 +41,6 @@ class ClasseurApiControllerTest extends SesileWebTestCase
     public function testPostAction()
     {
         $this->logIn($this->fixtures->getReference('user-one'));
-
         $collectivite = $this->fixtures->getReference('collectivite-one');
         $formData = $this->getFormData();
         $postData = [
@@ -64,6 +63,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
             'collectivite' => $formData['collectivite']->getId(),
         ];
 
+        $this->client->enableProfiler();
         $this->client->request(
             'POST',
             sprintf('/api/v4/classeur/new', $collectivite->getId()),
@@ -84,6 +84,14 @@ class ClasseurApiControllerTest extends SesileWebTestCase
             ),
             'the "Content-Type" header is "application/json"' // optional message shown on failure
         );
+        /**
+         * check email was sent
+         */
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        self::assertSame(2, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        self::assertEquals($this->fixtures->getReference('user-one')->getEmail(), key($collectedMessages[0]->getTo()));
+        self::assertEquals($this->fixtures->getReference('user-one')->getEmail(), key($collectedMessages[1]->getTo()));
         /**
          * check database data
          */

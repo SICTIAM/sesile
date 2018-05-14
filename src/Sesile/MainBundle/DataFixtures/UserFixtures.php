@@ -40,7 +40,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         $user->setNom('nom1');
         $user->setPrenom('prenom1');
         $user->setUsername('username');
-        $user->setEmail('email@domain.com');
+        $user->setEmail('user1@domain.com');
         $user->setPlainPassword('password');
         //$user->setPassword('3NCRYPT3D-V3R51ON');
         $user->setEnabled(true);
