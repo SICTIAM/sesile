@@ -1,6 +1,7 @@
 <?php
 namespace Sesile\ApiBundle\Controller;
 
+use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -88,28 +89,16 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      */
     public function indexAction(Request $request)
     {
-
-
         $em = $this->getDoctrine()->getManager();
-
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
 
-
-        //$entity = $em->getRepository('SesileUserBundle:User')->findAll();
-        //@todo refactor $user->getCollectivite()
-        $entity = $em->getRepository('SesileUserBundle:User')->findByCollectivite($user->getCollectivite());
+        //pour compatibilité on a pas d'autre option que prendre la premiere collectivite du user.
+        //@todo controller si les editeurs utilisent ce endpoint
         $users = array();
-        foreach ($entity as $e) {
-            $array = array();
-            $array['id'] = $e->getId();
-            $array['username'] = $e->getUsername();
-            $array['email'] = $e->getEmail();
-            $array['prenom'] = $e->getPrenom();
-            $array['nom'] = $e->getNom();
-            $users[] = $array;
-
+        if(count($user->getCollectivities()) > 0 && $user->getCollectivities()->first() instanceof Collectivite) {
+            $collectivite = $user->getCollectivities()->first();
+            $users = $em->getRepository('SesileUserBundle:User')->getUsersByCollectivityId($collectivite->getId());
         }
-
 
         return $users;
 

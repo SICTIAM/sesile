@@ -194,4 +194,21 @@ class UserRepository extends EntityRepository {
         $em->flush();
 
     }
+
+    /**
+     * @param string $collectiviteId
+     *
+     * @return array
+     */
+    public function getUsersByCollectivityId($collectiviteId)
+    {
+        return $this
+                ->createQueryBuilder('U')
+            ->select('U.id, U.Nom as nom, U.Prenom as prenom, U.email, U.username, U.ozwilloId, U.ville, U.cp, U.pays, U.departement, U.role, U.qualite')
+                ->join('U.collectivities', 'C')
+                ->where('C.id = :collectiviteId')
+                ->setParameter('collectiviteId', $collectiviteId)
+                ->getQuery()
+                ->getArrayResult();
+    }
 }

@@ -20,11 +20,20 @@ class SesileWebTestCase extends WebTestCase
      */
     protected $client = null;
 
+    /**
+     * {@inheritDoc}
+     */
     public function setUp()
     {
         $this->client = static::createClient();
     }
 
+    /**
+     * Login mock action for user.
+     * it simulates a Ozwillo token and sets the authentication cookie
+     *
+     * @param UserInterface $user
+     */
     protected function logIn(UserInterface $user)
     {
         $session = $this->client->getContainer()->get('session');

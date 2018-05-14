@@ -50,6 +50,13 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         //$this->setApisecret("secret_" . md5(uniqid(rand(), true)))
         $user->setApisecret('secret_abf9411ade3787a8e668ac534f97cf1a');
         $user->setApiactivated(true);
+        $user->setOzwilloId('9a59a3ce-a84d-4f32-b31f-d058d0131892');
+        $user->setRole('Développeur');
+        $user->setVille('Nice');
+        $user->setCp('06000');
+        $user->setPays('France');
+        $user->setDepartement('Alpes-Maritimes');
+        $user->setQualite('CTO');
         $user->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
         $user->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
@@ -70,6 +77,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         $user2->setApitoken('token_91186cb2457c4ce2d8d4a45893211a4b');
         $user2->setApisecret('secret_ef316bf44b62815f29c5f81fbf92f5c0');
         $user2->setApiactivated(true);
+        $user2->setOzwilloId('76fd56f5-502b-4210-abef-c8f67e60b8ac');
         $user2->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
         $user2->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
@@ -87,6 +95,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         //$user->setPassword('3NCRYPT3D-V3R51ON');
         $superUser->setEnabled(true);
         $superUser->setRoles(array('ROLE_SUPER_ADMIN'));
+        $superUser->setOzwilloId('8f152f70-3075-46ee-b1a2-4ed0e362626f');
         $superUser->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
         $superUser->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
