@@ -99,7 +99,6 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         $entityManager->clear();
         $data = $entityManager->getRepository(Classeur::class)->findOneBy(['nom' => 'The Name']);
         self::assertInstanceOf(Classeur::class, $data);
-//        var_dump($data->getVisible());exit;
         self::assertEquals('The Name', $data->getNom());
         self::assertEquals("test", $data->getDescription());
         self::assertEquals($formData['circuitValidation']->getId(), $data->getCircuitId()->getId());

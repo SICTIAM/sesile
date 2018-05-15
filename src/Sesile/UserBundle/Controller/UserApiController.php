@@ -55,7 +55,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             return $collectivite->getUsers();
         } else {
-            //@todo refactor $this->getUser()->getCollectivite()
+            //@todo refactor $this->getUser()->getCollectivite() wtf
             return $this->getUser()->getCollectivite()->getUsers();
         }
     }

@@ -23,6 +23,8 @@ class CollectiviteApiController extends Controller
      * @Rest\View(serializerGroups={"getAllCollectivite"})
      * @Rest\Get("s")
      * @return array
+     *
+     * @todo never use this please!
      */
     public function getAllAction()
     {
@@ -104,9 +106,8 @@ class CollectiviteApiController extends Controller
         if (empty($collectivite)) {
             return new JsonResponse(['message' => 'Collectivité inexistante'], Response::HTTP_NOT_FOUND);
         }
-        //@todo refactor $this->getUser()->getCollectivite()
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
-            $this->getUser()->getCollectivite() == $collectivite) {
+            $this->getUser()->getCollectivities()->contains($collectivite)) {
 
             $form = $this->createForm(CollectiviteType::class, $collectivite);
             $form->submit($request->request->all(), $clearMissing);
@@ -129,9 +130,8 @@ class CollectiviteApiController extends Controller
         if (empty($collectivite)) {
             return new JsonResponse(['message' => 'Collectivité inexistante'], Response::HTTP_NOT_FOUND);
         }
-        //@todo refactor $this->getUser()->getCollectivite()
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
-            $this->getUser()->getCollectivite() == $collectivite) {
+            $this->getUser()->getCollectivities()->contains($collectivite)) {
 
             $em = $this->getDoctrine()->getManager();
             if($request->isMethod('POST')) {
