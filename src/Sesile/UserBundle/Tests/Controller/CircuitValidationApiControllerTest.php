@@ -48,7 +48,6 @@ class CircuitValidationApiControllerTest extends SesileWebTestCase
     {
         $this->logIn($this->fixtures->getReference('user-super'));
         $collectivite = $this->fixtures->getReference('collectivite-two');
-        $circuitValidation = $this->fixtures->getReference('circuit-validation');
         $this->client->request('GET', sprintf('/apirest/circuit_validations/%s', $collectivite->getId()));
         $this->assertStatusCode(200, $this->client);
         $data = json_decode($this->client->getResponse()->getContent(), true);

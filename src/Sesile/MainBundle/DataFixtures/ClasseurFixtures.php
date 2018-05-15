@@ -36,7 +36,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
         $userOne = $this->getReference('user-one');
         $userPackOne = $this->getReference('user-pack-one');
 
-        $etapeClasseur = self::aValidEtapeClasseur([$userOne], [$userPackOne], 1, true);
+        $etapeClasseur = self::aValidEtapeClasseur([$userOne], [$userPackOne], 1, $userOne, true);
         $classeur = self::aValidClasseur(
             'Fixture Classeur',
             'Fixture Classeur Description',
@@ -70,7 +70,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
         $this->addReference(self::CLASSEURS_REFERENCE, $classeur);
 
         $etapeClasseur1 = self::aValidEtapeClasseur([$userOne], [], 1);
-        $etapeClasseur2 = self::aValidEtapeClasseur([$userOne], [$userPackOne], 2, true);
+        $etapeClasseur2 = self::aValidEtapeClasseur([$userOne], [$userPackOne], 2, null, true);
         //new classeur avec une nouvelle collectivite
         $classeur2 = self::aValidClasseur(
             'Another Classeur',
@@ -90,7 +90,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
 
         $userTwo = $this->getReference('user-two');
         $etapeClasseur1 = self::aValidEtapeClasseur([$userTwo], [], 1);
-        $etapeClasseur2 = self::aValidEtapeClasseur([$userTwo], [], 2, true);
+        $etapeClasseur2 = self::aValidEtapeClasseur([$userTwo], [], 2, null, true);
         /**
          * add classeur for user two
          */
@@ -172,14 +172,15 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
      *
      * @return EtapeClasseur
      */
-    public static function aValidEtapeClasseur(array $users = [], array $userPacks = [], $ordre = 1, $validante = false, $valide = false)
+    public static function aValidEtapeClasseur(array $users = [], array $userPacks = [], $ordre = 1, $userValidant = null, $validante = false, $valide = false)
     {
         $etapeClasseur = new EtapeClasseur();
         $etapeClasseur
             ->setEtapeValidante($validante)
             ->setEtapeValide($valide)
             ->setOrdre(1)
-            ->setDate(new \DateTime());
+            ->setDate(new \DateTime())
+            ->setUserValidant($userValidant);
         foreach ($users as $user){
          $etapeClasseur
             ->addUser($user);
