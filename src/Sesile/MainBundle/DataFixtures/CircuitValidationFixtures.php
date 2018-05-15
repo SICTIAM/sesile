@@ -17,6 +17,7 @@ use Sesile\UserBundle\Entity\Groupe;
 class CircuitValidationFixtures extends Fixture implements DependentFixtureInterface
 {
     const CIRCUIT_VALIDATION_REFERENCE = 'circuit-validation';
+    const CIRCUIT_VALIDATION_REFERENCE_TWO = 'circuit-validation-two';
 
     /**
      * Load data fixtures with the passed EntityManager
@@ -45,9 +46,31 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
         $manager->persist($type);
         $manager->persist($group);
         $etapeGroup->setGroupe($group);
-        $manager->persist($etapeGroup);
+        /**
+         * second
+         */
+        $etapeGroup2 = new EtapeGroupe();
+        $etapeGroup2
+            ->setOrdre(1)
+            ->addUser($this->getReference('user-two'))
+        ;
+
+        $group2 = new Groupe();
+        $group2
+            ->setNom('Circuit de validation two')
+            ->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE))
+            ->setCreation(new \DateTime())
+            ;
+        $type = $this->getReference(TypeClasseurFixtures::CLASSEUR_TYPE_ONE_REFERENCE);
+        $group2->addType($type);
+        $group2->addEtapeGroupe($etapeGroup2);
+
+        $manager->persist($group2);
+        $etapeGroup2->setGroupe($group2);
+        $manager->persist($etapeGroup2);
         $manager->flush();
         $this->addReference(self::CIRCUIT_VALIDATION_REFERENCE, $group);
+        $this->addReference(self::CIRCUIT_VALIDATION_REFERENCE_TWO, $group2);
     }
 
 
@@ -61,6 +84,7 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
     {
         return array(
             TypeClasseurFixtures::class,
+            UserPackFixtures::class
         );
     }
 }

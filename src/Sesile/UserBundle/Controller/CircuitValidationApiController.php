@@ -191,10 +191,9 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
     }
 
     private function authorize(Collectivite $collectivite) {
-        //@todo refactor $this->getUser()->getCollectivite()
         return $this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
                 ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') &&
-                $this->getUser()->getCollectivite() == $collectivite);
+                    $this->getUser()->getCollectivities()->contains($collectivite));
     }
 
 }
