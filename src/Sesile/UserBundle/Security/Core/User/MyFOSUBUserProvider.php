@@ -92,6 +92,7 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
         $user->setPrenom($data['given_name']);
         $user->setOzwilloId($data['sub']);
         $this->userManager->updateUser($user);
+        $user->setCurrentOrgId($ozwilloCollectiviteResult->getData()->getCollectivite()->getId());
 
         return $user;
     }

@@ -323,6 +323,12 @@ class User extends BaseUser {
      */
     protected $collectivities;
 
+    /**
+     * @var string $currentOrgId
+     * @Serializer\Groups({"currentUser", "UserId"})
+     */
+    protected $currentOrgId;
+
 
     public function setPath($path) {
         return $this->path = $path;
@@ -1307,5 +1313,25 @@ class User extends BaseUser {
     public function getCollectivities()
     {
         return $this->collectivities;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentOrgId()
+    {
+        return $this->currentOrgId;
+    }
+
+    /**
+     * @param string $currentOrgId
+     *
+     * @return User
+     */
+    public function setCurrentOrgId($currentOrgId)
+    {
+        $this->currentOrgId = $currentOrgId;
+
+        return $this;
     }
 }

@@ -85,6 +85,7 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
 
         $result = $this->userProvider->loadUserByOAuthUserResponse($userProviderResponseMock);
         self::assertInstanceOf(User::class, $result);
+        self::assertEquals($this->fixtures->getReference('collectivite-one')->getId(), $result->getCurrentOrgId());
 
         /**
          * check database
