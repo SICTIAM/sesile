@@ -54,7 +54,7 @@ class EtapeClasseurApiController extends FOSRestController implements ClassResou
      * @Rest\View(serializerGroups={"listClasseurStats"})
      * @Rest\Get("s/org/{orgId}/classeur_stats", requirements={"classeur" = "\d+"})
      *
-     * @todo adapt the frontend for collectiviteId
+     * @todo adapt the frontend for collectiviteId route: sesile_user_etapeclasseurapi_getclasseursvalidatebytype
      */
     public function getClasseursValidateByTypeAction($orgId)
     {
