@@ -55,13 +55,14 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
     public function usersCollectiviteAction(Collectivite $collectivite)
     {
-
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivities()->contains($collectivite)) {
             return $collectivite->getUsers();
-        } else {
-            //@todo refactor $this->getUser()->getCollectivite() wtf
-            return $this->getUser()->getCollectivite()->getUsers();
         }
+//        else {
+            //@todo refactor $this->getUser()->getCollectivite()
+//            return $this->getUser()->getCollectivite()->getUsers();
+//        }
+        return [];
     }
 
 
@@ -74,13 +75,20 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
     public function usersCollectiviteSelectAction(Collectivite $collectivite)
     {
-
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivities()->contains($collectivite)) {
+            $users = $collectivite->getUsers();
+        } else {
+            return [];
+        }
+        /**
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $users = $collectivite->getUsers();
         } else {
             //@todo refactor $this->getUser()->getCollectivite()
             $users = $this->getUser()->getCollectivite()->getUsers();
         }
+         *
+         */
 
         $users_select = [];
         foreach ($users as $user) {

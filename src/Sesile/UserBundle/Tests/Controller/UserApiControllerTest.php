@@ -64,13 +64,41 @@ class UserApiControllerTest extends SesileWebTestCase
 
     public function testGetCurrentAction()
     {
-        $this->logIn($this->fixtures->getReference('user-one'), $this->fixtures->getReference('collectivite-one')->getId());
+        $currentCollectivityId = $this->fixtures->getReference('collectivite-one')->getId();
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user, $currentCollectivityId);
         $this->client->request('GET', '/apirest/user/current');
         $this->assertStatusCode(200, $this->client);
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertEquals($this->fixtures->getReference('user-one')->getId(), $data['id']);
-        self::assertEquals($this->fixtures->getReference('collectivite-one')->getId(), $data['current_org_id']);
+        self::assertEquals($user->getId(), $data['id']);
+        self::assertEquals($currentCollectivityId, $data['current_org_id']);
+    }
+
+    public function testUsersCollectiviteAction()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $currentCollectivityId = $this->fixtures->getReference('collectivite-one')->getId();
+        $this->logIn($user, $currentCollectivityId);
+        $this->client->request('GET', sprintf('/apirest/users/%s', $currentCollectivityId));
+        $this->assertStatusCode(200, $this->client);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(3, $data);
+        self::assertEquals($user->getId(), $data[0]['id']);
+    }
+
+    public function testUsersCollectiviteSelectAction()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $currentCollectivityId = $this->fixtures->getReference('collectivite-one')->getId();
+        $this->logIn($user, $currentCollectivityId);
+        $this->client->request('GET', sprintf('/apirest/users-select/%s', $currentCollectivityId));
+        $this->assertStatusCode(200, $this->client);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(3, $data);
+        self::assertArraySubset(['label' => $user->getPrenom() . " " . $user->getNom(), 'value' => $user->getId()], $data[0]);
     }
 
 }

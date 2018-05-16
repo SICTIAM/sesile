@@ -67,8 +67,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
 
         // Create our user and set details
         $user2 = $userManager->createUser();
-        $user->setNom('nom2');
-        $user->setPrenom('prenom');
+        $user2->setNom('nom2');
+        $user2->setPrenom('prenom');
         $user2->setUsername('username2');
         $user2->setEmail('email2@domain.com');
         $user2->setPlainPassword('password2');
@@ -88,8 +88,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
 
         // Create our user and set details
         $superUser = $userManager->createUser();
-        $user->setNom('super nom');
-        $user->setPrenom('super prenom');
+        $superUser->setNom('super nom');
+        $superUser->setPrenom('super prenom');
         $superUser->setUsername('super');
         $superUser->setEmail('super@domain.com');
         $superUser->setPlainPassword('password');
