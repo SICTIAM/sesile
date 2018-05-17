@@ -177,6 +177,8 @@ class DocumentController extends Controller
     /**
      * @Route("/{id}", name="show_document",  options={"expose"=true})
      * @Template()
+     *
+     * @todo valider que ceci n'est pas utilisé
      */
     public function showAction(Request $request, $id)
     {

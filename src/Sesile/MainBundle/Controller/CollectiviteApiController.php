@@ -24,7 +24,7 @@ class CollectiviteApiController extends Controller
      * @Rest\Get("s")
      * @return array
      *
-     * @todo never use this please!
+     * @todo never use this please!must find an alternative
      */
     public function getAllAction()
     {

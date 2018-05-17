@@ -88,7 +88,6 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $users = $collectivite->getUsers();
         } else {
-            //@todo refactor $this->getUser()->getCollectivite()
             $users = $this->getUser()->getCollectivite()->getUsers();
         }
          *
@@ -260,6 +259,9 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @param User $user
      * @return JsonResponse
      * @internal param $id
+     *
+     * @todo must refactor this method. The user can't be deleted. If multi collectivie must remove from collectivity maybe?
+     * @todo add the collectivityID parameter
      */
     public function removeAction(User $user)
     {
@@ -434,6 +436,13 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         return $validDate = \DateTime::createFromFormat('ymdHisT', $date);
     }
 
+    /**
+     * @param Collectivite $collectivite
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @todo La url de ozwillo est en dur! must refactor
+     */
     private function getOzwilloUsers(Collectivite $collectivite) {
 
         $instanceId = $collectivite->getOzwillo()->getInstanceId();
