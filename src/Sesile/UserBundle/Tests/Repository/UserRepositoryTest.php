@@ -94,4 +94,18 @@ class UserRepositoryTest extends SesileWebTestCase
         self::assertCount(0, $result);
     }
 
+    public function testFindByNameOrFirstName()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $collectivity = $this->fixtures->getReference('collectivite-one');
+        $result = $this->em->getRepository(User::class)->findByNameOrFirstName($user->getNom(), $collectivity->getId());
+        self::assertCount(1, $result);
+        self::assertInstanceOf(User::class, $result[0]);
+        self::assertEquals($user->getId(), $result[0]->getId());
+        $result = $this->em->getRepository(User::class)->findByNameOrFirstName($user->getPrenom(), $collectivity->getId());
+        self::assertCount(1, $result);
+        self::assertInstanceOf(User::class, $result[0]);
+        self::assertEquals($user->getId(), $result[0]->getId());
+    }
+
 }

@@ -1316,6 +1316,21 @@ class User extends BaseUser {
     }
 
     /**
+     * @param string $collectivityId
+     *
+     * @return bool
+     */
+    public function hasCollectivity($collectivityId)
+    {
+        foreach ($this->collectivities as $collectivity) {
+            if ($collectivity->getId() == $collectivityId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return string
      */
     public function getCurrentOrgId()

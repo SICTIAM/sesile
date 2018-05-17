@@ -52,6 +52,8 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
+     * @todo à valider
      */
     public function usersCollectiviteAction(Collectivite $collectivite)
     {
@@ -72,6 +74,8 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
+     * @todo à valider
      */
     public function usersCollectiviteSelectAction(Collectivite $collectivite)
     {
@@ -154,6 +158,8 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @return array
      * @Rest\View()
      * @Rest\Get("s")
+     *
+     * @todo valider que ceci n'est pas utilisé
      */
     public function listAction()
     {
@@ -181,10 +187,10 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
          //TODO: return just actif users
          $value = $paramFetcher->get('value');
          $collectiviteId = $paramFetcher->get('collectiviteId');
-         //@todo refactor $this->getUser()->getCollectivite()
-         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivite()->getId() == $collectiviteId) {
+         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->hasCollectivity($collectiviteId)) {
             return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByNameOrFirstName($value, $collectiviteId);
          }
+         throw $this->createNotFoundException('No Users Found For Collectivity');
      }
 
     /**

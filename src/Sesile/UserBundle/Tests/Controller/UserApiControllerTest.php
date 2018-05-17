@@ -101,4 +101,42 @@ class UserApiControllerTest extends SesileWebTestCase
         self::assertArraySubset(['label' => $user->getPrenom() . " " . $user->getNom(), 'value' => $user->getId()], $data[0]);
     }
 
+    public function testFindByNomOrPrenomAction()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $currentCollectivityId = $this->fixtures->getReference('collectivite-one')->getId();
+        $this->logIn($user, $currentCollectivityId);
+        $this->client->request('GET', sprintf('/apirest/user/search?value=%s&collectiviteId=%s', $user->getNom(), $currentCollectivityId));
+        $this->assertStatusCode(200, $this->client);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(1, $data);
+        self::assertEquals($user->getId(), $data[0]['id']);
+        //try with prenom
+        $this->client->request('GET', sprintf('/apirest/user/search?value=%s&collectiviteId=%s', $user->getPrenom(), $currentCollectivityId));
+        $this->assertStatusCode(200, $this->client);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(1, $data);
+        self::assertEquals($user->getId(), $data[0]['id']);
+    }
+
+    public function testFindByNomOrPrenomActionShouldReturn404IfUserHasNotTheCollectivity()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $currentCollectivityId = $this->fixtures->getReference('collectivite-two')->getId();
+        $this->logIn($user, $currentCollectivityId);
+        $this->client->request('GET', sprintf('/apirest/user/search?value=%s&collectiviteId=%s', $user->getNom(), $currentCollectivityId));
+        $this->assertStatusCode(404, $this->client);
+    }
+
+    public function testFindByNomOrPrenomActionShouldReturnDataIfSuperAdminCalls()
+    {
+        $user = $this->fixtures->getReference('user-super');
+        $currentCollectivityId = $this->fixtures->getReference('collectivite-two')->getId();
+        $this->logIn($user, $currentCollectivityId);
+        $this->client->request('GET', sprintf('/apirest/user/search?value=%s&collectiviteId=%s', $user->getNom(), $currentCollectivityId));
+        $this->assertStatusCode(200, $this->client);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(0, $data);
+    }
+
 }
