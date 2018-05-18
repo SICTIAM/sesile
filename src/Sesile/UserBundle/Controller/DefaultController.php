@@ -27,7 +27,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
+/**
+ * @todo refactor $this->get("session")->get("collectivite")
+ */
 class DefaultController extends Controller
 {
     /**
@@ -86,6 +88,7 @@ class DefaultController extends Controller
                 $userObj = $em->getRepository('SesileUserBundle:User')->findOneByUsername($form->get('username')->getData());
 
                 if (empty($userObj)) {
+                    //@todo refactor $this->get("session")->get("collectivite")
                     $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneById($this->get("session")->get("collectivite"));
                     if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
                         $entity->setCollectivite($collectivite);

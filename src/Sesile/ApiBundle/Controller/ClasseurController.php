@@ -255,8 +255,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
     {
 
         $em = $this->getDoctrine()->getManager();
-        //@todo use the colelctivite
-        $collectivity = $this->get('collectivite.manager')->getCollectiviteBySiren($request->request->get('siren'));
         $email = $request->request->get('email');
         if(is_null($email))
         {
@@ -268,8 +266,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             $user = $em->getRepository('SesileUserBundle:User')->findOneByUsername($email);
             $userAPI = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
         }
-
-
+        if ($request->request->has('siren')) {
+            $collectivity = $this->get('collectivite.manager')
+                ->getCollectiviteBySiren($request->request->get('siren'))
+                ->getData();
+        } else {
+            $collectivity = $user->getFirstCollectivity();
+        }
 
         $serviceOrgs = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($user->getId());
 
@@ -344,7 +347,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $classeur->setEtapeDeposante($user->getId());
 
         $classeur->setVisibilite($request->request->get('visibilite'));
-
+        $classeur->setCollectivite($collectivity);
         $em->persist($classeur);
         $em->flush();
 
@@ -790,7 +793,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();
         //@todo refactor $this->get("session")->get("collectivite") maybe use: $classeur->getCollectivite();
-        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($classeur->getCollectivite());
         $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
 
         $env = new \Twig_Environment(new \Twig_Loader_String());
