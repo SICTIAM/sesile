@@ -26,19 +26,17 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
      */
     public function load(ObjectManager $manager)
     {
-        $etapeGroup = new EtapeGroupe();
-        $etapeGroup
-            ->setOrdre(1)
-            ->addUser($this->getReference('user-one'))
-            ->addUserPack($this->getReference('user-pack-one'))
-        ;
-
+//        $etapeGroup = new EtapeGroupe();
+//        $etapeGroup
+//            ->setOrdre(1)
+//            ->addUser($this->getReference('user-one'))
+//            ->addUserPack($this->getReference('user-pack-one'));
+        $etapeGroup = self::aValidEtapeGroupe(1, [$this->getReference('user-one')], [$this->getReference('user-pack-one')]);
         $group = new Groupe();
         $group
             ->setNom('Circuit de validation')
             ->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE))
-            ->setCreation(new \DateTime())
-            ;
+            ->setCreation(new \DateTime());
         $type = $this->getReference(TypeClasseurFixtures::CLASSEUR_TYPE_ONE_REFERENCE);
         $group->addType($type);
         $group->addEtapeGroupe($etapeGroup);
@@ -46,21 +44,20 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
         $manager->persist($type);
         $manager->persist($group);
         $etapeGroup->setGroupe($group);
+        $manager->persist($etapeGroup);
         /**
          * second
          */
         $etapeGroup2 = new EtapeGroupe();
         $etapeGroup2
             ->setOrdre(1)
-            ->addUser($this->getReference('user-two'))
-        ;
+            ->addUser($this->getReference('user-two'));
 
         $group2 = new Groupe();
         $group2
             ->setNom('Circuit de validation two')
             ->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE))
-            ->setCreation(new \DateTime())
-            ;
+            ->setCreation(new \DateTime());
         $type = $this->getReference(TypeClasseurFixtures::CLASSEUR_TYPE_ONE_REFERENCE);
         $group2->addType($type);
         $group2->addEtapeGroupe($etapeGroup2);
@@ -74,6 +71,21 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
     }
 
 
+    public static function aValidEtapeGroupe($order = 1, $users = [], $userPacks = [])
+    {
+        $etapeGroup = new EtapeGroupe;
+        $etapeGroup->setOrdre($order);
+        foreach ($users as $user) {
+            $etapeGroup->addUser($user);
+        }
+        foreach ($userPacks as $userPack) {
+            $etapeGroup->addUserPack($userPack);
+        }
+
+        return $etapeGroup;
+
+    }
+
     /**
      * This method must return an array of fixtures classes
      * on which the implementing class depends on
@@ -84,7 +96,7 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
     {
         return array(
             TypeClasseurFixtures::class,
-            UserPackFixtures::class
+            UserPackFixtures::class,
         );
     }
 }

@@ -248,22 +248,23 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * @Rest\View()
      * @Method("post")
      *
-     *
+     * @todo newActions needs the collectivite in order to set the correct collectivity id into the classeur
      *
      */
     public function newAction(Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
-
+        //@todo use the colelctivite
+        $collectivity = $this->get('collectivite.manager')->getCollectiviteBySiren($request->request->get('siren'));
         $email = $request->request->get('email');
-//var_dump($email);exit;
         if(is_null($email))
         {
             $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
             $userAPI = null;
         }
         else{
+            //@todo findOneByUsername? plutôto findOneByEmail?
             $user = $em->getRepository('SesileUserBundle:User')->findOneByUsername($email);
             $userAPI = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
         }
@@ -279,6 +280,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         foreach($serviceOrgs as $serviceOrg) {
             $groupetto = $em->getRepository('SesileUserBundle:Groupe')->findOneById($serviceOrg);
+            //@todo ceci peut donner un 500 si $groupetto == null
             $groupes[] = $groupetto->getId();
         }
 
@@ -297,7 +299,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         foreach ($tabgroups_types as $objGroupe) {
             $tabidG[] = $objGroupe->getId();
         }
-
         if (!in_array($request->request->get('groupe'), $tabidG)) {
             $view = $this->view(array('code' => '400', 'message' => 'Ce groupe n\'a pas accès au type de classeur renseigné ', "parametres_recus" => $request->request), 400);
             return $this->handleView($view);
@@ -308,9 +309,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $name = $request->request->get('name');
 
 
-     
+
         $validation = $request->request->get('validation');
- 
+
         $type= $request->request->get('type');
 
         $circuit = $request->request->get('groupe');
@@ -338,7 +339,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $classeur->setType($type);
 
 
-        $classeur->setUser($user->getId());
+        $classeur->setUser($user);
         // TODO a modifier par la bonne etape ?
         $classeur->setEtapeDeposante($user->getId());
 
@@ -788,6 +789,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();
+        //@todo refactor $this->get("session")->get("collectivite") maybe use: $classeur->getCollectivite();
         $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
         $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
 

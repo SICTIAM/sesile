@@ -218,6 +218,26 @@ class CollectiviteManagerTest extends WebTestCase
         self::assertInstanceOf(Collectivite::class, $result->getData());
         self::assertEquals($mockCollectivite, $result->getData());
     }
+    public function testGetCollectiviteBySirenShouldReturnNullIfNoneFound()
+    {
+        $repository = $this->getMockBuilder(CollectiviteRepository::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                ['findOneBySiren']
+            )->getMock();
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(Collectivite::class)
+            ->willReturn($repository);
+        $repository->expects(self::once())
+            ->method('findOneBySiren')
+            ->willReturn(null);
+
+        $result = $this->collectiviteManager->getCollectiviteBySiren('123456789');
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertNull($result->getData());
+    }
 
     public function testGetCollectiviteBySirenShouldReturnFalseWhenExceptionIsThrougn()
     {
