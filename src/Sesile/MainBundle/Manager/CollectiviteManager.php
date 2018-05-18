@@ -97,4 +97,23 @@ class CollectiviteManager
 
     }
 
+    /**
+     * @param $siren
+     *
+     * @return Message
+     */
+    public function getCollectiviteBySiren($siren)
+    {
+        try {
+            $data = $this->em->getRepository(Collectivite::class)->findOneBySiren($siren);
+
+            return new Message(true, $data);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/getCollectiviteBySiren error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+
+    }
+
 }
