@@ -793,10 +793,13 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();
         //@todo refactor $this->get("session")->get("collectivite") maybe use: $classeur->getCollectivite();
-        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($classeur->getCollectivite());
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
-
-        $env = new \Twig_Environment(new \Twig_Loader_String());
+//        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+        $coll = $classeur->getCollectivite();
+        //@todo $classeur->getPrevValidant() n'existe plus!! changer avec $classeur->getUser()?
+        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
+        //Twig_Loader_String is depricated
+//        $env = new \Twig_Environment(new \Twig_Loader_String());
+        $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
 
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
         foreach($validants as $validant) {
@@ -884,8 +887,10 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $tabDocs = $classeur->getDocuments();
         $cleanTabDocs = array();
-        foreach ($tabDocs as $doc) {
-            $cleanTabDocs[] = $this->docToArray($doc);
+        if (count($tabDocs) > 0 ) {
+                foreach ($tabDocs as $doc) {
+                $cleanTabDocs[] = $this->docToArray($doc);
+            }
         }
         $em = $this->getDoctrine()->getManager();
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
