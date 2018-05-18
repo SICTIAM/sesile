@@ -1316,6 +1316,18 @@ class User extends BaseUser {
     }
 
     /**
+     * @return Collectivite|null
+     */
+    public function getFirstCollectivity()
+    {
+        if ($this->collectivities && count($this->collectivities) > 0) {
+            return $this->collectivities->first();
+        }
+
+        return null;
+    }
+
+    /**
      * @param string $collectivityId
      *
      * @return bool
