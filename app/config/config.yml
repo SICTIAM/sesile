@@ -138,7 +138,7 @@ fos_rest:
         rules:
             # setting fallback_format to json means that instead of considering the next rule in case of a priority mismatch, json will be used
             - { path: '^/api/v4/',  priorities: ['json'], fallback_format: 'json',  prefer_extension: false }
-            - { path: '^/api/',  priorities: ['json', 'xml'],  prefer_extension: false }
+            - { path: '^/api/',  priorities: ['json'],  prefer_extension: false }
             - { path: '^/apirest/',  priorities: ['json'], fallback_format: 'json',  prefer_extension: false }
             - { path: '^/', priorities: [ 'html', '*/*'], fallback_format: html, prefer_extension: false }
             - { path: '^/doc/download_sign', priorities: [ 'pdf' ], fallback_format: ~, prefer_extension: true }
