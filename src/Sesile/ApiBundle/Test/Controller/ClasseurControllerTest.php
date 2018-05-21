@@ -232,10 +232,33 @@ class ClasseurControllerTest extends SesileWebTestCase
          */
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $entityManager->clear();
-
         $newDocument = $entityManager->getRepository(Document::class)->find($response['id']);
         self::assertInstanceOf(Document::class, $newDocument);
         self::assertEquals($classeur->getId(), $newDocument->getClasseur()->getId());
+        $filePath = $this->getContainer()->get('kernel')->getRootDir().'/../web/uploads/docs/'.$response['repourl'];
+        self::assertFileExists($filePath);
+        $fs->remove($filePath);
+    }
+
+    public function testGetTypesAction()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $this->client->request(
+            'GET',
+            sprintf('/api/classeur/types/'),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_token' => $user->getApitoken(),
+                'HTTP_secret' => $user->getApisecret()
+            )
+        );
+        $this->assertStatusCode(200, $this->client);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(2, $response);
+        self::assertEquals($this->fixtures->getReference(TypeClasseurFixtures::CLASSEUR_TYPE_ONE_REFERENCE)->getId(), $response[0]['id']);
+        self::assertEquals($this->fixtures->getReference(TypeClasseurFixtures::CLASSEUR_TYPE_TWO_REFERENCE)->getId(), $response[1]['id']);
     }
 
 }
