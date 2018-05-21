@@ -6,6 +6,7 @@ namespace Sesile\ApiBundle\Test\Controller;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Sesile\ClasseurBundle\Entity\Classeur;
+use Sesile\DocumentBundle\Entity\Document;
 use Sesile\MainBundle\DataFixtures\CircuitValidationFixtures;
 use Sesile\MainBundle\DataFixtures\ClasseurFixtures;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
@@ -13,6 +14,9 @@ use Sesile\MainBundle\DataFixtures\TypeClasseurFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\DataFixtures\UserPackFixtures;
 use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ClasseurControllerTest extends SesileWebTestCase
 {
@@ -141,16 +145,6 @@ class ClasseurControllerTest extends SesileWebTestCase
         );
         $this->assertStatusCode(200, $this->client);
         $responseData = json_decode($this->client->getResponse()->getContent(), true);
-        /**
-         * check database data
-         */
-        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $entityManager->clear();
-
-        $classeur = $entityManager->getRepository(Classeur::class)->find($responseData['id']);
-        self::assertInstanceOf(Classeur::class, $classeur);
-        self::assertEquals($collectivite->getId(), $classeur->getCollectivite()->getId());
-        self::assertEquals($user->getId(), $classeur->getUser()->getId());
     }
 
     public function testUpdateActionShouldSucceed()
@@ -206,6 +200,42 @@ class ClasseurControllerTest extends SesileWebTestCase
             )
         );
         $this->assertStatusCode(200, $this->client);
+    }
+
+    public function testNewDocumentActionShouldSucceed()
+    {
+        //create a file
+        $fs = new Filesystem();
+        $fs->dumpFile(__DIR__.'/../testFile.txt', 'test content');
+        $user = $this->fixtures->getReference('user-one');
+        $classeur = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE);
+        $photo = new UploadedFile(
+            __DIR__.'/../testFile.txt',
+            'testFile.txt',
+            'text/plain',
+            123
+        );
+        $this->client->request(
+            'POST',
+            sprintf('/api/classeur/%s/newDocuments', $classeur->getId()),
+            array(),
+            [$photo],
+            array(
+                'HTTP_token' => $user->getApitoken(),
+                'HTTP_secret' => $user->getApisecret()
+            )
+        );
+        $this->assertStatusCode(200, $this->client);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        /**
+         * check database data
+         */
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager->clear();
+
+        $newDocument = $entityManager->getRepository(Document::class)->find($response['id']);
+        self::assertInstanceOf(Document::class, $newDocument);
+        self::assertEquals($classeur->getId(), $newDocument->getClasseur()->getId());
     }
 
 }
