@@ -153,4 +153,59 @@ class ClasseurControllerTest extends SesileWebTestCase
         self::assertEquals($user->getId(), $classeur->getUser()->getId());
     }
 
+    public function testUpdateActionShouldSucceed()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $classeur = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE);
+        $circuitDeValidation = $this->fixtures->getReference('circuit-validation');
+        $data = [
+            'name' => 'name',
+            'desc' => 'description',
+            'validation' => '11/08/2018',
+            'circuit' => $circuitDeValidation->getId(),
+            'visibilite' => 1,
+        ];
+        $this->client->request(
+            'PUT',
+            sprintf('/api/classeur/%s', $classeur->getId()),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_token' => $user->getApitoken(),
+                'HTTP_secret' => $user->getApisecret()
+            ),
+            json_encode($data)
+        );
+        $this->assertStatusCode(200, $this->client);
+    }
+
+    public function testDeleteActionShouldSucceed()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $classeur = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE);
+        $typeClasseur = $this->fixtures->getReference('classeur-type-one');
+        $circuitDeValidation = $this->fixtures->getReference('circuit-validation');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $data = [
+            'name' => 'name',
+            'desc' => 'description',
+            'validation' => '11/08/2018',
+            'circuit' => $circuitDeValidation->getId(),
+            'visibilite' => 1,
+        ];
+        $this->client->request(
+            'DELETE',
+            sprintf('/api/classeur/%s', $classeur->getId()),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_token' => $user->getApitoken(),
+                'HTTP_secret' => $user->getApisecret()
+            )
+        );
+        $this->assertStatusCode(200, $this->client);
+    }
+
 }

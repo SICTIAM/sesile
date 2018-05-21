@@ -17,7 +17,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-
+/**
+ * @todo refactor $this->get("session")->get("collectivite")
+ */
 class SOController extends Controller {
 
     /**

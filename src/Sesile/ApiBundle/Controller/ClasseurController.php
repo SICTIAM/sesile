@@ -487,6 +487,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
      *  }
      * )
+     *
+     * @todo REFACTOR
      **/
     public function updateAction(Request $request, $id)
     {
@@ -496,7 +498,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
-
         if ($request->request->get('name') == 0 || $request->request->get('validation') == 0 || $request->request->get('circuit') == 0) {
             $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
             return $this->handleView($view);

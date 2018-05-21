@@ -49,24 +49,9 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
             $this->getReference('classeur-type-one')
         );
 
-//        $classeurRetracte = self::aValidClasseur(
-//            'Classeur retracté',
-//            'Classeur retracté Description',
-//            $userOne,
-//            [$userOne],
-//            [],
-//            $this->getReference('circuit-validation'),
-//            $this->getReference('collectivite-one'),
-//            [],
-//            $this->getReference('classeur-type-one'),
-//            3
-//        );
         $manager->persist($etapeClasseur);
         $manager->persist($classeur);
-//        $manager->persist($classeurRetracte);
         $manager->flush();
-//        $classeurRetracte->setStatus(3);
-//        $manager->flush($classeurRetracte);
         $this->addReference(self::CLASSEURS_REFERENCE, $classeur);
 
         $etapeClasseur1 = self::aValidEtapeClasseur([$userOne], [], 1);
