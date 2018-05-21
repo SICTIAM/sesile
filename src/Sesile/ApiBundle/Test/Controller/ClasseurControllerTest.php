@@ -5,6 +5,7 @@ namespace Sesile\ApiBundle\Test\Controller;
 
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\MainBundle\DataFixtures\CircuitValidationFixtures;
 use Sesile\MainBundle\DataFixtures\ClasseurFixtures;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
@@ -73,7 +74,6 @@ class ClasseurControllerTest extends SesileWebTestCase
     public function testNewAction()
     {
         $user = $this->fixtures->getReference('user-one');
-        $classeur = $this->fixtures->getReference('classeur-one');
         $typeClasseur = $this->fixtures->getReference('classeur-type-one');
         $circuitDeValidation = $this->fixtures->getReference('circuit-validation');
         $collectivite = $this->fixtures->getReference('collectivite-one');
@@ -99,8 +99,58 @@ class ClasseurControllerTest extends SesileWebTestCase
             ),
             json_encode($data)
         );
-        var_dump($this->client->getResponse()->getContent());exit;
         $this->assertStatusCode(200, $this->client);
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+        /**
+         * check database data
+         */
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager->clear();
+
+        $classeur = $entityManager->getRepository(Classeur::class)->find($responseData['id']);
+        self::assertInstanceOf(Classeur::class, $classeur);
+        self::assertEquals($collectivite->getId(), $classeur->getCollectivite()->getId());
+        self::assertEquals($user->getId(), $classeur->getUser()->getId());
+    }
+
+    public function testNewActionShouldSucceedIfNoSirenIsGiven()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $typeClasseur = $this->fixtures->getReference('classeur-type-one');
+        $circuitDeValidation = $this->fixtures->getReference('circuit-validation');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $data = [
+            'name' => 'name',
+            'desc' => 'description',
+            'validation' => '11/08/2018',
+            'type' => $typeClasseur->getId(),
+            'groupe' => $circuitDeValidation->getId(),
+            'visibilite' => 0,
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/classeur/'),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_token' => $user->getApitoken(),
+                'HTTP_secret' => $user->getApisecret()
+            ),
+            json_encode($data)
+        );
+        $this->assertStatusCode(200, $this->client);
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+        /**
+         * check database data
+         */
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager->clear();
+
+        $classeur = $entityManager->getRepository(Classeur::class)->find($responseData['id']);
+        self::assertInstanceOf(Classeur::class, $classeur);
+        self::assertEquals($collectivite->getId(), $classeur->getCollectivite()->getId());
+        self::assertEquals($user->getId(), $classeur->getUser()->getId());
     }
 
 }

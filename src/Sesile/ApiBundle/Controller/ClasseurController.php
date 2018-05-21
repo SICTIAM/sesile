@@ -23,6 +23,7 @@ use Sesile\DocumentBundle\Entity\Document;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\ClasseursUsers;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -235,6 +236,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"},
      *          {"name"="email", "dataType"="string", "format"="Email valide", "required"=false, "description"="email du déposant"},
+     *          {"name"="siren", "dataType"="string", "format"="string", "required"=false, "description"="siren collectivité, si non renseigné la premiere collectivité de l'utilisateur sera utilisé"},
      *
      *
      *
@@ -360,7 +362,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $enable = false;
         $etapeDeposante = 0;
-
         foreach ($etapesGroupe as $etapeGroupe) {
 
             $usersFromEtapes = $etapeGroupe->getUsers();
@@ -406,7 +407,11 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             }
 
             $step->setOrdre($k);
+            if ($k == 0) {
+                $step->setEtapeValidante(1);
+            }
             $em->persist($step);
+            $classeur->addEtapeClasseur($step);
             $em->flush();
             if (($k == 0 && $classeur->getOrdreValidant() === null) ||
                 ($k == 0 && $classeur->getStatus() == 0)
@@ -745,6 +750,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $message = \Swift_Message::newInstance();
         // Pour l integration de l image du logo dans le mail
         $html = explode("**logo_coll**", $body);
+
         if($this->get('session')->get('logo') !== null && $this->container->getParameter('upload')['logo_coll'] !== null && !empty($html)) {
             $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75" alt="Sesile">' . $html[1];
         } else {
@@ -796,27 +802,29 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 //        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
         $coll = $classeur->getCollectivite();
         //@todo $classeur->getPrevValidant() n'existe plus!! changer avec $classeur->getUser()?
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getUser());
+        //$classeur->getPrevValidant() : l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
+//        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
+        $c_user = $classeur->getUser();
         //Twig_Loader_String is depricated
 //        $env = new \Twig_Environment(new \Twig_Loader_String());
         $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
+        $template = $env->createTemplate($coll->getTextmailnew());
+        $template_html = [
+            'deposant' => $c_user->getPrenom() . " " . $c_user->getNom(),
+            'role' => $c_user->getRole(),
+            'qualite' => $c_user->getQualite(),
+            'titre_classeur' => $classeur->getNom(),
+            'date_limite' => $classeur->getValidation(),
+            'type' => strtolower($classeur->getType()->getNom()),
+            'lien' => '<a href="' . $this->container->get('router')->generate('classeur_edit', ['id' => $classeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '">valider le classeur</a>'
+        ];
+
 
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
         foreach($validants as $validant) {
-
             if ($validant != null) {
-                $body = $env->render($coll->getTextmailnew(),
-                    array(
-                        'validant' => $validant->getPrenom()." ".$validant->getNom(),
-                        'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
-                        'role' => $c_user->getRole(),
-                        'qualite' => $c_user->getQualite(),
-                        'titre_classeur' => $classeur->getNom(),
-                        'date_limite' => $classeur->getValidation(),
-                        'type' => strtolower($classeur->getType()->getNom()),
-                        "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
-                    )
-                );
+                $template_html['validant'] = $validant->getPrenom()." ".$validant->getNom();
+                $body = $template->render($template_html);
                 $this->sendMail("SESILE - Nouveau classeur à valider", $validant->getEmail(), $body);
             }
         }
