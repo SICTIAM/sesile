@@ -34,7 +34,7 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface, Con
     public function load(ObjectManager $manager)
     {
         $classeur = $this->getReference('classeur-one');
-        $document = self::aValidDocument('doc', __DIR__.'testFile.txt', $classeur);
+        $document = self::aValidDocument('doc', __DIR__.'/testFile.txt', $classeur);
         $manager->persist($document);
         $manager->flush();
         $this->addReference(self::DOCUMENT_REFERENCE_ONE, $document);

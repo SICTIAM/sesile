@@ -209,7 +209,7 @@ class ClasseurControllerTest extends SesileWebTestCase
         $fs->dumpFile(__DIR__.'/../testFile.txt', 'test content');
         $user = $this->fixtures->getReference('user-one');
         $classeur = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE);
-        $photo = new UploadedFile(
+        $file = new UploadedFile(
             __DIR__.'/../testFile.txt',
             'testFile.txt',
             'text/plain',
@@ -219,7 +219,7 @@ class ClasseurControllerTest extends SesileWebTestCase
             'POST',
             sprintf('/api/classeur/%s/newDocuments', $classeur->getId()),
             array(),
-            [$photo],
+            [$file],
             array(
                 'HTTP_token' => $user->getApitoken(),
                 'HTTP_secret' => $user->getApisecret()

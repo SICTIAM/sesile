@@ -118,14 +118,16 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
             throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur auquel appartient le document " . $id);
         }
 
-
         // obtenir une instance de UploadedFile identifiée par file
 
         if ($request->files->has('file')) {
             $file = $request->files->get('file');
             $name = $file->getClientOriginalName();
             $movedfile = $file->move($this->get('kernel')->getRootDir() . '/../web/uploads/docs/', uniqid() . '.' . $file->getExtension());
-            unlink($this->get('kernel')->getRootDir() . '/../web/uploads/docs/' . $document->getRepoUrl());
+            $originalFilePath = $this->get('kernel')->getRootDir().'/../web/uploads/docs/'.$document->getRepoUrl();
+            if (is_file($originalFilePath)) {
+                unlink($originalFilePath);
+            }
             $document->setRepourl($movedfile->getBasename());
             $document->setType($movedfile->getMimeType());
             $document->setName($name);
@@ -202,7 +204,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
         $em->flush();
 
 
-        return array('code' => '200', 'message' => 'Document supprimé');;
+        return array('code' => '200', 'message' => 'Document supprimé');
 
 
     }
