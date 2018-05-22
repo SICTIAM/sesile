@@ -165,11 +165,12 @@ class ClasseurControllerTest extends SesileWebTestCase
             array(),
             array(),
             array(
-                'CONTENT_TYPE' => 'application/json',
+//                'CONTENT_TYPE' => 'application/json',
                 'HTTP_token' => $user->getApitoken(),
                 'HTTP_secret' => $user->getApisecret()
             ),
-            json_encode($data)
+//            json_encode($data)
+            $data
         );
         $this->assertStatusCode(200, $this->client);
     }
@@ -178,16 +179,7 @@ class ClasseurControllerTest extends SesileWebTestCase
     {
         $user = $this->fixtures->getReference('user-one');
         $classeur = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE);
-        $typeClasseur = $this->fixtures->getReference('classeur-type-one');
         $circuitDeValidation = $this->fixtures->getReference('circuit-validation');
-        $collectivite = $this->fixtures->getReference('collectivite-one');
-        $data = [
-            'name' => 'name',
-            'desc' => 'description',
-            'validation' => '11/08/2018',
-            'circuit' => $circuitDeValidation->getId(),
-            'visibilite' => 1,
-        ];
         $this->client->request(
             'DELETE',
             sprintf('/api/classeur/%s', $classeur->getId()),
@@ -200,6 +192,18 @@ class ClasseurControllerTest extends SesileWebTestCase
             )
         );
         $this->assertStatusCode(200, $this->client);
+
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertEquals(['code' => '200', 'message' => 'Classeur retiré'], $responseData);
+        /**
+         * check database data
+         */
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager->clear();
+
+        $data = $entityManager->getRepository(Classeur::class)->find($classeur->getId());
+        self::assertInstanceOf(Classeur::class, $data);
+        self::assertEquals(3, $data->getStatus());
     }
 
     public function testNewDocumentActionShouldSucceed()

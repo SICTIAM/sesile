@@ -47,7 +47,7 @@ class CircuitControllerTest extends SesileWebTestCase
         );
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(1, $content);
-        self::assertEquals($this->fixtures->getReference(CircuitValidationFixtures::CIRCUIT_VALIDATION_REFERENCE)->getId(), $content[0]['id']);
+        self::assertCount(0, $content);
+        //it is obsolete
     }
 }

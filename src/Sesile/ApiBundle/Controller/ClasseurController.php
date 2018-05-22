@@ -602,7 +602,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         if (empty($classeur[0])) {
             throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
         }
-        $classeur[0]->supprimer();
+        $classeur[0]->setOrdreValidant('');
+        $classeur[0]->setStatus(3);
         $em->persist($classeur[0]);
         $em->flush();
 
