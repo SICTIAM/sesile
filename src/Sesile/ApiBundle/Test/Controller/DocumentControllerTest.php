@@ -140,8 +140,7 @@ class DocumentControllerTest extends SesileWebTestCase
             )
         );
         $this->assertStatusCode(200, $this->client);
-        $responseData = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertEquals($document->getId(), $responseData['id']);
+        self::assertEquals('test content', $this->client->getResponse()->getContent());
     }
 
 }

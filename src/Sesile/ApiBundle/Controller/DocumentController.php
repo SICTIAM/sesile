@@ -248,13 +248,14 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
         }
 
         $response = new Response();
+        $baseUploadPath = $this->get('kernel')->getRootDir().'/../web/uploads/docs/';
 
         $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $document->getRepourl()));
+        $response->headers->set('Content-type', mime_content_type($baseUploadPath . $document->getRepourl()));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getName() . '"');
-        $response->headers->set('Content-Length', filesize('uploads/docs/' . $document->getRepourl()));
+        $response->headers->set('Content-Length', filesize($baseUploadPath . $document->getRepourl()));
 
-        $response->setContent(file_get_contents('uploads/docs/' . $document->getRepourl()));
+        $response->setContent(file_get_contents($baseUploadPath . $document->getRepourl()));
 
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $document->setDownloaded(true);
