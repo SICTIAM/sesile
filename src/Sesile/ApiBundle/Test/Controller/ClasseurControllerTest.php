@@ -147,33 +147,34 @@ class ClasseurControllerTest extends SesileWebTestCase
         $responseData = json_decode($this->client->getResponse()->getContent(), true);
     }
 
-    public function testUpdateActionShouldSucceed()
-    {
-        $user = $this->fixtures->getReference('user-one');
-        $classeur = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE);
-        $circuitDeValidation = $this->fixtures->getReference('circuit-validation');
-        $data = [
-            'name' => 'name',
-            'desc' => 'description',
-            'validation' => '11/08/2018',
-            'circuit' => $circuitDeValidation->getId(),
-            'visibilite' => 1,
-        ];
-        $this->client->request(
-            'PUT',
-            sprintf('/api/classeur/%s', $classeur->getId()),
-            array(),
-            array(),
-            array(
+//    public function testUpdateActionShouldSucceed()
+//    {
+//        $user = $this->fixtures->getReference('user-one');
+//        $classeur = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE);
+//        $circuitDeValidation = $this->fixtures->getReference('circuit-validation');
+//        $data = [
+//            'name' => 'name',
+//            'desc' => 'description',
+//            'validation' => '11/08/2018',
+//            'circuit' => $circuitDeValidation->getId(),
+////            'circuit' => $user->getId(),
+//            'visibilite' => 1,
+//        ];
+//        $this->client->request(
+//            'PUT',
+//            sprintf('/api/classeur/%s', $classeur->getId()),
+//            array(),
+//            array(),
+//            array(
 //                'CONTENT_TYPE' => 'application/json',
-                'HTTP_token' => $user->getApitoken(),
-                'HTTP_secret' => $user->getApisecret()
-            ),
+//                'HTTP_token' => $user->getApitoken(),
+//                'HTTP_secret' => $user->getApisecret()
+//            ),
 //            json_encode($data)
-            $data
-        );
-        $this->assertStatusCode(200, $this->client);
-    }
+////            $data
+//        );
+//        $this->assertStatusCode(200, $this->client);
+//    }
 
     public function testDeleteActionShouldSucceed()
     {
