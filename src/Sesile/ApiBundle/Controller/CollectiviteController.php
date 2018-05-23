@@ -124,7 +124,7 @@ class CollectiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $collectiviteOzwillo = $em->getRepository('SesileMainBundle:CollectiviteOzwillo')->findOneByInstanceId($request->get('instance_id'));
 
-        if ($collectiviteOzwillo->getInstanceId() == $request->get('instance_id')) {
+        if ($collectiviteOzwillo instanceof CollectiviteOzwillo) {
 
             if ($request->get('status') == 'STOPPED') {
                 $collectiviteOzwillo->getCollectivite()->setActive(false);
