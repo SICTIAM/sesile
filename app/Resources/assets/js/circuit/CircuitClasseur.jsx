@@ -224,11 +224,11 @@ const StepCircuit = ({
                 <div className={`${currentTextClassName(etape_classeur)} text-bold`}>
                     {etape_classeur.users && etape_classeur.users.filter(user => user.id).map((user, userKey) =>
                         <div key={"user" + user.id} style={{display: 'inline-block', width: '100%'}}>
-                            <div style={{display: 'inline-block', width: '90%'}}>
+                            <div style={{display: 'inline-block', width: '89%'}}>
                                 {user._prenom} {user._nom}
                             </div>
                             {editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
-                            <div style={{display: 'inline-block', float: 'right'}}>
+                            <div style={{display: 'inline-block', float: 'right', width: '11%'}}>
                                 <a onClick={() => removeUser(stepKey, userKey)}>
                                     <i className="fa fa-times icon-action" style={{fontSize: '1.2em'}}></i>
                                 </a>
@@ -236,11 +236,11 @@ const StepCircuit = ({
                         </div>)}
                     {etape_classeur.user_packs && etape_classeur.user_packs.map((user_pack, user_packKey) =>
                         <div key={"userpack" + user_pack.id} style={{display: 'inline-block', width: '100%'}}>
-                            <div style={{display: 'inline-block', width: '90%'}}>
+                            <div style={{display: 'inline-block', width: '89%'}}>
                                 {user_pack.nom}
                             </div>
                             {editable && !etape_classeur.etape_valide && !etape_classeur.etape_validante &&
-                            <div style={{display: 'inline-block', float: 'right'}}>
+                            <div style={{display: 'inline-block', float: 'right', width: '11%'}}>
                                 <a onClick={() => removeGroup(stepKey, user_packKey)}>
                                     <i className="fa fa-times icon-action" style={{fontSize: '1.2em'}}></i>
                                 </a>

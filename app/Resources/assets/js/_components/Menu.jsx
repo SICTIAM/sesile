@@ -33,7 +33,11 @@ class Menu extends Component {
                                     <NavLink to="/classeur/nouveau" className="grid-x align-middle">
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
-                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.new_classeur') }</div>
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">
+                                                    <span className="text-bold">
+                                                        {t('common.menu.new_classeur')}
+                                                    </span>
+                                                </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
                                                     <i className="fa fa-pencil-square-o"></i>
                                                 </div>
@@ -45,7 +49,11 @@ class Menu extends Component {
                                     <NavLink to="/classeurs/liste" className="grid-x align-middle">
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
-                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.list_classeur') }</div>
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">
+                                                    <span className="text-bold">
+                                                        {t('common.menu.list_classeur')}
+                                                    </span>
+                                                </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
                                                     <i className="fa fa-th-list"></i>
                                                 </div>
@@ -57,7 +65,11 @@ class Menu extends Component {
                                     <NavLink to="/classeurs/valides" className="grid-x align-middle">
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
-                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.validate_classeur') }</div>
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">
+                                                    <span className="text-bold">
+                                                        {t('common.menu.validate_classeur')}
+                                                    </span>
+                                                </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
                                                     <i className="fa fa-check-square-o"></i>
                                                 </div>
@@ -69,7 +81,11 @@ class Menu extends Component {
                                     <NavLink to="/classeurs/retractables" className="grid-x align-middle">
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
-                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.retractable_classeur') }</div>
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">
+                                                    <span className="text-bold">
+                                                        {t('common.menu.retractable_classeur')}
+                                                    </span>
+                                                </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
                                                     <i className="fa fa-repeat"></i>
                                                 </div>
@@ -81,7 +97,11 @@ class Menu extends Component {
                                     <NavLink to="/classeurs/supprimes" className="grid-x align-middle">
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
-                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.deletable_classeur') }</div>
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">
+                                                    <span className="text-bold">
+                                                        {t('common.menu.deletable_classeur')}
+                                                    </span>
+                                                </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
                                                     <i className="fa fa-close"></i>
                                                 </div>
@@ -93,7 +113,11 @@ class Menu extends Component {
                                     <NavLink to="/tableau-de-bord/stats" className="grid-x align-middle">
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
-                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.stats') }</div>
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">
+                                                    <span className="text-bold">
+                                                        {t('common.menu.stats')}
+                                                    </span>
+                                                </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
                                                     <i className="fa fa-pie-chart"></i>
                                                 </div>
@@ -105,7 +129,11 @@ class Menu extends Component {
                                     <NavLink to="/documentations" className="grid-x align-middle">
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
-                                                <div className="cell small-12 small-order-2 large-10 large-order-1">{ t('common.menu.help') }</div>
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">
+                                                    <span className="text-bold">
+                                                        {t('common.menu.help')}
+                                                    </span>
+                                                </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
                                                     <i className="fa fa-question-circle-o"></i>
                                                 </div>

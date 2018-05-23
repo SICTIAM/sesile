@@ -137,7 +137,9 @@ class Classeurs extends Component {
                 <div className="grid-x panel align-middle">
                     <div className="cell medium-12 list-classeurs">
                         <div className="grid-x panel-heading align-middle text-center tri-classeurs">
-                            <div className="cell small-6 medium-6 large-2 text-left large-offset-1">
+                            <div
+                                style={{paddingLeft: '5px'}}
+                                className="cell small-6 medium-6 large-2 text-left large-offset-1">
                                 {t('common.classeurs.sort_label.name')}
                             </div>
                             <div className="cell large-2 show-for-large">

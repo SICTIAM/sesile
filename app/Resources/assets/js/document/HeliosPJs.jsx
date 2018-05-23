@@ -15,7 +15,10 @@ class HeliosPJs extends Component {
             <div className="cell medium-12">
                 <div className="grid-x grid-margin-x grid-padding-x">
                     <div className="cell medium-12">
-                        <h3><span className="fa fa-caret-right"></span> { t('common.helios.attachment_list') }</h3>
+                        <h2>
+                            <span className="fa fa-caret-right"/>
+                            {t('common.helios.attachment_list')}
+                        </h2>
                     </div>
                 </div>
 
@@ -42,7 +45,14 @@ class HeliosPJs extends Component {
                                     <td>{ pj.civilite + " " + pj.prenom + " " + pj.nom }</td>
                                     <td>{ pj.objet }</td>
                                     <td>
-                                        <Select id="imputations">
+                                        <Select
+                                            id="imputations"
+                                            style={{
+                                                height: '100%',
+                                                margin: '0',
+                                                paddingBottom: '0',
+                                                paddingTop: '0'
+                                            }}>
                                             { pj.imputations.map(imputation => <option key={imputation} value={imputation}>{imputation}</option>)}
                                         </Select>
                                     </td>
@@ -51,9 +61,15 @@ class HeliosPJs extends Component {
                                     <td>{ pj.mt_t_t_c }</td>
                                     <td>
                                         { pj.liste_p_js.length > 0 &&
-                                            <Select id="pj"
-                                                    onChange={handleClickPJ}
-                                            >
+                                            <Select
+                                                id="pj"
+                                                onChange={handleClickPJ}
+                                                style={{
+                                                    height: '100%',
+                                                    margin: '0',
+                                                    paddingBottom: '0',
+                                                    paddingTop: '0'
+                                                }}>
                                                 <option></option>
                                                 { pj.liste_p_js.map(liste_p_j => <option key={liste_p_j.id} value={liste_p_j.id}>{liste_p_j.nom}</option>)}
                                             </Select>

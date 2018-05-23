@@ -15,7 +15,10 @@ class HeliosVoucher extends Component {
             <div className="cell medium-12">
                 <div className="grid-x">
                     <div className="cell medium-12">
-                        <h3><span className="fa fa-caret-right"></span> { t('common.helios.voucher_infos') }</h3>
+                        <h2>
+                            <span className="fa fa-caret-right"/>
+                            {t('common.helios.voucher_infos')}
+                        </h2>
                     </div>
                 </div>
                 <div className="grid-x">

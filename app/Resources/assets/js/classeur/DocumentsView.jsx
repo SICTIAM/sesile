@@ -98,14 +98,14 @@ class DocumentsView extends Component {
     handleClickDocument = (e, id) => {
         e.preventDefault()
         e.stopPropagation()
-        this.fetchDocument(id)
+        if(id !== this.state.currentDocument.id) this.fetchDocument(id)
     }
 
     displayReveal = (e, id) => {
         e.preventDefault()
         e.stopPropagation()
         this.setState({revealDisplay: 'block'})
-        this.fetchDocument(id)
+        if(id !== this.state.currentDocument.id) this.fetchDocument(id)
     }
     hideRevealDisplay = () => {
         this.setState({revealDisplay: 'none'})
@@ -118,22 +118,22 @@ class DocumentsView extends Component {
                 this.setState({user: json})
             })
     }
-
+    isXmlFileType = (document) => document.type === "text/xml"
     render () {
+        const { t } = this.context
         const { documents, currentDocument, revealDisplay, user } = this.state
         const { classeurType, status, editClasseur } = this.props
-        const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'pdf', 'ppt', 'pptx']
+        const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'ppt', 'pptx']
         const imageType = ['png', 'jpg', 'jpeg', 'gif']
         const heliosType = ['xml']
         let fileType
         currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
-
         return (
             <div>
                 <DocumentsNew
                     documents={documents}
                     onClick={this.handleClickDocument}
-                    onDrop={ this.onDrop }
+                    onDrop={this.onDrop}
                     removeDocument={this.removeDocument}
                     displayReveal={this.displayReveal}
                     typeClasseur={classeurType}
@@ -154,17 +154,27 @@ class DocumentsView extends Component {
                         </div>
                     }
 
-                    { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "none" && classeurType.nom === "Helios" &&
-                        <Helios document={ currentDocument } />
+                    { this.isXmlFileType(currentDocument) && currentDocument.id && revealDisplay === "none" &&
+                        <div>
+                            <Helios document={ currentDocument } />
+                        </div>
                     }
-                    { heliosType.includes(fileType) && currentDocument.id && revealDisplay === "block" && classeurType.nom === "Helios" &&
+                    { this.isXmlFileType(currentDocument) && currentDocument.id && revealDisplay === "block" &&
                         <div className="reveal-full" style={{display: revealDisplay}}>
                             <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>
                             <Helios document={ Object.assign({}, currentDocument) } />
                         </div>
                     }
-
-
+                    {(currentDocument.type === 'application/pdf') &&
+                        <iframe
+                            id={currentDocument.name}
+                            style={{
+                                padding: 0,
+                                border: '5px'}}
+                            className="cell medium-12 only-office-height"
+                            src={`./../uploads/docs/${currentDocument.repourl}`}>
+                            {t('common.browser_not_support_pdf')}, <a src={`./../uploads/docs/${currentDocument.repourl}`}>{t('common.download_pdf')}</a>
+                        </iframe>}
                     { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" && user.id ) &&
                         <div className="reveal-full" style={{display: revealDisplay}}>
                             <div className="fa fa-close reveal-ico" onClick={() => this.hideRevealDisplay()}></div>

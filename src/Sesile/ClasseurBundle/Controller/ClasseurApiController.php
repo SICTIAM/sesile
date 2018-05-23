@@ -148,8 +148,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         foreach ($documents as $key => $document) {
             $fileSize = filesize($this->getParameter('upload')['fics'] . $document->getRepourl());
             $document->setSize($fileSize);
-            $this->get('logger')->debug("taile du fichier depuis la var {size}", array('size' => $fileSize));
-            $this->get('logger')->debug("taile du fichier {size}", array('size' => $document->getSize()));
         }
         return $classeur;
     }
@@ -271,6 +269,12 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         $actionMailer = $this->get(ActionMailer::class);
         $actionMailer->sendNotificationClasseur($classeur);
+
+        $documents = $classeur->getDocuments();
+        foreach ($documents as $key => $document) {
+            $fileSize = filesize($this->getParameter('upload')['fics'] . $document->getRepourl());
+            $document->setSize($fileSize);
+        }
 
         return $classeur;
     }

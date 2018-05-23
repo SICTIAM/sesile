@@ -180,9 +180,9 @@ html {
 
     &:hover, &.active, &:active {
       .fa {
-        color: $sesile-primary;
+        color: $sesile-color-2;
       }
-      color: $sesile-primary;
+      color: $sesile-color-2;
     }
   }
 
@@ -250,7 +250,7 @@ html {
     color: map-get($sesile-color, 'dark-blue');
 
     .classeur-name:hover {
-      color: #ec5935;
+      color: $sesile-color-2;
     }
 
     .tri-classeurs {
@@ -1334,4 +1334,8 @@ select {
   cursor: default;
   font-size: 0.85em;
   color: rgba(138, 138, 137, 0.58);
+}
+
+.text-capitalize-first-letter::first-letter {
+  text-transform: uppercase;
 }

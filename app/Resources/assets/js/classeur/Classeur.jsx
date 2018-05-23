@@ -54,7 +54,13 @@ class Classeur extends Component {
     getClasseur(id) {
         fetch(Routing.generate('sesile_classeur_classeurapi_getbyid', {id}), {credentials: 'same-origin'})
             .then(response => response.json())
-            .then(json => this.setState({classeur: json}))
+            .then(json => {
+                this.setState({classeur: json})
+                json.documents.map(document => {
+                    let htmlIdDocument = `#document-dropdown-${document.id}`
+                    $(htmlIdDocument).foundation()
+                })
+            })
     }
 
     postAction = () => {

@@ -70,7 +70,9 @@ class ClasseursRow extends Component {
                     </span>
                 </div>
                 <Link
-                    className="classeur-name cell small-6 medium-6 large-2 text-left text-bold"
+                    title={classeur.nom}
+                    className="classeur-name cell small-6 medium-6 large-2 text-left text-bold text-truncate"
+                    style={{paddingLeft: '5px'}}
                     to={`/classeur/${classeur.id}`}>
                     {classeur.nom}
                 </Link>
