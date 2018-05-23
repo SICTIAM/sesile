@@ -79,6 +79,7 @@ class CollectiviteControllerTest extends SesileWebTestCase
         self::assertInstanceOf(User::class, $userData);
         self::assertCount(1, $userData->getCollectivities());
         self::assertEquals('987654321', $userData->getCollectivities()->first()->getSiren());
+        self::assertEquals('organization-name', $userData->getCollectivities()->first()->getDomain());
         self::assertEquals('adb82586-d2f2-4eea-98e9-12999d12c80d', $userData->getCollectivities()->first()->getOzwillo()->getInstanceId());
     }
 
