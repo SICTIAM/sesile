@@ -55,18 +55,54 @@ class CollectiviteController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $siren = substr(strrchr($request->get('organization')['dc_id'], "/"), 1, 9);
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($request->get('user')['email_address']);
-
-        if ($em->getRepository('SesileMainBundle:Collectivite')->findOneBySiren($siren)) {
-            return new JsonResponse("There already exists a local authority with SIREN", Response::HTTP_BAD_REQUEST);
+        $userObject = $request->get('user');
+        if (isset($request->get('user')['email_address'])) {
+            $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($request->get('user')['email_address']);
+        } else {
+            $user = $em->getRepository('SesileUserBundle:User')->findOneByOzwilloId($userObject['id']);
         }
 
-        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->createCollectiviteFromOzwillo($request);
-        $userOzwillo = $em->getRepository('SesileUserBundle:User')->createUserFromOzwillo($user, $request, $collectivite);
+        $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->findOneBySiren($siren);
+        if ($collectivite && $collectivite->getOzwillo() instanceof CollectiviteOzwillo) {
+            return new JsonResponse("There already exists a local authority with SIREN", Response::HTTP_BAD_REQUEST);
+        } elseif ($collectivite && !$collectivite->getOzwillo()) {
+            //create CollectiviteOzwillo
+            $collectiviteOzwillo = $this->buildCollectiviteOzwilloFromOzwilloRequest($request, $collectivite);
+            $collectivite->setOzwillo($collectiviteOzwillo);
+            $em->persist($collectiviteOzwillo);
+            $em->persist($collectivite);
+            $em->flush();
+        } else {
+            $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->createCollectiviteFromOzwillo($request);
+        }
+
+        $userOzwillo = $em->getRepository('SesileUserBundle:User')->createUserFromOzwillo($user, $userObject, $collectivite);
 
         $notifyRegistrationToKernel = $this->notifyRegistrationToKernel($collectivite);
 
         return new JsonResponse($notifyRegistrationToKernel, Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * @param Request $request
+     * @param Collectivite $collectivite
+     *
+     * @return CollectiviteOzwillo
+     */
+    private function buildCollectiviteOzwilloFromOzwilloRequest(Request $request, Collectivite $collectivite)
+    {
+        $collectiviteOzwillo = new CollectiviteOzwillo();
+        $collectiviteOzwillo->setInstanceId($request->get('instance_id'));
+        $collectiviteOzwillo->setClientId($request->get('client_id'));
+        $collectiviteOzwillo->setClientSecret($request->get('client_secret'));
+        $collectiviteOzwillo->setInstanceRegistrationUri($request->get('instance_registration_uri'));
+        $collectiviteOzwillo->setDcId($request->get('organization')['dc_id']);
+        $collectiviteOzwillo->setServiceId($request->get('instance_id'));
+        $collectiviteOzwillo->setDestructionSecret(base64_encode(random_bytes(10)));
+        $collectiviteOzwillo->setStatusChangedSecret(base64_encode(random_bytes(10)));
+        $collectiviteOzwillo->setCollectivite($collectivite);
+
+        return $collectiviteOzwillo;
     }
 
 

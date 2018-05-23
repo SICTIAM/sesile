@@ -177,18 +177,26 @@ class UserRepository extends EntityRepository {
             ->getResult();
     }
 
-
-    public function createUserFromOzwillo ($user, Request $request, Collectivite $collectivite) {
+    /**
+     * @param $user
+     * @param $userObject array of the user object inside the request->get('user')
+     * @param Collectivite $collectivite
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function createUserFromOzwillo ($user, $userObject, Collectivite $collectivite) {
         $em = $this->getEntityManager();
         if (!$user) {
             $user = new User();
             $user->setEnabled(true);
-            $user->setUsername($request->get('user')['name']);
-            $user->setEmail($request->get('user')['email_address']);
+            $user->setUsername($userObject['name']);
+            $user->setEmail($userObject['email_address']);
             $user->setPlainPassword('sictiam');
+            $user->setOzwilloId($userObject['id']);
         }
 
         $user->setCollectivite($collectivite);
+        $user->addCollectivity($collectivite);
         $user->addRole("ROLE_ADMIN");
         $em->persist($user);
 
