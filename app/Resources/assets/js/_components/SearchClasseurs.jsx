@@ -14,6 +14,7 @@ class SearchClasseurs extends Component {
     }
 
     state = {
+        currentOrgId : this.props.user.current_org_id,
         classeurs: [],
         filteredClasseurs: [],
         nomClasseur: ''
@@ -25,7 +26,7 @@ class SearchClasseurs extends Component {
 
     fetchClasseurs() {
         const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_classeur_classeurapi_listall'), { credentials: 'same-origin' })
+        fetch(Routing.generate('sesile_classeur_classeurapi_listall', {orgId: this.state.currentOrgId}), { credentials: 'same-origin' })
             .then(handleErrors)
             .then(response => response.json())
             .then(classeurs => this.setState({classeurs}))

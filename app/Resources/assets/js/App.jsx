@@ -100,7 +100,7 @@ class App extends Component {
                                     </div>
                                     <div className="cell large-4 show-for-large">
                                         { user.id &&
-                                            <SearchClasseurs/>
+                                            <SearchClasseurs user={this.state.user}/>
                                         }
                                     </div>
                                     <div className="cell large-3 show-for-large"></div>
@@ -124,7 +124,7 @@ class App extends Component {
                                             <div className="cell medium-12 small-12">
                                                 <NotificationSystem ref={n => this._notificationSystem = n} style={this.notificationStyle} />
                                                 {user.id &&
-                                                    <AppRoute user={user}/>
+                                                    <AppRoute user={user} />
                                                 }
                                             </div>
                                         </div>

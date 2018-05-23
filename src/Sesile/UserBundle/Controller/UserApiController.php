@@ -27,6 +27,9 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
     public function getCurrentAction() {
         $user = $this->getUser();
+        if (!$user) {
+            return [];
+        }
         $user->setOzwillo($this->container->getParameter('ozwillo_portal'));
         $token = $this->container->get('security.token_storage')->getToken();
         if ($token->hasAttribute('orgId')){

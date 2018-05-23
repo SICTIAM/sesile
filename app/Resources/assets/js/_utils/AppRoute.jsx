@@ -45,8 +45,8 @@ class AppRoute extends Component {
         return (
             (!!user) &&
             <Switch>
-                <Route path={"/"} exact={true} component={DashBoard} />
-                <Route path={"/tableau-de-bord"} exact={true} component={DashBoard} />
+                <Route path={"/"} exact={true} component={() => <DashBoard user={user}/>} />
+                <Route path={"/tableau-de-bord"} exact={true} component={() => <DashBoard user={user}/>} />
                 <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
                 <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />
                 <Route path={"/classeur/nouveau"} exact={true} component={ClasseurNew} user={user} />
