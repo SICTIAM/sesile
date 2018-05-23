@@ -69,8 +69,8 @@ class CollectiviteControllerTest extends SesileWebTestCase
             ),
             json_encode($data)
         );
-        $response = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertStatusCode(202, $this->client);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
         /**
          * check database
          */
@@ -78,9 +78,40 @@ class CollectiviteControllerTest extends SesileWebTestCase
         $userData = $em->getRepository(User::class)->findOneBy(['ozwilloId' => '8dee7298-6a11-431c-861d-4c983fcbd137']);
         self::assertInstanceOf(User::class, $userData);
         self::assertCount(1, $userData->getCollectivities());
-        self::assertEquals('987654321', $userData->getCollectivities()->first()->getSiren());
-        self::assertEquals('organization-name', $userData->getCollectivities()->first()->getDomain());
-        self::assertEquals('adb82586-d2f2-4eea-98e9-12999d12c80d', $userData->getCollectivities()->first()->getOzwillo()->getInstanceId());
+        $newCollectivite = $userData->getCollectivities()->first();
+        self::assertEquals('987654321', $newCollectivite->getSiren());
+        self::assertEquals('organization-name', $newCollectivite->getDomain());
+        self::assertEquals('adb82586-d2f2-4eea-98e9-12999d12c80d', $newCollectivite->getOzwillo()->getInstanceId());
+        /**
+         * Assert Response
+         */
+
+        $mustHave = [
+            'instance_id' => "adb82586-d2f2-4eea-98e9-12999d12c80d",
+            'destruction_uri' => sprintf("http://localhost/api/collectivite/delete?id=%s", $newCollectivite->getId()),
+//            'destruction_secret' => "ZPr3H9y3hBklew==",
+            'status_changed_uri' => sprintf("http://localhost/api/collectivite/update?id=%s", $newCollectivite->getId()),
+//            'status_changed_secret' => "o6EmG/ahs9fpag==",
+            'services' => [
+                'name' => "SESILE - SICTIAM",
+                'tos_uri' => "https://sesile.fr/tos",
+                'policy_uri' => "https://sesile.fr/policy",
+                'icon' => "https://sesile.fr/images/favicons/sesile-icon-64x64.png",
+                'contacts' =>
+                    [
+                        "demat@sictiam.fr",
+                    ],
+                'payment_option' => "PAID",
+                'target_audience' => "PUBLIC_BODY",
+                'visibility' => "VISIBLE",
+                'access_control' => "RESTRICTED",
+                'service_uri' => "https://organization-name.sesile.fr/",
+                'redirect_uris' => [
+                    "https://organization-name.sesile.fr/login/check-ozwillo",
+                ],
+            ],
+        ];
+        self::assertArraySubset($mustHave, $response);
     }
 
     public function testPostActionCreateANewCollectivityForExistingAdminUserFromOzwillo()
