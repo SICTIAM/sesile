@@ -24,10 +24,17 @@ class HeliosInfos extends Component {
                 <div className="grid-x align-middle">
                     <div className="cell medium-3 text-bold">{t('common.helios.voucher')}</div>
 
-                    <Select id="vouchers"
-                            value={voucher.id}
-                            className="medium-6 cell"
-                            onChange={handleChangeVouchers}>
+                    <Select
+                        style={{
+                            height: '100%',
+                            margin: '0',
+                            paddingBottom: '0',
+                            paddingTop: '0'
+                        }}
+                        id="vouchers"
+                        value={voucher.id}
+                        className="medium-6 cell"
+                        onChange={handleChangeVouchers}>
                         {ListVouchers}
                     </Select>
                 </div>

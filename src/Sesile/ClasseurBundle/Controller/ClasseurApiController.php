@@ -144,7 +144,11 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
     {
         $classeur = $this->getDoctrine()->getManager()->getRepository('SesileClasseurBundle:Classeur')
                         ->addClasseurValue($classeur, $this->getUser()->getId());
-
+        $documents = $classeur->getDocuments();
+        foreach ($documents as $key => $document) {
+            $fileSize = filesize($this->getParameter('upload')['fics'] . $document->getRepourl());
+            $document->setSize($fileSize);
+        }
         return $classeur;
     }
 
@@ -234,7 +238,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                         $em->remove($etapeClasseur);
                     }
                 }
-
+                $this->get('logger')->debug("voici la nouvelle visibilité {visibilite}", array('visibilite' => $classeur->getVisibilite()));
                 $em->persist($classeur);
                 $em->flush();
 
@@ -265,6 +269,12 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         $actionMailer = $this->get(ActionMailer::class);
         $actionMailer->sendNotificationClasseur($classeur);
+
+        $documents = $classeur->getDocuments();
+        foreach ($documents as $key => $document) {
+            $fileSize = filesize($this->getParameter('upload')['fics'] . $document->getRepourl());
+            $document->setSize($fileSize);
+        }
 
         return $classeur;
     }

@@ -21,7 +21,6 @@ class OnlyOffice extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-
         if (nextProps.document.id !== this.props.document.id) {
             this.updateOnlyOfficeScript(nextProps.document)
 
@@ -86,8 +85,13 @@ class OnlyOffice extends Component {
 
         return (
             <div className={"cell medium-12 " + className } key={this.props.document.id} id="modal-root" >
-                <div id="placeholder" className="text-center">
-                    <h3>{t('common.documents.no_preview')}</h3>
+                <div className="grid-x grid-margin-x grid-margin-y grid-padding-x">
+                    <div className="cell medium-12">
+                        <div id="placeholder" className="callout alert">
+                            <h5>{t('common.documents.no_preview')}</h5>
+                            <p>{t('common.documents.error.preview')}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

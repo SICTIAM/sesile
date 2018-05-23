@@ -9,17 +9,19 @@ class ClasseursList extends Component {
         t: func
     }
 
-    constructor(props) {
-        super(props);
-    }
-
     render(){
         const { t } = this.context
 
         return (
             <div className="grid-x grid-margin-x grid-padding-x grid-padding-y align-center-middle">
+                <div className="cell medium-12 text-center">
+                    <h2>{t('common.menu.list_classeur')}</h2>
+                </div>
                 <div className="cell medium-12 head-list-classeurs">
-                    <Classeurs url="sesile_classeur_classeurapi_list" userId={this.props.userId} user={this.props.user} />
+                    <Classeurs
+                        url="sesile_classeur_classeurapi_list"
+                        userId={this.props.userId}
+                        user={this.props.user} />
                 </div>
             </div>
         )

@@ -75,19 +75,19 @@ class Helios extends Component {
                     </div>
                 }
 
-                <div className="grid-x grid-margin-x grid-padding-x panel">
+                <div className="grid-x grid-margin-x grid-padding-x">
                     <div className="cell medium-12">
                         <h2><i className="fa fa-eye"></i> {t('common.helios.title')}</h2>
                     </div>
                 </div>
 
-                 <div className="grid-x panel grid-margin-x grid-padding-x">
+                 <div className="grid-x grid-margin-x grid-padding-x">
                     <HeliosInfos pes={pes}
                                  voucher={voucher}
                                  handleChangeVouchers={this.handleChangeVouchers}
                     />
                  </div>
-                <div className="grid-x panel grid-margin-x grid-padding-x">
+                <div className="grid-x grid-margin-x grid-padding-x">
                     <HeliosVoucher voucher={voucher} />
                 </div>
                 <div className="grid-x">

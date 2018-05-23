@@ -102,7 +102,7 @@
             "title_infos": "Informations générales",
             "sort": "trier",
             "search": "Une recherche ?",
-            "date_limit": "Date limite le",
+            "date_limit": "Date limite de validation",
             "classeur_name": "Nom du classeur",
             "users_copy": "Utilisateurs en copie",
             "users_copy_select": "Sélectionner les utilisateurs",
@@ -159,7 +159,6 @@
                 "actions": "Actions",
                 "select": "Sélection"
             }
-
         },
         "documents": {
             "name": "document",
@@ -175,6 +174,7 @@
             "btn_both": "visa + signature",
             "no_preview": "Aucune prévisualisation possible",
             "error": {
+                "preview": "Une erreur est survenue lors de la prévisualisation du document",
                 "file_acceptation_rules": "Les fichiers doivent être au bon format et d'une taille maximum de 100 Mo",
                 "file_acceptation_rules_helios": "Le classeur ne doit comporter qu'un seul fichier PES au format xml. La taille maximum du fichier est 100 Mo"
             }
@@ -208,13 +208,14 @@
         "consult_document": "Voir le document",
         "search_by_name": "Recherche par nom",
         "type_a_name": "Saisir un nom",
-        "file_acceptation_rules": "Le fichier doit être au format {{types}} et d'une taille maximum de {{sizeMax}}",
+        "file_acceptation_rules": "Les fichiers doivent être au format {{types}} et d'une taille maximale de {{sizeMax}}",
         "sign_classeur": "Signer le classeur",
         "sign_classeur_plural": "Signer les classeurs",
         "sign_several_classeurs": "Signer plusieurs classeurs",
         "list_documents_by_classeur": "Liste des documents par classeur",
         "browser_not_support_pdf": "Votre navigateur ne supporte pas le format PDF",
-        "download_pdf": "Télécharger le PDF"
+        "download_pdf": "Télécharger le PDF",
+        "infos": "informations"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
@@ -245,7 +246,7 @@
             "type_user_name": "Entrez le nom d'un utilisateur",
             "name": "Nom du {{name}}",
             "type_name": "Entrez le nom du {{name}}...",
-            "type_userName_or_groupName": "Groupe ou utilisateur...",
+            "type_userName_or_groupName": "Recherche d'utilisateur et de groupe",
             "subject": "Sujet",
             "message": "Message",
             "add_circuit": "Nouveau circuit de validation"
@@ -327,7 +328,7 @@
             "subtitle_geo": "Informations géographiques",
             "subtitle_application": "Informations applications",
             "subtitle_role": "Rôles de l'utilisateur",
-            "image_avatar": "avatar",
+            "image_avatar": "photo de profil",
             "image_signature": "signature",
             "label_email": "Email",
             "placeholder_email": "Email de l'utilisateur",

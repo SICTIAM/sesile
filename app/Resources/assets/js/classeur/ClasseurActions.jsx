@@ -25,15 +25,15 @@ class ClasseurActions extends Component {
                         <h3 className="cell medium-12">{ t('common.classeurs.comments.name') }</h3>
                     </div>
 
-                    <div className="grid-x grid-margin-x grid-padding-x align-top text-center">
-                        <div className="cell medium-2 show-for-medium"><span className="fa fa-comment"></span></div>
+                    <div className="grid-x grid-margin-x grid-padding-x align-top">
                         <Textarea
                             id="new-action"
                             name="newAction"
-                            placeholder={ t('common.classeurs.comments.new') }
+                            placeholder={t('common.classeurs.comments.new')}
                             onChange={addComment}
-                            className="cell medium-10 small-12"
+                            className="cell medium-12 small-12"
                             value={action}
+                            style={{width: '100%', height: '78px'}}
                         />
                     </div>
 
@@ -46,18 +46,29 @@ class ClasseurActions extends Component {
                     </div>
 
                     { actions && actions.map((action) =>
-                        <div className="grid-x grid-margin-x grid-padding-x align-top text-center" key={action.id}>
-                            <div className="cell small-12 medium-2"><span className="fa fa-comment"></span></div>
-                            <div className="cell small-12 medium-10 text-left">
-                                <p>
-                                    { action.action } <span className="text-author">{ t('common.classeurs.comments.from') } {
-                                        action.user_action
-                                            ? action.user_action._prenom  + " " + action.user_action._nom
-                                            : action.username
-                                    }</span>
-                                    <span className="text-date"> { t('common.classeurs.comments.the') } { Moment(action.date).format('Do MMMM YYYY à HH:mm:ss') }
+                        <div key={action.id}>
+                            <hr style={{height: '0.2rem', margin: '1rem auto'}}/>
+                            <div className="align-middle" style={{display: 'flex'}}>
+                                <div className="" style={{marginLeft: '0.5em', display: 'inline-block'}}>
+                                    <i className="fa fa-comment" style={{fontSize: '1.2em'}} />
+                                </div>
+                                <div
+                                    className="text-left"
+                                    style={{
+                                        display: 'inline-block',
+                                        width: '90%',
+                                        marginLeft: '1em'}}>
+                                    {action.action}
+                                    <br/>
+                                    <span className="text-author text-capitalize">
+                                        {action.user_action ?
+                                            `${action.user_action._prenom}  ${action.user_action._nom}` :
+                                            `${action.username}`}
                                     </span>
-                                </p>
+                                    <span className="text-date">
+                                        {` ${t('common.classeurs.comments.the')} ${Moment(action.date).format('Do MMMM YYYY à HH:mm:ss')}`}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     )}

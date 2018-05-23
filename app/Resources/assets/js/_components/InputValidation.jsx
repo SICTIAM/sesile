@@ -4,7 +4,17 @@ import { Input, InputDatePicker } from './Form'
 
 export default class InputValidation extends Component {
     state = { isValid: true, errorMessage: '' }
-    static defaultProps = { value: '', type: '', accept: '', className: '', autoFocus: false, labelText: '', minDate: '', maxDate: ''  }
+    static defaultProps = {
+        value: '',
+        type: '',
+        accept: '',
+        className: '',
+        autoFocus: false,
+        labelText: '',
+        minDate: '',
+        maxDate: '',
+        readOnly: false
+    }
     validateValue = () => {
         const validation = new Validator({ [this.props.id]: this.props.value }, { [this.props.id]: this.props.validationRule }, this.props.customErrorMessages)
         const isValid = validation.passes()
@@ -27,7 +37,8 @@ export default class InputValidation extends Component {
                             value={this.props.value}
                             onChange={this.props.onChange}
                             onBlur={this.validateValue}
-                            helpText={this.props.helpText}/>}
+                            helpText={this.props.helpText}
+                            readOnly={this.props.readOnly}/>}
                 {(this.props.type === 'date' ) &&
                     <InputDatePicker    id={this.props.id}
                                         date={this.props.value}

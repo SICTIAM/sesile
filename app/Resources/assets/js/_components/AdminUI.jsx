@@ -4,7 +4,7 @@ import History from '../_utils/History'
 const AdminDetails = ({ className, title, subtitle, nom, children }) => 
     <div className={className}>
         <div id="admin-details" className="admin-details">
-            <h4 className="text-center text-bold text-uppercase">{title}</h4>
+            <h2 className="text-center">{title}</h2>
             <p className="text-center">
                 <em>{subtitle}</em>
             </p>
@@ -18,7 +18,7 @@ const AdminDetails = ({ className, title, subtitle, nom, children }) =>
 const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName, handleChangeName, placeholder, children }) => 
     <div className={className}>
         <div id="admin-details-input" className="admin-details">
-            <h4 className="text-center text-bold">{title}</h4>
+            <h2 className="text-center">{title}</h2>
             <p className="text-center">{subtitle}</p>
             <div className="admin-details-name">
                 <input name={inputName} value={nom} onChange={(e) => handleChangeName(e.target.name, e.target.value)} placeholder={placeholder} autoFocus={true}/>
@@ -50,8 +50,8 @@ const AccordionItem = ({ className, title, children, classNameChild }) =>
 const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey }) =>
     <div className={className}>
         <div className="grid-x step-item">
-            <div className="medium-12 cell name-step-item">
-            {title}<a className="float-right" style={{color: "red"}} onClick={e => handleClickDeleteStep(stepKey)}>x</a>
+            <div className="medium-12 cell name-step-item" style={{color: '#444'}}>
+            {title}<a className="float-right" onClick={e => handleClickDeleteStep(stepKey)}><i className="fa fa-times-circle icon-size"></i></a>
             </div>
             <div className="medium-12 cell content-step-item">
                 {children}

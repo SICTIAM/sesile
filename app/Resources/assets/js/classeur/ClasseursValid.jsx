@@ -18,9 +18,13 @@ class ClasseursValid extends Component {
 
         return (
             <div className="grid-x grid-margin-x grid-padding-x grid-padding-y align-center-middle">
-                <div className="cell medium-12 head-list-classeurs">
-                    <Classeurs url="sesile_classeur_classeurapi_valid" userId={this.props.userId} user={this.props.user} />
+                <div className="cell medium-12 text-center">
+                    <h2>{t('common.menu.validate_classeur')}</h2>
                 </div>
+                <Classeurs
+                    url="sesile_classeur_classeurapi_valid"
+                    userId={this.props.userId}
+                    user={this.props.user} />
             </div>
         )
     }

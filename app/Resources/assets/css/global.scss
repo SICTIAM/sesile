@@ -1,4 +1,3 @@
-
 $foundation-palette: (
     primary: #34a3fc,
     secondary: #2068a2,
@@ -8,8 +7,17 @@ $foundation-palette: (
     ozwillo: #663399,
 );
 
+$foundation-palette-hover: (
+    primary: #356bfc,
+    secondary: #1c43a2,
+    success: #2d6725,
+    warning: #e2661d,
+    alert: #851206,
+    ozwillo: #452c71,
+);
+
 $button-palette: map-merge($foundation-palette, (
-        gray: #edf2f6
+        gray: #f4f4f4
 )) !default;
 
 $title-color: #797c92;
@@ -24,18 +32,15 @@ $sesile-color: (
 $label-color: #FFFFFF;
 $label-color-alt: #FFFFFF;
 $label-radius: 0.3em;
-
+@import url(http://fonts.googleapis.com/css?family=Lato:300,700);
 @import "./../../../../node_modules/foundation-sites/scss/foundation";
-@include foundation-everything(true);
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700|Raleway:400,700|Work+Sans:400,700');
+@include foundation-everything($prototype: true);
 @import './../../../../node_modules/react-datepicker/dist/react-datepicker.css';
 @import './../../../../node_modules/react-select/dist/react-select.css';
 @import './../../../../node_modules/font-awesome/scss/font-awesome';
 
 $font-color-primary: #ffffff;
-$font-family: 'Work Sans', sans-serif;;
-$font-family-primary: 'Open Sans', sans-serif;
-$font-family-secondary: 'Raleway', sans-serif;
+$font-family: 'Lato';
 $sesile-primary: #fe5e3a;
 
 html {
@@ -175,9 +180,9 @@ html {
 
     &:hover, &.active, &:active {
       .fa {
-        color: $sesile-primary;
+        color: $sesile-color-2;
       }
-      color: $sesile-primary;
+      color: $sesile-color-2;
     }
   }
 
@@ -209,8 +214,11 @@ html {
 
 .main {
   h2 {
-    font-size: 2em;
+    font-size: 1.7em;
     font-family: $font-family;
+    font-weight: 700;
+    color: $sesile-color-3;
+    text-transform: uppercase;
   }
   h3 {
     font-size: 1.5em;
@@ -241,12 +249,8 @@ html {
   .list-classeurs, .list-classeurs a {
     color: map-get($sesile-color, 'dark-blue');
 
-    .dropdown-valign {
-      margin-top: 1em;
-    }
-
     .classeur-name:hover {
-      color: #ec5935;
+      color: $sesile-color-2;
     }
 
     .tri-classeurs {
@@ -267,7 +271,7 @@ html {
       margin-top: 0.8em;
     }
     .panel-body:hover, .panel-body:hover a {
-      background-color: #edf2f6;
+      background-color: #f4f4f4;
     }
     .img-avatar {
       margin-right:1em;
@@ -278,7 +282,7 @@ html {
 
     .dropdown-pane-circuit {
       font-size: 0.875em;
-      background-color: #edf2f6;
+      background-color: #f4f4f4;
       border-bottom: 0;
       h3 {
         color: $title-color;
@@ -287,7 +291,7 @@ html {
         text-transform: uppercase;
       }
       .panel {
-        background-color: #edf2f6;
+        background-color: #f4f4f4;
       }
     }
 
@@ -310,19 +314,6 @@ html {
   }
 
   .button-list {
-    a {
-      font-size: 1.5em;
-      &.fa {
-        color: lighten(map-get($sesile-color, 'gray-blue'), 30);
-      }
-
-      &:hover {
-        &.fa {
-          color: $sesile-primary;
-        }
-        color: $sesile-primary;
-      }
-    }
     .dropdown-pane {
       width: auto;
     }
@@ -341,7 +332,8 @@ html {
 
   .progress {
     border-radius: 1em;
-    height: 0.7em;
+    height: 0.5em;
+    margin-bottom: 0;
     background-color: white;
     border: solid 1px #a7a7a7;
   }
@@ -358,7 +350,7 @@ html {
     color: grey;
   }
 
-  background-color: #edf2f6;
+  background-color: #f4f4f4;
 
   .actu {
     color: $font-color-primary;
@@ -384,14 +376,22 @@ html {
 
   .panel {
     background-color: #ffffff;
-    border-radius: 0.3em;
     margin-bottom: 2em;
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+    border-radius: .28571429rem;
+    border: 1px solid rgba(34,36,38,.15);
+    h3 {
+      margin-bottom: 0.5em;
+      font-weight: 700;
+      color: $sesile-color-1;
+    }
     .panel-heading {
       font-weight:700;
       font-size:1em;
       text-transform: uppercase;
-      padding-top:1.5em;
-      padding-bottom:1em;
+      padding-top:0.5em;
+      padding-bottom:0.5em;
+      color: $sesile-color-1;
     }
     .panel-body {
       color: map-get($sesile-color, 'dark-blue');
@@ -629,15 +629,32 @@ html {
 
 .step-item{
   border-radius: 0.3em;
-  background: $light-gray;
+  background: #c6e4f1;
   padding: 0.3em;
 
   button {
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    .icon-size {
+      font-size:2.2em;
+      color: $sesile-color-1;
+      margin-right: 0.3em;
+    }
   }
 
   .name-step-item {
     font-weight: 700;
+    color: $sesile-color-3;
+    a{
+      color: $sesile-color-1;
+      i {
+        font-size: 1.2em;
+      }
+      i:hover {
+        color: red;
+      }
+    }
   }
 
   .content-step-item {
@@ -646,6 +663,12 @@ html {
     color: $dark-gray;
     ul {
       padding:0.5em;
+      li {
+        color: #444;
+        .step-item-hover:hover {
+          color: red;
+        }
+      }
     }
     a {
       color: $dark-gray;
@@ -905,6 +928,7 @@ $list-group-margin: $global-margin;
 
 .react-autosuggest__container {
   position: relative;
+  margin-top: 0.5em;
 }
 
 .react-autosuggest__input {
@@ -917,6 +941,7 @@ $list-group-margin: $global-margin;
   border: 1px solid #aaa;
   border-radius: 4px;
   -webkit-appearance: none;
+  margin-bottom: 0%;
 }
 
 .react-autosuggest__input--focused {
@@ -1077,7 +1102,6 @@ label > input {
 }
 
 .documentation-dropzone {
-  min-height: 10em;
   border: rgba(64, 66, 87, 1) 0.1em dashed;
   border-radius: 0.3em;
   text-align: center;
@@ -1086,6 +1110,14 @@ label > input {
 
 .documentation-dropzone:hover {
   background-color: rgba(64, 66, 87, 0.53);
+}
+
+.documentation-dropzone.disabled {
+  color: rgba(138, 138, 137, 0.58);
+}
+
+.documentation-dropzone.disabled:hover {
+  background-color: white;
 }
 
 .text-small { font-size: 0.8em; }
@@ -1132,9 +1164,6 @@ label > input {
     }
   }
 }
-.text-capitalize {
-  text-transform: capitalize;
-}
 
 .sign-role-list {
   list-style-type: none;
@@ -1145,4 +1174,168 @@ label > input {
     font-size: 0.9em;
     text-transform: unset;
   }
+}
+
+.panel h3:after {
+  content:' ';
+  display:block;
+  border:solid 1px;
+  background: $sesile-color-1;
+}
+
+.hover-red:hover {
+  color: #c82d2e;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.classeur-comment:before {
+  content:' ';
+  display:block;
+  border:0.5px solid $sesile-color-3;
+  margin: 10px;
+}
+
+.ui.label.labelStatus {
+  font-size: 0.9rem;
+}
+
+.ui.ribbon.label {
+  left: calc(-0.05rem - 1.2em);
+  margin-right: -1.2em;
+  padding-left: calc(1rem + 1.2em);
+  padding-right: 1.2em;
+  position: relative;
+  margin: 0;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+  border-radius: 0 .28571429rem .28571429rem 0;
+  border-color: rgba(0,0,0,.15);
+}
+
+.ui.label {
+  display: inline-block;
+  line-height: 1;
+  vertical-align: baseline;
+  margin: 0 .14285714em;
+  background-color: #e8e8e8;
+  background-image: none;
+  padding: .5833em .833em;
+  color: rgba(0, 0, 0, .6);
+  text-transform: none;
+  font-weight: 700;
+  border: 0 solid transparent;
+  border-radius: .28571429rem;
+  transition: background .1s ease;
+}
+
+.ui.ribbon.label:after {
+  position: absolute;
+  content: "";
+  top: 100%;
+  left: -0.5px;
+  background-color: transparent!important;
+  border-style: solid;
+  border-width: 0 1.2em 1.2em 0;
+  border-color: transparent;
+  border-right-color: inherit;
+  width: 0;
+  height: 0;
+}
+
+.ui.primary.label {
+  border-color: map-get($foundation-palette-hover, 'primary');
+  background-color: map-get($foundation-palette, 'primary');
+}
+
+.ui.secondary.label {
+  border-color: map-get($foundation-palette-hover, 'secondary');
+  background-color: map-get($foundation-palette, 'secondary');
+}
+
+.ui.success.label {
+  border-color: map-get($foundation-palette-hover, 'success');
+  background-color: map-get($foundation-palette, 'success');
+}
+
+.ui.warning.label {
+  border-color: map-get($foundation-palette-hover, 'warning');
+  background-color: map-get($foundation-palette, 'warning');
+}
+
+.ui.alert.label {
+  border-color: map-get($foundation-palette-hover, 'alert');
+  background-color: map-get($foundation-palette, 'alert');
+}
+
+.fa.success {
+  color: map-get($foundation-palette, 'success');
+}
+
+.fa.success:hover {
+  color: map-get($foundation-palette-hover, 'success');
+}
+
+.fa.warning {
+  color: map-get($foundation-palette, 'warning');
+}
+
+.fa.warning:hover {
+  color: map-get($foundation-palette-hover, 'warning');
+}
+
+.fa.alert {
+  color: map-get($foundation-palette, 'alert');
+}
+
+.fa.alert:hover {
+  color: map-get($foundation-palette-hover, 'alert');
+}
+
+.fa.primary {
+  color: map-get($foundation-palette, 'primary');
+}
+
+.fa.primary:hover {
+  color: map-get($foundation-palette-hover, 'primary');
+}
+
+.fa.secondary {
+  color: map-get($foundation-palette, 'secondary');
+}
+
+.fa.secondary:hover {
+  color: map-get($foundation-palette-hover, 'secondary');
+}
+
+.fa.disabled {
+  color: rgba(138, 138, 137, 0.58);
+}
+
+.doc-action-button {
+  cursor: pointer;
+  font-size: 0.85em;
+  color: #404257;
+}
+
+.doc-action-button:hover {
+  background-color: #f4f4f4;
+}
+
+.doc-action-button.disabled {
+  cursor: default;
+  font-size: 0.85em;
+  color: rgba(138, 138, 137, 0.58);
+}
+
+.text-capitalize-first-letter::first-letter {
+  text-transform: uppercase;
 }

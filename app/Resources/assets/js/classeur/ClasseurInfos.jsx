@@ -3,10 +3,12 @@ import {func, number, array} from 'prop-types'
 import { translate } from 'react-i18next'
 import Moment from 'moment'
 import Validator from 'validatorjs'
+
 import { Button, Form, Textarea } from '../_components/Form'
 import InputValidation from '../_components/InputValidation'
 import { Cell, GridX } from '../_components/UI'
-import ClasseurProgress from './ClasseurProgress'
+
+import ClasseurVisibilitySelect from './ClasseurVisibilitySelect'
 
 class ClasseurInfos extends Component {
 
@@ -26,7 +28,8 @@ class ClasseurInfos extends Component {
         },
         description: '',
         editable: false,
-        edit: false
+        edit: false,
+        usersCopy: []
     }
 
     validationRules = {
@@ -40,7 +43,8 @@ class ClasseurInfos extends Component {
         const fields = {
             nom: this.props.nom,
             validation: Moment(this.props.validation).format('YYYY-MM-DD HH:mm'),
-            description: this.props.description
+            description: this.props.description,
+            visibilite: this.props.visibilite
         }
         const validation = new Validator(fields, this.validationRules)
         if(validation.passes() && this.props.id) {
@@ -57,116 +61,119 @@ class ClasseurInfos extends Component {
         return (
             <div className="grid-x panel grid-padding-y">
                 <div className="cell small-12">
-
                     <Form onSubmit={this.saveClasseurInfos}>
                         <GridX className="grid-margin-x grid-padding-x">
-                            <Cell className="medium-8 name-details-classeur">
-                                { edit ? <InputValidation   id="nom"
-                                                            labelText={`${t('common.label.name')} *`}
-                                                            value={nom}
-                                                            onChange={handleChangeClasseur}
-                                                            validationRule={this.validationRules.nom}
-                                                            placeholder={t('common.classeurs.classeur_name')}/>
-                                    : <h3>{nom}</h3>
-                                }
-                            </Cell>
-                            <Cell className="medium-4 text-right">
-                                {
-                                    editable && !edit &&
-                                    <a onClick={() => handleEditClasseur(!edit)} className="button hollow">
-                                        { t('common.button.modify') }
-                                    </a>
-                                }
+                            <Cell>
+                                <h3 className="text-capitalize">
+                                    {t('common.infos')}
+                                </h3>
                             </Cell>
                         </GridX>
-
                         <GridX className="grid-margin-x grid-padding-x">
-                            <Cell className="small-6">
+                            <Cell>
+                                <InputValidation
+                                    id="nom"
+                                    type="text"
+                                    labelText={`${t('common.label.name')} *`}
+                                    value={nom}
+                                    onChange={handleChangeClasseur}
+                                    validationRule={this.validationRules.nom}
+                                    placeholder={t('common.classeurs.classeur_name')}/>
+                            </Cell>
+                        </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell className="small-12">
+                                <InputValidation
+                                    id="validation"
+                                    type="date"
+                                    labelText={`${t('common.classeurs.date_limit')} *`}
+                                    value={Moment(validation)}
+                                    readOnly={true}
+                                    locale={i18nextLng}
+                                    validationRule={this.validationRules.validation}
+                                    onChange={this.handleChangeLimitDate}/>
+                            </Cell>
+                        </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell>
+                                <ClasseurVisibilitySelect
+                                    className=""
+                                    visibilite={this.props.visibilite}
+                                    label={`${t('common.classeurs.label.circuits')} *`}
+                                    handleChangeClasseur={this.props.handleChangeClasseur}/>
+                            </Cell>
+                        </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell>
+                                <Textarea
+                                    id="classeur-description"
+                                    labelText={t('common.label.description')}
+                                    name="description"
+                                    value={description || ''}
+                                    onChange={handleChangeClasseur}/>
+                            </Cell>
+                        </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell>
                                 <label htmlFor="classeur-info-type" className="text-capitalize text-bold">
-                                    {`${t('admin.type.name')} *`}
+                                    {t('admin.type.name')}
                                 </label>
                             </Cell>
-                            <Cell className="small-6">
-                                <span id="classeur-info-type" className="bold-info-details-classeur">
+                        </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell>
+                                <span
+                                    id="classeur-info-type"
+                                    style={{marginLeft: '10px'}}
+                                    className="bold-info-details-classeur">
                                     {type.nom}
                                 </span>
                             </Cell>
                         </GridX>
-                        {edit ?
-                            <GridX className="grid-margin-x grid-padding-x">
-                                <Cell className="small-12">
-                                    <InputValidation
-                                        id="validation"
-                                        type="date"
-                                        labelText={`${t('common.label.date')} *`}
-                                        value={Moment(validation)}
-                                        readOnly={true}
-                                        locale={i18nextLng}
-                                        validationRule={this.validationRules.validation}
-                                        onChange={this.handleChangeLimitDate}/>
-                                </Cell>
-                            </GridX> :
-                            <div>
-                                <GridX className="grid-margin-x grid-padding-x">
-                                    <Cell className="small-6">
-                                        <label htmlFor="classeur-info-creation" className="text-bold">
-                                            {t('classeur.deposited')}
-                                        </label>
-                                    </Cell>
-                                    <Cell className="small-6">
-                                    <span id="classeur-info-creation" className="bold-info-details-classeur">
-                                        {Moment(creation).format('L')}
-                                    </span>
-                                    </Cell>
-                                </GridX>
-                                <GridX>
-                                    <Cell className="small-12">
-                                        <ClasseurProgress creation={creation} validation={validation} status={status} edit={true} />
-                                    </Cell>
-                                </GridX>
-                            </div>}
-
-                        { usersCopy.length > 0 &&
-                        <GridX className="grid-margin-x grid-padding-x align-middle">
-                            <Cell className="small-6">
-                                <label htmlFor="classeur-info-users-in-copy" className="text-bold">
-                                    {t('classeur.users_in_copy')}
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell>
+                                <label htmlFor="classeur-info-creation" className="text-bold">
+                                    {t('common.classeurs.sort_label.create_date')}
                                 </label>
                             </Cell>
-                            <Cell className="small-6">
-                                <span id="classeur-info-users-in-copy" className="bold-info-details-classeur">
-                                    {listUsers}
+                        </GridX>
+                        <GridX className="grid-margin-x grid-padding-x">
+                            <Cell>
+                                <span
+                                    id="classeur-info-creation"
+                                    style={{marginLeft: '10px'}}
+                                    className="bold-info-details-classeur">
+                                    {Moment(creation).format('L')}
                                 </span>
                             </Cell>
                         </GridX>
-                        }
-
-                        {(description || edit) &&
-                        <GridX className="grid-margin-x grid-padding-x">
-                            <Cell>
-                                {edit ? <Textarea id="classeur-description"
-                                                  labelText={t('common.label.description')}
-                                                  name="description"
-                                                  value={description || ''}
-                                                  onChange={handleChangeClasseur}/>
-                                    : <p className="bold-info-details-classeur">{description}</p>
-                                }
-                            </Cell>
-                        </GridX>
-                        }
-
-                        {edit &&
-                        <div className="grid-x grid-margin-x grid-padding-x align-middle">
-                            <div className="cell small-6 medium-4">
-                                { <a onClick={() => handleEditClasseur(!edit)} className="float-left">{ t('common.button.cancel') }</a> }
-                            </div>
+                        {usersCopy.length > 0 &&
+                            <div>
+                                <GridX className="grid-margin-x grid-padding-x align-middle">
+                                    <Cell className="small-12 medium-12">
+                                        <label htmlFor="classeur-info-users-in-copy" className="text-bold">
+                                            {t('classeur.users_in_copy')}
+                                        </label>
+                                    </Cell>
+                                </GridX>
+                                <GridX className="grid-margin-x grid-padding-x align-middle">
+                                    <Cell className="small-12 medium-12">
+                                        <ul
+                                            id="classeur-info-users-in-copy"
+                                            style={{marginLeft: '10px'}}
+                                            className="no-bullet bold-info-details-classeur">
+                                            {listUsers}
+                                        </ul>
+                                    </Cell>
+                                </GridX>
+                            </div>}
+                        <div className="grid-x grid-margin-x grid-padding-x align-right">
                             <Button id="submit-classeur-infos"
                                     className="cell small-6 medium-8"
                                     classNameButton="float-right"
                                     onClick={this.saveClasseurInfos}
                                     labelText={t('common.button.edit_save')}/>
                         </div>
-                            }
                     </Form>
                 </div>
             </div>
