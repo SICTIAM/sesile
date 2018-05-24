@@ -56,7 +56,7 @@ class AppRoute extends Component {
                 <Route path={"/classeurs/supprimes"} exact={true} component={() => <ClasseursRemove user={user}/>} />
                 <Route path={"/classeurs/previsualisation"} exact={true} component={ClasseursPreview} />
                 <Route path={"/documentations"} exact={true} component={HelpBoard} />
-                <Route path={"/tableau-de-bord/stats"} exact={true} component={Stats} />
+                <Route path={"/tableau-de-bord/stats"} exact={true} component={() => <Stats user={user}/>} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} user={user} />
                 )} />

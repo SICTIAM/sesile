@@ -56,7 +56,7 @@ class Classeurs extends Component {
     listClasseurs = (sort, order, limit, start, userId) => {
         const { t, _addNotification } = this.context
 
-        fetch(Routing.generate(this.props.url, {sort, order, limit, start, userId}), { credentials: 'same-origin' })
+        fetch(Routing.generate(this.props.url, {orgId: this.props.user.current_org_id, sort, order, limit, start, userId}), { credentials: 'same-origin' })
             .then(handleErrors)
             .then(response => response.json())
             .then(json => {
