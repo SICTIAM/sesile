@@ -11,7 +11,7 @@ use Doctrine\DBAL\Schema\Schema;
  * then it updates the new field with the collectivity id from the User tables through the foreign key.
  * The script then creates the new table Ref_Collectivite_User in order to create the manyToMany relation
  * between User and Collectivite
- * 
+ *
  */
 class Version20180501141159 extends AbstractMigration
 {
