@@ -110,7 +110,6 @@ class ClasseurNew extends Component {
                 formData.append("etapeClasseurs[" + key + "][user_packs][]", user_pack.id)
             })
         })
-
         formData.append('nom', classeur.nom)
         formData.append('validation', Moment(classeur.validation).format('YYYY-MM-DD HH:mm'))
         formData.append('description', classeur.description)
@@ -118,6 +117,7 @@ class ClasseurNew extends Component {
         formData.append('user', user.id)
         formData.append('type', type.id)
         formData.append('circuit_id', circuit.id)
+        formData.append('collectivite', user.current_org_id)
 
         fetch(Routing.generate('sesile_classeur_classeurapi_post'), {
             method: 'POST',

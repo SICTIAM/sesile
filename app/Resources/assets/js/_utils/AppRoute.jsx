@@ -58,7 +58,7 @@ class AppRoute extends Component {
                 <Route path={"/documentations"} exact={true} component={HelpBoard} />
                 <Route path={"/tableau-de-bord/stats"} exact={true} component={Stats} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
-                    <Classeur classeurId={match.params.classeurId} />
+                    <Classeur classeurId={match.params.classeurId} user={user} />
                 )} />
                 <AdminRoute exact={true} path={"/admin/circuits-de-validation"} component={CircuitsValidation} user={user} />
                 <AdminRoute exact={true} path={"/admin/groupes"} component={Groups} user={user} />
