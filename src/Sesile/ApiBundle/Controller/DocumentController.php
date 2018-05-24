@@ -118,14 +118,16 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
             throw new AccessDeniedHttpException("Vous n'avez pas accès au classeur auquel appartient le document " . $id);
         }
 
-
         // obtenir une instance de UploadedFile identifiée par file
 
         if ($request->files->has('file')) {
             $file = $request->files->get('file');
             $name = $file->getClientOriginalName();
             $movedfile = $file->move($this->get('kernel')->getRootDir() . '/../web/uploads/docs/', uniqid() . '.' . $file->getExtension());
-            unlink($this->get('kernel')->getRootDir() . '/../web/uploads/docs/' . $document->getRepoUrl());
+            $originalFilePath = $this->get('kernel')->getRootDir().'/../web/uploads/docs/'.$document->getRepoUrl();
+            if (is_file($originalFilePath)) {
+                unlink($originalFilePath);
+            }
             $document->setRepourl($movedfile->getBasename());
             $document->setType($movedfile->getMimeType());
             $document->setName($name);
@@ -202,7 +204,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
         $em->flush();
 
 
-        return array('code' => '200', 'message' => 'Document supprimé');;
+        return array('code' => '200', 'message' => 'Document supprimé');
 
 
     }
@@ -246,13 +248,14 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
         }
 
         $response = new Response();
+        $baseUploadPath = $this->get('kernel')->getRootDir().'/../web/uploads/docs/';
 
         $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', mime_content_type('uploads/docs/' . $document->getRepourl()));
+        $response->headers->set('Content-type', mime_content_type($baseUploadPath . $document->getRepourl()));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getName() . '"');
-        $response->headers->set('Content-Length', filesize('uploads/docs/' . $document->getRepourl()));
+        $response->headers->set('Content-Length', filesize($baseUploadPath . $document->getRepourl()));
 
-        $response->setContent(file_get_contents('uploads/docs/' . $document->getRepourl()));
+        $response->setContent(file_get_contents($baseUploadPath . $document->getRepourl()));
 
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($document, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $document->setDownloaded(true);

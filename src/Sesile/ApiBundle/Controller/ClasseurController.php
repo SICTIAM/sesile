@@ -1,6 +1,7 @@
 <?php
 namespace Sesile\ApiBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -475,10 +476,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet d'editer un classeur",
-     *  requirements={
-     *      {"name"="id", "dataType"="integer", "description"="id du classeur"}
-     *  },
+     *  description="Permet d'editer un classeur. Méthode obsolète",
      *  parameters={
      *          {"name"="name", "dataType"="string", "format"="Maximum de 250 caractères", "required"=true, "description"="Nom du classeur"},
      *          {"name"="desc", "dataType"="string", "format"="Maximum de 250 caractères", "required"=false, "description"="Description du classeur"},
@@ -496,9 +494,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $em = $this->getDoctrine()->getManager();
 
-
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
-        if ($request->request->get('name') == 0 || $request->request->get('validation') == 0 || $request->request->get('circuit') == 0) {
+        if ($request->request->get('name') == '' || $request->request->get('validation') == '' || $request->request->get('circuit') == '') {
             $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
             return $this->handleView($view);
         }
@@ -510,8 +507,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         if (empty($classeurs[0])) {
             throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
         }
-
-
         $classeur = $classeurs[0];
 
 
@@ -523,7 +518,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $classeur->setValidation($valid);
         $circuit = $request->request->get('circuit');
         $classeur->setCircuit($circuit);
-        $classeur->setUser($user->getId());
+        $classeur->setUser($user);
 
         $em->flush();
 
@@ -602,7 +597,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         if (empty($classeur[0])) {
             throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
         }
-        $classeur[0]->supprimer();
+        $classeur[0]->setOrdreValidant('');
+        $classeur[0]->setStatus(3);
         $em->persist($classeur[0]);
         $em->flush();
 
