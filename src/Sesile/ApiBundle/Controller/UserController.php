@@ -202,4 +202,33 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
 
         return $tabGroupes;
     }
+
+    /**
+     * Cette méthode permet de récupérer les circuit des validation dans les quelles l'utilisateurs est present, d'un
+     * collectivité specifique
+     *
+     *
+     * @var Request $request
+     * @return array
+     * @Route("/{email}/org/{siren}/circuits")
+     * @Rest\View()
+     * @Method("get")
+     *
+     *
+     * @param ParamFetcher $param
+     *
+     * @ApiDoc(
+     *  resource=false,
+     *  description="Permet de récupérer la liste des circuits organisationnels par utilisateur at par colelctivité/organisation",
+     *  requirements={
+     *      {"name"="sirent", "dataType"="string", "description"="Siren identifiant de neuf chiffres attribué à l'organisation/collectivité.ex: 123456789"},
+     *      {"name"="email", "dataType"="string", "description"="email de l'utilisateur"}
+     *  }
+     * )
+     */
+    public function getCircuitByCollectiviteAndUserAction(Request $request, $siren, $email)
+    {
+        return [];
+
+    }
 }
