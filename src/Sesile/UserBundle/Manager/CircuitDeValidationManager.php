@@ -48,16 +48,17 @@ class CircuitDeValidationManager
                 $userEmail,
                 $collectivite->getId()
             );
+            $temp = [];
             $result = [];
             foreach ($dataCollection as $data) {
-                if (isset($result[$data['circuitId']])) {
-                    $result[$data['circuitId']]['type_classeur'][] = $data['typeId'];
+                if (isset($temp[$data['circuitId']])) {
+                    $temp[$data['circuitId']]['type_classeur'][] = $data['typeId'];
                     continue;
                 }
-                $result[$data['circuitId']] = ['id' => $data['circuitId'], 'nom' => $data['circuitName'], 'type_classeur' =>[$data['typeId']]];
+                $temp[$data['circuitId']] = ['id' => $data['circuitId'], 'nom' => $data['circuitName'], 'type_classeur' =>[$data['typeId']]];
             }
 
-            return new Message(true, $result);
+            return new Message(true, array_values($temp));
         } catch (\Exception $e) {
             $this->logger->error(
                 sprintf('[CircuitDeValidationManager]/getCircuitDataByUserAndCollectivite error: %s', $e->getMessage())

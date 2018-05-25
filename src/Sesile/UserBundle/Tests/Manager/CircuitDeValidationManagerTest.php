@@ -76,12 +76,12 @@ class CircuitDeValidationManagerTest extends SesileWebTestCase
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
         $expectedData = [
-            135 => [
+            [
                 'id' => "135",
                 'nom' => "Circuit de validation",
                 'type_classeur' => ["156", "250"],
             ],
-            200 => [
+            [
                 'id' => "200",
                 'nom' => "Circuit sictiam",
                 'type_classeur' => ["250"],
