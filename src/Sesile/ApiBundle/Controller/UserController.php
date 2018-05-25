@@ -2,6 +2,7 @@
 namespace Sesile\ApiBundle\Controller;
 
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\UserBundle\Entity\Groupe;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -156,7 +157,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @ApiDoc(
      *  resource=false,
-     *  description="Permet de récupérer ma liste des services organisationnels ayant accès à un type de classeur",
+     *  description="Permet de récupérer ma liste des services organisationnels ayant accès à un type de classeur. DEPRICATED! USE: api/user/{userEmail}/org/{SIREN}/circuits",
      *  requirements={
      *      {"name"="email", "dataType"="string", "description"="email de l'utilisateur"}
      *  }
@@ -164,6 +165,8 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      */
     public function getServicesOrganisationnelsForUserAction(Request $request, $email)
     {
+        $message = sprintf('ENDPOINT DEPRICATED. USE:  /api/user/%s/org/%s/circuits', $email, 'SIREN');
+        return new JsonResponse($message, Response::HTTP_MOVED_PERMANENTLY);
         //@todo refactor!!!!
 
         $em = $this->getDoctrine()->getManager();
@@ -209,7 +212,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      *
      * @var Request $request
-     * @return array
+     * @return JsonResponse
      * @Route("/{email}/org/{siren}/circuits")
      * @Rest\View()
      * @Method("get")
@@ -226,9 +229,18 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *  }
      * )
      */
-    public function getCircuitByCollectiviteAndUserAction(Request $request, $siren, $email)
+    public function getCircuitByCollectiviteAndUserAction(Request $request, $email, $siren)
     {
-        return [];
+        $result = $this->get('collectivite.manager')->getCollectiviteBySiren($siren);
+        if (false === $result->isSuccess() || $result->getData() == null) {
+            return new JsonResponse("No Organisation found with the given SIREN", Response::HTTP_NOT_FOUND);
+        }
+        $collectivite = $result->getData();
+        $result = $this->get('circuit.manager')->getCircuitDataByUserAndCollectivite($email, $collectivite);
+        if (false === $result->isSuccess()) {
 
+            return new JsonResponse("An Error occurred, could not get requested data", Response::HTTP_SERVICE_UNAVAILABLE);
+        }
+        return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
 }
