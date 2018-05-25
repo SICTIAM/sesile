@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Sesile\MainBundle\Entity\Collectivite;
 
 /**
  * GroupeRepository
@@ -53,5 +54,37 @@ class GroupeRepository extends EntityRepository
         }
 
         return $circuits;
+    }
+
+    /**
+     * @param string $email
+     * @param integer $collectiviteId
+     *
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getCircuitDataByUserAndCollectivite($email, $collectiviteId)
+    {
+        $sql = 'SELECT c.id as circuitId, c.nom as circuitName, t.nom as typeName, t.id as typeId
+                FROM Groupe c
+                LEFT JOIN classeur_groupe cg on cg.groupe_id= c.id
+                LEFT JOIN TypeClasseur t on t.id=cg.typeclasseur_id
+                LEFT JOIN EtapeGroupe eg on eg.groupe = c.id
+                LEFT JOIN etapegroupe_user egu on egu.etapegroupe_id=eg.id
+                LEFT JOIN User u on u.id=egu.user_id
+                LEFT JOIN etapegroupe_userpack egup on egup.etapegroupe_id=eg.id
+                LEFT JOIN UserPack up on up.id=egup.userpack_id
+                LEFT JOIN userpack_user upu on upu.userpack_id=up.id
+                LEFT JOIN User u2 on u2.id=upu.user_id
+                WHERE (u.email= :userEmail or u2.email=:userEmail2) AND c.collectivite=:collectivityId
+                GROUP BY c.id, t.id
+        ';
+        $params = [
+            'userEmail' => $email,
+            'userEmail2' => $email,
+            'collectivityId' => $collectiviteId
+        ];
+
+        return $this->getEntityManager()->getConnection()->executeQuery($sql, $params)->fetchAll();
     }
 }

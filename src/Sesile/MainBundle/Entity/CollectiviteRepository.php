@@ -64,7 +64,8 @@ class CollectiviteRepository extends EntityRepository
     /**
      * @return array
      */
-    public function getCollectivitesList() {
+    public function getCollectivitesList()
+    {
 
         return $this
             ->createQueryBuilder('c')

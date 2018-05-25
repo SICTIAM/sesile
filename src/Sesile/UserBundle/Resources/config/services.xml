@@ -15,5 +15,9 @@
             <tag name="form.type" alias="sesile_user_profile"/>
             <argument>%fos_user.model.user.class%</argument>
         </service>
+        <service id="circuit.manager" class="Sesile\UserBundle\Manager\CircuitDeValidationManager">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="logger" />
+        </service>
     </services>
 </container>
