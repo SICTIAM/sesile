@@ -1,13 +1,13 @@
 {
     "common": {
-        "no_results": "Aucun {{name}} ne correspond à votre recherche...",
-        "no_results_female": "Aucune {{name}} ne correspond à votre recherche...",
-        "small_no_results": "Aucun résultat..." ,
+        "no_results": "Aucun {{name}} ne correspond à votre recherche",
+        "no_results_female": "Aucune {{name}} ne correspond à votre recherche",
+        "small_no_results": "Aucun résultat" ,
         "classeur": "classeur",
         "classeur_plural": "classeurs",
-        "confirm_delete_img": "Voulez-vous supprimer l'image",
-        "loading": "Chargement...",
-        "confirm_deletion_item": "Voulez vous vraiment supprimer cet élément ?",
+        "confirm_delete_img": "Voulez-vous supprimer l'image ?",
+        "loading": "Chargement ...",
+        "confirm_deletion_item": "Voulez-vous vraiment supprimer cet élément ?",
         "drop_file_here": "Déposer le fichier ici",
         "file_is_required": "Le fichier est requis",
         "helios": {
@@ -17,8 +17,8 @@
             "signing": "Signature",
             "no_signing": "Le flux n'est pas encore signé",
             "attachment_list": "Liste des pièces",
-            "attachment_number": "N°Piece",
-            "creditor": "Créancier Référence bancaire",
+            "attachment_number": "N° pièce",
+            "creditor": "Créancier référence bancaire",
             "type_pjs": "Nature de la ",
             "imputation": "Imputation",
             "amount_ht": "Montant HT",
@@ -77,8 +77,8 @@
             "new_classeur": "Créer un classeur",
             "list_classeur": "Liste des classeurs",
             "validate_classeur": "Classeurs à valider",
-            "retractable_classeur": "Classeurs rétractable",
-            "deletable_classeur": "Classeurs supprimable",
+            "retractable_classeur": "Classeurs rétractables",
+            "deletable_classeur": "Classeurs supprimables",
             "stats": "Statistiques",
             "help": "Aide"
         },
@@ -96,7 +96,7 @@
             "title_list": "liste des classeurs",
             "title_to_sign": "classeur à signer",
             "title_to_retract": "classeur retractable",
-            "title_remove": "classeurs supprimable",
+            "title_remove": "classeur supprimable",
             "title_to_sign_plural": "classeurs à signer",
             "title_add": "Création d'un nouveau classeur",
             "title_infos": "Informations générales",
@@ -109,15 +109,15 @@
             "error": {
                 "missing_input": "champs manquants",
                 "post": "Impossible de créer le classeur",
-                "no_circuits": "Vous ne faites partis d'aucun circuits"
+                "no_circuits": "Vous ne faites partie d'aucun circuit"
             },
             "status": {
-              "name": "status",
-              "refused": "Refusé",
-              "pending": "En cours",
-              "finished": "Finalisé",
-              "withdrawn": "Retiré",
-              "retracted": "Retracté"
+                "name": "statut",
+                "refused": "Refusé",
+                "pending": "En cours",
+                "finished": "Finalisé",
+                "withdrawn": "Retiré",
+                "retracted": "Rétracté"
             },
             "pagination" : {
                 "previous": "Précédent",
@@ -126,15 +126,15 @@
                 "current": "Vous êtes sur la page"
             },
             "comments": {
-              "name": "Commentaires du classeur",
-              "new": "Nouveau commentaire",
-              "submit": "Ajouter un commentaire",
-              "from": "par",
-              "the": "le"
+                "name": "Commentaires du classeur",
+                "new": "Nouveau commentaire",
+                "submit": "Ajouter un commentaire",
+                "from": "par",
+                "the": "le"
             },
             "label": {
-              "circuits": "Liste des circuits",
-              "types": "Type de classeur"
+                "circuits": "Liste des circuits",
+                "types": "Type de classeur"
             },
             "button": {
                 "add_classeur": "Nouveau classeur",
@@ -146,14 +146,14 @@
                 "remove_title": "Retirer le classeur",
                 "delete_title": "Suprimer le classeur",
                 "comment_title": "Commenter le classeur",
-                "no_roles" : "Vous ne disposez pas de roles pour la signature",
+                "no_roles" : "Vous ne disposez pas de rôles pour la signature",
                 "role_as" : "En tant que"
             },
             "sort_label": {
                 "name": "Nom",
                 "current_user": "Nom intervenant",
                 "create_date": "Date de dépôt",
-                "status": "Status",
+                "status": "Statut",
                 "type": "Type",
                 "limit_date": "Date limite",
                 "actions": "Actions",
@@ -200,7 +200,7 @@
         },
         "help_board":{
             "title": "Documentations et aides",
-            "title_patchs": "Mises à jours",
+            "title_patchs": "Mises à jour",
             "title_helps": "Aides",
             "title_video": "Vidéos",
             "view_button": "Voir le document"
@@ -269,7 +269,7 @@
             "complet_name_plural": "groupes d'utilisateurs",
             "success_delete": "Le groupe a été supprimé",
             "error_delete": "Une erreur est survenue lors de la suppression du groupe",
-            "add_group": "Ajouter un Groupe",
+            "add_group": "Ajouter un groupe",
             "groups_list": "Liste de groupes",
             "which_group": "Quel groupe ?"
         },
@@ -370,21 +370,21 @@
             "name_plural": "collectivités",
             "message": "Message d'accueil",
             "which": "Laquelle ?",
-            "type_name": "Entrez le nom de la collectivité...",
-            "no_results": "Aucune collectivité ne correspond à votre recherche...",
+            "type_name": "Entrez le nom de la collectivité",
+            "no_results": "Aucune collectivité ne correspond à votre recherche",
             "infos": "Informations générales",
             "mails_templates": "Modèles de mails",
-            "visa_location": "Emplacement du Visa",
+            "visa_location": "Emplacement du visa",
             "signature_location": "Emplacement de la signature",
             "classeur_delay": "Durée des classeurs",
             "placeholder_delay": "Saisir un nombre de 10 à 365",
             "classeur_delay_help_text": "La durée des classeurs doit être comprise entre 10 et 365 jours",
             "placeholder_type_name": "Saisir le nom de la collectivité",
-            "placeholder_type_visa_title": "Saisir le titre du VISA",
+            "placeholder_type_visa_title": "Saisir le titre du visa",
             "draggable_help_text": "Déplacer manuellement le tampon pour définir son emplacement",
-            "last_page": "Dérniere page",
+            "last_page": "Dernière page",
             "first_page": "Première page",
-            "success_edit": "La collectivité a bien été bien modifier",
+            "success_edit": "La collectivité a bien été bien modifiée",
             "success_upload_avatar": "L'image a été correctement chargée",
             "state": "Etat",
             "select_collectivite": "Sélectionner une collectivité",
@@ -395,17 +395,17 @@
                 "fail_edit": "Impossible de modifier la collectivité - erreur {{errorCode}}",
                 "fetch": "Impossible de récupérer la collectivité - erreur {{errorCode}}",
                 "field_delay_min": "La durée des classeurs doit être supérieure à 10 jours",
-                "field_delay_max": "La durée des classeurs doit être inférieur à 365 jours",
+                "field_delay_max": "La durée des classeurs doit être inférieure à 365 jours",
                 "field_delay_required": "La durée des classeurs est requise",
-                "visa_title": "Le titre du VISA est requis",
+                "visa_title": "Le titre du visa est requis",
                 "fetch_list": "Une erreur est survenue à la récupération des collectivités"
             },
             "mail": {
-              "new_classeur": "Mail nouveau classeur",
-              "refused_classeur": "Mail classeur refusé",
-              "valid_classeur": "Mail classeur validé",
-              "new_copy_classeur": "Mail nouveau classeur pour utilisateur en copie",
-              "valid_copy_classeur": "Mail classeur validé pour utilisateur en copie"
+                "new_classeur": "Mail nouveau classeur",
+                "refused_classeur": "Mail classeur refusé",
+                "valid_classeur": "Mail classeur validé",
+                "new_copy_classeur": "Mail nouveau classeur pour utilisateur en copie",
+                "valid_copy_classeur": "Mail classeur validé pour utilisateur en copie"
             }
         },
         "documentations": {
@@ -428,7 +428,7 @@
                 "delete": "Impossible de supprimer la documentation",
                 "save": "Impossible d'enregistrer la documentation",
                 "fetch": "Impossible de récupérer la documentation",
-                "fetch_all": "Impossible de récupérer les liste de documentation"
+                "fetch_all": "Impossible de récupérer les listes de documentation"
             }
         },
         "emailing": {
