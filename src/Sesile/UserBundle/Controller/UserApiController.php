@@ -28,6 +28,10 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
     public function getCurrentAction() {
         $user = $this->getUser();
         $user->setOzwillo($this->container->getParameter('ozwillo_portal'));
+        $token = $this->container->get('security.token_storage')->getToken();
+        if ($token->hasAttribute('orgId')){
+            $user->setCurrentOrgId($token->getAttribute('orgId'));
+        }
         return $user;
     }
 
@@ -48,15 +52,19 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
+     * @todo à valider
      */
     public function usersCollectiviteAction(Collectivite $collectivite)
     {
-
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivities()->contains($collectivite)) {
             return $collectivite->getUsers();
-        } else {
-            return $this->getUser()->getCollectivite()->getUsers();
         }
+//        else {
+            //@todo refactor $this->getUser()->getCollectivite()
+//            return $this->getUser()->getCollectivite()->getUsers();
+//        }
+        return [];
     }
 
 
@@ -66,15 +74,24 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
+     * @todo à valider
      */
     public function usersCollectiviteSelectAction(Collectivite $collectivite)
     {
-
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivities()->contains($collectivite)) {
+            $users = $collectivite->getUsers();
+        } else {
+            return [];
+        }
+        /**
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $users = $collectivite->getUsers();
         } else {
             $users = $this->getUser()->getCollectivite()->getUsers();
         }
+         *
+         */
 
         $users_select = [];
         foreach ($users as $user) {
@@ -140,6 +157,8 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @return array
      * @Rest\View()
      * @Rest\Get("s")
+     *
+     * @todo valider que ceci n'est pas utilisé
      */
     public function listAction()
     {
@@ -147,6 +166,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
             return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findAll();
         }
         else if($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            //@todo refactor $this->getUser()->getCollectivite()
             return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByCollectivite($this->getUser()->getCollectivite()->getId());
         }
         else {
@@ -166,9 +186,10 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
          //TODO: return just actif users
          $value = $paramFetcher->get('value');
          $collectiviteId = $paramFetcher->get('collectiviteId');
-         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->getCollectivite()->getId() == $collectiviteId) {
+         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->hasCollectivity($collectiviteId)) {
             return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:User')->findByNameOrFirstName($value, $collectiviteId);
          }
+         throw $this->createNotFoundException('No Users Found For Collectivity');
      }
 
     /**
@@ -238,9 +259,13 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      * @param User $user
      * @return JsonResponse
      * @internal param $id
+     *
+     * @todo must refactor this method. The user can't be deleted. If multi collectivie must remove from collectivity maybe?
+     * @todo add the collectivityID parameter
      */
     public function removeAction(User $user)
     {
+        //@todo refactor $this->getUser()->getCollectivite()
         if ($user
             && ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
             || $this->getUser()->getCollectivite() == $user->getCollectivite())
@@ -411,6 +436,13 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         return $validDate = \DateTime::createFromFormat('ymdHisT', $date);
     }
 
+    /**
+     * @param Collectivite $collectivite
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @todo La url de ozwillo est en dur! must refactor
+     */
     private function getOzwilloUsers(Collectivite $collectivite) {
 
         $instanceId = $collectivite->getOzwillo()->getInstanceId();

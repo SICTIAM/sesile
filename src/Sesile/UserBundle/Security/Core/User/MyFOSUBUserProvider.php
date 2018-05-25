@@ -6,19 +6,31 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseFOSUBProvider;
+use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Manager\CollectiviteManager;
 use Sesile\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use FOS\UserBundle\Util\TokenGenerator;
 
 class MyFOSUBUserProvider extends BaseFOSUBProvider
 {
-    protected $em;
     protected $tokenGenerator;
+    /**
+     * @var CollectiviteManager
+     */
+    protected $collectiviteManager;
 
-    public function __construct(UserManagerInterface $userManager, array $properties, EntityManagerInterface $em, TokenGenerator $tokenGenerator)
+    /**
+     * MyFOSUBUserProvider constructor.
+     * @param UserManagerInterface $userManager
+     * @param array $properties
+     * @param CollectiviteManager $collectiviteManager
+     * @param TokenGenerator $tokenGenerator
+     */
+    public function __construct(UserManagerInterface $userManager, array $properties, CollectiviteManager $collectiviteManager, TokenGenerator $tokenGenerator)
     {
         parent::__construct($userManager, $properties);
-        $this->em = $em;
+        $this->collectiviteManager = $collectiviteManager;
         $this->tokenGenerator = $tokenGenerator;
     }
 
@@ -54,27 +66,23 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
         $userEmail = $response->getEmail();
         $data = $response->getData();
         $user = $this->userManager->findUserByEmail($userEmail);
+        $client_id = $response->getResourceOwner()->getOption('client_id');
+        //$client_id is the unique id for a collectivite
+//       $ozwilloCollectivite = $this->em->getRepository('SesileMainBundle:CollectiviteOzwillo')->findOneByClientId($client_id);
+        $ozwilloCollectiviteResult = $this->collectiviteManager->getOzwilloCollectivityByClientId($client_id);
+        if (false === $ozwilloCollectiviteResult->isSuccess() || !$ozwilloCollectiviteResult->getData()) {
+            throw new \Exception('No Collectivity found for this client id. User could not be loaded');
+        }
 
         // if null just create new user and set it properties
         if (null === $user) {
             $username = $response->getRealName();
-            $client_id = $response->getResourceOwner()->getOption('client_id');
-            $ozwilloCollectivite = $this->em->getRepository('SesileMainBundle:CollectiviteOzwillo')->findOneByClientId($client_id);
 
-            $user = new User();
-            $user->setUsername($username);
-            $user->setOzwilloId($data['sub']);
-            $user->setNom($data['family_name']);
-            $user->setPrenom($data['given_name']);
-            $user->setEmail($userEmail);
-            $user->setPassword(substr($this->tokenGenerator->generateToken(), 0, 10));
-            $user->setEnabled(true);
-            $user->setCollectivite($ozwilloCollectivite->getCollectivite());
-
-            // ... save user to database
-            $this->userManager->updateUser($user);
-
-            return $user;
+            return $this->saveNewUser($username, $userEmail, $data, $ozwilloCollectiviteResult->getData()->getCollectivite());
+        }
+        //check if must add new collectivite to user
+        if (false === $this->collectiviteManager->userHasOzwilloCollectivity($user->getId(), $client_id)->getData()) {
+            $user->addCollectivity($ozwilloCollectiviteResult->getData()->getCollectivite());
         }
         // else update access token of existing user
 //        $serviceName = $response->getResourceOwner()->getName();
@@ -83,6 +91,36 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
         $user->setNom($data['family_name']);
         $user->setPrenom($data['given_name']);
         $user->setOzwilloId($data['sub']);
+        $this->userManager->updateUser($user);
+        $user->setCurrentOrgId($ozwilloCollectiviteResult->getData()->getCollectivite()->getId());
+
+        return $user;
+    }
+
+    /**
+     * @param string       $username
+     * @param string       $userEmail
+     * @param array        $data
+     * @param Collectivite $collectivite
+     *
+     * @return User
+     */
+    private function saveNewUser($username, $userEmail, $data, Collectivite $collectivite)
+    {
+        $user = new User();
+        $user->setUsername($username);
+        $user->setOzwilloId($data['sub']);
+        $user->setNom($data['family_name']);
+        $user->setPrenom($data['given_name']);
+        $user->setEmail($userEmail);
+        $user->setPassword(substr($this->tokenGenerator->generateToken(), 0, 10));
+        $user->setEnabled(true);
+        //leave for legacy - @todo remove this line when refactoring
+        $user->setCollectivite($collectivite);
+        //add the colelctivite to the user ref_collecitvite_user table
+        $user->addCollectivity($collectivite);
+
+        // ... save user to database
         $this->userManager->updateUser($user);
 
         return $user;

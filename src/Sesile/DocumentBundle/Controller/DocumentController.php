@@ -177,6 +177,8 @@ class DocumentController extends Controller
     /**
      * @Route("/{id}", name="show_document",  options={"expose"=true})
      * @Template()
+     *
+     * @todo valider que ceci n'est pas utilisé
      */
     public function showAction(Request $request, $id)
     {
@@ -211,6 +213,7 @@ class DocumentController extends Controller
             } else{
                 $signature = null;
             }
+            //@todo refactor getUser()->getCollectivite()
             $city = $this->get('security.token_storage')->getToken()->getUser()->getCollectivite();
 
 
@@ -496,7 +499,7 @@ class DocumentController extends Controller
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
-
+        //@todo refactor $user->getCollectivite();
         $city = $user->getCollectivite();
         $path = $this->container->getParameter('upload')['fics'];
 
@@ -535,6 +538,7 @@ class DocumentController extends Controller
         $em->flush();
 
         // On recupère la collectivité pour ses paramètres
+        //@todo refactor $user->getCollectivite();
         $city = $user->getCollectivite();
         $path = $this->container->getParameter('upload')['fics'];
 
@@ -574,7 +578,7 @@ class DocumentController extends Controller
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
-
+        //@todo refactor $user->getCollectivite();
         $city = $user->getCollectivite();
         $path = $this->container->getParameter('upload')['fics'];
 
@@ -722,6 +726,7 @@ class DocumentController extends Controller
                     }
                 }
                 else {
+                    //@todo refactor $user->getCollectivite();
                     $city = $user->getCollectivite();
                     $lastUser = $em->getRepository('SesileUserBundle:EtapeClasseur')->getLastValidant($doc->getClasseur());
                     $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();

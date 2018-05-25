@@ -48,16 +48,19 @@ class EtapeClasseurApiController extends FOSRestController implements ClassResou
     }
 
     /**
+     * @param string $orgId collectivite id
      * @return array
      * @internal param EtapeClasseur $etapeClasseur
      * @Rest\View(serializerGroups={"listClasseurStats"})
-     * @Rest\Get("s/classeur_stats/", requirements={"classeur" = "\d+"})
+     * @Rest\Get("s/org/{orgId}/classeur_stats", requirements={"classeur" = "\d+"})
+     *
+     * @todo adapt the frontend for collectiviteId route: sesile_user_etapeclasseurapi_getclasseursvalidatebytype
      */
-    public function getClasseursValidateByTypeAction()
+    public function getClasseursValidateByTypeAction($orgId)
     {
         $em = $this->getDoctrine()->getManager();
         $types = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findBy(
-            array('collectivites'   => $this->getUser()->getCollectivite()->getId())
+            array('collectivites'   => $orgId)
         );
 
         $stats[] = array("nom", "total");

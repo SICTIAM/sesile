@@ -34,6 +34,7 @@ class UserRepository extends EntityRepository {
         $user->setSesileVersion(0);
         $user->setCollectivite($collectivite);
         $user->setEnabled(true);
+        $user->addCollectivity($collectivite);
 
         $em->persist($user);
     }
@@ -163,34 +164,60 @@ class UserRepository extends EntityRepository {
         return false;
     }
 
-    public function findByNameOrFirstName($value, $collectiviteId) {
+    public function findByNameOrFirstName($value, $collectiviteId)
+    {
         return $this
             ->createQueryBuilder('U')
-            ->join('U.collectivite', 'C', 'WITH', 'C.id = :collectiviteId')
+            ->join('U.collectivities', 'C')
+            ->where('C.id = :collectiviteId')
             ->setParameter('collectiviteId', $collectiviteId)
-            ->where('CONCAT(U.Nom, \' \', U.Prenom) LIKE :value')
-            ->orWhere('CONCAT(U.Prenom, \' \', U.Nom) LIKE :value')
+            ->andWhere('CONCAT(U.Nom, \' \', U.Prenom) LIKE :value')
             ->setParameter('value', '%' .$value. '%')
             ->getQuery()
             ->getResult();
     }
 
-
-    public function createUserFromOzwillo ($user, Request $request, Collectivite $collectivite) {
+    /**
+     * @param $user
+     * @param $userObject array of the user object inside the request->get('user')
+     * @param Collectivite $collectivite
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function createUserFromOzwillo ($user, $userObject, Collectivite $collectivite) {
         $em = $this->getEntityManager();
         if (!$user) {
             $user = new User();
             $user->setEnabled(true);
-            $user->setUsername($request->get('user')['name']);
-            $user->setEmail($request->get('user')['email_address']);
+            $user->setUsername($userObject['name']);
+            $user->setEmail($userObject['email_address']);
             $user->setPlainPassword('sictiam');
+            $user->setOzwilloId($userObject['id']);
         }
 
         $user->setCollectivite($collectivite);
+        $user->addCollectivity($collectivite);
         $user->addRole("ROLE_ADMIN");
         $em->persist($user);
 
         $em->flush();
 
+    }
+
+    /**
+     * @param string $collectiviteId
+     *
+     * @return array
+     */
+    public function getUsersByCollectivityId($collectiviteId)
+    {
+        return $this
+                ->createQueryBuilder('U')
+            ->select('U.id, U.Nom as nom, U.Prenom as prenom, U.email, U.username, U.ozwilloId, U.ville, U.cp, U.pays, U.departement, U.role, U.qualite')
+                ->join('U.collectivities', 'C')
+                ->where('C.id = :collectiviteId')
+                ->setParameter('collectiviteId', $collectiviteId)
+                ->getQuery()
+                ->getArrayResult();
     }
 }

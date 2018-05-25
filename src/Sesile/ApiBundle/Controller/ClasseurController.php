@@ -23,6 +23,7 @@ use Sesile\DocumentBundle\Entity\Document;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\ClasseursUsers;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -235,6 +236,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"},
      *          {"name"="email", "dataType"="string", "format"="Email valide", "required"=false, "description"="email du déposant"},
+     *          {"name"="siren", "dataType"="string", "format"="string", "required"=false, "description"="siren collectivité, si non renseigné la premiere collectivité de l'utilisateur sera utilisé"},
      *
      *
      *
@@ -248,27 +250,31 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * @Rest\View()
      * @Method("post")
      *
-     *
+     * @todo newActions needs the collectivite in order to set the correct collectivity id into the classeur
      *
      */
     public function newAction(Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
-
         $email = $request->request->get('email');
-//var_dump($email);exit;
         if(is_null($email))
         {
             $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
             $userAPI = null;
         }
         else{
+            //@todo findOneByUsername? plutôto findOneByEmail?
             $user = $em->getRepository('SesileUserBundle:User')->findOneByUsername($email);
             $userAPI = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
         }
-
-
+        if ($request->request->has('siren')) {
+            $collectivity = $this->get('collectivite.manager')
+                ->getCollectiviteBySiren($request->request->get('siren'))
+                ->getData();
+        } else {
+            $collectivity = $user->getFirstCollectivity();
+        }
 
         $serviceOrgs = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($user->getId());
 
@@ -279,6 +285,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         foreach($serviceOrgs as $serviceOrg) {
             $groupetto = $em->getRepository('SesileUserBundle:Groupe')->findOneById($serviceOrg);
+            //@todo ceci peut donner un 500 si $groupetto == null
             $groupes[] = $groupetto->getId();
         }
 
@@ -297,7 +304,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         foreach ($tabgroups_types as $objGroupe) {
             $tabidG[] = $objGroupe->getId();
         }
-
         if (!in_array($request->request->get('groupe'), $tabidG)) {
             $view = $this->view(array('code' => '400', 'message' => 'Ce groupe n\'a pas accès au type de classeur renseigné ', "parametres_recus" => $request->request), 400);
             return $this->handleView($view);
@@ -308,9 +314,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $name = $request->request->get('name');
 
 
-     
+
         $validation = $request->request->get('validation');
- 
+
         $type= $request->request->get('type');
 
         $circuit = $request->request->get('groupe');
@@ -338,12 +344,12 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $classeur->setType($type);
 
 
-        $classeur->setUser($user->getId());
+        $classeur->setUser($user);
         // TODO a modifier par la bonne etape ?
         $classeur->setEtapeDeposante($user->getId());
 
         $classeur->setVisibilite($request->request->get('visibilite'));
-
+        $classeur->setCollectivite($collectivity);
         $em->persist($classeur);
         $em->flush();
 
@@ -356,7 +362,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $enable = false;
         $etapeDeposante = 0;
-
         foreach ($etapesGroupe as $etapeGroupe) {
 
             $usersFromEtapes = $etapeGroupe->getUsers();
@@ -402,7 +407,11 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             }
 
             $step->setOrdre($k);
+            if ($k == 0) {
+                $step->setEtapeValidante(1);
+            }
             $em->persist($step);
+            $classeur->addEtapeClasseur($step);
             $em->flush();
             if (($k == 0 && $classeur->getOrdreValidant() === null) ||
                 ($k == 0 && $classeur->getStatus() == 0)
@@ -478,6 +487,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Public, -1 si privé", "required"=true, "description"="Visibilité du classeur"}
      *  }
      * )
+     *
+     * @todo REFACTOR
      **/
     public function updateAction(Request $request, $id)
     {
@@ -487,7 +498,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
-
         if ($request->request->get('name') == 0 || $request->request->get('validation') == 0 || $request->request->get('circuit') == 0) {
             $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants'), 400);
             return $this->handleView($view);
@@ -741,6 +751,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $message = \Swift_Message::newInstance();
         // Pour l integration de l image du logo dans le mail
         $html = explode("**logo_coll**", $body);
+
         if($this->get('session')->get('logo') !== null && $this->container->getParameter('upload')['logo_coll'] !== null && !empty($html)) {
             $htmlBody = $html[0] . '<img src="' . $message->embed(\Swift_Image::fromPath($this->container->getParameter('upload')['logo_coll'] . $this->get('session')->get('logo'))) . '" width="75" alt="Sesile">' . $html[1];
         } else {
@@ -788,27 +799,33 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
     private function sendCreationMail($classeur) {
         $em = $this->getDoctrine()->getManager();
-        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
-        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
+        //@todo refactor $this->get("session")->get("collectivite") maybe use: $classeur->getCollectivite();
+//        $coll = $em->getRepository("SesileMainBundle:Collectivite")->find($this->get("session")->get("collectivite"));
+        $coll = $classeur->getCollectivite();
+        //@todo $classeur->getPrevValidant() n'existe plus!! changer avec $classeur->getUser()?
+        //$classeur->getPrevValidant() : l'id du précédent validant dans le circuit. L'id du déposant si on revient au premier
+//        $c_user = $em->getRepository("SesileUserBundle:User")->find($classeur->getPrevValidant());
+        $c_user = $classeur->getUser();
+        //Twig_Loader_String is depricated
+//        $env = new \Twig_Environment(new \Twig_Loader_String());
+        $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
+        $template = $env->createTemplate($coll->getTextmailnew());
+        $template_html = [
+            'deposant' => $c_user->getPrenom() . " " . $c_user->getNom(),
+            'role' => $c_user->getRole(),
+            'qualite' => $c_user->getQualite(),
+            'titre_classeur' => $classeur->getNom(),
+            'date_limite' => $classeur->getValidation(),
+            'type' => strtolower($classeur->getType()->getNom()),
+            'lien' => '<a href="' . $this->container->get('router')->generate('classeur_edit', ['id' => $classeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '">valider le classeur</a>'
+        ];
 
-        $env = new \Twig_Environment(new \Twig_Loader_String());
 
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
         foreach($validants as $validant) {
-
             if ($validant != null) {
-                $body = $env->render($coll->getTextmailnew(),
-                    array(
-                        'validant' => $validant->getPrenom()." ".$validant->getNom(),
-                        'deposant' => $c_user->getPrenom()." ".$c_user->getNom(),
-                        'role' => $c_user->getRole(),
-                        'qualite' => $c_user->getQualite(),
-                        'titre_classeur' => $classeur->getNom(),
-                        'date_limite' => $classeur->getValidation(),
-                        'type' => strtolower($classeur->getType()->getNom()),
-                        "lien" => '<a href="http://'.$this->container->get('router')->getContext()->getHost().$this->generateUrl('classeur_edit', array('id' => $classeur->getId())) . '">Valider le classeur</a>'
-                    )
-                );
+                $template_html['validant'] = $validant->getPrenom()." ".$validant->getNom();
+                $body = $template->render($template_html);
                 $this->sendMail("SESILE - Nouveau classeur à valider", $validant->getEmail(), $body);
             }
         }
@@ -879,8 +896,10 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $tabDocs = $classeur->getDocuments();
         $cleanTabDocs = array();
-        foreach ($tabDocs as $doc) {
-            $cleanTabDocs[] = $this->docToArray($doc);
+        if (count($tabDocs) > 0 ) {
+                foreach ($tabDocs as $doc) {
+                $cleanTabDocs[] = $this->docToArray($doc);
+            }
         }
         $em = $this->getDoctrine()->getManager();
         $validants = $em->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);

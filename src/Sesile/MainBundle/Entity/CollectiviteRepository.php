@@ -4,6 +4,7 @@ namespace Sesile\MainBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Gedmo\Sluggable\Util as Sluggable;
 
 /**
  * CollectiviteRepository
@@ -52,6 +53,7 @@ class CollectiviteRepository extends EntityRepository
         $collectivite->setSiren($siren);
         $collectivite->setActive(true);
         $collectivite->setOzwillo($collectiviteOzwillo);
+        $collectivite->setDomain(Sluggable\Urlizer::urlize($request->get('organization')['name'], '-'));
 
         $em->persist($collectivite);
         $em->flush();

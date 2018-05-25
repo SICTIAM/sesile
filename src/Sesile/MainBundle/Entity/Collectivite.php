@@ -2,8 +2,10 @@
 
 namespace Sesile\MainBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use Sesile\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,7 +32,9 @@ class Collectivite
      *                      "getAllCollectivite",
      *                      "getCollectiviteById",
      *                      "listUsers",
-     *                      "UserId"
+     *                      "UserId",
+     *                      "listClasseur",
+     *                      "classeurById",
      *     })
      */
     private $id;
@@ -202,7 +206,9 @@ class Collectivite
     private $pageSignature = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="Sesile\UserBundle\Entity\User", mappedBy="collectivite")
+     * @var \Doctrine\Common\Collections\Collection|User[]
+     *
+     * @ORM\ManyToMany(targetEntity="Sesile\UserBundle\Entity\User", mappedBy="collectivities")
      */
     private $users;
 
@@ -571,29 +577,38 @@ class Collectivite
         if ($this->getTextcopymailwalid() === null) {
             $this->setTextcopymailwalid("<p>Bonjour {{ en_copie }},</p><p>Un nouveau classeur pour lequel vous êtes en copie {{ titre_classeur }} vient d'être validé par {{ validant }}.</p><p>Vous pouvez visionner le classeur {{lien|raw}}</p><p>**logo_coll** {{ qualite }}<br>{{ validant }}</p>");
         }
+        $this->users = new ArrayCollection();
     }
 
     /**
      * Add users
      *
-     * @param \Sesile\UserBundle\Entity\User $users
+     * @param User $user
      * @return Collectivite
      */
-    public function addUser(\Sesile\UserBundle\Entity\User $users)
+    public function addUser(\Sesile\UserBundle\Entity\User $user)
     {
-        $this->users[] = $users;
-    
+        if ($this->users->contains($user)) {
+            return;
+        }
+        $this->users->add($user);
+        $user->addCollectivity($this);
+
         return $this;
     }
 
     /**
      * Remove users
      *
-     * @param \Sesile\UserBundle\Entity\User $users
+     * @param \Sesile\UserBundle\Entity\User $user
      */
-    public function removeUser(\Sesile\UserBundle\Entity\User $users)
+    public function removeUser(\Sesile\UserBundle\Entity\User $user)
     {
-        $this->users->removeElement($users);
+        if (!$this->users->contains($user)) {
+            return;
+        }
+        $this->users->removeElement($user);
+        $user->removeCollectivity($this);
     }
 
     /**

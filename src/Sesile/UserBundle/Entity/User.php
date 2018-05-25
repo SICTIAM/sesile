@@ -2,10 +2,13 @@
 
 namespace Sesile\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
 use JMS\Serializer\Annotation as Serializer;
+use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -304,6 +307,28 @@ class User extends BaseUser {
      */
     private $ozwilloUrl;
 
+    /**
+     * @var Collection|Collectivite[]
+     *
+     * @ORM\ManyToMany(targetEntity="Sesile\MainBundle\Entity\Collectivite", inversedBy="users")
+     * @ORM\JoinTable(
+     *  name="Ref_Collectivite_User",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="collectivite_id", referencedColumnName="id")
+     *  }
+     * )
+     */
+    protected $collectivities;
+
+    /**
+     * @var string $currentOrgId
+     * @Serializer\Groups({"currentUser", "UserId"})
+     */
+    protected $currentOrgId;
+
 
     public function setPath($path) {
         return $this->path = $path;
@@ -431,6 +456,7 @@ class User extends BaseUser {
         parent::__construct();
         $this->setApisecret("secret_" . md5(uniqid(rand(), true)));
         $this->setApitoken("token_" . md5(uniqid(rand(), true)));
+        $this->collectivities = new ArrayCollection();
     }
 
     /**
@@ -467,7 +493,7 @@ class User extends BaseUser {
     /**
      * Get delegationsRecues
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDelegationsRecues()
     {
@@ -500,7 +526,7 @@ class User extends BaseUser {
     /**
      * Get delegationsDonnees
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDelegationsDonnees()
     {
@@ -749,7 +775,7 @@ class User extends BaseUser {
     /**
      * Get classeurs
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection
      */
     public function getClasseurs()
     {
@@ -782,7 +808,7 @@ class User extends BaseUser {
     /**
      * Get userPacks
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection
      */
     public function getUserPacks()
     {
@@ -815,7 +841,7 @@ class User extends BaseUser {
     /**
      * Get etapeClasseurs
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection
      */
     public function getEtapeClasseurs()
     {
@@ -848,7 +874,7 @@ class User extends BaseUser {
     /**
      * Get etapeGroupes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection
      */
     public function getEtapeGroupes()
     {
@@ -1018,7 +1044,7 @@ class User extends BaseUser {
     /**
      * Get classeursCopy
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getClasseursCopy()
     {
@@ -1052,7 +1078,7 @@ class User extends BaseUser {
     /**
      * Get circuitsCopy
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCircuitsCopy()
     {
@@ -1110,7 +1136,7 @@ class User extends BaseUser {
     /**
      * Get etapeValide
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEtapeValide()
     {
@@ -1118,7 +1144,7 @@ class User extends BaseUser {
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getRoles()
     {
@@ -1160,7 +1186,7 @@ class User extends BaseUser {
     /**
      * Get userrole
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUserrole()
     {
@@ -1194,7 +1220,7 @@ class User extends BaseUser {
     /**
      * Get notes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getNotes()
     {
@@ -1247,5 +1273,92 @@ class User extends BaseUser {
     public function getOzwillo ()
     {
         return $this->ozwilloUrl;
+    }
+
+    /**
+     * @param Collectivite $collectivite
+     *
+     * @return User
+     */
+    public function addCollectivity(Collectivite $collectivite)
+    {
+        if ($this->collectivities->contains($collectivite)) {
+            return;
+        }
+        $this->collectivities->add($collectivite);
+        $collectivite->addUser($this);
+
+        return $this;
+    }
+
+    /**
+     * @param Collectivite $collectivite
+     *
+     * @return User
+     */
+    public function removeCollectivity(Collectivite $collectivite)
+    {
+        if (!$this->collectivities->contains($collectivite)) {
+            return;
+        }
+        $this->collectivities->removeElement($collectivite);
+        $collectivite->removeUser($this);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|Collection|Collectivite[]
+     */
+    public function getCollectivities()
+    {
+        return $this->collectivities;
+    }
+
+    /**
+     * @return Collectivite|null
+     */
+    public function getFirstCollectivity()
+    {
+        if ($this->collectivities && count($this->collectivities) > 0) {
+            return $this->collectivities->first();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $collectivityId
+     *
+     * @return bool
+     */
+    public function hasCollectivity($collectivityId)
+    {
+        foreach ($this->collectivities as $collectivity) {
+            if ($collectivity->getId() == $collectivityId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentOrgId()
+    {
+        return $this->currentOrgId;
+    }
+
+    /**
+     * @param string $currentOrgId
+     *
+     * @return User
+     */
+    public function setCurrentOrgId($currentOrgId)
+    {
+        $this->currentOrgId = $currentOrgId;
+
+        return $this;
     }
 }

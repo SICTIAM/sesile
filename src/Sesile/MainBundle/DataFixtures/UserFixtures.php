@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,6 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserFixtures extends Fixture implements DependentFixtureInterface, ContainerAwareInterface
 {
     const USER_ONE_REFERENCE = 'user-one';
+    const USER_TWO_REFERENCE = 'user-two';
+    const USER_SUPER_REFERENCE = 'user-super';
 
     /**
      * @var ContainerInterface
@@ -34,17 +37,72 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
 
         // Create our user and set details
         $user = $userManager->createUser();
+        $user->setNom('nom1');
+        $user->setPrenom('prenom1');
         $user->setUsername('username');
-        $user->setEmail('email@domain.com');
+        $user->setEmail('user1@domain.com');
         $user->setPlainPassword('password');
         //$user->setPassword('3NCRYPT3D-V3R51ON');
         $user->setEnabled(true);
         $user->setRoles(array('ROLE_ADMIN'));
-        $user->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        //$user->setApitoken("token_" . md5(uniqid(rand(), true)))
+        $user->setApitoken('token_09b7cedb5f9a6df29468b9ddf490ed70');
+        //$this->setApisecret("secret_" . md5(uniqid(rand(), true)))
+        $user->setApisecret('secret_abf9411ade3787a8e668ac534f97cf1a');
+        $user->setApiactivated(true);
+        //ozwillo id null for testing reasons on ozwillo provider
+        $user->setOzwilloId(null);
+        $user->setRole('Développeur');
+        $user->setVille('Nice');
+        $user->setCp('06000');
+        $user->setPays('France');
+        $user->setDepartement('Alpes-Maritimes');
+        $user->setQualite('CTO');
+//        $user->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        $user->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
 
         // Update the user
         $userManager->updateUser($user, true);
         $this->addReference(self::USER_ONE_REFERENCE, $user);
+
+        // Create our user and set details
+        $user2 = $userManager->createUser();
+        $user2->setNom('nom2');
+        $user2->setPrenom('prenom');
+        $user2->setUsername('username2');
+        $user2->setEmail('email2@domain.com');
+        $user2->setPlainPassword('password2');
+        //$user->setPassword('3NCRYPT3D-V3R51ON');
+        $user2->setEnabled(true);
+        $user2->setRoles(array('ROLE_USER'));
+        $user2->setApitoken('token_91186cb2457c4ce2d8d4a45893211a4b');
+        $user2->setApisecret('secret_ef316bf44b62815f29c5f81fbf92f5c0');
+        $user2->setApiactivated(true);
+        $user2->setOzwilloId('76fd56f5-502b-4210-abef-c8f67e60b8ac');
+//        $user2->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        $user2->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+
+        // Update the user
+        $userManager->updateUser($user2, true);
+        $this->addReference(self::USER_TWO_REFERENCE, $user2);
+
+        // Create our user and set details
+        $superUser = $userManager->createUser();
+        $superUser->setNom('super nom');
+        $superUser->setPrenom('super prenom');
+        $superUser->setUsername('super');
+        $superUser->setEmail('super@domain.com');
+        $superUser->setPlainPassword('password');
+        //$user->setPassword('3NCRYPT3D-V3R51ON');
+        $superUser->setEnabled(true);
+        $superUser->setRoles(array('ROLE_SUPER_ADMIN'));
+        $superUser->setOzwilloId('8f152f70-3075-46ee-b1a2-4ed0e362626f');
+//        $superUser->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        $superUser->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+
+        // Update the user
+        $userManager->updateUser($superUser, true);
+        $this->addReference(self::USER_SUPER_REFERENCE, $superUser);
     }
 
     /**

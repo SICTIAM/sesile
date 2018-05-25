@@ -13,8 +13,14 @@ use Sesile\UserBundle\Entity\User;
  */
 class ClasseurRepository extends EntityRepository {
 
-
-    public function getAllClasseursVisibles ($userId) {
+    /**
+     * @param $orgId collectivite Id
+     * @param $userId
+     *
+     * @return array
+     */
+    public function getAllClasseursVisibles ($orgId, $userId)
+    {
 
         $sort = "c.creation";
         $order = "DESC";
@@ -27,6 +33,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
+            ->where('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->getQuery()
             ->getResult()
@@ -37,8 +45,18 @@ class ClasseurRepository extends EntityRepository {
         return $classeurs;
     }
 
-    public function getClasseursVisibles ($userId, $sort, $order, $limit, $start) {
-
+    /**
+     * @param $orgId collectivite id
+     * @param $userId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     *
+     * @return array
+     */
+    public function getClasseursVisibles ($orgId, $userId, $sort, $order, $limit, $start)
+    {
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
         $classeurs =  $this
@@ -49,6 +67,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
+            ->where('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
@@ -61,9 +81,18 @@ class ClasseurRepository extends EntityRepository {
         return $classeurs;
     }
 
-
-    public function getClasseursValidable ($classeursId, $sort, $order, $limit, $start, $userId) {
-
+    /**
+     * @param $orgId collectivite id
+     * @param $classeursId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     * @param $userId
+     * @return array
+     */
+    public function getClasseursValidable ($orgId, $classeursId, $sort, $order, $limit, $start, $userId)
+    {
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
         $status = array(0,1,4);
@@ -78,6 +107,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
@@ -91,7 +122,18 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
-    public function getClasseursRetractable ($classeursId, $sort, $order, $limit, $start, $userId) {
+    /**
+     * @param $orgId
+     * @param $classeursId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     * @param $userId
+     * @return array
+     */
+    public function getClasseursRetractable ($orgId, $classeursId, $sort, $order, $limit, $start, $userId)
+    {
 
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
@@ -107,6 +149,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
@@ -120,7 +164,18 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
-    public function getClasseursremovable ($userId, $sort, $order, $limit, $start) {
+    /**
+     * @param $orgId
+     * @param $userId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     *
+     * @return array
+     */
+    public function getClasseursremovable ($orgId, $userId, $sort, $order, $limit, $start)
+    {
 
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
 
@@ -136,6 +191,8 @@ class ClasseurRepository extends EntityRepository {
             ->addSelect('t')
             ->join('c.user', 'u')
             ->addSelect('u')
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
@@ -300,6 +357,7 @@ class ClasseurRepository extends EntityRepository {
      *
      * @param Classeur $classeur
      * @throws \Doctrine\ORM\OptimisticLockException
+     *
      */
     public function setUserVisible(Classeur $classeur) {
         $em = $this->getEntityManager();
@@ -312,7 +370,7 @@ class ClasseurRepository extends EntityRepository {
 
             // Public
             case 1:
-                $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($classeur->getUser()->getCollectivite());
+                $users = $em->getRepository('SesileUserBundle:User')->findByCollectivite($classeur->getCollectivite());
                 break;
 
             // Privé à partir de moi
@@ -429,7 +487,6 @@ class ClasseurRepository extends EntityRepository {
     public function validerClasseur (Classeur $classeur, User $user) {
 
         foreach ($classeur->getEtapeClasseurs() as $etape) {
-
             if ($etape->getEtapeValidante()) {
                 $etape->setEtapeValide(1);
                 $etape->setEtapeValidante(0);

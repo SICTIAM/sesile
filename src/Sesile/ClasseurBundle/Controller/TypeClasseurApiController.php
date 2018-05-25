@@ -27,11 +27,13 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
+     * @todo ceci ne retourne pas! est-il vraiment utilisé?
      */
     public function getAllSimpleAction(Collectivite $collectivite)
     {
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
-            $this->getUser()->getCollectivite() == $collectivite) {
+            $this->getUser()->getCollectivities()->contains($collectivite)) {
             return $collectivite->getTypes();
         } else {
             return new JsonResponse(['message' => "Denied Access"], Response::HTTP_NOT_FOUND);
@@ -44,11 +46,12 @@ class TypeClasseurApiController extends FOSRestController implements ClassResour
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Collectivite $collectivite
      * @return array|\Doctrine\Common\Collections\Collection
+     *
      */
     public function getAllAction(Collectivite $collectivite)
     {
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
-            $this->getUser()->getCollectivite() == $collectivite) {
+            $this->getUser()->getCollectivities()->contains($collectivite)) {
             return $collectivite->getTypes();
         } else {
             return new JsonResponse(['message' => "Denied Access"], Response::HTTP_NOT_FOUND);

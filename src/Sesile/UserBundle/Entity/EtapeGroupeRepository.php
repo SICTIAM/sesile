@@ -35,6 +35,8 @@ class EtapeGroupeRepository extends EntityRepository
         /*
          * On recupere les etapes qui sont attribués a l utilisateur via un groupe
          */
+
+        //@todo ceci est absurde. MUST REFACTOR!!!
         $etapesGroupe = $this->findAll();
 
         // Liste des etapes des SO
