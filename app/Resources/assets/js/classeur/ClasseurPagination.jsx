@@ -38,7 +38,7 @@ class ClasseurPagination extends Component {
 
     componentDidMount() {
         const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_classeur_classeurapi_listall'), { credentials: 'same-origin' })
+        fetch(Routing.generate('sesile_classeur_classeurapi_listall', {orgId: this.state.currentOrgId}), { credentials: 'same-origin' })
             .then(handleErrors)
             .then(response => response.json())
             .then(classeurs => this.setState({classeurs}))

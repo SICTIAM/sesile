@@ -52,7 +52,7 @@ class Classeur extends Component {
     }
 
     getClasseur(id) {
-        fetch(Routing.generate('sesile_classeur_classeurapi_getbyid', {id}), {credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_classeur_classeurapi_getbyid', {orgId: this.props.user.current_org_id, classeurId: id}), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(json => {
                 this.setState({classeur: json})

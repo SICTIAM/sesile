@@ -45,8 +45,8 @@ class AppRoute extends Component {
         return (
             (!!user) &&
             <Switch>
-                <Route path={"/"} exact={true} component={DashBoard} />
-                <Route path={"/tableau-de-bord"} exact={true} component={DashBoard} />
+                <Route path={"/"} exact={true} component={() => <DashBoard user={user}/>} />
+                <Route path={"/tableau-de-bord"} exact={true} component={() => <DashBoard user={user}/>} />
                 <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
                 <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />
                 <Route path={"/classeur/nouveau"} exact={true} component={ClasseurNew} user={user} />
@@ -56,9 +56,9 @@ class AppRoute extends Component {
                 <Route path={"/classeurs/supprimes"} exact={true} component={() => <ClasseursRemove user={user}/>} />
                 <Route path={"/classeurs/previsualisation"} exact={true} component={ClasseursPreview} />
                 <Route path={"/documentations"} exact={true} component={HelpBoard} />
-                <Route path={"/tableau-de-bord/stats"} exact={true} component={Stats} />
+                <Route path={"/tableau-de-bord/stats"} exact={true} component={() => <Stats user={user}/>} />
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
-                    <Classeur classeurId={match.params.classeurId} />
+                    <Classeur classeurId={match.params.classeurId} user={user} />
                 )} />
                 <AdminRoute exact={true} path={"/admin/circuits-de-validation"} component={CircuitsValidation} user={user} />
                 <AdminRoute exact={true} path={"/admin/groupes"} component={Groups} user={user} />

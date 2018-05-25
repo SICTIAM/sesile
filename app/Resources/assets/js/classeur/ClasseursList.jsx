@@ -11,7 +11,6 @@ class ClasseursList extends Component {
 
     render(){
         const { t } = this.context
-
         return (
             <div className="grid-x grid-margin-x grid-padding-x grid-padding-y align-center-middle">
                 <div className="cell medium-12 text-center">

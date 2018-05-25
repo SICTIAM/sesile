@@ -17,6 +17,7 @@ class DashBoard extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            currentOrgId : this.props.user.current_org_id,
             lastClasseurs: [],
             urgentClasseurs: []
         }
@@ -33,7 +34,7 @@ class DashBoard extends Component {
         const limit = 10
         const start = 0
         const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_classeur_classeurapi_list', {sort, order, limit, start}), { credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_classeur_classeurapi_list', {orgId: this.state.currentOrgId, sort, order, limit, start}), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(lastClasseurs => this.setState({lastClasseurs}))
@@ -49,7 +50,7 @@ class DashBoard extends Component {
         const limit = 5
         const start = 0
         const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_classeur_classeurapi_valid', {sort, order, limit, start}), { credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_classeur_classeurapi_valid', {orgId: this.state.currentOrgId, sort, order, limit, start}), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(urgentClasseurs => this.setState({urgentClasseurs}))

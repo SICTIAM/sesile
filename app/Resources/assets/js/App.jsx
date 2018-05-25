@@ -99,8 +99,9 @@ class App extends Component {
                                         </Link>
                                     </div>
                                     <div className="cell large-4 show-for-large">
-                                        {user.id &&
-                                            <SearchClasseurs/>}
+                                        { user.id &&
+                                            <SearchClasseurs user={this.state.user}/>
+                                        }
                                     </div>
                                     <div className="cell large-3 show-for-large"></div>
                                     <div className="cell large-3 small-6">
@@ -121,7 +122,8 @@ class App extends Component {
                                             <div className="cell medium-12 small-12">
                                                 <NotificationSystem ref={n => this._notificationSystem = n} style={this.notificationStyle} />
                                                 {user.id &&
-                                                    <AppRoute user={user}/>}
+                                                    <AppRoute user={user}/>
+                                                }
                                             </div>
                                         </div>
                                     </div>

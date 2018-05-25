@@ -14,7 +14,7 @@ class UserListClasseurs extends Component {
 
     render(){
         return (
-            <ClasseursList userId={this.state.userId} />
+            <ClasseursList user={this.props.user} userId={this.state.userId} />
         )
     }
 }

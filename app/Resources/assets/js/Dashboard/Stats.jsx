@@ -25,7 +25,7 @@ class Stats extends Component {
 
     fetchClasseursValidateByType() {
         const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_user_etapeclasseurapi_getclasseursvalidatebytype'), { credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_user_etapeclasseurapi_getclasseursvalidatebytype', {orgId: this.props.user.current_org_id}), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(statsType => this.setState({statsType}))

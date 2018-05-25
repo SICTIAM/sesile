@@ -23,6 +23,7 @@ class ClasseursRemove extends Component {
                 </div>
                 <Classeurs
                     url="sesile_classeur_classeurapi_listremovable"
+                    user={this.props.user}
                     userId={this.props.userId} />
             </div>
         )
