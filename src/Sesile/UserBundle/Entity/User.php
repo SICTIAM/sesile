@@ -320,6 +320,20 @@ class User extends BaseUser {
      *      @ORM\JoinColumn(name="collectivite_id", referencedColumnName="id")
      *  }
      * )
+     *
+     * @Serializer\Groups({"listClasseur",
+     *                      "listEtapeClasseur",
+     *                      "listCircuitByCollectivite",
+     *                      "listCircuitByUser",
+     *                      "getByIdCircuit",
+     *                      "currentUser",
+     *                      "userPack",
+     *                      "searchUser",
+     *                      "userRole",
+     *                      "listUsers",
+     *                      "classeurById",
+     *                      "UserId"})
+     *     })
      */
     protected $collectivities;
 
