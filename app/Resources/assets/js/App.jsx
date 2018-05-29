@@ -100,12 +100,12 @@ class App extends Component {
                                         </Link>
                                     </div>
                                     <div className="cell large-4 show-for-large">
-                                        { user.id && user.collectivities.length > 1 &&
+                                        { user.id &&
                                             <SearchClasseurs user={this.state.user}/>
                                         }
                                     </div>
                                     <div className="cell large-3 small-6">
-                                        { user.id &&
+                                        { user.id && user.collectivities.length > 1 &&
                                             <SwitchCollectivite user={user}/>
                                         }
                                     </div>

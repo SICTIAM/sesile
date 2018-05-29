@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { number, func } from 'prop-types'
 import { translate } from 'react-i18next'
-import { Route, Redirect } from 'react-router-dom'
 
 class SwitchCollectivite extends Component {
 
@@ -26,7 +25,6 @@ class SwitchCollectivite extends Component {
 
     render() {
         const { user } = this.props
-        const { t } = this.context
         let host = window.location.host;
         let protocol = window.location.protocol;
         const collectivities = user.collectivities;
@@ -37,9 +35,11 @@ class SwitchCollectivite extends Component {
         const listItems = collectivities.map((collectivity) =>
             currentCollectivityId !== collectivity.id &&
             <li>
-                        <a href={protocol + '//' + collectivity.domain + '.' + host +'/connect/ozwillo'} className="button secondary clear">
-                        {collectivity.nom}
-                        </a>
+                <a
+                    href={`${protocol}//${collectivity.domain}.${host}/connect/ozwillo`}
+                    className="button secondary clear">
+                    {collectivity.nom}
+                </a>
             </li>
         );
         return (
