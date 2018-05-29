@@ -4,6 +4,7 @@ import { I18nextProvider } from 'react-i18next'
 import NotificationSystem from 'react-notification-system'
 import PropTypes from 'prop-types'
 import Login from './_components/Login'
+import SwitchCollectivite from './_components/SwitchCollectivite'
 import AppRoute from './_utils/AppRoute'
 import i18n from './_utils/i18n'
 import Validator from 'validatorjs'
@@ -99,11 +100,15 @@ class App extends Component {
                                         </Link>
                                     </div>
                                     <div className="cell large-4 show-for-large">
-                                        { user.id &&
+                                        { user.id && user.collectivities.length > 1 &&
                                             <SearchClasseurs user={this.state.user}/>
                                         }
                                     </div>
-                                    <div className="cell large-3 show-for-large"></div>
+                                    <div className="cell large-3 small-6">
+                                        { user.id &&
+                                            <SwitchCollectivite user={user}/>
+                                        }
+                                    </div>
                                     <div className="cell large-3 small-6">
                                         <Login user={this.state.user}/>
                                     </div>

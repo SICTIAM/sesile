@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { number, func } from 'prop-types'
 import { translate } from 'react-i18next'
-import { escapedValue } from '../_utils/Search'
-import Select from 'react-select'
 import { Route, Redirect } from 'react-router-dom'
 
 class SwitchCollectivite extends Component {
@@ -12,8 +10,7 @@ class SwitchCollectivite extends Component {
     }
 
     static propTypes = {
-        currentCollectiviteId: number,
-        handleChange: func.isRequired
+        currentCollectiviteId: number
     }
 
     state = {
@@ -23,38 +20,45 @@ class SwitchCollectivite extends Component {
         redirectUrl: {}
     }
 
-    handleChange = (collectivite) => {
-        this.setState({currentCollectivite: collectivite})
-        let host = window.location.host;
-        let protocol = window.location.protocol;
-        var url = protocol + '//' + collectivite.domain + '.' + host +'/connect/ozwillo';
-        location = url;
-        {/*<Route exact path="/" render={() => (*/}
-        // return <Redirect to="url"/>
-            {/*<Redirect to="/dashboard" push/>*/}
-        {/*)}/>*/}
-
-        //redirect to : http://sesile-dev.local/connect/ozwillo
-        // if(!!collectivite) this.props.handleChange(collectivite.id)
+    componentDidUpdate() {
+        $('.switch-collectivite').foundation()
     }
 
     render() {
         const { user } = this.props
         const { t } = this.context
-        const { currentCollectivite, collectivites } = this.state
+        let host = window.location.host;
+        let protocol = window.location.protocol;
+        const collectivities = user.collectivities;
+        const currentCollectivityId = user.current_org_id;
+        const listItems = collectivities.map((collectivity) =>
+            <li>
+                {currentCollectivityId == collectivity.id ? (
+                        <a href="#" className="button secondary clear">
+                            <b>{collectivity.nom}</b>
+                        </a>
+                    ) : (
+                        <a href={protocol + '//' + collectivity.domain + '.' + host +'/connect/ozwillo'} className="button secondary clear">
+                        {collectivity.nom}
+                        </a>
+                    )}
+            </li>
+        );
         return (
-            <label htmlFor="collectivites_select">
-                <span  className="text-bold">{t('admin.label.which_collectivite')}</span>
-                <Select 
-                    id="collectivites_select"
-                    placeholder={t('admin.collectivite.select_collectivite')}
-                    value={this.props.user.current_org_id}
-                    wrapperStyle={{marginBottom : "0.65em"}} 
-                    valueKey="id" 
-                    labelKey="nom" 
-                    options={this.props.user.collectivities}
-                    onChange={this.handleChange} />
-            </label>
+        <div className="switch-collectivite" data-toggle="switch-collectivite">
+            <ul className="dropdown menu align-center" data-dropdown-menu>
+                <li>
+                    <a href="#" className="button primary hollow user-complete-name">
+                        <div className="grid-x align-middle">
+                            { t('common.menu.switch_collectivity') }
+                        </div>
+                    </a>
+                    <ul className="menu">
+                        {listItems}
+                    </ul>
+                </li>
+            </ul>
+        </div>
         )
     }
 }
