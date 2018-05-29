@@ -40,6 +40,7 @@ hwi_oauth:
             infos_url:           https://accounts.ozwillo-preprod.eu/a/userinfo
 
 parameters:
+    domain: sesile-dev.local
     upload:
         path: '%kernel.root_dir%/../web/uploads/avatars/'
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'

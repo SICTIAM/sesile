@@ -215,7 +215,10 @@
         "list_documents_by_classeur": "Liste des documents par classeur",
         "browser_not_support_pdf": "Votre navigateur ne supporte pas le format PDF",
         "download_pdf": "Télécharger le PDF",
-        "infos": "informations"
+        "infos": "informations",
+        "select_collectivite": "Sélectionner la collectivité",
+        "research": "Recherche"
+
     },
     "admin": {
         "title": "Rechercher un {{name}}",

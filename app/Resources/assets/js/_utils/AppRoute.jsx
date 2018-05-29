@@ -98,3 +98,12 @@ class AppRoute extends Component {
 }
 
 export default AppRoute
+
+//TODO Add condition to non authenticated user
+const AuthRoute = ({component: Component, ...rest}, { isLoggedIn }) => (
+    <Route {...rest} render={(props) =>
+        {
+            <Component {...props} {...props.match.params}/>
+        }
+    }/>
+)

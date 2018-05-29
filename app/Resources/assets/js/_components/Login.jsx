@@ -76,9 +76,10 @@ class MenuBar extends Component {
                                     </li>
                                 </ul>
                             </li>
-                        </ul>
-                    :
-                    <a href="/connect/ozwillo" className="button primary hollow">{ t('common.menu.connection') }</a>
+                        </ul> :
+                    <button onClick={() => this.props.handleClickConnection()} className="button primary hollow">
+                        {t('common.menu.connection')}
+                    </button>
                 }
             </div>
         )
