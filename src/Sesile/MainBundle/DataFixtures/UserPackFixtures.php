@@ -7,6 +7,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sesile\ClasseurBundle\Entity\TypeClasseur;
+use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\UserPack;
 
 /**
@@ -38,6 +40,28 @@ class UserPackFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($userPack);
         $manager->flush();
         $this->addReference(self::USER_PACK_ONE_REFERENCE, $userPack);
+    }
+
+    /**
+     * @param string $name
+     * @param Collectivite $collectivite
+     * @param User[] $users
+     *
+     * @return UserPack
+     */
+    public static function aValidUserPack($name = 'The User Pack', Collectivite $collectivite, array $users = [])
+    {
+        $userPack = new UserPack();
+        $userPack
+            ->setNom($name)
+            ->setCollectivite($collectivite)
+            ->setCreation(new \DateTime())
+        ;
+        foreach ($users as $user) {
+            $userPack->addUser($user);
+        }
+
+        return $userPack;
     }
 
 

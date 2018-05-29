@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sesile\ClasseurBundle\Entity\TypeClasseur;
+use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\UserBundle\Entity\EtapeGroupe;
 use Sesile\UserBundle\Entity\Groupe;
 
@@ -87,6 +88,32 @@ class CircuitValidationFixtures extends Fixture implements DependentFixtureInter
 
         return $etapeGroup;
 
+    }
+
+    /**
+     * @param string $name
+     * @param Collectivite $collectivite
+     * @param TypeClasseur[] $typesClasseur
+     * @param EtapeGroupe[] $etapesGroup
+     *
+     * @return Groupe
+     */
+    public static function aValidCircuitDeValidation($name = 'Circuit de validation', Collectivite $collectivite, array $typesClasseur = [], array $etapesGroup = [])
+    {
+        $group = new Groupe();
+        $group
+            ->setNom($name)
+            ->setCollectivite($collectivite)
+            ->setCreation(new \DateTime());
+        foreach ($typesClasseur as $typeClasseur) {
+            $group->addType($typeClasseur);
+        }
+        foreach ($etapesGroup as $etapeGroup) {
+            $group->addEtapeGroupe($etapeGroup);
+            $etapeGroup->setGroupe($group);
+        }
+
+        return $group;
     }
 
     /**
