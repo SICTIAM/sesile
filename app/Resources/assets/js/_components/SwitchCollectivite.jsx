@@ -31,17 +31,15 @@ class SwitchCollectivite extends Component {
         let protocol = window.location.protocol;
         const collectivities = user.collectivities;
         const currentCollectivityId = user.current_org_id;
+        const currentCollectivity = collectivities.find((collectivity) => {
+            return currentCollectivityId == collectivity.id
+        });
         const listItems = collectivities.map((collectivity) =>
+            currentCollectivityId !== collectivity.id &&
             <li>
-                {currentCollectivityId == collectivity.id ? (
-                        <a href="#" className="button secondary clear">
-                            <b>{collectivity.nom}</b>
-                        </a>
-                    ) : (
                         <a href={protocol + '//' + collectivity.domain + '.' + host +'/connect/ozwillo'} className="button secondary clear">
                         {collectivity.nom}
                         </a>
-                    )}
             </li>
         );
         return (
@@ -50,7 +48,7 @@ class SwitchCollectivite extends Component {
                 <li>
                     <a href="#" className="button primary hollow user-complete-name">
                         <div className="grid-x align-middle">
-                            { t('common.menu.switch_collectivity') }
+                            {currentCollectivity.nom}
                         </div>
                     </a>
                     <ul className="menu">
