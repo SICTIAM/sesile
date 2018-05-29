@@ -15,6 +15,12 @@ sesile_main:
     type:     annotation
     prefix:   /
 
+sesile_select_collectivite:
+    defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
+    path: /choix-collectivite
+    requirements:
+        reactRouting: ".+"
+
 sesile_tableau-de-bord:
     defaults: { _controller: SesileMainBundle:Default:app, reactRouting: null }
     path: /tableau-de-bord/{reactRouting}

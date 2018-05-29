@@ -40,10 +40,12 @@ $label-radius: 0.3em;
 @import './../../../../node_modules/font-awesome/scss/font-awesome';
 
 $font-color-primary: #ffffff;
-$font-family: 'Lato';
+$font-family: 'Lato,Helvetica Neue,Arial,Helvetica,sans-serif';
 $sesile-primary: #fe5e3a;
 
-html {
+body, html {
+  height: auto;
+  background-color: #f4f4f4;
   font-family: $font-family;
 }
 
@@ -215,14 +217,12 @@ html {
 .main {
   h2 {
     font-size: 1.7em;
-    font-family: $font-family;
     font-weight: 700;
     color: $sesile-color-3;
     text-transform: uppercase;
   }
   h3 {
     font-size: 1.5em;
-    font-family: $font-family;
   }
 
   select, input:not([type="checkbox"]), textarea {
