@@ -3,6 +3,7 @@
 namespace Sesile\DocumentBundle\Controller;
 
 use Sesile\DocumentBundle\Entity\DocumentDetachedSign;
+use Sesile\MainBundle\Entity\Collectivite;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -24,6 +25,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  */
 class DocumentController extends Controller
 {
+    const DEFAULT_ABS = 10;
+    const DEFAULT_ORD = 10;
+
     /**
      * @Route("/new", name="new_document",  options={"expose"=true})
      * @Template()
@@ -479,7 +483,7 @@ class DocumentController extends Controller
 
 
     /**
-     * @Route("/org/{orgId}/download_visa/{id}/{absVisa}/{ordVisa}", name="download_doc_visa",  options={"expose"=true})
+     * @Route("/org/{orgId}/download_visa/{id}/{absVisa}/{ordVisa}", defaults={"absVisa"=10, "ordVisa"=10}, name="download_doc_visa",  options={"expose"=true})
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @param string $orgId
      * @param Document $doc
@@ -491,7 +495,7 @@ class DocumentController extends Controller
      * @throws \SetaPDF_Core_Exception
      * @todo refactor route on frontend
      */
-    public function downloadVisaAction($orgId, Document $doc, $absVisa = 10, $ordVisa = 10)
+    public function downloadVisaAction($orgId, Document $doc, $absVisa, $ordVisa)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -511,8 +515,8 @@ class DocumentController extends Controller
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
-        //@todo refactor $user->getCollectivite();
         $collectivity = $user->getCollectivityById($orgId);
+        list($absVisa, $ordVisa) = $this->defineVisaPosition($absVisa, $ordVisa, $collectivity);
         $path = $this->container->getParameter('upload')['fics'];
 
         /* SetaPDF */
@@ -530,7 +534,7 @@ class DocumentController extends Controller
     }
 
     /**
-     * @Route("/org/{orgId}/download_sign/{id}/{absSign}/{ordSign}", name="download_doc_sign",  options={"expose"=true})
+     * @Route("/org/{orgId}/download_sign/{id}/{absSign}/{ordSign}", defaults={"absSign"=10, "ordSign"=10}, name="download_doc_sign",  options={"expose"=true})
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @param $orgId
      * @param Document $doc
@@ -540,7 +544,7 @@ class DocumentController extends Controller
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    public function downloadSignAction($orgId, Document $doc, $absSign = 10, $ordSign = 10) {
+    public function downloadSignAction($orgId, Document $doc, $absSign, $ordSign) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -562,6 +566,8 @@ class DocumentController extends Controller
         // On recupère la collectivité pour ses paramètres
         //@todo refactor $user->getCollectivite();
         $collectivity = $user->getCollectivityById($orgId);
+
+        list($absSign, $ordSign) = $this->defineSignaturePosition($absSign, $ordSign, $collectivity);
         $path = $this->container->getParameter('upload')['fics'];
 
         // On recupere le dernier utilisateur ayant validé le classeur
@@ -612,6 +618,9 @@ class DocumentController extends Controller
         $em->flush();
         //@todo refactor $user->getCollectivite();
         $collectivity = $user->getCollectivityById($orgId);
+
+        list($absVisa, $ordVisa) = $this->defineVisaPosition($absVisa, $ordVisa, $collectivity);
+        list($absSign, $ordSign) = $this->defineSignaturePosition($absSign, $ordSign, $collectivity);
         $path = $this->container->getParameter('upload')['fics'];
 
         // On recupere le dernier utilisateur ayant validé le classeur
@@ -874,5 +883,45 @@ class DocumentController extends Controller
             return "PAYSAGE";
         }
 
+    }
+
+    /**
+     * @param integer      $absVisa
+     * @param integer      $ordVisa
+     * @param Collectivite $collectivity
+     *
+     * @return array
+     */
+    private function defineVisaPosition($absVisa, $ordVisa, Collectivite $collectivity)
+    {
+        if (($absVisa == 10 || !$ordVisa == 10 ) && ($collectivity->getAbscissesVisa() != '' && $collectivity->getOrdonneesVisa() != '')) {
+            $absVisa = $collectivity->getAbscissesVisa();
+            $ordVisa = $collectivity->getOrdonneesVisa();
+        } else {
+            $absVisa = self::DEFAULT_ABS;
+            $ordVisa = self::DEFAULT_ORD;
+        }
+
+        return [$absVisa, $ordVisa];
+    }
+
+    /**
+     * @param integer      $absSign
+     * @param integer      $ordSign
+     * @param Collectivite $collectivity
+     *
+     * @return array
+     */
+    private function defineSignaturePosition($absSign, $ordSign, Collectivite $collectivity)
+    {
+        if (($absSign == 10 || !$ordSign == 10 ) && ($collectivity->getAbscissesSignature() != '' && $collectivity->getOrdonneesSignature() != '')) {
+            $absSign = $collectivity->getAbscissesSignature();
+            $ordSign = $collectivity->getOrdonneesSignature();
+        } else {
+            $absSign = self::DEFAULT_ABS;
+            $ordSign = self::DEFAULT_ORD;
+        }
+
+        return [$absSign, $ordSign];
     }
 }
