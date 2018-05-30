@@ -268,6 +268,11 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
     public function removeAction(User $user)
     {
+        return new JsonResponse([
+            'status' => 'error',
+            'message' => "L'Utilisateur n'est peut pas être supprimé"
+        ],
+            Response::HTTP_UNAUTHORIZED);
         //@todo refactor $this->getUser()->getCollectivite()
         if ($user
             && ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
