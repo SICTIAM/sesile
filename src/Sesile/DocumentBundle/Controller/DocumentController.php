@@ -355,7 +355,8 @@ class DocumentController extends Controller
         return array('name' => $name);
     }
 
-    private function authorizeToDownloadDocument($visible, $user) {
+    private function authorizeToDownloadDocument($visible, $user)
+    {
         // user courant
         $repository = $this->getDoctrine()->getRepository('SesileDelegationsBundle:delegations');
         $usersdelegated = $repository->getUsersWhoHasMeAsDelegateRecursively($user);
@@ -379,6 +380,7 @@ class DocumentController extends Controller
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @param Document $doc
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      */
     public function downloadAction(Document $doc)
     {
@@ -477,30 +479,40 @@ class DocumentController extends Controller
 
 
     /**
-     * @Route("/download_visa/{id}/{absVisa}/{ordVisa}", name="download_doc_visa",  options={"expose"=true})
+     * @Route("/org/{orgId}/download_visa/{id}/{absVisa}/{ordVisa}", name="download_doc_visa",  options={"expose"=true})
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
-     * @param $id
+     * @param string $orgId
+     * @param Document $doc
      * @param int $absVisa
      * @param int $ordVisa
      * @return Response
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \SetaPDF_Core_Exception
+     * @todo refactor route on frontend
      */
-    public function downloadVisaAction(Document $doc, $absVisa = 10, $ordVisa = 10)
+    public function downloadVisaAction($orgId, Document $doc, $absVisa = 10, $ordVisa = 10)
     {
         $em = $this->getDoctrine()->getManager();
 
         // Verif des autorisations
+        //@todo authorizeToDownloadDocument contient la notion de délégation qui n'est plus d'actualité
         if(!$this->authorizeToDownloadDocument($doc->getClasseur()->getVisible(), $this->getUser())) {
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+            return new JsonResponse(['message' => 'Vous n\'avez pas accès à ce document'], Response::HTTP_FORBIDDEN);
         }
+
 
         // Ecriture de l'hitorique du document
         $id_user = $this->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        if (!$user || false === $user->hasCollectivity($orgId)) {
+            return new JsonResponse(['message' => 'Vous n\'avez pas accès à la collectivité demandé'], Response::HTTP_FORBIDDEN);
+        }
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
         //@todo refactor $user->getCollectivite();
-        $city = $user->getCollectivite();
+        $collectivity = $user->getCollectivityById($orgId);
         $path = $this->container->getParameter('upload')['fics'];
 
         /* SetaPDF */
@@ -509,8 +521,8 @@ class DocumentController extends Controller
             $absVisa,
             $ordVisa,
             true,
-            $city->getTitreVisa(),
-            $city->getCouleurVisa(),
+            $collectivity->getTitreVisa(),
+            $collectivity->getCouleurVisa(),
             $path
         );
         /* FIN SetaPDF */
@@ -518,10 +530,17 @@ class DocumentController extends Controller
     }
 
     /**
-     * @Route("/download_sign/{id}/{absSign}/{ordSign}", name="download_doc_sign",  options={"expose"=true})
+     * @Route("/org/{orgId}/download_sign/{id}/{absSign}/{ordSign}", name="download_doc_sign",  options={"expose"=true})
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
+     * @param $orgId
+     * @param Document $doc
+     * @param int $absSign
+     * @param int $ordSign
+     * @return JsonResponse|Response
+     *
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function downloadSignAction(Document $doc, $absSign = 10, $ordSign = 10) {
+    public function downloadSignAction($orgId, Document $doc, $absSign = 10, $ordSign = 10) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -533,13 +552,16 @@ class DocumentController extends Controller
         // Ecriture de l'hitorique du document
         $id_user = $this->getUser()->getId();
         $user = $em->getRepository('SesileUserBundle:User')->findOneByid($id_user);
+        if (!$user || false === $user->hasCollectivity($orgId)) {
+            return new JsonResponse(['message' => 'Vous n\'avez pas accès à la collectivité demandé'], Response::HTTP_FORBIDDEN);
+        }
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
 
         // On recupère la collectivité pour ses paramètres
         //@todo refactor $user->getCollectivite();
-        $city = $user->getCollectivite();
+        $collectivity = $user->getCollectivityById($orgId);
         $path = $this->container->getParameter('upload')['fics'];
 
         // On recupere le dernier utilisateur ayant validé le classeur
@@ -552,7 +574,7 @@ class DocumentController extends Controller
             $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(),
                 $absSign,
                 $ordSign,
-                $city->getPageSignature(),
+                $collectivity->getPageSignature(),
                 $imageSignature,
                 $lastUser,
                 $doc->getClasseur()->getId(),
@@ -565,21 +587,31 @@ class DocumentController extends Controller
     }
 
     /**
-     * @Route("/download_all/{id}/{absVisa}/{ordVisa}/{absSign}/{ordSign}", name="download_doc_all",  options={"expose"=true})
+     * @Route("/org/{orgId}/download_all/{id}/{absVisa}/{ordVisa}/{absSign}/{ordSign}", name="download_doc_all",  options={"expose"=true})
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
+     * @param $orgId
+     * @param Document $doc
+     * @param int $absVisa
+     * @param int $ordVisa
+     * @param int $absSign
+     * @param int $ordSign
      *
+     * @return JsonResponse
      */
-    public function downloadAllAction(Document $doc, $absVisa = 10, $ordVisa = 10, $absSign = 10, $ordSign = 10) {
+    public function downloadAllAction($orgId, Document $doc, $absVisa = 10, $ordVisa = 10, $absSign = 10, $ordSign = 10) {
 
         $em = $this->getDoctrine()->getManager();
 
         // Ecriture de l'hitorique du document
         $user = $this->getUser();
+        if (!$user || false === $user->hasCollectivity($orgId)) {
+            return new JsonResponse(['message' => 'Vous n\'avez pas accès à la collectivité demandé'], Response::HTTP_FORBIDDEN);
+        }
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
         //@todo refactor $user->getCollectivite();
-        $city = $user->getCollectivite();
+        $collectivity = $user->getCollectivityById($orgId);
         $path = $this->container->getParameter('upload')['fics'];
 
         // On recupere le dernier utilisateur ayant validé le classeur
@@ -595,11 +627,11 @@ class DocumentController extends Controller
                 $ordVisa,
                 $absSign,
                 $ordSign,
-                $city->getPageSignature(),
+                $collectivity->getPageSignature(),
                 true,
                 $imageSignature,
-                $city->getTitreVisa(),
-                $city->getCouleurVisa(),
+                $collectivity->getTitreVisa(),
+                $collectivity->getCouleurVisa(),
                 $lastUser,
                 $path
             );
@@ -640,55 +672,63 @@ class DocumentController extends Controller
 
 
     /**
-     * @Route("/download_doc_all_files/{id}", name="download_doc_all_files")
+     * @Route("/org/{orgId}/download_doc_all_files/{id}", name="download_doc_all_files")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param string $orgId
      * @param Classeur $classeur
      * @return Response
+     * @throws \SetaPDF_Core_Exception
      */
-    public function downloadDocAllFilesAction(Classeur $classeur)
+    public function downloadDocAllFilesAction($orgId, Classeur $classeur)
     {
-        return $this->zipFileDownload($classeur, "NONE");
+        return $this->zipFileDownload($orgId, $classeur, "NONE");
     }
 
     /**
-     * @Route("/download_doc_visa_all_files/{id}", name="download_doc_visa_all_files")
+     * @Route("/org/{orgId}/download_doc_visa_all_files/{id}", name="download_doc_visa_all_files")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param string $orgId
      * @param Classeur $classeur
      * @return Response
+     * @throws \SetaPDF_Core_Exception
      */
-    public function downloadDocVisaAllFilesAction(Classeur $classeur)
+    public function downloadDocVisaAllFilesAction($orgId, Classeur $classeur)
     {
-        return $this->zipFileDownload($classeur, "VISA");
+        return $this->zipFileDownload($orgId, $classeur, "VISA");
     }
 
     /**
-     * @Route("/download_doc_sign_all_files/{id}", name="download_doc_sign_all_files")
+     * @Route("/org/{orgId}/download_doc_sign_all_files/{id}", name="download_doc_sign_all_files")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param string $orgId
      * @param Classeur $classeur
      * @return Response
      */
-    public function downloadDocSignAllFilesAction(Classeur $classeur)
+    public function downloadDocSignAllFilesAction($orgId, Classeur $classeur)
     {
-        return $this->zipFileDownload($classeur, "SIGN");
+        return $this->zipFileDownload($orgId, $classeur, "SIGN");
 
     }
     /**
-     * @Route("/download_doc_all_all_files/{id}", name="download_doc_all_all_files")
+     * @Route("/org/{orgId}/download_doc_all_all_files/{id}", name="download_doc_all_all_files")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @param string $orgId
      * @param Classeur $classeur
      * @return Response
      */
-    public function downloadDocAllAllFilesAction(Classeur $classeur)
+    public function downloadDocAllAllFilesAction($orgId, Classeur $classeur)
     {
-        return $this->zipFileDownload($classeur, "ALL");
+        return $this->zipFileDownload($orgId, $classeur, "ALL");
     }
 
     /**
+     * @param string $orgId
      * @param $classeur
      * @param $type
      * @return Response
+     * @throws \SetaPDF_Core_Exception
      */
-    private function zipFileDownload ($classeur, $type) {
+    private function zipFileDownload ($orgId, $classeur, $type) {
 
         // Verif des autorisations
         if(!$this->authorizeToDownloadDocument($classeur->getVisible(), $this->getUser())) {
@@ -697,6 +737,9 @@ class DocumentController extends Controller
 
         // Ecriture de l'historique du document
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        if (!$user || false === $user->hasCollectivity($orgId)) {
+            return new JsonResponse(['message' => 'Vous n\'avez pas accès à la collectivité demandé'], Response::HTTP_FORBIDDEN);
+        }
         $docs = $classeur->getDocuments();
 
         $path = $this->container->getParameter('upload')['fics'];
@@ -727,7 +770,7 @@ class DocumentController extends Controller
                 }
                 else {
                     //@todo refactor $user->getCollectivite();
-                    $city = $user->getCollectivite();
+                    $collectivity = $user->getCollectivityById($orgId);
                     $lastUser = $em->getRepository('SesileUserBundle:EtapeClasseur')->getLastValidant($doc->getClasseur());
                     $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
@@ -739,20 +782,20 @@ class DocumentController extends Controller
                             $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponVisaAll(
                                 $doc->getRepourl(),
                                 $doc->getClasseur()->getId(),
-                                $city->getAbscissesVisa(),
-                                $city->getOrdonneesVisa(),
+                                $collectivity->getAbscissesVisa(),
+                                $collectivity->getOrdonneesVisa(),
                                 true,
-                                $city->getTitreVisa(),
-                                $city->getCouleurVisa(),
+                                $collectivity->getTitreVisa(),
+                                $collectivity->getCouleurVisa(),
                                 $path
                             );
                             break;
                         case "SIGN" :
                             $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignatureAll(
                                 $doc->getRepourl(),
-                                $city->getAbscissesSignature(),
-                                $city->getOrdonneesSignature(),
-                                $city->getPageSignature(),
+                                $collectivity->getAbscissesSignature(),
+                                $collectivity->getOrdonneesSignature(),
+                                $collectivity->getPageSignature(),
                                 $imageSignature,
                                 $lastUser,
                                 $doc->getClasseur()->getId(),
@@ -763,15 +806,15 @@ class DocumentController extends Controller
                             $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALLFiles(
                                 $doc->getRepourl(),
                                 $doc->getClasseur()->getId(),
-                                $city->getAbscissesVisa(),
-                                $city->getOrdonneesVisa(),
-                                $city->getAbscissesSignature(),
-                                $city->getOrdonneesSignature(),
-                                $city->getPageSignature(),
+                                $collectivity->getAbscissesVisa(),
+                                $collectivity->getOrdonneesVisa(),
+                                $collectivity->getAbscissesSignature(),
+                                $collectivity->getOrdonneesSignature(),
+                                $collectivity->getPageSignature(),
                                 true,
                                 $imageSignature,
-                                $city->getTitreVisa(),
-                                $city->getCouleurVisa(),
+                                $collectivity->getTitreVisa(),
+                                $collectivity->getCouleurVisa(),
                                 $lastUser,
                                 $path
                             );
