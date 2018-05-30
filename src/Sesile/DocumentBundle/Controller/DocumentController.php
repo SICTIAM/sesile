@@ -564,7 +564,6 @@ class DocumentController extends Controller
         $em->flush();
 
         // On recupère la collectivité pour ses paramètres
-        //@todo refactor $user->getCollectivite();
         $collectivity = $user->getCollectivityById($orgId);
 
         list($absSign, $ordSign) = $this->defineSignaturePosition($absSign, $ordSign, $collectivity);
@@ -897,7 +896,7 @@ class DocumentController extends Controller
         if (($absVisa == 10 || !$ordVisa == 10 ) && ($collectivity->getAbscissesVisa() != '' && $collectivity->getOrdonneesVisa() != '')) {
             $absVisa = $collectivity->getAbscissesVisa();
             $ordVisa = $collectivity->getOrdonneesVisa();
-        } else {
+        } elseif (($absVisa == 10 || !$ordVisa == 10 ) && ($collectivity->getAbscissesVisa() == '' || $collectivity->getOrdonneesVisa() == '')) {
             $absVisa = self::DEFAULT_ABS;
             $ordVisa = self::DEFAULT_ORD;
         }
@@ -917,7 +916,7 @@ class DocumentController extends Controller
         if (($absSign == 10 || !$ordSign == 10 ) && ($collectivity->getAbscissesSignature() != '' && $collectivity->getOrdonneesSignature() != '')) {
             $absSign = $collectivity->getAbscissesSignature();
             $ordSign = $collectivity->getOrdonneesSignature();
-        } else {
+        } elseif (($absSign == 10 || !$ordSign == 10 ) && ($collectivity->getAbscissesSignature() == '' || $collectivity->getOrdonneesSignature() == '')) {
             $absSign = self::DEFAULT_ABS;
             $ordSign = self::DEFAULT_ORD;
         }
