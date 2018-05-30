@@ -55,7 +55,7 @@ class DocumentsNew extends Component {
     isFinalizedOrRetiredClasseur = () => this.classeurIsFinalized() || this.props.statusClasseur === 3
     render () {
         const { t } = this.context
-        const { onDrop, removeDocument, onClick, displayReveal }  = this.props
+        const { onDrop, removeDocument, onClick, displayReveal, user }  = this.props
         const { disabled, accept, multiple, fileRule } = this.state
         const docs = this.props.documents.map((document, key) =>
             <div
@@ -136,7 +136,7 @@ class DocumentsNew extends Component {
                                     <li className="doc-action-button">
                                         <a
                                             className="button secondary clear"
-                                            href={Routing.generate('download_doc_visa', {id: document.id})}
+                                            href={Routing.generate('download_doc_visa', {orgId: user.current_org_id, id: document.id})}
                                             target="_blank">
                                             {t('common.documents.btn_visa')}
                                         </a>
@@ -145,7 +145,7 @@ class DocumentsNew extends Component {
                                     <li className="doc-action-button">
                                         <a
                                             className="button secondary clear"
-                                            href={Routing.generate('download_doc_sign', {id: document.id})}
+                                            href={Routing.generate('download_doc_sign', {orgId: user.current_org_id, id: document.id})}
                                             target="_blank">
                                             {t('common.documents.btn_signature')}
                                         </a>
@@ -154,7 +154,7 @@ class DocumentsNew extends Component {
                                     <li className="doc-action-button">
                                         <a
                                             className="button secondary clear"
-                                            href={Routing.generate('download_doc_all', {id: document.id})}
+                                            href={Routing.generate('download_doc_all', {orgId: user.current_org_id, id: document.id})}
                                             target="_blank">
                                             {t('common.documents.btn_both')}
                                         </a>

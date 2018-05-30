@@ -140,7 +140,8 @@ class DocumentsView extends Component {
                     statusClasseur={status}
                     classeurId={this.props.classeurId}
                     editClasseur={editClasseur}
-                    isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}/>
+                    isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}
+                    user={user}/>
                 <div className="grid-x panel grid-padding-y">
                     { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                         <div className="reveal-full" style={{display: revealDisplay}}>
