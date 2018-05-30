@@ -615,7 +615,6 @@ class DocumentController extends Controller
         $em->getRepository('SesileDocumentBundle:DocumentHistory')->writeLog($doc, "Téléchargement du document par " . $user->getPrenom() . " " . $user->getNom(), null);
         $doc->setDownloaded(true);
         $em->flush();
-        //@todo refactor $user->getCollectivite();
         $collectivity = $user->getCollectivityById($orgId);
 
         list($absVisa, $ordVisa) = $this->defineVisaPosition($absVisa, $ordVisa, $collectivity);
@@ -777,7 +776,6 @@ class DocumentController extends Controller
                     }
                 }
                 else {
-                    //@todo refactor $user->getCollectivite();
                     $collectivity = $user->getCollectivityById($orgId);
                     $lastUser = $em->getRepository('SesileUserBundle:EtapeClasseur')->getLastValidant($doc->getClasseur());
                     $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
