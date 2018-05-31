@@ -140,13 +140,13 @@ const RowUser = ({User, handleDeleteUser}, {t}) =>
                         className="fa fa-th-list icon-action" 
                         title={t('common.classeur', {count: 2})}/>
                 </Cell>
-                <Cell className="medium-auto">
-                    <ButtonConfirmDelete
-                        id={User.id}
-                        dataToggle={`delete-confirmation-update-${User.id}`}
-                        onConfirm={handleDeleteUser}
-                        content={t('common.confirm_deletion_item')}/>
-                </Cell>
+                {/*<Cell className="medium-auto">*/}
+                    {/*<ButtonConfirmDelete*/}
+                        {/*id={User.id}*/}
+                        {/*dataToggle={`delete-confirmation-update-${User.id}`}*/}
+                        {/*onConfirm={handleDeleteUser}*/}
+                        {/*content={t('common.confirm_deletion_item')}/>*/}
+                {/*</Cell>*/}
             </GridX>
         </Cell>
     </AdminListRow>
