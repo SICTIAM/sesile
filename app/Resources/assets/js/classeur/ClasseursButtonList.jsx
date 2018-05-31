@@ -89,11 +89,13 @@ class ClasseursButtonList extends Component {
                                 className="dropdown-pane"
                                 data-position={dropdownPosition}
                                 data-alignment="right"
+                                style={{width: '370px'}}
                                 data-dropdown data-auto-focus="true">
                                 <Textarea
                                     id={id}
                                     name="text-refus"
                                     value={ textRefus }
+                                    style={{ height: 200 }}
                                     placeholder={t('common.classeurs.button.refus_text')}
                                     onChange={this.handleTextrefus}/>
                                 <button
