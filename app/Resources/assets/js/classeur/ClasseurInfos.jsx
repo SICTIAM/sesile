@@ -99,7 +99,7 @@ class ClasseurInfos extends Component {
                                 <ClasseurVisibilitySelect
                                     className=""
                                     visibilite={this.props.visibilite}
-                                    label={`${t('common.classeurs.label.circuits')} *`}
+                                    label={`${t('common.classeurs.label.visibility')} *`}
                                     handleChangeClasseur={this.props.handleChangeClasseur}/>
                             </Cell>
                         </GridX>

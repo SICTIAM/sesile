@@ -134,7 +134,8 @@
             },
             "label": {
                 "circuits": "Liste des circuits",
-                "types": "Type de classeur"
+                "types": "Type de classeur",
+                "visibility": "Visibilité"
             },
             "button": {
                 "add_classeur": "Nouveau classeur",
