@@ -133,14 +133,20 @@ class DocumentsNew extends Component {
                                 data-dropdown data-auto-focus={true}>
                                 <ul className="no-bullet" style={{marginBottom: 0}}>
                                     <hr style={{margin: 0}}/>
-                                    <li className="doc-action-button">
-                                        <a
-                                            className="button secondary clear"
-                                            href={Routing.generate('download_doc_visa', {orgId: user.current_org_id, id: document.id})}
-                                            target="_blank">
-                                            {t('common.documents.btn_visa')}
-                                        </a>
-                                    </li>
+                                    {user.path_signature && user.path_signature.trim() !== ""?
+                                        <li className="doc-action-button">
+                                            <a
+                                                className="button secondary clear"
+                                                href={Routing.generate('download_doc_visa', {
+                                                    orgId: user.current_org_id,
+                                                    id: document.id
+                                                })}
+                                                target="_blank">
+                                                {t('common.documents.btn_visa')}
+                                            </a>
+                                        </li>
+                                        : ""
+                                    }
                                     <hr style={{margin: 0}}/>
                                     <li className="doc-action-button">
                                         <a
@@ -151,14 +157,17 @@ class DocumentsNew extends Component {
                                         </a>
                                     </li>
                                     <hr style={{margin: 0}}/>
-                                    <li className="doc-action-button">
-                                        <a
-                                            className="button secondary clear"
-                                            href={Routing.generate('download_doc_all', {orgId: user.current_org_id, id: document.id})}
-                                            target="_blank">
-                                            {t('common.documents.btn_both')}
-                                        </a>
-                                    </li>
+                                    {user.path_signature && user.path_signature.trim() !== ""?
+                                        <li className="doc-action-button">
+                                            <a
+                                                className="button secondary clear"
+                                                href={Routing.generate('download_doc_all', {orgId: user.current_org_id, id: document.id})}
+                                                target="_blank">
+                                                {t('common.documents.btn_both')}
+                                            </a>
+                                        </li>
+                                            : ""
+                                    }
                                 </ul>
                             </div>
                         </div> :

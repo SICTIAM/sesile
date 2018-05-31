@@ -118,7 +118,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="pathSignature", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"classeurById", "currentUser", "UserId"})
+     * @Serializer\Groups({"classeurById", "currentUser", "UserId", "currentUser"})
      */
     protected $pathSignature;
 
