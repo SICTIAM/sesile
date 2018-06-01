@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\DocumentBundle\Entity\Document;
+use Sesile\DocumentBundle\Entity\DocumentDetachedSign;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sesile\DocumentBundle\Classe\PES;
@@ -277,37 +278,36 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
             // On renomme le document pour indiquer qu il est signéz
             $ancienNom = $doc->getName();
             $path_parts = pathinfo($ancienNom);
-            $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
+            $nouveauNom = $path_parts['filename'] . '-sign.' . $uploadedfile->getExtension();
 
-            $typeDocument = $doc->getType();
+//            $typeDocument = $doc->getType();
 
             // Si le document renvoyé est signature détachée
             // Dans le cas d un CADES
-            if ($typeDocument != "application/xml" && $typeDocument != "application/pdf") {
-
-                $dateToday = new \DateTime();
-
-                $docSignNom = $path_parts['filename'] . '-sign';
-                $path_doc = pathinfo($doc->getRepourl());
-                $documentSignedURL = $path_doc['filename'] . '-sign-' . $dateToday->format('YmdHis');
-                // Upload du nouveau fichier
-                $uploadedfile->move($path, $documentSignedURL);
-                $documentSign = new DocumentDetachedSign();
-                $documentSign->setName($docSignNom);
-                $documentSign->setRepourl($documentSignedURL);
-                $documentSign->setDocument($doc);
-                $em->persist($documentSign);
-
-            }
-            // Dans les autres cas : pades, xades, xades-pes
-            else {
+//            if ($typeDocument != "application/xml" && $typeDocument != "application/pdf") {
+//
+//                $dateToday = new \DateTime();
+//
+//                $docSignNom = $path_parts['filename'] . '-sign';
+//                $path_doc = pathinfo($doc->getRepourl());
+//                $documentSignedURL = $path_doc['filename'] . '-sign-' . $dateToday->format('YmdHis');
+//                // Upload du nouveau fichier
+//                $uploadedfile->move($path, $documentSignedURL);
+//                $documentSign = new DocumentDetachedSign();
+//                $documentSign->setName($docSignNom);
+//                $documentSign->setRepourl($documentSignedURL);
+//                $documentSign->setDocument($doc);
+//                $em->persist($documentSign);
+//
+//            }
+//            // Dans les autres cas : pades, xades, xades-pes
+//            else {
                 unlink($path . $doc->getRepourl());
-
                 // Upload du nouveau fichier
                 $uploadedfile->move($path, $doc->getRepourl());
                 // On enregistre le nouveau nom
                 $doc->setName($nouveauNom);
-            }
+//            }
 
             // On valide la singature
             $doc->setSigned(true);

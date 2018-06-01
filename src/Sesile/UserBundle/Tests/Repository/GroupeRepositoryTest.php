@@ -53,7 +53,6 @@ class GroupeRepositoryTest extends SesileWebTestCase
         $collectivite = $this->fixtures->getReference('collectivite-one');
         $result = $this->em->getRepository(Groupe::class)->getCircuitDataByUserAndCollectivite($user->getEmail(), $collectivite->getId());
         self::assertCount(1, $result);
-        var_dump($result);
         $expectedCircuit = $this->fixtures->getReference(CircuitValidationFixtures::CIRCUIT_VALIDATION_REFERENCE);
         $expectedType = $this->fixtures->getReference(TypeClasseurFixtures::CLASSEUR_TYPE_ONE_REFERENCE);
         $expected[] = [
