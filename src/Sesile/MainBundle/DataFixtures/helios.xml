@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<n:PES_Aller xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" xmlns:acta="http://www.minefi.gouv.fr/cp/helios/pes_v2/etatactif/r0/aller" xmlns:buda="http://www.minefi.gouv.fr/cp/helios/pes_v2/budget/r0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:depa="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:empa="http://www.minefi.gouv.fr/cp/helios/pes_v2/emprunt/r0/aller" xmlns:mara="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" xmlns:reca="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" xmlns:rola="http://www.minefi.gouv.fr/cp/helios/pes_v2/role/r0/aller" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Enveloppe>
+        <Parametres>
+            <Version V="2"/>
+            <TypFic V="PESALR1"/>
+            <NomFic V="PesDepense-01-2017-1-12018050417163180"/>
+        </Parametres>
+        <Emetteur>
+            <Sigle V="Civil Net Finance - CIRIL"/>
+            <Adresse V="pesalldep 7.1.018"/>
+        </Emetteur>
+        <Recepteur>
+            <Sigle V="HELIOS"/>
+            <Adresse V="READRESSE"/>
+        </Recepteur>
+    </Enveloppe>
+    <EnTetePES>
+        <DteStr V="2018-05-04"/>
+        <IdPost V="06088"/>
+        <IdColl V="80263060800064"/>
+        <CodCol V="000"/>
+        <CodBud V="00"/>
+        <LibelleColBud V="Budget Principal (REA)"/>
+    </EnTetePES>
+    <PES_DepenseAller>
+        <EnTeteDepense>
+            <IdVer V="2"/>
+            <InfoDematerialisee V="0"/>
+        </EnTeteDepense>
+        <Bordereau>
+            <BlocBordereau>
+                <Exer V="2017"/>
+                <IdBord V="1"/>
+                <DteBordEm V="2017-01-25"/>
+                <TypBord V="01"/>
+                <NbrPce V="3"/>
+                <MtCumulAnnuel V="683941.46"/>
+                <MtBordHT V="683941.46"/>
+            </BlocBordereau>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="1"/>
+                        <TypPce V="01"/>
+                        <NatPce V="11"/>
+                        <Obj V="SALAIRES JANVIER 2017"/>
+                    </InfoPce>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="6411"/>
+                            <LibVir1 V="SALAIRES JANVIER 2017"/>
+                            <ModRegl V="09"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="677307.88"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="80263060800015"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="99999"/>
+                            <CatTiers V="23"/>
+                            <NatJur V="09"/>
+                            <Nom V="SALARIES"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr1 V="ZAC Arenas Les Cimes"/>
+                            <Adr2 V="94 BD RENE CASSIN"/>
+                            <CP V="06364"/>
+                            <Ville V="NICE CEDEX 4"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="2"/>
+                        <TypPce V="01"/>
+                        <NatPce V="11"/>
+                        <Obj V="AVANCES/SALAIRES  JANVIER 2017                              AVANCES SUR SALAIRES  JANVIER 2017"/>
+                    </InfoPce>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="6411"/>
+                            <LibVir1 V="AVANCES/SALAIRES  JANVIER 2017"/>
+                            <LibVir2 V="AVANCES SUR SALAIRES  JANVIER 2017"/>
+                            <ModRegl V="09"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="2400.00"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="80263060800015"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="99999"/>
+                            <CatTiers V="23"/>
+                            <NatJur V="09"/>
+                            <Nom V="SALARIES"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr1 V="ZAC Arenas Les Cimes"/>
+                            <Adr2 V="94 BD RENE CASSIN"/>
+                            <CP V="06364"/>
+                            <Ville V="NICE CEDEX 4"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="3"/>
+                        <TypPce V="01"/>
+                        <NatPce V="11"/>
+                        <Obj V="OPPOSITIONS/SALAIRES 01-17                                  OPPOSITIONS/SALAIRES JANVIER 2017"/>
+                    </InfoPce>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="6411"/>
+                            <LibVir1 V="OPPOSITIONS/SALAIRES 01-17"/>
+                            <LibVir2 V="OPPOSITIONS/SALAIRES JANVIER 2017"/>
+                            <ModRegl V="09"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="4233.58"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="80263060800015"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="99999"/>
+                            <CatTiers V="23"/>
+                            <NatJur V="09"/>
+                            <Nom V="SALARIES"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr1 V="ZAC Arenas Les Cimes"/>
+                            <Adr2 V="94 BD RENE CASSIN"/>
+                            <CP V="06364"/>
+                            <Ville V="NICE CEDEX 4"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+        </Bordereau>
+    </PES_DepenseAller>
+</n:PES_Aller>
