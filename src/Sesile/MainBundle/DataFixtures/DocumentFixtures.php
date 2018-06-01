@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\File\File;
 class DocumentFixtures extends Fixture implements DependentFixtureInterface, ContainerAwareInterface
 {
     const DOCUMENT_REFERENCE_ONE = 'document-one';
+    const DOCUMENT_REFERENCE_XML = 'document-xml';
 
     /**
      * @var ContainerInterface
@@ -36,8 +37,11 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface, Con
         $classeur = $this->getReference('classeur-one');
         $document = self::aValidDocument('doc', __DIR__.'/testFile.txt', $classeur);
         $manager->persist($document);
-        $manager->flush();
         $this->addReference(self::DOCUMENT_REFERENCE_ONE, $document);
+        $documentXml = self::aValidDocument('helios', __DIR__.'/helios.xml', $classeur);
+        $manager->persist($documentXml);
+        $this->addReference(self::DOCUMENT_REFERENCE_XML, $documentXml);
+        $manager->flush();
     }
 
     /**

@@ -8,6 +8,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\UserBundle\Entity\User;
+use Sesile\UserBundle\Entity\UserRole;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -53,6 +54,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         //ozwillo id null for testing reasons on ozwillo provider
         $user->setOzwilloId(null);
         $user->setRole('Développeur');
+        $user->addUserrole(self::aValidUserRole($user));
+        $user->addUserrole(self::aValidUserRole($user, 'Développeur'));
         $user->setVille('Nice');
         $user->setCp('06000');
         $user->setPays('France');
@@ -75,6 +78,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         //$user->setPassword('3NCRYPT3D-V3R51ON');
         $user2->setEnabled(true);
         $user2->setRoles(array('ROLE_USER'));
+        $user2->addUserrole(self::aValidUserRole($user, 'RH'));
         $user2->setApitoken('token_91186cb2457c4ce2d8d4a45893211a4b');
         $user2->setApisecret('secret_ef316bf44b62815f29c5f81fbf92f5c0');
         $user2->setApiactivated(true);
@@ -121,5 +125,20 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+    }
+
+    /**
+     * @param User   $user
+     * @param string $role
+     *
+     * @return UserRole
+     */
+    public static function aValidUserRole(User $user, $role = "Maire")
+    {
+        $userRole = new UserRole();
+        $userRole->setUser($user);
+        $userRole->setUserRoles($role);
+
+        return $userRole;
     }
 }
