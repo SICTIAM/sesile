@@ -8,6 +8,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sesile\ApiBundle\Controller\TokenAuthenticatedController;
+use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\ClasseurBundle\Form\ClasseurPostType;

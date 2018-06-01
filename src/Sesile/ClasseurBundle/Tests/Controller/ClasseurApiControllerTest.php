@@ -9,6 +9,7 @@ use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\MainBundle\DataFixtures\CircuitValidationFixtures;
 use Sesile\MainBundle\DataFixtures\ClasseurFixtures;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
+use Sesile\MainBundle\DataFixtures\DocumentFixtures;
 use Sesile\MainBundle\DataFixtures\TypeClasseurFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\DataFixtures\UserPackFixtures;
@@ -33,6 +34,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
                 TypeClasseurFixtures::class,
                 CircuitValidationFixtures::class,
                 ClasseurFixtures::class,
+                DocumentFixtures::class
             ]
         )->getReferenceRepository();
         parent::setUp();
@@ -495,6 +497,47 @@ class ClasseurApiControllerTest extends SesileWebTestCase
             'collectivite' => $collectivite,
             'userPack' => $userPack,
         ];
+    }
+
+    public function testJnlpSignerFilesAction()
+    {
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user);
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-two');
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/api/v4/jnlpsignerfiles/%s/%s',
+                $classeur->getId(),
+                $user->getUserrole()->first()->getId()
+            )
+        );
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    private function getValidJnlp($ids, $roleId, $classeur)
+    {
+        return sprintf('<?xml version="1.0" encoding="utf-8"?>
+                <jnlp spec="1.0+" codebase="http://sesile-dev.local/api/v4/jnlpsignerfiles/%s/%s">
+                  <information>
+                    <title>SESILE JWS Signer</title>
+                    <vendor>SICTIAM</vendor>
+                    <homepage href="http://signature.dev.sesile.fr/jws/sesile-jws-signer.jar"/>
+                    <description>Application de de signature de documents</description>
+                    <description kind="short">Application de signatures</description>
+                    <offline-allowed/>
+                  </information>
+                <security><all-permissions /></security>
+                  <resources>
+                    <j2se version="1.8" initial-heap-size="128m" max-heap-size="1024m"/>
+                    <jar href="http://signature.dev.sesile.fr/jws/sesile-jws-signer.jar"/>
+                  </resources>
+                  <application-desc ><argument>[{"name":"test refactor 1","url_valid_classeur":"http:\/\/sesile-dev.local\/api\/v4\/valider_classeur_jws\/632\/75","documents":[{"name":"test.xml","type":"cades","description":"desc2","url_file":"http:\/\/sesile-dev.local\/apirest\/document\/downloadJWS\/fad9e2e3820af602136e7bf896f8c434ca85baaf.","url_upload":"http:\/\/sesile-dev.local\/apirest\/document\/uploaddocument\/591"}]}]</argument><argument>Non renseigné</argument><argument>Non renseignée</argument><argument>Non renseigné</argument><argument>padawan</argument><argument>5b1106bceaab8</argument></application-desc>
+        </jnlp>',
+        urlencode(serialize($ids)),
+        $roleId
+        );
     }
 
 }
