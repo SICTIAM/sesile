@@ -227,6 +227,7 @@ class Classeur extends Component {
                             {
                                 classeur.documents &&
                                 <DocumentsView
+                                    user={this.props.user}
                                     documents={Object.assign([], classeur.documents)}
                                     classeurId={classeur.id}
                                     classeurType={Object.assign({}, classeur.type)}

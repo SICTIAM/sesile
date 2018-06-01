@@ -324,7 +324,6 @@ class User extends BaseUser {
      * @Serializer\Groups({"listClasseur",
      *                      "listEtapeClasseur",
      *                      "listCircuitByCollectivite",
-     *                      "listCircuitByUser",
      *                      "getByIdCircuit",
      *                      "currentUser",
      *                      "userPack",

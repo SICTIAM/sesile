@@ -30,6 +30,11 @@ class DocumentsView extends Component {
             documents: this.props.documents,
             currentDocument: this.props.documents[0]
         })
+        this.props.documents.map(document => {
+            $(`#signature-dropdown-${document.id}`).foundation()
+            $(`#visa-dropdown-${document.id}`).foundation()
+            $(`#signature-visa-dropdown-${document.id}`).foundation()
+        })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -131,6 +136,7 @@ class DocumentsView extends Component {
         return (
             <div>
                 <DocumentsNew
+                    user={this.props.user}
                     documents={documents}
                     onClick={this.handleClickDocument}
                     onDrop={this.onDrop}
@@ -140,8 +146,7 @@ class DocumentsView extends Component {
                     statusClasseur={status}
                     classeurId={this.props.classeurId}
                     editClasseur={editClasseur}
-                    isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}
-                    user={user}/>
+                    isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}/>
                 <div className="grid-x panel grid-padding-y">
                     { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                         <div className="reveal-full" style={{display: revealDisplay}}>

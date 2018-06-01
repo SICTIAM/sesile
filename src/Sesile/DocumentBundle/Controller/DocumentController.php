@@ -25,8 +25,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  */
 class DocumentController extends Controller
 {
-    const DEFAULT_ABS = 10;
-    const DEFAULT_ORD = 10;
+    const DEFAULT_ABS_SIGN = 120;
+    const DEFAULT_ORD_SIGN = 220;
+    const DEFAULT_ABS_VISA = 100;
+    const DEFAULT_ORD_VISA = 30;
 
     /**
      * @Route("/new", name="new_document",  options={"expose"=true})
@@ -483,7 +485,7 @@ class DocumentController extends Controller
 
 
     /**
-     * @Route("/org/{orgId}/download_visa/{id}/{absVisa}/{ordVisa}", defaults={"absVisa"=10, "ordVisa"=10}, name="download_doc_visa",  options={"expose"=true})
+     * @Route("/org/{orgId}/download_visa/{id}/{absVisa}/{ordVisa}", defaults={"absVisa"=0, "ordVisa"=0}, name="download_doc_visa",  options={"expose"=true})
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @param string $orgId
      * @param Document $doc
@@ -534,7 +536,7 @@ class DocumentController extends Controller
     }
 
     /**
-     * @Route("/org/{orgId}/download_sign/{id}/{absSign}/{ordSign}", defaults={"absSign"=10, "ordSign"=10}, name="download_doc_sign",  options={"expose"=true})
+     * @Route("/org/{orgId}/download_sign/{id}/{absSign}/{ordSign}", defaults={"absSign"=0, "ordSign"=0}, name="download_doc_sign",  options={"expose"=true})
      * @ParamConverter("Document", options={"mapping": {"id": "id"}})
      * @param $orgId
      * @param Document $doc
@@ -603,7 +605,7 @@ class DocumentController extends Controller
      *
      * @return JsonResponse
      */
-    public function downloadAllAction($orgId, Document $doc, $absVisa = 10, $ordVisa = 10, $absSign = 10, $ordSign = 10) {
+    public function downloadAllAction($orgId, Document $doc, $absVisa = 0, $ordVisa = 0, $absSign = 0, $ordSign = 0) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -891,12 +893,12 @@ class DocumentController extends Controller
      */
     private function defineVisaPosition($absVisa, $ordVisa, Collectivite $collectivity)
     {
-        if (($absVisa == 10 || !$ordVisa == 10 ) && ($collectivity->getAbscissesVisa() != '' && $collectivity->getOrdonneesVisa() != '')) {
+        if (($absVisa == 0 || $ordVisa == 0 ) && ($collectivity->getAbscissesVisa() != '' && $collectivity->getOrdonneesVisa() != '')) {
             $absVisa = $collectivity->getAbscissesVisa();
             $ordVisa = $collectivity->getOrdonneesVisa();
-        } elseif (($absVisa == 10 || !$ordVisa == 10 ) && ($collectivity->getAbscissesVisa() == '' || $collectivity->getOrdonneesVisa() == '')) {
-            $absVisa = self::DEFAULT_ABS;
-            $ordVisa = self::DEFAULT_ORD;
+        } elseif (($absVisa == 0 || $ordVisa == 0 ) && ($collectivity->getAbscissesVisa() == '' || $collectivity->getOrdonneesVisa() == '')) {
+            $absVisa = self::DEFAULT_ABS_VISA;
+            $ordVisa = self::DEFAULT_ORD_VISA;
         }
 
         return [$absVisa, $ordVisa];
@@ -911,12 +913,12 @@ class DocumentController extends Controller
      */
     private function defineSignaturePosition($absSign, $ordSign, Collectivite $collectivity)
     {
-        if (($absSign == 10 || !$ordSign == 10 ) && ($collectivity->getAbscissesSignature() != '' && $collectivity->getOrdonneesSignature() != '')) {
+        if (($absSign == 0 || $ordSign == 0 ) && ($collectivity->getAbscissesSignature() != '' && $collectivity->getOrdonneesSignature() != '')) {
             $absSign = $collectivity->getAbscissesSignature();
             $ordSign = $collectivity->getOrdonneesSignature();
-        } elseif (($absSign == 10 || !$ordSign == 10 ) && ($collectivity->getAbscissesSignature() == '' || $collectivity->getOrdonneesSignature() == '')) {
-            $absSign = self::DEFAULT_ABS;
-            $ordSign = self::DEFAULT_ORD;
+        } elseif (($absSign == 0 || $ordSign == 0 ) && ($collectivity->getAbscissesSignature() == '' || $collectivity->getOrdonneesSignature() == '')) {
+            $absSign = self::DEFAULT_ABS_SIGN;
+            $ordSign = self::DEFAULT_ORD_SIGN;
         }
 
         return [$absSign, $ordSign];

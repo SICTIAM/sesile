@@ -77,7 +77,7 @@ class CollectiviteVisa extends Component {
                     <DraggablePosition  className="cell medium-6"
                                         label="VISA"
                                         helpText={t('admin.collectivite.draggable_help_text')}
-                                        labelColor={couleur_visa}
+                                        boxStyle={{color: couleur_visa, cursor: 'pointer'}}
                                         position={{x: abscisses_visa, y: ordonnees_visa}}
                                         handleChange={this.handleChangeDeltaPosition}/>
                 </div>
