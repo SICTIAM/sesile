@@ -26,10 +26,10 @@ export default class DraggablePosition extends Component {
     render() {
         const { className, label, style, bounds, labelColor, helpText } = this.props
         return (
-            <div className={className}>
+            <div style={{display: 'inline-block'}} className={className}>
                 <div className="draggable-position-box" style={style}>
                     <Draggable position={this.props.position} bounds={bounds} onDrag={this.handleDrag}>
-                        <div className="draggable-position-box" style={{color: labelColor, cursor: 'pointer'}}>
+                        <div className="draggable-position-box" style={this.props.boxStyle}>
                             {label}
                         </div>
                     </Draggable>

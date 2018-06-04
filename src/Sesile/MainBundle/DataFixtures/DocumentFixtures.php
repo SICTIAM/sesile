@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\File\File;
 class DocumentFixtures extends Fixture implements DependentFixtureInterface, ContainerAwareInterface
 {
     const DOCUMENT_REFERENCE_ONE = 'document-one';
+    const DOCUMENT_REFERENCE_PDF = 'document-pdf';
     const DOCUMENT_REFERENCE_XML = 'document-xml';
 
     /**
@@ -42,6 +43,11 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface, Con
         $manager->persist($documentXml);
         $this->addReference(self::DOCUMENT_REFERENCE_XML, $documentXml);
         $manager->flush();
+        $this->addReference(self::DOCUMENT_REFERENCE_ONE, $document);
+        $document2 = self::aValidDocument('sictiam.pdf', __DIR__.'/sictiam.pdf', $classeur);
+        $manager->persist($document2);
+        $manager->flush();
+        $this->addReference(self::DOCUMENT_REFERENCE_PDF, $document2);
     }
 
     /**

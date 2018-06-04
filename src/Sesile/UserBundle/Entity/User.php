@@ -118,7 +118,7 @@ class User extends BaseUser {
      * @var string
      *
      * @ORM\Column(name="pathSignature", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"classeurById", "currentUser", "UserId"})
+     * @Serializer\Groups({"classeurById", "currentUser", "UserId", "currentUser"})
      */
     protected $pathSignature;
 
@@ -1318,6 +1318,20 @@ class User extends BaseUser {
     }
 
     /**
+     * @param string $orgId
+     * @return null|Collectivite
+     */
+    public function getCollectivityById($orgId)
+    {
+        foreach ($this->collectivities as $collectivity) {
+            if ($collectivity->getId() == $orgId) {
+                return $collectivity;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return Collectivite|null
      */
     public function getFirstCollectivity()
@@ -1336,10 +1350,8 @@ class User extends BaseUser {
      */
     public function hasCollectivity($collectivityId)
     {
-        foreach ($this->collectivities as $collectivity) {
-            if ($collectivity->getId() == $collectivityId) {
-                return true;
-            }
+        if ($collectivity = $this->getCollectivityById($collectivityId)) {
+            return $collectivity;
         }
         return false;
     }

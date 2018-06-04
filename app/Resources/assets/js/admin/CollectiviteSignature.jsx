@@ -67,6 +67,7 @@ class CollectiviteSignature extends Component {
                 <div className="medium-6 cell">
                     <DraggablePosition  className="cell medium-6"
                                         label="SIGNATURE"
+                                        boxStyle={{color: 'black', cursor: 'pointer'}}
                                         helpText={t('admin.collectivite.draggable_help_text')}
                                         style={{height: '300px', width: '245px', position: 'relative', overflow: 'auto', padding: '0'}}
                                         position={{x: abscisses_signature, y: ordonnees_signature}}

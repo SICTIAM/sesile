@@ -73,6 +73,7 @@ class UserApiControllerTest extends SesileWebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
         self::assertEquals($user->getId(), $data['id']);
         self::assertEquals($currentCollectivityId, $data['current_org_id']);
+        self::assertNull($data['path_signature']);
     }
 
     public function testUsersCollectiviteAction()

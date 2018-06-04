@@ -4,7 +4,10 @@ import Dropzone from 'react-dropzone'
 import {array, func, string, object, bool} from 'prop-types'
 
 import {Cell, GridX} from '../_components/UI'
+import DraggablePosition from '../_components/DraggablePosition'
+
 import { BytesToSize } from '../_utils/Utils'
+import { handleErrors } from '../_utils/Utils'
 
 
 class DocumentsNew extends Component {
@@ -17,7 +20,19 @@ class DocumentsNew extends Component {
         accept: '',
         dropFileError: '',
         multiple: false,
-        fileRule : ''
+        fileRule : '',
+        collectivite: {}
+    }
+    componentDidMount() {
+        this.fetchCollectivite()
+    }
+    fetchCollectivite() {
+        fetch(Routing.generate('sesile_main_collectiviteapi_getbyid', {id: this.props.user.current_org_id}),
+            {credentials: 'same-origin'})
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(collectivite => this.setState({collectivite}))
+            .catch(() => this.setState({collectivite: {ordonnees_signature: 10, abscisses_signature: 10}}))
     }
     componentWillReceiveProps(nextProps) {
         const { t } = this.context
@@ -41,6 +56,19 @@ class DocumentsNew extends Component {
             this.setState({fileRule: t('common.documents.error.file_acceptation_rules')})
         }
     }
+    handleChangeCollectiviteValue = (name, value) => {
+        const { collectivite } = this.state
+        collectivite[name] = value
+        this.setState({collectivite})
+    }
+    handleChangeSignaturePosition = (position) => {
+        this.handleChangeCollectiviteValue("abscisses_signature", position.x)
+        this.handleChangeCollectiviteValue("ordonnees_signature", position.y)
+    }
+    handleChangeVisaPosition = (position) => {
+        this.handleChangeCollectiviteValue("abscisses_visa", position.x)
+        this.handleChangeCollectiviteValue("ordonnees_visa", position.y)
+    }
     isHeliosAndExistingClasseur = () => {
         return this.props.classeurId && this.props.typeClasseur.nom === "Helios"
     }
@@ -55,7 +83,7 @@ class DocumentsNew extends Component {
     isFinalizedOrRetiredClasseur = () => this.classeurIsFinalized() || this.props.statusClasseur === 3
     render () {
         const { t } = this.context
-        const { onDrop, removeDocument, onClick, displayReveal }  = this.props
+        const { onDrop, removeDocument, onClick, displayReveal, user }  = this.props
         const { disabled, accept, multiple, fileRule } = this.state
         const docs = this.props.documents.map((document, key) =>
             <div
@@ -133,32 +161,67 @@ class DocumentsNew extends Component {
                                 data-dropdown data-auto-focus={true}>
                                 <ul className="no-bullet" style={{marginBottom: 0}}>
                                     <hr style={{margin: 0}}/>
-                                    <li className="doc-action-button">
-                                        <a
-                                            className="button secondary clear"
-                                            href={Routing.generate('download_doc_visa', {id: document.id})}
-                                            target="_blank">
-                                            {t('common.documents.btn_visa')}
-                                        </a>
-                                    </li>
+                                    <DraggablePositionDownload
+                                        href={Routing.generate('download_doc_visa', {
+                                            orgId: user.current_org_id,
+                                            id: document.id,
+                                            absVisa: this.state.collectivite.abscisses_visa,
+                                            ordVisa: this.state.collectivite.ordonnees_visa})}
+                                        position={{
+                                            x: this.state.collectivite.abscisses_visa,
+                                            y: this.state.collectivite.ordonnees_visa}}
+                                        label={t('common.documents.btn_visa')}
+                                        handleChange={this.handleChangeVisaPosition}
+                                        collectivite={this.state.collectivite}
+                                        dataToggle={`visa-dropdown-${document.id}`}
+                                        type="visa"/>
                                     <hr style={{margin: 0}}/>
-                                    <li className="doc-action-button">
-                                        <a
-                                            className="button secondary clear"
-                                            href={Routing.generate('download_doc_sign', {id: document.id})}
-                                            target="_blank">
-                                            {t('common.documents.btn_signature')}
-                                        </a>
-                                    </li>
-                                    <hr style={{margin: 0}}/>
-                                    <li className="doc-action-button">
-                                        <a
-                                            className="button secondary clear"
-                                            href={Routing.generate('download_doc_all', {id: document.id})}
-                                            target="_blank">
-                                            {t('common.documents.btn_both')}
-                                        </a>
-                                    </li>
+                                    {user.path_signature && user.path_signature.trim() !== "" &&
+                                        <div>
+                                            <DraggablePositionDownload
+                                                href={
+                                                    Routing.generate(
+                                                        'download_doc_sign',
+                                                        {orgId: user.current_org_id,
+                                                            id: document.id,
+                                                            absSign: this.state.collectivite.abscisses_signature,
+                                                            ordSign: this.state.collectivite.ordonnees_signature})}
+                                                position={{
+                                                    x: this.state.collectivite.abscisses_signature,
+                                                    y: this.state.collectivite.ordonnees_signature}}
+                                                label={t('common.documents.btn_signature')}
+                                                handleChange={this.handleChangeSignaturePosition}
+                                                collectivite={this.state.collectivite}
+                                                dataToggle={`signature-dropdown-${document.id}`}
+                                                type="signature"/>
+                                                <hr style={{margin: 0}}/>
+                                        </div>}
+                                    {user.path_signature && user.path_signature.trim() !== "" &&
+                                        <div>
+                                            <DraggablePositionVisaSignatureDownload
+                                                href={
+                                                    Routing.generate(
+                                                        'download_doc_all',
+                                                        {orgId: user.current_org_id,
+                                                            id: document.id,
+                                                            absSign: this.state.collectivite.abscisses_signature,
+                                                            ordSign: this.state.collectivite.ordonnees_signature,
+                                                            absVisa: this.state.collectivite.abscisses_visa,
+                                                            ordVisa: this.state.collectivite.ordonnees_visa})}
+                                                positionSignature={{
+                                                    x: this.state.collectivite.abscisses_signature,
+                                                    y: this.state.collectivite.ordonnees_signature}}
+                                                positionVisa={{
+                                                    x: this.state.collectivite.abscisses_visa,
+                                                    y: this.state.collectivite.ordonnees_visa}}
+                                                label={t('common.documents.btn_both')}
+                                                handleChangeSignature={this.handleChangeSignaturePosition}
+                                                handleChangeVisa={this.handleChangeVisaPosition}
+                                                collectivite={this.state.collectivite}
+                                                dataToggle={`signature-visa-dropdown-${document.id}`}
+                                                type="signature"/>
+                                            <hr style={{margin: 0}}/>
+                                        </div>}
                                 </ul>
                             </div>
                         </div> :
@@ -264,3 +327,120 @@ DocumentsNew.propTypes = {
 }
 
 export default translate('sesile')(DocumentsNew)
+
+const DraggablePositionDownload = ({handleChange, label, dataToggle, href, position, type}, {t}) => {
+    return (
+        <li className="doc-action-button">
+            <a
+                className="button secondary clear"
+                data-toggle={dataToggle}>
+                {label}
+            </a>
+            <div
+                style={{
+                    textAlign: 'center',
+                    padding: '1em',
+                    width: '15em',
+                    height: '23em',
+                    marginLeft: '100px',
+                    borderRadius: '5px'
+                }}
+                className="dropdown-pane"
+                id={dataToggle}
+                data-position="right"
+                data-alignment="center"
+                data-close-on-click={true}
+                data-dropdown data-auto-focus={true}>
+                <DraggablePosition
+                    style={{
+                        height: '300px',
+                        width: '210px',
+                        position: 'relative',
+                        overflow: 'auto',
+                        padding: '0',
+                        display: 'flex'}}
+                    position={position}
+                    boxStyle={{height: '30px', width: '65px', padding: 0}}
+                    label={type}
+                    handleChange={handleChange}/>
+                <div>
+                    <a
+                        className="button secondary hollow"
+                        href={href}
+                        target="_blank">
+                        {t('common.download')}
+                    </a>
+                </div>
+            </div>
+        </li>
+    )
+}
+
+DraggablePositionDownload.contextTypes = {
+    t: func
+}
+
+const DraggablePositionVisaSignatureDownload = ({handleChangeVisa, handleChangeSignature, label, dataToggle, href, positionVisa, positionSignature}, {t}) => {
+    return (
+        <li className="doc-action-button">
+            <a
+                className="button secondary clear"
+                data-toggle={dataToggle}>
+                {label}
+            </a>
+            <div
+                style={{
+                    textAlign: 'center',
+                    padding: '1em',
+                    width: '30em',
+                    height: '23em',
+                    marginLeft: '100px',
+                    borderRadius: '5px'
+                }}
+                className="dropdown-pane"
+                id={dataToggle}
+                data-position="right"
+                data-alignment="center"
+                data-close-on-click={true}
+                data-dropdown data-auto-focus={true}>
+                <DraggablePosition
+                    style={{
+                        height: '300px',
+                        width: '210px',
+                        position: 'relative',
+                        overflow: 'auto',
+                        padding: '0',
+                        display: 'flex',
+                        marginRight: '10px'}}
+                    position={positionVisa}
+                    boxStyle={{height: '30px', width: '65px', padding: 0}}
+                    label="visa"
+                    handleChange={handleChangeVisa}/>
+                <DraggablePosition
+                    style={{
+                        height: '300px',
+                        width: '210px',
+                        position: 'relative',
+                        overflow: 'auto',
+                        padding: '0',
+                        display: 'flex'}}
+                    position={positionSignature}
+                    boxStyle={{height: '30px', width: '65px', padding: 0}}
+                    label="signature"
+                    handleChange={handleChangeSignature}/>
+                <div>
+                    <a
+                        className="button secondary hollow"
+                        href={href}
+                        target="_blank">
+                        {t('common.download')}
+                    </a>
+                </div>
+            </div>
+        </li>
+    )
+}
+
+DraggablePositionVisaSignatureDownload.contextTypes = {
+    t: func
+}

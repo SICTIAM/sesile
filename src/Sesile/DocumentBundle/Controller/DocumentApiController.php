@@ -35,6 +35,19 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     {
         return $document;
     }
+    /**
+     * @Rest\View(serializerGroups={"classeurById"})
+     * @Rest\Get("/{id}/preview")
+     * @param Document $document
+     * @return Document
+     */
+    public function getPdfPreviewAction(Document $document)
+    {
+        //@todo
+        return false;
+//        $path = $this->container->getParameter('upload')['fics'];
+//        return $document->getPDFImage(0, "PORTRAIT", $path);
+    }
 
     /**
      * @Rest\View(serializerGroups={"classeurById"})

@@ -218,8 +218,8 @@
         "download_pdf": "Télécharger le PDF",
         "infos": "informations",
         "select_collectivite": "Sélectionner la collectivité",
-        "research": "Recherche"
-
+        "research": "Recherche",
+        "download": "Télécharger"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
