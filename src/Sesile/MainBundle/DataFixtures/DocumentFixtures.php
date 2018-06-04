@@ -42,8 +42,6 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface, Con
         $documentXml = self::aValidDocument('helios', __DIR__.'/helios.xml', $classeur);
         $manager->persist($documentXml);
         $this->addReference(self::DOCUMENT_REFERENCE_XML, $documentXml);
-        $manager->flush();
-        $this->addReference(self::DOCUMENT_REFERENCE_ONE, $document);
         $document2 = self::aValidDocument('sictiam.pdf', __DIR__.'/sictiam.pdf', $classeur);
         $manager->persist($document2);
         $manager->flush();
