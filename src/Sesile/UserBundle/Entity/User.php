@@ -321,19 +321,7 @@ class User extends BaseUser {
      *  }
      * )
      *
-     * @Serializer\Groups({"listClasseur",
-     *                      "listEtapeClasseur",
-     *                      "listCircuitByCollectivite",
-     *                      "listCircuitByUser",
-     *                      "getByIdCircuit",
-     *                      "currentUser",
-     *                      "userPack",
-     *                      "searchUser",
-     *                      "userRole",
-     *                      "listUsers",
-     *                      "classeurById",
-     *                      "UserId"})
-     *     })
+     * @Serializer\Groups({"currentUser"})
      */
     protected $collectivities;
 
