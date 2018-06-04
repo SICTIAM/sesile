@@ -50,13 +50,15 @@ class DocumentApiControllerTest extends SesileWebTestCase
         $filePath = $this->getContainer()->getParameter('upload')['fics'];
         $fs->copy($fixtureFilePath, $filePath.'helios.xml', true);
         $fs->copy($fixtureFilePath, __DIR__.'/../helios.xml', true);
+//        $fs->copy($fixtureFilePath, '../helios.xml', true);
         $this->logIn($user);
         $file = new UploadedFile(
+//            '../helios.xml',
             __DIR__.'/../helios.xml',
             'helios.xml',
             'application/xml',
             null,
-            null
+            null, true
         );
         $this->client->request(
             'POST',

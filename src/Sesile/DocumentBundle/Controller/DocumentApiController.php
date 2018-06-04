@@ -278,7 +278,8 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
             // On renomme le document pour indiquer qu il est signéz
             $ancienNom = $doc->getName();
             $path_parts = pathinfo($ancienNom);
-            $nouveauNom = $path_parts['filename'] . '-sign.' . $uploadedfile->getExtension();
+//            $nouveauNom = $path_parts['filename'] . '-sign.' . $path_parts['extension'];
+            $nouveauNom = $path_parts['filename'] . '-sign.' . $uploadedfile->guessExtension();
 
 //            $typeDocument = $doc->getType();
 
