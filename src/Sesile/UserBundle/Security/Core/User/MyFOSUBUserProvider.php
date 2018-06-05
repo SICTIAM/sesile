@@ -66,7 +66,8 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
         $userEmail = $response->getEmail();
         $data = $response->getData();
         $user = $this->userManager->findUserByEmail($userEmail);
-        $client_id = $response->getResourceOwner()->getOption('client_id');
+//        $client_id = $response->getResourceOwner()->getOption('client_id');
+        $client_id = $response->getResourceOwner()->getClientId();
         //$client_id is the unique id for a collectivite
 //       $ozwilloCollectivite = $this->em->getRepository('SesileMainBundle:CollectiviteOzwillo')->findOneByClientId($client_id);
         $ozwilloCollectiviteResult = $this->collectiviteManager->getOzwilloCollectivityByClientId($client_id);
