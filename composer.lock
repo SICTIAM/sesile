@@ -1622,12 +1622,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SICTIAM/HWIOAuthBundle.git",
-                "reference": "0b9d54b78042db33aea129d454d5b679bb585495"
+                "reference": "d275deed5a565412eda7839e93d312b89c9dc297"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SICTIAM/HWIOAuthBundle/zipball/0b9d54b78042db33aea129d454d5b679bb585495",
-                "reference": "0b9d54b78042db33aea129d454d5b679bb585495",
+                "url": "https://api.github.com/repos/SICTIAM/HWIOAuthBundle/zipball/d275deed5a565412eda7839e93d312b89c9dc297",
+                "reference": "d275deed5a565412eda7839e93d312b89c9dc297",
                 "shasum": ""
             },
             "require": {
@@ -1779,7 +1779,7 @@
             "support": {
                 "source": "https://github.com/SICTIAM/HWIOAuthBundle/tree/add-ozwillo-connection"
             },
-            "time": "2018-04-03T08:53:53+00:00"
+            "time": "2018-06-05T15:18:35+00:00"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -4004,6 +4004,7 @@
                 "compression",
                 "minification"
             ],
+            "abandoned": "symfony/webpack-encore-pack",
             "time": "2017-07-14T07:26:46+00:00"
         },
         {
