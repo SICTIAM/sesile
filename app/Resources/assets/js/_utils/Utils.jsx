@@ -29,4 +29,27 @@ const TruncateFileName = (name) => {
     return name
 }
 
-export { handleErrors, DisplayLongText, BytesToSize, TruncateFileName }
+const extractRootDomain = (url) => {
+    var domain;
+    //find & remove protocol (http, ftp, etc.) and get domain
+    if (url.indexOf("://") > -1) {
+        domain = url.split('/')[2];
+    } else {
+        domain = url.split('/')[0];
+    }
+    //find & remove port number
+    domain = domain.split(':')[0];
+    var splitArr = domain.split('.'), arrLen = splitArr.length;
+    if (arrLen > 2) {
+        domain = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
+        //check to see if it's using a Country Code Top Level Domain (ccTLD) (i.e. ".me.uk")
+        if (splitArr[arrLen - 2].length == 2 && splitArr[arrLen - 1].length == 2) {
+            //this is using a ccTLD
+            domain = splitArr[arrLen - 3] + '.' + domain;
+        }
+    }
+
+    return domain;
+};
+
+export { handleErrors, DisplayLongText, BytesToSize, TruncateFileName, extractRootDomain }

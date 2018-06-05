@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { number, func } from 'prop-types'
 import { translate } from 'react-i18next'
+import { extractRootDomain } from './../_utils/Utils'
 
 class SwitchCollectivite extends Component {
 
@@ -24,8 +25,9 @@ class SwitchCollectivite extends Component {
     }
 
     render() {
-        const { user } = this.props
-        let host = window.location.host;
+        const { user } = this.props;
+        let hostBase = window.location.host;
+        let host = extractRootDomain(hostBase);
         let protocol = window.location.protocol;
         const collectivities = user.collectivities;
         const currentCollectivityId = user.current_org_id;
