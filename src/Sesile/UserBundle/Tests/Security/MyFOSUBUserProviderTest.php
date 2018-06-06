@@ -266,8 +266,7 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
             ->getMock();
         $resourceOwnerMock
             ->expects($this->once())
-            ->method('getOption')
-            ->with('client_id')
+            ->method('getClientId')
             ->will($this->returnValue($clientId));
 
         return $resourceOwnerMock;
