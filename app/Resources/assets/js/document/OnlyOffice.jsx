@@ -85,9 +85,9 @@ class OnlyOffice extends Component {
 
         return (
             <div className={"cell medium-12 " + className } key={this.props.document.id} id="modal-root" >
-                <div className="grid-x grid-margin-x grid-margin-y grid-padding-x">
+                <div className="grid-x" style={{height: '100%'}}>
                     <div className="cell medium-12">
-                        <div id="placeholder" className="callout alert">
+                        <div id="placeholder" className="callout alert" style={{margin: '10px'}}>
                             <h5>{t('common.documents.no_preview')}</h5>
                             <p>{t('common.documents.error.preview')}</p>
                         </div>

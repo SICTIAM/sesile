@@ -49,7 +49,7 @@ class AppRoute extends Component {
                 <Route path={"/tableau-de-bord"} exact={true} component={() => <DashBoard user={user}/>} />
                 <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
                 <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />
-                <Route path={"/classeur/nouveau"} exact={true} component={ClasseurNew} user={user} />
+                <Route path={"/classeur/nouveau"} exact={true} component={() => <ClasseurNew user={user}/>} />
                 <Route path={"/classeurs/liste"} exact={true} component={() => <ClasseursList user={user}/>} />
                 <Route path={"/classeurs/valides"} exact={true} component={() => <ClasseursValid user={user}/>} />
                 <Route path={"/classeurs/retractables"} exact={true} component={() => <ClasseursRetract user={user}/>} />

@@ -286,6 +286,7 @@ class ClasseurNew extends Component {
                             </div>
                             <div className="cell medium-12">
                                 <DocumentsNew
+                                    user={this.props.user}
                                     documents={Object.assign([],documents)}
                                     onDrop={this.onDrop}
                                     removeDocument={this.removeDocument}
