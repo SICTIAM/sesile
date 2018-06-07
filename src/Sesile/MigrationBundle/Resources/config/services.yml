@@ -1,0 +1,4 @@
+services:
+    legacy.collectivity.service:
+        class: Sesile\MigrationBundle\Service\LegacyCollectivityService
+        arguments: ["@doctrine.dbal.legacy_connection"]
