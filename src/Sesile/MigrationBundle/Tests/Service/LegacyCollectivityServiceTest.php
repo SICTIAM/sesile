@@ -41,7 +41,6 @@ class LegacyCollectivityServiceTest extends LegacyWebTestCase
     public function testGetCollectivityList()
     {
         $result = $this->service->getCollectivityList();
-        var_dump($result);exit;
         self::assertCount(2, $result);
         self::assertArrayHasKey('id', $result[0]);
         self::assertArrayHasKey('name', $result[0]);
