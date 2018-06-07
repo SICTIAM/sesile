@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Security("is_granted('ROLE_ADMIN')")
- * @Rest\Route("/api/migration", options = { "expose" = true })
+ * @Security("is_granted('ROLE_SUPER_ADMIN')")
+ * @Rest\Route("/api/migration/v3v4", options = { "expose" = true })
  */
 class MigrationApiController extends Controller
 {
@@ -21,6 +21,10 @@ class MigrationApiController extends Controller
      */
     public function indexAction()
     {
-        return new JsonResponse('', Response::HTTP_OK);
+        $result = $this->get('legacy.collectivity.manager')->getLegacyCollectivityList();
+        if (false === $result->isSuccess()) {
+            return new JsonResponse(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
 }

@@ -19,7 +19,7 @@ class LegacyWebTestCase extends SesileWebTestCase
     /**
      *
      */
-    protected function resetDatabase()
+    protected function resetLegacyTestDatabase()
     {
         $application = new Application($this->getContainer()->get('kernel'));
         $application->setAutoExit(false);

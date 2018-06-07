@@ -33,7 +33,7 @@ class LegacyCollectivityServiceTest extends LegacyWebTestCase
         $this->em = $this->createMock(EntityManager::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->service = $this->getContainer()->get('legacy.collectivity.service');
-        $this->resetDatabase();
+        $this->resetLegacyTestDatabase();
         $this->loadLegacyFixtures();
         parent::setUp();
     }
@@ -41,9 +41,11 @@ class LegacyCollectivityServiceTest extends LegacyWebTestCase
     public function testGetCollectivityList()
     {
         $result = $this->service->getCollectivityList();
+        var_dump($result);exit;
         self::assertCount(2, $result);
         self::assertArrayHasKey('id', $result[0]);
         self::assertArrayHasKey('name', $result[0]);
+        self::assertArrayHasKey('domain', $result[0]);
     }
 
 }
