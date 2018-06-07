@@ -26,19 +26,16 @@ class SwitchCollectivite extends Component {
 
     render() {
         const { user } = this.props;
-        let hostBase = window.location.host;
-        let host = extractRootDomain(hostBase);
-        let protocol = window.location.protocol;
         const collectivities = user.collectivities;
         const currentCollectivityId = user.current_org_id;
         const currentCollectivity = collectivities.find((collectivity) => {
             return currentCollectivityId == collectivity.id
         });
-        const listItems = collectivities.map((collectivity) =>
+        const listItems = collectivities.map((collectivity, key) =>
             currentCollectivityId !== collectivity.id &&
-            <li>
+            <li key={key}>
                 <a
-                    href={`${protocol}//${collectivity.domain}.${host}/connect/ozwillo`}
+                    href={Routing.generate("sesile_main_default_redirecttosubdomain", {subdomain: collectivity.domain})}
                     className="button secondary clear">
                     {collectivity.nom}
                 </a>

@@ -28,9 +28,12 @@ class SelectCollectivite extends Component {
     handleChange = (currentCollectivite) => this.setState({currentCollectivite})
     render() {
         const { t } = this.context
-        let host = window.location.host;
-        let protocol = window.location.protocol;
-        const redirectLoginUrl = `${protocol}//${this.state.currentCollectivite.domain}.${host}/connect/ozwillo`
+        const redirectLoginUrl =
+            this.state.currentCollectivite.domain ?
+                Routing.generate(
+                    "sesile_main_default_redirecttosubdomain",
+                    {subdomain: this.state.currentCollectivite.domain}) :
+                '#'
         return (
             <div className="grid-container main">
                 <div className="grid-x grid-margin-x grid-padding-y align-center-middle"

@@ -58,4 +58,18 @@ class DefaultController extends Controller
     {
         return new JsonResponse($this->getParameter('informations'));
     }
+
+    /**
+     * @Rest\Get("/redirect/{subdomain}")
+     * @Template()
+     */
+    public function redirectToSubdomainAction(Request $request, $subdomain)
+    {
+        return $this->redirect(
+            sprintf(
+                '%s://%s.%s/connect/ozwillo',
+                $request->getScheme(),
+                $subdomain,
+                $this->getParameter('domain')));
+    }
 }
