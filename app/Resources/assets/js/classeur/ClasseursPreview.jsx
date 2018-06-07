@@ -5,6 +5,7 @@ import { translate } from 'react-i18next'
 import { Cell, GridX } from '../_components/UI'
 import OnlyOffice from '../document/OnlyOffice'
 import Helios from '../document/Helios'
+import History from "../_utils/History"
 
 class ClasseursPreview extends Component {
     static contextTypes = {
@@ -30,6 +31,11 @@ class ClasseursPreview extends Component {
             if(classeur.checked) idClasseursToSign.push(classeur.id)
         })
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(idClasseursToSign), role: role}))
+        History.push('/classeurs/valides')
+    }
+    signClasseur = (id, role) => {
+        window.open(Routing.generate('jnlpSignerFiles', {id, role}))
+        History.push('/classeurs/valides')
     }
     render() {
         const { t } = this.context
@@ -37,6 +43,7 @@ class ClasseursPreview extends Component {
         const documentsPreviewByClasseur =
             this.state.classeurs.map((classeur, key) =>
                 <DocumentsPreviewByClasseur
+                    signClasseur={this.signClasseur}
                     key={key}
                     classeur={classeur}
                     user={user} />)
@@ -148,7 +155,7 @@ const ListClasseursToSign = ({classeurs, handleCheckClasseur}) => {
     )
 }
 
-const DocumentsPreviewByClasseur = ({classeur, user}, {t}) => {
+const DocumentsPreviewByClasseur = ({classeur, user, signClasseur}, {t}) => {
     const documentList = classeur.documents.map((document, key) =>
         <Preview key={key} document={document} user={user} />)
     return (
@@ -161,13 +168,18 @@ const DocumentsPreviewByClasseur = ({classeur, user}, {t}) => {
                         </Cell>
                         <div className="cell medium-4 text-right sign-role-list">
                             <button className="button hollow left-button-group arrow-only" data-toggle={`button-classeur-${classeur.id}-sign`}>
-                                {t('common.sign_classeur')} <i className="fa fa-caret-down"></i>
+                                {t('common.sign_classeur')} <i className="fa fa-caret-down"/>
                             </button>
-                            <div className="dropdown-pane" data-position="bottom" data-alignment="center" id={`button-classeur-${classeur.id}-sign`} data-dropdown>
+                            <div
+                                className="dropdown-pane"
+                                data-position="bottom"
+                                data-alignment="center"
+                                id={`button-classeur-${classeur.id}-sign`}
+                                data-dropdown>
                                 { (user && user.userrole && user.userrole.length > 0)
                                     ? user.userrole.map(role => (
                                             <li key={role.id} className="text-right">
-                                                <a href={Routing.generate('jnlpSignerFiles', {id: classeur.id, role: role.id})}
+                                                <a onClick={() => signClasseur(classeur.id, role.id)}
                                                    title={role.user_roles}
                                                    className="button secondary clear">
                                                     {t('common.classeurs.button.role_as')} {role.user_roles}

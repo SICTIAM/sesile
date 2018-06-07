@@ -48,7 +48,7 @@ const actionClasseur = (that, url, id, method = 'PUT', type = '') => {
                 that.context._addNotification(basicNotification(
                     'success',
                     that.context.t('classeur.success.edit')))
-                History.push(`/classeurs/liste`)
+                History.push(`/classeurs/valides`)
             } else {
                 that.context._addNotification(basicNotification(
                     'success',
