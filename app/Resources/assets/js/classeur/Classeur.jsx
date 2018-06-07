@@ -13,6 +13,8 @@ import { refusClasseur, actionClasseur } from '../_utils/Classeur'
 import { Cell, GridX } from '../_components/UI'
 import ClasseurStatus from './ClasseurStatus'
 
+import History from '../_utils/History'
+
 class Classeur extends Component {
 
     static contextTypes = {
@@ -170,6 +172,7 @@ class Classeur extends Component {
             ids.push(classeur.id)
         })
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids), role: role}))
+        History.push('/classeurs/valides')
     }
     revertClasseurs = (classeurs) => {
         classeurs.map(classeur => {
