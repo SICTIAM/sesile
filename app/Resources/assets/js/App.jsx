@@ -114,7 +114,7 @@ class App extends Component {
                         </div>
                         <div className="off-canvas-content" data-off-canvas-content>
                             <div className="grid-x grid-y grid-frame">
-                                <div className="cell header">
+                                <div className="cell header" style={{background: 'white'}}>
                                     <div className="grid-x align-center-middle">
                                         <div className="cell large-2 small-6 logo text-center">
                                             <button type="button" className="button primary clear hide-for-large float-left" data-toggle="offCanvasLeft">
