@@ -57,7 +57,6 @@ class Patch
      *
      * @ORM\Column(name="date", type="datetime")
      *
-     *
      */
     private $date;
 

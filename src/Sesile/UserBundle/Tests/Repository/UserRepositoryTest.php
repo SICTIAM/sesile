@@ -36,6 +36,7 @@ class UserRepositoryTest extends SesileWebTestCase
                 UserFixtures::class,
             ]
         )->getReferenceRepository();
+        parent::setUp();
     }
 
     public function testGetUsersByCollectivityIdShouldReturnArrayOfUsers()
