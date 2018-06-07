@@ -17,6 +17,12 @@ parameters:
     database_name: sesileprod
     database_user: root
     database_password: ***REMOVED***
+    database_driver_legacy: pdo_mysql
+    database_host_legacy: 127.0.0.1
+    database_port_legacy: 3306
+    database_name_legacy: sesileprod-legacy
+    database_user_legacy: root
+    database_password_legacy: ***REMOVED***
     secret: ***REMOVED***
     domain_parse:
         default: sesile
