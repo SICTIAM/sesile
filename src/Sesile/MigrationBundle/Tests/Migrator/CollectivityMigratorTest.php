@@ -53,6 +53,14 @@ class CollectivityMigratorTest extends LegacyWebTestCase
         //@todo add assert on oldId field in sesileMigration table
     }
 
+    public function testMigrateCollectivityShouldFailIfEmptySirentIsGiven()
+    {
+        $oldCollectivityId = 1;
+        $result = $this->collectivityMigrator->migrate($oldCollectivityId, '');
+        self::assertInstanceOf(Message::class, $result);
+        self::assertFalse($result->isSuccess());
+    }
+
     private function assertCollectivity(Collectivite $collectivity, $legacyData)
     {
         self::assertEquals($legacyData['nom'], $collectivity->getNom());

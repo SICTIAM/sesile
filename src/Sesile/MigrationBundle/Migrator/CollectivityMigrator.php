@@ -52,15 +52,18 @@ class CollectivityMigrator implements SesileMigratorInterface
      */
     public function migrate($collectivityId, $siren)
     {
-        $this->logger->info(sprintf('[COLLECTIVITY_MIGRATOR Start for legacy collectivity: %s', $collectivityId));
+        $this->logger->info(sprintf('[COLLECTIVITY_MIGRATOR] START for legacy collectivity: %s', $collectivityId));
+        if ($siren == '') {
+            return new Message(false, null, [sprintf('[COLLECTIVITY_MIGRATOR] EMPTY SIREN IS GIVEN for Legacy Collectivity with id: %s not found.', $collectivityId)]);
+        }
         $legacyCollectivity = $this->service->getLegacyCollectivity($collectivityId);
         if (!$legacyCollectivity) {
-            return new Message(false, null, [sprintf('Legacy Collectivity with id: %s not found.', $collectivityId)]);
+            return new Message(false, null, [sprintf('[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s not found.', $collectivityId)]);
         }
         $collectivity = $this->buildCollectivity($legacyCollectivity, $siren);
         $result = $this->collectivityManager->saveCollectivity($collectivity);
         if (false === $result->isSuccess()) {
-            return new Message(false, null, [sprintf('Legacy Collectivity with id: %s Could not be saved.', $collectivityId)]);
+            return new Message(false, null, [sprintf('[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s Could not be saved.', $collectivityId)]);
         }
 
         return new Message(true, $result->getData());
@@ -93,7 +96,7 @@ class CollectivityMigrator implements SesileMigratorInterface
             ->setTitreVisa($legacyCollectivity['titreVisa'])
             ->setPageSignature($legacyCollectivity['pageSignature'])
             ->setDeleteClasseurAfter($legacyCollectivity['deleteClasseurAfter'])
-            ->setSiren(substr($siren, 0, 9));
+            ->setSiren(substr(trim($siren), 0, 9));
         ;
 
         return $collectivity;
