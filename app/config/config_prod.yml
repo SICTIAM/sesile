@@ -43,3 +43,14 @@ parameters:
         application: ***REMOVED***
         secret: ***REMOVED***
         consumer_key: ***REMOVED***
+monolog:
+    handlers:
+        main:
+            type:  stream
+            path:  '%kernel.logs_dir%/%kernel.environment%.log'
+            level: error
+        migrator:
+            type:  stream
+            path:  '%kernel.logs_dir%/migrator-%kernel.environment%.log'
+            level: info
+            channels: ['!security', '!doctrine']
