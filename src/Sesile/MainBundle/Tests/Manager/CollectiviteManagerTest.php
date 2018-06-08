@@ -259,4 +259,14 @@ class CollectiviteManagerTest extends WebTestCase
         self::assertNull($result->getData());
     }
 
+    public function testSaveCollectivity()
+    {
+        $newCollectivity = CollectiviteFixtures::aValidCollectivite('toto', 'Toto');
+        $result = $this->collectiviteManager->saveCollectivity($newCollectivity);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertInstanceOf(Collectivite::class, $result->getData());
+        self::assertEquals($newCollectivity->getDomain(), $result->getData()->getDomain());
+    }
+
 }
