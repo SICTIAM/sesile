@@ -47,4 +47,28 @@ class LegacyCollectivityServiceTest extends LegacyWebTestCase
         self::assertArrayHasKey('domain', $result[0]);
     }
 
+    public function testGetLegacyCollectivity()
+    {
+        $idCollectivity = 1;
+        $result = $this->service->getLegacyCollectivity($idCollectivity);
+        self::assertArrayHasKey('id', $result);
+        self::assertArrayHasKey('nom', $result);
+        self::assertArrayHasKey('domain', $result);
+        self::assertArrayHasKey('image', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('active', $result);
+        self::assertArrayHasKey('textmailnew', $result);
+        self::assertArrayHasKey('textmailrefuse', $result);
+        self::assertArrayHasKey('textmailwalid', $result);
+        self::assertArrayHasKey('abscissesVisa', $result);
+        self::assertArrayHasKey('ordonneesVisa', $result);
+        self::assertArrayHasKey('abscissesSignature', $result);
+        self::assertArrayHasKey('ordonneesSignature', $result);
+        self::assertArrayHasKey('couleurVisa', $result);
+        self::assertArrayHasKey('titreVisa', $result);
+        self::assertArrayHasKey('pageSignature', $result);
+        self::assertArrayHasKey('deleteClasseurAfter', $result);
+        self::assertEquals($idCollectivity, $result['id']);
+    }
+
 }

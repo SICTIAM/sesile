@@ -7,22 +7,8 @@ namespace Sesile\MigrationBundle\Service;
  * Class LegacyCollectivityService
  * @package Sesile\MigrationBundle\Service
  */
-class LegacyCollectivityService
+class LegacyCollectivityService extends BaseLegacyService
 {
-    /**
-     * @var \Doctrine\DBAL\Connection
-     */
-    protected $connection;
-
-    /**
-     * LegacyCollectivityService constructor.
-     * @param \Doctrine\DBAL\Connection $connection
-     */
-    public function __construct(\Doctrine\DBAL\Connection $connection)
-    {
-        $this->connection = $connection;
-    }
-
     /**
      * @return array
      * @throws \Doctrine\DBAL\DBALException
@@ -31,17 +17,14 @@ class LegacyCollectivityService
     {
         $query = "SELECT id, nom as name, domain FROM Collectivite";
 
-        return $this->fetchData($query);
+        return $this->fetchAllData($this->prepareQuery($query));
     }
 
-    /**
-     * @param string $query
-     * @return array
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    protected function fetchData($query)
+    public function getLegacyCollectivity($collectivityId)
     {
-        return $this->connection->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+        $query = 'SELECT * FROM Collectivite where id = :collectivityId';
+
+        return $this->fetchData($this->prepareQuery($query, ['collectivityId' => $collectivityId]));
     }
 
 }
