@@ -45,18 +45,19 @@ class CollectivityMigrator implements SesileMigratorInterface
     }
 
     /**
-     * @param $collectivityId
+     * @param integer $collectivityId
+     * @param string  $siren
      *
      * @return Message
      */
-    public function migrate($collectivityId)
+    public function migrate($collectivityId, $siren)
     {
         $this->logger->info(sprintf('[COLLECTIVITY_MIGRATOR Start for legacy collectivity: %s', $collectivityId));
         $legacyCollectivity = $this->service->getLegacyCollectivity($collectivityId);
         if (!$legacyCollectivity) {
             return new Message(false, null, [sprintf('Legacy Collectivity with id: %s not found.', $collectivityId)]);
         }
-        $collectivity = $this->buildCollectivity($legacyCollectivity);
+        $collectivity = $this->buildCollectivity($legacyCollectivity, $siren);
         $result = $this->collectivityManager->saveCollectivity($collectivity);
         if (false === $result->isSuccess()) {
             return new Message(false, null, [sprintf('Legacy Collectivity with id: %s Could not be saved.', $collectivityId)]);
@@ -66,11 +67,12 @@ class CollectivityMigrator implements SesileMigratorInterface
     }
 
     /**
-     * @param array $legacyCollectivity
+     * @param array   $legacyCollectivity
+     * @param string  $siren
      *
      * @return Collectivite
      */
-    private function buildCollectivity(array $legacyCollectivity = [])
+    private function buildCollectivity(array $legacyCollectivity = [], $siren)
     {
         $collectivity = new Collectivite();
         $collectivity
@@ -91,7 +93,7 @@ class CollectivityMigrator implements SesileMigratorInterface
             ->setTitreVisa($legacyCollectivity['titreVisa'])
             ->setPageSignature($legacyCollectivity['pageSignature'])
             ->setDeleteClasseurAfter($legacyCollectivity['deleteClasseurAfter'])
-            ->setSiren('');
+            ->setSiren(substr($siren, 0, 9));
         ;
 
         return $collectivity;

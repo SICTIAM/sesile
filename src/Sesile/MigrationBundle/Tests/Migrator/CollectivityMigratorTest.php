@@ -43,7 +43,8 @@ class CollectivityMigratorTest extends LegacyWebTestCase
     public function testMigrateCollectivity()
     {
         $oldCollectivityId = 1;
-        $result = $this->collectivityMigrator->migrate($oldCollectivityId);
+        $siren = '1234567890';
+        $result = $this->collectivityMigrator->migrate($oldCollectivityId, $siren);
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
         self::assertInstanceOf(Collectivite::class, $result->getData());
@@ -73,7 +74,7 @@ class CollectivityMigratorTest extends LegacyWebTestCase
         /**
          * New fields
          */
-        self::assertEmpty($collectivity->getSiren());
+        self::assertEquals('123456789', $collectivity->getSiren());
         $textcopymailnew = "<p>Bonjour {{ en_copie }},</p><p>Un nouveau classeur pour lequel vous êtes en copie {{ titre_classeur }} vient d'être déposé par {{ deposant }}, pour validation à {{ validant }}, à la date du <strong>{{ date_limite | date('d/m/Y') }}.</strong></p><p>Vous pouvez visionner le classeur {{lien|raw}}</p><p>**logo_coll** {{ qualite }}<br>{{ validant }}</p>";
         self::assertEquals($textcopymailnew, $collectivity->getTextcopymailnew());
         $textcopymailwalid = "<p>Bonjour {{ en_copie }},</p><p>Un nouveau classeur pour lequel vous êtes en copie {{ titre_classeur }} vient d'être validé par {{ validant }}.</p><p>Vous pouvez visionner le classeur {{lien|raw}}</p><p>**logo_coll** {{ qualite }}<br>{{ validant }}</p>";

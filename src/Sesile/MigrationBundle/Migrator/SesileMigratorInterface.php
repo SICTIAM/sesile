@@ -11,10 +11,4 @@ use Sesile\MainBundle\Domain\Message;
  */
 interface SesileMigratorInterface
 {
-    /**
-     * @param $identifier
-     * @return Message
-     */
-    public function migrate($identifier);
-
 }
