@@ -9,6 +9,7 @@ use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MigrationBundle\Service\LegacyUserService;
 use FOS\UserBundle\Doctrine\UserManager as FosUserManager;
 use Sesile\UserBundle\Entity\User;
+use Sesile\UserBundle\Entity\UserRole;
 
 /**
  * Class UserMigrator
@@ -92,7 +93,13 @@ class UserMigrator implements SesileMigratorInterface
         }
         $usersCollection = $this->handleUsers($legacyUsers, $collectivite);
 
-        $this->logger->info(sprintf('[USER_MIGRATOR] %s legacy users successfully imported for collectivity %s.', $usersCollection->count(), $oldCollectivityId));
+        $this->logger->info(
+            sprintf(
+                '[USER_MIGRATOR] %s legacy users successfully imported for collectivity %s.',
+                $usersCollection->count(),
+                $oldCollectivityId
+            )
+        );
 
         return new Message(true, $usersCollection);
     }
@@ -150,14 +157,40 @@ class UserMigrator implements SesileMigratorInterface
         $user->setRole($legacyUser['role']);
         $user->setApitoken($legacyUser['apitoken']);
         $user->setApisecret($legacyUser['apisecret']);
-        $user->setApiactivated((bool) $legacyUser['apiactivated']);
+        $user->setApiactivated((bool)$legacyUser['apiactivated']);
         $user->setPathSignature($legacyUser['pathSignature']);
         $user->setQualite($legacyUser['qualite']);
         $user->setSesileVersion('4.0');
         $user->setOzwilloId(null);
-//        $user->addUserrole(UserFixtures::aValidUserRole($user));
-//        $user->addUserrole(UserFixtures::aValidUserRole($user, 'Développeur'));
+        $this->setUserRoles($user);
+
         return $user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    private function setUserRoles(User $user)
+    {
+        try {
+            $LegacyUserRoles = $this->service->getLegacyUserRoles($user->getEmail());
+            foreach ($LegacyUserRoles as $role) {
+                $userRole = new UserRole();
+                $userRole->setUser($user);
+                $userRole->setUserRoles($role);
+                $user->addUserrole($userRole);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error(
+                sprintf('[USER_MIGRATOR] Error on Getting User Roles of User: %s. :: %s.', $userEmail, $e->getMessage())
+            );
+
+            return false;
+        }
+
+        return true;
     }
 
 }

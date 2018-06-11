@@ -6,8 +6,9 @@ namespace Sesile\MigrationBundle\Tests\Migrator;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
-use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\Domain\Message;
+use Sesile\MigrationBundle\Migrator\UserMigrator;
+use Sesile\MigrationBundle\Service\LegacyUserService;
 use Sesile\MigrationBundle\Tests\LegacyWebTestCase;
 
 class UserMigratorTest extends LegacyWebTestCase
@@ -49,6 +50,13 @@ class UserMigratorTest extends LegacyWebTestCase
         self::assertCount(2, $result->getData());
         $expectedUsersCollection = $this->userService->getLegacyUsersByCollectivity($oldCollectivityId);
         $this->assertUsers($expectedUsersCollection, $result->getData());
+        /**
+         * assert User Roles
+         */
+        $userOne = $result->getData()[0];
+        self::assertCount(2, $userOne->getUserrole());
+        self::assertEquals('Directeur Général', $userOne->getUserrole()[0]->getUserRoles());
+        self::assertEquals('Agent administratif', $userOne->getUserrole()[1]->getUserRoles());
     }
 
     private function assertUsers($expectedUsersCollection, $usersCollection)
