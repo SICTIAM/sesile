@@ -1,6 +1,6 @@
 <?php
 
-namespace Sesile\MainBundle\Command;
+namespace Sesile\MigrationBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class SetUpLegacyDatabaseTestCommand
- * @package Sesile\MainBundle\Command
+ * @package Sesile\MigrationBundle\Command
  */
 class SetUpLegacyDatabaseTestCommand extends ContainerAwareCommand
 {

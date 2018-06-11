@@ -66,6 +66,10 @@ sesile_api:
     type:     annotation
     prefix:   /api/
 
+sesile_migration:
+    resource: "@SesileMigrationBundle/Controller/"
+    type:     annotation
+
 #sesile_delegations:
 #    resource: "@SesileDelegationsBundle/Controller/"
 #    type:     annotation

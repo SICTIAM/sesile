@@ -1,0 +1,7 @@
+services:
+    legacy.collectivity.manager:
+        class: Sesile\MigrationBundle\Manager\LegacyCollectivityManager
+        arguments: ["@legacy.collectivity.service", "@logger"]
+    legacy.collectivity.service:
+        class: Sesile\MigrationBundle\Service\LegacyCollectivityService
+        arguments: ["@doctrine.dbal.legacy_connection"]
