@@ -24,7 +24,7 @@ class LegacyUserServiceTest extends LegacyWebTestCase
     public function testGetLegacyUsers()
     {
         $oldCollectivityId = 1;
-        $result = $this->service->getLegacyUsers($oldCollectivityId);
+        $result = $this->service->getLegacyUsersByCollectivity($oldCollectivityId);
         self::assertCount(2, $result);
         self::assertArrayHasKey('id', $result[0]);
         self::assertArrayHasKey('username', $result[0]);
