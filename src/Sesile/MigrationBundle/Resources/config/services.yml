@@ -13,3 +13,8 @@ services:
         arguments: ["@legacy.collectivity.service", "@collectivite.manager", "@logger"]
         tags:
             - { name: monolog.logger, channel: migrator }
+    user.migrator:
+        class: Sesile\MigrationBundle\Migrator\UserMigrator
+        arguments: ["@legacy.user.service", "@fos_user.user_manager", "@logger"]
+        tags:
+            - { name: monolog.logger, channel: migrator }
