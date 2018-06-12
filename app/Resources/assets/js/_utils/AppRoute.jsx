@@ -41,13 +41,13 @@ class AppRoute extends Component {
     }
 
     render () {
-        const { user } = this.props
+        const { user, updateUserInfos } = this.props
         return (
             (!!user) &&
             <Switch>
                 <Route path={"/"} exact={true} component={() => <DashBoard user={user}/>} />
                 <Route path={"/tableau-de-bord"} exact={true} component={() => <DashBoard user={user}/>} />
-                <Route path={"/utilisateur/mon-compte"} exact={true} component={Account} />
+                <Route path={"/utilisateur/mon-compte"} exact={true} component={() => <Account updateUserInfos={updateUserInfos}/>} />
                 <Route path={"/utilisateur/certificat-electronique"} exact={true} component={Certificate} />
                 <Route path={"/classeur/nouveau"} exact={true} component={() => <ClasseurNew user={user}/>} />
                 <Route path={"/classeurs/liste"} exact={true} component={() => <ClasseursList user={user}/>} />
