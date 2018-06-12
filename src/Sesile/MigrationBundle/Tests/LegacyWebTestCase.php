@@ -39,8 +39,6 @@ class LegacyWebTestCase extends SesileWebTestCase
      *
      * @param array $fixtures
      * @return bool
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
      */
     public function loadLegacyFixtures(array $fixtures = [])
     {
@@ -62,7 +60,9 @@ class LegacyWebTestCase extends SesileWebTestCase
                 $connection->exec($sql);  // Execute native SQL
             }
         } catch (\Exception $e) {
-            throw new \Exception(sprintf('An Error occured during the Legacy Sql fixtures. %s', $e->getMessage()));
+            return false;
         }
+
+        return true;
     }
 }

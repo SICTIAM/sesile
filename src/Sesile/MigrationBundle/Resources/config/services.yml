@@ -5,3 +5,8 @@ services:
     legacy.collectivity.service:
         class: Sesile\MigrationBundle\Service\LegacyCollectivityService
         arguments: ["@doctrine.dbal.legacy_connection"]
+    collectivity.migrator:
+        class: Sesile\MigrationBundle\Migrator\CollectivityMigrator
+        arguments: ["@legacy.collectivity.service", "@collectivite.manager", "@logger"]
+        tags:
+            - { name: monolog.logger, channel: migrator }

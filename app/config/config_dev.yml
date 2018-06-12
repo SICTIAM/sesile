@@ -23,6 +23,11 @@ monolog:
         chromephp:
             type:  chromephp
             level: info
+        migrator:
+            type:  stream
+            path:  '%kernel.logs_dir%/migrator-%kernel.environment%.log'
+            level: debug
+            channels: ['!security', '!doctrine']
 
 assetic:
     use_controller: true
@@ -59,3 +64,6 @@ parameters:
 twig:
     globals:
         only_office_url: 'http://localhost:8080/web-apps/apps/api/documents/api.js'
+
+swiftmailer:
+    disable_delivery: true

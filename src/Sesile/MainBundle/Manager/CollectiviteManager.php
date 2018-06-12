@@ -113,7 +113,25 @@ class CollectiviteManager
 
             return new Message(false, null, [$e->getMessage()]);
         }
+    }
 
+    /**
+     * @param Collectivite $collectivite
+     *
+     * @return Message
+     */
+    public function saveCollectivity(Collectivite $collectivite)
+    {
+        try {
+            $this->em->persist($collectivite);
+            $this->em->flush();
+
+            return new Message(true, $collectivite);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/saveCollectivity error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
     }
 
 }
