@@ -224,6 +224,13 @@ class DocumentsNew extends Component {
                                             disabled={!this.userNotHaveSignatureImage()}/>
                                         <hr style={{margin: 0}}/>
                                     </div>
+                                    <li className="doc-action-button">
+                                        <a
+                                            className="button secondary clear"
+                                            href={Routing.generate('download_doc', {id: document.id})}>
+                                            {t('common.electronic_signature')}
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div> :

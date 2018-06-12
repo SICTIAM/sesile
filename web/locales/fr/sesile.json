@@ -221,7 +221,8 @@
         "select_collectivite": "Sélectionner la collectivité",
         "research": "Recherche",
         "download": "Télécharger",
-        "error_loading_classeur": "Une erreur est survenue lors du chargement de la liste"
+        "error_loading_classeur": "Une erreur est survenue lors du chargement de la liste",
+        "electronic_signature": "Signature électronique"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
