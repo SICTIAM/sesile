@@ -81,7 +81,6 @@ class CollectivityMigrator implements SesileMigratorInterface
         $collectivity
             ->setNom($legacyCollectivity['nom'])
             ->setDomain($legacyCollectivity['domain'])
-            ->setImage($legacyCollectivity['domain'])
             ->setImage($legacyCollectivity['image'])
             ->setMessage($legacyCollectivity['message'])
             ->setActive($legacyCollectivity['active'])
