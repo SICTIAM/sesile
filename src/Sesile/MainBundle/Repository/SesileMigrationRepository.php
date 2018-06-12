@@ -11,7 +11,7 @@ class SesileMigrationRepository extends \Doctrine\ORM\EntityRepository
     /**
      * @return array
      */
-    public function testGetSesileMigrationHistory()
+    public function getSesileMigrationHistory()
     {
         return $this
             ->createQueryBuilder('sm')
