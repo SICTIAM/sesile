@@ -55,17 +55,20 @@ class ClasseursButtonList extends Component {
                                         title={t('common.classeurs.button.sign_title')}
                                         className="fa fa-edit success button hollow"/>
                                     <div
-                                        className="dropdown-pane"
+                                        className="dropdown-pane text-left"
                                         data-position={dropdownPosition}
                                         data-alignment="center"
                                         id={id + 'sign'}
-                                        data-dropdown>
+                                        data-dropdown
+                                        style={{padding: '5px'}}>
                                         {(user && user.userrole && user.userrole.length > 0) ?
                                             user.userrole.map(role => (
                                                 <li key={role.id}>
-                                                    <button onClick={() => signClasseur(classeurs, role.id)}
-                                                            title={role.user_roles}
-                                                            className="button secondary clear">
+                                                    <button
+                                                        style={{padding: '5px'}}
+                                                        onClick={() => signClasseur(classeurs, role.id)}
+                                                        title={role.user_roles}
+                                                        className="button secondary clear">
                                                         {role.user_roles}
                                                     </button>
                                                 </li>)) :

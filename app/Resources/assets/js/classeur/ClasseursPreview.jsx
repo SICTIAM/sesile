@@ -171,19 +171,22 @@ const DocumentsPreviewByClasseur = ({classeur, user, signClasseur}, {t}) => {
                                 {t('common.sign_classeur')} <i className="fa fa-caret-down"/>
                             </button>
                             <div
-                                className="dropdown-pane"
+                                className="dropdown-pane text-left"
                                 data-position="bottom"
                                 data-alignment="center"
                                 id={`button-classeur-${classeur.id}-sign`}
-                                data-dropdown>
+                                data-dropdown
+                                style={{padding: '5px'}}>
                                 { (user && user.userrole && user.userrole.length > 0)
                                     ? user.userrole.map(role => (
-                                            <li key={role.id} className="text-right">
-                                                <a onClick={() => signClasseur(classeur.id, role.id)}
-                                                   title={role.user_roles}
-                                                   className="button secondary clear">
-                                                    {t('common.classeurs.button.role_as')} {role.user_roles}
-                                                </a>
+                                            <li key={role.id} className="text-uppercase">
+                                                <button
+                                                    style={{padding: '5px'}}
+                                                    onClick={() => signClasseur(classeur.id, role.id)}
+                                                    title={role.user_roles}
+                                                    className="button secondary clear">
+                                                    {role.user_roles}
+                                                </button>
                                             </li>
                                         )
                                     )
