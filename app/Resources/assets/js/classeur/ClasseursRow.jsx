@@ -24,11 +24,11 @@ class ClasseursRow extends Component {
         4: 'retracted'
     })
     statusColorClass = Object.freeze({
-        0: 'alert',
-        1: 'warning',
-        2: 'success',
-        3: 'secondary',
-        4: 'primary'
+        0: '#851206',
+        1: '#e2661d',
+        2: '#2d6725',
+        3: '#1c43a2',
+        4: '#356bfc'
     })
     render(){
         const {
@@ -55,23 +55,18 @@ class ClasseursRow extends Component {
                         {user_pack.nom}
                     </span>)) :
             validUsers = `${classeur.user._prenom} ${classeur.user._nom}`
-
         return (
-            <div id={classeur.id} className="grid-x panel-body align-middle text-center" style={{minHeight: '5em'}}>
-                <div className="cell large-1 align-center show-for-large" style={{display: 'flex'}}>
-                    <span
-                        className={
-                            `${this.statusColorClass[classeur.status]}
-                            label
-                            text-bold
-                            text-uppercase`}
-                        style={{fontSize: '.73em', width: '70px', margin: '5px'}}>
-                        {this.context.t(`common.classeurs.status.${this.status[classeur.status]}`)}
-                    </span>
-                </div>
+            <div
+                id={classeur.id}
+                className="grid-x panel-body align-middle text-center"
+                style={{
+                    minHeight: '3em',
+                    borderLeft: `5px solid ${this.statusColorClass[classeur.status]}`,
+                    fontSize: '.75em',
+                    borderRadius: '5px 0px 0px 5px'}}>
                 <Link
                     title={classeur.nom}
-                    className="classeur-name cell small-6 medium-6 large-2 text-left text-bold text-truncate"
+                    className="classeur-name cell small-9 medium-8 large-6 text-left text-bold text-wrap"
                     style={{paddingLeft: '5px'}}
                     to={`/classeur/${classeur.id}`}>
                     {classeur.nom}
@@ -83,11 +78,15 @@ class ClasseursRow extends Component {
                         validUsers}
                 </Link>
                 <div
-                    className="cell small-6 medium-5 large-2 dropdown-valign"
-                    data-toggle={"example-dropdown-" + classeur.id}>
-                    <ClasseurProgress creation={classeur.creation} validation={classeur.validation} />
+                    className="cell small-3 medium-2 large-1 align-center dropdown-valign"
+                    data-toggle={"example-dropdown-" + classeur.id}
+                    style={{display: 'flex'}}>
+                    <ClasseurProgress
+                        classeur={classeur}
+                        creation={classeur.creation}
+                        validation={classeur.validation} />
                 </div>
-                <div className="cell large-2 text-bold show-for-large">
+                <div className="cell large-1 text-bold show-for-large">
                     {classeur.type.nom }
                 </div>
                 <CircuitListClasseur
@@ -95,23 +94,19 @@ class ClasseursRow extends Component {
                     etape_classeurs={classeur.etape_classeurs}
                     user={classeur.user} />
                 <div className="cell large-2 show-for-large">
-                    <ClasseursButtonList classeurs={[classeur]}
-                                         validClasseur={validClasseur}
-                                         signClasseur={signClasseur}
-                                         revertClasseur={revertClasseur}
-                                         refuseClasseur={refuseClasseur}
-                                         removeClasseur={removeClasseur}
-                                         deleteClasseur={deleteClasseur}
-                                         id={"button-list-" + classeur.id}
-                                         user={this.props.user}/>
-                </div>
-                <div className="cell medium-1 large-1 show-for-medium">
-                    <input
-                        type="checkbox"
+                    <ClasseursButtonList
+                        classeurs={[classeur]}
+                        validClasseur={validClasseur}
+                        signClasseur={signClasseur}
+                        revertClasseur={revertClasseur}
+                        refuseClasseur={refuseClasseur}
+                        removeClasseur={removeClasseur}
+                        deleteClasseur={deleteClasseur}
                         id={classeur.id}
+                        user={this.props.user}
+                        check={this.props.checkClasseur}
                         checked={this.props.classeur.checked}
-                        onChange={event => this.props.checkClasseur(event)}
-                        className="checkClasseur"/>
+                        style={{fontSize: '0.8em'}}/>
                 </div>
             </div>
 
