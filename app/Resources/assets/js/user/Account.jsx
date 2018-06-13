@@ -92,6 +92,7 @@ class Account extends Component {
                         t('admin.success.update', {name: t('admin.user.name')}),
                         t('admin.success.update', {name: t('admin.user.name')})
                     ))
+                    this.props.updateUserInfos()
                 }
             })
             .catch(error => _addNotification(basicNotification(
@@ -99,7 +100,10 @@ class Account extends Component {
                 t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
                 error.statusText)))
     }
-    handleChangeUser = (user) => this.setState({user})
+    handleChangeUser = (user) => {
+        this.setState({user})
+        this.props.updateUserInfos()
+    }
     render () {
         const { t } = this.context
         const { user } = this.state

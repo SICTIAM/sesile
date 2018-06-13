@@ -575,22 +575,29 @@ class DocumentController extends Controller
         $lastUser = $em->getRepository('SesileUserBundle:EtapeClasseur')->getLastValidant($doc->getClasseur());
 
         if ($lastUser) {
-            /* SetaPDF */
             $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
 
-            $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(),
-                $absSign,
-                $ordSign,
-                $collectivity->getPageSignature(),
-                $imageSignature,
-                $lastUser,
-                $doc->getClasseur()->getId(),
-                $path
-            );
-            /* FIN SetaPDF */
+            if(!empty($lastUser->getPathSignature() && file_exists($imageSignature))) {
+                $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(),
+                    $absSign,
+                    $ordSign,
+                    $collectivity->getPageSignature(),
+                    $imageSignature,
+                    $lastUser,
+                    $doc->getClasseur()->getId(),
+                    $path
+                );
+            }
+            else {
+                return $this->render(
+                    'error.html.twig', array('error' => 'Vous n\'avez pas d\'image de signature',
+                    'message' => 'Veuillez ajouter une image de signature sur votre profil'));
+            }
         }
 
-        return new JsonResponse(array("error" => "pas de validant"));
+        return $this->render(
+            'error.html.twig', array('error' => 'Le classeur n\'a pas été validé',
+            'message' => 'Veuillez attendre qu\'il soit validé pour télécharger le document signé'));
     }
 
     /**
@@ -603,7 +610,7 @@ class DocumentController extends Controller
      * @param int $absSign
      * @param int $ordSign
      *
-     * @return JsonResponse
+     * @return JsonResponse|Response
      */
     public function downloadAllAction($orgId, Document $doc, $absVisa = 0, $ordVisa = 0, $absSign = 0, $ordSign = 0) {
 
@@ -627,27 +634,34 @@ class DocumentController extends Controller
         $lastUser = $em->getRepository('SesileUserBundle:EtapeClasseur')->getLastValidant($doc->getClasseur());
         if ($lastUser) {
             $imageSignature = $this->container->getParameter('upload')['signatures'] . $lastUser->getPathSignature();
-            /* SetaPDF */
 
-            $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL(
-                $doc->getRepourl(),
-                $doc->getClasseur()->getId(),
-                $absVisa,
-                $ordVisa,
-                $absSign,
-                $ordSign,
-                $collectivity->getPageSignature(),
-                true,
-                $imageSignature,
-                $collectivity->getTitreVisa(),
-                $collectivity->getCouleurVisa(),
-                $lastUser,
-                $path
-            );
-            /* FIN SetaPDF */
+            if(file_exists($imageSignature) && !empty($lastUser->getPathSignature())) {
+                $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponALL(
+                    $doc->getRepourl(),
+                    $doc->getClasseur()->getId(),
+                    $absVisa,
+                    $ordVisa,
+                    $absSign,
+                    $ordSign,
+                    $collectivity->getPageSignature(),
+                    true,
+                    $imageSignature,
+                    $collectivity->getTitreVisa(),
+                    $collectivity->getCouleurVisa(),
+                    $lastUser,
+                    $path
+                );
+            }
+            else {
+                return $this->render(
+                    'error.html.twig', array('error' => 'Vous n\'avez pas d\'image de signature',
+                    'message' => 'Veuillez ajouter une image de signature sur votre profil'));
+            }
         }
 
-        return new JsonResponse(array("error" => "pas de validant"));
+        return $this->render(
+            'error.html.twig', array('error' => 'Le classeur n\'a pas été validé',
+            'message' => 'Veuillez attendre qu\'il soit validé pour télécharger le document signé'));
     }
 
 

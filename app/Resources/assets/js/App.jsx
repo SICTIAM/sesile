@@ -80,7 +80,7 @@ class App extends Component {
         }
     }
 
-    fetchUser() {
+    fetchUser = () => {
         fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(user => {
@@ -153,7 +153,7 @@ class App extends Component {
                                                 <div className="cell medium-12 small-12">
                                                     <NotificationSystem ref={n => this._notificationSystem = n} style={this.notificationStyle} />
                                                     {user.id &&
-                                                        <AppRoute user={user}/>}
+                                                        <AppRoute user={user} updateUserInfos={this.fetchUser}/>}
                                                 </div>
                                             </div>
                                         </div>

@@ -81,6 +81,7 @@ class DocumentsNew extends Component {
     }
     classeurIsFinalized = () => this.props.statusClasseur === 2
     isFinalizedOrRetiredClasseur = () => this.classeurIsFinalized() || this.props.statusClasseur === 3
+    userNotHaveSignatureImage = () => this.props.user.path_signature && this.props.user.path_signature.trim() !== ""
     render () {
         const { t } = this.context
         const { onDrop, removeDocument, onClick, displayReveal, user }  = this.props
@@ -174,54 +175,55 @@ class DocumentsNew extends Component {
                                         handleChange={this.handleChangeVisaPosition}
                                         collectivite={this.state.collectivite}
                                         dataToggle={`visa-dropdown-${document.id}`}
-                                        type="visa"/>
+                                        type="visa"
+                                        disabled={false}/>
                                     <hr style={{margin: 0}}/>
-                                    {user.path_signature && user.path_signature.trim() !== "" &&
-                                        <div>
-                                            <DraggablePositionDownload
-                                                href={
-                                                    Routing.generate(
-                                                        'download_doc_sign',
-                                                        {orgId: user.current_org_id,
-                                                            id: document.id,
-                                                            absSign: this.state.collectivite.abscisses_signature,
-                                                            ordSign: this.state.collectivite.ordonnees_signature})}
-                                                position={{
-                                                    x: this.state.collectivite.abscisses_signature,
-                                                    y: this.state.collectivite.ordonnees_signature}}
-                                                label={t('common.documents.btn_signature')}
-                                                handleChange={this.handleChangeSignaturePosition}
-                                                collectivite={this.state.collectivite}
-                                                dataToggle={`signature-dropdown-${document.id}`}
-                                                type="signature"/>
-                                                <hr style={{margin: 0}}/>
-                                        </div>}
-                                    {user.path_signature && user.path_signature.trim() !== "" &&
-                                        <div>
-                                            <DraggablePositionVisaSignatureDownload
-                                                href={
-                                                    Routing.generate(
-                                                        'download_doc_all',
-                                                        {orgId: user.current_org_id,
-                                                            id: document.id,
-                                                            absSign: this.state.collectivite.abscisses_signature,
-                                                            ordSign: this.state.collectivite.ordonnees_signature,
-                                                            absVisa: this.state.collectivite.abscisses_visa,
-                                                            ordVisa: this.state.collectivite.ordonnees_visa})}
-                                                positionSignature={{
-                                                    x: this.state.collectivite.abscisses_signature,
-                                                    y: this.state.collectivite.ordonnees_signature}}
-                                                positionVisa={{
-                                                    x: this.state.collectivite.abscisses_visa,
-                                                    y: this.state.collectivite.ordonnees_visa}}
-                                                label={t('common.documents.btn_both')}
-                                                handleChangeSignature={this.handleChangeSignaturePosition}
-                                                handleChangeVisa={this.handleChangeVisaPosition}
-                                                collectivite={this.state.collectivite}
-                                                dataToggle={`signature-visa-dropdown-${document.id}`}
-                                                type="signature"/>
+                                    <div>
+                                        <DraggablePositionDownload
+                                            href={
+                                                Routing.generate(
+                                                    'download_doc_sign',
+                                                    {orgId: user.current_org_id,
+                                                        id: document.id,
+                                                        absSign: this.state.collectivite.abscisses_signature,
+                                                        ordSign: this.state.collectivite.ordonnees_signature})}
+                                            position={{
+                                                x: this.state.collectivite.abscisses_signature,
+                                                y: this.state.collectivite.ordonnees_signature}}
+                                            label={t('common.documents.btn_signature')}
+                                            handleChange={this.handleChangeSignaturePosition}
+                                            collectivite={this.state.collectivite}
+                                            dataToggle={`signature-dropdown-${document.id}`}
+                                            type="signature"
+                                            disabled={!this.userNotHaveSignatureImage()}/>
                                             <hr style={{margin: 0}}/>
-                                        </div>}
+                                    </div>
+                                    <div>
+                                        <DraggablePositionVisaSignatureDownload
+                                            href={
+                                                Routing.generate(
+                                                    'download_doc_all',
+                                                    {orgId: user.current_org_id,
+                                                        id: document.id,
+                                                        absSign: this.state.collectivite.abscisses_signature,
+                                                        ordSign: this.state.collectivite.ordonnees_signature,
+                                                        absVisa: this.state.collectivite.abscisses_visa,
+                                                        ordVisa: this.state.collectivite.ordonnees_visa})}
+                                            positionSignature={{
+                                                x: this.state.collectivite.abscisses_signature,
+                                                y: this.state.collectivite.ordonnees_signature}}
+                                            positionVisa={{
+                                                x: this.state.collectivite.abscisses_visa,
+                                                y: this.state.collectivite.ordonnees_visa}}
+                                            label={t('common.documents.btn_both')}
+                                            handleChangeSignature={this.handleChangeSignaturePosition}
+                                            handleChangeVisa={this.handleChangeVisaPosition}
+                                            collectivite={this.state.collectivite}
+                                            dataToggle={`signature-visa-dropdown-${document.id}`}
+                                            type="signature"
+                                            disabled={!this.userNotHaveSignatureImage()}/>
+                                        <hr style={{margin: 0}}/>
+                                    </div>
                                 </ul>
                             </div>
                         </div> :
@@ -328,12 +330,12 @@ DocumentsNew.propTypes = {
 
 export default translate('sesile')(DocumentsNew)
 
-const DraggablePositionDownload = ({handleChange, label, dataToggle, href, position, type}, {t}) => {
+const DraggablePositionDownload = ({handleChange, label, dataToggle, href, position, type, disabled}, {t}) => {
     return (
         <li className="doc-action-button">
             <a
-                className="button secondary clear"
-                data-toggle={dataToggle}>
+                className={`button secondary clear ${disabled && ' disabled'}`}
+                data-toggle={!disabled && dataToggle}>
                 {label}
             </a>
             <div
@@ -380,12 +382,13 @@ DraggablePositionDownload.contextTypes = {
     t: func
 }
 
-const DraggablePositionVisaSignatureDownload = ({handleChangeVisa, handleChangeSignature, label, dataToggle, href, positionVisa, positionSignature}, {t}) => {
+const DraggablePositionVisaSignatureDownload =
+    ({handleChangeVisa, handleChangeSignature, label, dataToggle, href, positionVisa, positionSignature, disabled}, {t}) => {
     return (
         <li className="doc-action-button">
             <a
-                className="button secondary clear"
-                data-toggle={dataToggle}>
+                className={`button secondary clear ${disabled && ' disabled'}`}
+                data-toggle={!disabled && dataToggle}>
                 {label}
             </a>
             <div
