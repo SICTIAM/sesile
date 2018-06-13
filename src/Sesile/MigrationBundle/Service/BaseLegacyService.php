@@ -47,20 +47,22 @@ class BaseLegacyService
 
     /**
      * @param Statement $statement
+     * @param int $fetchMode
      * @return array
      */
-    protected function fetchAllData(Statement $statement)
+    protected function fetchAllData(Statement $statement, $fetchMode = \PDO::FETCH_ASSOC)
     {
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $statement->fetchAll($fetchMode);
     }
 
     /**
      * @param Statement $statement
+     * @param int $fetchMode
      * @return mixed
      */
-    protected function fetchData(Statement $statement)
+    protected function fetchData(Statement $statement, $fetchMode = \PDO::FETCH_ASSOC)
     {
-        return $statement->fetch(\PDO::FETCH_ASSOC);
+        return $statement->fetch($fetchMode);
     }
 
 }

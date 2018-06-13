@@ -20,6 +20,11 @@ class LegacyCollectivityService extends BaseLegacyService
         return $this->fetchAllData($this->prepareQuery($query));
     }
 
+    /**
+     * @param $collectivityId
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getLegacyCollectivity($collectivityId)
     {
         $query = 'SELECT * FROM Collectivite where id = :collectivityId';

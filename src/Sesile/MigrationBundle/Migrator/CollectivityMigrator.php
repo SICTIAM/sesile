@@ -46,7 +46,7 @@ class CollectivityMigrator implements SesileMigratorInterface
 
     /**
      * @param integer $collectivityId
-     * @param string  $siren
+     * @param string $siren
      *
      * @return Message
      */
@@ -54,24 +54,74 @@ class CollectivityMigrator implements SesileMigratorInterface
     {
         $this->logger->info(sprintf('[COLLECTIVITY_MIGRATOR] START for legacy collectivity: %s', $collectivityId));
         if ($siren == '') {
-            return new Message(false, null, [sprintf('[COLLECTIVITY_MIGRATOR] EMPTY SIREN IS GIVEN for Legacy Collectivity with id: %s not found.', $collectivityId)]);
+            return new Message(
+                false,
+                null,
+                [
+                    sprintf(
+                        '[COLLECTIVITY_MIGRATOR] EMPTY SIREN IS GIVEN for Legacy Collectivity with id: %s not found.',
+                        $collectivityId
+                    ),
+                ]
+            );
         }
-        $legacyCollectivity = $this->service->getLegacyCollectivity($collectivityId);
+        try {
+            $legacyCollectivity = $this->service->getLegacyCollectivity($collectivityId);
+        } catch (\Exception $e) {
+            $this->logger->error(
+                sprintf('[COLLECTIVITY_MIGRATOR] Error on getting the legacy collectivity : %s', $e->getMessage())
+            );
+
+            return new Message(
+                false,
+                null,
+                [sprintf('[COLLECTIVITY_MIGRATOR] Error on getting the legacy collectivity : %s', $e->getMessage())]
+            );
+        }
         if (!$legacyCollectivity) {
-            return new Message(false, null, [sprintf('[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s not found.', $collectivityId)]);
+            $this->logger->warning(
+                sprintf('[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s not found.', $collectivityId)
+            );
+
+            return new Message(
+                false,
+                null,
+                [sprintf('[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s not found.', $collectivityId)]
+            );
         }
         $collectivity = $this->buildCollectivity($legacyCollectivity, $siren);
         $result = $this->collectivityManager->saveCollectivity($collectivity);
         if (false === $result->isSuccess()) {
-            return new Message(false, null, [sprintf('[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s Could not be saved.', $collectivityId)]);
+            $this->logger->error(
+                sprintf('[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s Could not be saved.', $collectivityId)
+            );
+
+            return new Message(
+                false,
+                null,
+                [
+                    sprintf(
+                        '[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s Could not be saved.',
+                        $collectivityId
+                    ),
+                ]
+            );
         }
+        $this->logger->info(
+            sprintf(
+                '[COLLECTIVITY_MIGRATOR] Legacy Collectivity with id: %s Successfully Imported. New ID: %s / SIREN: %s',
+                $collectivityId,
+                $result->getData()->getId(),
+                $result->getData()->getSiren()
+            )
+        );
 
         return new Message(true, $result->getData());
     }
 
     /**
-     * @param array   $legacyCollectivity
-     * @param string  $siren
+     * @param array $legacyCollectivity
+     * @param string $siren
      *
      * @return Collectivite
      */
@@ -95,8 +145,7 @@ class CollectivityMigrator implements SesileMigratorInterface
             ->setTitreVisa($legacyCollectivity['titreVisa'])
             ->setPageSignature($legacyCollectivity['pageSignature'])
             ->setDeleteClasseurAfter($legacyCollectivity['deleteClasseurAfter'])
-            ->setSiren(substr(trim($siren), 0, 9));
-        ;
+            ->setSiren(substr(trim($siren), 0, 9));;
 
         return $collectivity;
 

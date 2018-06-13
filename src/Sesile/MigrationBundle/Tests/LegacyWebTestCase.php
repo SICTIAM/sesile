@@ -43,7 +43,6 @@ class LegacyWebTestCase extends SesileWebTestCase
     public function loadLegacyFixtures(array $fixtures = [])
     {
         try {
-
             // Bundle to manage file and directories
             $finder = new Finder();
             $finder->in(__DIR__.'/Sql/');
@@ -59,6 +58,23 @@ class LegacyWebTestCase extends SesileWebTestCase
                 $connection = $this->getContainer()->get('doctrine.dbal.legacy_connection');
                 $connection->exec($sql);  // Execute native SQL
             }
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $sql
+     *
+     * @return bool
+     */
+    public function loadCustomFixture($sql)
+    {
+        try {
+            $connection = $this->getContainer()->get('doctrine.dbal.legacy_connection');
+            $connection->exec($sql);
         } catch (\Exception $e) {
             return false;
         }

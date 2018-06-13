@@ -5,6 +5,7 @@ namespace Sesile\MigrationBundle\Tests\Manager;
 
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Statement;
 use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\MigrationBundle\Manager\LegacyCollectivityManager;
@@ -28,10 +29,10 @@ class LegacyCollectivityManagerTest extends LegacyWebTestCase
 
     public function setUp()
     {
-        $this->service = $repository = $this->getMockBuilder(LegacyCollectivityService::class)
+        $this->service = $this->getMockBuilder(LegacyCollectivityService::class)
             ->disableOriginalConstructor()
             ->setMethods(
-                ['fetchData', 'getLegacyCollectivityList']
+                ['fetchData', 'getLegacyCollectivityList', 'fetchAllData', 'prepareQuery']
             )->getMock();
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->legacyCollectivityManager = new LegacyCollectivityManager($this->service, $this->logger);
@@ -39,8 +40,14 @@ class LegacyCollectivityManagerTest extends LegacyWebTestCase
 
     public function testGetLegacyCollectivityList()
     {
+        $statement = $this->getMockBuilder(Statement::class)->disableOriginalConstructor()->getMock();
         $this->service->expects(self::once())
-            ->method('fetchData')
+            ->method('prepareQuery')
+            ->willReturn(
+                $statement
+            );
+        $this->service->expects(self::once())
+            ->method('fetchAllData')
             ->willReturn(
                 [
                     ['id' => '1', 'name' => 'Sictiam', 'domain' => 'sictiam'],
