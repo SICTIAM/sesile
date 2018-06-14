@@ -40,6 +40,7 @@ class MigrationApiController extends Controller
         }
         return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
+
     /**
      * @Rest\Route("/org/check/siren/{siren}", options = { "expose" = true })
      * @return Response
@@ -54,5 +55,18 @@ class MigrationApiController extends Controller
             return new JsonResponse(['success' => 0, 'siren' => $siren, 'orgName' => $result->getData()->getNom()], Response::HTTP_OK);
         }
         return new JsonResponse(['success' => 1, 'siren' => $siren], Response::HTTP_OK);
+    }
+
+    /**
+     * @Rest\Post("/org/migrate/init", options = { "expose" = true })
+     * @return Response
+     */
+    public function initCollectivityMigrationAction(Request $request)
+    {
+        if (!$request->request->has('siren') || !$request->request->has('orgId')) {
+
+            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        }
+        return new JsonResponse([], Response::HTTP_CREATED);
     }
 }
