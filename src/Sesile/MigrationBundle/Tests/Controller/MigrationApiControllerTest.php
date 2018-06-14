@@ -86,11 +86,8 @@ class MigrationApiControllerTest extends LegacyWebTestCase
 
     public function testGetCollectivityListShouldExludeTheCollectivityInSesileMigration()
     {
-        $entityManager= $this->getContainer()->get('doctrine.orm.default_entity_manager');
         $collectivityOne = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
-        $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivityOne);
-        $entityManager->persist($sesileMigration);
-        $entityManager->flush();
+        $this->persistSesileMigration($collectivityOne);
 
         $user = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
         $this->logIn($user);
@@ -102,6 +99,40 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertEquals($collectivityTwo->getId(), $content[0]['id']);
         self::assertEquals($collectivityTwo->getNom(), $content[0]['nom']);
         self::assertEquals($collectivityTwo->getDomain(), $content[0]['domain']);
+    }
+
+    public function testCheckCollectivitySirenShouldSucceedIfSirenIsAvailable()
+    {
+        $user = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($user);
+        $this->client->request('GET', '/api/migration/v3v4/org/check/siren/FR1212121');
+        $this->assertStatusCode(200, $this->client);
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        //{success: 1, siren: "21121"}
+        self::assertEquals(1, $content['success']);
+        self::assertEquals('FR1212121', $content['siren']);
+    }
+
+    public function testCheckCollectivitySirenShouldFailIfSirenIsNotAvailable()
+    {
+        $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+        $user = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($user);
+        $this->client->request('GET', sprintf('/api/migration/v3v4/org/check/siren/%s', $collectivity->getSiren()));
+        $this->assertStatusCode(200, $this->client);
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        //{success: 0, siren: "21121", orgName : "nom de la collectivité avec le SIREN" }
+        self::assertEquals(0, $content['success']);
+        self::assertEquals($collectivity->getSiren(), $content['siren']);
+        self::assertEquals($collectivity->getNom(), $content['orgName']);
+    }
+
+    private function persistSesileMigration($collectivity, $siren = '123456789')
+    {
+        $entityManager= $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivity);
+        $entityManager->persist($sesileMigration);
+        $entityManager->flush();
     }
 
 }

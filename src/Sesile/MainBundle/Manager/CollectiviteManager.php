@@ -105,7 +105,7 @@ class CollectiviteManager
     public function getCollectiviteBySiren($siren)
     {
         try {
-            $data = $this->em->getRepository(Collectivite::class)->findOneBySiren($siren);
+            $data = $this->em->getRepository(Collectivite::class)->findOneBy(['siren'=> $siren]);
 
             return new Message(true, $data);
         } catch (\Exception $e) {
