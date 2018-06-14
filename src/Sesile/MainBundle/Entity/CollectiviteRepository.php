@@ -3,6 +3,7 @@
 namespace Sesile\MainBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr;
 use Symfony\Component\HttpFoundation\Request;
 use Gedmo\Sluggable\Util as Sluggable;
 
@@ -70,6 +71,25 @@ class CollectiviteRepository extends EntityRepository
         return $this
             ->createQueryBuilder('c')
             ->select('c.id', 'c.nom', 'c.domain')
+            ->getQuery()
+            ->getArrayResult()
+            ;
+    }
+
+    /**
+     * return alla collectivities that are not present into a sesile migration process
+     *
+     * @return array
+     */
+    public function getMigrationCollectivityList()
+    {
+
+        return $this
+            ->createQueryBuilder('c')
+            ->select('c.id', 'c.nom', 'c.domain')
+            ->leftJoin('SesileMainBundle:SesileMigration', 's', 'WITH', 'c.id = s.collectivityId')
+            ->addSelect('s.collectivityId')
+            ->where('s.collectivityId IS NULL')
             ->getQuery()
             ->getArrayResult()
             ;

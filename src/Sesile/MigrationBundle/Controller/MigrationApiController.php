@@ -19,7 +19,19 @@ class MigrationApiController extends Controller
      * @Rest\Route("/collectivity/list", options = { "expose" = true })
      * @return Response
      */
-    public function indexAction()
+    public function getCollectivityListAction()
+    {
+        $result = $this->get('collectivite.manager')->getMigrationCollectivityList();
+        if (false === $result->isSuccess()) {
+            return new JsonResponse(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return new JsonResponse($result->getData(), Response::HTTP_OK);
+    }
+    /**
+     * @Rest\Route("/collectivity/legacy/list", options = { "expose" = true })
+     * @return Response
+     */
+    public function getLegacyCollectivityListAction()
     {
         $result = $this->get('legacy.collectivity.manager')->getLegacyCollectivityList();
         if (false === $result->isSuccess()) {

@@ -9,6 +9,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
+use Sesile\MainBundle\DataFixtures\SesileMigrationFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteRepository;
@@ -73,6 +74,31 @@ class CollectiviteRepositoryTest extends WebTestCase
             ->willReturn($collectiviteRepository);
         self::expectException(\Exception::class);
         $entityManager->getRepository(Collectivite::class)->getCollectivitesList();
+    }
+
+    public function testGetMigrationCollectivityListShouldReturnArrayResultOnSuccess()
+    {
+        $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE);
+        $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivity);
+        $this->em->persist($sesileMigration);
+        $this->em->flush();
+        $result = $this->em->getRepository(Collectivite::class)->getMigrationCollectivityList();
+        self::assertCount(1, $result);
+        self::assertEquals('Sictiam Collectivité', $result[0]['nom']);
+        self::assertEquals('sictiam', $result[0]['domain']);
+    }
+
+    public function testGetMigrationCollectivityListShouldReturnEmptyArrayIfAllMigrated()
+    {
+        $collectivityOne = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+        $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivityOne);
+        $collectivityTwo = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE);
+        $this->em->persist($sesileMigration);
+        $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivityTwo);
+        $this->em->persist($sesileMigration);
+        $this->em->flush();
+        $result = $this->em->getRepository(Collectivite::class)->getMigrationCollectivityList();
+        self::assertCount(0, $result);
     }
 
 }

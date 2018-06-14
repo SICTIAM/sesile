@@ -269,4 +269,29 @@ class CollectiviteManagerTest extends WebTestCase
         self::assertEquals($newCollectivity->getDomain(), $result->getData()->getDomain());
     }
 
+    public function testGetMigrationCollectivityList()
+    {
+        $repository = $this->createMock(CollectiviteRepository::class);
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(Collectivite::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('getMigrationCollectivityList')
+            ->willReturn(
+                [
+                    ['nom' => 'Sictiam Collectivité', 'domain' => 'sictiam'],
+                    ['nom' => 'test organisation', 'domain' => 'casa'],
+                ]
+            );
+        $result = $this->collectiviteManager->getMigrationCollectivityList();
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertCount(2, $result->getData());
+        $data = $result->getData();
+        self::assertEquals('Sictiam Collectivité', $data[0]['nom']);
+        self::assertEquals('sictiam', $data[0]['domain']);
+    }
+
 }

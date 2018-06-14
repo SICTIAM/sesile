@@ -134,4 +134,23 @@ class CollectiviteManager
         }
     }
 
+    /**
+     * Get an array of all organisations (aka collectivité) list that are not yet migrated
+     * see Entity: SesileMigration
+     *
+     * @return Message
+     */
+    public function getMigrationCollectivityList()
+    {
+        try {
+            $data = $this->em->getRepository(Collectivite::class)->getMigrationCollectivityList();
+
+            return new Message(true, $data);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/getCollectivitesList error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+    }
+
 }
