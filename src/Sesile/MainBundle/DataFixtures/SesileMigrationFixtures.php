@@ -29,18 +29,24 @@ class SesileMigrationFixtures extends Fixture
         $manager->persist($sesileMigration);
         $this->addReference(self::SESILE_MIGRATION_ONE_REFERENCE, $sesileMigration);
         $collectivite2 = $this->getReference('collectivite-two');
-        $sesileMigration2 = self::aValidSesileMigration($collectivite2, '3333');
+        $sesileMigration2 = self::aValidSesileMigration($collectivite2, '987654321', SesileMigration::STATUS_FINALISE);
         $manager->persist($sesileMigration2);
         $this->addReference(self::SESILE_MIGRATION_TWO_REFERENCE, $sesileMigration2);
         $manager->flush();
     }
 
-    public static function aValidSesileMigration(Collectivite $collectivite, $oldId = '1234')
-    {
+    public static function aValidSesileMigration(
+        Collectivite $collectivite,
+        $siren = '123456789',
+        $status = 'EN_COURS',
+        $usersExported = false
+    ) {
         $sesileMigration = new SesileMigration();
         $sesileMigration
-            ->setCollectivity($collectivite->getId())
-            ->setOldId($oldId)
+            ->setCollectivityId($collectivite->getId())
+            ->setSiren($siren)
+            ->setStatus($status)
+            ->setUsersExported($usersExported)
             ->setDate(new \DateTime());
 
         return $sesileMigration;

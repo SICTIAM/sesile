@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SesileMigration
 {
+    const STATUS_EN_COURS = 'EN_COURS';
+    const STATUS_FINALISE = 'FINALISE';
+
     /**
      * @var integer
      *
@@ -24,9 +27,28 @@ class SesileMigration
     /**
      * @var string
      *
-     * @ORM\Column(name="collectivity", type="string", length=255)
+     * @ORM\Column(name="collectivity_id", type="string", length=255)
      */
-    private $collectivity;
+    private $collectivityId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="siren", type="string", length=9)
+     */
+    private $siren;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=10)
+     */
+    private $status;
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="users_exported", type="boolean")
+     */
+    private $usersExported;
 
     /**
      * @var string legacy collectivity id
@@ -60,19 +82,19 @@ class SesileMigration
     /**
      * @return string
      */
-    public function getCollectivity()
+    public function getCollectivityId()
     {
-        return $this->collectivity;
+        return $this->collectivityId;
     }
 
     /**
-     * @param string $collectivity
+     * @param string $collectivityId
      *
      * @return SesileMigration
      */
-    public function setCollectivity($collectivity)
+    public function setCollectivityId($collectivityId)
     {
-        $this->collectivity = $collectivity;
+        $this->collectivityId = $collectivityId;
 
         return $this;
     }
@@ -113,6 +135,79 @@ class SesileMigration
     public function setDate($date)
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiren()
+    {
+        return $this->siren;
+    }
+
+    /**
+     * @param string $siren
+     *
+     * @return SesileMigration
+     */
+    public function setSiren($siren)
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     *
+     * returns false if status is not correct
+     *
+     * @return SesileMigration
+     * @throws \Exception
+     */
+    public function setStatus($status)
+    {
+        if (!in_array($status, [self::STATUS_EN_COURS, self::STATUS_FINALISE])) {
+            throw new \Exception(
+                sprintf(
+                    'SesileMigration Status %s is not valid. Accepted values: %s, %s',
+                    $status,
+                    self::STATUS_EN_COURS,
+                    self::STATUS_FINALISE
+                )
+            );
+        }
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsersExported()
+    {
+        return $this->usersExported;
+    }
+
+    /**
+     * @param bool $usersExported
+     *
+     * @return SesileMigration
+     */
+    public function setUsersExported($usersExported)
+    {
+        $this->usersExported = $usersExported;
 
         return $this;
     }
