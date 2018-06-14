@@ -13,7 +13,8 @@ export default class InputValidation extends Component {
         labelText: '',
         minDate: '',
         maxDate: '',
-        readOnly: false
+        readOnly: false,
+        disabled: false
     }
     validateValue = () => {
         const validation = new Validator({ [this.props.id]: this.props.value }, { [this.props.id]: this.props.validationRule }, this.props.customErrorMessages)
@@ -28,17 +29,19 @@ export default class InputValidation extends Component {
                     this.props.type === 'number' ||
                     this.props.type === '' ||
                     this.props.type === undefined) &&
-                    <Input  id={this.props.id}
-                            autoFocus={this.props.autoFocus}
-                            labelText={this.props.labelText}
-                            type={this.props.type}
-                            className={this.props.className}
-                            placeholder={this.props.placeholder}
-                            value={this.props.value}
-                            onChange={this.props.onChange}
-                            onBlur={this.validateValue}
-                            helpText={this.props.helpText}
-                            readOnly={this.props.readOnly}/>}
+                    <Input
+                        id={this.props.id}
+                        autoFocus={this.props.autoFocus}
+                        labelText={this.props.labelText}
+                        type={this.props.type}
+                        className={this.props.className}
+                        placeholder={this.props.placeholder}
+                        value={this.props.value}
+                        onChange={this.props.onChange}
+                        onBlur={this.validateValue}
+                        helpText={this.props.helpText}
+                        readOnly={this.props.readOnly}
+                        disabled={this.props.disabled}/>}
                 {(this.props.type === 'date' ) &&
                     <InputDatePicker    id={this.props.id}
                                         date={this.props.value}

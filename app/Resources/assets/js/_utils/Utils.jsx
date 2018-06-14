@@ -29,6 +29,7 @@ const TruncateFileName = (name) => {
     return name
 }
 
+//@todo remove it because not used
 const extractRootDomain = (url) => {
     var domain;
     //find & remove protocol (http, ftp, etc.) and get domain
@@ -52,4 +53,32 @@ const extractRootDomain = (url) => {
     return domain;
 };
 
-export { handleErrors, DisplayLongText, BytesToSize, TruncateFileName, extractRootDomain }
+const isEmptyObject = (object = {}) => Object.keys(object || {}).length === 0
+
+const isValidSiren = (siren) => {
+    let isValid;
+    if ( (siren.length !== 9) || (isNaN(siren)) )
+        isValid = false;
+    else {
+        let somme = 0;
+        let tmp;
+        for (let cpt = 0; cpt<siren.length; cpt++) {
+            if ((cpt % 2) === 1) {
+                tmp = siren.charAt(cpt) * 2;
+                if (tmp > 9)
+                    tmp -= 9;
+            }
+            else
+                tmp = siren.charAt(cpt);
+            somme += parseInt(tmp);
+        }
+        console.log(somme)
+        if ((somme % 10) === 0)
+            isValid = true;
+        else
+            isValid = false;
+    }
+    return isValid;
+}
+
+export { handleErrors, DisplayLongText, BytesToSize, TruncateFileName, extractRootDomain, isEmptyObject, isValidSiren }

@@ -21,8 +21,7 @@ const FormGroup = ({ children }) =>
 
 const Input = (props) =>
     <div className={`admin_search_input ${props.className}`}>
-        <label>
-            <span className="text-bold">{props.labelText}</span>
+        <label htmlFor={props.id} className="text-bold text-capitalize-first-letter">{props.labelText}</label>
             <input  id={props.id}
                     autoFocus={props.autoFocus || false}
                     type={props.type}
@@ -30,6 +29,7 @@ const Input = (props) =>
                     value={props.value}
                     placeholder={props.placeholder}
                     readOnly={props.readOnly}
+                    disabled={props.disabled}
                     onChange={e => {
                         let { value, name } = e.target
                         if(props.type === 'number') value = parseInt(value)
@@ -37,7 +37,6 @@ const Input = (props) =>
                     }} 
                     onBlur={props.onBlur} />
             {props.children ? props.children : <p className="help-text" id={props.id}>{props.helpText}</p> }
-        </label>
     </div>
 
 const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, labelText, helpText, children, style, disabled = false }) =>

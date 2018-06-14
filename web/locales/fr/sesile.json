@@ -223,7 +223,10 @@
         "download": "Télécharger",
         "error_loading_classeur": "Une erreur est survenue lors du chargement de la liste",
         "electronic_signature": "Signature électronique",
-        "stakeholders": "Intervenants"
+        "stakeholders": "Intervenants",
+        "siren": "siren",
+        "type_siren_collectivite": "Saisir le SIREN de la colléctivité",
+        "migrate": "migrer"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
@@ -472,7 +475,8 @@
         "role_application": {
             "name": "role",
             "name_plural": "roles"
-        }
+        },
+        "migration": "migration"
     },
     "classeur": {
         "name": "Classeur",
