@@ -7,8 +7,8 @@ namespace Sesile\MainBundle\Tests\Repository;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\SesileMigrationFixtures;
-use Sesile\MainBundle\Entity\SesileMigration;
 use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
+use Sesile\MigrationBundle\Entity\SesileMigration;
 
 class SesileMigrationRepositoryTest extends SesileWebTestCase
 {

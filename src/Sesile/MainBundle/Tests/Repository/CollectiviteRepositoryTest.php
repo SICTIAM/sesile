@@ -50,7 +50,7 @@ class CollectiviteRepositoryTest extends WebTestCase
     public function testGetCollectivitesListShouldReturnArrayResultOnSuccess()
     {
         $result = $this->em->getRepository(Collectivite::class)->getCollectivitesList();
-        self::assertCount(2, $result);
+        self::assertCount(3, $result);
         self::assertEquals('Sictiam Collectivité', $result[0]['nom']);
         self::assertEquals('sictiam', $result[0]['domain']);
     }
@@ -83,7 +83,7 @@ class CollectiviteRepositoryTest extends WebTestCase
         $this->em->persist($sesileMigration);
         $this->em->flush();
         $result = $this->em->getRepository(Collectivite::class)->getMigrationCollectivityList();
-        self::assertCount(1, $result);
+        self::assertCount(2, $result);
         self::assertEquals('Sictiam Collectivité', $result[0]['nom']);
         self::assertEquals('sictiam', $result[0]['domain']);
     }
@@ -95,6 +95,9 @@ class CollectiviteRepositoryTest extends WebTestCase
         $collectivityTwo = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE);
         $this->em->persist($sesileMigration);
         $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivityTwo);
+        $this->em->persist($sesileMigration);
+        $collectivityThree = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_THREE_REFERENCE);
+        $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivityThree);
         $this->em->persist($sesileMigration);
         $this->em->flush();
         $result = $this->em->getRepository(Collectivite::class)->getMigrationCollectivityList();
