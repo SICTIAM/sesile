@@ -6,7 +6,7 @@ namespace Sesile\MainBundle\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sesile\MainBundle\Entity\Collectivite;
-use Sesile\MainBundle\Entity\SesileMigration;
+use Sesile\MigrationBundle\Entity\SesileMigration;
 
 /**
  * Class SesileMigrationFixtures

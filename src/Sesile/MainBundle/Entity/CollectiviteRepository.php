@@ -87,7 +87,7 @@ class CollectiviteRepository extends EntityRepository
         return $this
             ->createQueryBuilder('c')
             ->select('c.id', 'c.nom', 'c.domain')
-            ->leftJoin('SesileMainBundle:SesileMigration', 's', 'WITH', 'c.id = s.collectivityId')
+            ->leftJoin('SesileMigrationBundle:SesileMigration', 's', 'WITH', 'c.id = s.collectivityId')
             ->addSelect('s.collectivityId')
             ->where('s.collectivityId IS NULL')
             ->getQuery()
