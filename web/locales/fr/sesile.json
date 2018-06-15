@@ -159,7 +159,8 @@
                 "limit_date": "Date limite",
                 "actions": "Actions",
                 "select": "Sélection"
-            }
+            },
+            "empty_classeur_list": "Vous n'avez pas de classeur sur cette liste"
         },
         "documents": {
             "name": "document",
@@ -219,7 +220,8 @@
         "infos": "informations",
         "select_collectivite": "Sélectionner la collectivité",
         "research": "Recherche",
-        "download": "Télécharger"
+        "download": "Télécharger",
+        "error_loading_classeur": "Une erreur est survenue lors du chargement de la liste"
     },
     "admin": {
         "title": "Rechercher un {{name}}",

@@ -26,7 +26,8 @@ class Classeurs extends Component {
         limit: 15,
         start: 0,
         checkedAll: false,
-        userId: this.props.userId
+        userId: this.props.userId,
+        message: ''
     }
     componentDidMount() {
         this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
@@ -49,7 +50,7 @@ class Classeurs extends Component {
     }
     listClasseurs = (sort, order, limit, start, userId) => {
         const { t, _addNotification } = this.context
-
+        this.setState({message: t('common.loading')})
         fetch(Routing.generate(this.props.url, {orgId: this.props.user.current_org_id, sort, order, limit, start, userId}), { credentials: 'same-origin' })
             .then(handleErrors)
             .then(response => response.json())
@@ -58,12 +59,17 @@ class Classeurs extends Component {
                     Object.defineProperty(classeur, "checked", {value : false, writable : true, enumerable : true, configurable : true}))
                 this.setState({classeurs})
                 $('#classeurRow').foundation()
+                if(classeurs.length <= 0) this.setState({message: t('common.classeurs.empty_classeur_list')})
+                else this.setState({message: null})
             })
             .then(this.setState({start}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
-                error.statusText)))
+            .catch(error => {
+                this.setState({message: t('common.error_loading_classeur')})
+                _addNotification(basicNotification(
+                    'error',
+                    t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
+                    error.statusText))
+            })
     }
     checkAllClasseurs() {
         const newCheckAll = !this.state.checkedAll
@@ -169,10 +175,10 @@ class Classeurs extends Component {
                             </div>
                         </div>
                         <div id="classeurRow">
-                            {classeurs.length > 0 ?
+                            {this.state.message === null ?
                                 classeurRowList :
                                 <div className="grid-x panel-body align-middle align-center" style={{minHeight: '5em'}}>
-                                    {t('common.loading')}
+                                    {this.state.message}
                                 </div>}
                         </div>
                         {classeurs &&
