@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MigrationApiController extends Controller
 {
     /**
-     * @Rest\Route("/collectivity/list", options = { "expose" = true })
+     * @Rest\Get("/collectivity/list", options = { "expose" = true }, name="v3v4_migrate_org_list")
      * @return Response
      */
     public function getCollectivityListAction()
@@ -29,7 +29,7 @@ class MigrationApiController extends Controller
         return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
     /**
-     * @Rest\Route("/collectivity/legacy/list", options = { "expose" = true })
+     * @Rest\Get("/collectivity/legacy/list", options = { "expose" = true }, name="v3v4_migrate_legacy_list")
      * @return Response
      */
     public function getLegacyCollectivityListAction()
@@ -42,7 +42,7 @@ class MigrationApiController extends Controller
     }
 
     /**
-     * @Rest\Route("/org/check/siren/{siren}", options = { "expose" = true })
+     * @Rest\Get("/org/check/siren/{siren}", options = { "expose" = true }, name="v3v4_migrate_check_siren")
      * @return Response
      */
     public function checkOrgSirenAvailabilityAction($siren)
@@ -58,7 +58,7 @@ class MigrationApiController extends Controller
     }
 
     /**
-     * @Rest\Post("/org/migrate/init", options = { "expose" = true })
+     * @Rest\Post("/org/migrate/init", options = { "expose" = true }, name="v3v4_migrate_init")
      * @return Response
      */
     public function initCollectivityMigrationAction(Request $request)
@@ -67,6 +67,7 @@ class MigrationApiController extends Controller
 
             return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
         }
+
         return new JsonResponse([], Response::HTTP_CREATED);
     }
 }

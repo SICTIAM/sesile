@@ -10,7 +10,7 @@ use Sesile\MainBundle\DataFixtures\SesileMigrationFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
-use Sesile\MainBundle\Entity\SesileMigration;
+use Sesile\MigrationBundle\Entity\SesileMigration;
 use Sesile\MigrationBundle\Tests\LegacyWebTestCase;
 
 class MigrationApiControllerTest extends LegacyWebTestCase
