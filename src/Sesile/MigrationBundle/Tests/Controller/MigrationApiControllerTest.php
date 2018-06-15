@@ -85,7 +85,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $this->client->request('GET', '/api/migration/v3v4/collectivity/list');
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(2, $content);
+        self::assertCount(3, $content);
         $collectivityOne = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
         self::assertEquals($collectivityOne->getId(), $content[0]['id']);
         self::assertEquals($collectivityOne->getNom(), $content[0]['nom']);
@@ -106,7 +106,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $this->client->request('GET', '/api/migration/v3v4/collectivity/list');
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(1, $content);
+        self::assertCount(2, $content);
         $collectivityTwo = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE);
         self::assertEquals($collectivityTwo->getId(), $content[0]['id']);
         self::assertEquals($collectivityTwo->getNom(), $content[0]['nom']);
@@ -165,6 +165,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         /**
          * check DB
          */
+        $this->em->clear();
         $testCollectivity = $this->em->getRepository(Collectivite::class)->find($collectivity->getId());
         self::assertEquals('784512658', $testCollectivity->getSiren());
         self::assertNull($testCollectivity->getOzwillo());
