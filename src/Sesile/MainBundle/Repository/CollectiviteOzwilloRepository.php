@@ -36,6 +36,33 @@ class CollectiviteOzwilloRepository extends \Doctrine\ORM\EntityRepository
         if (count($result) > 0) {
             return true;
         }
+
+        return false;
+    }
+
+    /**
+     * @param $fromCollectivityId
+     * @param $toCollectivityId
+     *
+     * @return bool
+     */
+    public function switchCollectivityId($fromCollectivityId, $toCollectivityId)
+    {
+        try {
+            $connection = $this->getEntityManager()->getConnection();
+            $connection->beginTransaction();
+            $sql = 'UPDATE collectivite_ozwillo co set co.collectivite_id = :toCollectivityId WHERE co.collectivite_id = :fromCollectivityId';
+            $result = $connection->executeQuery($sql, ['toCollectivityId' => $toCollectivityId, 'fromCollectivityId'=>$fromCollectivityId]);
+            if ($result) {
+                $connection->commit();
+
+                return true;
+            }
+            $connection->rollBack();
+        } catch (\Exception $e) {
+            return false;
+        }
+
         return false;
     }
 }
