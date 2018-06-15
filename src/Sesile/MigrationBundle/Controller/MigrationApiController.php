@@ -71,7 +71,7 @@ class MigrationApiController extends Controller
         $siren = $request->request->get('siren');
         $result = $this->get('sesile.migrator')->hanldeNewMigration($collectivityId, $siren);
         if (false === $result->isSuccess()) {
-            return new JsonResponse([], Response::HTTP_BAD_GATEWAY);
+            return new JsonResponse(['errors' => $result->getErrors()], Response::HTTP_BAD_GATEWAY);
         }
 
         return new JsonResponse([], Response::HTTP_CREATED);

@@ -143,7 +143,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
      * Test l'action lors on selection une collectivité à migrer, qui n'est pas encore provisioné par ozwillo
      *
      */
-    public function testMigrateCollectivity()
+    public function testMigrateCollectivityShouldSucceedForNotProvisionedCollectivity()
     {
         $collectivity = $this->persistCollectivity();
         $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
@@ -172,6 +172,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $collectivity->getId()]);
         self::assertEquals('784512658', $testSesileMigration->getSiren());
         self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
+        self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
         self::assertFalse($testSesileMigration->isUsersExported());
     }
     /**
@@ -221,6 +222,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $collectivity->getId()]);
         self::assertEquals($siren, $testSesileMigration->getSiren());
         self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
+        self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
         self::assertFalse($testSesileMigration->isUsersExported());
     }
 

@@ -114,6 +114,7 @@ class SesileMigrator implements SesileMigratorInterface
         $sesileMigration = new SesileMigration();
         $sesileMigration->setCollectivityId($collectivity->getId());
         $sesileMigration->setSiren($siren);
+        $sesileMigration->setCollectivityName($collectivity->getNom());
 
         return $sesileMigration;
     }

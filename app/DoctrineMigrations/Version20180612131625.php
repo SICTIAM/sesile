@@ -26,7 +26,7 @@ class Version20180612131625 extends AbstractMigration
             'UPDATE Collectivite c 
                 SET c.textcopymailwalid = "<p>Bonjour {{ en_copie }},</p><p>Un nouveau classeur pour lequel vous êtes en copie {{ titre_classeur }} vient d\'être validé par {{ validant }}.</p><p>Vous pouvez visionner le classeur {{lien|raw}}</p><p>**logo_coll** {{ qualite }}<br>{{ validant }}</p>"
                 WHERE c.textcopymailwalid IS NULL;');
-        $this->addSql('CREATE TABLE sesile_migration (id INT AUTO_INCREMENT NOT NULL, collectivity_id VARCHAR(255) NOT NULL, siren VARCHAR(9) NOT NULL, status VARCHAR(10) NOT NULL, users_exported TINYINT(1) NOT NULL, old_id VARCHAR(255) DEFAULT NULL, date DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE sesile_migration (id INT AUTO_INCREMENT NOT NULL, collectivity_id VARCHAR(255) NOT NULL, collectivity_name VARCHAR(255) DEFAULT NULL, siren VARCHAR(9) NOT NULL, status VARCHAR(10) NOT NULL, users_exported TINYINT(1) NOT NULL, old_id VARCHAR(255) DEFAULT NULL, date DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('ALTER TABLE Collectivite CHANGE siren siren VARCHAR(10) DEFAULT NULL');
     }
 

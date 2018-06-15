@@ -34,6 +34,13 @@ class SesileMigration
     /**
      * @var string
      *
+     * @ORM\Column(name="collectivity_name", type="string", length=255, nullable=true)
+     */
+    private $collectivityName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="siren", type="string", length=9)
      */
     private $siren;
@@ -213,6 +220,26 @@ class SesileMigration
     public function setUsersExported($usersExported)
     {
         $this->usersExported = $usersExported;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCollectivityName()
+    {
+        return $this->collectivityName;
+    }
+
+    /**
+     * @param string $collectivityName
+     *
+     * @return SesileMigration
+     */
+    public function setCollectivityName($collectivityName)
+    {
+        $this->collectivityName = $collectivityName;
 
         return $this;
     }
