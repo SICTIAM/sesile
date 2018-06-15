@@ -13,9 +13,14 @@ class SesileMigrationRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getSesileMigrationHistory()
     {
+
         return $this
             ->createQueryBuilder('sm')
+            ->select('sm.id','sm.collectivityId','sm.collectivityName','sm.siren','sm.status','sm.usersExported','sm.date', 'sm.oldId')
+            ->leftJoin('SesileMainBundle:CollectiviteOzwillo', 'o', 'WITH', 'o.collectivite = sm.collectivityId')
+            ->addSelect('o.instanceId', 'o.serviceId')
             ->getQuery()
-            ->getArrayResult();
+            ->getArrayResult()
+            ;
     }
 }

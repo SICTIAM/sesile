@@ -16,6 +16,7 @@ class SesileMigrationFixtures extends Fixture
 {
     const SESILE_MIGRATION_ONE_REFERENCE = 'migration-history-one';
     const SESILE_MIGRATION_TWO_REFERENCE = 'migration-history-two';
+    const SESILE_MIGRATION_THREE_REFERENCE = 'migration-history-three';
 
     /**
      * Load data fixtures with the passed EntityManager
@@ -32,6 +33,10 @@ class SesileMigrationFixtures extends Fixture
         $sesileMigration2 = self::aValidSesileMigration($collectivite2, '987654321', SesileMigration::STATUS_FINALISE);
         $manager->persist($sesileMigration2);
         $this->addReference(self::SESILE_MIGRATION_TWO_REFERENCE, $sesileMigration2);
+        $collectivite3 = $this->getReference('collectivite-three');
+        $sesileMigration3 = self::aValidSesileMigration($collectivite3, '777777777', SesileMigration::STATUS_EN_COURS);
+        $manager->persist($sesileMigration3);
+        $this->addReference(self::SESILE_MIGRATION_THREE_REFERENCE, $sesileMigration3);
         $manager->flush();
     }
 
@@ -44,6 +49,7 @@ class SesileMigrationFixtures extends Fixture
         $sesileMigration = new SesileMigration();
         $sesileMigration
             ->setCollectivityId($collectivite->getId())
+            ->setCollectivityName($collectivite->getNom())
             ->setSiren($siren)
             ->setStatus($status)
             ->setUsersExported($usersExported)

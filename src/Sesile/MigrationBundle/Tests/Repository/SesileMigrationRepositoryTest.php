@@ -34,7 +34,7 @@ class SesileMigrationRepositoryTest extends SesileWebTestCase
         $this->fixtures = $this->loadFixtures(
             [
                 CollectiviteFixtures::class,
-                SesileMigrationFixtures::class
+                SesileMigrationFixtures::class,
             ]
         )->getReferenceRepository();
         parent::setUp();
@@ -43,7 +43,17 @@ class SesileMigrationRepositoryTest extends SesileWebTestCase
     public function testGetCollectiviteList()
     {
         $result = $this->em->getRepository(SesileMigration::class)->getSesileMigrationHistory();
-        self::assertCount(2, $result);
+        self::assertCount(3, $result);
+        self::assertArrayHasKey('id', $result[0]);
+        self::assertArrayHasKey('collectivityId', $result[0]);
+        self::assertArrayHasKey('collectivityName', $result[0]);
+        self::assertArrayHasKey('siren', $result[0]);
+        self::assertArrayHasKey('status', $result[0]);
+        self::assertArrayHasKey('usersExported', $result[0]);
+        self::assertArrayHasKey('oldId', $result[0]);
+        self::assertArrayHasKey('date', $result[0]);
+        self::assertArrayHasKey('instanceId', $result[0]);
+        self::assertArrayHasKey('serviceId', $result[0]);
     }
 
 }
