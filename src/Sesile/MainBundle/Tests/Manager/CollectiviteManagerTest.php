@@ -202,14 +202,14 @@ class CollectiviteManagerTest extends WebTestCase
         $repository = $this->getMockBuilder(CollectiviteRepository::class)
             ->disableOriginalConstructor()
             ->setMethods(
-                ['findOneBySiren']
+                ['findOneBy']
             )->getMock();
         $this->em->expects(self::once())
             ->method('getRepository')
             ->with(Collectivite::class)
             ->willReturn($repository);
         $repository->expects(self::once())
-            ->method('findOneBySiren')
+            ->method('findOneBy')
             ->willReturn($mockCollectivite);
 
         $result = $this->collectiviteManager->getCollectiviteBySiren('123456789');
@@ -223,14 +223,14 @@ class CollectiviteManagerTest extends WebTestCase
         $repository = $this->getMockBuilder(CollectiviteRepository::class)
             ->disableOriginalConstructor()
             ->setMethods(
-                ['findOneBySiren']
+                ['findOneBy']
             )->getMock();
         $this->em->expects(self::once())
             ->method('getRepository')
             ->with(Collectivite::class)
             ->willReturn($repository);
         $repository->expects(self::once())
-            ->method('findOneBySiren')
+            ->method('findOneBy')
             ->willReturn(null);
 
         $result = $this->collectiviteManager->getCollectiviteBySiren('123456789');
@@ -244,14 +244,14 @@ class CollectiviteManagerTest extends WebTestCase
         $repository = $this->getMockBuilder(CollectiviteRepository::class)
             ->disableOriginalConstructor()
             ->setMethods(
-                ['findOneBySiren']
+                ['findOneBy']
             )->getMock();
         $this->em->expects(self::once())
             ->method('getRepository')
             ->with(Collectivite::class)
             ->willReturn($repository);
         $repository->expects(self::once())
-            ->method('findOneBySiren')
+            ->method('findOneBy')
             ->willThrowException(new \Exception('ERROR'));
         $result = $this->collectiviteManager->getCollectiviteBySiren('123456789');
         self::assertInstanceOf(Message::class, $result);
@@ -292,6 +292,53 @@ class CollectiviteManagerTest extends WebTestCase
         $data = $result->getData();
         self::assertEquals('Sictiam Collectivité', $data[0]['nom']);
         self::assertEquals('sictiam', $data[0]['domain']);
+    }
+
+    /**
+     * switch the CollecitvityOzwillo to another collectivity
+     */
+    public function testSwitchCollectivityOzwillo()
+    {
+        $repository = $this->getMockBuilder(CollectiviteOzwillo::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                ['switchCollectivityId']
+            )->getMock();
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(CollectiviteOzwillo::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('switchCollectivityId')
+            ->willReturn(true);
+
+        $result = $this->collectiviteManager->switchCollectivityOzwillo(CollectiviteFixtures::aValidCollectivite(), CollectiviteFixtures::aValidCollectivite('test'));
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+    }
+    /**
+     * switch the CollecitvityOzwillo to another collectivity
+     */
+    public function testSwitchCollectivityOzwilloShouldReturnFalseIfFailed()
+    {
+        $repository = $this->getMockBuilder(CollectiviteOzwillo::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                ['switchCollectivityId']
+            )->getMock();
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(CollectiviteOzwillo::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('switchCollectivityId')
+            ->willReturn(false);
+
+        $result = $this->collectiviteManager->switchCollectivityOzwillo(CollectiviteFixtures::aValidCollectivite(), CollectiviteFixtures::aValidCollectivite('test'));
+        self::assertInstanceOf(Message::class, $result);
+        self::assertFalse($result->isSuccess());
     }
 
 }

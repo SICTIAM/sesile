@@ -153,4 +153,58 @@ class CollectiviteManager
         }
     }
 
+    /**
+     * @param int $collectivityId
+     *
+     * @return Message
+     */
+    public function getCollectivity($collectivityId)
+    {
+        try {
+            $data = $this->em->getRepository(Collectivite::class)->find($collectivityId);
+            if ($data && $data instanceof Collectivite) {
+                return new Message(true, $data);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/getCollectivity error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+
+        return new Message(false, null, [sprintf('No collectivity found with id: %s', $collectivityId)]);
+    }
+
+    /**
+     * @param Collectivite $collectivityFrom
+     * @param Collectivite $collectivityTo
+     * @return Message
+     */
+    public function switchCollectivityOzwillo(Collectivite $collectivityFrom, Collectivite $collectivityTo)
+    {
+        try {
+            $data = $this->em->getRepository(CollectiviteOzwillo::class)->switchCollectivityId($collectivityFrom->getId(), $collectivityTo->getId());
+            if (true === $data) {
+                $msg = sprintf(
+                    'CollectiviteManager]/switchCollectivityOzwillo Switch Ozwillo from collectivityId %s to collectivityId %s',
+                    $collectivityFrom->getId(),
+                    $collectivityTo->getId()
+                );
+                $this->logger->info($msg);
+                return new Message(true, $data);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/switchCollectivityOzwillo error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+
+        $msg = sprintf(
+            'Switch Ozwillo from collectivityId %s to collectivityId %s Failed',
+            $collectivityFrom->getId(),
+            $collectivityTo->getId()
+        );
+
+        return new Message(false, null, [$msg]);
+    }
+
 }
