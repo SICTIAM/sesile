@@ -213,7 +213,7 @@ class UserRepository extends EntityRepository {
     {
         return $this
                 ->createQueryBuilder('U')
-            ->select('U.id, U.Nom as nom, U.Prenom as prenom, U.email, U.username, U.ozwilloId, U.ville, U.cp, U.pays, U.departement, U.role, U.qualite')
+            ->select('U.id, U.Nom as nom, U.Prenom as prenom, U.email, U.username, U.ozwilloId, U.ville, U.cp, U.pays, U.departement, U.role, U.qualite, U.roles')
                 ->join('U.collectivities', 'C')
                 ->where('C.id = :collectiviteId')
                 ->setParameter('collectiviteId', $collectiviteId)
