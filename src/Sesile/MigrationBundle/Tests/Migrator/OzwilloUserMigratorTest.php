@@ -69,11 +69,13 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
          */
         $requestBody = json_decode($lastRequest->getBody()->getContents(), true);
         self::assertArrayHasKey('emails', $requestBody);
+        self::assertArraySubset(['user1@domain.com', 'toto@domain.com', 'email2@domain.com'], $requestBody['emails']);
         self::assertArrayHasKey('ozwilloInstanceInfo', $requestBody);
-        self::assertArrayHasKey('organizationId', $requestBody['ozwilloInstanceInfo']);
-        self::assertArrayHasKey('instanceId', $requestBody['ozwilloInstanceInfo']);
-        self::assertArrayHasKey('creatorId', $requestBody['ozwilloInstanceInfo']);
-        self::assertArrayHasKey('serviceId', $requestBody['ozwilloInstanceInfo']);
+        self::assertEquals('todo', $requestBody['ozwilloInstanceInfo']['organizationId']);
+        self::assertEquals($collectivity->getOzwillo()->getInstanceId(), $requestBody['ozwilloInstanceInfo']['instanceId']);
+        self::assertEquals('0ceacd38-1be2-4e3b-81c6-780d71b20b89', $requestBody['ozwilloInstanceInfo']['creatorId']);
+        //@todo serviceId must be properly set during the provisioning
+        self::assertEquals($collectivity->getOzwillo()->getServiceId(), $requestBody['ozwilloInstanceInfo']['serviceId']);
 
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
@@ -113,6 +115,22 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
                     'prenom' => 'prenom1',
                     'email' => 'user1@domain.com',
                     'username' => 'username',
+                    'ozwilloId' => '0ceacd38-1be2-4e3b-81c6-780d71b20b89',
+                    'ville' => 'Nice',
+                    'cp' => '06000',
+                    'pays' => 'France',
+                    'departement' => 'Alpes-Maritimes',
+                    'role' => 'Développeur',
+                    'qualite' => 'CTO',
+                    'roles' =>[
+                        0 => 'ROLE_ADMIN',
+                    ]
+                ],[
+                    'id' => 8,
+                    'nom' => 'nom1',
+                    'prenom' => 'toto',
+                    'email' => 'toto@domain.com',
+                    'username' => 'lolo',
                     'ozwilloId' => null,
                     'ville' => 'Nice',
                     'cp' => '06000',
@@ -120,6 +138,7 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
                     'departement' => 'Alpes-Maritimes',
                     'role' => 'Développeur',
                     'qualite' => 'CTO',
+                    'roles' =>[]
                 ],
                 [
                     'id' => 17,
@@ -134,6 +153,7 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
                     'departement' => null,
                     'role' => null,
                     'qualite' => null,
+                    'roles' =>[]
                 ]
             ];
     }
