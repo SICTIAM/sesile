@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
+use Sesile\UserBundle\Entity\User;
 
 /**
  * Class CollectiviteManager
@@ -72,7 +73,9 @@ class CollectiviteManager
 
             return new Message(true, $data);
         } catch (\Exception $e) {
-            $this->logger->error(sprintf('[CollectiviteManager]/userHasOzwilloCollectivity error: %s', $e->getMessage()));
+            $this->logger->error(
+                sprintf('[CollectiviteManager]/userHasOzwilloCollectivity error: %s', $e->getMessage())
+            );
 
             return new Message(false, false, [$e->getMessage()]);
         }
@@ -90,7 +93,9 @@ class CollectiviteManager
 
             return new Message(true, $data);
         } catch (\Exception $e) {
-            $this->logger->error(sprintf('[CollectiviteManager]/getOzwilloCollectivityByClientId error: %s', $e->getMessage()));
+            $this->logger->error(
+                sprintf('[CollectiviteManager]/getOzwilloCollectivityByClientId error: %s', $e->getMessage())
+            );
 
             return new Message(false, null, [$e->getMessage()]);
         }
@@ -105,7 +110,7 @@ class CollectiviteManager
     public function getCollectiviteBySiren($siren)
     {
         try {
-            $data = $this->em->getRepository(Collectivite::class)->findOneBy(['siren'=> $siren]);
+            $data = $this->em->getRepository(Collectivite::class)->findOneBy(['siren' => $siren]);
 
             return new Message(true, $data);
         } catch (\Exception $e) {
@@ -182,7 +187,10 @@ class CollectiviteManager
     public function switchCollectivityOzwillo(Collectivite $collectivityFrom, Collectivite $collectivityTo)
     {
         try {
-            $data = $this->em->getRepository(CollectiviteOzwillo::class)->switchCollectivityId($collectivityFrom->getId(), $collectivityTo->getId());
+            $data = $this->em->getRepository(CollectiviteOzwillo::class)->switchCollectivityId(
+                $collectivityFrom->getId(),
+                $collectivityTo->getId()
+            );
             if (true === $data) {
                 $msg = sprintf(
                     'CollectiviteManager]/switchCollectivityOzwillo Switch Ozwillo from collectivityId %s to collectivityId %s',
@@ -190,10 +198,13 @@ class CollectiviteManager
                     $collectivityTo->getId()
                 );
                 $this->logger->info($msg);
+
                 return new Message(true, $data);
             }
         } catch (\Exception $e) {
-            $this->logger->error(sprintf('[CollectiviteManager]/switchCollectivityOzwillo error: %s', $e->getMessage()));
+            $this->logger->error(
+                sprintf('[CollectiviteManager]/switchCollectivityOzwillo error: %s', $e->getMessage())
+            );
 
             return new Message(false, null, [$e->getMessage()]);
         }
@@ -205,6 +216,25 @@ class CollectiviteManager
         );
 
         return new Message(false, null, [$msg]);
+    }
+
+    /**
+     * @param $collectivityId
+     *
+     * @return Message
+     */
+    public function getCollectivityUsersList($collectivityId)
+    {
+        try {
+            $data = $this->em->getRepository(User::class)->getUsersByCollectivityId($collectivityId);
+            return new Message(true, $data);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/getCollectivityUsersList error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+
+
     }
 
 }
