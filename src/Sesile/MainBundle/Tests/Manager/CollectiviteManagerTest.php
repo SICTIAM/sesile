@@ -376,6 +376,9 @@ class CollectiviteManagerTest extends WebTestCase
                         'departement' => 'Alpes-Maritimes',
                         'role' => 'Développeur',
                         'qualite' => 'CTO',
+                        'roles' =>[
+                                0 => 'ROLE_ADMIN',
+                            ]
                     ],
                     [
                         'id' => 17,
@@ -390,6 +393,7 @@ class CollectiviteManagerTest extends WebTestCase
                         'departement' => null,
                         'role' => null,
                         'qualite' => null,
+                        'roles' =>[]
                     ]
                 ]
             );
@@ -428,5 +432,65 @@ class CollectiviteManagerTest extends WebTestCase
         self::assertNull($result->getData());
     }
 
+
+    public function testGetCollectivityAdminUser()
+    {
+        $repository = $this->createMock(UserRepository::class);
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(User::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('getCollectivityAdminUser')
+            ->willReturn(
+                [
+                    [
+                        'id' => 16,
+                        'nom' => 'nom1',
+                        'prenom' => 'prenom1',
+                        'email' => 'user1@domain.com',
+                        'username' => 'username',
+                        'ozwilloId' => null,
+                        'ville' => 'Nice',
+                        'cp' => '06000',
+                        'pays' => 'France',
+                        'departement' => 'Alpes-Maritimes',
+                        'role' => 'Développeur',
+                        'qualite' => 'CTO',
+                    ],
+                    [
+                        'id' => 17,
+                        'nom' => 'nom2',
+                        'prenom' => 'prenom',
+                        'email' => 'email2@domain.com',
+                        'username' => 'username2',
+                        'ozwilloId' => '76fd56f5-502b-4210-abef-c8f67e60b8ac',
+                        'ville' => null,
+                        'cp' => null,
+                        'pays' => null,
+                        'departement' => null,
+                        'role' => null,
+                        'qualite' => null,
+                    ]
+                ]
+            );
+        $result = $this->collectiviteManager->getCollectivityUsersList(1);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertCount(2, $result->getData());
+        $data = $result->getData();
+        self::assertArrayHasKey('id', $data[0]);
+        self::assertArrayHasKey('prenom', $data[0]);
+        self::assertArrayHasKey('email', $data[0]);
+        self::assertArrayHasKey('username', $data[0]);
+        self::assertArrayHasKey('ozwilloId', $data[0]);
+        self::assertArrayHasKey('ville', $data[0]);
+        self::assertArrayHasKey('cp', $data[0]);
+        self::assertArrayHasKey('pays', $data[0]);
+        self::assertArrayHasKey('departement', $data[0]);
+        self::assertArrayHasKey('role', $data[0]);
+        self::assertArrayHasKey('qualite', $data[0]);
+    }
 
 }

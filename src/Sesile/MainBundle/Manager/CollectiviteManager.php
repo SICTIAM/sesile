@@ -233,8 +233,6 @@ class CollectiviteManager
 
             return new Message(false, null, [$e->getMessage()]);
         }
-
-
     }
 
 }
