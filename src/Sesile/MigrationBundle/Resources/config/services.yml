@@ -26,3 +26,10 @@ services:
         arguments: ["@legacy.user.service", "@fos_user.user_manager", "@logger"]
         tags:
             - { name: monolog.logger, channel: migrator }
+    sesile_user.migrator:
+        class: Sesile\MigrationBundle\Migrator\SesileUserMigrator
+        arguments: ["@guzzle.client", "@collectivite.manager", "%user_gateway%",  "@logger"]
+        tags:
+            - { name: monolog.logger, channel: migrator }
+    guzzle.client:
+        class: GuzzleHttp\Client
