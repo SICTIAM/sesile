@@ -24,4 +24,6 @@ parameters:
     mailer_password: null
     locale: fr
     secret: ThisTokenIsNotSoSecretChangeIt
-    ozwillo_user_gateway_uri: "http://usergateway.ozwillo-preprod.eu"
+    ozwillo_user_gateway_uri: "https://usersgw.ozwillo-preprod.eu/api/usersgw"
+    ozwillo_user_gateway_username: admin
+    ozwillo_user_gateway_password: ***REMOVED***

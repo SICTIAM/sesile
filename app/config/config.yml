@@ -195,6 +195,8 @@ sensio_framework_extra:
 
 sesile_migration:
     ozwillo_user_gateway: "%ozwillo_user_gateway_uri%"
+    ozwillo_user_gateway_username: "%ozwillo_user_gateway_username%"
+    ozwillo_user_gateway_password: "%ozwillo_user_gateway_password%"
 
 services:
     my.sesile.user_provider:
