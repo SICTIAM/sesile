@@ -80,7 +80,7 @@ class SesileMigrationManager
         $data = [];
         foreach ($migrationData as $item) {
             $item['allowExport'] = 0;
-            if ($item['instanceId'] && $item['serviceId']) {
+            if ($item['instanceId'] && $item['serviceId'] && true !== $item['usersExported']) {
                 $item['allowExport'] = 1;
             }
             $data[] = $item;
