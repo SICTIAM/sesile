@@ -1,10 +1,10 @@
 <?php
 
-namespace Sesile\MainBundle\Repository;
+namespace Sesile\MigrationBundle\Entity;
 
 /**
  * Class SesileMigrationRepository
- * @package Sesile\MainBundle\Repository
+ * @package Sesile\MigrationBundle\Repository
  */
 class SesileMigrationRepository extends \Doctrine\ORM\EntityRepository
 {

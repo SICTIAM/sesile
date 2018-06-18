@@ -47,7 +47,7 @@ class Collectivite
     /**
      * @var string
      *
-     * @ORM\Column(name="siren", type="string", length=10)
+     * @ORM\Column(name="siren", type="string", length=10, nullable=true)
      */
     private $siren;
 

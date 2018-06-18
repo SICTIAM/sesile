@@ -4,9 +4,13 @@ namespace Sesile\MigrationBundle\Tests\Controller;
 
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Doctrine\ORM\EntityManager;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\SesileMigrationFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
+use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
+use Sesile\MigrationBundle\Entity\SesileMigration;
 use Sesile\MigrationBundle\Tests\LegacyWebTestCase;
 
 class MigrationApiControllerTest extends LegacyWebTestCase
@@ -15,15 +19,22 @@ class MigrationApiControllerTest extends LegacyWebTestCase
      * @var ReferenceRepository
      */
     protected $fixtures;
+    /**
+     * @var EntityManager
+     */
+    protected $em;
 
     public function setUp()
     {
-        $this->fixtures = $this->loadFixtures([
-            CollectiviteFixtures::class,
-            UserFixtures::class
-        ])->getReferenceRepository();
+        $this->fixtures = $this->loadFixtures(
+            [
+                CollectiviteFixtures::class,
+                UserFixtures::class,
+            ]
+        )->getReferenceRepository();
         $this->resetLegacyTestDatabase();
         $this->loadLegacyFixtures();
+        $this->em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
         parent::setUp();
     }
 
@@ -52,6 +63,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertArrayHasKey('id', $content[0]);
         self::assertArrayHasKey('name', $content[0]);
     }
+
     public function testGetCollectivityListShouldFailIfNotLoggedIn()
     {
         $this->client->request('GET', '/api/migration/v3v4/collectivity/list');
@@ -73,7 +85,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $this->client->request('GET', '/api/migration/v3v4/collectivity/list');
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(2, $content);
+        self::assertCount(3, $content);
         $collectivityOne = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
         self::assertEquals($collectivityOne->getId(), $content[0]['id']);
         self::assertEquals($collectivityOne->getNom(), $content[0]['nom']);
@@ -94,7 +106,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $this->client->request('GET', '/api/migration/v3v4/collectivity/list');
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(1, $content);
+        self::assertCount(2, $content);
         $collectivityTwo = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE);
         self::assertEquals($collectivityTwo->getId(), $content[0]['id']);
         self::assertEquals($collectivityTwo->getNom(), $content[0]['nom']);
@@ -127,12 +139,168 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertEquals($collectivity->getNom(), $content['orgName']);
     }
 
+    /**
+     * Test l'action lors on selection une collectivité à migrer, qui n'est pas encore provisioné par ozwillo
+     *
+     */
+    public function testMigrateCollectivityShouldSucceedForNotProvisionedCollectivity()
+    {
+        $collectivity = $this->persistCollectivity();
+        $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($superUser);
+        $this->client->enableProfiler();
+        $postData = [
+            'orgId' => $collectivity->getId(),
+            'siren' => '784512658',
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/migration/v3v4/org/migrate/init'),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(201, $this->client);
+        /**
+         * check DB
+         */
+        $this->em->clear();
+        $testCollectivity = $this->em->getRepository(Collectivite::class)->find($collectivity->getId());
+        self::assertEquals('784512658', $testCollectivity->getSiren());
+        self::assertNull($testCollectivity->getOzwillo());
+        $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $collectivity->getId()]);
+        self::assertEquals('784512658', $testSesileMigration->getSiren());
+        self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
+        self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
+        self::assertFalse($testSesileMigration->isUsersExported());
+    }
+    /**
+     * Test l'action lors on selection une collectivité à migrer,
+     * avec un SIREN qui apartienne à une collectivité qui a été provisioné par ozwillo
+     * sur sesile.
+     * Sesile doit recuperer la collectiviteOzwillo et l'attacher à la collectivité en question.
+     *
+     */
+    public function testMigrateCollectivityAlreadyProvisioned()
+    {
+
+        $provisionedCollectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+        $collectivity = $this->persistCollectivity();
+        $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($superUser);
+        $this->client->enableProfiler();
+        $siren = $provisionedCollectivity->getSiren();
+        $postData = [
+            'orgId' => $collectivity->getId(),
+            'siren' => $siren,
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/migration/v3v4/org/migrate/init'),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(201, $this->client);
+        /**
+         * check DB
+         */
+        $this->em->clear();
+        $testCollectivity = $this->em->getRepository(Collectivite::class)->find($collectivity->getId());
+        self::assertEquals($siren, $testCollectivity->getSiren());
+        self::assertInstanceOf(CollectiviteOzwillo::class, $testCollectivity->getOzwillo());
+        /**
+         * la collectivité en doublon déjà provisioné soit perdre la collectivité ozwillo
+         * et aussi doit perdre son siren
+         */
+        $oldCollectivity = $this->em->getRepository(Collectivite::class)->find($provisionedCollectivity->getId());
+        self::assertNull($oldCollectivity->getOzwillo());
+        self::assertNull($oldCollectivity->getSiren());
+
+        $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $collectivity->getId()]);
+        self::assertEquals($siren, $testSesileMigration->getSiren());
+        self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
+        self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
+        self::assertFalse($testSesileMigration->isUsersExported());
+    }
+
+    public function testMigrateCollectivityReturn400WhenNoSirenIsSet()
+    {
+        $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($superUser);
+        $postData = [
+            'siren' => '1212'
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/migration/v3v4/org/migrate/init'),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(400, $this->client);
+    }
+
+    public function testMigrateCollectivityReturn400WhenNoOrgIdIsSet()
+    {
+        $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($superUser);
+        $postData = [
+            'orgId' => '1212'
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/migration/v3v4/org/migrate/init'),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(400, $this->client);
+    }
+
+    public function testMigrateCollectivityReturnForbidden302WhenNoAuthenticatedAsSuperAdmin()
+    {
+        $user = $this->fixtures->getReference(UserFixtures::USER_ONE_REFERENCE);
+        $this->logIn($user);
+        $postData = [
+            'orgId' => '1212'
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/migration/v3v4/org/migrate/init'),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(403, $this->client);
+    }
+
     private function persistSesileMigration($collectivity, $siren = '123456789')
     {
-        $entityManager= $this->getContainer()->get('doctrine.orm.default_entity_manager');
         $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivity);
-        $entityManager->persist($sesileMigration);
-        $entityManager->flush();
+        $this->em->persist($sesileMigration);
+        $this->em->flush();
+
+        return $sesileMigration;
+    }
+
+    private function persistCollectivity($domain = 'domain', $name = 'org Name', $withOzwillo = false)
+    {
+        $aValidCollectivity = CollectiviteFixtures::aValidCollectivite($domain, $name, null);
+        if (true === $withOzwillo) {
+            $collectiviteOzwillo = CollectiviteFixtures::aValidCollectiviteOzwillo($aValidCollectivity);
+
+            $this->em->persist($collectiviteOzwillo);
+        }
+        $this->em->persist($aValidCollectivity);
+        $this->em->flush();
+
+        return $aValidCollectivity;
     }
 
 }

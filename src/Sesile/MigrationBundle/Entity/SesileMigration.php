@@ -1,6 +1,6 @@
 <?php
 
-namespace Sesile\MainBundle\Entity;
+namespace Sesile\MigrationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * SesileMigration
  *
  * @ORM\Table("sesile_migration")
- * @ORM\Entity(repositoryClass="Sesile\MainBundle\Repository\SesileMigrationRepository")
+ * @ORM\Entity(repositoryClass="Sesile\MigrationBundle\Entity\SesileMigrationRepository")
  */
 class SesileMigration
 {
@@ -34,6 +34,13 @@ class SesileMigration
     /**
      * @var string
      *
+     * @ORM\Column(name="collectivity_name", type="string", length=255, nullable=true)
+     */
+    private $collectivityName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="siren", type="string", length=9)
      */
     private $siren;
@@ -53,7 +60,7 @@ class SesileMigration
     /**
      * @var string legacy collectivity id
      *
-     * @ORM\Column(name="old_id", type="string")
+     * @ORM\Column(name="old_id", type="string", nullable=true)
      */
     private $oldId;
 
@@ -74,9 +81,14 @@ class SesileMigration
         return $this->id;
     }
 
+    /**
+     * SesileMigration constructor.
+     */
     public function __construct()
     {
         $this->date = new \DateTime();
+        $this->usersExported = false;
+        $this->status = self::STATUS_EN_COURS;
     }
 
     /**
@@ -208,6 +220,26 @@ class SesileMigration
     public function setUsersExported($usersExported)
     {
         $this->usersExported = $usersExported;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCollectivityName()
+    {
+        return $this->collectivityName;
+    }
+
+    /**
+     * @param string $collectivityName
+     *
+     * @return SesileMigration
+     */
+    public function setCollectivityName($collectivityName)
+    {
+        $this->collectivityName = $collectivityName;
 
         return $this;
     }

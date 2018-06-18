@@ -16,6 +16,7 @@ class CollectiviteFixtures extends Fixture
 {
     const COLLECTIVITE_ONE_REFERENCE = 'collectivite-one';
     const COLLECTIVITE_TWO_REFERENCE = 'collectivite-two';
+    const COLLECTIVITE_THREE_REFERENCE = 'collectivite-three';
 
     /**
      * Load data fixtures with the passed EntityManager
@@ -46,9 +47,13 @@ class CollectiviteFixtures extends Fixture
 
         $manager->persist($collectivite2);
         $manager->persist($collectiviteOzwillo2);
+        //create collectivity without ozwillo and null siren
+        $collectivite3 = self::aValidCollectivite('migration', 'Collectivity to migrate', null);
+        $manager->persist($collectivite3);
         $manager->flush();
         $this->addReference(self::COLLECTIVITE_ONE_REFERENCE, $collectivite);
         $this->addReference(self::COLLECTIVITE_TWO_REFERENCE, $collectivite2);
+        $this->addReference(self::COLLECTIVITE_THREE_REFERENCE, $collectivite3);
     }
 
     public static function aValidCollectivite($domain = 'sictiam', $name = 'Sictiam Collectivité', $siren = '123456789')

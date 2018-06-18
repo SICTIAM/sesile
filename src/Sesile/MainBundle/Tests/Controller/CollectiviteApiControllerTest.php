@@ -36,7 +36,7 @@ class CollectiviteApiControllerTest extends SesileWebTestCase
         $crawler = $this->client->request('GET', '/apirest/collectivite/list');
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(2, $content);
+        self::assertCount(3, $content);
         self::assertEquals('Sictiam Collectivité', $content[0]['nom']);
         self::assertEquals('sictiam', $content[0]['domain']);
     }

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MigrationApiController extends Controller
 {
     /**
-     * @Rest\Route("/collectivity/list", options = { "expose" = true })
+     * @Rest\Get("/collectivity/list", options = { "expose" = true }, name="v3v4_migrate_org_list")
      * @return Response
      */
     public function getCollectivityListAction()
@@ -29,7 +29,7 @@ class MigrationApiController extends Controller
         return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
     /**
-     * @Rest\Route("/collectivity/legacy/list", options = { "expose" = true })
+     * @Rest\Get("/collectivity/legacy/list", options = { "expose" = true }, name="v3v4_migrate_legacy_list")
      * @return Response
      */
     public function getLegacyCollectivityListAction()
@@ -40,8 +40,9 @@ class MigrationApiController extends Controller
         }
         return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
+
     /**
-     * @Rest\Route("/org/check/siren/{siren}", options = { "expose" = true })
+     * @Rest\Get("/org/check/siren/{siren}", options = { "expose" = true }, name="v3v4_migrate_check_siren")
      * @return Response
      */
     public function checkOrgSirenAvailabilityAction($siren)
@@ -54,5 +55,25 @@ class MigrationApiController extends Controller
             return new JsonResponse(['success' => 0, 'siren' => $siren, 'orgName' => $result->getData()->getNom()], Response::HTTP_OK);
         }
         return new JsonResponse(['success' => 1, 'siren' => $siren], Response::HTTP_OK);
+    }
+
+    /**
+     * @Rest\Post("/org/migrate/init", options = { "expose" = true }, name="v3v4_migrate_init")
+     * @return Response
+     */
+    public function initCollectivityMigrationAction(Request $request)
+    {
+        if (!$request->request->has('siren') || !$request->request->has('orgId')) {
+
+            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        }
+        $collectivityId = $request->request->get('orgId');
+        $siren = $request->request->get('siren');
+        $result = $this->get('sesile.migrator')->hanldeNewMigration($collectivityId, $siren);
+        if (false === $result->isSuccess()) {
+            return new JsonResponse(['errors' => $result->getErrors()], Response::HTTP_BAD_GATEWAY);
+        }
+
+        return new JsonResponse([], Response::HTTP_CREATED);
     }
 }

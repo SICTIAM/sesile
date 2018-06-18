@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Sesile\MainBundle\Tests\Repository;
+namespace Sesile\MigrationBundle\Tests\Repository;
 
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\SesileMigrationFixtures;
-use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
 use Sesile\MigrationBundle\Entity\SesileMigration;
+use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
 
 class SesileMigrationRepositoryTest extends SesileWebTestCase
 {
