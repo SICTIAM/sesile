@@ -9,7 +9,8 @@ class ClasseurVisibilitySelect extends Component {
         t: func
     }
     static defaultProps = {
-        visibility: ''
+        visibility: '',
+        disabled: false
     }
 
     render() {
@@ -24,6 +25,7 @@ class ClasseurVisibilitySelect extends Component {
                 className={this.props.className}
                 label={this.props.label}
                 value={this.props.visibilite}
+                disabled={this.props.disabled}
                 onChange={this.props.handleChangeClasseur}>
                 {listVisibilities}
             </Select>

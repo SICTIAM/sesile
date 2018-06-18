@@ -56,6 +56,7 @@ class ClasseurInfos extends Component {
         const { nom, validation, creation, type, description, status, handleChangeClasseur, editable, edit, handleEditClasseur, usersCopy } = this.props
         const { t } = this.context
         const { i18nextLng } = window.localStorage
+        //@todo verify usersCopy isn't empty
         const listUsers = usersCopy.map(user => <li className="medium-12" key={user.id}>{ user._prenom + " " + user._nom }</li>)
 
         return (
@@ -77,6 +78,7 @@ class ClasseurInfos extends Component {
                                     labelText={`${t('common.label.name')} *`}
                                     value={nom}
                                     onChange={handleChangeClasseur}
+                                    readOnly={!!this.props.isFinalizedClasseur()}
                                     validationRule={this.validationRules.nom}
                                     placeholder={t('common.classeurs.classeur_name')}/>
                             </Cell>
@@ -89,6 +91,7 @@ class ClasseurInfos extends Component {
                                     labelText={`${t('common.classeurs.date_limit')} *`}
                                     value={Moment(validation)}
                                     readOnly={true}
+                                    disabled={!!this.props.isFinalizedClasseur()}
                                     locale={i18nextLng}
                                     validationRule={this.validationRules.validation}
                                     onChange={this.handleChangeLimitDate}/>
@@ -99,6 +102,7 @@ class ClasseurInfos extends Component {
                                 <ClasseurVisibilitySelect
                                     className=""
                                     visibilite={this.props.visibilite}
+                                    disabled={!!this.props.isFinalizedClasseur()}
                                     label={`${t('common.classeurs.label.visibility')} *`}
                                     handleChangeClasseur={this.props.handleChangeClasseur}/>
                             </Cell>
@@ -110,6 +114,7 @@ class ClasseurInfos extends Component {
                                     labelText={t('common.label.description')}
                                     name="description"
                                     value={description || ''}
+                                    disabled={!!this.props.isFinalizedClasseur()}
                                     onChange={handleChangeClasseur}/>
                             </Cell>
                         </GridX>
@@ -169,6 +174,7 @@ class ClasseurInfos extends Component {
                             </div>}
                         <div className="grid-x grid-margin-x grid-padding-x align-right">
                             <Button id="submit-classeur-infos"
+                                    disabled={!!this.props.isFinalizedClasseur()}
                                     className="cell small-6 medium-8"
                                     classNameButton="float-right"
                                     onClick={this.saveClasseurInfos}

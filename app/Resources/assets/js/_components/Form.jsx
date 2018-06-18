@@ -40,13 +40,14 @@ const Input = (props) =>
         </label>
     </div>
 
-const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, labelText, helpText, children, style }) =>
+const Textarea = ({ id, name, value, placeholder, onChange, className, onBlur, labelText, helpText, children, style, disabled = false }) =>
     <div className={className}>
         <label>
             <span className="text-bold text-capitalize">{labelText}</span>
             <textarea   id={id}
                         name={name}
                         style={style}
+                        disabled={disabled}
                         placeholder={placeholder}
                         onChange={e => {
                             let { value } = e.target
@@ -115,21 +116,22 @@ const Avatar = ({ className, size = 100, nom, fileName }) =>
             <UserAvatar size={size} name={nom.charAt(0) || "S"} colors={['#fe5e3a', '#404257', '#34a3fc']}/>
         </div>
 
-const Select = ({ id, className, label, value, onChange, children, style = {} }) =>
+const Select = ({ id, className, label, value, onChange, children, style = {}, disabled = false }) =>
     <div className={className}>
         <label htmlFor={id} className="text-bold">{label}</label>
-        <select id={id} value={value} onChange={(e) => onChange(id, e.target.value)} style={style} >
+        <select id={id} value={value} onChange={(e) => onChange(id, e.target.value)} style={style} disabled={disabled} >
             {children}
         </select>
     </div>
 
-const InputDatePicker = ({id, className, date, label, onChange, i18nextLng, onBlur, readOnly=false, minDate, maxDate}) =>
+const InputDatePicker = ({id, className, date, label, onChange, i18nextLng, onBlur, readOnly = false, minDate, maxDate, disabled = false}) =>
     <div className={className}>
         <label htmlFor={id} className="text-bold">{label}</label>
         <DatePicker id={id}
                     selected={ date }
                     onChange={ onChange }
                     readOnly={readOnly}
+                    disabled={disabled}
                     onBlur={onBlur}
                     minDate={minDate}
                     maxDate={maxDate}
