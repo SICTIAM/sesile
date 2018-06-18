@@ -76,4 +76,18 @@ class MigrationApiController extends Controller
 
         return new JsonResponse([], Response::HTTP_CREATED);
     }
+
+    /**
+     * @Rest\Get("/dashboard", options = { "expose" = true }, name="v3v4_migrate_dashboard")
+     * @return Response
+     */
+    public function dashboardMigrationAction()
+    {
+        $result = $this->get('sesile_migration.manager')->getSesileMigrationHistory();
+        if (false === $result->isSuccess()) {
+            return new JsonResponse(['errors' => $result->getErrors()], Response::HTTP_BAD_GATEWAY);
+        }
+
+        return new JsonResponse($result->getData(), Response::HTTP_OK);
+    }
 }

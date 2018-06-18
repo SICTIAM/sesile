@@ -30,6 +30,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
             [
                 CollectiviteFixtures::class,
                 UserFixtures::class,
+                SesileMigrationFixtures::class
             ]
         )->getReferenceRepository();
         $this->resetLegacyTestDatabase();
@@ -278,6 +279,16 @@ class MigrationApiControllerTest extends LegacyWebTestCase
             json_encode($postData)
         );
         $this->assertStatusCode(403, $this->client);
+    }
+
+    public function testListMigrationAction()
+    {
+        $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($superUser);
+        $this->client->request('GET', '/api/migration/v3v4/dashboard');
+        $this->assertStatusCode(200, $this->client);
+        $content = json_decode($this->client->getResponse()->getContent());
+        self::assertCount(3, $content);
     }
 
     private function persistSesileMigration($collectivity, $siren = '123456789')

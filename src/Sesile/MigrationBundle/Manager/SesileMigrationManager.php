@@ -52,4 +52,42 @@ class SesileMigrationManager
         }
     }
 
+    /**
+     * @return Message
+     */
+    public function getSesileMigrationHistory()
+    {
+        try {
+            $result = $this->em->getRepository(SesileMigration::class)->getSesileMigrationHistory();
+
+            return new Message(true, $this->handleMigrationData($result));
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[SesileMigrationManager]/getSesileMigrationHistory error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+    }
+
+    /**
+     * @param array $migrationData
+     * @return array
+     */
+    private function handleMigrationData(array $migrationData)
+    {
+        if (count($migrationData) == 0) {
+            return [];
+        }
+        $data = [];
+        foreach ($migrationData as $item) {
+            $item['allowExport'] = 0;
+            if ($item['instanceId'] && $item['serviceId'] && true !== $item['usersExported']) {
+                $item['allowExport'] = 1;
+            }
+            $data[] = $item;
+        }
+
+        return $data;
+
+    }
+
 }
