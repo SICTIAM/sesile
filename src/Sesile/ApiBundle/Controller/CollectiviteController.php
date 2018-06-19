@@ -45,7 +45,6 @@ class CollectiviteController extends Controller
      */
     public function postAction (Request $request)
     {
-
         $secret = $this->getParameter('ozwillo_secret');
         if (!$request->headers->has("X-Hub-Signature")) {
             return new JsonResponse("No X-Hub-Signature header found in request", Response::HTTP_BAD_REQUEST);
@@ -97,9 +96,14 @@ class CollectiviteController extends Controller
         $collectiviteOzwillo->setClientSecret($request->get('client_secret'));
         $collectiviteOzwillo->setInstanceRegistrationUri($request->get('instance_registration_uri'));
         $collectiviteOzwillo->setDcId($request->get('organization')['dc_id']);
-        $collectiviteOzwillo->setServiceId($request->get('instance_id'));
+//        $collectiviteOzwillo->setServiceId($request->get('instance_id'));
         $collectiviteOzwillo->setDestructionSecret(base64_encode(random_bytes(10)));
         $collectiviteOzwillo->setStatusChangedSecret(base64_encode(random_bytes(10)));
+        $organization = $request->get('organization');
+        if (isset($organization['id'])) {
+            $collectiviteOzwillo->setOrganizationId($organization['id']);
+        }
+
         $collectiviteOzwillo->setCollectivite($collectivite);
 
         return $collectiviteOzwillo;
