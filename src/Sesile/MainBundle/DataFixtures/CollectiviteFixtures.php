@@ -68,6 +68,15 @@ class CollectiviteFixtures extends Fixture
         return $collectivite;
     }
 
+    /**
+     * @param $collectivite
+     * @param string $instanceId
+     * @param string $clientId
+     * @param string $secret
+     * @param string $dcId
+     * @param string $serviceId
+     * @return CollectiviteOzwillo
+     */
     public static function aValidCollectiviteOzwillo(
         $collectivite,
         $instanceId = '2e771747-f906-4125-ba96-806553bc2ce2',
@@ -83,8 +92,9 @@ class CollectiviteFixtures extends Fixture
             ->setClientId($clientId)
             ->setClientSecret($secret)
             ->setDcId($dcId)
-            ->setInstanceRegistrationUri('')
-            ->setServiceId($serviceId);
+            ->setNotifiedToKernel(false)
+            ->setServiceId($serviceId)
+            ->setInstanceRegistrationUri('https://kernel.ozwillo-preprod.eu/apps/pending-instance/'.$instanceId);
 
         return $collectiviteOzwillo;
     }

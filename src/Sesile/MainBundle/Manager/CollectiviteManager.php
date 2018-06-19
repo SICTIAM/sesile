@@ -222,15 +222,17 @@ class CollectiviteManager
      * this method is called after the success call to registration_uri
      *
      * @param Collectivite $collectivite
+     * @param string $serviceId
      * @param bool $notified
-     * 
+     *
      * @return Message
      */
-    public function updateNotifiedToKernel(Collectivite $collectivite, $notified = true)
+    public function updateNotifiedToKernel(Collectivite $collectivite, $serviceId, $notified = true)
     {
         try {
             $result = $this->em->getRepository(CollectiviteOzwillo::class)->updateNotifiedToKernel(
                 $collectivite->getId(),
+                $serviceId,
                 $notified
             );
             if (true === $result) {
@@ -244,7 +246,6 @@ class CollectiviteManager
         }
 
         return new Message(false, $collectivite);
-
     }
 
 }

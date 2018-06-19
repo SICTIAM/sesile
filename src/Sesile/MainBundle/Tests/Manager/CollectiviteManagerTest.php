@@ -366,7 +366,7 @@ class CollectiviteManagerTest extends WebTestCase
             ->willReturn(true);
 
         $newCollectivity = CollectiviteFixtures::aValidCollectivite('toto', 'Toto');
-        $result = $this->collectiviteManager->updateNotifiedToKernel($newCollectivity);
+        $result = $this->collectiviteManager->updateNotifiedToKernel($newCollectivity, 'serviceId', true);
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
         self::assertInstanceOf(Collectivite::class, $result->getData());
@@ -389,7 +389,7 @@ class CollectiviteManagerTest extends WebTestCase
             ->willThrowException(new \Exception('Error'));
 
         $newCollectivity = CollectiviteFixtures::aValidCollectivite('toto', 'Toto');
-        $result = $this->collectiviteManager->updateNotifiedToKernel($newCollectivity);
+        $result = $this->collectiviteManager->updateNotifiedToKernel($newCollectivity, 'serviceId', true);
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
     }

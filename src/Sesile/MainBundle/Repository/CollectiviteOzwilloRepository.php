@@ -72,20 +72,24 @@ class CollectiviteOzwilloRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-     * update the field notifiedToKernel
+     * update the field notifiedToKernel bollean and sets the service Id that is returned by the registration_uri of ozwillo
      *
      * @param string $collectivityId
-     * @param bool   $notified
+     * @param $serviceId
+     * @param bool $notified
      *
      * @return bool
      */
-    public function updateNotifiedToKernel($collectivityId, $notified = true)
+    public function updateNotifiedToKernel($collectivityId, $serviceId, $notified = true)
     {
         try {
             $connection = $this->getEntityManager()->getConnection();
             $connection->beginTransaction();
-            $sql = 'UPDATE collectivite_ozwillo co set co.notifiedToKernel = :notified WHERE co.collectivite_id = :collectivityId';
-            $result = $connection->executeQuery($sql, ['notified' => (bool) $notified, 'collectivityId' => $collectivityId]);
+            $sql = 'UPDATE collectivite_ozwillo co set co.notifiedToKernel = :notified, co.serviceId = :serviceId WHERE co.collectivite_id = :collectivityId';
+            $result = $connection->executeQuery(
+                $sql,
+                ['notified' => (bool)$notified, 'serviceId' => $serviceId, 'collectivityId' => $collectivityId]
+            );
             if ($result) {
                 $connection->commit();
 
@@ -94,6 +98,7 @@ class CollectiviteOzwilloRepository extends \Doctrine\ORM\EntityRepository
             $connection->rollBack();
         } catch (\Exception $e) {
             var_dump($e->getMessage());
+
             return false;
         }
 
