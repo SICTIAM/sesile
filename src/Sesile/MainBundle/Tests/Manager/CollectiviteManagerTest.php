@@ -218,6 +218,7 @@ class CollectiviteManagerTest extends WebTestCase
         self::assertInstanceOf(Collectivite::class, $result->getData());
         self::assertEquals($mockCollectivite, $result->getData());
     }
+
     public function testGetCollectiviteBySirenShouldReturnNullIfNoneFound()
     {
         $repository = $this->getMockBuilder(CollectiviteRepository::class)
@@ -313,10 +314,14 @@ class CollectiviteManagerTest extends WebTestCase
             ->method('switchCollectivityId')
             ->willReturn(true);
 
-        $result = $this->collectiviteManager->switchCollectivityOzwillo(CollectiviteFixtures::aValidCollectivite(), CollectiviteFixtures::aValidCollectivite('test'));
+        $result = $this->collectiviteManager->switchCollectivityOzwillo(
+            CollectiviteFixtures::aValidCollectivite(),
+            CollectiviteFixtures::aValidCollectivite('test')
+        );
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
     }
+
     /**
      * switch the CollecitvityOzwillo to another collectivity
      */
@@ -336,7 +341,55 @@ class CollectiviteManagerTest extends WebTestCase
             ->method('switchCollectivityId')
             ->willReturn(false);
 
-        $result = $this->collectiviteManager->switchCollectivityOzwillo(CollectiviteFixtures::aValidCollectivite(), CollectiviteFixtures::aValidCollectivite('test'));
+        $result = $this->collectiviteManager->switchCollectivityOzwillo(
+            CollectiviteFixtures::aValidCollectivite(),
+            CollectiviteFixtures::aValidCollectivite('test')
+        );
+        self::assertInstanceOf(Message::class, $result);
+        self::assertFalse($result->isSuccess());
+    }
+
+    public function testUpdateNotifiedToKernel()
+    {
+        $repository = $this->getMockBuilder(CollectiviteOzwillo::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                ['updateNotifiedToKernel']
+            )->getMock();
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(CollectiviteOzwillo::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('updateNotifiedToKernel')
+            ->willReturn(true);
+
+        $newCollectivity = CollectiviteFixtures::aValidCollectivite('toto', 'Toto');
+        $result = $this->collectiviteManager->updateNotifiedToKernel($newCollectivity);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertInstanceOf(Collectivite::class, $result->getData());
+    }
+
+    public function testUpdateNotifiedToKernelShouldReturnErrorMessageIfFailed()
+    {
+        $repository = $this->getMockBuilder(CollectiviteOzwillo::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                ['updateNotifiedToKernel']
+            )->getMock();
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(CollectiviteOzwillo::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('updateNotifiedToKernel')
+            ->willThrowException(new \Exception('Error'));
+
+        $newCollectivity = CollectiviteFixtures::aValidCollectivite('toto', 'Toto');
+        $result = $this->collectiviteManager->updateNotifiedToKernel($newCollectivity);
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
     }
