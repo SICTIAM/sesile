@@ -107,7 +107,17 @@ class OzwilloProvisioner
                 return new Message(false, $requestData, [$msg]);
             }
             $serviceId = $body[$localId];
-            $this->collectivityManager->updateNotifiedToKernel($collectivite, $serviceId, true);
+            $result = $this->collectivityManager->updateNotifiedToKernel($collectivite, $serviceId, true);
+            if (false === $result->isSuccess()) {
+                $msg = sprintf(
+                    '[OzwilloProvisioner]/notifyRegistrationToKernel Error on updatingNotificationToKernel for collectivity id: %s and serviceId: %s',
+                    $collectivite->getId(),
+                    $serviceId
+                );
+                $this->logger->error($msg);
+
+                return new Message(false, $requestData, [$msg]);
+            }
 
             return new Message(true, $requestData);
 
