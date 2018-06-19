@@ -226,7 +226,9 @@
         "stakeholders": "Intervenants",
         "siren": "siren",
         "type_siren_collectivite": "Saisir le SIREN de la colléctivité",
-        "migrate": "migrer"
+        "migrate": "migrer",
+        "migration_is_begin": "La migration a été lancée",
+        "empty_list": "Aucun élements à afficher"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
