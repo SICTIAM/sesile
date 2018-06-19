@@ -77,9 +77,13 @@ class CollectiviteController extends Controller
 
         $userOzwillo = $em->getRepository('SesileUserBundle:User')->createUserFromOzwillo($user, $userObject, $collectivite);
 
-        $notifyRegistrationToKernel = $this->notifyRegistrationToKernel($collectivite);
+//        $notifyRegistrationToKernel = $this->notifyRegistrationToKernel($collectivite);
+        $result = $this->get('ozwillo.provisioner')->notifyRegistrationToKernel($collectivite);
+        if (false === $result->isSuccess()) {
+            return new JsonResponse([], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
-        return new JsonResponse($notifyRegistrationToKernel, Response::HTTP_ACCEPTED);
+        return new JsonResponse([], Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -163,7 +167,7 @@ class CollectiviteController extends Controller
             'icon'      => "https://sesile.fr/images/favicons/sesile-icon-64x64.png",
             'contacts'  => $contacts,
             'payment_option' => "PAID",
-            'target_audience' => "PUBLIC_BODY",
+            'target_audience' => "PUBLIC_BODIES",
             'visibility' => "VISIBLE",
             'access_control' => "RESTRICTED",
             'service_uri' => $this->urlRegistrationToKernel($collectivite, $this->generateUrl('sesile_main_default_app')),
