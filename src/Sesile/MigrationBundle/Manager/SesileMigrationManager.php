@@ -55,6 +55,38 @@ class SesileMigrationManager
     }
 
     /**
+     * @param Collectivite $collectivity
+     *
+     * @return Message
+     */
+    public function finish(Collectivite $collectivity)
+    {
+        try {
+            $sesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(
+                ['collectivityId' => $collectivity->getId()]
+            );
+            if (!$sesileMigration instanceof SesileMigration) {
+                $msg = sprintf(
+                    '[SesileMigrationManager]/finish Sesile Migration Not found for Collectivity id: %s',
+                    $collectivity->getId()
+                );
+
+                return new Message(false, null, [$msg]);
+            }
+            $sesileMigration->setStatus(SesileMigration::STATUS_FINALISE);
+            $sesileMigration->setUsersExported(true);
+            $this->em->persist($sesileMigration);
+            $this->em->flush();
+
+            return new Message(true, $sesileMigration);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[SesileMigrationManager]/finish error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+    }
+
+    /**
      * @return Message
      */
     public function getSesileMigrationHistory()
@@ -102,7 +134,11 @@ class SesileMigrationManager
 
                 return new Message(false, $collectivite, [$msg]);
             }
-            if (true === $this->allowExportByConditions($ozwillo->getInstanceId(), $ozwillo->getServiceId(), $sesileMigration->hasUsersExported())) {
+            if (true === $this->allowExportByConditions(
+                    $ozwillo->getInstanceId(),
+                    $ozwillo->getServiceId(),
+                    $sesileMigration->hasUsersExported()
+                )) {
                 return new Message(true, $collectivite);
             }
         } catch (\Exception $e) {
@@ -129,7 +165,11 @@ class SesileMigrationManager
         foreach ($migrationData as $item) {
             $item['allowExport'] = 0;
 //            if ($item['instanceId'] && $item['serviceId'] && true !== (bool)$item['usersExported']) {
-            if (true === $this->allowExportByConditions($item['instanceId'], $item['serviceId'], $item['usersExported'])) {
+            if (true === $this->allowExportByConditions(
+                    $item['instanceId'],
+                    $item['serviceId'],
+                    $item['usersExported']
+                )) {
                 $item['allowExport'] = 1;
             }
             $data[] = $item;

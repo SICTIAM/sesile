@@ -271,4 +271,44 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
         ];
     }
 
+    public function testFinishMustUpdateSesileMigrationEntryWhenDone()
+    {
+        $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+        $this->persistSesileMigration($collectivity);
+        $result = $this->sesileMigrationManager->finish($collectivity);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        /**
+         * check DB
+         */
+        $this->em->clear();
+        $sesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(
+            ['collectivityId' => $collectivity->getId()]
+        );
+        self::assertTrue($sesileMigration->hasUsersExported());
+        self::assertEquals(SesileMigration::STATUS_FINALISE, $sesileMigration->getStatus());
+    }
+
+    public function testFinishMustReturnFalseIfSesileMigrationForCollectivityNotFound()
+    {
+        $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+        $result = $this->sesileMigrationManager->finish($collectivity);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertFalse($result->isSuccess());
+    }
+
+    /**
+     * @param $collectivity
+     * @param string $siren
+     * @return SesileMigration
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function persistSesileMigration($collectivity, $siren = '123456789')
+    {
+        $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivity);
+        $this->em->persist($sesileMigration);
+        $this->em->flush();
+
+        return $sesileMigration;
+    }
 }
