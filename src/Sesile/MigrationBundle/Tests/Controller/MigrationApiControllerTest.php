@@ -317,20 +317,13 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $this->logIn($superUser);
         $this->client->request('GET', '/api/migration/v3v4/dashboard');
         $this->assertStatusCode(200, $this->client);
-        $content = json_decode($this->client->getResponse()->getContent());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
         self::assertCount(3, $content);
     }
 
     public function testOzwilloUserExportAction()
     {
         $provisionedCollectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
-        /**
-         * mock sesileMigrationManager service
-         */
-//        $sesileMigrationManager = $this->getSesileMigrationManagerMock();
-//        $sesileMigrationManager->expects(self::once())
-//            ->method('allowOzwilloUserExport')
-//            ->willReturn(new Message(true, $provisionedCollectivity));
 
         $sesileUserMigrator = $this->getSesileUserMigratorMock();
         $sesileUserMigrator->expects(self::once())
@@ -367,6 +360,14 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $migration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $provisionedCollectivity->getId()]);
         self::assertTrue($migration->hasUsersExported());
         self::assertEquals(SesileMigration::STATUS_FINALISE, $migration->getStatus());
+        //assert list of sesile migration history after user export action. 
+        $this->client->request('GET', '/api/migration/v3v4/dashboard');
+        $this->assertStatusCode(200, $this->client);
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(3, $content);
+        $migration = $content[0];
+        self::assertEquals($provisionedCollectivity->getId(), $migration['collectivityId']);
+        self::assertEquals(0, $migration['allowExport']);
     }
 
     private function getSesileUserMigratorMock()
