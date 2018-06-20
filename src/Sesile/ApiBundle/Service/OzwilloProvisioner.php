@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Router;
 class OzwilloProvisioner
 {
     const SERVICE_LOCAL_ID = "sesile";
+    const SESILE_ICON_URI = 'https://www.ozwillo.com/static/img/editors/sesile-icon-64x64.png';
     /**
      * @var Client
      */
@@ -39,6 +40,10 @@ class OzwilloProvisioner
      * @var CollectiviteManager
      */
     protected $collectivityManager;
+    /**
+     * @var string
+     */
+    protected $contactEmail;
 
     /**
      * OzwilloProvisioner constructor.
@@ -46,6 +51,7 @@ class OzwilloProvisioner
      * @param CollectiviteManager $collectiviteManager
      * @param Router $router
      * @param string $domain domain parameter
+     * @param string $contactEmail
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -53,12 +59,14 @@ class OzwilloProvisioner
         CollectiviteManager $collectiviteManager,
         Router $router,
         $domain,
+        $contactEmail,
         LoggerInterface $logger
     ) {
         $this->client = $client;
         $this->collectivityManager = $collectiviteManager;
         $this->router = $router;
         $this->domain = $domain;
+        $this->contactEmail = $contactEmail;
         $this->logger = $logger;
     }
 
@@ -96,7 +104,9 @@ class OzwilloProvisioner
 
                 return new Message(false, $requestData, [$msg]);
             }
+
             $localId = $this->getLocalId($collectivite);
+
             if (!isset($body[$localId])) {
                 $msg = sprintf(
                     'No service Id returned for Local Id: %s, for Collectivity id %s',
@@ -106,6 +116,7 @@ class OzwilloProvisioner
 
                 return new Message(false, $requestData, [$msg]);
             }
+
             $serviceId = $body[$localId];
             $result = $this->collectivityManager->updateNotifiedToKernel($collectivite, $serviceId, true);
             if (false === $result->isSuccess()) {
@@ -160,16 +171,16 @@ class OzwilloProvisioner
      */
     private function buildRequestData(Collectivite $collectivite)
     {
-        $contacts = ['demat@sictiam.fr'];
-        $services = [
+        $contacts = ['mailto:'.$this->contactEmail];
+        $services[] = [
             'local_id' => $this->getLocalId($collectivite),
-            'name' => "SESILE - SICTIAM",
+            'name' => sprintf("SESILE - %s", $collectivite->getNom()),
             'tos_uri' => "https://sesile.fr/tos",
             'policy_uri' => "https://sesile.fr/policy",
-            'icon' => "https://sesile.fr/images/favicons/sesile-icon-64x64.png",
+            'icon' => self::SESILE_ICON_URI,
             'contacts' => $contacts,
             'payment_option' => "PAID",
-            'target_audience' => "PUBLIC_BODIES",
+            'target_audience' => ["PUBLIC_BODIES"],
             'visibility' => "VISIBLE",
             'access_control' => "RESTRICTED",
             'service_uri' => $this->urlRegistrationToKernel(

@@ -8,7 +8,8 @@
             <argument type="service" id="guzzle.client" />
             <argument type="service" id="collectivite.manager" />
             <argument type="service" id="router" />
-            <argument>%domain%%</argument>
+            <argument>%domain%</argument>
+            <argument>%contact%</argument>
             <argument type="service" id="logger" />
         </service>
     </services>

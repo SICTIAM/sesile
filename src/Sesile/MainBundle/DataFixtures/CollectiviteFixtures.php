@@ -94,7 +94,9 @@ class CollectiviteFixtures extends Fixture
             ->setDcId($dcId)
             ->setNotifiedToKernel(false)
             ->setServiceId($serviceId)
-            ->setInstanceRegistrationUri('https://kernel.ozwillo-preprod.eu/apps/pending-instance/'.$instanceId);
+            ->setInstanceRegistrationUri('https://kernel.ozwillo-preprod.eu/apps/pending-instance/'.$instanceId)
+            ->setDestructionSecret('MZQgq7jqKh3sPQ==')
+            ->setStatusChangedSecret("9Ac+j4a3j/hhew==");
 
         return $collectiviteOzwillo;
     }

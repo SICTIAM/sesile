@@ -64,11 +64,13 @@ class OzwilloProvisionerTest extends SesileWebTestCase
         $logger = $this->createMock(LoggerInterface::class);
         $router = $this->getContainer()->get('router');
         $domainParameter = $this->getContainer()->getParameter('domain');
+        $contactParameter = $this->getContainer()->getParameter('contact');
         $ozwilloProvisioner = new OzwilloProvisioner(
             $client,
             $this->collectivityManager,
             $router,
             $domainParameter,
+            $contactParameter,
             $logger
         );
 
@@ -84,19 +86,23 @@ class OzwilloProvisionerTest extends SesileWebTestCase
         $requestBody = json_decode($lastRequest->getBody()->getContents(), true);
         self::assertEquals($collectivite->getOzwillo()->getInstanceId(), $requestBody['instance_id']);
         $services = [
-            'name' => "SESILE - SICTIAM",
+            'local_id' => OzwilloProvisioner::SERVICE_LOCAL_ID . '-'.$collectivite->getDomain(),
+            'name' => "SESILE - " . $collectivite->getNom(),
             'tos_uri' => "https://sesile.fr/tos",
             'policy_uri' => "https://sesile.fr/policy",
-            'icon' => "https://sesile.fr/images/favicons/sesile-icon-64x64.png",
-            'contacts' => ['demat@sictiam.fr'],
+            'icon' => "https://www.ozwillo.com/static/img/editors/sesile-icon-64x64.png",
+            'contacts' => ['mailto:'.$this->getContainer()->getParameter('contact')],//demat@sictiam.fr
             'payment_option' => "PAID",
-            'target_audience' => "PUBLIC_BODIES",
+            'target_audience' => ["PUBLIC_BODIES"],
             'visibility' => "VISIBLE",
             'access_control' => "RESTRICTED",
-            'service_uri' => $this->urlRegistrationToKernel($collectivite, '/'),
-            'redirect_uris' => [$this->urlRegistrationToKernel($collectivite, '/login/check-ozwillo')],
+//            'service_uri' => $this->urlRegistrationToKernel($collectivite, '/'),
+            'service_uri' => 'https://sictiam.sesile.fr/',
+//            'redirect_uris' => [$this->urlRegistrationToKernel($collectivite, '/login/check-ozwillo')],
+            'redirect_uris' => ['https://sictiam.sesile.fr/login/check-ozwillo'],
         ];
-        self::assertArraySubset($services, $requestBody['services']);
+        self::assertCount(1, $requestBody['services']);
+        self::assertArraySubset($services, $requestBody['services'][0]);
         self::assertArrayHasKey('destruction_uri', $requestBody);
         self::assertArrayHasKey('destruction_secret', $requestBody);
         self::assertArrayHasKey('status_changed_uri', $requestBody);
@@ -139,11 +145,13 @@ class OzwilloProvisionerTest extends SesileWebTestCase
         $logger = $this->createMock(LoggerInterface::class);
         $router = $this->getContainer()->get('router');
         $domainParameter = $this->getContainer()->getParameter('domain');
+        $contactParameter = $this->getContainer()->getParameter('contact');
         $ozwilloProvisioner = new OzwilloProvisioner(
             $client,
             $this->collectivityManager,
             $router,
             $domainParameter,
+            $contactParameter,
             $logger
         );
 
@@ -180,11 +188,13 @@ class OzwilloProvisionerTest extends SesileWebTestCase
         $logger = $this->createMock(LoggerInterface::class);
         $router = $this->getContainer()->get('router');
         $domainParameter = $this->getContainer()->getParameter('domain');
+        $contactParameter = $this->getContainer()->getParameter('contact');
         $ozwilloProvisioner = new OzwilloProvisioner(
             $client,
             $this->collectivityManager,
             $router,
             $domainParameter,
+            $contactParameter,
             $logger
         );
         $result = $ozwilloProvisioner->notifyRegistrationToKernel($collectivite);
