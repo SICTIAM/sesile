@@ -156,4 +156,18 @@ class MigrationReport
         return count($this->users);
     }
 
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'countUsers' => $this->countUsers(),
+            'organizationId' => $this->getOrganizationId(),
+            'instanceId' => $this->getInstanceId(),
+            'creatorId' => $this->getCreatorId(),
+            'serviceId' => $this->getServiceId(),
+        ];
+    }
+
 }
