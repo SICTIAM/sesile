@@ -45,6 +45,7 @@ export default class InputValidation extends Component {
                                         label={this.props.labelText}
                                         locale={this.props.locale}
                                         readOnly={this.props.readOnly}
+                                        disabled={this.props.disabled}
                                         minDate={this.props.minDate}
                                         onBlur={this.validateValue}
                                         onChange={this.props.onChange}/>}

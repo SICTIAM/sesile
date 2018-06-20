@@ -3,6 +3,8 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use phpDocumentor\Reflection\Types\Array_;
+use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sesile\UserBundle\Entity\User;
 
 /**
@@ -249,8 +251,16 @@ class ClasseurRepository extends EntityRepository {
 
     public function isClasseurRemovableByUser(Classeur $classeur, $userId) {
         $em = $this->getEntityManager();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneById($userId);
-        if($classeur->getStatus() === 2 && $user->hasRole('ROLE_ADMIN')) {
+        $repositoryEtapeClasseur = $em->getRepository('SesileUserBundle:EtapeClasseur');
+        $validantUserId = null;
+        $usersPreviousEtape = array();
+        if($classeur->getEtapeValidante()) {
+            $etapeRetractable = $repositoryEtapeClasseur->getPreviousEtape($classeur->getEtapeValidante());
+            if($etapeRetractable !== false) {
+                $usersPreviousEtape = $repositoryEtapeClasseur->getUsersForEtape($etapeRetractable);
+            }
+        }
+        if($classeur->getStatus() === 1 && (in_array($userId, array_column($usersPreviousEtape, 'id')) OR $userId === $classeur->getUser()->getId())) {
             $classeur->setRemovable(true);
         }
     }
@@ -284,7 +294,7 @@ class ClasseurRepository extends EntityRepository {
         } else {
             $validantUsersId = array();
         }
-
+        // @todo verify this condition
         if(
             (in_array($userId, $validantUsersId) AND $classeur->getStatus() != 0 AND $classeur->getStatus() != 2 AND $classeur->getStatus() != 3)
             OR ($classeur->getEtapeDeposante() AND $classeur->getUser()->getId() === $userId)
@@ -306,17 +316,7 @@ class ClasseurRepository extends EntityRepository {
     }
 
     public function isClasseurRetractableByUser(Classeur $classeur, $userId) {
-        $em = $this->getEntityManager();
-        $etapeValidante = $classeur->getEtapeValidante();
-        $validantUserId = null;
-        if ($etapeValidante){
-            $etapeRetractable = $em->getRepository('SesileUserBundle:EtapeClasseur')->getPreviousEtape($etapeValidante);
-            if ($etapeRetractable && $etapeRetractable->getUserValidant()) {
-                $validantUserId = $etapeRetractable->getUserValidant()->getId();
-            }
-        }
-
-        if(($userId === $validantUserId OR ($classeur->countEtapeValide() === 0 AND $userId == $classeur->getUser()->getId())) AND $classeur->getStatus() == 1) {
+        if(($userId === $this->getUserIdValidant($classeur->getEtapeValidante()) OR ($classeur->countEtapeValide() === 0 AND $userId == $classeur->getUser()->getId())) AND $classeur->getStatus() == 1) {
             $classeur->setRetractable(true);
         }
         else {
@@ -635,6 +635,18 @@ class ClasseurRepository extends EntityRepository {
             ->getResult();
 
         return $classeurs;
+    }
+
+    private function getUserIdValidant($etapeValidante)
+    {
+        $em = $this->getEntityManager();
+        $validantUserId = null;
+        if ($etapeValidante){
+            $etapeRetractable = $em->getRepository('SesileUserBundle:EtapeClasseur')->getPreviousEtape($etapeValidante);
+            if ($etapeRetractable && $etapeRetractable->getUserValidant()) {
+                return $validantUserId = $etapeRetractable->getUserValidant()->getId();
+            }
+        }
     }
 
 }

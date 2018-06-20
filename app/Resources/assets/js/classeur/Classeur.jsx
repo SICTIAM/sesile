@@ -194,7 +194,7 @@ class Classeur extends Component {
             actionClasseur(this, 'sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE')
         })
     }
-
+    isFinalizedClasseur = () => this.state.classeur.status === 2
     render() {
         const { classeur, user, editClasseur } = this.state
         return (
@@ -270,6 +270,7 @@ class Classeur extends Component {
                                             putClasseur={this.putClasseur}
                                             editable={classeur.validable}
                                             handleEditClasseur={this.handleEditClasseur}
+                                            isFinalizedClasseur={this.isFinalizedClasseur}
                                             edit={editClasseur}
                                             usersCopy={classeur.copy}/>
 
@@ -286,6 +287,7 @@ class Classeur extends Component {
                                                  removeEtape={this.handleRemoveEtape}
                                                  removeUser={this.handleClickDeleteUser}
                                                  removeGroup={this.handleClickDeleteGroup}
+                                                 isFinalizedClasseur={this.isFinalizedClasseur}
                                                  collectiviteId={user.collectivite.id}/>}
                             {classeur.actions &&
                                 <ClasseurActions actions={Object.assign([], classeur.actions)}

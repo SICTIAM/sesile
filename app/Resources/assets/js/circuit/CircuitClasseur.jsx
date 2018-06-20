@@ -150,6 +150,7 @@ class CircuitClasseur extends Component {
                             id="submit-classeur-infos"
                             className="cell small-6 medium-8"
                             classNameButton="float-right"
+                            disabled={!!this.props.isFinalizedClasseur()}
                             onClick={this.saveCircuit}
                             labelText={t('common.button.edit_save')}/>
                     </div>
