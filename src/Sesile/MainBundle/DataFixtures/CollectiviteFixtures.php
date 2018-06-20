@@ -83,7 +83,8 @@ class CollectiviteFixtures extends Fixture
         $clientId = 'ozwillo-client-id',
         $secret = 'ozwillo-client-secret',
         $dcId = '123456789',
-        $serviceId = '49d86a4c-d814-417f-8308-ed2302034b87'
+        $serviceId = '49d86a4c-d814-417f-8308-ed2302034b87',
+        $organisationId = 'bd8abc83-2f34-4e14-b17c-334eeeed952f'
     ) {
         $collectiviteOzwillo = new CollectiviteOzwillo();
         $collectiviteOzwillo
@@ -96,7 +97,8 @@ class CollectiviteFixtures extends Fixture
             ->setServiceId($serviceId)
             ->setInstanceRegistrationUri('https://kernel.ozwillo-preprod.eu/apps/pending-instance/'.$instanceId)
             ->setDestructionSecret('MZQgq7jqKh3sPQ==')
-            ->setStatusChangedSecret("9Ac+j4a3j/hhew==");
+            ->setStatusChangedSecret("9Ac+j4a3j/hhew==")
+            ->setOrganizationId($organisationId);
 
         return $collectiviteOzwillo;
     }

@@ -10,6 +10,8 @@ use GuzzleHttp\Psr7\Request;
 use Http\Client\HttpClient;
 use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\Domain\Message;
+use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Sesile\MainBundle\Manager\CollectiviteManager;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -56,35 +58,52 @@ class SesileUserMigrator implements SesileMigratorInterface
     }
 
     /**
-     * @param $collectivityId
+     * @param Collectivite $collectivity
      * @return Message
      */
-    public function exportCollectivityUsers($collectivityId)
+    public function exportCollectivityUsers(Collectivite $collectivity)
     {
         try {
+            $collectivityOzwillo = $collectivity->getOzwillo();
+            if (!$collectivityOzwillo instanceof CollectiviteOzwillo) {
+                $msg = sprintf(
+                    '[SesileUserMigrator]/exportCollectivityUsers Collectivity id: %s has no Collectivity Ozwillo Configuration',
+                    $collectivity->getId()
+                );
+                $this->logger->warning($msg);
+
+                return new Message(false, null, [$msg]);
+            }
             //get collectivity users
-            $userRequest = $this->collectiviteManager->getCollectivityUsersList($collectivityId);
+            $userRequest = $this->collectiviteManager->getCollectivityUsersList($collectivity->getId());
             if (false === $userRequest->isSuccess()) {
-                $msg = sprintf('Error while retrieving users of collectivity id: %s', $collectivityId);
+                $msg = sprintf(
+                    '[SesileUserMigrator]/exportCollectivityUsers Error while retrieving users of collectivity id: %s',
+                    $collectivity->getId()
+                );
                 $this->logger->error($msg);
 
                 return new Message(false, null, array_merge([$msg], $userRequest->getErrors()));
             }
             $users = $userRequest->getData();
             if (count($users) < 1) {
-                $msg = sprintf('No users found for collectivity id: %s. No User Export will be made.', $collectivityId);
+                $msg = sprintf(
+                    '[SesileUserMigrator]/exportCollectivityUsers No users found for collectivity id: %s. No User Export will be made.',
+                    $collectivity->getId()
+                );
                 $this->logger->debug($msg);
 
                 return new Message(false, null, [$msg]);
             }
-            $requestOptions = $this->buildRequestData($users);
-            $response = $this->client->request('POST', 'uri', $requestOptions);
+
+            $requestOptions = $this->buildRequestData($collectivityOzwillo, $users);
+            $response = $this->client->request('POST', $this->config['gateway_uri'], $requestOptions);
             if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new Message(true, $requestOptions);
             }
             $msg = sprintf(
                 '[SesileUserMigrator]/exportCollectivityUsers for collectivityid: %s Failed :: %s',
-                $collectivityId,
+                $collectivity->getId(),
                 $response->getBody()->getContents()
             );
             $this->logger->warning($msg);
@@ -93,7 +112,7 @@ class SesileUserMigrator implements SesileMigratorInterface
         } catch (\Exception $e) {
             $msg = sprintf(
                 '[SesileUserMigrator]/exportCollectivityUsers WARNING for collectivityid: %s :: %s',
-                $collectivityId,
+                $collectivity->getId(),
                 $e->getMessage()
             );
             $this->logger->warning($msg);
@@ -102,7 +121,7 @@ class SesileUserMigrator implements SesileMigratorInterface
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             $msg = sprintf(
                 '[SesileUserMigrator]/exportCollectivityUsers GuzzleException WARNING for collectivityid: %s :: %s',
-                $collectivityId,
+                $collectivity->getId(),
                 $e->getMessage()
             );
             $this->logger->warning($msg);
@@ -112,10 +131,11 @@ class SesileUserMigrator implements SesileMigratorInterface
     }
 
     /**
+     * @param CollectiviteOzwillo $collectivityOzwillo
      * @param array $users
      * @return array
      */
-    private function buildRequestData(array $users = [])
+    private function buildRequestData(CollectiviteOzwillo $collectivityOzwillo, array $users = [])
     {
         $emailArray = array_map(
             function ($user) {
@@ -123,20 +143,36 @@ class SesileUserMigrator implements SesileMigratorInterface
             },
             $users
         );
+        $adminUserOzwilloId = $this->findAdminUserOzwilloId($users);
         $body = [
             "emails" => $emailArray,
             "ozwilloInstanceInfo" => [
-                "organizationId" => null,
-                "instanceId" => null,
-                "creatorId" => null,
-                "serviceId" => null,
+                "organizationId" => $collectivityOzwillo->getOrganizationId(),
+                "instanceId" => $collectivityOzwillo->getInstanceId(),
+                "creatorId" => $adminUserOzwilloId,
+                "serviceId" => $collectivityOzwillo->getServiceId(),
             ],
         ];
         $requestOptions = [
             'auth' => [$this->config['username'], $this->config['password']],
-            'json' => $body
+            'json' => $body,
         ];
 
         return $requestOptions;
+    }
+
+    /**
+     * @param $users
+     * @return string|null
+     */
+    private function findAdminUserOzwilloId($users)
+    {
+        foreach ($users as $user) {
+            if (in_array('ROLE_ADMIN', $user['roles']) && $user['ozwilloId'] != ''){
+                return $user['ozwilloId'];
+            }
+        }
+
+        return null;
     }
 }
