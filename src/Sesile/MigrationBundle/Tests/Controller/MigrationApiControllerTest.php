@@ -81,6 +81,15 @@ class MigrationApiControllerTest extends LegacyWebTestCase
 
     public function testGetCollectivityList()
     {
+        //remove sesile migration fixtures
+        $sesileMigration = $this->fixtures->getReference(SesileMigrationFixtures::SESILE_MIGRATION_ONE_REFERENCE);
+        $this->em->remove($sesileMigration);
+        $sesileMigration = $this->fixtures->getReference(SesileMigrationFixtures::SESILE_MIGRATION_TWO_REFERENCE);
+        $this->em->remove($sesileMigration);
+        $sesileMigration = $this->fixtures->getReference(SesileMigrationFixtures::SESILE_MIGRATION_THREE_REFERENCE);
+        $this->em->remove($sesileMigration);
+        $this->em->flush();
+        $this->em->clear();
         $user = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
         $this->logIn($user);
         $this->client->request('GET', '/api/migration/v3v4/collectivity/list');
@@ -92,15 +101,26 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertEquals($collectivityOne->getNom(), $content[0]['nom']);
         self::assertEquals($collectivityOne->getDomain(), $content[0]['domain']);
         $collectivityTwo = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE);
-        self::assertEquals($collectivityTwo->getId(), $content[1]['id']);
-        self::assertEquals($collectivityTwo->getNom(), $content[1]['nom']);
-        self::assertEquals($collectivityTwo->getDomain(), $content[1]['domain']);
+        self::assertEquals($collectivityTwo->getId(), $content[0]['id']);
+        self::assertEquals($collectivityTwo->getNom(), $content[0]['nom']);
+        self::assertEquals($collectivityTwo->getDomain(), $content[0]['domain']);
+        $collectivityThree = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_THREE_REFERENCE);
+        self::assertEquals($collectivityThree->getId(), $content[1]['id']);
+        self::assertEquals($collectivityThree->getNom(), $content[1]['nom']);
+        self::assertEquals($collectivityThree->getDomain(), $content[1]['domain']);
     }
 
     public function testGetCollectivityListShouldExludeTheCollectivityInSesileMigration()
     {
-        $collectivityOne = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
-        $this->persistSesileMigration($collectivityOne);
+
+        $sesileMigration = $this->fixtures->getReference(SesileMigrationFixtures::SESILE_MIGRATION_TWO_REFERENCE);
+        $this->em->remove($sesileMigration);
+        $sesileMigration = $this->fixtures->getReference(SesileMigrationFixtures::SESILE_MIGRATION_THREE_REFERENCE);
+        $this->em->remove($sesileMigration);
+        $this->em->flush();
+        $this->em->clear();
+//        $collectivityOne = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+//        $this->persistSesileMigration($collectivityOne);
 
         $user = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
         $this->logIn($user);

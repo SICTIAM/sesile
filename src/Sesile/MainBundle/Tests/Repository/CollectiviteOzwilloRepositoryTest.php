@@ -99,4 +99,17 @@ class CollectiviteOzwilloRepositoryTest extends WebTestCase
         $res = $this->em->getRepository(CollectiviteOzwillo::class)->findBy(['collectivite' => $collectivityOne]);
         self::assertCount(1, $res);
     }
+
+    public function testUpdateNotifiedToKernel()
+    {
+        $collectivityOne = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+        $result = $this->em->getRepository(CollectiviteOzwillo::class)->updateNotifiedToKernel($collectivityOne->getId(), '31336385-f2ff-4488-8835-1f7da53669b9', true);
+        self::assertTrue($result);
+        /**
+         * check DB
+         */
+        $res = $this->em->getRepository(CollectiviteOzwillo::class)->findOneBy(['collectivite' => $collectivityOne]);
+        self::assertTrue($res->getNotifiedToKernel());
+        self::assertEquals('31336385-f2ff-4488-8835-1f7da53669b9', $res->getServiceId());
+    }
 }

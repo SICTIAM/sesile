@@ -351,6 +351,51 @@ class CollectiviteManagerTest extends WebTestCase
         self::assertFalse($result->isSuccess());
     }
 
+    public function testUpdateNotifiedToKernel()
+    {
+        $repository = $this->getMockBuilder(CollectiviteOzwillo::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                ['updateNotifiedToKernel']
+            )->getMock();
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(CollectiviteOzwillo::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('updateNotifiedToKernel')
+            ->willReturn(true);
+
+        $newCollectivity = CollectiviteFixtures::aValidCollectivite('toto', 'Toto');
+        $result = $this->collectiviteManager->updateNotifiedToKernel($newCollectivity, 'serviceId', true);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertInstanceOf(Collectivite::class, $result->getData());
+    }
+
+    public function testUpdateNotifiedToKernelShouldReturnErrorMessageIfFailed()
+    {
+        $repository = $this->getMockBuilder(CollectiviteOzwillo::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                ['updateNotifiedToKernel']
+            )->getMock();
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(CollectiviteOzwillo::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('updateNotifiedToKernel')
+            ->willThrowException(new \Exception('Error'));
+
+        $newCollectivity = CollectiviteFixtures::aValidCollectivite('toto', 'Toto');
+        $result = $this->collectiviteManager->updateNotifiedToKernel($newCollectivity, 'serviceId', true);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertFalse($result->isSuccess());
+    }
+
     public function testGetCollectivityUsersList()
     {
         $repository = $this->createMock(UserRepository::class);

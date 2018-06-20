@@ -219,6 +219,37 @@ class CollectiviteManager
     }
 
     /**
+     * update the collectivity ozwillo field notifiedToKernel
+     * this method is called after the success call to registration_uri
+     *
+     * @param Collectivite $collectivite
+     * @param string $serviceId
+     * @param bool $notified
+     *
+     * @return Message
+     */
+    public function updateNotifiedToKernel(Collectivite $collectivite, $serviceId, $notified = true)
+    {
+        try {
+            $result = $this->em->getRepository(CollectiviteOzwillo::class)->updateNotifiedToKernel(
+                $collectivite->getId(),
+                $serviceId,
+                $notified
+            );
+            if (true === $result) {
+                return new Message(true, $collectivite);
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/setOzwilloKernelNotified error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+
+        return new Message(false, $collectivite);
+    }
+
+    /**
      * @param $collectivityId
      *
      * @return Message

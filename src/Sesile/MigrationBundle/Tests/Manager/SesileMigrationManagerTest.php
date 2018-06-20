@@ -103,7 +103,7 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
         $migration2 = $result->getData()[1];
         self::assertEquals(0, $migration2['allowExport']);
         $migration3 = $result->getData()[2];
-        self::assertEquals(1, $migration3['allowExport']);
+        self::assertEquals(0, $migration3['allowExport']);
 
 
     }

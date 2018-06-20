@@ -27,3 +27,4 @@ parameters:
     ozwillo_user_gateway_uri: 'https://usersgw.ozwillo-preprod.eu/api/usersgw'
     ozwillo_user_gateway_username: admin
     ozwillo_user_gateway_password: ***REMOVED***
+    contact_email: demat@sictiam.fr

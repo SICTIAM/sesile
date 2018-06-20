@@ -139,6 +139,7 @@ parameters:
         secret: ***REMOVED***
         consumer_key: ***REMOVED***
     hwi_oauth.authentication.provider.oauth.class: Sesile\UserBundle\Security\OAuthProvider
+    contact: '%contact_email%'
 # La suite, c'est pour l'api
 fos_rest:
     serializer:
