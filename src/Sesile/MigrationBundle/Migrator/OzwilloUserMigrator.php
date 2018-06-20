@@ -105,7 +105,6 @@ class OzwilloUserMigrator implements SesileMigratorInterface
                     $collectivityOzwillo,
                     $requestOptions['json']['ozwilloInstanceInfo']['creatorId']
                 );
-
                 return new Message(true, $migrationReport);
             }
             $msg = sprintf(

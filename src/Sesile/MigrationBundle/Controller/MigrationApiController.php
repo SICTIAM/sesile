@@ -26,8 +26,10 @@ class MigrationApiController extends Controller
         if (false === $result->isSuccess()) {
             return new JsonResponse(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
         return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
+
     /**
      * @Rest\Get("/collectivity/legacy/list", options = { "expose" = true }, name="v3v4_migrate_legacy_list")
      * @return Response
@@ -38,6 +40,7 @@ class MigrationApiController extends Controller
         if (false === $result->isSuccess()) {
             return new JsonResponse(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
         return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
 
@@ -51,9 +54,13 @@ class MigrationApiController extends Controller
         if (false === $result->isSuccess()) {
             return new JsonResponse(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        if($result->getData() instanceof Collectivite) {
-            return new JsonResponse(['success' => 0, 'siren' => $siren, 'orgName' => $result->getData()->getNom()], Response::HTTP_OK);
+        if ($result->getData() instanceof Collectivite) {
+            return new JsonResponse(
+                ['success' => 0, 'siren' => $siren, 'orgName' => $result->getData()->getNom()],
+                Response::HTTP_OK
+            );
         }
+
         return new JsonResponse(['success' => 1, 'siren' => $siren], Response::HTTP_OK);
     }
 
@@ -89,5 +96,51 @@ class MigrationApiController extends Controller
         }
 
         return new JsonResponse($result->getData(), Response::HTTP_OK);
+    }
+
+    /**
+     * @Rest\Post("/ozwillo/users", options = { "expose" = true }, name="v3v4_migrate_users_export")
+     * @return Response
+     */
+    public function ozwilloUserExportAction(Request $request)
+    {
+        if (!$request->request->has('orgId')) {
+
+            return new JsonResponse(['error' => 'No orgId Given'], Response::HTTP_BAD_REQUEST);
+        }
+        $collectivityId = $request->request->get('orgId');
+        $collectivityResult = $this->get('collectivite.manager')->getCollectivity($collectivityId);
+        if (false === $collectivityResult->isSuccess()) {
+            return new JsonResponse(
+                ['error' => sprintf('Organisation not found with orgId: %s', $collectivityId)],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+        $collectivity = $collectivityResult->getData();
+        $sesileMigrationManager = $this->get('sesile_migration.manager');
+        $allowResult = $sesileMigrationManager->allowOzwilloUserExport($collectivity);
+        if (false === $allowResult->isSuccess()) {
+            return new JsonResponse(
+                ['errors' => 'User Export Is not permitted yet.'], Response::HTTP_METHOD_NOT_ALLOWED
+            );
+        }
+
+        $result = $this->get('sesile_user.migrator')->exportCollectivityUsers($collectivity);
+        if (false === $result->isSuccess()) {
+            $msg = sprintf(
+                'Ozwillo Users Export Failed for Collectivity: %s (%s)',
+                $collectivity->getNom(),
+                $collectivity->getId()
+            );
+
+            return new JsonResponse(
+                ['errors' => array_merge([$msg], $result->getErrors())],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+        //users export is successful, lets update the SesileMigration status and usersExported for the collectivity
+        $sesileMigrationManager->finish($collectivity);
+
+        return new JsonResponse($result->getData()->toArray(), Response::HTTP_OK);
     }
 }
