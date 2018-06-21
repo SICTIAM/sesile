@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
+use Sesile\MainBundle\Manager\SesileMailer;
 use Sesile\MigrationBundle\Entity\SesileMigration;
 
 /**
@@ -24,16 +25,28 @@ class SesileMigrationManager
      * @var LoggerInterface
      */
     protected $logger;
+    /**
+     * @var SesileMailer
+     */
+    protected $mailer;
+    /**
+     * @var string
+     */
+    protected $contactEmail;
 
     /**
      * SesileMigrationManager constructor.
      * @param EntityManager $em
+     * @param SesileMailer $mailer
+     * @param string $contactEmail
      * @param LoggerInterface $logger
      */
-    public function __construct(EntityManager $em, LoggerInterface $logger)
+    public function __construct(EntityManager $em, SesileMailer $mailer, $contactEmail, LoggerInterface $logger)
     {
         $this->em = $em;
+        $this->mailer = $mailer;
         $this->logger = $logger;
+        $this->contactEmail = $contactEmail;
     }
 
     /**
@@ -77,6 +90,8 @@ class SesileMigrationManager
             $sesileMigration->setUsersExported(true);
             $this->em->persist($sesileMigration);
             $this->em->flush();
+            //send email
+            $this->sentEmailConfirmationMigration($sesileMigration);
 
             return new Message(true, $sesileMigration);
         } catch (\Exception $e) {
@@ -191,6 +206,21 @@ class SesileMigrationManager
         }
 
         return false;
+    }
+
+    /**
+     * @param SesileMigration $migration
+     *
+     * @return Message
+     */
+    private function sentEmailConfirmationMigration(SesileMigration $migration)
+    {
+        return $this->mailer->send(
+            [$this->contactEmail],
+            '[Sesile] La migration a bien été effectué',
+            $migration,
+            '@SesileMigration/mail/confirmationMigration.html.twig'
+        );
     }
 
 }

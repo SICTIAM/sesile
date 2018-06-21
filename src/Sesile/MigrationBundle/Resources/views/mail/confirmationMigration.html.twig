@@ -1,0 +1,11 @@
+Bonjour,
+
+La migration de la collectivité "{{ body.collectivityName }}" à bien été effectué avec le code SIREN {{ body.siren }}.
+<br>
+{% if body.usersExported is defined %}
+    Les utilisateurs de la collectivité ont été exportés sur Ozwillo.
+{% else %}
+    Les utilisateurs de la collectivité n'ont pas été exportés sur Ozwillo.
+{% endif %}
+<br>
+Vous pouvez consulter le tableau de bord des migrations sur le lien suivant <a href="{{ url('sesile_main_default_app') ~ "admin/migration" }}">{{ url('sesile_main_default_app') ~ "admin/migration" }}</a>
