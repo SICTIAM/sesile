@@ -42,6 +42,11 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         parent::setUp();
     }
 
+    public function tearDown()
+    {
+        $this->em->getConnection()->close();
+    }
+
     /**
      * Après que l'utilisateur a effectué le login sur ozwillo on ne veut pas qui aie d'autres changement sur la base des donees
      * que l'update de son nom, prenom et l'identifiant ozwillo

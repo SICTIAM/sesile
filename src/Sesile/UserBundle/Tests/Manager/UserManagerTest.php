@@ -46,6 +46,11 @@ class UserManagerTest extends SesileWebTestCase
         parent::setUp();
     }
 
+    public function tearDown()
+    {
+        $this->em->getConnection()->close();
+    }
+
     public function testSaveBareUser()
     {
 //        $roles = 'a:1:{i:0;s:10:"ROLE_ADMIN";}';

@@ -11,6 +11,7 @@ use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\SesileMigrationFixtures;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
+use Sesile\MainBundle\Manager\SesileMailer;
 use Sesile\MainBundle\Repository\CollectiviteOzwilloRepository;
 use Sesile\MigrationBundle\Entity\SesileMigration;
 use Sesile\MigrationBundle\Entity\SesileMigrationRepository;
@@ -68,7 +69,8 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
     {
         $logger = $this->createMock(LoggerInterface::class);
         $em = $this->createMock(EntityManager::class);
-        $manager = new SesileMigrationManager($em, $logger);
+        $mailer = $this->createMock(SesileMailer::class);
+        $manager = new SesileMigrationManager($em, $mailer, 'toto@test.com', $logger);
         $em->expects(self::once())
             ->method('flush')
             ->willThrowException(new \Exception('ERROR'));
@@ -94,7 +96,8 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
             ->method('getSesileMigrationHistory')
             ->willReturn($this->getFicturesMockData());
         $logger = $this->createMock(LoggerInterface::class);
-        $manager = new SesileMigrationManager($em, $logger);
+        $mailer = $this->createMock(SesileMailer::class);
+        $manager = new SesileMigrationManager($em, $mailer, 'toto@test.com', $logger);
         $result = $manager->getSesileMigrationHistory();
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
@@ -125,7 +128,8 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
             ->willReturn($sesileMigrationMockData);
 
         $logger = $this->createMock(LoggerInterface::class);
-        $manager = new SesileMigrationManager($em, $logger);
+        $mailer = $this->createMock(SesileMailer::class);
+        $manager = new SesileMigrationManager($em, $mailer, 'toto@test.com', $logger);
         $result = $manager->allowOzwilloUserExport($collectivity);
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
@@ -151,7 +155,8 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
             ->method('findOneBy')
             ->willReturn($sesileMigrationMockData);
         $logger = $this->createMock(LoggerInterface::class);
-        $manager = new SesileMigrationManager($em, $logger);
+        $mailer = $this->createMock(SesileMailer::class);
+        $manager = new SesileMigrationManager($em, $mailer, 'toto@test.com', $logger);
         $result = $manager->allowOzwilloUserExport($collectivity);
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
@@ -162,7 +167,8 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
         $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_THREE_REFERENCE);
         $em = $this->createMock(EntityManager::class);
         $logger = $this->createMock(LoggerInterface::class);
-        $manager = new SesileMigrationManager($em, $logger);
+        $mailer = $this->createMock(SesileMailer::class);
+        $manager = new SesileMigrationManager($em, $mailer, 'toto@test.com', $logger);
         $result = $manager->allowOzwilloUserExport($collectivity);
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
@@ -182,7 +188,8 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
             ->method('findOneBy')
             ->willReturn(null);
         $logger = $this->createMock(LoggerInterface::class);
-        $manager = new SesileMigrationManager($em, $logger);
+        $mailer = $this->createMock(SesileMailer::class);
+        $manager = new SesileMigrationManager($em, $mailer, 'toto@test.com', $logger);
         $result = $manager->allowOzwilloUserExport($collectivity);
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
@@ -202,7 +209,8 @@ class SesileMigrationManagerTest extends LegacyWebTestCase
             ->method('findOneBy')
             ->willThrowException(new \Exception('Errrrrrror'));
         $logger = $this->createMock(LoggerInterface::class);
-        $manager = new SesileMigrationManager($em, $logger);
+        $mailer = $this->createMock(SesileMailer::class);
+        $manager = new SesileMigrationManager($em, $mailer, 'toto@test.com', $logger);
         $result = $manager->allowOzwilloUserExport($collectivity);
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());

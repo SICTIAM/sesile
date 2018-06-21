@@ -39,6 +39,11 @@ class UserRepositoryTest extends SesileWebTestCase
         parent::setUp();
     }
 
+    public function tearDown()
+    {
+        $this->em->getConnection()->close();
+    }
+
     public function testGetUsersByCollectivityIdShouldReturnArrayOfUsers()
     {
         $collectivity = $this->fixtures->getReference('collectivite-one');

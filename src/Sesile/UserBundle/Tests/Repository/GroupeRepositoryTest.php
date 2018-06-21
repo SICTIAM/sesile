@@ -47,6 +47,11 @@ class GroupeRepositoryTest extends SesileWebTestCase
         )->getReferenceRepository();
     }
 
+    public function tearDown()
+    {
+        $this->em->getConnection()->close();
+    }
+
     public function testGetCircuitDataByUserAndCollectivite()
     {
         $user = $this->fixtures->getReference('user-one');
