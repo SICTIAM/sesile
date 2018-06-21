@@ -29,6 +29,13 @@ class Classeurs extends Component {
         userId: this.props.userId,
         message: ''
     }
+    statesCaption = [
+        {color: '#c82d2e', state: 'refused'},
+        {color: '#f48c4f', state: 'pending'},
+        {color: '#39922c', state: 'finished'},
+        {color: '#1c43a2', state: 'withdrawn'},
+        {color: '#356bfc', state: 'retracted'}
+    ]
     componentDidMount() {
         this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
     }
@@ -119,6 +126,9 @@ class Classeurs extends Component {
             <option key={limit} value={limit}>
                 {limit}
             </option>)
+        const classeursStatesCaption =
+            this.statesCaption.map(stateCaption =>
+                <ClasseurStateCaption key={stateCaption.state} state={stateCaption.state} color={stateCaption.color}/>)
         return (
             <div className="cell medium-12 head-list-classeurs">
                 {(checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
@@ -142,36 +152,41 @@ class Classeurs extends Component {
                     </div>}
                 <div className="grid-x panel align-middle">
                     <div className="cell medium-12 list-classeurs">
-                        <div className="grid-x panel-heading align-middle text-center tri-classeurs">
+                        <div
+                            style={{
+                                paddingTop: 0,
+                                paddingBottom: 0,
+                                fontSize: '.79em'
+                            }}
+                            className="grid-x panel-heading align-middle text-center tri-classeurs">
                             <div
-                                style={{paddingLeft: '5px'}}
-                                className="cell small-6 medium-6 large-2 text-left large-offset-1">
+                                style={{paddingLeft: '10px'}}
+                                className="cell small-9 medium-8 large-6 text-left">
                                 {t('common.classeurs.sort_label.name')}
                             </div>
                             <div className="cell large-2 show-for-large">
-                                {t('common.classeurs.sort_label.current_user')}
+                                {t('common.stakeholders')}
                             </div>
-                            <div className="cell small-6 medium-5 large-2">
+                            <div className="cell small-3 medium-2 large-1">
                                 {t('common.classeurs.sort_label.limit_date')}
                             </div>
-                            <div className="cell large-2 show-for-large">
+                            <div className="cell large-1 show-for-large">
                                 {t('common.classeurs.sort_label.type')}
                             </div>
-                            <div className="cell large-2 title-sort show-for-large">
-                                {(checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
-                                    <ClasseursButtonList
-                                        classeurs={classeurs.filter(classeur => classeur.checked)}
-                                        validClasseur={this.validClasseurs}
-                                        revertClasseur={this.revertClasseurs}
-                                        refuseClasseur={this.refuseClasseurs}
-                                        removeClasseur={this.removeClasseurs}
-                                        deleteClasseur={this.deleteClasseurs}
-                                        signClasseur={this.signClasseurs}
-                                        id={"button-lists-large"}
-                                        user={this.props.user}/>}
-                            </div>
-                            <div className="cell medium-1 large-1 show-for-medium">
-                                <input value={checkedAll} onClick={() => this.checkAllClasseurs()} type="checkbox" />
+                            <div className="cell large-2 show-for-large">
+                                {<ClasseursButtonList
+                                    classeurs={classeurs.filter(classeur => classeur.checked)}
+                                    validClasseur={this.validClasseurs}
+                                    revertClasseur={this.revertClasseurs}
+                                    refuseClasseur={this.refuseClasseurs}
+                                    removeClasseur={this.removeClasseurs}
+                                    deleteClasseur={this.deleteClasseurs}
+                                    signClasseur={this.signClasseurs}
+                                    check={this.checkAllClasseurs}
+                                    checked={checkedAll}
+                                    id={"button-lists-large"}
+                                    user={this.props.user}
+                                    style={{fontSize: '0.8em'}}/>}
                             </div>
                         </div>
                         <div id="classeurRow">
@@ -183,17 +198,28 @@ class Classeurs extends Component {
                         </div>
                         {classeurs &&
                             <div
-                                className="grid-x panel-heading"
-                                style={{borderTop: 'solid 1px #a7a7a7', padding: '10px'}}>
+                                className="grid-x align-middle panel-heading"
+                                style={{borderTop: 'solid 1px #a7a7a7', padding: '5px 10px'}}>
                                 <Select
                                     id="limit"
-                                    style={{margin: 0, width: '70px', height: '2.3em'}}
+                                    style={{
+                                        height: '80%',
+                                        margin: '0',
+                                        paddingBottom: '0',
+                                        paddingTop: '0',
+                                        width: '60px'
+                                    }}
                                     value={this.state.limit}
-                                    className="cell small-6 medium-1 large-1"
+                                    className="cell small-4 medium-2 large-2"
                                     onChange={this.changeLimit}
                                     children={listLimit}/>
                                 <div
-                                    className="cell small-6 medium-3 large-3 medium-offset-8 large-offset-8"
+                                    style={{display: '-webkit-inline-box'}}
+                                    className="cell small-4 medium-7 large-7">
+                                    {classeursStatesCaption}
+                                </div>
+                                <div
+                                    className="cell small-4 medium-3 large-3"
                                     style={{height: '2.3em'}}>
                                         <ClasseurPagination
                                             limit={limit}
@@ -218,3 +244,33 @@ Classeurs.PropTypes = {
 }
 
 export default translate(['sesile'])(Classeurs)
+
+
+const ClasseurStateCaption = ({state, color = 'blue'}, {t}) =>
+    <div
+        className="align-middle"
+        style={{
+            marginRight: '10px',
+            display: 'flex',
+            textTransform: 'none',
+            fontSize: '.8em',
+            color: '#4a4c63'}}>
+        <div
+            style={{
+                display: 'inline-block',
+                width: '15px',
+                height: '15px',
+                borderRadius: '10px',
+                background: `${color}`}}>
+        </div>
+        <span
+            style={{
+                marginLeft: '5px',
+                display: 'inline-block'}}>
+            {t(`common.classeurs.status.${state}`)}
+        </span>
+    </div>
+
+ClasseurStateCaption.contextTypes = {
+    t: func
+}

@@ -20,7 +20,9 @@ class ClasseurProgress extends Component {
 
         let classProgress, percentProgress
 
-        if (diffToday < 0) {
+        if(this.props.classeur.status === 2) {
+            classProgress = "disabled"
+        } else if (diffToday < 0) {
             classProgress = "alert"
             percentProgress = 100
         } else if (diffToday < 1) {
@@ -37,10 +39,6 @@ class ClasseurProgress extends Component {
                     <div className={`text-${classProgress} text-left`}>
                         <span className="text-bold">{Moment(validationDate).format('L')}</span>
                     </div>
-                    { status !== 2 &&
-                    <div className={classProgress +" progress"}>
-                        <div className="progress-meter" style={{width: percentProgress + '%'}}/>
-                    </div>}
                 </div>
             </div>
         )

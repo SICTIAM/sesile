@@ -67,16 +67,16 @@ class ClasseurPagination extends Component {
         } else {
             pages = (classeurs.length / limit)
         }
-
+        const buttonStyle = {fontSize: '0.775em'}
         const currentPage = start/limit
         if (currentPage === 0) {
             pagesDisplay.push(
-                <li key="previous" className="disabled">
+                <li style={buttonStyle} key="previous" className="disabled">
                     <span style={this.previousAndNextButtonStyle} className="fa fa-chevron-circle-left"/>
                 </li>)
         } else {
             pagesDisplay.push(
-            <li key="previous">
+            <li style={buttonStyle} key="previous">
                 <button
                     style={this.previousAndNextButtonStyle}
                     className="fa fa-chevron-circle-left primary"
@@ -88,7 +88,7 @@ class ClasseurPagination extends Component {
             (currentPage === page)
                 ? pagesDisplay.push(<li key={page} className="current show-for-large">{page + 1}</li>)
                 : pagesDisplay.push(
-                    <li key={page} className="show-for-large">
+                    <li style={buttonStyle} key={page} className="show-for-large">
                         <button
                             style={this.pageNumberButtonHoverStyle}
                             onClick={() => changePage(page)}
@@ -99,12 +99,12 @@ class ClasseurPagination extends Component {
         }
         if (currentPage === Math.ceil(pages) -1) {
             pagesDisplay.push(
-                <li key="next" className="disabled">
+                <li style={buttonStyle} key="next" className="disabled">
                     <span style={this.previousAndNextButtonStyle} className="fa fa-chevron-circle-right"/>
                 </li>)
         } else {
             pagesDisplay.push(
-                <li key="next">
+                <li style={buttonStyle} key="next">
                     <button
                         style={this.previousAndNextButtonStyle}
                         className="fa fa-chevron-circle-right primary"
@@ -115,7 +115,6 @@ class ClasseurPagination extends Component {
 
         return (
             <ul
-                style={{display: 'flex'}}
                 className="align-middle pagination float-right"
                 role="navigation"
                 aria-label="Pagination">

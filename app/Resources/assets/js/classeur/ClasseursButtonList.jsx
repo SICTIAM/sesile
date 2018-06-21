@@ -28,7 +28,7 @@ class ClasseursButtonList extends Component {
         this.setState({textRefus: value})
     }
     actionEnabled = (actionName) => {
-        return !this.props.classeurs.filter(classeur => !classeur[actionName]).length
+        return !this.props.classeurs.filter(classeur => !classeur[actionName]).length && this.props.classeurs.length > 0
     }
     render () {
 
@@ -37,7 +37,7 @@ class ClasseursButtonList extends Component {
         const { t } = this.context
 
         return (
-            <div className="grid-x button-list align-middle text-center">
+            <div style={this.props.style} className="grid-x button-list align-middle text-center">
                 <div className="cell auto">
                     <ButtonValid classeurs={ classeurs } valid={ validClasseur } enabled={this.actionEnabled('validable')} />
                 </div>
@@ -123,6 +123,10 @@ class ClasseursButtonList extends Component {
                         deleteClasseur={deleteClasseur}
                         enabled={this.actionEnabled('deletable')} />
                 </div>
+                {this.props.check !== undefined &&
+                    <div className="cell auto">
+                        <input id={this.props.id} value={this.props.checked} onClick={(e) => this.props.check(e)} type="checkbox" />
+                    </div>}
             </div>
         )
     }
