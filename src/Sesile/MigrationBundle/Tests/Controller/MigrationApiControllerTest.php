@@ -329,7 +329,6 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $sesileUserMigrator->expects(self::once())
             ->method('exportCollectivityUsers')
             ->willReturn(new Message(true, new MigrationReport([['id' => 1], ['id' => 2], ['id' => 3]], $provisionedCollectivity->getOzwillo(), '123454-54464-5454')));
-
         //override service inside the container with the mock object
         $this->client->getContainer()->set('sesile_user.migrator', $sesileUserMigrator);
 
@@ -338,6 +337,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $postData = [
            'orgId' => $provisionedCollectivity->getId()
         ];
+        $this->client->enableProfiler();
         $this->client->request(
             'POST',
             sprintf('/api/migration/v3v4/ozwillo/users'),
@@ -353,6 +353,17 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertArrayHasKey('instanceId', $responseContent);
         self::assertArrayHasKey('creatorId', $responseContent);
         self::assertArrayHasKey('serviceId', $responseContent);
+
+        /**
+         * check email was sent
+         */
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        self::assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        self::assertEquals($this->getContainer()->getParameter('email_sender_address'), key($collectedMessages[0]->getFrom()));
+        self::assertEquals($this->getContainer()->getParameter('contact'), key($collectedMessages[0]->getTo()));
+        $assertBodyContent= sprintf('La migration de la collectivité "%s" à bien été effectué avec le code SIREN %s.', $provisionedCollectivity->getNom(), $provisionedCollectivity->getSiren());
+        self::assertContains($assertBodyContent, $collectedMessages[0]->getBody());
         /**
          * check DB
          */
@@ -360,7 +371,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $migration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $provisionedCollectivity->getId()]);
         self::assertTrue($migration->hasUsersExported());
         self::assertEquals(SesileMigration::STATUS_FINALISE, $migration->getStatus());
-        //assert list of sesile migration history after user export action. 
+        //assert list of sesile migration history after user export action.
         $this->client->request('GET', '/api/migration/v3v4/dashboard');
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
@@ -368,6 +379,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $migration = $content[0];
         self::assertEquals($provisionedCollectivity->getId(), $migration['collectivityId']);
         self::assertEquals(0, $migration['allowExport']);
+
     }
 
     private function getSesileUserMigratorMock()

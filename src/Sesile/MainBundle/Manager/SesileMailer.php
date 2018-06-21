@@ -19,10 +19,6 @@ class SesileMailer
      */
     protected $mailer;
     /**
-     * @var EngineInterface
-     */
-    protected $templating;
-    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -65,7 +61,7 @@ class SesileMailer
      * @param array $toAddresses
      * @param $subject
      * @param string|mixed $body the body can be the text, or the data for the template render
-     * @param null $template the tempalte in the form of: MigrationBundle:Mail:confirmationMigration.html.twig
+     * @param null $template the tempalte in the form of: @SesileMigration/mail/confirmationMigration.html.twig
      *
      * @return Message
      */
@@ -73,7 +69,7 @@ class SesileMailer
     {
         try {
             if ($template) {
-                $body = $this->templating->render($template, $body);
+                $body = $this->template->render($template, ['body' => $body]);
             }
             $message = (new \Swift_Message($subject))
                 ->setFrom([$this->emailSenderAddress => $this->domain])

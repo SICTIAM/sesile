@@ -4,7 +4,7 @@ services:
         arguments: ["@legacy.collectivity.service", "@logger"]
     sesile_migration.manager:
         class: Sesile\MigrationBundle\Manager\SesileMigrationManager
-        arguments: ["@doctrine.orm.default_entity_manager", "@logger"]
+        arguments: ["@doctrine.orm.default_entity_manager", '@sesile.mailer' ,'%contact%', "@logger"]
     legacy.collectivity.service:
         class: Sesile\MigrationBundle\Service\LegacyCollectivityService
         arguments: ["@doctrine.dbal.legacy_connection"]
