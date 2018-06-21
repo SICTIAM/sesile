@@ -4,8 +4,10 @@
 namespace Sesile\ApiBundle\Test\Controller;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Sesile\ApiBundle\Service\OzwilloProvisioner;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
+use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
 use Sesile\UserBundle\Entity\User;
@@ -58,6 +60,16 @@ class CollectiviteControllerTest extends SesileWebTestCase
             ]
 
         ];
+        /**
+         * mock ozwillo provisioner service
+         */
+        $ozwilloProvisioner = $this->getOzwilloPrividerMock();
+        $ozwilloProvisioner->expects(self::once())
+            ->method('notifyRegistrationToKernel')
+            ->willReturn(new Message(true, null));
+        //override service inside the container with the mock object
+        $this->client->getContainer()->set('ozwillo.provisioner', $ozwilloProvisioner);
+
         $this->client->request(
             'POST',
             sprintf('/api/collectivite/new'),
@@ -82,36 +94,12 @@ class CollectiviteControllerTest extends SesileWebTestCase
         self::assertEquals('987654321', $newCollectivite->getSiren());
         self::assertEquals('organization-name', $newCollectivite->getDomain());
         self::assertEquals('adb82586-d2f2-4eea-98e9-12999d12c80d', $newCollectivite->getOzwillo()->getInstanceId());
+        self::assertNull($newCollectivite->getOzwillo()->getServiceId());
+        self::assertEquals('d21ad98e-4db7-49e8-a7de-27a2c335b53a', $newCollectivite->getOzwillo()->getOrganizationId());
         /**
          * Assert Response
          */
-
-        $mustHave = [
-            'instance_id' => "adb82586-d2f2-4eea-98e9-12999d12c80d",
-            'destruction_uri' => sprintf("http://localhost/api/collectivite/delete?id=%s", $newCollectivite->getId()),
-//            'destruction_secret' => "ZPr3H9y3hBklew==",
-            'status_changed_uri' => sprintf("http://localhost/api/collectivite/update?id=%s", $newCollectivite->getId()),
-//            'status_changed_secret' => "o6EmG/ahs9fpag==",
-            'services' => [
-                'name' => "SESILE - SICTIAM",
-                'tos_uri' => "https://sesile.fr/tos",
-                'policy_uri' => "https://sesile.fr/policy",
-                'icon' => "https://sesile.fr/images/favicons/sesile-icon-64x64.png",
-                'contacts' =>
-                    [
-                        "demat@sictiam.fr",
-                    ],
-                'payment_option' => "PAID",
-                'target_audience' => "PUBLIC_BODY",
-                'visibility' => "VISIBLE",
-                'access_control' => "RESTRICTED",
-                'service_uri' => "https://organization-name.sesile.fr/",
-                'redirect_uris' => [
-                    "https://organization-name.sesile.fr/login/check-ozwillo",
-                ],
-            ],
-        ];
-        self::assertArraySubset($mustHave, $response);
+        self::assertEmpty($response);
     }
 
     public function testPostActionCreateANewCollectivityForExistingAdminUserFromOzwillo()
@@ -141,6 +129,15 @@ class CollectiviteControllerTest extends SesileWebTestCase
             ]
 
         ];
+        /**
+         * mock ozwillo provisioner service
+         */
+        $ozwilloProvisioner = $this->getOzwilloPrividerMock();
+        $ozwilloProvisioner->expects(self::once())
+            ->method('notifyRegistrationToKernel')
+            ->willReturn(new Message(true, null));
+        //override service inside the container with the mock object
+        $this->client->getContainer()->set('ozwillo.provisioner', $ozwilloProvisioner);
         $this->client->request(
             'POST',
             sprintf('/api/collectivite/new'),
@@ -164,6 +161,8 @@ class CollectiviteControllerTest extends SesileWebTestCase
         $newCollectivity = $userData->getCollectivities()->last();
         self::assertEquals('222222222', $newCollectivity->getSiren());
         self::assertEquals('adb82586-d2f2-4eea-98e9-12999d12c80d', $newCollectivity->getOzwillo()->getInstanceId());
+        self::assertNull($newCollectivity->getOzwillo()->getServiceId());
+        self::assertEquals('d21ad98e-4db7-49e8-a7de-27a2c335b53a', $newCollectivity->getOzwillo()->getOrganizationId());
     }
 
     public function testPostActionOnExistingCollecitvityWithoutOzwilloMustAddOzwilloData()
@@ -199,6 +198,15 @@ class CollectiviteControllerTest extends SesileWebTestCase
             ]
 
         ];
+        /**
+         * mock ozwillo provisioner service
+         */
+        $ozwilloProvisioner = $this->getOzwilloPrividerMock();
+        $ozwilloProvisioner->expects(self::once())
+            ->method('notifyRegistrationToKernel')
+            ->willReturn(new Message(true, null));
+        //override service inside the container with the mock object
+        $this->client->getContainer()->set('ozwillo.provisioner', $ozwilloProvisioner);
         $this->client->request(
             'POST',
             sprintf('/api/collectivite/new'),
@@ -220,6 +228,8 @@ class CollectiviteControllerTest extends SesileWebTestCase
         self::assertCount(1, $userData->getCollectivities());
         self::assertEquals('999999999', $userData->getCollectivities()->first()->getSiren());
         self::assertEquals('adb82586-d2f2-4eea-98e9-12999d12c80d', $userData->getCollectivities()->first()->getOzwillo()->getInstanceId());
+        self::assertNull($userData->getCollectivities()->first()->getOzwillo()->getServiceId());
+        self::assertEquals('d21ad98e-4db7-49e8-a7de-27a2c335b53a', $userData->getCollectivities()->first()->getOzwillo()->getOrganizationId());
     }
 
     public function testPostActionOnExistingCollectivityAlreadyMapedWithOzwilloMustReturn400()
@@ -249,6 +259,15 @@ class CollectiviteControllerTest extends SesileWebTestCase
             ]
 
         ];
+        /**
+         * mock ozwillo provisioner service
+         */
+        $ozwilloProvisioner = $this->getOzwilloPrividerMock();
+        $ozwilloProvisioner->expects(self::never())
+            ->method('notifyRegistrationToKernel')
+            ->willReturn(new Message(true, null));
+        //override service inside the container with the mock object
+        $this->client->getContainer()->set('ozwillo.provisioner', $ozwilloProvisioner);
         $this->client->request(
             'POST',
             sprintf('/api/collectivite/new'),
@@ -261,6 +280,19 @@ class CollectiviteControllerTest extends SesileWebTestCase
             json_encode($data)
         );
         $this->assertStatusCode(400, $this->client);
+    }
+
+
+    private function getOzwilloPrividerMock()
+    {
+        /**
+         * mock ozwillo provisioner service
+         */
+        $ozwilloProvisioner = $this->getMockBuilder(OzwilloProvisioner::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['notifyRegistrationToKernel'])->getMock();
+
+        return $ozwilloProvisioner;
     }
 
     public function testPostActionWithWrongSignatureShouldReturn403()

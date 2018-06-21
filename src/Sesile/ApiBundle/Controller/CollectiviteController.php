@@ -45,7 +45,6 @@ class CollectiviteController extends Controller
      */
     public function postAction (Request $request)
     {
-
         $secret = $this->getParameter('ozwillo_secret');
         if (!$request->headers->has("X-Hub-Signature")) {
             return new JsonResponse("No X-Hub-Signature header found in request", Response::HTTP_BAD_REQUEST);
@@ -78,9 +77,13 @@ class CollectiviteController extends Controller
 
         $userOzwillo = $em->getRepository('SesileUserBundle:User')->createUserFromOzwillo($user, $userObject, $collectivite);
 
-        $notifyRegistrationToKernel = $this->notifyRegistrationToKernel($collectivite);
+//        $notifyRegistrationToKernel = $this->notifyRegistrationToKernel($collectivite);
+        $result = $this->get('ozwillo.provisioner')->notifyRegistrationToKernel($collectivite);
+        if (false === $result->isSuccess()) {
+            return new JsonResponse([], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
-        return new JsonResponse($notifyRegistrationToKernel, Response::HTTP_ACCEPTED);
+        return new JsonResponse([], Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -97,9 +100,14 @@ class CollectiviteController extends Controller
         $collectiviteOzwillo->setClientSecret($request->get('client_secret'));
         $collectiviteOzwillo->setInstanceRegistrationUri($request->get('instance_registration_uri'));
         $collectiviteOzwillo->setDcId($request->get('organization')['dc_id']);
-        $collectiviteOzwillo->setServiceId($request->get('instance_id'));
+//        $collectiviteOzwillo->setServiceId($request->get('instance_id'));
         $collectiviteOzwillo->setDestructionSecret(base64_encode(random_bytes(10)));
         $collectiviteOzwillo->setStatusChangedSecret(base64_encode(random_bytes(10)));
+        $organization = $request->get('organization');
+        if (isset($organization['id'])) {
+            $collectiviteOzwillo->setOrganizationId($organization['id']);
+        }
+
         $collectiviteOzwillo->setCollectivite($collectivite);
 
         return $collectiviteOzwillo;
@@ -159,7 +167,7 @@ class CollectiviteController extends Controller
             'icon'      => "https://sesile.fr/images/favicons/sesile-icon-64x64.png",
             'contacts'  => $contacts,
             'payment_option' => "PAID",
-            'target_audience' => "PUBLIC_BODY",
+            'target_audience' => "PUBLIC_BODIES",
             'visibility' => "VISIBLE",
             'access_control' => "RESTRICTED",
             'service_uri' => $this->urlRegistrationToKernel($collectivite, $this->generateUrl('sesile_main_default_app')),

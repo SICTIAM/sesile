@@ -24,3 +24,4 @@ parameters:
     mailer_password: null
     locale: fr
     secret: ThisTokenIsNotSoSecretChangeIt
+    contact_email: demat@sictiam.fr

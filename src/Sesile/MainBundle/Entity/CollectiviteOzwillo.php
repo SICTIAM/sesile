@@ -104,6 +104,13 @@ class CollectiviteOzwillo
      */
     private $serviceId;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="organizationId", type="string", length=100, nullable=true)
+     */
+    private $organizationId;
+
 
     /**
      * Get id
@@ -401,5 +408,25 @@ class CollectiviteOzwillo
     public function getCollectivite()
     {
         return $this->collectivite;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationId()
+    {
+        return $this->organizationId;
+    }
+
+    /**
+     * @param string $organizationId
+     *
+     * @return CollectiviteOzwillo
+     */
+    public function setOrganizationId($organizationId)
+    {
+        $this->organizationId = $organizationId;
+
+        return $this;
     }
 }

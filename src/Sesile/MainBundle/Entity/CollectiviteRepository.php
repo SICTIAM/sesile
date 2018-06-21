@@ -46,9 +46,13 @@ class CollectiviteRepository extends EntityRepository
         $collectiviteOzwillo->setClientSecret($request->get('client_secret'));
         $collectiviteOzwillo->setInstanceRegistrationUri($request->get('instance_registration_uri'));
         $collectiviteOzwillo->setDcId($request->get('organization')['dc_id']);
-        $collectiviteOzwillo->setServiceId($request->get('instance_id'));
+//        $collectiviteOzwillo->setServiceId($request->get('instance_id'));
         $collectiviteOzwillo->setDestructionSecret(base64_encode(random_bytes(10)));
         $collectiviteOzwillo->setStatusChangedSecret(base64_encode(random_bytes(10)));
+        $organization = $request->get('organization');
+        if (isset($organization['id'])) {
+            $collectiviteOzwillo->setOrganizationId($organization['id']);
+        }
         $collectiviteOzwillo->setCollectivite($collectivite);
         $collectivite->setNom($request->get('organization')['name']);
         $collectivite->setSiren($siren);
