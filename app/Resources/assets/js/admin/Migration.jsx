@@ -59,19 +59,23 @@ class Migration extends Component {
         const { t, _addNotification } = this.context
 
         fetch(Routing.generate('v3v4_migrate_init'), {
-            credentials: 'same-origin',
-            method: 'POST',
-            body: {siren: this.state.siren, orgId: this.state.currentCollectivite.id}
-            })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(() => {
-                _addNotification(basicNotification(
-                    'success',
-                    t('common.migration_is_begin')
-                ))
-            })
-            .catch(error => console.log(error))
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({siren: this.state.siren, orgId: this.state.currentCollectivite.id}),
+            credentials: 'same-origin'
+        })
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(() => {
+            _addNotification(basicNotification(
+                'success',
+                t('common.migration_is_begin')
+            ))
+        })
+        .catch(error => console.log(error))
     }
     fetchMigrationHistory = () => {
         const { t, _addNotification } = this.context
@@ -96,7 +100,26 @@ class Migration extends Component {
 
         else this.setState({sirenAvailabel : null, sirenValid: null})
     }
-    exportUsersToOzwillo = () => console.log("Tkt ils seront exportés ... un jour !!")
+    exportUsersToOzwillo = (orgId) => {
+        fetch(Routing.generate('v3v4_migrate_users_export'), {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({orgId : orgId}),
+            credentials: 'same-origin'
+        })
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(() => {
+            _addNotification(basicNotification(
+                'success',
+                t('common.export_user_is_begin')
+            ))
+        })
+        .catch(error => console.log(error))
+    }
     sirenIsNotAvailabel = () => this.state.sirenAvailabel !== null && this.state.sirenAvailabel === false
     sirenIsNotValid = () => this.state.sirenValid !== null && this.state.sirenValid === false
     render() {
@@ -207,18 +230,29 @@ const ListMigrationHistory = ({migrations, exportUsersToOzwillo}, {t}) => {
         <tr key={migration.id}>
             <td>{Moment(new Date(migration.date.date)).format('LLLL')}</td>
             <td>{migration.collectivityName}</td>
-            <td>{migration.siren}</td>
             <td>
                 <MigrationStatus status={migration.status} />
             </td>
+            <td>{migration.siren}</td>
+            <td>{migration.usersExported ?
+                    <div
+                        className={`ui success label labelStatus`}
+                        style={{color: '#fff', textAlign: 'center', width: '110px'}}>
+                        {t(`common.exported`)}
+                    </div> :
+                    <div
+                        className={`ui disabled label labelStatus`}
+                        style={{color: 'black', textAlign: 'center', width: '110px'}}>
+                        {t(`common.not_exported`)}
+                    </div>}
+            </td>
             <td>
-                <Button
-                    id="submit-export-users-to-ozwillo"
-                    className="cell medium-12"
-                    classNameButton="float-right"
-                    onClick={exportUsersToOzwillo}
-                    disabled={!!migration.allowExport}
-                    labelText={"Exporter les utilisateurs"}/>
+                <button
+                    className="button hollow"
+                    onClick={() => exportUsersToOzwillo(migration.collectivityId)}
+                    disabled={!!migration.allowExport}>
+                    {"Exporter les utilisateurs"}
+                </button>
             </td>
         </tr>
     )
@@ -228,8 +262,9 @@ const ListMigrationHistory = ({migrations, exportUsersToOzwillo}, {t}) => {
                 <tr>
                     <th width="200">Date</th>
                     <th>Collectivité</th>
+                    <th width="100">Migration</th>
                     <th width="100">SIREN</th>
-                    <th width="100">Statut</th>
+                    <th width="150">Utilisateurs</th>
                     <th width="150">Action</th>
                 </tr>
             </thead>
@@ -241,6 +276,7 @@ const ListMigrationHistory = ({migrations, exportUsersToOzwillo}, {t}) => {
                     <tr>
                         <td/>
                         <td className="text-center">{t('common.empty_list')}</td>
+                        <td/>
                         <td/>
                         <td/>
                         <td/>
@@ -277,3 +313,4 @@ const MigrationStatus = ({status}, {t}) => {
 MigrationStatus.contextTypes = {
     t: func
 }
+
