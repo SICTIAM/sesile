@@ -13,13 +13,14 @@ use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Sesile\MainBundle\Manager\CollectiviteManager;
+use Sesile\MigrationBundle\Domain\MigrationReport;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class SesileUserMigrator
+ * Class OzwilloUserMigrator
  * @package Sesile\MigrationBundle\Migrator
  */
-class SesileUserMigrator implements SesileMigratorInterface
+class OzwilloUserMigrator implements SesileMigratorInterface
 {
     /**
      * @var LoggerInterface
@@ -39,7 +40,7 @@ class SesileUserMigrator implements SesileMigratorInterface
     protected $config;
 
     /**
-     * SesileUserMigrator constructor.
+     * OzwilloUserMigrator constructor.
      * @param ClientInterface $client
      * @param CollectiviteManager $collectiviteManager
      * @param array $config
@@ -61,13 +62,13 @@ class SesileUserMigrator implements SesileMigratorInterface
      * @param Collectivite $collectivity
      * @return Message
      */
-    public function exportCollectivityUsers(Collectivite $collectivity)
+        public function exportCollectivityUsers(Collectivite $collectivity)
     {
         try {
             $collectivityOzwillo = $collectivity->getOzwillo();
             if (!$collectivityOzwillo instanceof CollectiviteOzwillo) {
                 $msg = sprintf(
-                    '[SesileUserMigrator]/exportCollectivityUsers Collectivity id: %s has no Collectivity Ozwillo Configuration',
+                    '[OzwilloUserMigrator]/exportCollectivityUsers Collectivity id: %s has no Collectivity Ozwillo Configuration',
                     $collectivity->getId()
                 );
                 $this->logger->warning($msg);
@@ -78,7 +79,7 @@ class SesileUserMigrator implements SesileMigratorInterface
             $userRequest = $this->collectiviteManager->getCollectivityUsersList($collectivity->getId());
             if (false === $userRequest->isSuccess()) {
                 $msg = sprintf(
-                    '[SesileUserMigrator]/exportCollectivityUsers Error while retrieving users of collectivity id: %s',
+                    '[OzwilloUserMigrator]/exportCollectivityUsers Error while retrieving users of collectivity id: %s',
                     $collectivity->getId()
                 );
                 $this->logger->error($msg);
@@ -88,7 +89,7 @@ class SesileUserMigrator implements SesileMigratorInterface
             $users = $userRequest->getData();
             if (count($users) < 1) {
                 $msg = sprintf(
-                    '[SesileUserMigrator]/exportCollectivityUsers No users found for collectivity id: %s. No User Export will be made.',
+                    '[OzwilloUserMigrator]/exportCollectivityUsers No users found for collectivity id: %s. No User Export will be made.',
                     $collectivity->getId()
                 );
                 $this->logger->debug($msg);
@@ -99,10 +100,15 @@ class SesileUserMigrator implements SesileMigratorInterface
             $requestOptions = $this->buildRequestData($collectivityOzwillo, $users);
             $response = $this->client->request('POST', $this->config['gateway_uri'], $requestOptions);
             if ($response->getStatusCode() === Response::HTTP_OK) {
-                return new Message(true, $requestOptions);
+                $migrationReport = $this->buildMigrationReport(
+                    $users,
+                    $collectivityOzwillo,
+                    $requestOptions['json']['ozwilloInstanceInfo']['creatorId']
+                );
+                return new Message(true, $migrationReport);
             }
             $msg = sprintf(
-                '[SesileUserMigrator]/exportCollectivityUsers for collectivityid: %s Failed :: %s',
+                '[OzwilloUserMigrator]/exportCollectivityUsers for collectivityid: %s Failed :: %s',
                 $collectivity->getId(),
                 $response->getBody()->getContents()
             );
@@ -111,7 +117,7 @@ class SesileUserMigrator implements SesileMigratorInterface
             return new Message(false, $requestOptions, [$msg]);
         } catch (\Exception $e) {
             $msg = sprintf(
-                '[SesileUserMigrator]/exportCollectivityUsers WARNING for collectivityid: %s :: %s',
+                '[OzwilloUserMigrator]/exportCollectivityUsers WARNING for collectivityid: %s :: %s',
                 $collectivity->getId(),
                 $e->getMessage()
             );
@@ -120,7 +126,7 @@ class SesileUserMigrator implements SesileMigratorInterface
             return new Message(false, null, [$msg]);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             $msg = sprintf(
-                '[SesileUserMigrator]/exportCollectivityUsers GuzzleException WARNING for collectivityid: %s :: %s',
+                '[OzwilloUserMigrator]/exportCollectivityUsers GuzzleException WARNING for collectivityid: %s :: %s',
                 $collectivity->getId(),
                 $e->getMessage()
             );
@@ -128,6 +134,18 @@ class SesileUserMigrator implements SesileMigratorInterface
 
             return new Message(false, null, [$msg]);
         }
+    }
+
+    /**
+     * @param array $users
+     * @param CollectiviteOzwillo $collectiviteOzwillo
+     * @param string $creatorId
+     *
+     * @return MigrationReport
+     */
+    private function buildMigrationReport(array $users, CollectiviteOzwillo $collectiviteOzwillo, $creatorId)
+    {
+        return new MigrationReport($users, $collectiviteOzwillo, $creatorId);
     }
 
     /**

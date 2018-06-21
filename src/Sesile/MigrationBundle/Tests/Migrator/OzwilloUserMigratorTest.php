@@ -13,13 +13,14 @@ use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Manager\CollectiviteManager;
-use Sesile\MigrationBundle\Migrator\SesileUserMigrator;
+use Sesile\MigrationBundle\Domain\MigrationReport;
+use Sesile\MigrationBundle\Migrator\OzwilloUserMigrator;
 use Sesile\MigrationBundle\Tests\LegacyWebTestCase;
 
 class OzwilloUserMigratorTest extends LegacyWebTestCase
 {
     /**
-     * @var SesileUserMigrator
+     * @var OzwilloUserMigrator
      */
     protected $sesileUserMigrator;
     /**
@@ -53,7 +54,7 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
         //get user_gateway config this is set into the Sesile\MigrationBundle\DependencyInjection\SesileMigrationExtension
         $config = $this->getContainer()->getParameter('user_gateway');
         $logger = $this->createMock(LoggerInterface::class);
-        $sesileUserMigrator = new SesileUserMigrator($client, $collectivityManager, $config, $logger);
+        $sesileUserMigrator = new OzwilloUserMigrator($client, $collectivityManager, $config, $logger);
 
         $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
         $result = $sesileUserMigrator->exportCollectivityUsers($collectivity);
@@ -82,6 +83,12 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
 
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
+        self::assertInstanceOf(MigrationReport::class, $result->getData());
+        $migrationReport = $result->getData();
+        self::assertEquals(count($this->getCollectivityUsersListMockData()), $migrationReport->countUsers());
+        self::assertEquals($fixtureCollectivityOzwillo->getOrganizationId(), $migrationReport->getOrganizationId());
+        self::assertEquals($fixtureCollectivityOzwillo->getInstanceId(), $migrationReport->getInstanceId());
+        self::assertEquals($fixtureCollectivityOzwillo->getServiceId(), $migrationReport->getServiceId());
     }
 
     public function testMigrateUsersShouldReturnFalseIfRequestFailed()
@@ -99,13 +106,14 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
         //get user_gateway config this is set into the Sesile\MigrationBundle\DependencyInjection\SesileMigrationExtension
         $config = $this->getContainer()->getParameter('user_gateway');
         $logger = $this->createMock(LoggerInterface::class);
-        $sesileUserMigrator = new SesileUserMigrator($client, $collectivityManager, $config, $logger);
+        $sesileUserMigrator = new OzwilloUserMigrator($client, $collectivityManager, $config, $logger);
 
         $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
         $result = $sesileUserMigrator->exportCollectivityUsers($collectivity);
 
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
+        self::assertNull($result->getData());
     }
 
     public function testMigrateUsersShouldReturnFalseIfCollectivityHasNoOzwilloConfiguration()
@@ -117,13 +125,14 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
         //get user_gateway config this is set into the Sesile\MigrationBundle\DependencyInjection\SesileMigrationExtension
         $config = $this->getContainer()->getParameter('user_gateway');
         $logger = $this->createMock(LoggerInterface::class);
-        $sesileUserMigrator = new SesileUserMigrator($client, $collectivityManager, $config, $logger);
+        $sesileUserMigrator = new OzwilloUserMigrator($client, $collectivityManager, $config, $logger);
 
         $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_THREE_REFERENCE);
         $result = $sesileUserMigrator->exportCollectivityUsers($collectivity);
 
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
+        self::assertNull($result->getData());
     }
 
     public function testMigrateUsersShouldReturnFalseIfCollectivityHasNoUsers()
@@ -141,13 +150,14 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
         //get user_gateway config this is set into the Sesile\MigrationBundle\DependencyInjection\SesileMigrationExtension
         $config = $this->getContainer()->getParameter('user_gateway');
         $logger = $this->createMock(LoggerInterface::class);
-        $sesileUserMigrator = new SesileUserMigrator($client, $collectivityManager, $config, $logger);
+        $sesileUserMigrator = new OzwilloUserMigrator($client, $collectivityManager, $config, $logger);
 
         $collectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
         $result = $sesileUserMigrator->exportCollectivityUsers($collectivity);
 
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
+        self::assertNull($result->getData());
     }
 
     private function getCollectivityUsersListMockData()

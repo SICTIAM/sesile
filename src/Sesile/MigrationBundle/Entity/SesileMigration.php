@@ -207,7 +207,7 @@ class SesileMigration
     /**
      * @return bool
      */
-    public function isUsersExported()
+    public function hasUsersExported()
     {
         return $this->usersExported;
     }

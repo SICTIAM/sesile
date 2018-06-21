@@ -5,12 +5,17 @@ namespace Sesile\MigrationBundle\Tests\Controller;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\SesileMigrationFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
+use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
+use Sesile\MigrationBundle\Domain\MigrationReport;
 use Sesile\MigrationBundle\Entity\SesileMigration;
+use Sesile\MigrationBundle\Manager\SesileMigrationManager;
+use Sesile\MigrationBundle\Migrator\OzwilloUserMigrator;
 use Sesile\MigrationBundle\Tests\LegacyWebTestCase;
 
 class MigrationApiControllerTest extends LegacyWebTestCase
@@ -23,6 +28,10 @@ class MigrationApiControllerTest extends LegacyWebTestCase
      * @var EntityManager
      */
     protected $em;
+    /**
+     * @var SesileMigrationManager
+     */
+    protected $sesileMigrationManager;
 
     public function setUp()
     {
@@ -36,6 +45,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $this->resetLegacyTestDatabase();
         $this->loadLegacyFixtures();
         $this->em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        $this->sesileMigrationManager = $this->getContainer()->get('sesile_migration.manager');
         parent::setUp();
     }
 
@@ -194,7 +204,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertEquals('784512658', $testSesileMigration->getSiren());
         self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
         self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
-        self::assertFalse($testSesileMigration->isUsersExported());
+        self::assertFalse($testSesileMigration->hasUsersExported());
     }
     /**
      * Test l'action lors on selection une collectivité à migrer,
@@ -244,7 +254,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertEquals($siren, $testSesileMigration->getSiren());
         self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
         self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
-        self::assertFalse($testSesileMigration->isUsersExported());
+        self::assertFalse($testSesileMigration->hasUsersExported());
     }
 
     public function testMigrateCollectivityReturn400WhenNoSirenIsSet()
@@ -307,17 +317,69 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $this->logIn($superUser);
         $this->client->request('GET', '/api/migration/v3v4/dashboard');
         $this->assertStatusCode(200, $this->client);
-        $content = json_decode($this->client->getResponse()->getContent());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
         self::assertCount(3, $content);
     }
 
-    private function persistSesileMigration($collectivity, $siren = '123456789')
+    public function testOzwilloUserExportAction()
     {
-        $sesileMigration = SesileMigrationFixtures::aValidSesileMigration($collectivity);
-        $this->em->persist($sesileMigration);
-        $this->em->flush();
+        $provisionedCollectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
 
-        return $sesileMigration;
+        $sesileUserMigrator = $this->getSesileUserMigratorMock();
+        $sesileUserMigrator->expects(self::once())
+            ->method('exportCollectivityUsers')
+            ->willReturn(new Message(true, new MigrationReport([['id' => 1], ['id' => 2], ['id' => 3]], $provisionedCollectivity->getOzwillo(), '123454-54464-5454')));
+
+        //override service inside the container with the mock object
+        $this->client->getContainer()->set('sesile_user.migrator', $sesileUserMigrator);
+
+        $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($superUser);
+        $postData = [
+           'orgId' => $provisionedCollectivity->getId()
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/migration/v3v4/ozwillo/users'),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(200, $this->client);
+        $responseContent = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertEquals(3, $responseContent['countUsers']);
+        self::assertArrayHasKey('organizationId', $responseContent);
+        self::assertArrayHasKey('instanceId', $responseContent);
+        self::assertArrayHasKey('creatorId', $responseContent);
+        self::assertArrayHasKey('serviceId', $responseContent);
+        /**
+         * check DB
+         */
+        $this->em->clear();
+        $migration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $provisionedCollectivity->getId()]);
+        self::assertTrue($migration->hasUsersExported());
+        self::assertEquals(SesileMigration::STATUS_FINALISE, $migration->getStatus());
+        //assert list of sesile migration history after user export action. 
+        $this->client->request('GET', '/api/migration/v3v4/dashboard');
+        $this->assertStatusCode(200, $this->client);
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(3, $content);
+        $migration = $content[0];
+        self::assertEquals($provisionedCollectivity->getId(), $migration['collectivityId']);
+        self::assertEquals(0, $migration['allowExport']);
+    }
+
+    private function getSesileUserMigratorMock()
+    {
+        /**
+         * mock OzwilloUserMigrator
+         */
+        $sesileUserMigrator = $this->getMockBuilder(OzwilloUserMigrator::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['exportCollectivityUsers'])->getMock();
+
+        return $sesileUserMigrator;
     }
 
     private function persistCollectivity($domain = 'domain', $name = 'org Name', $withOzwillo = false)

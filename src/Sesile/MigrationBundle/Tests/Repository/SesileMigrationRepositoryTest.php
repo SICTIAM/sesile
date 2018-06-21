@@ -40,7 +40,7 @@ class SesileMigrationRepositoryTest extends SesileWebTestCase
         parent::setUp();
     }
 
-    public function testGetCollectiviteList()
+    public function testGetSesileMigrationHistory()
     {
         $result = $this->em->getRepository(SesileMigration::class)->getSesileMigrationHistory();
         self::assertCount(3, $result);

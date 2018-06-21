@@ -27,7 +27,7 @@ services:
         tags:
             - { name: monolog.logger, channel: migrator }
     sesile_user.migrator:
-        class: Sesile\MigrationBundle\Migrator\SesileUserMigrator
+        class: Sesile\MigrationBundle\Migrator\OzwilloUserMigrator
         arguments: ["@guzzle.client", "@collectivite.manager", "%user_gateway%",  "@logger"]
         tags:
             - { name: monolog.logger, channel: migrator }
