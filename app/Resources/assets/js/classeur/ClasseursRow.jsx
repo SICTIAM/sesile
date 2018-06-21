@@ -24,7 +24,7 @@ class ClasseursRow extends Component {
         4: 'retracted'
     })
     statusColorClass = Object.freeze({
-        0: '#851206',
+        0: '#c82d2e',
         1: '#e2661d',
         2: '#2d6725',
         3: '#1c43a2',

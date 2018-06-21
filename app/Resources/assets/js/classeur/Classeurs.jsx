@@ -29,6 +29,13 @@ class Classeurs extends Component {
         userId: this.props.userId,
         message: ''
     }
+    statesCaption = [
+        {color: '#c82d2e', state: 'refused'},
+        {color: '#f48c4f', state: 'pending'},
+        {color: '#39922c', state: 'finished'},
+        {color: '#1c43a2', state: 'withdrawn'},
+        {color: '#356bfc', state: 'retracted'}
+    ]
     componentDidMount() {
         this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
     }
@@ -119,6 +126,9 @@ class Classeurs extends Component {
             <option key={limit} value={limit}>
                 {limit}
             </option>)
+        const classeursStatesCaption =
+            this.statesCaption.map(stateCaption =>
+                <ClasseurStateCaption key={stateCaption.state} state={stateCaption.state} color={stateCaption.color}/>)
         return (
             <div className="cell medium-12 head-list-classeurs">
                 {(checkedAll || classeurs && classeurs.filter(classeur => classeur.checked).length > 1) &&
@@ -188,23 +198,28 @@ class Classeurs extends Component {
                         </div>
                         {classeurs &&
                             <div
-                                className="grid-x panel-heading"
+                                className="grid-x align-middle panel-heading"
                                 style={{borderTop: 'solid 1px #a7a7a7', padding: '5px 10px'}}>
                                 <Select
                                     id="limit"
                                     style={{
-                                        height: '100%',
+                                        height: '80%',
                                         margin: '0',
                                         paddingBottom: '0',
                                         paddingTop: '0',
-                                        width: '50px'
+                                        width: '60px'
                                     }}
                                     value={this.state.limit}
-                                    className="cell small-6 medium-1 large-1"
+                                    className="cell small-4 medium-2 large-2"
                                     onChange={this.changeLimit}
                                     children={listLimit}/>
                                 <div
-                                    className="cell small-6 medium-3 large-3 medium-offset-8 large-offset-8"
+                                    style={{display: '-webkit-inline-box'}}
+                                    className="cell small-4 medium-7 large-7">
+                                    {classeursStatesCaption}
+                                </div>
+                                <div
+                                    className="cell small-4 medium-3 large-3"
                                     style={{height: '2.3em'}}>
                                         <ClasseurPagination
                                             limit={limit}
@@ -229,3 +244,33 @@ Classeurs.PropTypes = {
 }
 
 export default translate(['sesile'])(Classeurs)
+
+
+const ClasseurStateCaption = ({state, color = 'blue'}, {t}) =>
+    <div
+        className="align-middle"
+        style={{
+            marginRight: '10px',
+            display: 'flex',
+            textTransform: 'none',
+            fontSize: '.8em',
+            color: '#4a4c63'}}>
+        <div
+            style={{
+                display: 'inline-block',
+                width: '15px',
+                height: '15px',
+                borderRadius: '10px',
+                background: `${color}`}}>
+        </div>
+        <span
+            style={{
+                marginLeft: '5px',
+                display: 'inline-block'}}>
+            {t(`common.classeurs.status.${state}`)}
+        </span>
+    </div>
+
+ClasseurStateCaption.contextTypes = {
+    t: func
+}
