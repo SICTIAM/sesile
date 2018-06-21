@@ -5,3 +5,12 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@logger'
+    sesile.mailer:
+        class: Sesile\MainBundle\Manager\SesileMailer
+        autowire: false
+        arguments:
+            - '@mailer'
+            - '@templating'
+            - '%domain%'
+            - '%email_sender_address%'
+            - '@logger'
