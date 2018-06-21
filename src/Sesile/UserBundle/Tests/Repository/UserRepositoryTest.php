@@ -56,6 +56,8 @@ class UserRepositoryTest extends SesileWebTestCase
             'username' => $userOne->getUsername(),
         ];
         self::assertArraySubset($userOneArray, $result[0]);
+        self::assertArrayHasKey('roles', $result[0]);
+        self::assertArrayHasKey('ozwilloId', $result[0]);
         /**
          * user two
          */
@@ -68,6 +70,8 @@ class UserRepositoryTest extends SesileWebTestCase
             'username' => $userTwo->getUsername(),
         ];
         self::assertArraySubset($userTwoArray, $result[1]);
+        self::assertArrayHasKey('roles', $result[0]);
+        self::assertArrayHasKey('ozwilloId', $result[0]);
         /**
          * super user
          */

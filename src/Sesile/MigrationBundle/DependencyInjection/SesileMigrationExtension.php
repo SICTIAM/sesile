@@ -21,6 +21,12 @@ class SesileMigrationExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+        $user_gateway = [
+            'gateway_uri' => $config['ozwillo_user_gateway'],
+            'username' => $config['ozwillo_user_gateway_username'],
+            'password' => $config['ozwillo_user_gateway_password']
+        ];
+        $container->setParameter('user_gateway', $user_gateway);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');

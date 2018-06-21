@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
+use Sesile\UserBundle\Entity\User;
 
 /**
  * Class CollectiviteManager
@@ -246,6 +247,23 @@ class CollectiviteManager
         }
 
         return new Message(false, $collectivite);
+    }
+
+    /**
+     * @param $collectivityId
+     *
+     * @return Message
+     */
+    public function getCollectivityUsersList($collectivityId)
+    {
+        try {
+            $data = $this->em->getRepository(User::class)->getUsersByCollectivityId($collectivityId);
+            return new Message(true, $data);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[CollectiviteManager]/getCollectivityUsersList error: %s', $e->getMessage()));
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
     }
 
 }

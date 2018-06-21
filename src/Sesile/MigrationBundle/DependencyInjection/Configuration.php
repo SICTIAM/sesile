@@ -19,6 +19,12 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sesile_migration');
+        $rootNode
+            ->children()
+            ->scalarNode('ozwillo_user_gateway')->isRequired()->end()
+            ->scalarNode('ozwillo_user_gateway_username')->isRequired()->end()
+            ->scalarNode('ozwillo_user_gateway_password')->isRequired()->end()
+            ->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
