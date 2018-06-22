@@ -6,25 +6,14 @@ parameters:
     database_name: sesile-react
     database_user: root
     database_password: sictiam
-    database_driver_test: pdo_mysql
-    database_host_test: db
-    database_port_test: 3306
-    database_name_test: sesile-test
-    database_user_test: root
-    database_password_test: sictiam
-    database_driver_legacy: pdo_mysql
-    database_host_legacy: db
-    database_port_legacy: 3306
-    database_name_legacy: sesile-legacy
-    database_user_legacy: root
-    database_password_legacy: sictiam
     mailer_transport: smtp
     mailer_host: ***REMOVED***
     mailer_user: null
     mailer_password: null
     locale: fr
-    secret: ThisTokenIsNotSoSecretChangeIt
-    ozwillo_user_gateway_uri: "https://usersgw.ozwillo-preprod.eu/api/usersgw"
+    sesile_domain: sesile-dev.local
+    secret: ***REMOVED***
+    ozwillo_user_gateway_uri: 'https://usersgw.ozwillo-preprod.eu/api/usersgw'
     ozwillo_user_gateway_username: admin
     ozwillo_user_gateway_password: ***REMOVED***
     contact_email: demat@sictiam.fr
