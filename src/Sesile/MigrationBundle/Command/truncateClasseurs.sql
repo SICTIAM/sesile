@@ -1,0 +1,13 @@
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE Classeur_visible;
+TRUNCATE ClasseursUsers;
+TRUNCATE Action;
+TRUNCATE Classeur_copy;
+TRUNCATE etapeclasseur_userpack;
+TRUNCATE etapeclasseur_user;
+TRUNCATE EtapeClasseur;
+TRUNCATE DocumentDetachedSign;
+TRUNCATE DocumentHistory;
+TRUNCATE Document;
+TRUNCATE Classeur;
+SET FOREIGN_KEY_CHECKS = 1;
