@@ -20,6 +20,7 @@ class OzwilloProvisioner
 {
     const SERVICE_LOCAL_ID = "sesile";
     const SESILE_ICON_URI = 'https://www.ozwillo.com/static/img/editors/sesile-icon-64x64.png';
+    const OZWILLO_CONNECT_URI = 'connect/ozwillo';
     /**
      * @var Client
      */
@@ -186,7 +187,7 @@ class OzwilloProvisioner
             'service_uri' => $this->urlRegistrationToKernel(
                 $collectivite,
                 $this->router->generate('sesile_main_default_app')
-            ),
+            ) . self::OZWILLO_CONNECT_URI,
             'redirect_uris' => [
                 $this->urlRegistrationToKernel(
                     $collectivite,

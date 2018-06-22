@@ -97,7 +97,7 @@ class OzwilloProvisionerTest extends SesileWebTestCase
             'visibility' => "VISIBLE",
             'access_control' => "RESTRICTED",
 //            'service_uri' => $this->urlRegistrationToKernel($collectivite, '/'),
-            'service_uri' => 'https://sictiam.sesile.fr/',
+            'service_uri' => 'https://sictiam.sesile.fr/connect/ozwillo',
 //            'redirect_uris' => [$this->urlRegistrationToKernel($collectivite, '/login/check-ozwillo')],
             'redirect_uris' => ['https://sictiam.sesile.fr/login/check-ozwillo'],
         ];
