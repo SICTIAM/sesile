@@ -31,20 +31,6 @@ class MigrationApiController extends Controller
     }
 
     /**
-     * @Rest\Get("/collectivity/legacy/list", options = { "expose" = true }, name="v3v4_migrate_legacy_list")
-     * @return Response
-     */
-    public function getLegacyCollectivityListAction()
-    {
-        $result = $this->get('legacy.collectivity.manager')->getLegacyCollectivityList();
-        if (false === $result->isSuccess()) {
-            return new JsonResponse(null, Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
-        return new JsonResponse($result->getData(), Response::HTTP_OK);
-    }
-
-    /**
      * @Rest\Get("/org/check/siren/{siren}", options = { "expose" = true }, name="v3v4_migrate_check_siren")
      * @return Response
      */

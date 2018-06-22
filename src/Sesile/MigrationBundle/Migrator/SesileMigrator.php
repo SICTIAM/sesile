@@ -46,6 +46,16 @@ class SesileMigrator implements SesileMigratorInterface
         $this->logger = $logger;
     }
 
+    /**
+     * it creates a new entry into the table sesile_migration
+     * + it sets the siren to the collectivity
+     * + it checks if already the collectivity has been "provisioned"
+     * in this case we switch the collectivity ozwillo
+     * 
+     * @param $collectivityId
+     * @param $siren
+     * @return Message
+     */
     public function hanldeNewMigration($collectivityId, $siren)
     {
         $collectivityMsg = $this->collectivityManager->getCollectivity($collectivityId);

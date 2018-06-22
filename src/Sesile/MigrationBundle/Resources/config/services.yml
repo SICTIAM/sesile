@@ -1,29 +1,10 @@
 services:
-    legacy.collectivity.manager:
-        class: Sesile\MigrationBundle\Manager\LegacyCollectivityManager
-        arguments: ["@legacy.collectivity.service", "@logger"]
     sesile_migration.manager:
         class: Sesile\MigrationBundle\Manager\SesileMigrationManager
         arguments: ["@doctrine.orm.default_entity_manager", '@sesile.mailer' ,'%contact%', "@logger"]
-    legacy.collectivity.service:
-        class: Sesile\MigrationBundle\Service\LegacyCollectivityService
-        arguments: ["@doctrine.dbal.legacy_connection"]
-    legacy.user.service:
-        class: Sesile\MigrationBundle\Service\LegacyUserService
-        arguments: ["@doctrine.dbal.legacy_connection"]
     sesile.migrator:
         class: Sesile\MigrationBundle\Migrator\SesileMigrator
         arguments: ["@sesile_migration.manager", "@collectivite.manager", "@logger"]
-        tags:
-            - { name: monolog.logger, channel: migrator }
-    collectivity.migrator:
-        class: Sesile\MigrationBundle\Migrator\CollectivityMigrator
-        arguments: ["@legacy.collectivity.service", "@collectivite.manager", "@logger"]
-        tags:
-            - { name: monolog.logger, channel: migrator }
-    user.migrator:
-        class: Sesile\MigrationBundle\Migrator\UserMigrator
-        arguments: ["@legacy.user.service", "@fos_user.user_manager", "@logger"]
         tags:
             - { name: monolog.logger, channel: migrator }
     sesile_user.migrator:

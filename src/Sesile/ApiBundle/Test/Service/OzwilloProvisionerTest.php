@@ -85,9 +85,10 @@ class OzwilloProvisionerTest extends SesileWebTestCase
          */
         $requestBody = json_decode($lastRequest->getBody()->getContents(), true);
         self::assertEquals($collectivite->getOzwillo()->getInstanceId(), $requestBody['instance_id']);
+        $domainParameter = $this->getContainer()->getParameter('domain');
         $services = [
-            'local_id' => OzwilloProvisioner::SERVICE_LOCAL_ID . '-'.$collectivite->getDomain(),
-            'name' => "SESILE - " . $collectivite->getNom(),
+            'local_id' => OzwilloProvisioner::SERVICE_LOCAL_ID.'-'.$collectivite->getDomain(),
+            'name' => "SESILE - ".$collectivite->getNom(),
             'tos_uri' => "https://sesile.fr/tos",
             'policy_uri' => "https://sesile.fr/policy",
             'icon' => "https://www.ozwillo.com/static/img/editors/sesile-icon-64x64.png",
@@ -97,9 +98,9 @@ class OzwilloProvisionerTest extends SesileWebTestCase
             'visibility' => "VISIBLE",
             'access_control' => "RESTRICTED",
 //            'service_uri' => $this->urlRegistrationToKernel($collectivite, '/'),
-            'service_uri' => 'https://sictiam.sesile.fr/connect/ozwillo',
+            'service_uri' => 'https://sictiam.'.$domainParameter.'/connect/ozwillo',
 //            'redirect_uris' => [$this->urlRegistrationToKernel($collectivite, '/login/check-ozwillo')],
-            'redirect_uris' => ['https://sictiam.sesile.fr/login/check-ozwillo'],
+            'redirect_uris' => ['https://sictiam.'.$domainParameter.'/login/check-ozwillo'],
         ];
         self::assertCount(1, $requestBody['services']);
         self::assertArraySubset($services, $requestBody['services'][0]);
