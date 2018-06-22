@@ -41,7 +41,21 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
 
     public function testMigrateUsers()
     {
-        $mock = new MockHandler([new Response(200, [])]);
+        $mock = new MockHandler([new Response(200, ['Content-Type' => 'application/json'], '{
+            "organizationId": "3955d5f0-9174-434a-8fea-65b1bd95b289",
+            "instanceId": "8127cb38-46ba-4885-a8e1-be07d0ff042f",
+            "creatorId": "cbb67b1d-612b-4a6e-b2c3-e1b215fe685a",
+            "serviceId": "4940052b-3ab0-4967-92cd-c22c26c1e408",
+            "_id": {
+                "timestamp": 1529669891,
+                "machineIdentifier": 15392675,
+                "processIdentifier": 32467,
+                "counter": 11637971,
+                "date": "2018-06-22T12:18:11.000+0000",
+                "time": 1529669891000,
+                "timeSecond": 1529669891
+            }
+        }')]);
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
         $collectivityManager = $this->getMockBuilder(CollectiviteManager::class)

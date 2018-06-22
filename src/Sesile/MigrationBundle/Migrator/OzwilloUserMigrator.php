@@ -62,7 +62,7 @@ class OzwilloUserMigrator implements SesileMigratorInterface
      * @param Collectivite $collectivity
      * @return Message
      */
-        public function exportCollectivityUsers(Collectivite $collectivity)
+    public function exportCollectivityUsers(Collectivite $collectivity)
     {
         try {
             $collectivityOzwillo = $collectivity->getOzwillo();
