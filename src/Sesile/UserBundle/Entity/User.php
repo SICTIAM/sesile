@@ -266,7 +266,7 @@ class User extends BaseUser {
     /**
      * @var float
      * 
-     * @ORM\Column(name="sesile_version", type="float")
+     * @ORM\Column(name="sesile_version", type="float", nullable=true)
      */
     private $sesileVersion = 0;
 
