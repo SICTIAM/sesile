@@ -29,10 +29,10 @@ class Version20180501141159 extends AbstractMigration
         $this->addSql('ALTER TABLE Circuit_copy ADD CONSTRAINT FK_3C730687A76ED395 FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE');
         $this->addSql('DROP TABLE UserGroupe');
         $this->addSql('ALTER TABLE Collectivite CHANGE pageSignature pageSignature INT DEFAULT 0 NOT NULL');
-        $this->addSql('ALTER TABLE EtapeClasseur CHANGE EtapeValidante EtapeValidante TINYINT(1) DEFAULT \'0\' NOT NULL, CHANGE date date DATETIME NOT NULL');
         $this->addSql('ALTER TABLE Collectivite ADD siren VARCHAR(10) DEFAULT NULL, ADD textcopymailnew VARCHAR(3000) DEFAULT NULL, ADD textcopymailwalid VARCHAR(3000) DEFAULT NULL, CHANGE pageSignature pageSignature INT DEFAULT 0');
         $this->addSql('ALTER TABLE EtapeClasseur ADD etapeValide TINYINT(1) DEFAULT \'0\' NOT NULL, ADD date DATETIME DEFAULT NULL, ADD userValidant INT DEFAULT NULL, CHANGE EtapeValidante EtapeValidante TINYINT(1) DEFAULT \'0\'');
         $this->addSql('ALTER TABLE EtapeClasseur ADD CONSTRAINT FK_B476E85F4DBC755C FOREIGN KEY (userValidant) REFERENCES User (id)');
+        $this->addSql('ALTER TABLE EtapeClasseur CHANGE EtapeValidante EtapeValidante TINYINT(1) DEFAULT \'0\' NOT NULL, CHANGE date date DATETIME NOT NULL');
         $this->addSql('CREATE INDEX IDX_B476E85F4DBC755C ON EtapeClasseur (userValidant)');
         $this->addSql('ALTER TABLE Groupe DROP couleur, DROP json, DROP ordreEtape');
         $this->addSql('ALTER TABLE User ADD ozwilloId VARCHAR(255) DEFAULT NULL, CHANGE sesile_version sesile_version DOUBLE PRECISION DEFAULT NULL');
@@ -51,10 +51,6 @@ class Version20180501141159 extends AbstractMigration
         $this->addSql('INSERT INTO Ref_Collectivite_User (user_id, collectivite_id) (SELECT u.id as user_id, u.collectivite as collectivite_id FROM User u where u.collectivite is NOT NULL)');
         $this->addSql('ALTER TABLE Ref_Collectivite_User ADD CONSTRAINT FK_762C809A76ED395 FOREIGN KEY (user_id) REFERENCES User (id)');
         $this->addSql('ALTER TABLE Ref_Collectivite_User ADD CONSTRAINT FK_762C809A7991F51 FOREIGN KEY (collectivite_id) REFERENCES Collectivite (id)');
-
-
-
-
     }
 
     /**
