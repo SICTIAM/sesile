@@ -50,8 +50,7 @@ class ClasseurNew extends Component {
 
     getCircuitsValidation() {
         const { t, _addNotification} = this.context
-
-        fetch(Routing.generate('sesile_user_circuitvalidationapi_listbyuser'), {credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_user_circuitvalidationapi_listbyuser', {orgId: this.props.user.current_org_id}), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(circuits => {
                 if (circuits.length === 0) {

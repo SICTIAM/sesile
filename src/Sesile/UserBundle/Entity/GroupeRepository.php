@@ -34,10 +34,18 @@ class GroupeRepository extends EntityRepository
         return array_unique($users);
     }
 
-    public function getCircuits ($circuitsId, $user) {
+    /**
+     * @param $circuitsId
+     * @param $user
+     * @param Collectivite $collectivite
+     * @return array|Groupe[]
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function getCircuits ($circuitsId, $user, Collectivite $collectivite) {
 
         $em = $this->getEntityManager();
-        $circuits = $em->getRepository('SesileUserBundle:Groupe')->findById($circuitsId);
+//        $circuits = $em->getRepository('SesileUserBundle:Groupe')->findById($circuitsId);
+        $circuits = $em->getRepository('SesileUserBundle:Groupe')->findBy(['id' => $circuitsId, 'collectivite' => $collectivite]);
 
         foreach ($circuits as $circuit) {
             $etapeDeposante = false;

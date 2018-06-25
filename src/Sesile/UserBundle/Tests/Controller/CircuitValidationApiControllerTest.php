@@ -63,4 +63,16 @@ class CircuitValidationApiControllerTest extends SesileWebTestCase
         $this->client->request('GET', sprintf('/apirest/circuit_validations/%s', $collectiviteTwo->getId()));
         $this->assertStatusCode(404, $this->client);
     }
+
+    public function testListByUserAction()
+    {
+        $this->logIn($this->fixtures->getReference('user-one'));
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $circuitValidation = $this->fixtures->getReference('circuit-validation');
+        $this->client->request('GET', sprintf('/apirest/circuit_validations_user/orgId/%s', $collectivite->getId()));
+        $this->assertStatusCode(200, $this->client);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(1, $data);
+        self::assertEquals($circuitValidation->getId(), $data[0]['id']);
+    }
 }
