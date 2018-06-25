@@ -6,8 +6,11 @@ hwi_oauth:
     resource_owners:
         ozwillo:
             type:                ozwillo
-            client_id:           2e771747-f906-4125-ba96-806553bc2ce2
-            client_secret:       ***REMOVED***
+            client_id:           '%ozwillo_client_id%'
+            client_secret:       '%ozwillo_client_secret%'
+            access_token_url:    '%ozwillo_access_token_url%'
+            authorization_url:   '%ozwillo_authorization_url%'
+            infos_url:           '%ozwillo_infos_url%'
 
 parameters:
 #    domain: sesile.fr
