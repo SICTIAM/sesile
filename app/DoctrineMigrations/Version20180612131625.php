@@ -28,7 +28,6 @@ class Version20180612131625 extends AbstractMigration
                 WHERE c.textcopymailwalid IS NULL;');
         $this->addSql('CREATE TABLE sesile_migration (id INT AUTO_INCREMENT NOT NULL, collectivity_id VARCHAR(255) NOT NULL, collectivity_name VARCHAR(255) DEFAULT NULL, siren VARCHAR(9) NOT NULL, status VARCHAR(10) NOT NULL, users_exported TINYINT(1) NOT NULL, old_id VARCHAR(255) DEFAULT NULL, date DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('ALTER TABLE Collectivite CHANGE siren siren VARCHAR(10) DEFAULT NULL');
-        $this->addSql('ALTER TABLE collectivite_ozwillo ADD organizationId VARCHAR(100) DEFAULT NULL');
     }
 
     /**
@@ -40,6 +39,5 @@ class Version20180612131625 extends AbstractMigration
 
         $this->addSql('DROP TABLE sesile_migration');
         $this->addSql('ALTER TABLE Collectivite CHANGE siren siren VARCHAR(10) NOT NULL COLLATE utf8_unicode_ci');
-        $this->addSql('ALTER TABLE collectivite_ozwillo DROP organizationId');
     }
 }
