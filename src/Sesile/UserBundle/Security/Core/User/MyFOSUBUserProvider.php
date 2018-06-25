@@ -78,6 +78,7 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
         // if null just create new user and set it properties
         if (null === $user) {
             $username = $response->getRealName();
+            $username = $userEmail;
 
             return $this->saveNewUser($username, $userEmail, $data, $ozwilloCollectiviteResult->getData()->getCollectivite());
         }

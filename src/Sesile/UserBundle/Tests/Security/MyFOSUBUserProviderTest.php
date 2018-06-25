@@ -143,7 +143,8 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         $this->em->clear();
         $dbUser = $this->em->getRepository(User::class)->find($result->getId());
         self::assertEquals('cbb67b1d-612b-4a6e-b2c3-e1b215fe685a', $dbUser->getOzwilloId());
-        self::assertEquals('newUsername', $dbUser->getUsername());
+//        self::assertEquals('newUsername', $dbUser->getUsername());
+        self::assertEquals('new@user.com', $dbUser->getUsername());
         self::assertEquals('new@user.com', $dbUser->getEmail());
         self::assertEquals('new family name', $dbUser->getNom());
         self::assertEquals('new name', $dbUser->getPrenom());
