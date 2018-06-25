@@ -10,13 +10,13 @@ hwi_oauth:
             client_secret:       ***REMOVED***
 
 parameters:
-    domain: sesile.fr
-    database_driver: pdo_mysql
-    database_host: 127.0.0.1
-    database_port: null
-    database_name: sesileprod
-    database_user: root
-    database_password: ***REMOVED***
+#    domain: sesile.fr
+#    database_driver: pdo_mysql
+#    database_host: 127.0.0.1
+#    database_port: null
+#    database_name: sesileprod
+#    database_user: root
+#    database_password: ***REMOVED***
     secret: ***REMOVED***
     domain_parse:
         default: sesile
