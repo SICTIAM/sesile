@@ -100,9 +100,13 @@ class OzwilloProvisionerTest extends SesileWebTestCase
 //            'service_uri' => $this->urlRegistrationToKernel($collectivite, '/'),
             'service_uri' => 'https://sictiam.'.$domainParameter.'/connect/ozwillo',
 //            'redirect_uris' => [$this->urlRegistrationToKernel($collectivite, '/login/check-ozwillo')],
-            'redirect_uris' => ['https://sictiam.'.$domainParameter.'/login/check-ozwillo'],
+            'redirect_uris' => [
+                'https://sictiam.'.$domainParameter.'/login/check-ozwillo',
+                'http://sictiam.'.$domainParameter.'/login/check-ozwillo',
+            ],
         ];
         self::assertCount(1, $requestBody['services']);
+        self::assertCount(2, $requestBody['services'][0]['redirect_uris']);
         self::assertArraySubset($services, $requestBody['services'][0]);
         self::assertArrayHasKey('destruction_uri', $requestBody);
         self::assertArrayHasKey('destruction_secret', $requestBody);

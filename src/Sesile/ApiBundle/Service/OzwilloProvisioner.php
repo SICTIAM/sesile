@@ -185,13 +185,18 @@ class OzwilloProvisioner
             'visibility' => "VISIBLE",
             'access_control' => "RESTRICTED",
             'service_uri' => $this->urlRegistrationToKernel(
-                $collectivite,
-                $this->router->generate('sesile_main_default_app')
-            ) . self::OZWILLO_CONNECT_URI,
+                    $collectivite,
+                    $this->router->generate('sesile_main_default_app')
+                ).self::OZWILLO_CONNECT_URI,
             'redirect_uris' => [
                 $this->urlRegistrationToKernel(
                     $collectivite,
                     $this->router->generate('ozwillo_login')
+                ),
+                $this->urlRegistrationToKernel(
+                    $collectivite,
+                    $this->router->generate('ozwillo_login'),
+                    false
                 ),
             ],
         ];
@@ -223,12 +228,18 @@ class OzwilloProvisioner
 
     /**
      * @param Collectivite $collectivite
-     * @param $path
+     * @param string $path
+     * @param bool $https
      * @return string
      */
-    private function urlRegistrationToKernel(Collectivite $collectivite, $path)
+    private function urlRegistrationToKernel(Collectivite $collectivite, $path, $https = true)
     {
-        return 'https://'.$collectivite->getDomain().'.'.$this->domain.$path;
+        $uri = $collectivite->getDomain().'.'.$this->domain.$path;
+        if (false === $https) {
+            return 'http://'.$uri;
+        }
+
+        return 'https://'.$uri;
     }
 
 }
