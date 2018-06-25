@@ -77,7 +77,7 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
 
         // if null just create new user and set it properties
         if (null === $user) {
-            $username = $response->getRealName();
+//            $username = $response->getRealName();
             $username = $userEmail;
 
             return $this->saveNewUser($username, $userEmail, $data, $ozwilloCollectiviteResult->getData()->getCollectivite());
@@ -90,9 +90,15 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
 //        $serviceName = $response->getResourceOwner()->getName();
 //        $setter = 'set' . ucfirst($serviceName) . 'AccessToken';
 //        $user->$setter($response->getAccessToken());//update access token
-        $user->setNom($data['family_name']);
-        $user->setPrenom($data['given_name']);
-        $user->setOzwilloId($data['sub']);
+        if (isset($data['family_name'])) {
+            $user->setNom($data['family_name']);
+        }
+        if (isset($data['given_name'])) {
+            $user->setPrenom($data['given_name']);
+        }
+        if (isset($data['sub'])) {
+            $user->setOzwilloId($data['sub']);
+        }
         $this->userManager->updateUser($user);
         $user->setCurrentOrgId($ozwilloCollectiviteResult->getData()->getCollectivite()->getId());
 

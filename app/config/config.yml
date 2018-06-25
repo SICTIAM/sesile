@@ -36,7 +36,8 @@ twig:
         upload_path_signatures: /uploads/signatures/
         sesile_version: 3.5
         id_video_yt: 'ms-YYoaU4PE'
-        only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
+#        only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
+        only_office_url: '%only_office_url%'
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 stof_doctrine_extensions:

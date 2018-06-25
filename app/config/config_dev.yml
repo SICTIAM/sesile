@@ -62,7 +62,7 @@ parameters:
 # Twig Configuration
 twig:
     globals:
-        only_office_url: 'http://localhost:8080/web-apps/apps/api/documents/api.js'
+        only_office_url: '%only_office_url%'
 
 swiftmailer:
     disable_delivery: true

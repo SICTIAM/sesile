@@ -125,10 +125,10 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
             ->expects($this->once())
             ->method('getEmail')
             ->will($this->returnValue($email));
-        $userProviderResponseMock
-            ->expects($this->once())
-            ->method('getRealName')
-            ->will($this->returnValue($username));
+//        $userProviderResponseMock
+//            ->expects($this->once())
+//            ->method('getRealName')
+//            ->will($this->returnValue($username));
         $userProviderResponseMock
             ->expects($this->once())
             ->method('getData')
