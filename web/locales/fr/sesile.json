@@ -223,7 +223,15 @@
         "download": "Télécharger",
         "error_loading_classeur": "Une erreur est survenue lors du chargement de la liste",
         "electronic_signature": "Signature électronique",
-        "stakeholders": "Intervenants"
+        "stakeholders": "Intervenants",
+        "siren": "siren",
+        "type_siren_collectivite": "Saisir le SIREN de la colléctivité",
+        "migrate": "migrer",
+        "migration_is_begin": "La migration a été lancée",
+        "empty_list": "Aucun élements à afficher",
+        "exported": "Exportés",
+        "not_exported": "Non exportés",
+        "export_user_is_begin": "L'export des utilisateurs vers Ozwillo a été lancée"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
@@ -472,7 +480,8 @@
         "role_application": {
             "name": "role",
             "name_plural": "roles"
-        }
+        },
+        "migration": "migration"
     },
     "classeur": {
         "name": "Classeur",

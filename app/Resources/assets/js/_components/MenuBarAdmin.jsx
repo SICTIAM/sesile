@@ -25,6 +25,8 @@ class MenuBarAdmin extends Component {
                     <li><Link to={"/admin/emailing"} className="button gray btn-user-conf"><span>{t('admin.emailing.name')}</span></Link></li>}
                 {isSuperAdmin &&
                     <li><Link to={"/admin/notes"} className="button gray btn-user-conf"><span>{t('admin.notes.name', {context: 'plural'})}</span></Link></li>}
+                {isSuperAdmin &&
+                    <li><Link to={"/admin/migration"} className="button gray btn-user-conf"><span>{t('admin.migration')}</span></Link></li>}
             </ul>
         )
     }

@@ -20,6 +20,7 @@ class SelectCollectivite extends Component {
             .then(collectivites => {
                 this.setState({collectivites})
             })
+            // @todo modify translation of the notification
             .catch(error => this.context._addNotification(basicNotification(
                 'error',
                 this.context.t('classeur.error.edit', {errorCode: error.status}),

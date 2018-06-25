@@ -19,6 +19,7 @@ class SesileMigrationRepository extends \Doctrine\ORM\EntityRepository
             ->select('sm.id','sm.collectivityId','sm.collectivityName','sm.siren','sm.status','sm.usersExported','sm.date', 'sm.oldId')
             ->leftJoin('SesileMainBundle:CollectiviteOzwillo', 'o', 'WITH', 'o.collectivite = sm.collectivityId')
             ->addSelect('o.instanceId', 'o.serviceId')
+            ->addOrderBy('sm.date', 'DESC')
             ->getQuery()
             ->getArrayResult()
             ;

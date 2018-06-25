@@ -12,6 +12,7 @@ import Documentations from '../admin/Documentations'
 import Documentation from '../admin/Documentation'
 import Groups from '../admin/Groups'
 import Group from '../admin/Group'
+import Migration from '../admin/Migration'
 import Notes from '../admin/Notes'
 import Note from '../admin/Note'
 import Users from '../admin/Users'
@@ -68,6 +69,7 @@ class AppRoute extends Component {
                 <AdminRoute exact={true} path={"/admin/documentations"} component={Documentations} user={user} superAdmin={true} />
                 <AdminRoute exact={true} path={"/admin/emailing"} component={Emailing} user={user} superAdmin={true} />
                 <AdminRoute exact={true} path={"/admin/notes"} component={Notes} user={user} superAdmin={true} />
+                <AdminRoute exact={true} path={"/admin/migration"} component={Migration} user={user} superAdmin={true} />
                 <Route exact={true} path={"/admin/:collectiviteId/groupe/:groupId?"} render={({ match}) => (
                     <AdminRoute exact={true} path={match.path} component={Group} user={user} match={match} />                    
                 )} />
