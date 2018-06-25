@@ -6,6 +6,7 @@ import { translate } from 'react-i18next'
 import { handleErrors } from '../_utils/Utils'
 import { Chart } from 'react-google-charts'
 import { basicNotification } from '../_components/Notifications'
+import Moment from 'moment'
 
 class DashBoard extends Component {
 
@@ -19,13 +20,22 @@ class DashBoard extends Component {
         this.state = {
             currentOrgId : this.props.user.current_org_id,
             lastClasseurs: [],
-            urgentClasseurs: []
+            urgentClasseurs: [],
+            certificate: null
         }
     }
 
     componentDidMount() {
         this.fetchLastClasseurs()
         this.fetchUrgentClasseurs()
+        this.fetchCertificate()
+    }
+
+    fetchCertificate() {
+        fetch(Routing.generate("sesile_user_userapi_getcertificate"), {credentials: 'same-origin'})
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(certificate => this.setState({certificate}))
     }
 
     fetchLastClasseurs() {
@@ -65,6 +75,11 @@ class DashBoard extends Component {
 
         const { lastClasseurs, urgentClasseurs } = this.state
         const { t } = this.context
+        if (this.state.certificate && this.state.certificate.HTTP_X_SSL_CLIENT_NOT_AFTER) {
+            var now = Moment();
+            var end = Moment(this.state.certificate.HTTP_X_SSL_CLIENT_NOT_AFTER);
+            var certificateRemainingDays = end.diff(now, 'days');
+        }
 
         return (
             <div className="grid-x">
@@ -87,10 +102,22 @@ class DashBoard extends Component {
                                     </div>
                                     <div className="grid-x panel-body grid-padding-x dashboard-title align-middle">
                                         <div className="cell medium-8 small-12 text-center medium-text-left text-bold">
-                                            { t('common.user.certificate_validity', {count: 5}) }
+                                            { this.state.certificate && certificateRemainingDays &&
+                                                <span>{t('common.user.certificate_validity', {count: certificateRemainingDays})}</span>}
+                                            <Link
+                                                className="button float-left text-uppercase hollow"
+                                                to="https://www.sictiam.fr/certificat-electronique/"
+                                                target="_blank">
+                                                {t('common.button.certificate_order')}
+                                            </Link>
                                         </div>
                                         <div className="cell medium-4 small-12 text-center medium-text-right">
-                                            <Link className="button primary hollow" to="https://www.sictiam.fr/certificat-electronique/" target="_blank">{ t('common.button.certificate_order') }</Link>
+                                            {this.state.certificate &&
+                                            <Link
+                                                className="button text-uppercase hollow"
+                                                to="/utilisateur/certificat-electronique">
+                                                {t('common.button.certificate_user')}
+                                            </Link>}
                                         </div>
                                     </div>
                                 </div>
