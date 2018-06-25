@@ -45,7 +45,7 @@ class HeliosInfos extends Component {
                 <div className="grid-x">
                     <div className="cell medium-3 text-bold">{t('common.helios.signing')}</div>
                     <div className="cell medium-9">
-                        { pes.signataire ? pes.signataire : t('common.helios.no_signing') }
+                        { pes.signatory ? pes.signatory : t('common.helios.no_signing') }
                     </div>
                 </div>
             </div>
