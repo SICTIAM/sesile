@@ -94,6 +94,10 @@ class OzwilloUserMigratorTest extends LegacyWebTestCase
         self::assertEquals($colectivityUserAdminOzwilloId, $requestBody['ozwilloInstanceInfo']['creatorId']);
         //@todo serviceId must be properly set during the provisioning
         self::assertEquals($fixtureCollectivityOzwillo->getServiceId(), $requestBody['ozwilloInstanceInfo']['serviceId']);
+        self::assertEquals($fixtureCollectivityOzwillo->getClientId(), $requestBody['ozwilloInstanceInfo']['clientId']);
+        self::assertEquals($fixtureCollectivityOzwillo->getClientSecret(), $requestBody['ozwilloInstanceInfo']['clientSecret']);
+        self::assertEquals("SESILE v4", $requestBody['ozwilloInstanceInfo']['creatorName']);
+        self::assertEquals("http://data.ozwillo.com/dc/type/orgfr:Organisation_0/FR/".$collectivity->getSiren(), $requestBody['ozwilloInstanceInfo']['dcId']);
 
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());

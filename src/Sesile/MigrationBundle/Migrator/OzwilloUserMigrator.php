@@ -97,7 +97,7 @@ class OzwilloUserMigrator implements SesileMigratorInterface
                 return new Message(false, null, [$msg]);
             }
 
-            $requestOptions = $this->buildRequestData($collectivityOzwillo, $users);
+            $requestOptions = $this->buildRequestData($collectivityOzwillo, $collectivity->getSiren(), $users);
             $response = $this->client->request('POST', $this->config['gateway_uri'], $requestOptions);
             if ($response->getStatusCode() === Response::HTTP_OK) {
                 $migrationReport = $this->buildMigrationReport(
@@ -105,6 +105,7 @@ class OzwilloUserMigrator implements SesileMigratorInterface
                     $collectivityOzwillo,
                     $requestOptions['json']['ozwilloInstanceInfo']['creatorId']
                 );
+
                 return new Message(true, $migrationReport);
             }
             $msg = sprintf(
@@ -150,10 +151,11 @@ class OzwilloUserMigrator implements SesileMigratorInterface
 
     /**
      * @param CollectiviteOzwillo $collectivityOzwillo
+     * @param string $siren
      * @param array $users
      * @return array
      */
-    private function buildRequestData(CollectiviteOzwillo $collectivityOzwillo, array $users = [])
+    private function buildRequestData(CollectiviteOzwillo $collectivityOzwillo, $siren, array $users = [])
     {
         $emailArray = array_map(
             function ($user) {
@@ -169,6 +171,10 @@ class OzwilloUserMigrator implements SesileMigratorInterface
                 "instanceId" => $collectivityOzwillo->getInstanceId(),
                 "creatorId" => $adminUserOzwilloId,
                 "serviceId" => $collectivityOzwillo->getServiceId(),
+                "clientId" => $collectivityOzwillo->getClientId(),
+                "clientSecret" => $collectivityOzwillo->getClientSecret(),
+                "creatorName" => 'SESILE v4',
+                "dcId" => sprintf('http://data.ozwillo.com/dc/type/orgfr:Organisation_0/FR/%s', $siren),
             ],
         ];
         $requestOptions = [
@@ -186,7 +192,7 @@ class OzwilloUserMigrator implements SesileMigratorInterface
     private function findAdminUserOzwilloId($users)
     {
         foreach ($users as $user) {
-            if (in_array('ROLE_ADMIN', $user['roles']) && $user['ozwilloId'] != ''){
+            if (in_array('ROLE_ADMIN', $user['roles']) && $user['ozwilloId'] != '') {
                 return $user['ozwilloId'];
             }
         }
