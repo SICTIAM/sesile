@@ -23,7 +23,9 @@ class ClasseurNew extends Component {
     state = {
         edit: true,
         circuits: [],
-        circuit: {},
+        circuit: {
+            users_copy: []
+        },
         type:{},
         classeur: {
             nom: '',
@@ -136,7 +138,7 @@ class ClasseurNew extends Component {
 
     handleChangeCircuit = (name, value) => {
         const circuit = this.state.circuits.find(circuit => circuit.id === parseInt(value))
-        this.setState({circuit})
+        this.setState({circuit, documents: [], type: circuit.types[0]})
         const usersCopy = circuit.users_copy.map(user => {
             return {label: user._prenom + " " + user._nom, value: user.id}
         })
@@ -146,7 +148,7 @@ class ClasseurNew extends Component {
         const type = this.state.circuit.types.find(type => type.id === parseInt(value))
         this.setState(prevState => {prevState.type = type})
         if (type.nom === "Helios" && (this.state.documents.length > 0 || this.state.documents.find(document => document.type !== 'text/xml'))) {
-            this.setState(prevState => prevState.documents = [this.state.documents.find(document => document.type === 'text/xml')])
+            this.setState({documents: []})
         }
     }
     handleChangeClasseur = (key, value) => this.setState(prevState => {prevState.classeur[key] = value})
