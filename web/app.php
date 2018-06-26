@@ -2,6 +2,7 @@
 
 use Symfony\Component\HttpFoundation\Request;
 
+umask(0002);
 $loader = require_once __DIR__ . '/../app/autoload.php';
 
 // Use APC for autoloading to improve performance.
