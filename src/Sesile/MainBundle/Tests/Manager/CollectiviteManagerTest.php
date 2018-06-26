@@ -7,12 +7,14 @@ use Doctrine\ORM\EntityManager;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
+use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Sesile\MainBundle\Entity\CollectiviteRepository;
 use Sesile\MainBundle\Manager\CollectiviteManager;
 use Sesile\MainBundle\Repository\CollectiviteOzwilloRepository;
+use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
 use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\UserRepository;
 
@@ -20,7 +22,7 @@ use Sesile\UserBundle\Entity\UserRepository;
  * Class CollectiviteManagerTest
  * @package Sesile\MainBundle\Tests\Manager
  */
-class CollectiviteManagerTest extends WebTestCase
+class CollectiviteManagerTest extends SesileWebTestCase
 {
     /**
      * @var EntityManager
@@ -35,7 +37,7 @@ class CollectiviteManagerTest extends WebTestCase
      */
     protected $collectiviteManager;
 
-    protected function setUp()
+    public function setUp()
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->logger = $this->createMock(LoggerInterface::class);
@@ -509,5 +511,26 @@ class CollectiviteManagerTest extends WebTestCase
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
         self::assertNull($result->getData());
+    }
+
+    public function testRemoveCollectivity()
+    {
+        $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        $collectivity = CollectiviteFixtures::aValidCollectivite();
+        $em->persist($collectivity);
+        $em->flush();
+        $assertCollectivityId = $collectivity->getId();
+        $collectiviteManager = new CollectiviteManager($em, $this->logger);
+
+        $result = $collectiviteManager->removeCollectivity($collectivity);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertEquals($assertCollectivityId, $result->getData());
+        /**
+         * check DB
+         */
+        $em->clear();
+        $res = $em->getRepository(Collectivite::class)->find($result->getData());
+        self::assertNull($res);
     }
 }
