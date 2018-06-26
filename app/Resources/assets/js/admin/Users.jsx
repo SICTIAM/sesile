@@ -21,14 +21,14 @@ class Users extends Component {
     state = {
         users: [],
         filteredUsers: [],
-        collectiviteId: this.props.user.collectivite.id,
+        collectiviteId: this.props.user.current_org_id,
         fieldSearch: '',
         infos: '',
         isSuperAdmin: false
     }
     componentDidMount() {
         if(this.props.user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
-        this.fetchUsers(this.props.user.collectivite.id)
+        this.fetchUsers(this.props.user.current_org_id)
     }
     fetchUsers (id) {
         const { t, _addNotification } = this.context
@@ -70,7 +70,7 @@ class Users extends Component {
     render() {
         const { t } = this.context
         const listUser = this.state.filteredUsers.map(filteredUser =>
-            <RowUser key={filteredUser.id} User={filteredUser} handleDeleteUser={this.handleDeleteUser} />)
+            <RowUser key={filteredUser.id} User={filteredUser} handleDeleteUser={this.handleDeleteUser} collectiviteId={this.state.collectiviteId}/>)
 
         return (
             <AdminPage
@@ -115,7 +115,7 @@ Users.PropTypes = {
 
 export default translate(['sesile'])(Users)
 
-const RowUser = ({User, handleDeleteUser}, {t}) => 
+const RowUser = ({User, handleDeleteUser, collectiviteId}, {t}) =>
     <AdminListRow>
         <Cell className="medium-auto">
             {User._prenom} {User._nom}
@@ -130,13 +130,13 @@ const RowUser = ({User, handleDeleteUser}, {t}) =>
             <GridX>
                 <Cell className="medium-auto">
                     <Link 
-                        to={`/admin/${User.collectivite.id}/utilisateur/${User.id}`} 
+                        to={`/admin/${collectiviteId}/utilisateur/${User.id}`}
                         className="fa fa-pencil icon-action" 
                         title={t('common.button.edit')}/>
                 </Cell>
                 <Cell className="medium-auto">
                     <Link 
-                        to={`/admin/${User.collectivite.id}/classeurs/${User.id}`} 
+                        to={`/admin/${collectiviteId}/classeurs/${User.id}`}
                         className="fa fa-th-list icon-action" 
                         title={t('common.classeur', {count: 2})}/>
                 </Cell>

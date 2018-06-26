@@ -105,6 +105,9 @@ class CircuitValidationStep extends Component {
     render() {
         const { t } = this.context
         const { stepKey, step, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser } = this.props
+        console.log('***************************');
+        console.log(collectiviteId);
+        console.log('***************************');
         const listUsers =
             step.users && step.users.map((user, key) =>
                 <li key={key} className="text-wrap" title={user._prenom + " " + user._nom}>

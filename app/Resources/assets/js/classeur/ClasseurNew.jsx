@@ -269,9 +269,9 @@ class ClasseurNew extends Component {
                                     </div>
                                     <div className="grid-x grid-margin-x grid-padding-x">
                                         <div className="cell medium-12">
-                                            { (circuit.etape_groupes && user.collectivite) &&
+                                            { (circuit.etape_groupes && user.current_org_id) &&
                                             <CircuitValidationSteps  steps={Object.assign([], circuit.etape_groupes)}
-                                                                     collectiviteId={user.collectivite.id}
+                                                                     collectiviteId={user.current_org_id}
                                                                      onSortEnd={this.onSortEnd}
                                                                      handleClickDeleteUser={this.handleClickDeleteUser}
                                                                      handleClickDeleteGroup={this.handleClickDeleteGroup}
@@ -303,8 +303,8 @@ class ClasseurNew extends Component {
                                     </div>
                                     <div className="grid-x grid-margin-x grid-padding-x">
                                         {
-                                            (user.collectivite && user.collectivite.id) &&
-                                            <UsersCopy currentCollectiviteId={user.collectivite.id}
+                                            (user.collectivite && user.current_org_id) &&
+                                            <UsersCopy currentCollectiviteId={user.current_org_id}
                                                        handleChange={this.handleSelectChange}
                                                        className="cell medium-12"
                                                        users_copy={users_copy}

@@ -274,7 +274,7 @@ class Classeur extends Component {
                                             edit={editClasseur}
                                             usersCopy={classeur.copy}/>
 
-                            {(classeur.id && classeur.user && user.collectivite) &&
+                            {(classeur.id && classeur.user && user.current_org_id) &&
                                 <CircuitClasseur classeurId={classeur.id}
                                                  etape_classeurs={classeur.etape_classeurs}
                                                  user={classeur.user}
@@ -288,7 +288,7 @@ class Classeur extends Component {
                                                  removeUser={this.handleClickDeleteUser}
                                                  removeGroup={this.handleClickDeleteGroup}
                                                  isFinalizedClasseur={this.isFinalizedClasseur}
-                                                 collectiviteId={user.collectivite.id}/>}
+                                                 collectiviteId={user.current_org_id}/>}
                             {classeur.actions &&
                                 <ClasseurActions actions={Object.assign([], classeur.actions)}
                                                  action={this.state.action}

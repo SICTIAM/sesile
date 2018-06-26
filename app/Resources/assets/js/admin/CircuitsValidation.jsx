@@ -29,7 +29,7 @@ class CircuitsValidation extends Component {
     }
     componentDidMount() {
         const user = this.props.user
-        this.handleChangeCollectivite(user.collectivite.id)
+        this.handleChangeCollectivite(user.current_org_id)
         if(user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
     }
     fetchCircuitsValidations(collectiviteId) {

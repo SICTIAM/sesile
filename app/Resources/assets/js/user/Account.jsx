@@ -67,7 +67,7 @@ class Account extends Component {
             enabled: user.enabled,
             apiactivated: user.apiactivated,
             roles: user.roles,
-            collectivite: user.collectivite.id
+            // collectivite: user.collectivite.id
         }
 
         this.putUser(field, this.state.user.id)

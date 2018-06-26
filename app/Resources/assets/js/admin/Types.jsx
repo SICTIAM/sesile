@@ -40,8 +40,8 @@ class Types extends Component {
     }
     componentDidMount() {
         const user = this.props.user
-        this.fetchTypes(user.collectivite.id)
-        this.setState({collectiviteId: user.collectivite.id})
+        this.fetchTypes(user.current_org_id)
+        this.setState({collectiviteId: user.current_org_id})
         if(user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
     }
     fetchTypes = (id) => {

@@ -28,8 +28,8 @@ class Groups extends Component {
     }
     componentDidMount() {
         const user = this.props.user
-        this.setState({collectiviteId: user.collectivite.id})
-        this.getListGroupe(user.collectivite.id)
+        this.setState({collectiviteId: user.current_org_id})
+        this.getListGroupe(user.current_org_id)
         if(user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
     }
     handleClickDelete = (id) => {
