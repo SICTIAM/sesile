@@ -303,7 +303,7 @@ class ClasseurNew extends Component {
                                     </div>
                                     <div className="grid-x grid-margin-x grid-padding-x">
                                         {
-                                            (user.collectivite && user.current_org_id) &&
+                                            (user.current_org_id) &&
                                             <UsersCopy currentCollectiviteId={user.current_org_id}
                                                        handleChange={this.handleSelectChange}
                                                        className="cell medium-12"
