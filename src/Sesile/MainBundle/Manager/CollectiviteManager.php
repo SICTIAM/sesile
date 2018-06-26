@@ -272,18 +272,18 @@ class CollectiviteManager
      * this method removes all entries of the table Ref_Collectivite_Users
      * for a collectivity
      *
-     * @param $collectivityId
+     * @param Collectivite $collectivity
      *
      * @return Message
      */
-    public function clearCollectivityUsers($collectivityId)
+    public function clearCollectivityUsers(Collectivite $collectivity)
     {
         try {
-            $data = $this->em->getRepository(Collectivite::class)->clearCollectivityUsers($collectivityId);
+            $data = $this->em->getRepository(Collectivite::class)->clearCollectivityUsers($collectivity->getId());
             if (true === $data) {
                 $msg = sprintf(
                     'CollectiviteManager]/clearCollectivityUsers Clear All Users Of Collectivity %s',
-                    $collectivityId
+                    $collectivity->getId()
                 );
                 $this->logger->info($msg);
 
@@ -299,7 +299,7 @@ class CollectiviteManager
 
         $msg = sprintf(
             'CollectiviteManager]/clearCollectivityUsers Clear All Users Of Collectivity %s Failed',
-            $collectivityId
+            $collectivity->getId()
         );
         $this->logger->warning($msg);
 

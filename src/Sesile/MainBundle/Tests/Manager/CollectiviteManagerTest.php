@@ -488,7 +488,7 @@ class CollectiviteManagerTest extends WebTestCase
         $repository->expects(self::once())
             ->method('clearCollectivityUsers')
             ->willReturn(true);
-        $result = $this->collectiviteManager->clearCollectivityUsers(1);
+        $result = $this->collectiviteManager->clearCollectivityUsers(CollectiviteFixtures::aValidCollectivite());
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
         self::assertTrue($result->getData());
@@ -505,7 +505,7 @@ class CollectiviteManagerTest extends WebTestCase
         $repository->expects(self::once())
             ->method('clearCollectivityUsers')
             ->willThrowException(new \Doctrine\DBAL\DBALException('ERROR'));
-        $result = $this->collectiviteManager->clearCollectivityUsers(1);
+        $result = $this->collectiviteManager->clearCollectivityUsers(CollectiviteFixtures::aValidCollectivite());
         self::assertInstanceOf(Message::class, $result);
         self::assertFalse($result->isSuccess());
         self::assertNull($result->getData());

@@ -598,6 +598,14 @@ class Collectivite
     }
 
     /**
+     *
+     */
+    public function clearAllUsers()
+    {
+        $this->users->clear();
+    }
+
+    /**
      * Remove users
      *
      * @param \Sesile\UserBundle\Entity\User $user

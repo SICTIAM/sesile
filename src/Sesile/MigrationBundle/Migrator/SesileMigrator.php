@@ -109,6 +109,8 @@ class SesileMigrator implements SesileMigratorInterface
             $msg = sprintf('Error on Setting Null Siren Field on collectivity Id: %s', $provisionedCollectivity->getId());
             return new Message(false, null, array_merge([$msg], $result->getErrors()));
         }
+        //Clear all users of collectivity
+        $this->collectivityManager->clearCollectivityUsers($provisionedCollectivity);
 
         return new Message(true, null, []);
     }

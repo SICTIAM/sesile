@@ -39,7 +39,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
             [
                 CollectiviteFixtures::class,
                 UserFixtures::class,
-                SesileMigrationFixtures::class
+                SesileMigrationFixtures::class,
             ]
         )->getReferenceRepository();
         $this->resetLegacyTestDatabase();
@@ -174,12 +174,15 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $testCollectivity = $this->em->getRepository(Collectivite::class)->find($collectivity->getId());
         self::assertEquals('784512658', $testCollectivity->getSiren());
         self::assertNull($testCollectivity->getOzwillo());
-        $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $collectivity->getId()]);
+        $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(
+            ['collectivityId' => $collectivity->getId()]
+        );
         self::assertEquals('784512658', $testSesileMigration->getSiren());
         self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
         self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
         self::assertFalse($testSesileMigration->hasUsersExported());
     }
+
     /**
      * Test l'action lors on selection une collectivité à migrer,
      * avec un SIREN qui apartienne à une collectivité qui a été provisioné par ozwillo
@@ -223,8 +226,12 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $oldCollectivity = $this->em->getRepository(Collectivite::class)->find($provisionedCollectivity->getId());
         self::assertNull($oldCollectivity->getOzwillo());
         self::assertNull($oldCollectivity->getSiren());
+        //mur remove all Ref collectivity users
+        self::assertCount(0, $oldCollectivity->getUsers());
 
-        $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $collectivity->getId()]);
+        $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(
+            ['collectivityId' => $collectivity->getId()]
+        );
         self::assertEquals($siren, $testSesileMigration->getSiren());
         self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
         self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
@@ -236,7 +243,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
         $this->logIn($superUser);
         $postData = [
-            'siren' => '1212'
+            'siren' => '1212',
         ];
         $this->client->request(
             'POST',
@@ -254,7 +261,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
         $this->logIn($superUser);
         $postData = [
-            'orgId' => '1212'
+            'orgId' => '1212',
         ];
         $this->client->request(
             'POST',
@@ -272,7 +279,7 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $user = $this->fixtures->getReference(UserFixtures::USER_ONE_REFERENCE);
         $this->logIn($user);
         $postData = [
-            'orgId' => '1212'
+            'orgId' => '1212',
         ];
         $this->client->request(
             'POST',
@@ -302,14 +309,23 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $sesileUserMigrator = $this->getSesileUserMigratorMock();
         $sesileUserMigrator->expects(self::once())
             ->method('exportCollectivityUsers')
-            ->willReturn(new Message(true, new MigrationReport([['id' => 1], ['id' => 2], ['id' => 3]], $provisionedCollectivity->getOzwillo(), '123454-54464-5454')));
+            ->willReturn(
+                new Message(
+                    true,
+                    new MigrationReport(
+                        [['id' => 1], ['id' => 2], ['id' => 3]],
+                        $provisionedCollectivity->getOzwillo(),
+                        '123454-54464-5454'
+                    )
+                )
+            );
         //override service inside the container with the mock object
         $this->client->getContainer()->set('sesile_user.migrator', $sesileUserMigrator);
 
         $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
         $this->logIn($superUser);
         $postData = [
-           'orgId' => $provisionedCollectivity->getId()
+            'orgId' => $provisionedCollectivity->getId(),
         ];
         $this->client->enableProfiler();
         $this->client->request(
@@ -334,15 +350,24 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
         self::assertSame(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
-        self::assertEquals($this->getContainer()->getParameter('email_sender_address'), key($collectedMessages[0]->getFrom()));
+        self::assertEquals(
+            $this->getContainer()->getParameter('email_sender_address'),
+            key($collectedMessages[0]->getFrom())
+        );
         self::assertEquals($this->getContainer()->getParameter('contact'), key($collectedMessages[0]->getTo()));
-        $assertBodyContent= sprintf('La migration de la collectivité "%s" à bien été effectué avec le code SIREN %s.', $provisionedCollectivity->getNom(), $provisionedCollectivity->getSiren());
+        $assertBodyContent = sprintf(
+            'La migration de la collectivité "%s" à bien été effectué avec le code SIREN %s.',
+            $provisionedCollectivity->getNom(),
+            $provisionedCollectivity->getSiren()
+        );
         self::assertContains($assertBodyContent, $collectedMessages[0]->getBody());
         /**
          * check DB
          */
         $this->em->clear();
-        $migration = $this->em->getRepository(SesileMigration::class)->findOneBy(['collectivityId' => $provisionedCollectivity->getId()]);
+        $migration = $this->em->getRepository(SesileMigration::class)->findOneBy(
+            ['collectivityId' => $provisionedCollectivity->getId()]
+        );
         self::assertTrue($migration->hasUsersExported());
         self::assertEquals(SesileMigration::STATUS_FINALISE, $migration->getStatus());
         //assert list of sesile migration history after user export action.
@@ -350,8 +375,23 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
         self::assertCount(3, $content);
-        $migration = $content[0];
-        self::assertEquals($provisionedCollectivity->getId(), $migration['collectivityId']);
+        $collectivitiesIdsInMigration = array_map(
+            function ($migration) {
+                return $migration['collectivityId'];
+            },
+            $content
+        );
+        //find the one
+        $migration = array_filter(
+            $content,
+            function ($data) use ($provisionedCollectivity) {
+                if ((int)$data['collectivityId'] == (int)$provisionedCollectivity->getId()) {
+                    return $data;
+                }
+            }
+        );
+        $migration = $migration[0];
+        self::assertTrue(in_array($provisionedCollectivity->getId(), $collectivitiesIdsInMigration));
         self::assertEquals(0, $migration['allowExport']);
 
     }

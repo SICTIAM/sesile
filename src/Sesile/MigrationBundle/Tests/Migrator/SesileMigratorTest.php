@@ -8,7 +8,9 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\SesileMigrationFixtures;
+use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\Domain\Message;
+use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Manager\CollectiviteManager;
 use Sesile\MigrationBundle\Manager\SesileMigrationManager;
 use Sesile\MigrationBundle\Migrator\SesileMigrator;
@@ -24,17 +26,25 @@ class SesileMigratorTest extends LegacyWebTestCase
      * @var ReferenceRepository
      */
     protected $fixtures;
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $em;
 
     public function setUp()
     {
         $this->fixtures = $this->loadFixtures(
             [
                 CollectiviteFixtures::class,
+                UserFixtures::class
             ]
         )->getReferenceRepository();
         $this->resetLegacyTestDatabase();
         $this->loadLegacyFixtures();
         $this->sesileMigrator = $this->getContainer()->get('sesile.migrator');
+        $this->em = $this->getContainer()
+            ->get('doctrine')
+            ->getManager();
         parent::setUp();
     }
 
@@ -44,6 +54,12 @@ class SesileMigratorTest extends LegacyWebTestCase
         $result = $this->sesileMigrator->hanldeNewMigration($collectivity->getId(), '777777777');
         self::assertInstanceOf(Message::class, $result);
         self::assertTrue($result->isSuccess());
+        /**
+         * check DB
+         */
+        $this->em->clear();
+        $res = $this->em->getRepository(Collectivite::class)->find($collectivity->getId());
+        self::assertEquals('777777777', $res->getSiren());
     }
 
     public function testHandleNewSesileMigrationShouldReturnFalseWhenCollectivityNotFound()
