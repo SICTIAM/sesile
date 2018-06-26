@@ -123,9 +123,9 @@ class MyFOSUBUserProvider extends BaseFOSUBProvider
         $user->setEmail($userEmail);
         $user->setPassword(substr($this->tokenGenerator->generateToken(), 0, 10));
         $user->setEnabled(true);
-        //leave for legacy - @todo remove this line when refactoring
-        $user->setCollectivite($collectivite);
-        //add the colelctivite to the user ref_collecitvite_user table
+        //legacy - removed
+//        $user->setCollectivite($collectivite);
+        //add the collectivite to the user ref_collecitvite_user table
         $user->addCollectivity($collectivite);
 
         // ... save user to database

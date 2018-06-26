@@ -194,8 +194,8 @@ class UserRepository extends EntityRepository {
             $user->setPlainPassword('sictiam');
             $user->setOzwilloId($userObject['id']);
         }
-
-        $user->setCollectivite($collectivite);
+        //regacy -removed
+//        $user->setCollectivite($collectivite);
         $user->addCollectivity($collectivite);
         $user->addRole("ROLE_ADMIN");
         $em->persist($user);
