@@ -3,6 +3,7 @@
 namespace Sesile\UserBundle\Controller;
 
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -446,26 +447,20 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
 
     /**
      * @param Collectivite $collectivite
-     * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     *
-     * @todo La url de ozwillo est en dur! must refactor
+     * @return JsonResponse
      */
-    private function getOzwilloUsers(Collectivite $collectivite) {
-
+    private function getOzwilloUsers(Collectivite $collectivite)
+    {
+        if (!$collectivite->getOzwillo() instanceof CollectiviteOzwillo) {
+            return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+        }
         $instanceId = $collectivite->getOzwillo()->getInstanceId();
         $accessToken = $this->get('security.token_storage')->getToken()->getAccessToken();
-
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', 'https://kernel.ozwillo-preprod.eu/apps/acl/instance/' . $instanceId,
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$accessToken,
-                ],
-            ]
-        );
-
-        $ozwilloUsers = json_decode($response->getBody(), true);
+        $ozwilloUsersResult = $this->get('ozwillo_user.service')->getOzwilloAclInstance($instanceId, $accessToken, true);
+        if(false === $ozwilloUsersResult->isSuccess()) {
+            return new JsonResponse([], Response::HTTP_FORBIDDEN);
+        }
+        $ozwilloUsers = $ozwilloUsersResult->getData();
         $users = $collectivite->getUsers();
         $usersImport = [];
 
@@ -475,7 +470,7 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
             }
         }
 
-        return $usersImport;
+        return new JsonResponse($usersImport, Response::HTTP_OK);
     }
 
 }

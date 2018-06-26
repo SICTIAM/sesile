@@ -251,7 +251,8 @@
             "not_updatable": "Impossible de mettre à jour le {{name}} - erreur {{errorCode}}",
             "not_removable": "Impossible de supprimer le {{name}} - erreur {{errorCode}}",
             "add_user": "Impossible d'ajouter l'utilisateur - erreur {{errorCode}}",
-            "add_user_plural": "Impossible d'ajouter l'utilisateur - erreur {{errorCode}}"
+            "add_user_plural": "Impossible d'ajouter l'utilisateur - erreur {{errorCode}}",
+            "ozwillo_instance_users": "Désolé vous n'avez pas accès à la liste d'utilisateurs."
         },
         "success": {
             "add": "Ajout de {{name}}",

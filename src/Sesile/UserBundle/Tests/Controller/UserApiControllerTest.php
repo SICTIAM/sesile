@@ -3,11 +3,17 @@
 namespace Sesile\UserBundle\Tests\Controller;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
+use Psr\Log\LoggerInterface;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Tests\Tools\SesileWebTestCase;
 use Sesile\UserBundle\Entity\User;
+use Sesile\UserBundle\Service\OzwilloUserService;
 
 /**
  * Class UserApiControllerTest
@@ -138,6 +144,44 @@ class UserApiControllerTest extends SesileWebTestCase
         $this->assertStatusCode(200, $this->client);
         $data = json_decode($this->client->getResponse()->getContent(), true);
         self::assertCount(0, $data);
+    }
+
+    public function testGetOzwilloUsers()
+    {
+        $mock = new MockHandler(
+            [
+                new Response(
+                    200, ['Content-Type' => 'application/json'], '[
+                    {
+                        "id": "c50eda08-ea25-49b2-a4fc-ec89cc98209c",
+                        "entry_uri": "https://kernel.ozwillo.com/apps/acl/ace/c50eda08-ea25-49b2-a4fc-ec89cc98209c",
+                        "entry_etag": "\"1529942756432\"",
+                        "instance_id": "b9bdc41e-4c8c-4e2a-8e38-d3abe120b535",
+                        "user_id": "7b2ee276-cef6-4227-add0-6242515f0780",
+                        "user_name": "nom1 prenom1",
+                        "user_email_address": "user1@domain.com",
+                        "created": 1529942756.432,
+                        "creator_id": "7b2ee276-cef6-4227-add0-6242515f0780",
+                        "creator_name": "ali boulajine",
+                        "app_user": true,
+                        "app_admin": true
+                    }
+                ]'
+                ),
+            ]
+        );
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
+        $logger = $this->createMock(LoggerInterface::class);
+        $ozwilloUserService = new OzwilloUserService($client, 'uri', $logger);
+        $this->client->getContainer()->set('ozwillo_user.service', $ozwilloUserService);
+        $user = $this->fixtures->getReference('user-one');
+        $collectivity = $this->fixtures->getReference('collectivite-one');
+        $this->logIn($user);
+        $this->client->request('GET', sprintf('/apirest/user/ozwillo/%s', $collectivity->getId()));
+        $this->assertStatusCode(200, $this->client);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(1, $data);
     }
 
 }

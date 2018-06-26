@@ -19,5 +19,10 @@
             <argument type="service" id="doctrine.orm.default_entity_manager" />
             <argument type="service" id="logger" />
         </service>
+        <service id="ozwillo_user.service" class="Sesile\UserBundle\Service\OzwilloUserService">
+            <argument type="service" id="guzzle.client" />
+            <argument>%ozwillo_acl_instance_url%</argument>
+            <argument type="service" id="logger" />
+        </service>
     </services>
 </container>
