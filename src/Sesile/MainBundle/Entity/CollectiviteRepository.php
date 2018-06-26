@@ -93,6 +93,7 @@ class CollectiviteRepository extends EntityRepository
             ->leftJoin('SesileMigrationBundle:SesileMigration', 's', 'WITH', 'c.id = s.collectivityId')
             ->addSelect('s.collectivityId')
             ->where('s.collectivityId IS NULL')
+            ->andWhere('c.active = 1')
             ->getQuery()
             ->getArrayResult();
     }
