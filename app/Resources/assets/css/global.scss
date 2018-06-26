@@ -1339,3 +1339,8 @@ select {
 .text-capitalize-first-letter::first-letter {
   text-transform: uppercase;
 }
+
+.ui.waiting.label {
+  border-color: #c58600;
+  background-color: #f1a100;
+}

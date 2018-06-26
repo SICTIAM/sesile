@@ -26,7 +26,8 @@ class Migration extends Component {
             orgName: ''
         },
         sirenAvailabel: null,
-        sirenValid: null
+        sirenValid: null,
+        messageMigrationHistory: ''
     }
     validationRules = {
         siren: 'required|integer'
@@ -36,8 +37,6 @@ class Migration extends Component {
         this.fetchMigrationHistory()
     }
     fetchCollectivites = () => {
-        const { t, _addNotification } = this.context
-
         fetch(Routing.generate('v3v4_migrate_org_list'), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
@@ -45,50 +44,61 @@ class Migration extends Component {
             .catch(error => console.error('erreur get collectivite', error))
     }
     checkOrgSirenAvailability = (siren) => {
-        const { t, _addNotification } = this.context
-
         fetch(Routing.generate('v3v4_migrate_check_siren', {siren}), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(orgSirenAvailability => {
                 this.setState({orgSirenAvailability, sirenAvailabel: !!orgSirenAvailability.success})
             })
-            .catch(error => console.error('erreur availability siren collectivite', error))
+            .catch(error => console.error('Erreur availability siren collectivite', error))
     }
     initMigration = () => {
         const { t, _addNotification } = this.context
-
-        fetch(Routing.generate('v3v4_migrate_init'), {
-            method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({siren: this.state.siren, orgId: this.state.currentCollectivite.id}),
-            credentials: 'same-origin'
-        })
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(() => {
-            _addNotification(basicNotification(
-                'success',
-                t('common.migration_is_begin')
-            ))
-        })
-        .catch(error => console.log(error))
+        this.checkOrgSirenAvailability()
+        if(this.state.sirenAvailabel) {
+            fetch(Routing.generate('v3v4_migrate_init'), {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({siren: this.state.siren, orgId: this.state.currentCollectivite.id}),
+                credentials: 'same-origin'
+            })
+                .then(handleErrors)
+                .then(response => response.json())
+                .then(() => {
+                    _addNotification(basicNotification('success', t('common.migration_is_begin')))
+                    this.fetchMigrationHistory()
+                    this.setState({currentCollectivite: {}, siren: '', sirenAvailabel: null, sirenValid: null})
+                })
+                .catch(() => _addNotification(basicNotification('error', t('common.migration_init_error'))))
+        }
     }
     fetchMigrationHistory = () => {
-        const { t, _addNotification } = this.context
-
+        const { t } = this.context
+        this.setState({messageMigrationHistory: t('common.loading')})
+        let refreshElement = document.getElementById("refresh")
+        refreshElement.classList.add("fa-spin","disabled")
         fetch(Routing.generate('v3v4_migrate_dashboard'), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
-            .then(migrations => this.setState({migrations}))
-            .catch(error => console.error('erreur get migration history', error))
+            .then(migrations => {
+                this.setState({migrations})
+                if(migrations.length <= 0) this.setState({messageMigrationHistory: t('common.empty_list')})
+                else this.setState({messageMigrationHistory: null})
+                let refreshElement = document.getElementById("refresh")
+                refreshElement.classList.remove("fa-spin","disabled")
+            })
+            .catch(error => {
+                this.setState({messageMigrationHistory: t('common.error_fetch_migration_list')})
+                let refreshElement = document.getElementById("refresh")
+                refreshElement.classList.remove("fa-spin","disabled")
+                console.error('erreur get migration history', error)
+            })
     }
     handleChange = (currentCollectivite) => this.setState({currentCollectivite})
     handleChangeSiren = (name, value) => {
-        console.log(value.length)
         if(value.length <= 9) {
             this.setState({[name]: value})
         }
@@ -117,20 +127,38 @@ class Migration extends Component {
                 'success',
                 t('common.export_user_is_begin')
             ))
+            this.fetchMigrationHistory()
         })
-        .catch(error => console.log(error))
+        .catch(error => console.error(error))
     }
     sirenIsNotAvailabel = () => this.state.sirenAvailabel !== null && this.state.sirenAvailabel === false
     sirenIsNotValid = () => this.state.sirenValid !== null && this.state.sirenValid === false
+    refreshMigrationHistory = () => {
+        let refreshElement = document.getElementById("refresh")
+        refreshElement.classList.add("fa-spin","disabled")
+        this.fetchMigrationHistory()
+    }
     render() {
         const { t } = this.context
-        console.log(this.state.orgSirenAvailability)
         return (
             <div className="grid-x grid-margin-x grid-padding-x grid-padding-y align-center-middle">
                 <div className="cell medium-12 text-center">
                     <h2>{t('admin.migration')}</h2>
                 </div>
                 <div className="cell medium-12 panel" style={{marginBottom: '50px'}}>
+                    <div className="grid-x" style={{marginBottom: '10px'}}>
+                        <div className="cell medium-12">
+                            <div className="callout primary">
+                                <h5><i className="fa fa-info" style={{color: 'white'}}/> Les étapes de migration:</h5>
+                                <ul>
+                                    <li>Renseigner le SIREN pour la collectivité sur le formulaire ci-dessous.</li>
+                                    <li>Provisioner Sesile pour la collectivité depuis ozwillo.</li>
+                                    <li>Resyncroniser la liste des migrations en appuyant sur ce button situé sur la liste "<i className="fa fa-refresh"/>"</li>
+                                    <li>Une fois le provisionnement effectif sur sesile le button "Exporter les utilistateurs" devient actif, vous pouvez alors lancer l'export d'utilisateur.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                     <div className="grid-x" style={{marginBottom: '10px'}}>
                         <div className="cell medium-12">
                             <label htmlFor="collectivite-select" className="text-capitalize-first-letter text-bold">
@@ -167,6 +195,7 @@ class Migration extends Component {
                                     <h4>{`Le SIREN ${this.state.orgSirenAvailability.siren} est déjà utilisé par la collectivité "${this.state.orgSirenAvailability.orgName}"`}</h4>
                                     <p>
                                         {`Si vous migrez la collectivité "${this.state.currentCollectivite.nom}" avec ce siren celle-ci sera liée aux données Ozwillo de la collectivité "${this.state.orgSirenAvailability.orgName}"`}
+                                        <strong>{`La collectivité "${this.state.orgSirenAvailability.orgName}" sera totalement supprimée de SESILE`}</strong>
                                     </p>
                                     <button className="close-button" aria-label="Dismiss alert" type="button" data-close>
                                         <span aria-hidden="true">&times;</span>
@@ -205,8 +234,7 @@ class Migration extends Component {
                     <div className="grid-x" style={{marginBottom: '10px'}}>
                         <div className="cell medium-12 align-right">
                             <h3>
-                                {/*@todo translation*/}
-                                {"Liste des migrations"}
+                                {t('common.migration_list')}
                             </h3>
                         </div>
                     </div>
@@ -214,7 +242,9 @@ class Migration extends Component {
                         <div className="cell medium-12 align-right">
                             <ListMigrationHistory
                                 migrations={this.state.migrations}
-                                exportUsersToOzwillo={this.exportUsersToOzwillo}/>
+                                exportUsersToOzwillo={this.exportUsersToOzwillo}
+                                messageMigrationHistory={this.state.messageMigrationHistory}
+                                refreshMigrationHistory={this.refreshMigrationHistory}/>
                         </div>
                     </div>
                 </div>
@@ -225,33 +255,34 @@ class Migration extends Component {
 
 export default translate(['sesile'])(Migration)
 
-const ListMigrationHistory = ({migrations, exportUsersToOzwillo}, {t}) => {
+const ListMigrationHistory = ({migrations, exportUsersToOzwillo, messageMigrationHistory, refreshMigrationHistory}, {t}) => {
     const listMigration = migrations.map(migration =>
         <tr key={migration.id}>
             <td>{Moment(new Date(migration.date.date)).format('LLLL')}</td>
             <td>{migration.collectivityName}</td>
             <td>
-                <MigrationStatus status={migration.status} />
+                <MigrationStatus status={migration.status} allowExport={migration.allowExport} />
             </td>
             <td>{migration.siren}</td>
             <td>{migration.usersExported ?
                     <div
                         className={`ui success label labelStatus`}
-                        style={{color: '#fff', textAlign: 'center', width: '110px'}}>
+                        style={{textAlign: 'center', width: '110px'}}>
                         {t(`common.exported`)}
                     </div> :
                     <div
                         className={`ui disabled label labelStatus`}
-                        style={{color: 'black', textAlign: 'center', width: '110px'}}>
+                        style={{textAlign: 'center', width: '110px'}}>
                         {t(`common.not_exported`)}
                     </div>}
             </td>
             <td>
                 <button
+                    title={migration.allowExport !== 1 ? t('common.waiting_action_on_ozwillo'): t('common.export_users')}
                     className="button hollow"
                     onClick={() => exportUsersToOzwillo(migration.collectivityId)}
-                    disabled={!!migration.allowExport}>
-                    {"Exporter les utilisateurs"}
+                    disabled={migration.allowExport !== 1}>
+                    {t('common.export_users')}
                 </button>
             </td>
         </tr>
@@ -265,7 +296,15 @@ const ListMigrationHistory = ({migrations, exportUsersToOzwillo}, {t}) => {
                     <th width="100">Migration</th>
                     <th width="100">SIREN</th>
                     <th width="150">Utilisateurs</th>
-                    <th width="150">Action</th>
+                    <th width="150">
+                        Action
+                        <i
+                            id="refresh"
+                            style={{marginLeft: '60px'}}
+                            className="icon-action fa fa-refresh"
+                            onClick={(e) => refreshMigrationHistory()}
+                            aria-hidden="true"/>
+                    </th>
                 </tr>
             </thead>
             {listMigration.length > 0 ?
@@ -275,7 +314,7 @@ const ListMigrationHistory = ({migrations, exportUsersToOzwillo}, {t}) => {
                 <tfoot>
                     <tr>
                         <td/>
-                        <td className="text-center">{t('common.empty_list')}</td>
+                        <td className="text-center">{messageMigrationHistory}</td>
                         <td/>
                         <td/>
                         <td/>
@@ -290,21 +329,29 @@ ListMigrationHistory.contextTypes = {
     t: func
 }
 
-const MigrationStatus = ({status}, {t}) => {
+const MigrationStatus = ({status, allowExport}, {t}) => {
     const statusTranslation = Object.freeze({
         'REFUSED': 'refused',
         'EN_COURS': 'pending',
-        'FINALISE': 'finished'
+        'FINALISE': 'finished',
+        'WAITING': 'waiting'
     })
     const statusColorClass = Object.freeze({
         'REFUSED': 'alert',
         'EN_COURS': 'warning',
-        'FINALISE': 'success'
+        'FINALISE': 'success',
+        'WAITING': 'waiting'
     })
+    let message = ''
+    if(allowExport === 0) {
+        status = 'WAITING'
+        message = t('common.waiting_action_on_ozwillo')
+    }
     return (
         <div
+            title={message}
             className={`ui ${statusColorClass[status]} label labelStatus`}
-            style={{color: '#fff', textAlign: 'center', width: '80px'}}>
+            style={{color: '#fff', textAlign: 'center', width: '80px', padding: '5px', fontSize: '0.9em'}}>
             {t(`common.classeurs.status.${statusTranslation[status]}`)}
         </div>
     )

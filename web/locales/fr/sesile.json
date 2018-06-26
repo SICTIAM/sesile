@@ -117,7 +117,8 @@
                 "pending": "En cours",
                 "finished": "Finalisé",
                 "withdrawn": "Retiré",
-                "retracted": "Rétracté"
+                "retracted": "Rétracté",
+                "waiting": "En attente"
             },
             "pagination" : {
                 "previous": "Précédent",
@@ -231,7 +232,12 @@
         "empty_list": "Aucun élements à afficher",
         "exported": "Exportés",
         "not_exported": "Non exportés",
-        "export_user_is_begin": "L'export des utilisateurs vers Ozwillo a été lancée"
+        "export_user_is_begin": "L'export des utilisateurs vers Ozwillo a été lancée",
+        "migration_init_error": "Une erreur est survenue lors du lancement de la migration",
+        "error_fetch_migration_list": "Une erreur est survenue lors de la récupération de la liste de migrations",
+        "waiting_action_on_ozwillo": "En attente d'une action sur ozwillo",
+        "export_users": "Exporter les utilisateurs",
+        "migration_list": "Liste des migrations"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
