@@ -192,7 +192,6 @@ class MigrationApiControllerTest extends LegacyWebTestCase
      */
     public function testMigrateCollectivityAlreadyProvisioned()
     {
-
         $provisionedCollectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
         $collectivity = $this->persistCollectivity();
         $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
@@ -237,6 +236,49 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertEquals($siren, $testSesileMigration->getSiren());
         self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
         self::assertEquals($collectivity->getNom(), $testSesileMigration->getCollectivityName());
+        self::assertFalse($testSesileMigration->hasUsersExported());
+    }
+    /**
+     * Test l'action lors on selection une collectivité à migrer,
+     * avec un SIREN qui apartienne à une collectivité qui a été provisioné par ozwillo
+     * sur sesile. MAIS que ils ont le MEME collecitvity ID!!
+     * Sesile doit que initier la migration sans autres actions
+     *
+     */
+    public function testMigrateCollectivityEqualsAlreadyProvisionedCollectivity()
+    {
+        $provisionedCollectivity = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+        $superUser = $this->fixtures->getReference(UserFixtures::USER_SUPER_REFERENCE);
+        $this->logIn($superUser);
+        $this->client->enableProfiler();
+        $siren = $provisionedCollectivity->getSiren();
+        $postData = [
+            'orgId' => $provisionedCollectivity->getId(),
+            'siren' => $siren,
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/migration/v3v4/org/migrate/init'),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(201, $this->client);
+        /**
+         * check DB
+         */
+        $this->em->clear();
+        $testCollectivity = $this->em->getRepository(Collectivite::class)->find($provisionedCollectivity->getId());
+        self::assertEquals($siren, $testCollectivity->getSiren());
+        self::assertInstanceOf(CollectiviteOzwillo::class, $testCollectivity->getOzwillo());
+
+        $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(
+            ['collectivityId' => $provisionedCollectivity->getId()]
+        );
+        self::assertEquals($siren, $testSesileMigration->getSiren());
+        self::assertEquals(SesileMigration::STATUS_EN_COURS, $testSesileMigration->getStatus());
+        self::assertEquals($provisionedCollectivity->getNom(), $testSesileMigration->getCollectivityName());
         self::assertFalse($testSesileMigration->hasUsersExported());
     }
 

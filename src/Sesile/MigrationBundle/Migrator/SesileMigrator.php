@@ -96,27 +96,48 @@ class SesileMigrator implements SesileMigratorInterface
         if (false === $provisionedCollectivity) {
             //no provisioned collectivity found
             $this->logger->debug(sprintf('[SesileMigrator] No Provisioned Collectivity found for siren: %s', $siren));
+
             return new Message(true, null, []);
         }
+        if ($provisionedCollectivity->getId() == $collectivity->getId()) {
+            $this->logger->debug(
+                sprintf(
+                    '[SesileMigrator] The Provisioned Collectivity Is the Same as the Collectivity you are trying to migrate. id:%s siren: %s',
+                    $provisionedCollectivity->getId(),
+                    $siren
+                )
+            );
+
+            return new Message(true, null);
+        }
         $result = $this->collectivityManager->switchCollectivityOzwillo($provisionedCollectivity, $collectivity);
-        if (false === $result->isSuccess()){
+        if (false === $result->isSuccess()) {
             return new Message(false, null, $result->getErrors());
         }
         //remove siren from provised collectivity
         $provisionedCollectivity->setSiren(null);
         $provisionedCollectivity->setActive(false);
         $result = $this->collectivityManager->saveCollectivity($provisionedCollectivity);
-        if (false === $result->isSuccess()){
-            $msg = sprintf('Error on Setting Null Siren Field on collectivity Id: %s', $provisionedCollectivity->getId());
+        if (false === $result->isSuccess()) {
+            $msg = sprintf(
+                'Error on Setting Null Siren Field on collectivity Id: %s',
+                $provisionedCollectivity->getId()
+            );
+
             return new Message(false, null, array_merge([$msg], $result->getErrors()));
         }
         //Clear all users of collectivity
         $clearResult = $this->collectivityManager->clearCollectivityUsers($provisionedCollectivity);
-        $this->logger->debug(sprintf('[SesileMigrator] Clear Users of Provisioned Collectivity: %s', $provisionedCollectivity->getId()));
+        $this->logger->debug(
+            sprintf('[SesileMigrator] Clear Users of Provisioned Collectivity: %s', $provisionedCollectivity->getId())
+        );
         if (true === $clearResult->isSuccess()) {
             $this->collectivityManager->removeCollectivity($provisionedCollectivity);
-            $this->logger->debug(sprintf('[SesileMigrator] Remove Provisioned Collectivity: %s', $provisionedCollectivity->getId()));
+            $this->logger->debug(
+                sprintf('[SesileMigrator] Remove Provisioned Collectivity: %s', $provisionedCollectivity->getId())
+            );
         }
+
         return new Message(true, null, []);
     }
 
