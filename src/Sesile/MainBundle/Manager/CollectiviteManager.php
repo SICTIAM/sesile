@@ -214,6 +214,7 @@ class CollectiviteManager
             $collectivityFrom->getId(),
             $collectivityTo->getId()
         );
+        $this->logger->warning($msg);
 
         return new Message(false, null, [$msg]);
     }
@@ -258,12 +259,51 @@ class CollectiviteManager
     {
         try {
             $data = $this->em->getRepository(User::class)->getUsersByCollectivityId($collectivityId);
+
             return new Message(true, $data);
         } catch (\Exception $e) {
             $this->logger->error(sprintf('[CollectiviteManager]/getCollectivityUsersList error: %s', $e->getMessage()));
 
             return new Message(false, null, [$e->getMessage()]);
         }
+    }
+
+    /**
+     * this method removes all entries of the table Ref_Collectivite_Users
+     * for a collectivity
+     *
+     * @param $collectivityId
+     *
+     * @return Message
+     */
+    public function clearCollectivityUsers($collectivityId)
+    {
+        try {
+            $data = $this->em->getRepository(Collectivite::class)->clearCollectivityUsers($collectivityId);
+            if (true === $data) {
+                $msg = sprintf(
+                    'CollectiviteManager]/clearCollectivityUsers Clear All Users Of Collectivity %s',
+                    $collectivityId
+                );
+                $this->logger->info($msg);
+
+                return new Message(true, $data);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error(
+                sprintf('[CollectiviteManager]/clearCollectivityUsers error: %s', $e->getMessage())
+            );
+
+            return new Message(false, null, [$e->getMessage()]);
+        }
+
+        $msg = sprintf(
+            'CollectiviteManager]/clearCollectivityUsers Clear All Users Of Collectivity %s Failed',
+            $collectivityId
+        );
+        $this->logger->warning($msg);
+
+        return new Message(false, null, [$msg]);
     }
 
 }

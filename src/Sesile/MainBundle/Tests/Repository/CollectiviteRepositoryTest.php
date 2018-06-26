@@ -104,4 +104,39 @@ class CollectiviteRepositoryTest extends WebTestCase
         self::assertCount(0, $result);
     }
 
+    public function testClearCollectivityUsers()
+    {
+        $collectivityOne = $this->fixtures->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE);
+        /**
+         * check DB
+         */
+        $res = $this->em->getRepository(Collectivite::class)->find($collectivityOne->getId());
+        self::assertCount(3, $res->getUsers());
+
+        $result = $this->em->getRepository(Collectivite::class)->clearCollectivityUsers($collectivityOne->getId());
+        self::assertTrue($result);
+        /**
+         * check DB
+         */
+        $this->em->clear();
+        $res = $this->em->getRepository(Collectivite::class)->find($collectivityOne->getId());
+        self::assertCount(0, $res->getUsers());
+    }
+
+    public function testClearCollectivityUsersShouldThrowExceptionOnError()
+    {
+        $collectiviteRepository = $this->createMock(CollectiviteRepository::class);
+
+        $collectiviteRepository->expects(self::once())
+            ->method('clearCollectivityUsers')
+            ->willThrowException(new \Doctrine\DBAL\DBALException('ERROR SQL'));
+
+        $entityManager = $this->createMock(EntityManager::class);
+        $entityManager->expects($this->any())
+            ->method('getRepository')
+            ->willReturn($collectiviteRepository);
+        self::expectException(\Doctrine\DBAL\DBALException::class);
+        $entityManager->getRepository(Collectivite::class)->clearCollectivityUsers(1);
+    }
+
 }

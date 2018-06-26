@@ -76,8 +76,7 @@ class CollectiviteRepository extends EntityRepository
             ->createQueryBuilder('c')
             ->select('c.id', 'c.nom', 'c.domain')
             ->getQuery()
-            ->getArrayResult()
-            ;
+            ->getArrayResult();
     }
 
     /**
@@ -95,7 +94,36 @@ class CollectiviteRepository extends EntityRepository
             ->addSelect('s.collectivityId')
             ->where('s.collectivityId IS NULL')
             ->getQuery()
-            ->getArrayResult()
-            ;
+            ->getArrayResult();
+    }
+
+    /**
+     * this method removes all entries of the table Ref_Collectivite_Users
+     * for a collectivity
+     *
+     * @param $collectivityId
+     *
+     * @return bool
+     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function clearCollectivityUsers($collectivityId)
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->beginTransaction();
+        $sql = 'DELETE FROM Ref_Collectivite_User where collectivite_id= :collectivityId';
+        $result = $connection->executeQuery(
+            $sql,
+            ['collectivityId' => $collectivityId]
+        );
+        if ($result) {
+            $connection->commit();
+
+            return true;
+        }
+        $connection->rollBack();
+
+        return false;
+
     }
 }

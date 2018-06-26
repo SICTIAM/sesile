@@ -476,4 +476,38 @@ class CollectiviteManagerTest extends WebTestCase
         self::assertFalse($result->isSuccess());
         self::assertNull($result->getData());
     }
+
+    public function testClearCollectivityUsers()
+    {
+        $repository = $this->createMock(CollectiviteRepository::class);
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(Collectivite::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('clearCollectivityUsers')
+            ->willReturn(true);
+        $result = $this->collectiviteManager->clearCollectivityUsers(1);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertTrue($result->isSuccess());
+        self::assertTrue($result->getData());
+    }
+
+    public function testClearCollectivityUsersShouldReturnFalseIfExceptionIsThrown()
+    {
+        $repository = $this->createMock(CollectiviteRepository::class);
+        $this->em->expects(self::once())
+            ->method('getRepository')
+            ->with(Collectivite::class)
+            ->willReturn($repository);
+
+        $repository->expects(self::once())
+            ->method('clearCollectivityUsers')
+            ->willThrowException(new \Doctrine\DBAL\DBALException('ERROR'));
+        $result = $this->collectiviteManager->clearCollectivityUsers(1);
+        self::assertInstanceOf(Message::class, $result);
+        self::assertFalse($result->isSuccess());
+        self::assertNull($result->getData());
+    }
 }
