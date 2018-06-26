@@ -51,7 +51,7 @@ class SesileMigrator implements SesileMigratorInterface
      * + it sets the siren to the collectivity
      * + it checks if already the collectivity has been "provisioned"
      * in this case we switch the collectivity ozwillo
-     * 
+     *
      * @param $collectivityId
      * @param $siren
      * @return Message
@@ -104,14 +104,19 @@ class SesileMigrator implements SesileMigratorInterface
         }
         //remove siren from provised collectivity
         $provisionedCollectivity->setSiren(null);
+        $provisionedCollectivity->setActive(false);
         $result = $this->collectivityManager->saveCollectivity($provisionedCollectivity);
         if (false === $result->isSuccess()){
             $msg = sprintf('Error on Setting Null Siren Field on collectivity Id: %s', $provisionedCollectivity->getId());
             return new Message(false, null, array_merge([$msg], $result->getErrors()));
         }
         //Clear all users of collectivity
-        $this->collectivityManager->clearCollectivityUsers($provisionedCollectivity);
-
+        $clearResult = $this->collectivityManager->clearCollectivityUsers($provisionedCollectivity);
+        $this->logger->debug(sprintf('[SesileMigrator] Clear Users of Provisioned Collectivity: %s', $provisionedCollectivity->getId()));
+        if (true === $clearResult->isSuccess()) {
+            $this->collectivityManager->removeCollectivity($provisionedCollectivity);
+            $this->logger->debug(sprintf('[SesileMigrator] Remove Provisioned Collectivity: %s', $provisionedCollectivity->getId()));
+        }
         return new Message(true, null, []);
     }
 

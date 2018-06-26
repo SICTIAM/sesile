@@ -220,14 +220,16 @@ class MigrationApiControllerTest extends LegacyWebTestCase
         self::assertEquals($siren, $testCollectivity->getSiren());
         self::assertInstanceOf(CollectiviteOzwillo::class, $testCollectivity->getOzwillo());
         /**
-         * la collectivité en doublon déjà provisioné soit perdre la collectivité ozwillo
+         * la collectivité en doublon déjà provisioné doit disparaitre
+         * soit perdre la collectivité ozwillo
          * et aussi doit perdre son siren
          */
         $oldCollectivity = $this->em->getRepository(Collectivite::class)->find($provisionedCollectivity->getId());
-        self::assertNull($oldCollectivity->getOzwillo());
-        self::assertNull($oldCollectivity->getSiren());
-        //mur remove all Ref collectivity users
-        self::assertCount(0, $oldCollectivity->getUsers());
+        self::assertNull($oldCollectivity);
+//        self::assertNull($oldCollectivity->getOzwillo());
+//        self::assertNull($oldCollectivity->getSiren());
+//        //mur remove all Ref collectivity users
+//        self::assertCount(0, $oldCollectivity->getUsers());
 
         $testSesileMigration = $this->em->getRepository(SesileMigration::class)->findOneBy(
             ['collectivityId' => $collectivity->getId()]

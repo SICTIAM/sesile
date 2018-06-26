@@ -166,6 +166,7 @@ class CollectiviteManager
     public function getCollectivity($collectivityId)
     {
         try {
+            $this->em->clear(Collectivite::class);
             $data = $this->em->getRepository(Collectivite::class)->find($collectivityId);
             if ($data && $data instanceof Collectivite) {
                 return new Message(true, $data);
@@ -307,13 +308,21 @@ class CollectiviteManager
     }
 
     /**
-     * @param Collectivite $collectivity
+     * @param string $collectivityId
      *
      * @return Message
      */
-    public function removeCollectivity(Collectivite $collectivity)
+    public function removeCollectivity($collectivityId)
     {
         try {
+            $collectivityResult = $this->getCollectivity($collectivityId);
+            if (false === $collectivityResult->isSuccess()) {
+                $msg = sprintf('[CollectiviteManager]/removeCollectivity Unable to find Collectivity %s.', $collectivity->getId());
+                $this->logger->warning($msg);
+
+                return new Message(false, $collectivity, [$msg]);
+            }
+            $collectivity = $collectivityResult->getData();
             if ($collectivity->getOzwillo() instanceof CollectiviteOzwillo) {
                 $msg = sprintf('[CollectiviteManager]/removeCollectivity Unable to remove Collectivity %s It contains Ozwillo Configuration', $collectivity->getId());
                 $this->logger->warning($msg);
