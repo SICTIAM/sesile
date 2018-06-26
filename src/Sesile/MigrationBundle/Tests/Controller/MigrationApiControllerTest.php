@@ -381,16 +381,9 @@ class MigrationApiControllerTest extends LegacyWebTestCase
             },
             $content
         );
-        //find the one
-        $migration = array_filter(
-            $content,
-            function ($data) use ($provisionedCollectivity) {
-                if ((int)$data['collectivityId'] == (int)$provisionedCollectivity->getId()) {
-                    return $data;
-                }
-            }
-        );
-        $migration = $migration[0];
+        //find the one we need to assert
+        $assertKey = array_flip($collectivitiesIdsInMigration)[(int)$provisionedCollectivity->getId()];
+        $migration = $content[$assertKey];
         self::assertTrue(in_array($provisionedCollectivity->getId(), $collectivitiesIdsInMigration));
         self::assertEquals(0, $migration['allowExport']);
 
