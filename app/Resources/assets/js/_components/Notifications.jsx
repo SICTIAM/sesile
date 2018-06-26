@@ -3,7 +3,7 @@ const basicNotification = (type, title, message, autoDismiss = 6) => {
         title: title,
         message: message,
         level: type,
-        position: 'tr',
+        position: 'br',
         autoDismiss: autoDismiss
     }
 }

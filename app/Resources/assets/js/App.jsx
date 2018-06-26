@@ -40,27 +40,6 @@ class App extends Component {
         t: PropTypes.func,
     }
 
-    notificationStyle = {
-        Title: {
-            DefaultStyle: {
-                textTransform: 'uppercase'
-            }
-        },
-        NotificationItem: { 
-            DefaultStyle: { 
-                margin: '100px 5px 2px 1px',
-                backgroundColor: '#404257',
-                color: 'white',
-                fontWeight: '700'
-            }
-        },
-        Dismiss: {
-            DefaultStyle: {
-              backgroundColor: '#404257'
-            }
-        }
-      }
-
     getChildContext() {
         return {
             _addNotification: this._addNotification,
@@ -151,7 +130,7 @@ class App extends Component {
                                             {user.id && <Note/>}
                                             <div className="grid-x grid-padding-x medium-11">
                                                 <div className="cell medium-12 small-12">
-                                                    <NotificationSystem ref={n => this._notificationSystem = n} style={this.notificationStyle} />
+                                                    <NotificationSystem ref={n => this._notificationSystem = n} />
                                                     {user.id &&
                                                         <AppRoute user={user} updateUserInfos={this.fetchUser}/>}
                                                 </div>
