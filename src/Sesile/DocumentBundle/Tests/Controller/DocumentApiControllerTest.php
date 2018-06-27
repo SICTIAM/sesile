@@ -39,6 +39,30 @@ class DocumentApiControllerTest extends SesileWebTestCase
         parent::setUp();
     }
 
+    public function testGetPdfPreview()
+    {
+        $this->markTestIncomplete(
+            'Todo implement the action and install imagick. add into composer.json "ext-imagick": "*"'
+        );
+        $user = $this->fixtures->getReference('user-one');
+        $this->logIn($user);
+        $document = $this->fixtures->getReference('document-pdf');
+
+        $filePath = sprintf('%s/../src/Sesile/MainBundle/DataFixtures/%s', $this->getContainer()->get('kernel')->getRootDir(), $document->getRepourl());
+        $docFilePath = $this->getContainer()->get('kernel')->getRootDir().'/../web/uploads/docs/'.$document->getRepourl();
+        $fs = new Filesystem();
+        $fs->copy($filePath, $docFilePath, true);
+        $this->client->request(
+            'GET',
+            sprintf('/apirest/document/%s/preview', $document->getId())
+        );
+        $this->assertStatusCode(200, $this->client);
+        $content = $this->client->getResponse()->getContent();
+        self::assertEquals(base64_encode($docFilePath), $content);
+        self::assertFileExists($docFilePath);
+        $fs->remove($docFilePath);
+    }
+
     public function testUploadDocumentAction()
     {
 

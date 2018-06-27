@@ -26,6 +26,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
      * @var ContainerInterface
      */
     private $container;
+
     /**
      * Load data fixtures with the passed EntityManager
      *
@@ -128,7 +129,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
     }
 
     /**
-     * @param User   $user
+     * @param User $user
      * @param string $role
      *
      * @return UserRole
@@ -140,5 +141,52 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         $userRole->setUserRoles($role);
 
         return $userRole;
+    }
+
+    /**
+     * @param string $role
+     * @param string $nom
+     * @param string $email
+     * @param array $collectivities
+     * @param array $userRoles
+     */
+    public static function aValidUser(
+        $role = 'ROLE_ADMIN',
+        $nom = 'nom',
+        $email = 'valid@email.com',
+        array $collectivities = [],
+        array $userRoles = []
+    ) {
+        $user = new User();
+        $user->setNom($nom);
+        $user->setPrenom('prenom1');
+        $user->setUsername('username');
+        $user->setEmail($email);
+        $user->setPlainPassword('password');
+        //$user->setPassword('3NCRYPT3D-V3R51ON');
+        $user->setEnabled(true);
+        $user->setRoles(array($role));
+        //$user->setApitoken("token_" . md5(uniqid(rand(), true)))
+        $user->setApitoken('token_09b7cedb5f9a6df29468b9ddf490ed70');
+        //$this->setApisecret("secret_" . md5(uniqid(rand(), true)))
+        $user->setApisecret('secret_abf9411ade3787a8e668ac534f97cf1a');
+        $user->setApiactivated(true);
+        //ozwillo id null for testing reasons on ozwillo provider
+        $user->setOzwilloId(null);
+        $user->setRole('Développeur');
+        foreach ($userRoles as $role) {
+            $user->addUserrole(self::aValidUserRole($user, $role));
+        }
+        $user->setVille('Nice');
+        $user->setCp('06000');
+        $user->setPays('France');
+        $user->setDepartement('Alpes-Maritimes');
+        $user->setQualite('CTO');
+        foreach ($collectivities as $collectivity) {
+            $user->addCollectivity($collectivity);
+        }
+
+        return $user;
+
     }
 }

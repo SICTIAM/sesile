@@ -480,6 +480,71 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         self::assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testSearchClasseursAction()
+    {
+        $this->logIn($this->fixtures->getReference('user-one'));
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $postData = [
+            'name' => 'Classeur'
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/v4/org/%s/classeurs/search', $collectivite->getId()),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(1, $data);
+
+        self::assertEquals($classeur->getId(), $data[0]['id']);
+        self::assertEquals($classeur->getDescription(), $data[0]['description']);
+        self::assertEquals($classeur->getNom(), $data[0]['nom']);
+    }
+    public function testSearchClasseursActionShouldReturnEmptyIfNothingFound()
+    {
+        $this->logIn($this->fixtures->getReference('user-one'));
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $postData = [
+            'name' => 'Nothing to find'
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/v4/org/%s/classeurs/search', $collectivite->getId()),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertCount(0, $data);
+    }
+    public function testSearchClasseursActionShouldReturnBadRequestIfNoSearchTermIsGiven()
+    {
+        $this->logIn($this->fixtures->getReference('user-one'));
+        $classeur = $this->fixtures->getReference('classeur-one');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+        $postData = [
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/v4/org/%s/classeurs/search', $collectivite->getId()),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+
+        self::assertEquals(400, $this->client->getResponse()->getStatusCode());
+    }
+
     private function getFormData()
     {
         $typeClasseur = $this->fixtures->getReference('classeur-type-one');

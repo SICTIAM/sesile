@@ -8,12 +8,14 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sesile\ApiBundle\Controller\TokenAuthenticatedController;
+use Sesile\ClasseurBundle\Domain\SearchClasseurData;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\Classeur as Classeur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\ClasseurBundle\Form\ClasseurPostType;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Service\ActionMailer;
+use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\UserRole;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,6 +42,30 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getAllClasseursVisibles($orgId, $this->getUser()->getId());
 
         return $classeurs;
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Post("/org/{orgId}/classeurs/search")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @ParamConverter("collectivite", options={"mapping": {"orgId": "id"}})
+     * @return Groupe|\Symfony\Component\Form\Form|JsonResponse
+     *
+     */
+    public function searchClasseursAction(Request $request, Collectivite $collectivite)
+    {
+        if (!$request->request->has('name')) {
+
+            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        }
+        $filter = new SearchClasseurData($request->request->get('name'));
+        $result = $this->get('classeur.manager')->searchClasseurs($collectivite, $this->getUser(), $filter);
+        if (false === $result->isSuccess()){
+            return new JsonResponse(['errors' => $result->getErrors()], Response::HTTP_BAD_GATEWAY);
+        }
+
+        return new JsonResponse($result->getData(), Response::HTTP_OK);
     }
 
     /**

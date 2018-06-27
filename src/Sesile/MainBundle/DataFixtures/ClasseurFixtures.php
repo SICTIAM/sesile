@@ -19,6 +19,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
 {
     const CLASSEURS_REFERENCE = 'classeur-one';
     const CLASSEURS_REFERENCE_TWO = 'classeur-two';
+    const CLASSEURS_REFERENCE_THREE = 'classeur-three';
 
     /**
      * @var ContainerInterface
@@ -80,7 +81,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
          * add classeur for user two
          */
         $classeur3 = self::aValidClasseur(
-            'User Two Classeur',
+            'User Two documents',
             'User Two Classeur Description',
             $userTwo,
             [$userTwo],
@@ -92,6 +93,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
         );
         $manager->persist($classeur3);
         $manager->flush();
+        $this->addReference(self::CLASSEURS_REFERENCE_THREE, $classeur3);
 
     }
 
