@@ -22,10 +22,12 @@ RUN "date"
 # Type docker-php-ext-install to see available extensions
 RUN docker-php-ext-install pdo pdo_mysql
 
-
 # install xdebug
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
+RUN echo 'memory_limit = 1024M' >> /usr/local/etc/php/conf.d/memory-limit-php.ini
+RUN echo 'upload_max_filesize = 150M' >> /usr/local/etc/php/conf.d/upload-max-filesize-php.ini
+RUN echo 'post_max_size = 150M' >> /usr/local/etc/php/conf.d/post-max-size-php.ini
 RUN echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini

@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sesile\ClasseurBundle\Form\ClasseurPostType;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Service\ActionMailer;
+use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\UserRole;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -180,8 +181,11 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         $form = $this->createForm(ClasseurPostType::class, $classeur);
         $form->submit($request->request->all(), false);
-
         if ($form->isValid()) {
+            $classeur = $form->getData();
+            if(!$classeur->getUser() instanceof User) {
+                return new JsonResponse(['message' => 'Impossible de mettre à jour le classeur'], Response::HTTP_NOT_MODIFIED);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->getRepository('SesileClasseurBundle:Classeur')->setUserVisible($classeur);
             $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
