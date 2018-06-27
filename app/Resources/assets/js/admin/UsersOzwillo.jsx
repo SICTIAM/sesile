@@ -17,23 +17,27 @@ class UsersOzwillo extends Component {
         usersOzwillo: [],
         collectiviteId: parseInt(this.props.match.params.collectiviteId),
         fieldSearch: '',
-        infos: ''
+        infos: '',
+        message: null
     }
     componentDidMount() {
         this.fetchUsersOzwillo(this.state.collectiviteId)
     }
     fetchUsersOzwillo (id) {
         const { t, _addNotification } = this.context
+        this.setState({message: t('common.loading')})
         fetch(Routing.generate('sesile_user_userapi_ozwillo', {id}), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(json => {
-                this.setState({usersOzwillo: json})
+                this.setState({usersOzwillo: json, message: null})
             })
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
-                error.statusText)))
+            .catch(error => {
+                let message =  t('common.error_loading_list')
+                if(error.status === 400) message = t('common.collectivite_not_provisioned_on_ozwillo')
+                if(error.status === 403) message = t('admin.error.ozwillo_instance_users')
+                this.setState({message})
+                _addNotification(basicNotification('error', message, error.statusText))})
     }
 
     handleAddUser = (user) => {
@@ -89,7 +93,7 @@ class UsersOzwillo extends Component {
                         title={t('admin.users_list_ozwillo')}
                         listLength={listUser.length}
                         headTitles={[t('admin.user.name'), t('admin.user.label_email'), t('common.label.actions')]}
-                        emptyListMessage={t('common.no_results', {name: t('admin.user.name')})}>
+                        emptyListMessage={this.state.message}>
                         {
                             usersOzwillo.length >> 0 &&
                             <AdminListRow>

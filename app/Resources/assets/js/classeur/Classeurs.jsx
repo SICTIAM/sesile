@@ -71,7 +71,7 @@ class Classeurs extends Component {
             })
             .then(this.setState({start}))
             .catch(error => {
-                this.setState({message: t('common.error_loading_classeur')})
+                this.setState({message: t('common.error_loading_list')})
                 _addNotification(basicNotification(
                     'error',
                     t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
