@@ -22,6 +22,7 @@ class ClasseurNew extends Component {
 
     state = {
         edit: true,
+        sending: false,
         circuits: [],
         circuit: {
             users_copy: []
@@ -119,7 +120,7 @@ class ClasseurNew extends Component {
         formData.append('type', type.id)
         formData.append('circuit_id', circuit.id)
         formData.append('collectivite', user.current_org_id)
-
+        this.setState({sending: true})
         fetch(Routing.generate('sesile_classeur_classeurapi_post'), {
             method: 'POST',
             body: formData,
@@ -134,6 +135,7 @@ class ClasseurNew extends Component {
                 'error',
                 this.context.t('common.classeurs.error.post', {errorCode: error.status}),
                 error.statusText)))
+            .finally(() => this.setState({sending: false}))
     }
 
     handleChangeCircuit = (name, value) => {
@@ -188,7 +190,6 @@ class ClasseurNew extends Component {
         circuit.types ?
             listTypes = circuit.types.map(type => <option key={type.id} value={type.id}>{type.nom}</option>)
             : listTypes = ""
-
         return(
             <div className="cell medium-12">
                 <div className="grid-x grid-padding-y">
@@ -319,10 +320,10 @@ class ClasseurNew extends Component {
                                     <Button id="submit-classeur-infos"
                                             className="cell medium-12"
                                             classNameButton="float-right hollow"
+                                            loading={this.state.sending}
+                                            disabled={this.state.sending}
                                             onClick={this.saveClasseur}
-                                            labelText={t('common.button.save')}
-                                            disabled={!this.state.edit}
-                                    />
+                                            labelText={t('common.button.save')}/>
                                 </div>
                             </div>
 

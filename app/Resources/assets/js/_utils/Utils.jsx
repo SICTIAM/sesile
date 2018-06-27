@@ -72,7 +72,6 @@ const isValidSiren = (siren) => {
                 tmp = siren.charAt(cpt);
             somme += parseInt(tmp);
         }
-        console.log(somme)
         if ((somme % 10) === 0)
             isValid = true;
         else
