@@ -16,7 +16,8 @@ import { escapedValue } from '../_utils/Search'
 class Notes extends Component {
     static contextTypes = {
         t: func,
-        _addNotification: func
+        _addNotification: func,
+        fetchUserNote: func
     }
     state = {
         valueSearchByTitle: '', 
@@ -27,6 +28,7 @@ class Notes extends Component {
         fetch(Routing.generate('sesile_user_noteapi_get'), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(notes => this.setState({notes, filtredNotes: notes}))
+        this.context.fetchUserNote()
     }
     deleteNote = (id) => {
         const { t, _addNotification } = this.context

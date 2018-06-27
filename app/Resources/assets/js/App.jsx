@@ -30,19 +30,29 @@ class App extends Component {
                 mainDomain: '',
                 currentDomain: ''
             },
-            displaySelectCollectivite: false
+            displaySelectCollectivite: false,
+            noteObject: {
+                note: {
+                    title: '',
+                    subtitle: '',
+                    message: ''
+                },
+                alreadyOpen: true
+            }
         }
         this._notificationSystem = null
     }
 
     static childContextTypes = {
         _addNotification: PropTypes.func,
+        fetchUserNote: PropTypes.func,
         t: PropTypes.func,
     }
 
     getChildContext() {
         return {
             _addNotification: this._addNotification,
+            fetchUserNote: this.fetchUserNote,
             t: this.t
         }
     }
@@ -51,6 +61,7 @@ class App extends Component {
         $(document).foundation()
         this.fetchUser()
         this.mainDomainControll()
+        this.fetchUserNote()
     }
 
     _addNotification = (notification) => {
@@ -72,6 +83,16 @@ class App extends Component {
             .then(mainDomain => {
                 this.setState({mainDomain})
             })
+    }
+    fetchUserNote = () => {
+        fetch(Routing.generate('sesile_user_noteapi_getlast'), {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(noteObject => {if(noteObject.note) this.setState({noteObject})})
+    }
+    handleChangeStateUserNote = () => {
+        const { noteObject } = this.state
+        noteObject['alreadyOpen'] = true
+        this.setState({noteObject})
     }
     handleClickConnection = () => {
         let host = window.location.host;
@@ -127,7 +148,7 @@ class App extends Component {
                                         <div
                                             style={{paddingLeft: '2.5%', paddingRight: '2.5%'}}
                                             className="cell large-10 medium-12 small-12 cell-block-y main">
-                                            {user.id && <Note/>}
+                                            {user.id && <Note noteObject={this.state.noteObject} fetchUserNote={this.fetchUserNote} handleChange={this.handleChangeStateUserNote}/>}
                                             <div className="grid-x grid-padding-x medium-11">
                                                 <div className="cell medium-12 small-12">
                                                     <NotificationSystem ref={n => this._notificationSystem = n} />
