@@ -124,6 +124,7 @@ class SesileMigratorTest extends LegacyWebTestCase
     {
         list($sesileManager, $collectivityManager, $logger) = $this->getMockObjects();
         $collectivity = CollectiviteFixtures::aValidCollectivite();
+        $collectivity->setId(1);
 
         $collectivityManager->expects(self::once())
             ->method('getCollectivity')
@@ -133,6 +134,7 @@ class SesileMigratorTest extends LegacyWebTestCase
          */
 
         $aValidcollectivite = CollectiviteFixtures::aValidCollectivite();
+        $aValidcollectivite->setId(2);
         $collectiviteOzwillo = CollectiviteFixtures::aValidCollectiviteOzwillo($aValidcollectivite);
         $aValidcollectivite->setOzwillo($collectiviteOzwillo);
         $collectivityManager->expects(self::once())
