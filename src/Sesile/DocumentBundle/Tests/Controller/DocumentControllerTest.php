@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sesile\DocumentBundle\Test\Controller;
+namespace Sesile\DocumentBundle\Tests\Controller;
 
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
