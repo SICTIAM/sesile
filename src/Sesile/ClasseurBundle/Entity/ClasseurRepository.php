@@ -48,6 +48,31 @@ class ClasseurRepository extends EntityRepository {
     }
 
     /**
+     * @param $collectivityId
+     * @param $userId
+     * @param $name
+     *
+     * @return array
+     */
+    public function searchClasseurs($collectivityId, $userId, $name)
+    {
+        return $this
+            ->createQueryBuilder('c')
+            ->select('c.id, c.nom, c.description')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :userId')
+            ->join('c.user', 'u')
+            ->where('c.collectivite = :orgId')
+            ->andWhere('c.nom like :name')
+            ->setParameter('userId', $userId)
+            ->setParameter('orgId', $collectivityId)
+            ->setParameter('name', '%'.$name.'%')
+            ->orderBy("c.creation", "DESC")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * @param $orgId collectivite id
      * @param $userId
      * @param $sort
