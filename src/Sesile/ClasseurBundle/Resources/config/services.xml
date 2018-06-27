@@ -8,13 +8,11 @@
     <parameters>
         <parameter key="sesile_classeur.example.class">Sesile\ClasseurBundle\Example</parameter>
     </parameters>
-
+    -->
     <services>
-        <service id="sesile_classeur.example" class="%sesile_classeur.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="classeur.manager" class="Sesile\ClasseurBundle\Manager\ClasseurManager">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="logger" />
         </service>
     </services>
-    -->
 </container>
