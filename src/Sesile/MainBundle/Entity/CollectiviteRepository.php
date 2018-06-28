@@ -75,6 +75,7 @@ class CollectiviteRepository extends EntityRepository
         return $this
             ->createQueryBuilder('c')
             ->select('c.id', 'c.nom', 'c.domain')
+            ->orderBy('c.nom', 'ASC')
             ->getQuery()
             ->getArrayResult();
     }
@@ -94,6 +95,7 @@ class CollectiviteRepository extends EntityRepository
             ->addSelect('s.collectivityId')
             ->where('s.collectivityId IS NULL')
             ->andWhere('c.active = 1')
+            ->orderBy('c.nom', 'ASC')
             ->getQuery()
             ->getArrayResult();
     }
