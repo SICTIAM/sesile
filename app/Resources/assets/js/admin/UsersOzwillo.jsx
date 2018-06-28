@@ -34,6 +34,7 @@ class UsersOzwillo extends Component {
             })
             .catch(error => {
                 let message =  t('common.error_loading_list')
+                if(error.status === 401) window.location.reload();
                 if(error.status === 400) message = t('common.collectivite_not_provisioned_on_ozwillo')
                 if(error.status === 403) message = t('admin.error.ozwillo_instance_users')
                 this.setState({message})

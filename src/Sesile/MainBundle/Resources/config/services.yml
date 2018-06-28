@@ -14,3 +14,12 @@ services:
             - '%domain%'
             - '%email_sender_address%'
             - '@logger'
+    expired_token.listener:
+        class: Sesile\MainBundle\EventListener\ExpiredTokenListener
+        arguments: ["@session", "@security.token_storage", "@logger"]
+        tags:
+          - { name: kernel.event_listener, event: ozwillo_token.expired, method: onTokenExpired }
+    ozwillo_access_denied.listener:
+          class: Sesile\MainBundle\EventListener\OzwilloAccessDeniedListener
+          tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }

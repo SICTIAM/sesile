@@ -71,13 +71,14 @@ class OzwilloUserService
             }
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             $msg = sprintf(
-                '[OzwilloUserService]/getOzwilloAclInstance GuzzleException WARNING for instanceId: %s :: %s',
+                '[OzwilloUserService]/getOzwilloAclInstance GuzzleException WARNING for instanceId: %s CODE: %s :: %s',
+                $e->getCode(),
                 $instanceId,
                 $e->getMessage()
             );
             $this->logger->error($msg);
 
-            return new Message(false, null, [$e->getMessage()]);
+            return new Message(false, $e->getCode(), [$e->getMessage()]);
         } catch (\Exception $e) {
             $msg = sprintf(
                 '[OzwilloUserService]/getOzwilloAclInstance Exception WARNING for instanceId: %s :: %s',
@@ -86,7 +87,7 @@ class OzwilloUserService
             );
             $this->logger->error($msg);
 
-            return new Message(false, null, [$e->getMessage()]);
+            return new Message(false, ['code' => $e->getCode()], [$e->getMessage()]);
         }
     }
 

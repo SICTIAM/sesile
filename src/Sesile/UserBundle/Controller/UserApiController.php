@@ -4,6 +4,7 @@ namespace Sesile\UserBundle\Controller;
 
 use Sesile\MainBundle\Entity\Collectivite;
 use Sesile\MainBundle\Entity\CollectiviteOzwillo;
+use Sesile\UserBundle\Exceptions\OzwilloAccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -458,6 +459,20 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         $accessToken = $this->get('security.token_storage')->getToken()->getAccessToken();
         $ozwilloUsersResult = $this->get('ozwillo_user.service')->getOzwilloAclInstance($instanceId, $accessToken, true);
         if(false === $ozwilloUsersResult->isSuccess()) {
+            //get code
+            $code = $ozwilloUsersResult->getData();
+            if ($code == Response::HTTP_UNAUTHORIZED) {
+                /**
+                 * if 401 means that token is no more valid, so we dispach the event ozwillo_token.expired
+                 * the ExpiredTokenListener logs out the user
+                 * then an OzwilloAccessDeniedException is trown that is catched by
+                 * ozwillo_access_denied.listener (OzwilloAccessDeniedListener) that returns HTTP_UNAUTHORIZED 401
+                 * This 401 should be managed into the react front to refresh tha page
+                */
+                $eventDispacher = $this->get('event_dispatcher');
+                $eventDispacher->dispatch('ozwillo_token.expired');
+                throw new OzwilloAccessDeniedException();
+            }
             return new JsonResponse([], Response::HTTP_FORBIDDEN);
         }
         $ozwilloUsers = $ozwilloUsersResult->getData();
