@@ -51,8 +51,10 @@ class CollectiviteRepositoryTest extends WebTestCase
     {
         $result = $this->em->getRepository(Collectivite::class)->getCollectivitesList();
         self::assertCount(3, $result);
-        self::assertEquals('Sictiam Collectivité', $result[0]['nom']);
+        self::assertEquals('a Sictiam Collectivité', $result[0]['nom']);
         self::assertEquals('sictiam', $result[0]['domain']);
+        self::assertEquals('b Mairie de Nice', $result[1]['nom']);
+        self::assertEquals('Collectivity to migrate', $result[2]['nom']);
     }
 
     public function testGetCollectivitesListShouldThrowExceptionOnError()
@@ -84,7 +86,7 @@ class CollectiviteRepositoryTest extends WebTestCase
         $this->em->flush();
         $result = $this->em->getRepository(Collectivite::class)->getMigrationCollectivityList();
         self::assertCount(2, $result);
-        self::assertEquals('Sictiam Collectivité', $result[0]['nom']);
+        self::assertEquals('a Sictiam Collectivité', $result[0]['nom']);
         self::assertEquals('sictiam', $result[0]['domain']);
     }
 

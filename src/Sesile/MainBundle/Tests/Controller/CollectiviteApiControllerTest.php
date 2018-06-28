@@ -37,8 +37,10 @@ class CollectiviteApiControllerTest extends SesileWebTestCase
         $this->assertStatusCode(200, $this->client);
         $content = json_decode($this->client->getResponse()->getContent(), true);
         self::assertCount(3, $content);
-        self::assertEquals('Sictiam Collectivité', $content[0]['nom']);
+        self::assertEquals('a Sictiam Collectivité', $content[0]['nom']);
         self::assertEquals('sictiam', $content[0]['domain']);
+        self::assertEquals('b Mairie de Nice', $content[1]['nom']);
+        self::assertEquals('Collectivity to migrate', $content[2]['nom']);
     }
 
     public function testGetAllOrganisationsShouldReturnErrorCodeWhenErrorIsThrown()

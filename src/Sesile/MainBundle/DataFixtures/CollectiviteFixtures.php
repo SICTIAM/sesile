@@ -35,7 +35,7 @@ class CollectiviteFixtures extends Fixture
         /**
          * create a new collectivite that will have no users
          */
-        $collectivite2 = self::aValidCollectivite('nice', 'Mairie de Nice', '11111111');
+        $collectivite2 = self::aValidCollectivite('nice', 'b Mairie de Nice', '11111111');
         $collectiviteOzwillo2 = self::aValidCollectiviteOzwillo(
             $collectivite2,
             '2ca106ea-bf4b-4d08-9dc3-082b916d8fdf',
@@ -56,7 +56,7 @@ class CollectiviteFixtures extends Fixture
         $this->addReference(self::COLLECTIVITE_THREE_REFERENCE, $collectivite3);
     }
 
-    public static function aValidCollectivite($domain = 'sictiam', $name = 'Sictiam Collectivité', $siren = '123456789')
+    public static function aValidCollectivite($domain = 'sictiam', $name = 'a Sictiam Collectivité', $siren = '123456789')
     {
         $collectivite = new Collectivite();
         $collectivite
