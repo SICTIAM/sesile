@@ -14,11 +14,24 @@ class Classeurs extends Component {
     static contextTypes = {
         t: func
     }
+    static defaultProps = {
+        classeurs : []
+    }
 
     render () {
 
         const { classeurs, title } = this.props
         const { t } = this.context
+        const listItems = classeurs.map((classeur) =>
+            <Link to={`/classeur/${classeur.id}`} className="grid-x panel-body grid-padding-x align-middle dashboard-content" key={classeur.id}>
+                <div className="cell auto text-bold">
+                    { classeur.nom }
+                </div>
+                <div className="cell auto text-justify">
+                    <ClasseurProgress creation={classeur.creation} validation={classeur.validation} status={classeur.status} />
+                </div>
+            </Link>
+        );
 
         return (
             <div className="grid-x grid-padding-x panel">
@@ -30,19 +43,7 @@ class Classeurs extends Component {
                         <div className="cell auto text-bold">{ t('common.classeurs.sort_label.name') }</div>
                         <div className="cell auto text-bold">{ t('common.classeurs.sort_label.limit_date') }</div>
                     </div>
-                    {
-                        classeurs &&
-                        classeurs.map((classeur) => (
-                            <Link to={`/classeur/${classeur.id}`} className="grid-x panel-body grid-padding-x align-middle dashboard-content" key={classeur.id}>
-                                <div className="cell auto text-bold">
-                                    { classeur.nom }
-                                </div>
-                                <div className="cell auto text-justify">
-                                    <ClasseurProgress creation={classeur.creation} validation={classeur.validation} />
-                                </div>
-                            </Link>
-                        ))
-                    }
+                    { listItems }
                 </div>
 
             </div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Moment from 'moment/moment'
+import Moment from 'moment'
 import { translate } from 'react-i18next'
 import {func, string, number, bool} from 'prop-types'
 
@@ -12,15 +12,16 @@ class ClasseurProgress extends Component {
         edit: false
     }
     render() {
-        const { creation, validation, status, edit } = this.props
+        const { creation, validation, status } = this.props
         const creationDate = Moment(creation)
         const validationDate = Moment(validation)
         const diffToday = validationDate.diff(Moment(), 'days')
         const diffToCreation = validationDate.diff(creationDate, 'days')
+        const validationDateString = Moment(validationDate).format('L')
 
         let classProgress, percentProgress
 
-        if(this.props.classeur.status === 2) {
+        if(status === 2) {
             classProgress = "disabled"
         } else if (diffToday < 0) {
             classProgress = "alert"
@@ -37,7 +38,7 @@ class ClasseurProgress extends Component {
             <div className="grid-x classeur-progress">
                 <div className="cell small-12">
                     <div className={`text-${classProgress} text-left`}>
-                        <span className="text-bold">{Moment(validationDate).format('L')}</span>
+                        <span className="text-bold">{validationDateString}</span>
                     </div>
                 </div>
             </div>
