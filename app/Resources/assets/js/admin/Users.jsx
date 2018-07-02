@@ -69,6 +69,7 @@ class Users extends Component {
     }
     render() {
         const { t } = this.context
+        console.log(this.state.filteredUsers);
         const listUser = this.state.filteredUsers.map(filteredUser =>
             <RowUser key={filteredUser.id} User={filteredUser} handleDeleteUser={this.handleDeleteUser} collectiviteId={this.state.collectiviteId}/>)
 
@@ -98,7 +99,8 @@ class Users extends Component {
                         title={t('admin.users_list')}
                         listLength={listUser.length}
                         labelButton={t('common.button.add_user')}
-                        headTitles={[t('admin.user.first_name_and_name'), t('admin.collectivite.name'), t('admin.user.label_email'), t('common.label.actions')]}
+                        headTitles={[t('admin.user.first_name_and_name'), t('admin.user.label_email'), t('common.label.actions')]}
+                        headGrid={['medium-auto', 'medium-auto', 'medium-2']}
                         emptyListMessage={t('common.no_results', {name: t('admin.user.name')})}>
                             {listUser}
                     </AdminList>
@@ -121,12 +123,9 @@ const RowUser = ({User, handleDeleteUser, collectiviteId}, {t}) =>
             {User._prenom} {User._nom}
         </Cell>
         <Cell className="medium-auto">
-            {User.collectivite.nom}
-        </Cell>
-        <Cell className="medium-auto">
             {User.email}
         </Cell>
-        <Cell className="medium-auto">
+        <Cell className="medium-2">
             <GridX>
                 <Cell className="medium-auto">
                     <Link 
