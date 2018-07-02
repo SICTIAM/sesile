@@ -118,8 +118,7 @@ parameters:
         commit: 994e6f7902355e6bf62dde14804e0bd9863d5662
         buildnumber: 0
     majorversion: 4
-#    url_applet: signature.sesile.fr
-    url_applet: signature.dev.sesile.fr
+    url_applet: '%signature_url_applet%'
     ozwillo_portal: portal.ozwillo-preprod.eu
     ovh_credential:
         application: ***REMOVED***

@@ -25,3 +25,4 @@ parameters:
     contact_email: demat@sictiam.fr
     ozwillo_secret: ***REMOVED***
     only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
+    signature_url_applet: 'signature.dev.sesile.fr'

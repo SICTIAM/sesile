@@ -29,7 +29,7 @@ parameters:
         zone: sesile.fr
         target: sesile.fr.
     email_sender_address: sictiam@sesile.fr
-    url_applet: signature.sesile.fr
+    url_applet: '%signature_url_applet%'
     upload:
         path: '%kernel.root_dir%/../web/uploads/avatars/'
         fics: '%kernel.project_dir%/web/uploads/docs/'
