@@ -25,8 +25,8 @@ class CollectiviteSignature extends Component {
     }
 
     optionsPageSignature = [
-        {value:0, text: this.context.t('admin.collectivite.first_page')},
-        {value:1, text: this.context.t('admin.collectivite.last_page')}
+        {value:1, text: this.context.t('admin.collectivite.first_page')},
+        {value:0, text: this.context.t('admin.collectivite.last_page')}
     ]
 
     validationRules = {

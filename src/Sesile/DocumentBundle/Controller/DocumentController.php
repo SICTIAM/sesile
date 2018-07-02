@@ -581,7 +581,7 @@ class DocumentController extends Controller
                 $em->getRepository('SesileDocumentBundle:Document')->setaPDFTamponSignature($doc->getRepourl(),
                     $absSign,
                     $ordSign,
-                    $collectivity->getPageSignature(),
+                    (bool) $collectivity->getPageSignature(),
                     $imageSignature,
                     $lastUser,
                     $doc->getClasseur()->getId(),
