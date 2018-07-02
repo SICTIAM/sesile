@@ -77,6 +77,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param null $userId
      * @return array
      * @Rest\View(serializerGroups={"listClasseur"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\Get("/org/{orgId}/classeurs/list/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
     public function listAction($orgId, $sort = null, $order = null, $limit, $start, $userId = null)
@@ -100,6 +101,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param int $start
      * @param null $userId
      * @return array
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("/org/{orgId}/classeurs/valid/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
@@ -125,6 +127,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param int $start
      * @param null $userId
      * @return array
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("/org/{orgId}/classeurs/retract/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
@@ -148,6 +151,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param int $start
      * @param null $userId
      * @return array
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("/org/{orgId}/classeurs/remove/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
      */
@@ -169,6 +173,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("/org/{orgId}/classeurs/{classeurId}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param string $orgId     id collectivite
      * @param string $classeur  id classeur
      *
@@ -197,6 +202,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
     /**
      * @Rest\View("statusCode=Response::HTTP_CREATED", serializerGroups={"classeurById"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\Post("/classeur/new")
      * @param Request $request
      * @return Classeur|\Symfony\Component\Form\Form|JsonResponse
@@ -245,6 +251,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Patch("/classeur/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Request $request
      * @param Classeur $classeur
      * @return Classeur|\Symfony\Component\Form\Form|JsonResponse
@@ -302,6 +309,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Put("/action/valid/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Classeur $classeur
      * @return Classeur
      */
@@ -334,6 +342,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Put("/action/retract/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Classeur $classeur
      * @return Classeur
      */
@@ -353,6 +362,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Put("/action/refuse/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Request $request
      * @param Classeur $classeur
      * @return Classeur
@@ -378,6 +388,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Put("/action/remove/{id}")
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Classeur $classeur
      * @return Classeur
      */

@@ -135,6 +135,9 @@ fos_rest:
         include_format: false
     param_fetcher_listener: true
     body_listener: true
+    access_denied_listener:
+        # all requests using the 'json' format will return a 403 on an access denied violation
+        json: true
     body_converter:
         enabled: false
     format_listener:
@@ -155,6 +158,7 @@ fos_rest:
         default_engine: twig
         view_response_listener: 'force'
     exception:
+        enabled: true
         codes:
             'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
             'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException': 403

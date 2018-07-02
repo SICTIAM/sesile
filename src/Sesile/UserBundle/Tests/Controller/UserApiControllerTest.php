@@ -183,5 +183,23 @@ class UserApiControllerTest extends SesileWebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
         self::assertCount(1, $data);
     }
+    public function testGetOzwilloUsersShouldReturn401IfTokenExpired()
+    {
+        $mock = new MockHandler(
+            [
+                new Response(401, ['Content-Type' => 'application/json'], '')
+            ]
+        );
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
+        $logger = $this->createMock(LoggerInterface::class);
+        $ozwilloUserService = new OzwilloUserService($client, 'uri', $logger);
+        $this->client->getContainer()->set('ozwillo_user.service', $ozwilloUserService);
+        $user = $this->fixtures->getReference('user-one');
+        $collectivity = $this->fixtures->getReference('collectivite-one');
+        $this->logIn($user);
+        $this->client->request('GET', sprintf('/apirest/user/ozwillo/%s', $collectivity->getId()));
+        $this->assertStatusCode(401, $this->client);
+    }
 
 }
