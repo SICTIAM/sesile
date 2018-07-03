@@ -142,7 +142,7 @@ class App extends Component {
                                 </div>
                                 <div className="cell auto grid-y">
                                     <div className="grid-x cell auto">
-                                        <div className="hide-for-medium-only hide-for-small-only cell large-2 grid-y" style={{backgroundColor: '#f4f4f4'}}>
+                                        <div className="hide-for-medium-only hide-for-small-only cell large-2 grid-y" style={{backgroundColor: '#f4f4f4', width: '15%'}}>
                                             <Route render={routeProps => <Menu {...routeProps} user={user} />} />
                                         </div>
                                         <div
