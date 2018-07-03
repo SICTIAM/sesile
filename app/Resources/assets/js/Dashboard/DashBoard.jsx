@@ -101,9 +101,16 @@ class DashBoard extends Component {
                                         <div className="cell medium-12 text-center medium-text-left">{ t('common.user.certificate_info')}</div>
                                     </div>
                                     <div className="grid-x panel-body grid-padding-x dashboard-title align-middle">
-                                        <div className="cell medium-8 small-12 text-center medium-text-left text-bold">
-                                            { this.state.certificate && certificateRemainingDays &&
-                                                <span>{t('common.user.certificate_validity', {count: certificateRemainingDays})}</span>}
+                                        <div className="cell small-12 medium-12 large-12">
+                                            {this.state.certificate && certificateRemainingDays ?
+                                                <span style={{margin: '5px'}}>
+                                                    {t('common.user.certificate_validity', {count: certificateRemainingDays})}
+                                                </span> :
+                                                <span style={{margin: '5px'}}>
+                                                    {t('common.no_certificat')}
+                                                </span>}
+                                        </div>
+                                        <div className="cell medium-auto small-12 text-center medium-text-left text-bold">
                                             <Link
                                                 className="button float-left text-uppercase hollow"
                                                 to="https://www.sictiam.fr/certificat-electronique/"
@@ -111,13 +118,13 @@ class DashBoard extends Component {
                                                 {t('common.button.certificate_order')}
                                             </Link>
                                         </div>
-                                        <div className="cell medium-4 small-12 text-center medium-text-right">
+                                        <div className="cell medium-auto small-12 text-center medium-text-right">
                                             {this.state.certificate &&
-                                            <Link
-                                                className="button text-uppercase hollow"
-                                                to="/utilisateur/certificat-electronique">
-                                                {t('common.button.certificate_user')}
-                                            </Link>}
+                                                <Link
+                                                    className="button text-uppercase hollow"
+                                                    to="/utilisateur/certificat-electronique">
+                                                    {t('common.button.certificate_user')}
+                                                </Link>}
                                         </div>
                                     </div>
                                 </div>

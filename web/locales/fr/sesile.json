@@ -37,7 +37,7 @@
         "button": {
             "delete": "Supprimer",
             "add_user": "Ajouter un utilisateur",
-            "certificate_user": "Voir les informations de mon certificat",
+            "certificate_user": "Informations du certificat",
             "certificate_order": "Commander un certificat",
             "edit_save": "Enregistrer les modifications",
             "update": "Mettre à jour",
@@ -241,7 +241,8 @@
         "collectivite_not_provisioned_on_ozwillo": "La collectivité n'est pas provisionnée sur Ozwillo",
         "error_fetch_ozwillo": "Une erreur est survenue lors de l'appel ",
         "error_global_classeur_research": "Une erreur est survenu sur le serveur lors de la recherche",
-        "no_result_globel_classeur_research": "Aucun classeur ne correspond à votre recherche"
+        "no_result_globel_classeur_research": "Aucun classeur ne correspond à votre recherche",
+        "no_certificat": "Aucun certificat détecté"
     },
     "admin": {
         "title": "Rechercher un {{name}}",
