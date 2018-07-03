@@ -32,6 +32,8 @@
 /web/bundles/*
 web/bundles/
 /web/uploads/*
+web/avatars/*
+web/signatures/*
 
 # PHPUnit
 /app/phpunit.xml
