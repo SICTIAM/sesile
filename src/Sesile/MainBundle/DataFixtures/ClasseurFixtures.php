@@ -72,7 +72,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
         $manager->persist($classeur2);
         $manager->flush();
 
-        $this->addReference(self::CLASSEURS_REFERENCE_TWO, $classeur);
+        $this->addReference(self::CLASSEURS_REFERENCE_TWO, $classeur2);
 
         $userTwo = $this->getReference('user-two');
         $etapeClasseur1 = self::aValidEtapeClasseur([$userTwo], [], 1);
@@ -125,6 +125,7 @@ class ClasseurFixtures extends Fixture implements DependentFixtureInterface, Con
     ) {
         $classeur = new Classeur();
         $classeur
+            ->setCreation(new \DateTime('2018-01-02 11:36'))
             ->setUser($user)
             ->setCircuitId($circuitValidation)
             ->setCollectivite($collectivite)

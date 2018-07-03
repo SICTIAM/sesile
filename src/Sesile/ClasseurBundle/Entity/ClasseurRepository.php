@@ -674,4 +674,26 @@ class ClasseurRepository extends EntityRepository {
         }
     }
 
+    /**
+     * @param null $collectivityId
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getExpiredClasseurs($collectivityId = null)
+    {
+
+        $sql = 'select c.id
+                from Classeur c
+                LEFT JOIN Collectivite col on c.collectivite_id = col.id
+                where (c.creation + INTERVAL col.deleteClasseurAfter DAY) < NOW()
+        ';
+        $params = [];
+        if ($collectivityId) {
+            $sql .= ' AND c.collectivite_id = :collectivityId';
+            $params['collectivityId'] = $collectivityId;
+        }
+
+        return $this->getEntityManager()->getConnection()->executeQuery($sql, $params)->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
 }

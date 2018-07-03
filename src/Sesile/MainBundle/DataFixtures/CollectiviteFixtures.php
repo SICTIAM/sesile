@@ -63,7 +63,8 @@ class CollectiviteFixtures extends Fixture
             ->setActive(true)
             ->setDomain($domain)
             ->setNom($name)
-            ->setSiren($siren);
+            ->setSiren($siren)
+            ->setDeleteClasseurAfter(180);
 
         return $collectivite;
     }

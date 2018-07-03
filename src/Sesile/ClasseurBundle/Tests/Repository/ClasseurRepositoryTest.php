@@ -92,4 +92,19 @@ class ClasseurRepositoryTest extends SesileWebTestCase
         self::assertCount(0, $result);
     }
 
+    public function testGetExpiredClasseurs()
+    {
+        //change crateion date of classeurs
+        $classeur = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE);
+        $sql = sprintf("update Classeur set creation = '2018-01-02' where id=%s", $classeur->getId());
+        $this->em->getConnection()->executeQuery($sql);
+        $classeur2 = $this->fixtures->getReference(ClasseurFixtures::CLASSEURS_REFERENCE_TWO);
+        $sql = sprintf("update Classeur set creation = '2017-01-02' where id=%s", $classeur2->getId());
+        $this->em->getConnection()->executeQuery($sql);
+
+        $result = $this->em->getRepository(Classeur::class)->getExpiredClasseurs();
+        self::assertCount(2, $result);
+        self::assertArraySubset([$classeur->getId(), $classeur2->getId()], $result);
+    }
+
 }
