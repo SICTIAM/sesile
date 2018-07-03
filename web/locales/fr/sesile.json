@@ -229,7 +229,7 @@
         "type_siren_collectivite": "Saisir le SIREN de la colléctivité",
         "migrate": "migrer",
         "migration_is_begin": "La migration a été lancée",
-        "empty_list": "Aucun élements à afficher",
+        "empty_list": "Aucun élement à afficher",
         "exported": "Exportés",
         "not_exported": "Non exportés",
         "export_user_is_begin": "L'export des utilisateurs vers Ozwillo a été lancée",

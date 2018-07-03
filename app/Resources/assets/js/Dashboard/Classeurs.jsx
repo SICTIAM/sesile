@@ -7,10 +7,6 @@ import { translate } from 'react-i18next'
 
 class Classeurs extends Component {
 
-    constructor(props) {
-        super(props)
-    }
-
     static contextTypes = {
         t: func
     }
@@ -43,7 +39,13 @@ class Classeurs extends Component {
                         <div className="cell auto text-bold">{ t('common.classeurs.sort_label.name') }</div>
                         <div className="cell auto text-bold">{ t('common.classeurs.sort_label.limit_date') }</div>
                     </div>
-                    { listItems }
+                    {listItems.length > 0 ?
+                        listItems :
+                        <div className="grid-x panel-body grid-padding-x align-center-middle">
+                            <span>
+                                {this.props.message}
+                            </span>
+                        </div>}
                 </div>
 
             </div>

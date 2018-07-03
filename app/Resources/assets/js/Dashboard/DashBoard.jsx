@@ -21,7 +21,9 @@ class DashBoard extends Component {
             currentOrgId : this.props.user.current_org_id,
             lastClasseurs: [],
             urgentClasseurs: [],
-            certificate: null
+            certificate: null,
+            messageLastClasseur: null,
+            messageUrgentClasseur: null
         }
     }
 
@@ -44,14 +46,16 @@ class DashBoard extends Component {
         const limit = 10
         const start = 0
         const { t, _addNotification } = this.context
+        this.setState({messageLastClasseur: t('common.loading')})
         fetch(Routing.generate('sesile_classeur_classeurapi_list', {orgId: this.state.currentOrgId, sort, order, limit, start}), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
-            .then(lastClasseurs => this.setState({lastClasseurs}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
-                error.statusText)))
+            .then(lastClasseurs => {
+                let messageLastClasseur = null
+                if(lastClasseurs.length <= 0) messageLastClasseur = t('common.empty_list')
+                this.setState({lastClasseurs, messageLastClasseur})
+            })
+            .catch(() => this.setState({messageLastClasseur: t('common.error_loading_list')}))
     }
 
     fetchUrgentClasseurs() {
@@ -60,14 +64,16 @@ class DashBoard extends Component {
         const limit = 5
         const start = 0
         const { t, _addNotification } = this.context
+        this.setState({messageUrgentClasseur: t('common.loading')})
         fetch(Routing.generate('sesile_classeur_classeurapi_valid', {orgId: this.state.currentOrgId, sort, order, limit, start}), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
-            .then(urgentClasseurs => this.setState({urgentClasseurs}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
-                error.statusText)))
+            .then(urgentClasseurs => {
+                let messageUrgentClasseur = null
+                if(urgentClasseurs.length <= 0) messageUrgentClasseur = t('common.empty_list')
+                this.setState({urgentClasseurs, messageUrgentClasseur})
+            })
+            .catch(() => this.setState({messageUrgentClasseur: t('common.error_loading_list')}))
     }
 
 
@@ -91,10 +97,10 @@ class DashBoard extends Component {
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x align-top align-center">
                         <div className="cell large-6 medium-12">
-                            <Classeurs classeurs={lastClasseurs} title={t('common.dashboard.last_classeurs')} />
+                            <Classeurs classeurs={lastClasseurs} message={this.state.messageLastClasseur} title={t('common.dashboard.last_classeurs')} />
                         </div>
                         <div className="cell large-6 medium-12">
-                            <Classeurs classeurs={urgentClasseurs} title={t('common.dashboard.urgent_classeurs')} />
+                            <Classeurs classeurs={urgentClasseurs} message={this.state.messageUrgentClasseur} title={t('common.dashboard.urgent_classeurs')} />
                             <div className="grid-x grid-padding-x panel">
                                 <div className="cell medium-12">
                                     <div className="grid-x panel-heading grid-padding-x align-middle">
