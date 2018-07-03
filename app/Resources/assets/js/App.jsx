@@ -61,7 +61,6 @@ class App extends Component {
         $(document).foundation()
         this.fetchUser()
         this.mainDomainControll()
-        this.fetchUserNote()
     }
 
     _addNotification = (notification) => {
@@ -74,7 +73,8 @@ class App extends Component {
         fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(user => {
-                this.setState({user})
+                if(user.length === 0) this.setState({user: {id: null}})
+                else if (user.id) this.setState({user})
             })
     }
     mainDomainControll = () => {

@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { func } from 'prop-types'
-import { escapedValue } from '../_utils/Search'
 import { Link } from 'react-router-dom'
-import { basicNotification } from "../_components/Notifications"
 import { handleErrors } from '../_utils/Utils'
 import { translate } from 'react-i18next'
+import Debounce from 'debounce'
 
 class SearchClasseurs extends Component {
 
@@ -17,34 +16,41 @@ class SearchClasseurs extends Component {
         currentOrgId : this.props.user.current_org_id,
         classeurs: [],
         filteredClasseurs: [],
-        nomClasseur: ''
+        nomClasseur: '',
+        loading: false,
+        message: null
     }
 
-    componentDidMount () {
-        this.fetchClasseurs()
-    }
-
-    fetchClasseurs() {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_classeur_classeurapi_listall', {orgId: this.state.currentOrgId}), { credentials: 'same-origin' })
+    fetchClasseurs = Debounce(() => {
+        const { t } = this.context
+        this.setState({loading: true, message: "Chargement ..."})
+        fetch(Routing.generate('sesile_classeur_classeurapi_searchclasseurs', {orgId: this.state.currentOrgId}), {
+            method: 'POST',
+            body: JSON.stringify({name: this.state.nomClasseur}),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin' })
             .then(handleErrors)
             .then(response => response.json())
-            .then(classeurs => this.setState({classeurs}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
-                error.statusText)))
-    }
+            .then(filteredClasseurs => {
+                this.setState({loading: false})
+                if(filteredClasseurs <= 0) this.setState({message: t('common.no_result_globel_classeur_research')})
+                else this.setState({filteredClasseurs})
+            })
+            .catch(() => {
+                this.setState({message: t('common.error_global_classeur_research')})
+            })
+    }, 800)
 
     searchClasseurs = (e) => {
         const value = e.target.value
-        const { classeurs, filteredClasseurs } = this.state
-        if (value) {
-            const regex = escapedValue(value, filteredClasseurs, classeurs)
-            const filteredClasseurs = classeurs.filter(classeur => regex.test(classeur.nom))
-            this.setState({filteredClasseurs})
-        }
         this.setState({nomClasseur: value})
+
+        if (value.length >= 3) {
+            this.fetchClasseurs()
+        } else this.setState({filteredClasseurs: [], message: null})
     }
 
     handleClick = (e) => {
@@ -57,7 +63,7 @@ class SearchClasseurs extends Component {
     }
 
     handleBlur = () => {
-        this.setState({filteredClasseurs: []})
+        this.setState({filteredClasseurs: [], message: null})
     }
 
     render () {
@@ -67,24 +73,29 @@ class SearchClasseurs extends Component {
 
         return (
             <div className="autocomplete input-group admin_search_input">
-
                 <input className="input-group-field"
                        type="search"
                        name="sesile-search input-autocomplete"
                        placeholder={t('common.classeurs.search')}
                        value={ nomClasseur }
                        onChange={ this.searchClasseurs }
-                       tabIndex="0"
-                />
-                <span className="input-group-label"><i className="fa fa-search"></i></span>
-
-                {
-                    filteredClasseurs.length > 0 &&
-                    <ListClasseurs filteredClasseurs={ filteredClasseurs }
-                                   handleClick={ this.handleClick }
-                                   handleBlur={ this.handleBlur }
-                    />
-                }
+                       tabIndex="0"/>
+                <span className="input-group-label">
+                    <i className="fa fa-search"/>
+                </span>
+                {filteredClasseurs.length > 0 ?
+                    <ListClasseurs
+                        filteredClasseurs={ filteredClasseurs }
+                        handleClick={ this.handleClick }
+                        handleBlur={ this.handleBlur }/> :
+                        this.state.message !== null &&
+                            <div className="list-autocomplete" onMouseLeave={() => this.handleBlur() } >
+                                <ul className="list-group">
+                                    <li className={"list-group-item"}>
+                                        {this.state.message}
+                                    </li>
+                                </ul>
+                            </div>}
             </div>
         )
     }

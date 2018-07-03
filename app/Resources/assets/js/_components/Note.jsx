@@ -14,6 +14,9 @@ class Note extends Component {
     state = {
         isOpen: false
     }
+    componentDidMount() {
+        this.props.fetchUserNote()
+    }
     componentWillReceiveProps(nexProps) {
         if(nexProps.noteObject.note) this.setState({isOpen: !nexProps.noteObject.alreadyOpen})
     }
