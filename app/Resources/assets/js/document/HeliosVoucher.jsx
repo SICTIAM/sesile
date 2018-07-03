@@ -12,34 +12,33 @@ class HeliosVoucher extends Component {
         const { voucher } = this.props
 
         return (
-            <div className="cell medium-12">
+            <div className="cell medium-12" style={{marginBottom: '20px'}}>
                 <div className="grid-x">
                     <div className="cell medium-12">
-                        <h2>
-                            <span className="fa fa-caret-right"/>
+                        <h3>
                             {t('common.helios.voucher_infos')}
-                        </h2>
+                        </h3>
                     </div>
                 </div>
-                <div className="grid-x">
+                <div className="grid-x" style={{marginBottom: '10px'}}>
                     <div className="cell medium-3 text-bold">{ t('common.helios.number') }</div>
                     <div className="cell medium-3">{ voucher.id }</div>
                     <div className="cell medium-3 text-bold">{ t('common.helios.fiscal_year') }</div>
                     <div className="cell medium-3">{ voucher.exercice }</div>
                 </div>
-                <div className="grid-x">
+                <div className="grid-x" style={{marginBottom: '10px'}}>
                     <div className="cell medium-3 text-bold">{ t('common.helios.type') }</div>
                     <div className="cell medium-3">{ voucher.type }</div>
                     <div className="cell medium-3 text-bold">{ t('common.helios.year_to_date') }</div>
                     <div className="cell medium-3">{ voucher.mt_cumul_annuel }</div>
                 </div>
-                <div className="grid-x">
+                <div className="grid-x" style={{marginBottom: '10px'}}>
                     <div className="cell medium-3 text-bold">{ t('common.helios.issue_date') }</div>
                     <div className="cell medium-3">{ Moment(voucher.date_em).format('LL') }</div>
                     <div className="cell medium-3"></div>
                     <div className="cell medium-3"></div>
                 </div>
-                <div className="grid-x">
+                <div className="grid-x" style={{marginBottom: '10px'}}>
                     <div className="cell medium-3 text-bold">{ t('common.helios.attachments_count') }</div>
                     <div className="cell medium-3">{ voucher.nb_piece }</div>
                     <div className="cell medium-3"></div>

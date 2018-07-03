@@ -76,8 +76,8 @@ class Helios extends Component {
                 }
 
                 <div className="grid-x grid-margin-x grid-padding-x">
-                    <div className="cell medium-12">
-                        <h2><i className="fa fa-eye"></i> {t('common.helios.title')}</h2>
+                    <div className="cell medium-12 text-center" style={{margin: '20px'}}>
+                        <h2>{t('common.helios.title')}</h2>
                     </div>
                 </div>
 

@@ -15,14 +15,13 @@ class HeliosPJs extends Component {
             <div className="cell medium-12">
                 <div className="grid-x grid-margin-x grid-padding-x">
                     <div className="cell medium-12">
-                        <h2>
-                            <span className="fa fa-caret-right"/>
+                        <h3>
                             {t('common.helios.attachment_list')}
-                        </h2>
+                        </h3>
                     </div>
                 </div>
 
-                <div className="grid-x">
+                <div className="grid-x" style={{margin: '5px'}}>
                     <div className="cell medium-12">
                         <table>
                         <thead>
@@ -47,12 +46,16 @@ class HeliosPJs extends Component {
                                     <td>
                                         <Select
                                             id="imputations"
+                                            onChange={() => {}}
                                             style={{
-                                                height: '100%',
+                                                fontSize: '1.15em',
+                                                height: '20px',
+                                                width: '63px',
                                                 margin: '0',
                                                 paddingBottom: '0',
                                                 paddingTop: '0'
                                             }}>
+                                            <option>{"Liste"}</option>
                                             { pj.imputations.map(imputation => <option key={imputation} value={imputation}>{imputation}</option>)}
                                         </Select>
                                     </td>
@@ -65,12 +68,14 @@ class HeliosPJs extends Component {
                                                 id="pj"
                                                 onChange={handleClickPJ}
                                                 style={{
-                                                    height: '100%',
+                                                    fontSize: '1.15em',
+                                                    height: '20px',
+                                                    width: '78px',
                                                     margin: '0',
                                                     paddingBottom: '0',
                                                     paddingTop: '0'
                                                 }}>
-                                                <option></option>
+                                                <option>{"Liste PJ"}</option>
                                                 { pj.liste_p_js.map(liste_p_j => <option key={liste_p_j.id} value={liste_p_j.id}>{liste_p_j.nom}</option>)}
                                             </Select>
                                         }

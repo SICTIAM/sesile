@@ -20,13 +20,14 @@ class HeliosInfos extends Component {
         const ListVouchers = pes.vouchers.map(option => <option key={option.id} value={option.id}>{option.id}</option>)
 
         return (
-            <div className="cell medium-12">
-                <div className="grid-x align-middle">
+            <div className="cell medium-12" style={{marginBottom: '20px'}}>
+                <div className="grid-x align-middle" style={{marginBottom: '10px'}}>
                     <div className="cell medium-3 text-bold">{t('common.helios.voucher')}</div>
-
                     <Select
                         style={{
-                            height: '100%',
+                            fontSize: '1.15em',
+                            height: '20px',
+                            width: '63px',
                             margin: '0',
                             paddingBottom: '0',
                             paddingTop: '0'
@@ -38,7 +39,7 @@ class HeliosInfos extends Component {
                         {ListVouchers}
                     </Select>
                 </div>
-                <div className="grid-x">
+                <div className="grid-x" style={{marginBottom: '10px'}}>
                     <div className="cell medium-3 text-bold">{t('common.helios.budget')}</div>
                     <div className="cell medium-9">{ pes.budget }</div>
                 </div>
