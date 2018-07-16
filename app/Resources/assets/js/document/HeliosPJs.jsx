@@ -63,7 +63,7 @@ class HeliosPJs extends Component {
                                     <td>{ pj.mt_t_v_a }</td>
                                     <td>{ pj.mt_t_t_c }</td>
                                     <td>
-                                        { pj.liste_p_js.length > 0 &&
+                                        {pj.liste_p_js.length > 0 ?
                                             <Select
                                                 id="pj"
                                                 onChange={handleClickPJ}
@@ -77,8 +77,8 @@ class HeliosPJs extends Component {
                                                 }}>
                                                 <option>{"Liste PJ"}</option>
                                                 { pj.liste_p_js.map(liste_p_j => <option key={liste_p_j.id} value={liste_p_j.id}>{liste_p_j.nom}</option>)}
-                                            </Select>
-                                        }
+                                            </Select> :
+                                            <p>{"Aucune"}</p>}
                                     </td>
                                 </tr>
                             )
