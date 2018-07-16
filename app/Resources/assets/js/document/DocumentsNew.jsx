@@ -82,6 +82,7 @@ class DocumentsNew extends Component {
     classeurIsFinalized = () => this.props.statusClasseur === 2
     isFinalizedOrRetiredClasseur = () => this.classeurIsFinalized() || this.props.statusClasseur === 3
     userNotHaveSignatureImage = () => this.props.user.path_signature && this.props.user.path_signature.trim() !== ""
+    isPendindAndHeliosTypeCLasseur = () => this.props.statusClasseur === 1 && this.props.typeClasseur.nom === 'Helios'
     render () {
         const { t } = this.context
         const { onDrop, removeDocument, onClick, displayReveal, user }  = this.props
@@ -275,7 +276,7 @@ class DocumentsNew extends Component {
                             <h3>{t('common.documents.title_preview')}</h3>
                         </div>
                     </div>
-                    {!this.classeurIsFinalized() &&
+                    {!this.classeurIsFinalized() && !this.isPendindAndHeliosTypeCLasseur() &&
                         <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="cell medium-12">
                                 <Dropzone
