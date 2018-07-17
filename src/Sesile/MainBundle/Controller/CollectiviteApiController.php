@@ -33,7 +33,7 @@ class CollectiviteApiController extends Controller
             return $this->getDoctrine()
                 ->getManager()
                 ->getRepository('SesileMainBundle:Collectivite')
-                ->findAll();
+                ->findBy(array(), array("nom" => "ASC"));
         } else {
             //@todo refactor $this->getUser()->getCollectivite()
             return array($this->getUser()->getCollectivite());
