@@ -242,7 +242,8 @@
         "error_fetch_ozwillo": "Une erreur est survenue lors de l'appel ",
         "error_global_classeur_research": "Une erreur est survenu sur le serveur lors de la recherche",
         "no_result_globel_classeur_research": "Aucun classeur ne correspond à votre recherche",
-        "no_certificat": "Aucun certificat détecté"
+        "no_certificat": "Aucun certificat détecté",
+        "expand_preview": "Agrandir"
     },
     "admin": {
         "title": "Rechercher un {{name}}",

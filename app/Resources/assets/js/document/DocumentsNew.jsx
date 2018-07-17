@@ -125,6 +125,7 @@ class DocumentsNew extends Component {
                 <hr style={{margin: 0}}/>
                 <div className="grid-x">
                     <div
+                        title={t('common.expand_preview')}
                         onClick={(e) => {if(!this.isNewDocument(document)) displayReveal(e, document.id)}}
                         className={
                             `cell medium-auto align-center
@@ -135,6 +136,7 @@ class DocumentsNew extends Component {
                     </div>
                     {this.isPdfAndExistingDocument(document) && this.classeurIsFinalized(document) ?
                         <div
+                            title={t('common.download')}
                             className={
                                 `cell medium-auto align-center
                                 doc-action-button
@@ -237,6 +239,7 @@ class DocumentsNew extends Component {
                         </div> :
                         this.isNewDocument(document) ?
                             <div
+                                title={t('common.download')}
                                 className={
                                     `cell medium-auto align-center
                                     doc-action-button
@@ -245,6 +248,7 @@ class DocumentsNew extends Component {
                                 <i className="fa fa-download"  style={{padding: '5px'}}/>
                             </div> :
                             <a
+                                title={t('common.download')}
                                 href={Routing.generate('download_doc', {id: document.id})}
                                 className={
                                     `cell medium-auto align-center
@@ -254,6 +258,7 @@ class DocumentsNew extends Component {
                                 <i className="fa fa-download"  style={{padding: '5px'}}/>
                             </a>}
                     <div
+                        title={t('common.button.delete')}
                         className={
                             `cell medium-auto align-center
                             doc-action-button
