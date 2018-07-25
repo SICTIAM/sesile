@@ -258,8 +258,8 @@ class ClasseurRepository extends EntityRepository {
     public function addClasseurValue($classeur, $userId) {
         $this->isEtapeDeposante($classeur);
         $this->isClasseurValidableByUser($classeur, $userId);
-        $this->isClasseurSignable($classeur);
-        $this->isClasseurRefusable($classeur);
+        $this->isClasseurSignable($classeur, $userId);
+        $this->isClasseurRefusable($classeur, $userId);
         $this->isClasseurRetractableByUser($classeur, $userId);
         $this->isClasseurRemovableByUser($classeur, $userId);
         $this->isClasseurDeletableByUser($classeur, $userId);
@@ -296,9 +296,9 @@ class ClasseurRepository extends EntityRepository {
      * @param Classeur $classeur
      * @return Classeur
      */
-    public function isClasseurSignable(Classeur $classeur) {
+    public function isClasseurSignable(Classeur $classeur, $userId) {
 
-        if($classeur->isAtLastValidant() AND $classeur->getValidable()){
+        if($this->userIsInValidatingStep($classeur->getEtapeValidante(), $userId) && $classeur->isAtLastValidant()){
             $docs = $classeur->getDocuments();
             foreach($docs as $doc){
                 if(in_array($doc->getType(), $classeur->typeSignable)){
@@ -312,17 +312,11 @@ class ClasseurRepository extends EntityRepository {
     }
 
     public function isClasseurValidableByUser(Classeur $classeur, $userId) {
-        $etapeValidante = $classeur->getEtapeValidante();
-
-        if ($etapeValidante) {
-            $validantUsersId = $etapeValidante->getValidantUsersId();
-        } else {
-            $validantUsersId = array();
-        }
-        // @todo verify this condition
+        // @todo verify this condition and move it in a service
         if(
-            (in_array($userId, $validantUsersId) AND $classeur->getStatus() != 0 AND $classeur->getStatus() != 2 AND $classeur->getStatus() != 3)
-            OR ($classeur->getEtapeDeposante() AND $classeur->getUser()->getId() === $userId)
+            ($this->userIsInValidatingStep($classeur->getEtapeValidante(), $userId) AND $classeur->getStatus() != 0 AND $classeur->getStatus() != 2 AND $classeur->getStatus() != 3)
+            AND !($classeur->getNextEtapeValidante() === false AND $classeur->getType()->getNom() == "Helios")
+            OR ($classeur->getEtapeDeposante() AND $classeur->getUser()->getId() === $userId )
         ) {
             $classeur->setValidable(true);
         } else {
@@ -331,9 +325,8 @@ class ClasseurRepository extends EntityRepository {
         return $classeur;
     }
 
-    public function isClasseurRefusable(Classeur $classeur) {
-
-        if ($classeur->getValidable() && !$classeur->getEtapeDeposante()) {
+    public function isClasseurRefusable(Classeur $classeur, $userId) {
+        if ($this->userIsInValidatingStep($classeur->getEtapeValidante(), $userId) && !$classeur->getEtapeDeposante()) {
             $classeur->setRefusable(true);
         } else {
             $classeur->setRefusable(false);
@@ -696,4 +689,11 @@ class ClasseurRepository extends EntityRepository {
         return $this->getEntityManager()->getConnection()->executeQuery($sql, $params)->fetchAll(\PDO::FETCH_COLUMN);
     }
 
+    public function userIsInValidatingStep($etapeValidante, $userId) {
+        if ($etapeValidante && in_array($userId, $etapeValidante->getValidantUsersId())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
