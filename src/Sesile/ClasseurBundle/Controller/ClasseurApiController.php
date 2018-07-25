@@ -532,7 +532,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $response->headers->set('Content-type', 'application/x-java-jnlp-file');
         $response->headers->set('Content-disposition', 'filename="signer.jnlp"');
 
-        $url_applet = 'http://' . $this->container->getParameter('url_applet') . '/jws/sesile-jws-signer.jar';
+        $url_applet = $this->container->getParameter('url_applet') . '/jws/sesile-jws-signer.jar';
 
         $contentSigner =
             '<?xml version="1.0" encoding="utf-8"?>
