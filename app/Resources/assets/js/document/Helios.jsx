@@ -55,7 +55,10 @@ class Helios extends Component {
     handleClickPJ = (name, value) => {
         if (value) {
             const pj = this.state.voucher.list_pieces.find(piece => piece.liste_p_js.find(pj => pj.id == value)).liste_p_js.find(pj => pj.id == value)
-            this.setState({pj: Routing.generate("sesile_document_documentapi_getpj", {id: this.props.document.id, pejid: pj.id, pejname: pj.nom}, true), revealDisplay: 'block'})
+            // TODO refactor this function, issue #4537 demand to replace dropdown by openning pj in new tab
+            //this.setState({pj: Routing.generate("sesile_document_documentapi_getpj", {id: this.props.document.id, pejid: pj.id, pejname: pj.nom}, true), revealDisplay: 'block'})
+            let win = window.open(Routing.generate("sesile_document_documentapi_getpj", {id: this.props.document.id, pejid: pj.id, pejname: pj.nom}, true))
+            win.focus()
         }
     }
 
