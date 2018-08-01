@@ -135,18 +135,6 @@ class DocumentsView extends Component {
         currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
         return (
             <div>
-                <DocumentsNew
-                    user={this.props.user}
-                    documents={documents}
-                    onClick={this.handleClickDocument}
-                    onDrop={this.onDrop}
-                    removeDocument={this.removeDocument}
-                    displayReveal={this.displayReveal}
-                    typeClasseur={classeurType}
-                    statusClasseur={status}
-                    classeurId={this.props.classeurId}
-                    editClasseur={editClasseur}
-                    isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}/>
                 <div className="grid-x panel">
                     { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                         <div className="reveal-full" style={{display: revealDisplay}}>
@@ -191,6 +179,18 @@ class DocumentsView extends Component {
                         <OnlyOffice document={ currentDocument } user={user} revealDisplay={false} />
                     }
                 </div>
+                <DocumentsNew
+                    user={this.props.user}
+                    documents={documents}
+                    onClick={this.handleClickDocument}
+                    onDrop={this.onDrop}
+                    removeDocument={this.removeDocument}
+                    displayReveal={this.displayReveal}
+                    typeClasseur={classeurType}
+                    statusClasseur={status}
+                    classeurId={this.props.classeurId}
+                    editClasseur={editClasseur}
+                    isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}/>
             </div>
         )
     }
