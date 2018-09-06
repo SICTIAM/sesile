@@ -78,7 +78,7 @@ class SOController extends Controller {
         {
             $this->get('session')->getFlashBag()->add(
                 'error',
-                'Ce nom de service organisationnel existe déjà'
+                'Ce nom de circuit de validation existe déjà'
             );
             return new RedirectResponse($this->container->get('router')->generate('new_serviceorg'));
         }
