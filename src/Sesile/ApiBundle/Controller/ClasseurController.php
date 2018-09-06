@@ -280,7 +280,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $serviceOrgs = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($user->getId());
 
         if(!count($serviceOrgs)) {
-            $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun service organisationnel.');
+            $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun circuit de validation.');
             return $this->redirect($this->generateUrl('classeur'));
         }
 

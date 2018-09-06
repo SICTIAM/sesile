@@ -4,7 +4,7 @@
     <div class="bloc_page">
         <div class="titre_page">
             <span class="glyphicon glyphicon-floppy-saved"></span>
-            &nbsp;&nbsp;&nbsp;Liste des services organisationnels
+            &nbsp;&nbsp;&nbsp;Liste des circuits de validation
         </div>
         <table class="table tableau dtables">
             <thead>
@@ -27,10 +27,10 @@
                         {% endif %}
                     </td>
                     <td class="boutons_action">
-                        <a href="{{ path('edit_serviceorg',{id:servOrg.id}) }}" title="Editer le service organisationnel">
+                        <a href="{{ path('edit_serviceorg',{id:servOrg.id}) }}" title="Editer le circuit de validation">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        <a href="{{ path("delete_serviceorg", {'id' : servOrg.id }) }}" data-toggle="modal" data-target="#confirm-delete" class="deleter" title="Supprimer le service organisationnel">
+                        <a href="{{ path("delete_serviceorg", {'id' : servOrg.id }) }}" data-toggle="modal" data-target="#confirm-delete" class="deleter" title="Supprimer le circuit de validation">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>
@@ -40,7 +40,7 @@
         </table>
         <a href="{{ path("new_serviceorg") }}">
             <button type="button" class="btn btn-default navbar-btn">
-                Ajouter un service organisationnel
+                Ajouter un circuit de validation
             </button>
         </a>
         <link type="text/css" href="{{ asset("/datatables/css/jquery.dataTables.css") }}" rel="stylesheet" />
@@ -50,7 +50,7 @@
     <script type="application/javascript" src="{{ asset("/datatables/jquery.dataTables.min.js") }}"></script>
     <script>
         $('.deleter').confirm({
-            text: "Etes-vous sur de vouloir supprimer ce service organisationnel?",
+            text: "Etes-vous sur de vouloir supprimer ce circuit de validation?",
             confirmButton: "Supprimer",
             cancelButton: "Annuler",
             confirmButtonClass: "btn btn-danger pull-right"
@@ -70,8 +70,8 @@
                     "sNext": "",
                     "sLast": ""
                 },
-                "sZeroRecords": "Aucun service organisationnel &agrave; afficher",
-                "sEmptyTable": "Aucun service organisationnel &agrave; afficher"
+                "sZeroRecords": "Aucun circuit de validation &agrave; afficher",
+                "sEmptyTable": "Aucun circuit de validation &agrave; afficher"
             },
             "iDisplayLength": 15,
             "aLengthMenu": [15, 30, 50, 100],
