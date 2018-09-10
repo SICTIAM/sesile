@@ -34,9 +34,9 @@ class CollectiviteInfos extends Component {
     }
 
     customErrorMessages = {
-        delete_classeur_after: {min: this.context.t('admin.collectivite.error.field_delay_min'), 
-                                max: this.context.t('admin.collectivite.error.field_delay_max'),
-                                required: this.context.t('admin.collectivite.error.field_delay_required')}
+        delete_classeur_after: {min: this.context.t('admin.collectivite.error.field_delay_min'),
+            max: this.context.t('admin.collectivite.error.field_delay_max'),
+            required: this.context.t('admin.collectivite.error.field_delay_required')}
     }
 
     updateAvatar = (file) => {
@@ -48,18 +48,18 @@ class CollectiviteInfos extends Component {
                 method: 'POST',
                 body: data
             })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(json => {
-                this.context._addNotification(basicNotification(
-                    'success', 
-                    this.context.t('admin.collectivite.success_upload_avatar')))
-                this.props.handleChange('image', json.image)}
-            )
-            .catch(error => this.context._addNotification(basicNotification(
-                'error', 
-                this.context.t('admin.collectivite.error.upload_avatar', {errorCode: error.status}), 
-                error.statusText)))
+                .then(handleErrors)
+                .then(response => response.json())
+                .then(json => {
+                    this.context._addNotification(basicNotification(
+                        'success',
+                        this.context.t('admin.collectivite.success_upload_avatar')))
+                    this.props.handleChange('image', json.image)}
+                )
+                .catch(error => this.context._addNotification(basicNotification(
+                    'error',
+                    this.context.t('admin.collectivite.error.upload_avatar', {errorCode: error.status}),
+                    error.statusText)))
         }
     }
 
@@ -69,23 +69,23 @@ class CollectiviteInfos extends Component {
             credentials: 'same-origin',
             method: 'DELETE'
         })
-        .then(this.handleErrors)
-        .then(response => response.json())
-        .then(json => {
-            $("#confirm_delete").foundation('close')
-            this.props.handleChange('image', json.image)
-        })
-        .catch(error => this.context._addNotification(basicNotification(
-            'error', 
-            this.context.t('admin.collectivite.error.delete_avatar', {errorCode: error.status}), 
-            error.statusText)))
+            .then(this.handleErrors)
+            .then(response => response.json())
+            .then(json => {
+                $("#confirm_delete").foundation('close')
+                this.props.handleChange('image', json.image)
+            })
+            .catch(error => this.context._addNotification(basicNotification(
+                'error',
+                this.context.t('admin.collectivite.error.delete_avatar', {errorCode: error.status}),
+                error.statusText)))
     }
 
     saveCollectivite = () => {
         const { putCollectivite, id, nom, active, delete_classeur_after, editState } = this.props
         const fields = { nom, active, delete_classeur_after }
         const validation = new Validator(fields, this.validationRules)
-        if(validation.passes()) if(id) putCollectivite(id, fields)
+        if ({nom} == this.props.nom) if(validation.passes()) if(id) putCollectivite(id, fields)
     }
 
     render() {
@@ -113,19 +113,19 @@ class CollectiviteInfos extends Component {
                 <div className="medium-6 cell">
                     <div className="grid-x">
                         <InputValidation    id="nom"
-                                            type="text"  
+                                            type="text"
                                             className={"medium-12 cell"}
                                             labelText={`${t('common.label.name')} *`}
-                                            value={nom} 
-                                            onChange={handleChange}
+                                            value={nom}
                                             validationRule={this.validationRules.nom}
+                                            disabled
                                             placeholder={t('admin.collectivite.placeholder_type_name')}/>
 
                         <InputValidation    id="delete_classeur_after"
                                             type="number"
                                             className={"medium-12 cell"}
                                             labelText={`${t('admin.collectivite.classeur_delay')} *`}
-                                            value={delete_classeur_after} 
+                                            value={delete_classeur_after}
                                             onChange={handleChange}
                                             placeholder={t('admin.collectivite.placeholder_delay')}
                                             customErrorMessages={this.customErrorMessages.delete_classeur_after}
@@ -141,7 +141,7 @@ class CollectiviteInfos extends Component {
                                 inactiveText={t('common.label.no')}/>
                     </div>
                 </div>
-                {(id) && 
+                {(id) &&
                 <Button id="submit-infos"
                         className="cell medium-12"
                         classNameButton="float-right"
