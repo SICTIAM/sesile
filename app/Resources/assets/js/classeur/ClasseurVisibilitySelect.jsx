@@ -14,7 +14,7 @@ class ClasseurVisibilitySelect extends Component {
     }
 
     render() {
-        const visibilitiesStatus = ["Privé", "Public", "Privé a partir de moi", "Service organisationnel"]
+        const visibilitiesStatus = ["Privé", "Public", "Privé a partir de moi", "Circuit de validation"]
         const listVisibilities = visibilitiesStatus.map((visibilite, key) =>
             <option key={key} value={key}>{visibilite}</option>
         )

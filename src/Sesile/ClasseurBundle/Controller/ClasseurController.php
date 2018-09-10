@@ -601,7 +601,7 @@ class ClasseurController extends Controller {
         $serviceOrgs = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($this->getUser()->getId());
 
         if(!count($serviceOrgs)) {
-            $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun service organisationnel.');
+            $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun circuit de validation.');
             return $this->redirect($this->generateUrl('classeur'));
         }
 

@@ -340,7 +340,7 @@ export default translate('sesile')(ClasseurNew)
 
 const Visibility = ({visibility, handleChangeClasseur}, {t}) => {
 
-    const visibilitiesStatus = ["Privé", "Public", "Privé a partir de moi", "Service organisationnel"]
+    const visibilitiesStatus = ["Privé", "Public", "Privé a partir de moi", "Circuit de validation"]
     const listVisibilities = visibilitiesStatus.map((visibility, key) =>
         <option key={key} value={key}>{visibility}</option>
     )
