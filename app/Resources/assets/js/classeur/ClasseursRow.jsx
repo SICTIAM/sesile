@@ -61,7 +61,7 @@ class ClasseursRow extends Component {
                 className="grid-x panel-body align-middle text-center"
                 style={{
                     minHeight: '3em',
-                    borderLeft: `5px solid ${this.statusColorClass[classeur.status]}`,
+                    borderLeft: `10px solid ${this.statusColorClass[classeur.status]}`,
                     fontSize: '.75em',
                     borderRadius: '5px 0px 0px 5px'}}>
                 <Link
