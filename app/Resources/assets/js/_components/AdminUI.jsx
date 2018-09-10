@@ -1,7 +1,7 @@
 import React from 'react'
 import History from '../_utils/History'
 
-const AdminDetails = ({ className, title, subtitle, nom, children }) => 
+const AdminDetails = ({ className, title, subtitle, nom, children }) =>
     <div className={className}>
         <div id="admin-details" className="admin-details">
             <h2 className="text-center">{title}</h2>
@@ -15,7 +15,7 @@ const AdminDetails = ({ className, title, subtitle, nom, children }) =>
         </div>
     </div>
 
-const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName, handleChangeName, placeholder, children }) => 
+const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName, handleChangeName, placeholder, children }) =>
     <div className={className}>
         <div id="admin-details-input" className="admin-details">
             <h2 className="text-center">{title}</h2>
@@ -27,7 +27,7 @@ const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName
         </div>
     </div>
 
-const SimpleContent = ({className, children}) => 
+const SimpleContent = ({className, children}) =>
     <div className={"admin-content-details " + className }>
         {children}
     </div>
@@ -51,7 +51,7 @@ const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey }
     <div className={className}>
         <div className="grid-x step-item">
             <div className="medium-12 cell name-step-item" style={{color: '#444'}}>
-            {title}<a className="float-right" onClick={e => handleClickDeleteStep(stepKey)}><i className="fa fa-times-circle icon-size"></i></a>
+                {title}<a className="float-right" onClick={e => handleClickDeleteStep(stepKey)}><i className="fa fa-times-circle icon-size"></i></a>
             </div>
             <div className="medium-12 cell content-step-item">
                 {children}
@@ -82,9 +82,9 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
                     <h3>{title}</h3>
                 </div>
                 {(labelButton && addLink) &&
-                    <div className="cell medium-auto text-right">
-                        <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
-                    </div>
+                <div className="cell medium-auto text-right">
+                    <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
+                </div>
                 }
             </div>
             <div className="grid-x grid-padding-x panel">
@@ -106,7 +106,83 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
     )
 }
 
-const AdminContainer = ({children}) => 
+const AdminListDoc = ({title, headTitles, headGrid = [], labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
+    const listHeadTitles = headTitles.map((headTitle, index) =>
+        <div
+            key={headTitle}
+            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-2' : index === 2 ? 'cell small-1' : 'cell ${headGrid[index]}' }>
+            {headTitle}
+        </div>)
+    return(
+        <div className="cell medium-10 list-admin">
+            <div className="grid-x align-center-middle">
+                <div className="cell medium-auto">
+                    <h3>{title}</h3>
+                </div>
+                {(labelButton && addLink) &&
+                <div className="cell medium-auto text-right">
+                    <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
+                </div>
+                }
+            </div>
+            <div className="grid-x grid-padding-x panel">
+                <div className="cell medium-12">
+                    <div className="panel-heading grid-x grid-padding-x">
+                        {listHeadTitles}
+                    </div>
+                    {
+                        (listLength > 0) ? children :
+                            <div className="grid-x grid-padding-x panel-body dashboard-title">
+                                <div className="cell medium-12 text-center">
+                                    {emptyListMessage}
+                                </div>
+                            </div>
+                    }
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const AdminListHelp = ({title, headTitles, headGrid = [], labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
+    const listHeadTitles = headTitles.map((headTitle, index) =>
+        <div
+            key={headTitle}
+            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : index === 0 ? 'cell large-auto' : index === 1 ? 'cell medium-3' : index === 2 ? 'cell small-1' : index === 3 ? 'cell medium-3' : 'cell ${headGrid[index]}' }>
+            {headTitle}
+        </div>)
+    return(
+        <div className="cell medium-10 list-admin">
+            <div className="grid-x align-center-middle">
+                <div className="cell medium-auto">
+                    <h3>{title}</h3>
+                </div>
+                {(labelButton && addLink) &&
+                <div className="cell medium-auto text-right">
+                    <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
+                </div>
+                }
+            </div>
+            <div className="grid-x grid-padding-x panel">
+                <div className="cell medium-12">
+                    <div className="panel-heading grid-x grid-padding-x">
+                        {listHeadTitles}
+                    </div>
+                    {
+                        (listLength > 0) ? children :
+                            <div className="grid-x grid-padding-x panel-body dashboard-title">
+                                <div className="cell medium-12 text-center">
+                                    {emptyListMessage}
+                                </div>
+                            </div>
+                    }
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const AdminContainer = ({children}) =>
     <div className="grid-x grid-margin-y align-center-middle">
         {children}
     </div>
@@ -116,4 +192,4 @@ const AdminListRow = ({children, link}) =>
         {children}
     </div>
 
-export { AdminDetails, AdminDetailsWithInputField, SimpleContent, AccordionContent, AccordionItem, StepItem, AdminPage, AdminList, AdminContainer, AdminListRow }
+export { AdminDetails, AdminDetailsWithInputField, SimpleContent, AccordionContent, AccordionItem, StepItem, AdminPage, AdminList, AdminListHelp, AdminListDoc, AdminContainer, AdminListRow }

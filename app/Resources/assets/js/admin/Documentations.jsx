@@ -4,7 +4,7 @@ import { translate } from 'react-i18next'
 import Moment from 'moment'
 import { Link, Redirect } from 'react-router-dom'
 
-import { AdminList, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
+import { AdminList, AdminListHelp, AdminListDoc, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
 import ButtonConfirmDelete from '../_components/ButtonConfirmDelete'
 import { Input } from '../_components/Form'
 import { Cell, GridX } from '../_components/UI'
@@ -35,28 +35,28 @@ class Documentations extends Component {
     fetchHelps = () => {
         const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_main_documentationapi_getallaide'), { credentials: 'same-origin'})
-        .then(handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(helps => {
                 this.setState({helps, filteredHelps: helps})
             })
-        .catch(error => _addNotification(basicNotification(
-           'error',
-           t('admin.error.not_extractable_list', {name: t('common.help_board.title_helps'), errorCode: error.status}),
-           error.statusText)))
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_extractable_list', {name: t('common.help_board.title_helps'), errorCode: error.status}),
+                error.statusText)))
     }
     fetchPatchs = () => {
         const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_main_documentationapi_getallpatch'), { credentials: 'same-origin'})
-        .then(handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(patchs => {
                 this.setState({patchs, filteredPatchs: patchs})
             })
-        .catch(error => _addNotification(basicNotification(
-           'error',
-           t('admin.error.not_extractable_list', {name: t('common.help_board.title_patchs'), errorCode: error.status}),
-           error.statusText)))
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.not_extractable_list', {name: t('common.help_board.title_patchs'), errorCode: error.status}),
+                error.statusText)))
     }
     deleteHelp = (id) => {
         const { t, _addNotification } = this.context
@@ -64,39 +64,39 @@ class Documentations extends Component {
             method: 'DELETE',
             credentials: 'same-origin'
         })
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(helps => {
-            _addNotification(
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(helps => {
+                _addNotification(
+                    basicNotification(
+                        'success',
+                        t('admin.documentations.succes_delete')))
+                this.setState({helps, filteredHelps: helps})
+            })
+            .catch(error => _addNotification(
                 basicNotification(
-                    'success',
-                    t('admin.documentations.succes_delete')))
-            this.setState({helps, filteredHelps: helps})
-        })
-        .catch(error => _addNotification(
-            basicNotification(
-                'error',
-                t('admin.documentations.error.delete'),
-                error.statusText)))
+                    'error',
+                    t('admin.documentations.error.delete'),
+                    error.statusText)))
     }
     deletePatch = (id) => {
         const { t, _addNotification } = this.context
         fetch(Routing.generate('sesile_main_documentationapi_removepatch', {id}), {
             method: 'DELETE',
             credentials: 'same-origin'})
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(patchs => {
-            _addNotification(basicNotification(
-                'success',
-                t('admin.documentations.succes_delete')))
-            this.setState({patchs, filteredPatchs: patchs})
-        })
-        .catch(error => _addNotification(
-            basicNotification(
-                'error',
-                t('admin.documentations.error.delete'),
-                error.statusText)))
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(patchs => {
+                _addNotification(basicNotification(
+                    'success',
+                    t('admin.documentations.succes_delete')))
+                this.setState({patchs, filteredPatchs: patchs})
+            })
+            .catch(error => _addNotification(
+                basicNotification(
+                    'error',
+                    t('admin.documentations.error.delete'),
+                    error.statusText)))
     }
     searchPatchByDescription = (key, searchPatchByDescription) => {
         this.setState({searchPatchByDescription})
@@ -119,40 +119,40 @@ class Documentations extends Component {
             <AdminPage
                 title={t('admin.documentations.title')}
                 subtitle={t('admin.documentations.subtitle')}>
-                    <AdminContainer>
-                        <Input
-                            className="cell medium-6 align-center-middle"
-                            labelText={t('admin.label.which')}
-                            value={this.state.searchPatchByDescription}
-                            onChange={this.searchPatchByDescription}
-                            placeholder={t('admin.documentations.search_by_description')}
-                            type="text"/>
-                        <AdminList
-                            title={t('admin.documentations.list_update_title')}
-                            listLength={listDocumentEvo.length}
-                            labelButton={t('admin.documentations.add_document')}
-                            addLink={"/admin/documentation/mise-a-jour"}
-                            headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.version'), t('common.label.actions')]}
-                            emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
-                                {listDocumentEvo}
-                        </AdminList>
-                        <Input
-                            className="cell medium-6 align-center-middle"
-                            labelText={t('admin.label.which')}
-                            value={this.state.searchHelpByDescription}
-                            onChange={this.searchHelpByDescription}
-                            placeholder={t('admin.documentations.search_by_description')}
-                            type="text"/>
-                        <AdminList
-                            title={t('admin.documentations.list_help_title')}
-                            listLength={listDocumentHelp.length}
-                            labelButton={t('admin.documentations.add_document')}
-                            addLink={"/admin/documentation/aide"}
-                            headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.actions')]}
-                            emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
-                                {listDocumentHelp}
-                        </AdminList>
-                    </AdminContainer>
+                <AdminContainer>
+                    <Input
+                        className="cell medium-6 align-center-middle"
+                        labelText={t('admin.label.which')}
+                        value={this.state.searchPatchByDescription}
+                        onChange={this.searchPatchByDescription}
+                        placeholder={t('admin.documentations.search_by_description')}
+                        type="text"/>
+                    <AdminListDoc
+                        title={t('admin.documentations.list_update_title')}
+                        listLength={listDocumentEvo.length}
+                        labelButton={t('admin.documentations.add_document')}
+                        addLink={"/admin/documentation/mise-a-jour"}
+                        headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.version'), t('common.label.actions')]}
+                        emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
+                        {listDocumentEvo}
+                    </AdminListDoc>
+                    <Input
+                        className="cell medium-6 align-center-middle"
+                        labelText={t('admin.label.which')}
+                        value={this.state.searchHelpByDescription}
+                        onChange={this.searchHelpByDescription}
+                        placeholder={t('admin.documentations.search_by_description')}
+                        type="text"/>
+                    <AdminListHelp
+                        title={t('admin.documentations.list_help_title')}
+                        listLength={listDocumentHelp.length}
+                        labelButton={t('admin.documentations.add_document')}
+                        addLink={"/admin/documentation/aide"}
+                        headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.actions')]}
+                        emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
+                        {listDocumentHelp}
+                    </AdminListHelp>
+                </AdminContainer>
             </AdminPage>
         )
     }
@@ -164,29 +164,29 @@ export default translate(['sesile'])(Documentations)
 const RowDocumentEvo = ({patch, deletePatch}, {t}) => {
     return(
         <AdminListRow>
-            <Cell className="medium-auto">
-                <DisplayLongText text={patch.description} />
+            <Cell className="large-6">
+                <DisplayLongText text={patch.description} maxSize={100} />
             </Cell>
-            <Cell className="medium-auto">
+            <Cell className="medium-2">
                 {Moment(patch.date).format('LL')}
             </Cell>
-            <Cell className="medium-auto">
+            <Cell className="small-1">
                 {patch.version}
             </Cell>
-            <Cell className="medium-auto">
+            <Cell className="medium-3">
                 <GridX>
                     <Cell className="medium-auto">
-                        <i 
+                        <i
                             className="fa fa-pencil icon-action"
-                            title={t('common.button.edit')} 
+                            title={t('common.button.edit')}
                             onClick={() => History.push(`/admin/documentation/mise-a-jour/${patch.id}`)} >
                         </i>
                     </Cell>
                     <Cell className="medium-auto">
-                        <Link 
+                        <Link
                             to={
                                 Routing.generate(
-                                    'sesile_main_documentationapi_showdocumentpatch', 
+                                    'sesile_main_documentationapi_showdocumentpatch',
                                     {id: patch.id})}
                             target="_blank"
                             className="fa fa-file-pdf-o icon-action"
@@ -213,26 +213,26 @@ RowDocumentEvo.contextTypes = {
 const RowDocumentHelp = ({help, deleteHelp}, {t}) => {
     return(
         <AdminListRow>
-            <Cell className="medium-auto">
-                <DisplayLongText text={help.description} maxSize={40} />
+            <Cell className="large-6">
+                <DisplayLongText text={help.description} maxSize={100} />
             </Cell>
-            <Cell className="medium-auto">
+            <Cell className="medium-3">
                 {Moment(help.date).format('LL')}
             </Cell>
-            <Cell className="medium-auto">
+            <Cell className="medium-3">
                 <GridX>
                     <Cell className="medium-auto">
-                        <i 
+                        <i
                             className="fa fa-pencil icon-action"
-                            title={t('common.button.edit')} 
+                            title={t('common.button.edit')}
                             onClick={() => History.push(`/admin/documentation/aide/${help.id}`)} >
                         </i>
                     </Cell>
                     <Cell className="medium-auto">
-                        <Link 
+                        <Link
                             to={
                                 Routing.generate(
-                                    'sesile_main_documentationapi_showdocumentaide', 
+                                    'sesile_main_documentationapi_showdocumentaide',
                                     {id: help.id})}
                             target="_blank"
                             className="fa fa-file-pdf-o medium icon-action"
