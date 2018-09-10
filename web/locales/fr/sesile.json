@@ -353,7 +353,7 @@
             "name_plural": "utilisateurs",
             "subtitle_user": "Informations utilisateur",
             "subtitle_signature": "Informations signatures",
-            "subtitle_certificate": "Informations certificats",
+            "subtitle_certificate": "Informations certificat",
             "subtitle_geo": "Informations géographiques",
             "subtitle_application": "Informations applications",
             "subtitle_role": "Rôles de l'utilisateur",
