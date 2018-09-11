@@ -277,7 +277,7 @@ class DocumentController extends FOSRestController implements TokenAuthenticated
             'name' => $doc->getName(),
             'repourl' => $doc->getrepourl(),
             'type' => $doc->getType(),
-            'signed' => false,
+            'signed' => $doc->getSigned(),
             'histories' => $cleanTabHisto);
     }
 
