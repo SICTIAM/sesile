@@ -4,7 +4,7 @@ import { translate } from 'react-i18next'
 import Moment from 'moment'
 import { Link, Redirect } from 'react-router-dom'
 
-import { AdminList, AdminListHelp, AdminListDoc, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
+import { AdminList, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
 import ButtonConfirmDelete from '../_components/ButtonConfirmDelete'
 import { Input } from '../_components/Form'
 import { Cell, GridX } from '../_components/UI'
@@ -127,7 +127,7 @@ class Documentations extends Component {
                         onChange={this.searchPatchByDescription}
                         placeholder={t('admin.documentations.search_by_description')}
                         type="text"/>
-                    <AdminListDoc
+                    <AdminList
                         title={t('admin.documentations.list_update_title')}
                         listLength={listDocumentEvo.length}
                         labelButton={t('admin.documentations.add_document')}
@@ -135,7 +135,7 @@ class Documentations extends Component {
                         headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.version'), t('common.label.actions')]}
                         emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
                         {listDocumentEvo}
-                    </AdminListDoc>
+                    </AdminList>
                     <Input
                         className="cell medium-6 align-center-middle"
                         labelText={t('admin.label.which')}
@@ -143,7 +143,7 @@ class Documentations extends Component {
                         onChange={this.searchHelpByDescription}
                         placeholder={t('admin.documentations.search_by_description')}
                         type="text"/>
-                    <AdminListHelp
+                    <AdminList
                         title={t('admin.documentations.list_help_title')}
                         listLength={listDocumentHelp.length}
                         labelButton={t('admin.documentations.add_document')}
@@ -151,7 +151,7 @@ class Documentations extends Component {
                         headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.actions')]}
                         emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
                         {listDocumentHelp}
-                    </AdminListHelp>
+                    </AdminList>
                 </AdminContainer>
             </AdminPage>
         )

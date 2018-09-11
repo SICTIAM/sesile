@@ -75,82 +75,25 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
             className={headGrid.length > 0 ? `cell ${headGrid[index]}` : 'cell medium-auto' }>
             {headTitle}
         </div>)
-    return(
-        <div className="cell medium-10 list-admin">
-            <div className="grid-x align-center-middle">
-                <div className="cell medium-auto">
-                    <h3>{title}</h3>
-                </div>
-                {(labelButton && addLink) &&
-                <div className="cell medium-auto text-right">
-                    <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
-                </div>
-                }
-            </div>
-            <div className="grid-x grid-padding-x panel">
-                <div className="cell medium-12">
-                    <div className="panel-heading grid-x grid-padding-x">
-                        {listHeadTitles}
-                    </div>
-                    {
-                        (listLength > 0) ? children :
-                            <div className="grid-x grid-padding-x panel-body dashboard-title">
-                                <div className="cell medium-12 text-center">
-                                    {emptyListMessage}
-                                </div>
-                            </div>
-                    }
-                </div>
-            </div>
-        </div>
-    )
-}
 
-const AdminListDoc = ({title, headTitles, headGrid = [], labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
-    const listHeadTitles = headTitles.map((headTitle, index) =>
+    const listHeadTitlesDoc = headTitles.map((headTitle, index) =>
         <div
             key={headTitle}
-            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-2' : index === 2 ? 'cell small-1' : index == 3 ? 'cell medium-3' : 'cell medium-auto' }>
+            className={headGrid.length > 0 ? `cell ${headGrid[index]}`
+                : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-2'
+                    : index === 2 ? 'cell small-1' : index == 3 ? 'cell medium-3' : 'cell medium-auto' }>
             {headTitle}
         </div>)
-    return(
-        <div className="cell medium-10 list-admin">
-            <div className="grid-x align-center-middle">
-                <div className="cell medium-auto">
-                    <h3>{title}</h3>
-                </div>
-                {(labelButton && addLink) &&
-                <div className="cell medium-auto text-right">
-                    <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
-                </div>
-                }
-            </div>
-            <div className="grid-x grid-padding-x panel">
-                <div className="cell medium-12">
-                    <div className="panel-heading grid-x grid-padding-x">
-                        {listHeadTitles}
-                    </div>
-                    {
-                        (listLength > 0) ? children :
-                            <div className="grid-x grid-padding-x panel-body dashboard-title">
-                                <div className="cell medium-12 text-center">
-                                    {emptyListMessage}
-                                </div>
-                            </div>
-                    }
-                </div>
-            </div>
-        </div>
-    )
-}
 
-const AdminListHelp = ({title, headTitles, headGrid = [], labelButton, addLink, listLength= 0, emptyListMessage, children}) => {
-    const listHeadTitles = headTitles.map((headTitle, index) =>
+    const listHeadTitlesHelp = headTitles.map((headTitle, index) =>
         <div
             key={headTitle}
-            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-3' : index === 2 ? 'cell small-1' : 'cell medium-auto' }>
+            className={headGrid.length > 0 ? `cell ${headGrid[index]}`
+                : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-3'
+                    : index === 2 ? 'cell small-1' : 'cell medium-auto' }>
             {headTitle}
         </div>)
+
     return(
         <div className="cell medium-10 list-admin">
             <div className="grid-x align-center-middle">
@@ -166,7 +109,14 @@ const AdminListHelp = ({title, headTitles, headGrid = [], labelButton, addLink, 
             <div className="grid-x grid-padding-x panel">
                 <div className="cell medium-12">
                     <div className="panel-heading grid-x grid-padding-x">
-                        {listHeadTitles}
+                        { title === "Les documents de mise à jour" ? (
+                            listHeadTitlesDoc
+                        ) : (
+                            title === "Les documents d'aide") ? (
+                            listHeadTitlesHelp
+                        ) : (
+                            listHeadTitles
+                        )}
                     </div>
                     {
                         (listLength > 0) ? children :
@@ -181,7 +131,6 @@ const AdminListHelp = ({title, headTitles, headGrid = [], labelButton, addLink, 
         </div>
     )
 }
-
 const AdminContainer = ({children}) =>
     <div className="grid-x grid-margin-y align-center-middle">
         {children}
@@ -192,4 +141,4 @@ const AdminListRow = ({children, link}) =>
         {children}
     </div>
 
-export { AdminDetails, AdminDetailsWithInputField, SimpleContent, AccordionContent, AccordionItem, StepItem, AdminPage, AdminList, AdminListHelp, AdminListDoc, AdminContainer, AdminListRow }
+export { AdminDetails, AdminDetailsWithInputField, SimpleContent, AccordionContent, AccordionItem, StepItem, AdminPage, AdminList, AdminContainer, AdminListRow }
