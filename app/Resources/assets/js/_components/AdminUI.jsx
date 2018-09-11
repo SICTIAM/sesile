@@ -110,7 +110,7 @@ const AdminListDoc = ({title, headTitles, headGrid = [], labelButton, addLink, l
     const listHeadTitles = headTitles.map((headTitle, index) =>
         <div
             key={headTitle}
-            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-2' : index === 2 ? 'cell small-1' : 'cell ${headGrid[index]}' }>
+            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-2' : index === 2 ? 'cell small-1' : index == 3 ? 'cell medium-3' : 'cell medium-auto' }>
             {headTitle}
         </div>)
     return(
@@ -148,7 +148,7 @@ const AdminListHelp = ({title, headTitles, headGrid = [], labelButton, addLink, 
     const listHeadTitles = headTitles.map((headTitle, index) =>
         <div
             key={headTitle}
-            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : index === 0 ? 'cell large-auto' : index === 1 ? 'cell medium-3' : index === 2 ? 'cell small-1' : index === 3 ? 'cell medium-3' : 'cell ${headGrid[index]}' }>
+            className={headGrid.length > 0 ? `cell ${headGrid[index]}` : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-3' : index === 2 ? 'cell small-1' : 'cell medium-auto' }>
             {headTitle}
         </div>)
     return(
