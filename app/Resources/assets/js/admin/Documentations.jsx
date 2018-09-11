@@ -133,6 +133,7 @@ class Documentations extends Component {
                         labelButton={t('admin.documentations.add_document')}
                         addLink={"/admin/documentation/mise-a-jour"}
                         headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.version'), t('common.label.actions')]}
+                        headGrid={['large-6', 'medium-2', 'small-1', 'medium-3']}
                         emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
                         {listDocumentEvo}
                     </AdminList>
@@ -149,6 +150,7 @@ class Documentations extends Component {
                         labelButton={t('admin.documentations.add_document')}
                         addLink={"/admin/documentation/aide"}
                         headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.actions')]}
+                        headGrid={['large-6', 'medium-2', 'small-1']}
                         emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
                         {listDocumentHelp}
                     </AdminList>

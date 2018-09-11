@@ -76,24 +76,6 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
             {headTitle}
         </div>)
 
-    const listHeadTitlesDoc = headTitles.map((headTitle, index) =>
-        <div
-            key={headTitle}
-            className={headGrid.length > 0 ? `cell ${headGrid[index]}`
-                : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-2'
-                    : index === 2 ? 'cell small-1' : index == 3 ? 'cell medium-3' : 'cell medium-auto' }>
-            {headTitle}
-        </div>)
-
-    const listHeadTitlesHelp = headTitles.map((headTitle, index) =>
-        <div
-            key={headTitle}
-            className={headGrid.length > 0 ? `cell ${headGrid[index]}`
-                : index === 0 ? 'cell large-6' : index === 1 ? 'cell medium-3'
-                    : index === 2 ? 'cell small-1' : 'cell medium-auto' }>
-            {headTitle}
-        </div>)
-
     return(
         <div className="cell medium-10 list-admin">
             <div className="grid-x align-center-middle">
@@ -109,14 +91,7 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
             <div className="grid-x grid-padding-x panel">
                 <div className="cell medium-12">
                     <div className="panel-heading grid-x grid-padding-x">
-                        { title === "Les documents de mise à jour" ? (
-                            listHeadTitlesDoc
-                        ) : (
-                            title === "Les documents d'aide") ? (
-                            listHeadTitlesHelp
-                        ) : (
-                            listHeadTitles
-                        )}
+                        {listHeadTitles}
                     </div>
                     {
                         (listLength > 0) ? children :
