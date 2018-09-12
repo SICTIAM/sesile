@@ -6,6 +6,7 @@ import { basicNotification } from '../_components/Notifications'
 import AvatarForm from "./AvatarForm"
 import SignatureForm from "./SignatureForm"
 import {Link} from 'react-router-dom'
+import { CertificateValidity } from '../_components/CertificateExpiry'
 
 class Account extends Component {
 
@@ -108,12 +109,12 @@ class Account extends Component {
         const { t } = this.context
         const { user } = this.state
         const userId = user.id
+
         if (this.state.certificate && this.state.certificate.HTTP_X_SSL_CLIENT_NOT_AFTER) {
             var now = Moment();
             var end = Moment(this.state.certificate.HTTP_X_SSL_CLIENT_NOT_AFTER);
             var certificateRemainingDays = end.diff(now, 'days');
         }
-
         return (
             <div className="cell medium-12">
                 <div className="grid-x grid-padding-y">
@@ -217,15 +218,12 @@ class Account extends Component {
                         </div>
                         <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="medium-6 cell">
-                                <div className="cell small-12 medium-12 large-12">
-                                    {this.state.certificate && certificateRemainingDays ?
-                                        <span style={{margin: '5px'}}>
-                                        {t('common.user.certificate_validity', {count: certificateRemainingDays})}
-                                    </span> :
-                                        <span style={{margin: '5px'}}>
-                                        {t('common.no_certificat')}
-                                    </span>}
-                                </div>
+                                <CertificateValidity
+                                    certificate={this.state.certificate}
+                                    certificateRemainingDays={certificateRemainingDays}
+                                    CertifRemain={t('common.user.certificate_validity', {count: certificateRemainingDays})}
+                                    NoCertif={t('common.no_certificat')}>
+                                </CertificateValidity>
                                 <Link
                                     className="button float-left text-uppercase hollow"
                                     to="https://www.sictiam.fr/certificat-electronique/"
