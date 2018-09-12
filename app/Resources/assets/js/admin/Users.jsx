@@ -69,7 +69,6 @@ class Users extends Component {
     }
     render() {
         const { t } = this.context
-        console.log(this.state.filteredUsers);
         const listUser = this.state.filteredUsers.map(filteredUser =>
             <RowUser key={filteredUser.id} User={filteredUser} handleDeleteUser={this.handleDeleteUser} collectiviteId={this.state.collectiviteId}/>)
 
