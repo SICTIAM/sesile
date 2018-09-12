@@ -23,6 +23,7 @@ const refusClasseur = (that, url, id, motif = '', type = '') => {
                 ? that.listClasseurs(that.state.sort, that.state.order, that.state.limit, that.state.start, that.state.userId)
                 : that.setState({classeur})
         })
+        .then(() => History.push(`/classeurs/valides`))
 }
 
 

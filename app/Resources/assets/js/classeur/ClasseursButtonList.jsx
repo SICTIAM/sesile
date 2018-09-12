@@ -85,17 +85,18 @@ class ClasseursButtonList extends Component {
                     {this.actionEnabled('refusable') ?
                         <div className={"btn-refuser-" + id}>
                             <a
-                                data-toggle={id} title={t('common.classeurs.button.refus_title')}
+                                data-toggle={`toggle-refus-${id}`} title={t('common.classeurs.button.refus_title')}
                                 className="fa fa-minus-circle alert hollow"/>
                             <div
-                                id={id}
+                                id={`toggle-refus-${id}`}
                                 className="dropdown-pane"
                                 data-position={dropdownPosition}
                                 data-alignment="right"
                                 style={{width: '370px'}}
-                                data-dropdown data-auto-focus="true">
+                                data-close-on-click={true}
+                                data-dropdown data-auto-focus={true}>
                                 <Textarea
-                                    id={id}
+                                    id={`textarea-${id}`}
                                     name="text-refus"
                                     value={ textRefus }
                                     style={{ height: 200 }}
