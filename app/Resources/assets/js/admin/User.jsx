@@ -20,7 +20,6 @@ class User extends Component {
         super(props)
         this.state = {
             userId: null,
-            collectivites: [],
             roles: [],
             isSuperAdmin: true,
             user: {
@@ -35,7 +34,6 @@ class User extends Component {
                 pays: '',
                 enabled: false,
                 roles: [],
-                collectivite: this.props.match.params.collectiviteId,
                 userrole: [],
                 apiactivated: false,
                 apitoken: '',
@@ -47,7 +45,6 @@ class User extends Component {
     }
 
     componentDidMount() {
-        this.fetchCollectivites()
         if(this.props.user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
             this.setState({isSuperAdmin: true})
         }
@@ -64,24 +61,11 @@ class User extends Component {
             .then(handleErrors)
             .then(response => response.json())
             .then(json => {
-                json.collectivite = json.collectivite.id
                 this.setState({user: json})
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
                 t('admin.error.not_extractable_list', {name: t('admin.user.name'), errorCode: error.status}),
-                error.statusText)))
-    }
-
-    fetchCollectivites () {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_main_collectiviteapi_getall'), { credentials: 'same-origin'})
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(collectivites => this.setState({collectivites}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('admin.collectivite.name'), errorCode: error.status}),
                 error.statusText)))
     }
 
@@ -130,7 +114,6 @@ class User extends Component {
             enabled: user.enabled,
             apiactivated: user.apiactivated,
             roles: user.roles,
-            collectivite: user.collectivite,
             userrole: user.userrole
         }
 
@@ -178,7 +161,7 @@ class User extends Component {
 
     render() {
         const { t } = this.context
-        const {user,collectivites}  = this.state
+        const { user }  = this.state
         const roles = this.state.roles
         const userId = this.props.match.params.userId
         const rolesSelect = roles && roles.map((role,key) => <option value={role} key={key}>{role}</option>)
@@ -220,7 +203,6 @@ class User extends Component {
                                             <div className="cell medium-6">{user._prenom}</div>
                                         </div>
                                         <div className="grid-x grid-padding-x grid-padding-y">
-                                            <CollectivitesMap collectivites={collectivites} collectiviteId={user.collectivite} isSuperAdmin={this.state.isSuperAdmin} handleChangeField={this.handleChangeField} />
                                             <Switch id="enabled"
                                                     className="cell medium-4"
                                                     labelText={t('admin.user.placeholder_enable')}
@@ -387,32 +369,3 @@ User.PropTypes = {
 }
 
 export default translate(['sesile'])(User)
-
-
-const CollectivitesMap = ({collectivites, collectiviteId, isSuperAdmin, handleChangeField}, {t}) => {
-
-    const collectiviteOptions = collectivites && collectivites.filter(collectivite => collectivite.active)
-        .map(collectivite => <option value={collectivite.id} key={collectivite.id}>{collectivite.nom}</option>)
-
-    return (
-        isSuperAdmin &&
-        <Select id="collectivite"
-                value={collectiviteId}
-                className={"medium-8 cell"}
-                label={t('admin.collectivite.name')}
-                onChange={handleChangeField}>
-            {collectiviteOptions}
-        </Select>
-    )
-}
-
-CollectivitesMap.PropTypes = {
-    collectivites: array.isRequired,
-    collectiviteId: number,
-    isSuperAdmin: bool.isRequired,
-    handleChangeField: func.isRequired
-}
-
-CollectivitesMap.contextTypes = {
-    t: func
-}
