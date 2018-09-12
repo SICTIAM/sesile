@@ -111,7 +111,7 @@ class DashBoard extends Component {
                                         <CertificateValidity
                                             certificate={this.state.certificate}
                                             certificateRemainingDays={certificateRemainingDays}
-                                            CertifRemain={t('common.user.certificate_validity', {count: certificateRemainingDays})}
+                                            CertifRemain={t('common.user.certificate_validity', {count: certificateRemainingDays | 1})}
                                             NoCertif={t('common.no_certificat')}>
                                         </CertificateValidity>
                                         <div className="cell medium-auto small-12 text-center medium-text-left text-bold">
