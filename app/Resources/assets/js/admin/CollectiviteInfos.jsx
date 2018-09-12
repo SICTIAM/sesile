@@ -85,7 +85,7 @@ class CollectiviteInfos extends Component {
         const { putCollectivite, id, nom, active, delete_classeur_after, editState } = this.props
         const fields = { nom, active, delete_classeur_after }
         const validation = new Validator(fields, this.validationRules)
-        if ({nom} == this.props.nom) if(validation.passes()) if(id) putCollectivite(id, fields)
+        if(validation.passes()) if(id) putCollectivite(id, fields)
     }
 
     render() {
@@ -117,9 +117,10 @@ class CollectiviteInfos extends Component {
                                             className={"medium-12 cell"}
                                             labelText={`${t('common.label.name')} *`}
                                             value={nom}
+                                            onChange={handleChange}
                                             validationRule={this.validationRules.nom}
-                                            disabled
-                                            placeholder={t('admin.collectivite.placeholder_type_name')}/>
+                                            placeholder={t('admin.collectivite.placeholder_type_name')}
+                                            disabled/>
 
                         <InputValidation    id="delete_classeur_after"
                                             type="number"

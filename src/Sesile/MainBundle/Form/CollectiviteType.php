@@ -16,7 +16,6 @@ class CollectiviteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom')
             ->add('active')
             ->add('file')
             ->add('textmailnew')
