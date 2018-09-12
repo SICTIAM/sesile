@@ -6,6 +6,7 @@ import { basicNotification } from '../_components/Notifications'
 import AvatarForm from "./AvatarForm"
 import SignatureForm from "./SignatureForm"
 import {Link} from 'react-router-dom'
+import { CertificateValidity } from '../_components/CertificateExpiry'
 
 class Account extends Component {
 
@@ -109,129 +110,140 @@ class Account extends Component {
         const { user } = this.state
         const userId = user.id
 
+        if (this.state.certificate && this.state.certificate.HTTP_X_SSL_CLIENT_NOT_AFTER) {
+            var now = Moment();
+            var end = Moment(this.state.certificate.HTTP_X_SSL_CLIENT_NOT_AFTER);
+            var certificateRemainingDays = end.diff(now, 'days');
+        }
         return (
-        <div className="cell medium-12">
-            <div className="grid-x grid-padding-y">
-                <div className="cell medium-12 text-center text-uppercase text-bold">
-                    <h2>{t('common.user.title')}</h2>
-                </div>
-            </div>
-            <div
-                className="grid-x grid-padding-y panel"
-                style={{borderTop: '2px solid #663399'}}>
-                <div className="cell medium-12" style={{padding: '10px'}}>
-                    <div className="grid-x grid-padding-y">
-                        <label className="cell medium-2 text-bold" htmlFor="nom">
-                            {t('admin.user.label_name')}
-                        </label>
-                        <div className="cell medium-10" id="nom">
-                            {user._nom}
-                        </div>
-                    </div>
-                    <div className="grid-x grid-padding-y">
-                        <label className="cell medium-2 text-bold" htmlFor="prenom">
-                            {t('admin.user.label_firstname')}
-                        </label>
-                        <div className="cell medium-10" id="prenom">
-                            {user._prenom}
-                        </div>
-                    </div>
-                    <div className="grid-x grid-padding-y">
-                        <label className="cell medium-2 text-bold" htmlFor="email">
-                            {t('admin.user.label_email')}
-                        </label>
-                        <div className="cell medium-10" id="email">
-                            {user.email}
-                        </div>
-                    </div>
-                    <div className="grid-x grid-padding-y">
-                        <div className="cell medium-12 text-right text-bold">
-                            <a href={ "https://" + user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
-                                <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
-                                {t('common.user.upadate_account')}
-                            </a>
-                        </div>
+            <div className="cell medium-12">
+                <div className="grid-x grid-padding-y">
+                    <div className="cell medium-12 text-center text-uppercase text-bold">
+                        <h2>{t('common.user.title')}</h2>
                     </div>
                 </div>
-            </div>
-            <div className="grid-x grid-padding-y panel">
-                <div className="cell medium-12">
-                    <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-12 cell">
-                            <h3 className="text-capitalize">{t('common.infos')}</h3>
-                        </div>
-                    </div>
-                    <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-12 cell">
-                            <div className="grid-x grid-padding-y align-center-middle">
-                                <SignatureForm
-                                    handleChangeUser={this.handleChangeUser}
-                                    user={user}
-                                    styleClass="small-12 medium-12 large-12 cell"/>
-                                <AvatarForm
-                                    handleChangeUser={this.handleChangeUser}
-                                    user={user}
-                                    styleClass={"cell small-12 medium-12 large-12"}/>
+                <div
+                    className="grid-x grid-padding-y panel"
+                    style={{borderTop: '2px solid #663399'}}>
+                    <div className="cell medium-12" style={{padding: '10px'}}>
+                        <div className="grid-x grid-padding-y">
+                            <label className="cell medium-2 text-bold" htmlFor="nom">
+                                {t('admin.user.label_name')}
+                            </label>
+                            <div className="cell medium-10" id="nom">
+                                {user._nom}
                             </div>
-                            <div className="grid-x grid-padding-y">
-                                <div className="cell medium-2">
-                                    <label className="text-bold">{t('admin.user.label_quality')}</label>
+                        </div>
+                        <div className="grid-x grid-padding-y">
+                            <label className="cell medium-2 text-bold" htmlFor="prenom">
+                                {t('admin.user.label_firstname')}
+                            </label>
+                            <div className="cell medium-10" id="prenom">
+                                {user._prenom}
+                            </div>
+                        </div>
+                        <div className="grid-x grid-padding-y">
+                            <label className="cell medium-2 text-bold" htmlFor="email">
+                                {t('admin.user.label_email')}
+                            </label>
+                            <div className="cell medium-10" id="email">
+                                {user.email}
+                            </div>
+                        </div>
+                        <div className="grid-x grid-padding-y">
+                            <div className="cell medium-12 text-right text-bold">
+                                <a href={ "https://" + user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
+                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
+                                    {t('common.user.upadate_account')}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="grid-x grid-padding-y panel">
+                    <div className="cell medium-12">
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <h3 className="text-capitalize">{t('common.infos')}</h3>
+                            </div>
+                        </div>
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <div className="grid-x grid-padding-y align-center-middle">
+                                    <SignatureForm
+                                        handleChangeUser={this.handleChangeUser}
+                                        user={user}
+                                        styleClass="small-12 medium-12 large-12 cell"/>
+                                    <AvatarForm
+                                        handleChangeUser={this.handleChangeUser}
+                                        user={user}
+                                        styleClass={"cell small-12 medium-12 large-12"}/>
                                 </div>
-                                <div className="cell medium-10">
+                                <div className="grid-x grid-padding-y">
+                                    <div className="cell medium-2">
+                                        <label className="text-bold">{t('admin.user.label_quality')}</label>
+                                    </div>
+                                    <div className="cell medium-10">
                                     <textarea
                                         name="qualite"
                                         value={this.state.user.qualite || " "}
                                         onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="grid-x grid-padding-x align-center-middle">
-                                <div className="cell small-12 medium-6 large-6">
+                                <div className="grid-x grid-padding-x align-center-middle">
+                                    <div className="cell small-12 medium-6 large-6">
                                     <span className="help-text" style={{fontSize: '0.65em'}}>
                                         {t('common.file_acceptation_rules',
                                             {types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}
                                     </span>
-                                </div>
-                                <div className="cell small-12 medium-6 large-6">
-                                    <button
-                                        className="button float-right text-uppercase hollow"
-                                        onClick={() => this.handleClickSave()}>
-                                        {(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}
-                                    </button>
+                                    </div>
+                                    <div className="cell small-12 medium-6 large-6">
+                                        <button
+                                            className="button float-right text-uppercase hollow"
+                                            onClick={() => this.handleClickSave()}>
+                                            {(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="grid-x grid-padding-y panel">
-                <div className="cell medium-12">
-                    <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-12 cell">
-                            <h3>{t('admin.user.subtitle_certificate')}</h3>
+                <div className="grid-x grid-padding-y panel">
+                    <div className="cell medium-12">
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <h3>{t('admin.user.subtitle_certificate')}</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
-                        <div className="medium-6 cell">
-                            <Link
-                                className="button float-left text-uppercase hollow"
-                                to="https://www.sictiam.fr/certificat-electronique/"
-                                target="_blank">
-                                {t('common.button.certificate_order')}
-                            </Link>
-                        </div>
-                        <div className="medium-6 cell text-right">
-                            {this.state.certificate &&
+                        <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                            <div className="medium-6 cell">
+                                <CertificateValidity
+                                    certificate={this.state.certificate}
+                                    certificateRemainingDays={certificateRemainingDays}
+                                    CertifRemain={t('common.user.certificate_validity', {count: certificateRemainingDays})}
+                                    NoCertif={t('common.no_certificat')}>
+                                </CertificateValidity>
+                                <Link
+                                    className="button float-left text-uppercase hollow"
+                                    to="https://www.sictiam.fr/certificat-electronique/"
+                                    target="_blank">
+                                    {t('common.button.certificate_order')}
+                                </Link>
+                            </div>
+                            <div className="medium-6 cell text-right">
+                                {this.state.certificate &&
                                 <Link
                                     className="button text-uppercase hollow"
                                     to="/utilisateur/certificat-electronique">
                                     {t('common.button.certificate_user')}
                                 </Link>}
+                            </div>
                         </div>
                     </div>
                 </div>
-                </div>
             </div>
-    )}
+        )}
 }
 
 export default translate(['sesile'])(Account)
