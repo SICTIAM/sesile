@@ -1,7 +1,7 @@
 import React from 'react'
 import History from '../_utils/History'
 
-const AdminDetails = ({ className, title, subtitle, nom, children }) => 
+const AdminDetails = ({ className, title, subtitle, nom, children }) =>
     <div className={className}>
         <div id="admin-details" className="admin-details">
             <h2 className="text-center">{title}</h2>
@@ -15,7 +15,7 @@ const AdminDetails = ({ className, title, subtitle, nom, children }) =>
         </div>
     </div>
 
-const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName, handleChangeName, placeholder, children }) => 
+const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName, handleChangeName, placeholder, children }) =>
     <div className={className}>
         <div id="admin-details-input" className="admin-details">
             <h2 className="text-center">{title}</h2>
@@ -27,7 +27,7 @@ const AdminDetailsWithInputField = ({ className, title, subtitle, nom, inputName
         </div>
     </div>
 
-const SimpleContent = ({className, children}) => 
+const SimpleContent = ({className, children}) =>
     <div className={"admin-content-details " + className }>
         {children}
     </div>
@@ -51,7 +51,7 @@ const StepItem = ({ className, title, children, handleClickDeleteStep, stepKey }
     <div className={className}>
         <div className="grid-x step-item">
             <div className="medium-12 cell name-step-item" style={{color: '#444'}}>
-            {title}<a className="float-right" onClick={e => handleClickDeleteStep(stepKey)}><i className="fa fa-times-circle icon-size"></i></a>
+                {title}<a className="float-right" onClick={e => handleClickDeleteStep(stepKey)}><i className="fa fa-times-circle icon-size"></i></a>
             </div>
             <div className="medium-12 cell content-step-item">
                 {children}
@@ -75,6 +75,7 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
             className={headGrid.length > 0 ? `cell ${headGrid[index]}` : 'cell medium-auto' }>
             {headTitle}
         </div>)
+
     return(
         <div className="cell medium-10 list-admin">
             <div className="grid-x align-center-middle">
@@ -82,9 +83,9 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
                     <h3>{title}</h3>
                 </div>
                 {(labelButton && addLink) &&
-                    <div className="cell medium-auto text-right">
-                        <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
-                    </div>
+                <div className="cell medium-auto text-right">
+                    <button className="button hollow" onClick={() => History.push(addLink)}>{labelButton}</button>
+                </div>
                 }
             </div>
             <div className="grid-x grid-padding-x panel">
@@ -105,8 +106,7 @@ const AdminList = ({title, headTitles, headGrid = [], labelButton, addLink, list
         </div>
     )
 }
-
-const AdminContainer = ({children}) => 
+const AdminContainer = ({children}) =>
     <div className="grid-x grid-margin-y align-center-middle">
         {children}
     </div>
