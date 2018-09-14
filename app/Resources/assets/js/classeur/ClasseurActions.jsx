@@ -37,12 +37,10 @@ class ClasseurActions extends Component {
                         />
                     </div>
 
-                    <div className="grid-x grid-margin-x grid-padding-x grid-margin-bottom align-top text-center">
-                        <div className="cell medium-2"></div>
+                    <div className="grid-x grid-margin-x grid-padding-x grid-margin-bottom align-top align-right">
                         <Button labelText={ t('common.classeurs.comments.submit') }
                                 className="cell medium-10 text-right"
-                                onClick={submitComment}
-                        />
+                                onClick={submitComment}/>
                     </div>
 
                     { actions && actions.map((action) =>

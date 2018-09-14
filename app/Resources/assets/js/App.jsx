@@ -16,7 +16,7 @@ import { Route } from 'react-router'
 import SelectCollectivite from './SelectCollectivite'
 import History from './_utils/History'
 Validator.useLang(window.localStorage.i18nextLng)
-Moment.locale(window.localStorage.i18nextLng)
+Moment.locale(window.localStorage.i18nextLng || 'fr')
 
 class App extends Component {
 

@@ -145,15 +145,16 @@ class CircuitClasseur extends Component {
                                 </div>}
                         </div>
                     </div>
-                    <div className="grid-x grid-margin-x grid-padding-x align-right">
-                        <Button
-                            id="submit-classeur-infos"
-                            className="cell small-6 medium-8"
-                            classNameButton="float-right"
-                            disabled={!!this.props.isFinalizedClasseur()}
-                            onClick={this.saveCircuit}
-                            labelText={t('common.button.edit_save')}/>
-                    </div>
+                    {this.props.editable &&
+                        <div className="grid-x grid-margin-x grid-padding-x align-right">
+                            <Button
+                                id="submit-classeur-infos"
+                                className="cell small-6 medium-8"
+                                classNameButton="float-right"
+                                disabled={!!this.props.isFinalizedClasseur()}
+                                onClick={this.saveCircuit}
+                                labelText={t('common.button.edit_save')}/>
+                        </div>}
                 </div>
             </div>
         )

@@ -84,20 +84,22 @@ class DocumentsView extends Component {
     }
 
     removeDocument = (e, id) => {
-        e.preventDefault()
-        e.stopPropagation()
-        fetch(Routing.generate('sesile_document_documentapi_remove', {id}), {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin'
-        })
-            .then(response => response.json())
-            .then(() => {
-                this.fetchDocuments()
+        if(this.props.editClasseur) {
+            e.preventDefault()
+            e.stopPropagation()
+            fetch(Routing.generate('sesile_document_documentapi_remove', {id}), {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin'
             })
+                .then(response => response.json())
+                .then(() => {
+                    this.fetchDocuments()
+                })
+        }
     }
 
     handleClickDocument = (e, id) => {
@@ -123,7 +125,7 @@ class DocumentsView extends Component {
                 this.setState({user: json})
             })
     }
-    isXmlFileType = (document) => document.type === "text/xml"
+    isXmlFileType = (document) => document.type && document.type === "text/xml"
     render () {
         const { t } = this.context
         const { documents, currentDocument, revealDisplay, user } = this.state
@@ -132,7 +134,7 @@ class DocumentsView extends Component {
         const imageType = ['png', 'jpg', 'jpeg', 'gif']
         const heliosType = ['xml']
         let fileType
-        currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
+        currentDocument && currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
         return (
             <div>
                 <div className="grid-x panel">

@@ -177,27 +177,40 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param string $orgId     id collectivite
      * @param string $classeur  id classeur
      *
-     * @return Classeur
+     * @return Classeur|JsonResponse
      */
     public function getByIdAction ($orgId, $classeurId)
     {
-        $classeurRepository = $this->getDoctrine()->getManager()->getRepository(Classeur::class);
-        $classeur = $classeurRepository->findOneBy(['id' => $classeurId, 'collectivite' => $orgId]);
-        if (!$classeur) {
-        throw $this->createNotFoundException("Le Classeur n'a pas pu être trouvé");
-        }
-        $classeur = $classeurRepository
-                        ->addClasseurValue($classeur, $this->getUser()->getId());
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ||
+            $this->getUser()->getcollectivities()->exists(function ($key, $collectivite) use ($orgId) {
+                return $collectivite->getId() == $orgId;})) {
 
-        foreach ($classeur->getDocuments() as $document) {
-            $documentPath = $this->getParameter('upload')['fics'] . $document->getRepourl();
-            $fileSize = 0;
-            if(file_exists($documentPath)) {
-                $fileSize = filesize($documentPath);
+            $classeurRepository = $this->getDoctrine()->getManager()->getRepository(Classeur::class);
+            $classeur = $classeurRepository->findOneBy(['id' => $classeurId, 'collectivite' => $orgId]);
+
+            if (!$classeur) {
+                throw $this->createNotFoundException("Le Classeur n'a pas pu être trouvé");
             }
-            $document->setSize($fileSize);
+            if($classeur->getVisible()->exists(function ($key, $user) {return $user->getId() == $this->getUser()->getId();})) {
+                $classeur = $classeurRepository
+                    ->addClasseurValue($classeur, $this->getUser()->getId());
+
+                foreach ($classeur->getDocuments() as $document) {
+                    $documentPath = $this->getParameter('upload')['fics'] . $document->getRepourl();
+                    $fileSize = 0;
+                    if(file_exists($documentPath)) {
+                        $fileSize = filesize($documentPath);
+                    }
+                    $document->setSize($fileSize);
+                }
+                return $classeur;
+            } else {
+                return new JsonResponse(['message' => "Denied Access"], Response::HTTP_UNAUTHORIZED);
+            }
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_UNAUTHORIZED);
         }
-        return $classeur;
     }
 
     /**
@@ -262,10 +275,12 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         if (empty($classeur)) {
             return new JsonResponse(['message' => 'classeur inexistant'], Response::HTTP_NOT_FOUND);
         }
+        $classeurRepository = $this->getDoctrine()->getManager()->getRepository(Classeur::class);
+        $classeur = $classeurRepository->addClasseurValue($classeur, $this->getUser()->getId());
 
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ||
-            $this->getUser()->getId() == $classeur->getUser()->getId()) {
+            $classeur->getValidable()) {
 
             $etapeClasseurs = new ArrayCollection();
             foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {

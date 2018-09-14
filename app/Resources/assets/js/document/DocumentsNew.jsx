@@ -262,7 +262,7 @@ class DocumentsNew extends Component {
                         className={
                             `cell medium-auto align-center
                             doc-action-button
-                             ${(this.isHeliosAndExistingClasseur() || this.isFinalizedOrRetiredClasseur()) &&
+                             ${this.isHeliosAndExistingClasseur() || this.isFinalizedOrRetiredClasseur() && !this.props.editClasseur  &&
                                 ' disabled'}`}
                         style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2', cursor: 'pointer'}}
                         onClick={(e) => {
@@ -281,7 +281,7 @@ class DocumentsNew extends Component {
                             <h3>{`${t('common.documents.title_preview')} *`}</h3>
                         </div>
                     </div>
-                    {!this.classeurIsFinalized() && !this.isPendindAndHeliosTypeCLasseur() &&
+                    {!this.classeurIsFinalized() && !this.isPendindAndHeliosTypeCLasseur() || !this.props.editClasseur &&
                         <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="cell medium-12">
                                 <Dropzone
