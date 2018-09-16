@@ -16,8 +16,11 @@ class ClasseursList extends Component {
                 <div className="cell medium-12 text-center">
                     <h2>{t('common.menu.list_classeur')}</h2>
                 </div>
-                <div className="cell medium-12 head-list-classeurs">
-                    <Classeurs url="sesile_classeur_classeurapi_list"/>
+                <div className="cell medium-12 panel">
+                    <Classeurs
+                        url="sesile_classeur_classeurapi_list"
+                        userId={this.props.userId}
+                        user={this.props.user} />
                 </div>
             </div>
         )

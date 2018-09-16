@@ -35,13 +35,13 @@ class ClasseursButtonList extends Component {
         const { textRefus } = this.state
         const { classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur, display, id, dropdownPosition, user } = this.props
         const { t } = this.context
-
+        console.log(this.props.checked)
         return (
             <div style={this.props.style} className="grid-x button-list align-middle text-center">
-                <div className="cell auto">
+                <div className="cell medium-3">
                     <ButtonValid classeurs={ classeurs } valid={ validClasseur } enabled={this.actionEnabled('validable')} />
                 </div>
-                <div className="cell auto">
+                <div className="cell medium-3">
                     <div className={"btn-sign-" + id}>
                         {this.actionEnabled('signable_and_last_validant') ?
                             display === "list" ?
@@ -78,54 +78,11 @@ class ClasseursButtonList extends Component {
                             <i title={t('common.classeurs.button.sign_title')} className="fa fa-edit disabled hollow" />}
                     </div>
                 </div>
-                <div className="cell auto">
+                <div className="cell medium-3">
                     <ButtonRevert classeurs={ classeurs } revert={ revertClasseur } enabled={this.actionEnabled('retractable')} />
                 </div>
-                <div className="cell auto">
-                    {this.actionEnabled('refusable') ?
-                        <div className={"btn-refuser-" + id}>
-                            <a
-                                data-toggle={`toggle-refus-${id}`} title={t('common.classeurs.button.refus_title')}
-                                className="fa fa-minus-circle alert hollow"/>
-                            <div
-                                id={`toggle-refus-${id}`}
-                                className="dropdown-pane"
-                                data-position={dropdownPosition}
-                                data-alignment="right"
-                                style={{width: '370px'}}
-                                data-close-on-click={true}
-                                data-dropdown data-auto-focus={true}>
-                                <Textarea
-                                    id={`textarea-${id}`}
-                                    name="text-refus"
-                                    value={ textRefus }
-                                    style={{ height: 200 }}
-                                    placeholder={t('common.classeurs.button.refus_text')}
-                                    onChange={this.handleTextrefus}/>
-                                <button
-                                    onClick={() => refuseClasseur(classeurs, textRefus)}
-                                    title={t('common.classeurs.button.refus_title')}
-                                    className="alert button hollow" >
-                                    {t('common.classeurs.button.refus_title')}
-                                </button>
-                            </div>
-                        </div> :
-                        <i title={t('common.classeurs.button.refus_title')} className="fa fa-minus-circle disabled" />}
-                </div>
-                <div className="cell auto">
-                    <ButtonRemove
-                        classeurs={classeurs}
-                        remove={removeClasseur}
-                        enabled={this.actionEnabled('removable')} />
-                </div>
-                <div className="cell auto">
-                    <ButtonDelete
-                        classeurs={classeurs}
-                        deleteClasseur={deleteClasseur}
-                        enabled={this.actionEnabled('deletable')} />
-                </div>
                 {this.props.check !== undefined &&
-                    <div className="cell auto">
+                    <div className="cell medium-3" style={{marginTop: '5px'}}>
                         <input id={this.props.id} value={this.props.checked} onClick={(e) => this.props.check(e)} type="checkbox" />
                     </div>}
             </div>

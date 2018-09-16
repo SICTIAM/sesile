@@ -21,7 +21,7 @@ class ClasseurPagination extends Component {
     }
     previousAndNextButtonStyle = {
         fontSize: '1.9em',
-        background: 'white',
+        background: '#f1f1f1',
         cursor: 'pointer'
     }
     pageNumberButtonHoverStyle = {
