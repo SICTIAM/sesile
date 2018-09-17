@@ -145,7 +145,7 @@ class CircuitClasseur extends Component {
                                 </div>}
                         </div>
                     </div>
-                    {this.props.editable &&
+                    {this.props.edit &&
                         <div className="grid-x grid-margin-x grid-padding-x align-right">
                             <Button
                                 id="submit-classeur-infos"

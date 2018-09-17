@@ -149,6 +149,28 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
+    public function countClasseursValidable($orgId, $classeursId) {
+        $status = array(0,1,4);
+
+        $count = $this
+            ->createQueryBuilder('c')
+            ->where('c.id IN (:id)')
+            ->andWhere('c.status IN (:status)')
+            ->setParameter('id', $classeursId)
+            ->setParameter('status', $status)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
+            ->select('COUNT(c)')
+            ->getQuery()
+            ->getResult();
+
+        return $count;
+    }
+
     /**
      * @param $orgId
      * @param $classeursId
@@ -191,6 +213,29 @@ class ClasseurRepository extends EntityRepository {
 
     }
 
+    public function countClasseursRetractable ($orgId, $classeursId)
+    {
+        $status = 1;
+
+        $count = $this
+            ->createQueryBuilder('c')
+            ->where('c.id IN (:id)')
+            ->andWhere('c.status = :status')
+            ->setParameter('id', $classeursId)
+            ->setParameter('status', $status)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
+            ->select('COUNT(c)')
+            ->getQuery()
+            ->getResult();
+
+        return $count;
+    }
+
     /**
      * @param $orgId
      * @param $userId
@@ -228,6 +273,30 @@ class ClasseurRepository extends EntityRepository {
             ;
 
         $classeurs = $this->addClasseursValue($classeurs, $userId);
+
+        return $classeurs;
+
+    }
+
+    public function countClasseursremovable ($orgId, $userId)
+    {
+        $status = 3;
+
+        $classeurs = $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->andWhere('c.status = :status')
+            ->setParameter('id', $userId)
+            ->setParameter('status', $status)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->andWhere('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
+            ->select('COUNT(c)')
+            ->getQuery()
+            ->getResult();
 
         return $classeurs;
 
@@ -695,5 +764,21 @@ class ClasseurRepository extends EntityRepository {
         } else {
             return false;
         }
+    }
+
+    public function countVisibleClasseur($orgId, $userId) {
+        return $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userId)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->where('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
+            ->select('COUNT(c)')
+            ->getQuery()
+            ->getResult();
     }
 }

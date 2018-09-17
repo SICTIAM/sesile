@@ -14,11 +14,19 @@ class DocumentsView extends Component {
         _addNotification: func
     }
 
+    static defaultProps = {
+        currentDocument: {
+            repourl: ''
+        }
+    }
+
     constructor(props) {
         super(props)
         this.state = {
             documents: [],
-            currentDocument: {},
+            currentDocument: {
+                repourl: ''
+            },
             revealDisplay: "none",
             user: {}
         }
@@ -48,7 +56,7 @@ class DocumentsView extends Component {
             .then(handleErrors)
             .then(response => response.json())
             .then(documents => {
-                this.setState({documents})
+                documents && this.setState({documents})
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
@@ -84,7 +92,7 @@ class DocumentsView extends Component {
     }
 
     removeDocument = (e, id) => {
-        if(this.props.editClasseur) {
+        if(this.props.edit) {
             e.preventDefault()
             e.stopPropagation()
             fetch(Routing.generate('sesile_document_documentapi_remove', {id}), {
@@ -137,6 +145,7 @@ class DocumentsView extends Component {
         currentDocument && currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
         return (
             <div>
+                {currentDocument &&
                 <div className="grid-x panel">
                     { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                         <div className="reveal-full" style={{display: revealDisplay}}>
@@ -180,7 +189,7 @@ class DocumentsView extends Component {
                     { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none" && user.id) &&
                         <OnlyOffice document={ currentDocument } user={user} revealDisplay={false} />
                     }
-                </div>
+                </div>}
                 <DocumentsNew
                     user={this.props.user}
                     documents={documents}
@@ -192,6 +201,7 @@ class DocumentsView extends Component {
                     statusClasseur={status}
                     classeurId={this.props.classeurId}
                     editClasseur={editClasseur}
+                    edit={this.props.edit}
                     isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}/>
             </div>
         )

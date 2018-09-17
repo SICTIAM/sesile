@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { string, number, func }from 'prop-types'
+import { string, number, func, object }from 'prop-types'
 import { translate } from 'react-i18next'
 
 import { basicNotification } from '../_components/Notifications'
@@ -17,7 +17,8 @@ class Classeurs extends Component {
 
     static contextTypes = {
         t: func,
-        _addNotification: func
+        _addNotification: func,
+        user: object
     }
     state = {
         classeurs: [],
@@ -26,8 +27,9 @@ class Classeurs extends Component {
         limit: 15,
         start: 0,
         checkedAll: false,
-        userId: this.props.userId,
-        message: ''
+        message: '',
+        nbElement: 0,
+        nbElementTotal: 0
     }
     statesCaption = [
         {color: '#c82d2e', state: 'refused'},
@@ -37,34 +39,39 @@ class Classeurs extends Component {
         {color: '#356bfc', state: 'retracted'}
     ]
     componentDidMount() {
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.state.userId)
+        if(this.state.classeurs.length === 0) {
+            this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id)
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+
     }
     changeLimit = (name, value) => {
         this.setState({limit: parseInt(value)})
-        this.listClasseurs(this.state.sort, this.state.order, value, this.state.start, this.state.userId)
+        this.listClasseurs(this.state.sort, this.state.order, value, this.state.start, this.context.user.id)
     }
     changePage = (start) => {
         const newStart = (start * this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.state.userId)
+        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
     }
     changePreviousPage = () => {
         const newStart = (this.state.start - this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.state.userId)
+        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
     }
     changeNextPage = () => {
         const newStart = (this.state.start + this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.state.userId)
+        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
     }
     listClasseurs = (sort, order, limit, start, userId) => {
         const { t, _addNotification } = this.context
         this.setState({message: t('common.loading')})
-        fetch(Routing.generate(this.props.url, {orgId: this.props.user.current_org_id, sort, order, limit, start, userId}), { credentials: 'same-origin' })
+        fetch(Routing.generate(this.props.url, {orgId: this.context.user.current_org_id, sort, order, limit, start, userId}), { credentials: 'same-origin' })
             .then(handleErrors)
             .then(response => response.json())
             .then(json => {
-                let classeurs = json.map(classeur =>
+                let classeurs = json.list.map(classeur =>
                     Object.defineProperty(classeur, "checked", {value : false, writable : true, enumerable : true, configurable : true}))
-                this.setState({classeurs})
+                this.setState({classeurs, nbElement: json.nb_element_in_list, nbElementTotal: json.nb_element_total_of_entity})
                 $('#classeurRow').foundation()
                 if(classeurs.length <= 0) this.setState({message: t('common.classeurs.empty_classeur_list')})
                 else this.setState({message: null})
@@ -99,7 +106,7 @@ class Classeurs extends Component {
         classeurs.map(classeur => {
             ids.push(classeur.id)
         })
-        History.push('/classeurs/previsualisation', {classeurs, user: this.props.user})
+        History.push('/classeurs/previsualisation', {classeurs, user: this.context.user})
     }
     revertClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id, 'PUT', 'list')})}
     refuseClasseurs = (classeurs, motif) => { classeurs.map(classeur => { refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif, 'list') })}
@@ -112,8 +119,8 @@ class Classeurs extends Component {
         const limits = [15,30,50,100]
         const classeurRowList = this.state.classeurs.map(classeur =>
                 <ClasseursRow
-                    classeur={classeur}
                     key={classeur.id}
+                    classeur={classeur}
                     checkClasseur={this.checkClasseur}
                     validClasseur={this.validClasseurs}
                     revertClasseur={this.revertClasseurs}
@@ -121,7 +128,7 @@ class Classeurs extends Component {
                     removeClasseur={this.removeClasseurs}
                     deleteClasseur={this.deleteClasseurs}
                     signClasseur={this.signClasseurs}
-                    user={this.props.user}/>)
+                    user={this.context.user}/>)
         const listLimit = limits.map(limit =>
             <option key={limit} value={limit}>
                 {limit}
@@ -137,6 +144,7 @@ class Classeurs extends Component {
                             <div className="grid-x panel grid-padding-y">
                                 <div className="cell medium-12 classeur-button-list">
                                     <ClasseursButtonList
+                                        key={0}
                                         classeurs={classeurs.filter(classeur => classeur.checked)}
                                         validClasseur={this.validClasseurs}
                                         revertClasseur={this.revertClasseurs}
@@ -145,7 +153,7 @@ class Classeurs extends Component {
                                         deleteClasseur={this.deleteClasseurs}
                                         signClasseur={this.signClasseurs}
                                         id={"button-lists-small"}
-                                        user={this.props.user}/>
+                                        user={this.context.user}/>
                                 </div>
                             </div>
                         </div>
@@ -175,6 +183,7 @@ class Classeurs extends Component {
                             </div>
                             <div className="cell large-2 show-for-large">
                                 {<ClasseursButtonList
+                                    key={1}
                                     classeurs={classeurs.filter(classeur => classeur.checked)}
                                     validClasseur={this.validClasseurs}
                                     revertClasseur={this.revertClasseurs}
@@ -185,7 +194,7 @@ class Classeurs extends Component {
                                     check={this.checkAllClasseurs}
                                     checked={checkedAll}
                                     id={"button-lists-large"}
-                                    user={this.props.user}
+                                    user={this.context.user}
                                     style={{fontSize: '0.8em'}}/>}
                             </div>
                         </div>
@@ -224,6 +233,9 @@ class Classeurs extends Component {
                                         <ClasseurPagination
                                             limit={limit}
                                             start={start}
+                                            nbElement={this.state.nbElement}
+                                            nbElementTotal={this.state.nbElementTotal}
+                                            currentOrgId={this.context.user.current_org_id}
                                             changeLimit={this.changeLimit}
                                             changePreviousPage={this.changePreviousPage}
                                             changeNextPage={this.changeNextPage}
@@ -239,8 +251,7 @@ class Classeurs extends Component {
 }
 
 Classeurs.PropTypes = {
-    url: string.isRequired,
-    userId: number.isRequired
+    url: string.isRequired
 }
 
 export default translate(['sesile'])(Classeurs)

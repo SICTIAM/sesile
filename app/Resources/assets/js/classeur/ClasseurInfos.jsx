@@ -71,7 +71,7 @@ class ClasseurInfos extends Component {
                             </Cell>
                         </GridX>
                         <ClasseurField
-                            editable={editable}
+                            edit={this.props.edit}
                             label={t('common.label.name')}
                             value={nom}>
                             <InputValidation
@@ -84,7 +84,7 @@ class ClasseurInfos extends Component {
                                 placeholder={t('common.classeurs.classeur_name')}/>
                         </ClasseurField>
                         <ClasseurField
-                            editable={editable}
+                            edit={this.props.edit}
                             label={t('common.classeurs.date_limit')}
                             value={Moment(validation).format('LL')}>
                             <InputValidation
@@ -99,7 +99,7 @@ class ClasseurInfos extends Component {
                                 onChange={this.handleChangeLimitDate}/>
                         </ClasseurField>
                         <ClasseurField
-                            editable={editable}
+                            edit={this.props.edit}
                             label={t('common.classeurs.label.visibility')}
                             value={visibilitiesStatus[this.props.visibilite]}>
                             <ClasseurVisibilitySelect
@@ -110,7 +110,7 @@ class ClasseurInfos extends Component {
                                 handleChangeClasseur={this.props.handleChangeClasseur}/>
                         </ClasseurField>
                         <ClasseurField
-                            editable={editable}
+                            edit={this.props.edit}
                             label={t('common.label.description')}
                             value={description || t('common.description_not_specified')}>
                             <Textarea
@@ -175,7 +175,7 @@ class ClasseurInfos extends Component {
                                     </Cell>
                                 </GridX>
                             </div>}
-                        {editable &&
+                        {this.props.edit &&
                             <div className="grid-x grid-margin-x grid-padding-x align-right">
                                 <Button id="submit-classeur-infos"
                                         disabled={!!this.props.isFinalizedClasseur()}
@@ -193,10 +193,10 @@ class ClasseurInfos extends Component {
 
 export default translate(['sesile'])(ClasseurInfos)
 
-const ClasseurField = ({editable , children, label, value}, {t}) => {
+const ClasseurField = ({edit , children, label, value}, {t}) => {
     return (
         <div>
-            {editable ?
+            {edit ?
                 <GridX className="grid-margin-x grid-padding-x">
                     <Cell>
                         {children}

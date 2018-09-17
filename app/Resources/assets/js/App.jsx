@@ -46,6 +46,7 @@ class App extends Component {
     static childContextTypes = {
         _addNotification: PropTypes.func,
         fetchUserNote: PropTypes.func,
+        user: PropTypes.object,
         t: PropTypes.func,
     }
 
@@ -53,6 +54,7 @@ class App extends Component {
         return {
             _addNotification: this._addNotification,
             fetchUserNote: this.fetchUserNote,
+            user: this.state.user,
             t: this.t
         }
     }

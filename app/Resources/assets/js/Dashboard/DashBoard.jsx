@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Classeurs from './Classeurs'
-import { func } from 'prop-types'
+import { func, object } from 'prop-types'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { handleErrors } from '../_utils/Utils'
@@ -13,13 +13,13 @@ class DashBoard extends Component {
 
     static contextTypes = {
         t: func,
-        _addNotification: func
+        _addNotification: func,
+        user: object
     }
 
     constructor(props) {
         super(props)
         this.state = {
-            currentOrgId : this.props.user.current_org_id,
             lastClasseurs: [],
             urgentClasseurs: [],
             certificate: null,
@@ -48,13 +48,13 @@ class DashBoard extends Component {
         const start = 0
         const { t, _addNotification } = this.context
         this.setState({messageLastClasseur: t('common.loading')})
-        fetch(Routing.generate('sesile_classeur_classeurapi_list', {orgId: this.state.currentOrgId, sort, order, limit, start}), { credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_classeur_classeurapi_list', {orgId: this.context.user.current_org_id, sort, order, limit, start}), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(lastClasseurs => {
                 let messageLastClasseur = null
-                if(lastClasseurs.length <= 0) messageLastClasseur = t('common.empty_list')
-                this.setState({lastClasseurs, messageLastClasseur})
+                if(lastClasseurs.list.length <= 0) messageLastClasseur = t('common.empty_list')
+                this.setState({lastClasseurs: lastClasseurs.list, messageLastClasseur})
             })
             .catch(() => this.setState({messageLastClasseur: t('common.error_loading_list')}))
     }
@@ -66,13 +66,13 @@ class DashBoard extends Component {
         const start = 0
         const { t, _addNotification } = this.context
         this.setState({messageUrgentClasseur: t('common.loading')})
-        fetch(Routing.generate('sesile_classeur_classeurapi_valid', {orgId: this.state.currentOrgId, sort, order, limit, start}), { credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_classeur_classeurapi_valid', {orgId: this.context.user.current_org_id, sort, order, limit, start}), { credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(urgentClasseurs => {
                 let messageUrgentClasseur = null
-                if(urgentClasseurs.length <= 0) messageUrgentClasseur = t('common.empty_list')
-                this.setState({urgentClasseurs, messageUrgentClasseur})
+                if(urgentClasseurs.list.length <= 0) messageUrgentClasseur = t('common.empty_list')
+                this.setState({urgentClasseurs: urgentClasseurs.list, messageUrgentClasseur})
             })
             .catch(() => this.setState({messageUrgentClasseur: t('common.error_loading_list')}))
     }
