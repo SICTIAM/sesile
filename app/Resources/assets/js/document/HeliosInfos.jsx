@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {func, object} from 'prop-types'
 import {Select} from '../_components/Form'
 import { translate } from 'react-i18next'
+import Moment from "moment";
 
 class HeliosInfos extends Component {
 
@@ -46,7 +47,7 @@ class HeliosInfos extends Component {
                 <div className="grid-x">
                     <div className="cell medium-3 text-bold">{t('common.helios.signing')}</div>
                     <div className="cell medium-9">
-                        { pes.signatory ? pes.signatory : t('common.helios.no_signing') }
+                        { pes.signatory ? pes.signatory + ' le ' + Moment(pes.date_sign).format('LLLL') : t('common.helios.no_signing') }
                     </div>
                 </div>
             </div>

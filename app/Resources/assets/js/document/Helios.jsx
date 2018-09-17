@@ -12,7 +12,7 @@ class Helios extends Component {
             pes: {
                 budget: "",
                 signatory: "",
-                dateSign: "",
+                date_sign: "",
                 vouchers: []
             },
             voucher: {

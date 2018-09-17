@@ -38,7 +38,8 @@ class PES
             $this->signatory = utf8_decode($subject['CN']);
 
             //on récupère la date de signature (il y a surement plus simple)
-            $this->dateSign = $xml->PES_DepenseAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
+            $this->dateSign = new \DateTime($xml->PES_DepenseAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime);
+
 
         } elseif(isset($xml->PES_RecetteAller) && count($xml->PES_RecetteAller->Bordereau->Signature)) {
             //si on a une signature  on récupère le certificat
@@ -50,7 +51,7 @@ class PES
             $this->signatory = utf8_decode($subject['CN']);
 
             //on récupère la date de signature (il y a surement plus simple)
-            $this->dateSign = $xml->PES_RecetteAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime;
+            $this->dateSign = new \DateTime($xml->PES_RecetteAller->Bordereau->Signature->Object->QualifyingProperties->SignedProperties->SignedSignatureProperties->SigningTime);
 
         }
         else{

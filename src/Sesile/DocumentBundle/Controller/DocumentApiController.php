@@ -192,7 +192,8 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
             $str = str_ireplace('ns3:', '', str_ireplace('xad:', '', str_ireplace('ds:', '', file_get_contents($path))));
             $xml = simplexml_load_string($str, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
 
-            return new PES($xml);
+            $xml = new PES($xml);
+            return $xml;
         }
 
         return new JsonResponse(['message' => 'Impossible de récupérer le document'], Response::HTTP_NO_CONTENT);
