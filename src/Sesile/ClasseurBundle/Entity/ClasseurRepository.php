@@ -326,7 +326,7 @@ class ClasseurRepository extends EntityRepository {
     }
 
     public function isClasseurRefusable(Classeur $classeur, $userId) {
-        if ($this->userIsInValidatingStep($classeur->getEtapeValidante(), $userId) && !$classeur->getEtapeDeposante()) {
+        if ($this->userIsInValidatingStep($classeur->getEtapeValidante(), $userId) AND !$classeur->getEtapeDeposante() AND $classeur->getStatus() !== 3) {
             $classeur->setRefusable(true);
         } else {
             $classeur->setRefusable(false);
