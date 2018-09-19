@@ -12,12 +12,10 @@ const AdminRoute = ({ component, exact = false, path, user, match, superAdmin = 
             render={props => (
                 user.roles.find(role => role.includes("ADMIN")) !== undefined && superAdmin === false ? 
                     (<div>
-                        <MenuBarAdmin user={ user }/>
                         {React.createElement(component, {user, match})}
                     </div> ) :  
                     (user.roles.includes("ROLE_SUPER_ADMIN") ?
                         (<div>
-                            <MenuBarAdmin user={ user }/>
                             {React.createElement(component, {user, match})}
                         </div>) :
                         (<Redirect to='/tableau-de-bord'/>))
