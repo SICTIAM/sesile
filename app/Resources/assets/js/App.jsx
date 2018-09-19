@@ -103,6 +103,9 @@ class App extends Component {
             this.setState({displaySelectCollectivite: true}) :
             location = redirectLoginUrl
     }
+    isAdminMenu = () => {
+        return window.location.pathname.search("admin") === 1
+    }
     render () {
         const { user } = this.state
         return (
@@ -111,7 +114,10 @@ class App extends Component {
                     <SelectCollectivite /> :
                     <div className="off-canvas-wrapper">
                         <div className="off-canvas position-left hide-for-large grid-y" id="offCanvasLeft" data-off-canvas>
-                            <Route render={routeProps => <MenuAdmin {...routeProps} user={user} />} />
+                            {this.isAdminMenu() ?
+                                <Route render={routeProps => <MenuAdmin {...routeProps} user={user}/>}/> :
+                                <Route render={routeProps => <Menu {...routeProps} user={user}/>}/>
+                            }
                         </div>
                         <div className="off-canvas-content" data-off-canvas-content>
                             <div className="grid-x grid-y grid-frame">
@@ -144,7 +150,10 @@ class App extends Component {
                                 <div className="cell auto grid-y">
                                     <div className="grid-x cell auto">
                                         <div className="hide-for-medium-only hide-for-small-only cell large-2 grid-y" style={{backgroundColor: '#f4f4f4', width: '15%'}}>
-                                            <Route render={routeProps => <MenuAdmin {...routeProps} user={user} />} />
+                                            {this.isAdminMenu() ?
+                                                <Route render={routeProps => <MenuAdmin {...routeProps} user={user}/>}/> :
+                                                <Route render={routeProps => <Menu {...routeProps} user={user}/>}/>
+                                            }
                                         </div>
                                         <div
                                             style={{paddingLeft: '2.5%', paddingRight: '2.5%'}}
