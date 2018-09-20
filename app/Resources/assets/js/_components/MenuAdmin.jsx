@@ -183,7 +183,7 @@ class MenuAdmin extends Component {
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
-                                                    <i className="fa fa-step-backward"></i>
+                                                    <i className="fa fa-reply"></i>
                                                 </div>
                                             </div>
                                         </div>

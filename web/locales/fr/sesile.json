@@ -495,7 +495,7 @@
             "name_plural": "roles"
         },
         "migration": "Migration",
-        "backuser": "Retour Utilisateur"
+        "backuser": "Application"
     },
     "classeur": {
         "name": "Classeur",
