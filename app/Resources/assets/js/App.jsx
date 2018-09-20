@@ -133,7 +133,10 @@ class App extends Component {
                                         </div>
                                         <div className="cell large-4 show-for-large">
                                             { user.id &&
-                                            <SearchClasseurs user={this.state.user}/>
+                                            <SearchClasseurs
+                                                user={this.state.user}
+                                                color={this.isAdminMenu() ? '#d63284' : '#3299CC'}
+                                            />
                                             }
                                         </div>
                                         <div className="cell large-3 small-6">
@@ -143,7 +146,9 @@ class App extends Component {
                                         <div className="cell large-3 small-6">
                                             <Login
                                                 handleClickConnection={this.handleClickConnection}
-                                                user={this.state.user}/>
+                                                user={this.state.user}
+                                                color={this.isAdminMenu() ? '#d63284' : '#3299CC'}
+                                            />
                                         </div>
                                     </div>
                                 </div>
