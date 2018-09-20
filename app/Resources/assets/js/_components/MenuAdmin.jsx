@@ -34,7 +34,8 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Utilisateurs
+                                                    <span className="text-bold">
+                                                        {t('admin.user.name', {count: 2})}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
@@ -49,7 +50,8 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Circuits
+                                                    <span className="text-bold">
+                                                        {t('admin.circuit.name', {count: 2})}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
@@ -64,7 +66,8 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Groupes
+                                                    <span className="text-bold">
+                                                        {t('admin.group.name', {count: 2})}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
@@ -79,7 +82,8 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Types
+                                                    <span className="text-bold">
+                                                        {t('admin.type.name', {count: 2})}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
@@ -94,7 +98,8 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Collectivité
+                                                    <span className="text-bold">
+                                                        {t('admin.collectivite.name', {count: 2})}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
@@ -109,7 +114,8 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Documentations et Aides
+                                                    <span className="text-bold">
+                                                        {t('common.help_board.title')}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
@@ -124,7 +130,8 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Emailing
+                                                    <span className="text-bold">
+                                                        {t('admin.emailing.name')}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
@@ -139,7 +146,8 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Notes
+                                                    <span className="text-bold">
+                                                        {t('admin.notes.name', {context: 'plural'})}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
@@ -154,11 +162,12 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Migration
+                                                    <span className="text-bold">
+                                                        {t('admin.migration')}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
-                                                    <i className="fa fa-forward"></i>
+                                                    <i className="fa fa-cloud-upload"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -169,11 +178,12 @@ class MenuAdmin extends Component {
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
-                                                    <span className="text-bold">Retour Utilisateur
+                                                    <span className="text-bold">
+                                                        {t('admin.backuser')}
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
-                                                    <i className="fa fa-user-tag"></i>
+                                                    <i className="fa fa-step-backward"></i>
                                                 </div>
                                             </div>
                                         </div>
