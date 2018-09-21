@@ -74,6 +74,7 @@ body, html {
 
 .header {
   font-family: $font-family;
+  border-bottom: $sesile-color-1 solid 2px;
 
   .input-group :first-child {
     box-shadow: none;
