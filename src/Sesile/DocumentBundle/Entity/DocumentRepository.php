@@ -230,11 +230,14 @@ class DocumentRepository extends EntityRepository
                     // Si la qualite + le nom de l utilisateur fait plus de 40 caractères on rajoute des sauts de ligne
                     (strlen($etapeClasseur->getUserValidant()->getUsername() . $etapeClasseur->getUserValidant()->getQualite()) >= 40)
                         ? $role = ",\n" . $etapeClasseur->getUserValidant()->getQualite() . ",\n"
-                        : $role = ", " . $etapeClasseur->getUserValidant()->getQualite() . ", ";
+                        : $role = ",\n" . $etapeClasseur->getUserValidant()->getQualite() . ", ";
 
                 } else {
                     $role = '';
                 }
+
+                $nom = $etapeClasseur->getUserValidant()->getNom();
+                $prenom = $etapeClasseur->getUserValidant()->getPrenom();
 
                 ($etapeClasseur->getUserValidant())
                     ? $userValidant = $etapeClasseur->getUserValidant()
@@ -244,7 +247,7 @@ class DocumentRepository extends EntityRepository
                     ? $date = ' le ' . $etapeClasseur->getDate()->format('d/m/Y à H:i')
                     : $date = '';
 
-                $texteStamp .= "\n" . $userValidant . $role . $date;
+                $texteStamp .= "\n" . $nom . " " . $prenom . $role . "\n" .  $date;
             }
         }
 
@@ -266,6 +269,7 @@ class DocumentRepository extends EntityRepository
         $stamp_visa->setPadding($padding);
         $stamp_visa->setPaddingTop($padding + 3);
         $stamp_visa->setTextColor($colorVisa);
+        //$stamp_visa->setOpacity(0.6);
 
 
         // create a stamper instance
