@@ -17,7 +17,7 @@ class ClasseurProgress extends Component {
         const validationDate = Moment(validation)
         const diffToday = validationDate.diff(Moment(), 'days')
         const diffToCreation = validationDate.diff(creationDate, 'days')
-        const validationDateString = Moment(validationDate).format('L')
+        const validationDateString = Moment(validationDate).format('LL')
 
         let classProgress, percentProgress
 

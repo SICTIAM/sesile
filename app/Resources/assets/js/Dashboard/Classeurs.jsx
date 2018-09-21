@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import ClasseursButtonList from '../classeur/ClasseursButtonList'
 import ClasseurProgress from '../classeur/ClasseurProgress'
 import { translate } from 'react-i18next'
+import History from "../_utils/History";
 
 class Classeurs extends Component {
 
@@ -19,33 +20,45 @@ class Classeurs extends Component {
         const { classeurs, title } = this.props
         const { t } = this.context
         const listItems = classeurs.map((classeur) =>
-            <Link to={`/classeur/${classeur.id}`} className="grid-x panel-body grid-padding-x align-middle dashboard-content" key={classeur.id}>
-                <div className="cell auto text-bold">
+            <tr id="classrow" onClick={() => History.push(`/classeur/${classeur.id}`)} style={{cursor:"Pointer", fontSize:"0.9em"}}>
+                <td className="text-bold">
                     { classeur.nom }
-                </div>
-                <div className="cell auto text-justify">
+                </td>
+                <td className="text-justify">
+                    {classeur.type.nom}
+                </td>
+                <td className="text-justify">
                     <ClasseurProgress creation={classeur.creation} validation={classeur.validation} status={classeur.status} />
-                </div>
-            </Link>
+                </td>
+            </tr>
         );
 
         return (
             <div className="grid-x grid-padding-x panel">
                 <div className="cell medium-12">
-                    <div className="grid-x panel-heading align-middle ">
-                        <div className="cell medium-12 text-center medium-text-left">{ title }</div>
+                    <div className=" align-middle " style={{paddingTop:'0.5em'}}>
+                        <h3>{ title }</h3>
                     </div>
-                    <div className="grid-x grid-padding-x panel-body dashboard-title">
-                        <div className="cell auto text-bold">{ t('common.classeurs.sort_label.name') }</div>
-                        <div className="cell auto text-bold">{ t('common.classeurs.sort_label.limit_date') }</div>
-                    </div>
+                    <table>
+                        <thead>
+                            <tr style={{backgroundColor:"#3299cc", color:"white"}}>
+                                <td width="290px" className="text-bold">{ t('common.classeurs.sort_label.name') }</td>
+                                <td width="110px" className="text-bold">{ t('common.classeurs.sort_label.type') }</td>
+                                <td width="120px" className="text-bold">{ t('common.classeurs.sort_label.limit_date') }</td>
+                            </tr>
+                        </thead>
+                        <tbody>
                     {listItems.length > 0 ?
                         listItems :
-                        <div className="grid-x panel-body grid-padding-x align-center-middle">
-                            <span>
-                                {this.props.message}
-                            </span>
-                        </div>}
+                        <tr>
+                            <td>
+                                <span style={{textAlign:"center"}}>{this.props.message}</span>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>}
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
