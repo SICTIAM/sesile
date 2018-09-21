@@ -58,7 +58,7 @@ class ClasseurInfos extends Component {
         const { i18nextLng } = window.localStorage
         //@todo verify usersCopy isn't empty
         const listUsers = usersCopy.map(user => <li className="medium-12" key={user.id}>{ user._prenom + " " + user._nom }</li>)
-
+        const visibilitiesStatus = ["Privé", "Public", "Privé a partir de moi", "Circuit de validation"]
         return (
             <div className="grid-x panel grid-padding-y">
                 <div className="cell small-12">
@@ -70,54 +70,57 @@ class ClasseurInfos extends Component {
                                 </h3>
                             </Cell>
                         </GridX>
-                        <GridX className="grid-margin-x grid-padding-x">
-                            <Cell>
-                                <InputValidation
-                                    id="nom"
-                                    type="text"
-                                    labelText={`${t('common.label.name')} *`}
-                                    value={nom}
-                                    onChange={handleChangeClasseur}
-                                    readOnly={!!this.props.isFinalizedClasseur()}
-                                    validationRule={this.validationRules.nom}
-                                    placeholder={t('common.classeurs.classeur_name')}/>
-                            </Cell>
-                        </GridX>
-                        <GridX className="grid-margin-x grid-padding-x">
-                            <Cell className="small-12">
-                                <InputValidation
-                                    id="validation"
-                                    type="date"
-                                    labelText={`${t('common.classeurs.date_limit')} *`}
-                                    value={Moment(validation)}
-                                    readOnly={true}
-                                    disabled={!!this.props.isFinalizedClasseur()}
-                                    locale={i18nextLng}
-                                    validationRule={this.validationRules.validation}
-                                    onChange={this.handleChangeLimitDate}/>
-                            </Cell>
-                        </GridX>
-                        <GridX className="grid-margin-x grid-padding-x">
-                            <Cell>
-                                <ClasseurVisibilitySelect
-                                    className=""
-                                    visibilite={this.props.visibilite}
-                                    disabled={!!this.props.isFinalizedClasseur()}
-                                    label={`${t('common.classeurs.label.visibility')} *`}
-                                    handleChangeClasseur={this.props.handleChangeClasseur}/>
-                            </Cell>
-                        </GridX>
-                        <GridX className="grid-margin-x grid-padding-x">
-                            <Cell>
-                                <Textarea
-                                    id="classeur-description"
-                                    labelText={t('common.label.description')}
-                                    name="description"
-                                    value={description || ''}
-                                    disabled={!!this.props.isFinalizedClasseur()}
-                                    onChange={handleChangeClasseur}/>
-                            </Cell>
-                        </GridX>
+                        <ClasseurField
+                            edit={this.props.edit}
+                            label={t('common.label.name')}
+                            value={nom}>
+                            <InputValidation
+                                id="nom"
+                                type="text"
+                                labelText={`${t('common.label.name')} *`}
+                                value={nom}
+                                onChange={handleChangeClasseur}
+                                validationRule={this.validationRules.nom}
+                                placeholder={t('common.classeurs.classeur_name')}/>
+                        </ClasseurField>
+                        <ClasseurField
+                            edit={this.props.edit}
+                            label={t('common.classeurs.date_limit')}
+                            value={Moment(validation).format('LL')}>
+                            <InputValidation
+                                id="validation"
+                                type="date"
+                                labelText={`${t('common.classeurs.date_limit')} *`}
+                                value={Moment(validation)}
+                                readOnly={true}
+                                disabled={!!this.props.isFinalizedClasseur()}
+                                locale={i18nextLng}
+                                validationRule={this.validationRules.validation}
+                                onChange={this.handleChangeLimitDate}/>
+                        </ClasseurField>
+                        <ClasseurField
+                            edit={this.props.edit}
+                            label={t('common.classeurs.label.visibility')}
+                            value={visibilitiesStatus[this.props.visibilite]}>
+                            <ClasseurVisibilitySelect
+                                className=""
+                                visibilite={this.props.visibilite}
+                                disabled={!!this.props.isFinalizedClasseur()}
+                                label={`${t('common.classeurs.label.visibility')} *`}
+                                handleChangeClasseur={this.props.handleChangeClasseur}/>
+                        </ClasseurField>
+                        <ClasseurField
+                            edit={this.props.edit}
+                            label={t('common.label.description')}
+                            value={description || t('common.description_not_specified')}>
+                            <Textarea
+                                id="classeur-description"
+                                labelText={t('common.label.description')}
+                                name="description"
+                                value={description || ''}
+                                disabled={!!this.props.isFinalizedClasseur()}
+                                onChange={handleChangeClasseur}/>
+                        </ClasseurField>
                         <GridX className="grid-margin-x grid-padding-x">
                             <Cell>
                                 <label htmlFor="classeur-info-type" className="text-capitalize text-bold">
@@ -148,7 +151,7 @@ class ClasseurInfos extends Component {
                                     id="classeur-info-creation"
                                     style={{marginLeft: '10px'}}
                                     className="bold-info-details-classeur">
-                                    {Moment(creation).format('L')}
+                                    {Moment(creation).format('LL')}
                                 </span>
                             </Cell>
                         </GridX>
@@ -172,14 +175,15 @@ class ClasseurInfos extends Component {
                                     </Cell>
                                 </GridX>
                             </div>}
-                        <div className="grid-x grid-margin-x grid-padding-x align-right">
-                            <Button id="submit-classeur-infos"
-                                    disabled={!!this.props.isFinalizedClasseur()}
-                                    className="cell small-6 medium-8"
-                                    classNameButton="float-right"
-                                    onClick={this.saveClasseurInfos}
-                                    labelText={t('common.button.edit_save')}/>
-                        </div>
+                        {this.props.edit &&
+                            <div className="grid-x grid-margin-x grid-padding-x align-right">
+                                <Button id="submit-classeur-infos"
+                                        disabled={!!this.props.isFinalizedClasseur()}
+                                        className="cell small-6 medium-8"
+                                        classNameButton="float-right"
+                                        onClick={this.saveClasseurInfos}
+                                        labelText={t('common.button.edit_save')}/>
+                            </div>}
                     </Form>
                 </div>
             </div>
@@ -188,3 +192,39 @@ class ClasseurInfos extends Component {
 }
 
 export default translate(['sesile'])(ClasseurInfos)
+
+const ClasseurField = ({edit , children, label, value}, {t}) => {
+    return (
+        <div>
+            {edit ?
+                <GridX className="grid-margin-x grid-padding-x">
+                    <Cell>
+                        {children}
+                    </Cell>
+                </GridX> :
+                <div>
+                    <GridX className="grid-margin-x grid-padding-x">
+                        <Cell>
+                            <label htmlFor="classeur-info-name" className="text-capitalize text-bold">
+                                {label}
+                            </label>
+                        </Cell>
+                    </GridX>
+                    <GridX className="grid-margin-x grid-padding-x">
+                        <Cell>
+                            <span
+                                id="classeur-info-name"
+                                style={{marginLeft: '10px'}}
+                                className="bold-info-details-classeur text-capitalize-first-letter">
+                                {value}
+                            </span>
+                        </Cell>
+                    </GridX>
+                </div>}
+        </div>
+    )
+}
+
+ClasseurField.contextTypes = {
+    t: func
+}

@@ -21,10 +21,7 @@ class ClasseursRemove extends Component {
                 <div className="cell medium-12 text-center">
                     <h2>{t('common.menu.deletable_classeur')}</h2>
                 </div>
-                <Classeurs
-                    url="sesile_classeur_classeurapi_listremovable"
-                    user={this.props.user}
-                    userId={this.props.userId} />
+                <Classeurs url="sesile_classeur_classeurapi_listremovable"/>
             </div>
         )
     }

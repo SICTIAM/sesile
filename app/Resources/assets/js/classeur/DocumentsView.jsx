@@ -14,11 +14,19 @@ class DocumentsView extends Component {
         _addNotification: func
     }
 
+    static defaultProps = {
+        currentDocument: {
+            repourl: ''
+        }
+    }
+
     constructor(props) {
         super(props)
         this.state = {
             documents: [],
-            currentDocument: {},
+            currentDocument: {
+                repourl: ''
+            },
             revealDisplay: "none",
             user: {}
         }
@@ -48,7 +56,7 @@ class DocumentsView extends Component {
             .then(handleErrors)
             .then(response => response.json())
             .then(documents => {
-                this.setState({documents})
+                documents && this.setState({documents})
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
@@ -84,20 +92,22 @@ class DocumentsView extends Component {
     }
 
     removeDocument = (e, id) => {
-        e.preventDefault()
-        e.stopPropagation()
-        fetch(Routing.generate('sesile_document_documentapi_remove', {id}), {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin'
-        })
-            .then(response => response.json())
-            .then(() => {
-                this.fetchDocuments()
+        if(this.props.edit) {
+            e.preventDefault()
+            e.stopPropagation()
+            fetch(Routing.generate('sesile_document_documentapi_remove', {id}), {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin'
             })
+                .then(response => response.json())
+                .then(() => {
+                    this.fetchDocuments()
+                })
+        }
     }
 
     handleClickDocument = (e, id) => {
@@ -123,7 +133,7 @@ class DocumentsView extends Component {
                 this.setState({user: json})
             })
     }
-    isXmlFileType = (document) => document.type === "text/xml"
+    isXmlFileType = (document) => document.type && document.type === "text/xml"
     render () {
         const { t } = this.context
         const { documents, currentDocument, revealDisplay, user } = this.state
@@ -132,9 +142,10 @@ class DocumentsView extends Component {
         const imageType = ['png', 'jpg', 'jpeg', 'gif']
         const heliosType = ['xml']
         let fileType
-        currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
+        currentDocument && currentDocument.repourl ? fileType = currentDocument.repourl.split('.').pop() : fileType = ""
         return (
             <div>
+                {currentDocument &&
                 <div className="grid-x panel">
                     { (imageType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" ) &&
                         <div className="reveal-full" style={{display: revealDisplay}}>
@@ -178,7 +189,7 @@ class DocumentsView extends Component {
                     { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "none" && user.id) &&
                         <OnlyOffice document={ currentDocument } user={user} revealDisplay={false} />
                     }
-                </div>
+                </div>}
                 <DocumentsNew
                     user={this.props.user}
                     documents={documents}
@@ -190,6 +201,7 @@ class DocumentsView extends Component {
                     statusClasseur={status}
                     classeurId={this.props.classeurId}
                     editClasseur={editClasseur}
+                    edit={this.props.edit}
                     isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}/>
             </div>
         )

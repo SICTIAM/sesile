@@ -82,7 +82,7 @@ class DocumentsNew extends Component {
     classeurIsFinalized = () => this.props.statusClasseur === 2
     isFinalizedOrRetiredClasseur = () => this.classeurIsFinalized() || this.props.statusClasseur === 3
     userNotHaveSignatureImage = () => this.props.user.path_signature && this.props.user.path_signature.trim() !== ""
-    isPendindAndHeliosTypeCLasseur = () => this.props.statusClasseur === 1 && this.props.typeClasseur.nom === 'Helios'
+    isPendingAndHeliosTypeCLasseur = () => this.props.statusClasseur === 1 && this.props.typeClasseur.nom === 'Helios'
     render () {
         const { t } = this.context
         const { onDrop, removeDocument, onClick, displayReveal, user }  = this.props
@@ -260,11 +260,14 @@ class DocumentsNew extends Component {
                     <div
                         title={t('common.button.delete')}
                         className={
-                            `cell medium-auto align-center
-                            doc-action-button
-                             ${(this.isHeliosAndExistingClasseur() || this.isFinalizedOrRetiredClasseur()) &&
+                            `cell medium-auto align-center doc-action-button
+                             ${(this.isHeliosAndExistingClasseur() || this.isFinalizedOrRetiredClasseur() || !this.props.edit) &&
                                 ' disabled'}`}
-                        style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2', cursor: 'pointer'}}
+                        style={{
+                            display: 'flex',
+                            borderLeft: 'solid 1px #b3b2b2',
+                            cursor: `${(!this.isHeliosAndExistingClasseur() || !this.isFinalizedOrRetiredClasseur() || this.props.edit) && ' disabled'}`
+                        }}
                         onClick={(e) => {
                             if(!this.isHeliosAndExistingClasseur() && !this.isFinalizedOrRetiredClasseur()){
                                 removeDocument(e, document.id)
@@ -281,7 +284,7 @@ class DocumentsNew extends Component {
                             <h3>{`${t('common.documents.title_preview')} *`}</h3>
                         </div>
                     </div>
-                    {!this.classeurIsFinalized() && !this.isPendindAndHeliosTypeCLasseur() &&
+                    {(!this.isFinalizedOrRetiredClasseur() && !this.isPendingAndHeliosTypeCLasseur()) && this.props.edit &&
                         <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="cell medium-12">
                                 <Dropzone

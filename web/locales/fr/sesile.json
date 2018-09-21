@@ -127,7 +127,7 @@
                 "current": "Vous êtes sur la page"
             },
             "comments": {
-                "name": "Commentaires du classeur",
+                "name": "Commentaires",
                 "new": "Nouveau commentaire",
                 "submit": "Ajouter un commentaire",
                 "from": "par",
@@ -243,7 +243,8 @@
         "error_global_classeur_research": "Une erreur est survenu sur le serveur lors de la recherche",
         "no_result_globel_classeur_research": "Aucun classeur ne correspond à votre recherche",
         "no_certificat": "Aucun certificat détecté",
-        "expand_preview": "Agrandir"
+        "expand_preview": "Agrandir",
+        "description_not_specified": "Description non renseigné"
     },
     "admin": {
         "title": "Rechercher un {{name}}",

@@ -21,10 +21,7 @@ class ClasseursRetract extends Component {
                 <div className="cell medium-12 text-center">
                     <h2>{t('common.menu.retractable_classeur')}</h2>
                 </div>
-                <Classeurs
-                    url="sesile_classeur_classeurapi_listretract"
-                    userId={this.props.userId}
-                    user={this.props.user} />
+                <Classeurs url="sesile_classeur_classeurapi_listretract"/>
             </div>
         )
     }

@@ -10,10 +10,6 @@ class ClasseurPagination extends Component {
         t: func
     }
 
-    state = {
-        classeurs: []
-    }
-
     static propTypes = {
         limit: number.isRequired,
         start: number.isRequired,
@@ -36,37 +32,12 @@ class ClasseurPagination extends Component {
         cursor: 'pointer'
     }
 
-    componentDidMount() {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_classeur_classeurapi_listall', {orgId: this.state.currentOrgId}), { credentials: 'same-origin' })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(classeurs => this.setState({classeurs}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
-                error.statusText)))
-    }
-
     render() {
         const { t } = this.context
-        const { classeurs } = this.state
         const { limit, start, changePage, url } = this.props
 
         let pagesDisplay = []
-        let pages
-
-        if (url === "sesile_classeur_classeurapi_list") {
-            pages = (classeurs.length / limit)
-        } else if (url === "sesile_classeur_classeurapi_valid") {
-            pages = (classeurs.filter(classeur => classeur.validable).length / limit)
-        } else if (url === "sesile_classeur_classeurapi_listretract") {
-            pages = (classeurs.filter(classeur => classeur.retractable).length / limit)
-        } else if (url === "sesile_classeur_classeurapi_listremovable") {
-            pages = (classeurs.filter(classeur => classeur.deletable).length / limit)
-        } else {
-            pages = (classeurs.length / limit)
-        }
+        let pages = this.props.nbElementTotal / limit
         const buttonStyle = {fontSize: '0.775em'}
         const currentPage = start/limit
         if (currentPage === 0) {

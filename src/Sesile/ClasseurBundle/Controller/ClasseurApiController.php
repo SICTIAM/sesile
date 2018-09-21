@@ -7,6 +7,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sesile\Utils\ListPagination;
 use Sesile\ApiBundle\Controller\TokenAuthenticatedController;
 use Sesile\ClasseurBundle\Domain\SearchClasseurData;
 use Sesile\ClasseurBundle\Entity\Action;
@@ -90,7 +91,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $em = $this->getDoctrine()->getManager();
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisibles($orgId, $userId, $sort, $order, $limit, $start);
 
-        return $classeurs;
+        $nbClasseur = $em->getRepository('SesileClasseurBundle:Classeur')->countVisibleClasseur($orgId, $userId);
+
+        return new ListPagination($classeurs, count($classeurs), (int)$nbClasseur[0][1]);
     }
 
     /**
@@ -100,7 +103,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param int $limit
      * @param int $start
      * @param null $userId
-     * @return array
+     * @return ListPagination
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("/org/{orgId}/classeurs/valid/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
@@ -114,9 +117,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $classeursId = $em->getRepository('SesileUserBundle:User')->getClasseurIdValidableForUser($user);
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursValidable($orgId, $classeursId, $sort, $order, $limit, $start, $user->getId());
 
+        $nbClasseurValidable = $em->getRepository('SesileClasseurBundle:Classeur')->countClasseursValidable($orgId, $classeursId);
 
-        return $classeurs;
-
+        return new ListPagination($classeurs, count($classeurs), (int)$nbClasseurValidable[0][1]);
     }
 
     /**
@@ -126,7 +129,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param int $limit
      * @param int $start
      * @param null $userId
-     * @return array
+     * @return ListPagination
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("/org/{orgId}/classeurs/retract/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
@@ -139,8 +142,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $classeursId = $em->getRepository('SesileUserBundle:User')->getClasseurIdRetractableForUser($user);
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursRetractable($orgId, $classeursId, $sort, $order, $limit, $start, $user->getId());
 
-        return $classeurs;
+        $nbClasseur = $em->getRepository('SesileClasseurBundle:Classeur')->countClasseursRetractable($orgId, $classeursId);
 
+        return new ListPagination($classeurs, count($classeurs), (int)$nbClasseur[0][1]);
     }
 
     /**
@@ -150,7 +154,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param int $limit
      * @param int $start
      * @param null $userId
-     * @return array
+     * @return ListPagination
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\View(serializerGroups={"listClasseur"})
      * @Rest\Get("/org/{orgId}/classeurs/remove/{sort}/{order}/{limit}/{start}/{userId}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
@@ -165,8 +169,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $em = $this->getDoctrine()->getManager();
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursremovable($orgId, $userId, $sort, $order, $limit, $start);
 
-        return $classeurs;
+        $nbClasseur = $em->getRepository('SesileClasseurBundle:Classeur')->countClasseursremovable ($orgId, $userId);
 
+        return new ListPagination($classeurs, count($classeurs), (int)$nbClasseur[0][1]);
     }
 
     /**
@@ -177,27 +182,40 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @param string $orgId     id collectivite
      * @param string $classeur  id classeur
      *
-     * @return Classeur
+     * @return Classeur|JsonResponse
      */
     public function getByIdAction ($orgId, $classeurId)
     {
-        $classeurRepository = $this->getDoctrine()->getManager()->getRepository(Classeur::class);
-        $classeur = $classeurRepository->findOneBy(['id' => $classeurId, 'collectivite' => $orgId]);
-        if (!$classeur) {
-        throw $this->createNotFoundException("Le Classeur n'a pas pu être trouvé");
-        }
-        $classeur = $classeurRepository
-                        ->addClasseurValue($classeur, $this->getUser()->getId());
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ||
+            $this->getUser()->getcollectivities()->exists(function ($key, $collectivite) use ($orgId) {
+                return $collectivite->getId() == $orgId;})) {
 
-        foreach ($classeur->getDocuments() as $document) {
-            $documentPath = $this->getParameter('upload')['fics'] . $document->getRepourl();
-            $fileSize = 0;
-            if(file_exists($documentPath)) {
-                $fileSize = filesize($documentPath);
+            $classeurRepository = $this->getDoctrine()->getManager()->getRepository(Classeur::class);
+            $classeur = $classeurRepository->findOneBy(['id' => $classeurId, 'collectivite' => $orgId]);
+
+            if (!$classeur) {
+                throw $this->createNotFoundException("Le Classeur n'a pas pu être trouvé");
             }
-            $document->setSize($fileSize);
+            if($classeur->getVisible()->exists(function ($key, $user) {return $user->getId() == $this->getUser()->getId();})) {
+                $classeur = $classeurRepository
+                    ->addClasseurValue($classeur, $this->getUser()->getId());
+
+                foreach ($classeur->getDocuments() as $document) {
+                    $documentPath = $this->getParameter('upload')['fics'] . $document->getRepourl();
+                    $fileSize = 0;
+                    if(file_exists($documentPath)) {
+                        $fileSize = filesize($documentPath);
+                    }
+                    $document->setSize($fileSize);
+                }
+                return $classeur;
+            } else {
+                return new JsonResponse(['message' => "Denied Access"], Response::HTTP_UNAUTHORIZED);
+            }
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_UNAUTHORIZED);
         }
-        return $classeur;
     }
 
     /**
@@ -262,10 +280,12 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         if (empty($classeur)) {
             return new JsonResponse(['message' => 'classeur inexistant'], Response::HTTP_NOT_FOUND);
         }
+        $classeurRepository = $this->getDoctrine()->getManager()->getRepository(Classeur::class);
+        $classeur = $classeurRepository->addClasseurValue($classeur, $this->getUser()->getId());
 
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ||
-            $this->getUser()->getId() == $classeur->getUser()->getId()) {
+            $classeur->getValidable()) {
 
             $etapeClasseurs = new ArrayCollection();
             foreach ($classeur->getEtapeClasseurs() as $etapeClasseur) {

@@ -16,7 +16,7 @@ import { Route } from 'react-router'
 import SelectCollectivite from './SelectCollectivite'
 import History from './_utils/History'
 Validator.useLang(window.localStorage.i18nextLng)
-Moment.locale(window.localStorage.i18nextLng)
+Moment.locale(window.localStorage.i18nextLng || 'fr')
 
 class App extends Component {
 
@@ -46,6 +46,7 @@ class App extends Component {
     static childContextTypes = {
         _addNotification: PropTypes.func,
         fetchUserNote: PropTypes.func,
+        user: PropTypes.object,
         t: PropTypes.func,
     }
 
@@ -53,6 +54,7 @@ class App extends Component {
         return {
             _addNotification: this._addNotification,
             fetchUserNote: this.fetchUserNote,
+            user: this.state.user,
             t: this.t
         }
     }

@@ -135,11 +135,8 @@ class Classeur extends Component {
         this.reOrderSteps()
     }
 
-    handleEditClasseur = (edit) => {
-        if (!edit) {
-            this.getClasseur(this.state.classeur.id)
-        }
-        this.setState(state => state.editClasseur = edit)
+    isEditableClasseur = () => {
+        return this.state.classeur.signable_and_last_validant || this.state.classeur.validable
     }
     handleRemoveEtape = (stepKey) => {
         this.setState(prevState => prevState.classeur.etape_classeurs.splice(stepKey,1))
@@ -235,7 +232,8 @@ class Classeur extends Component {
                                     classeurId={classeur.id}
                                     classeurType={Object.assign({}, classeur.type)}
                                     status={classeur.status}
-                                    editClasseur={classeur.validable}/>
+                                    editClasseur={classeur.validable}
+                                    edit={this.isEditableClasseur()}/>
                             }
                         </div>
                         <div className="cell large-4 medium-12 small-12">
@@ -271,7 +269,7 @@ class Classeur extends Component {
                                             editable={classeur.validable}
                                             handleEditClasseur={this.handleEditClasseur}
                                             isFinalizedClasseur={this.isFinalizedClasseur}
-                                            edit={editClasseur}
+                                            edit={this.isEditableClasseur()}
                                             usersCopy={classeur.copy}/>
 
                             {(classeur.id && classeur.user && user.current_org_id) &&
@@ -280,6 +278,7 @@ class Classeur extends Component {
                                                  user={classeur.user}
                                                  etapeDeposante={classeur.etape_deposante}
                                                  editable={classeur.validable}
+                                                 edit={this.isEditableClasseur()}
                                                  putClasseur={this.putClasseur}
                                                  addEtape={this.handleAddEtape}
                                                  addUser={this.addUser}

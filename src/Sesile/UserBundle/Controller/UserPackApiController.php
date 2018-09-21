@@ -21,17 +21,24 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class UserPackApiController extends FOSRestController implements ClassResourceInterface
 {
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Get("s/{collectiviteId}")
      * @ParamConverter("collectivite", options={"mapping": {"collectiviteId": "id"}})
      * @param Collectivite $collectivite
-     * @return \Doctrine\Common\Collections\Collection|UserPack
+     * @return \Doctrine\Common\Collections\Collection|UserPack|JsonResponse
      */
     public function getByCollectiviteAction(Collectivite $collectivite)
     {
-        $this->get('logger')->info('Get group by collectivite {id}', array('id' => $collectivite->getId()));
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ||
+            $this->getUser()->getcollectivities()->contains($collectivite)) {
+            $this->get('logger')->info('Get group by collectivite {id}', array('id' => $collectivite->getId()));
 //        return $this->getDoctrine()->getManager()->getRepository('SesileUserBundle:UserPack')->findByCollectivite($collectivite->getId());
-        return $collectivite->getUserPacks();
+            return $collectivite->getUserPacks();
+        } else {
+            return new JsonResponse(['message' => "Denied Access"], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
