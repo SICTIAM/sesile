@@ -141,7 +141,7 @@ const RowUser = ({User, handleDeleteUser, collectiviteId}, {t}) =>
         <td>
             <Link
                 to={`/admin/${collectiviteId}/classeurs/${User.id}`}
-                className="fa fa-th-list icon-action"
+                className="fa fa-copy icon-action"
                 title={t('common.classeur', {count: 2})}/>
 
         </td>
