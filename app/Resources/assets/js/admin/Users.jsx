@@ -79,10 +79,7 @@ class Users extends Component {
                 title={t('admin.title', {name: t('admin.user.name_plural')})}>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel" style={{width:"74em"}}>
-                            <div className=" align-middle " style={{padding:'0.5em', width:"75em"}}>
-                                <h3>{t('admin.users_list')}</h3>
-                            </div>
-
+                        <div className="cell medium-3" style={{marginTop:"10px", marginLeft:"26%"}}>
                         <Input
                             className="cell medium-3"
                             labelText=""
@@ -90,18 +87,20 @@ class Users extends Component {
                             onChange={this.handleChangeSearchUser}
                             placeholder={t('admin.user.search_by_first_name_and_name')}
                             type="text"/>
+                        </div>
                         {this.state.isSuperAdmin &&
-                        <div className="medium-3">
+                        <div className="medium-3" style={{marginTop:"10px"}}>
                             <SelectCollectivite currentCollectiviteId={this.state.collectiviteId}
                                                 handleChange={this.onSearchByCollectiviteFieldChange} />
                         </div>
                         }
-                            <table>
+                            <table style={{margin:"10px", borderRadius:"6px"}}>
                                 <thead>
                                 <tr style={{backgroundColor:"#3299cc", color:"white"}}>
-                                    <td width="200px" className="text-bold">{ t('admin.user.first_name_and_name') }</td>
-                                    <td width="200px" className="text-bold">{  t('admin.user.label_email') }</td>
-                                    <td width="60px" className="text-bold">{ t('common.label.actions') }</td>
+                                    <td width="160px" className="text-bold">{ t('admin.user.label_name') }</td>
+                                    <td width="160px" className="text-bold">{ t('admin.user.label_firstname') }</td>
+                                    <td width="210px" className="text-bold">{  t('admin.user.label_email') }</td>
+                                    <td width="30px" className="text-bold">{ t('common.label.actions') }</td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -111,6 +110,7 @@ class Users extends Component {
                                         <td>
                                             <span style={{textAlign:"center"}}>{this.props.message}</span>
                                         </td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                     </tr>}
@@ -133,7 +133,10 @@ export default translate(['sesile'])(Users)
 const RowUser = ({User, handleDeleteUser, collectiviteId}, {t}) =>
     <tr id="classrow">
         <td onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
-            {User._prenom} {User._nom}
+            {User._nom}
+        </td>
+        <td onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
+            {User._prenom}
         </td>
         <td onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
             {User.email}
