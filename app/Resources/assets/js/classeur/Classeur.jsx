@@ -232,8 +232,7 @@ class Classeur extends Component {
                                     classeurId={classeur.id}
                                     classeurType={Object.assign({}, classeur.type)}
                                     status={classeur.status}
-                                    editClasseur={classeur.validable}
-                                    edit={this.isEditableClasseur()}/>
+                                    editClasseur={this.isEditableClasseur()}/>
                             }
                         </div>
                         <div className="cell large-4 medium-12 small-12">
@@ -266,7 +265,6 @@ class Classeur extends Component {
                                             description={classeur.description}
                                             handleChangeClasseur={this.handleChangeClasseur}
                                             putClasseur={this.putClasseur}
-                                            editable={classeur.validable}
                                             handleEditClasseur={this.handleEditClasseur}
                                             isFinalizedClasseur={this.isFinalizedClasseur}
                                             edit={this.isEditableClasseur()}

@@ -201,7 +201,6 @@ class DocumentsView extends Component {
                     statusClasseur={status}
                     classeurId={this.props.classeurId}
                     editClasseur={editClasseur}
-                    edit={this.props.edit}
                     isHeliosAndNewClasseur={this.isHeliosAndNewClasseur}/>
             </div>
         )

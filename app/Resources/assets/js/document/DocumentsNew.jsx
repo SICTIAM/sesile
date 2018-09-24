@@ -261,12 +261,12 @@ class DocumentsNew extends Component {
                         title={t('common.button.delete')}
                         className={
                             `cell medium-auto align-center doc-action-button
-                             ${(this.isHeliosAndExistingClasseur() || this.isFinalizedOrRetiredClasseur() || !this.props.edit) &&
+                             ${(this.isHeliosAndExistingClasseur() || this.isFinalizedOrRetiredClasseur() || !this.props.editClasseur) &&
                                 ' disabled'}`}
                         style={{
                             display: 'flex',
                             borderLeft: 'solid 1px #b3b2b2',
-                            cursor: `${(!this.isHeliosAndExistingClasseur() || !this.isFinalizedOrRetiredClasseur() || this.props.edit) && ' disabled'}`
+                            cursor: `${(!this.isHeliosAndExistingClasseur() || !this.isFinalizedOrRetiredClasseur() || this.props.editClasseur) && ' disabled'}`
                         }}
                         onClick={(e) => {
                             if(!this.isHeliosAndExistingClasseur() && !this.isFinalizedOrRetiredClasseur()){
@@ -284,7 +284,7 @@ class DocumentsNew extends Component {
                             <h3>{`${t('common.documents.title_preview')} *`}</h3>
                         </div>
                     </div>
-                    {(!this.isFinalizedOrRetiredClasseur() && !this.isPendingAndHeliosTypeCLasseur()) && this.props.edit &&
+                    {(!this.isFinalizedOrRetiredClasseur() && !this.isPendingAndHeliosTypeCLasseur()) && this.props.editClasseur &&
                         <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="cell medium-12">
                                 <Dropzone
