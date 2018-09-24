@@ -131,17 +131,17 @@ Users.PropTypes = {
 export default translate(['sesile'])(Users)
 
 const RowUser = ({User, handleDeleteUser, collectiviteId}, {t}) =>
-    <tr id="classrow" onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
-        <td>
+    <tr id="classrow">
+        <td onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
             {User._prenom} {User._nom}
         </td>
-        <td>
+        <td onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
             {User.email}
         </td>
         <td>
             <Link
                 to={`/admin/${collectiviteId}/classeurs/${User.id}`}
-                className="fa fa-copy icon-action"
+                className="fa fa-copy icon-action text-center"
                 title={t('common.classeur', {count: 2})}/>
 
         </td>
