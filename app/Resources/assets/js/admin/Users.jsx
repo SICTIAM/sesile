@@ -78,10 +78,11 @@ class Users extends Component {
             <AdminPage
                 title={t('admin.title', {name: t('admin.user.name_plural')})}>
                 <AdminContainer>
-                    <div className="grid-x grid-padding-x panel" style={{width:"74em"}}>
-                        <div className="cell medium-3" style={{marginTop:"10px", marginLeft:"26%"}}>
+                    <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
+                        <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px"}}>
+                        <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"17em",marginRight:"10px"}}>
                         <Input
-                            className="cell medium-3"
+                            className=""
                             labelText=""
                             value={this.state.fieldSearch}
                             onChange={this.handleChangeSearchUser}
@@ -89,14 +90,15 @@ class Users extends Component {
                             type="text"/>
                         </div>
                         {this.state.isSuperAdmin &&
-                        <div className="medium-3" style={{marginTop:"10px"}}>
+                        <div className="" style={{marginTop:"10px",marginLeft:"10px",width:"17em",marginRight:"1%"}}>
                             <SelectCollectivite currentCollectiviteId={this.state.collectiviteId}
                                                 handleChange={this.onSearchByCollectiviteFieldChange} />
                         </div>
                         }
+                        </div>
                             <table style={{margin:"10px", borderRadius:"6px"}}>
                                 <thead>
-                                <tr style={{backgroundColor:"#3299cc", color:"white"}}>
+                                <tr style={{backgroundColor:"#CC0066", color:"white"}}>
                                     <td width="160px" className="text-bold">{ t('admin.user.label_name') }</td>
                                     <td width="160px" className="text-bold">{ t('admin.user.label_firstname') }</td>
                                     <td width="210px" className="text-bold">{  t('admin.user.label_email') }</td>
