@@ -12,6 +12,8 @@ import SelectCollectivite from '../_components/SelectCollectivite'
 
 import { escapedValue } from '../_utils/Search'
 import { handleErrors } from '../_utils/Utils'
+import History from "../_utils/History";
+import ClasseurProgress from "../classeur/ClasseurProgress";
 
 class Users extends Component {
     static contextTypes = {
@@ -74,35 +76,47 @@ class Users extends Component {
 
         return (
             <AdminPage
-                title={t('admin.title', {name: t('admin.user.name')})}
-                subtitle={t('admin.subtitle')}>
+                title={t('admin.title', {name: t('admin.user.name_plural')})}>
                 <AdminContainer>
-                    <Cell className="medium-6">
-                        <GridX className="grid-padding-x align-center-middle">
-                            <Input
-                                className="cell medium-auto"
-                                labelText={t('admin.label.which')}
-                                value={this.state.fieldSearch}
-                                onChange={this.handleChangeSearchUser}
-                                placeholder={t('admin.user.search_by_first_name_and_name')}
-                                type="text"/>
-                            {this.state.isSuperAdmin &&
-                                <Cell className="medium-auto">
-                                    <SelectCollectivite currentCollectiviteId={this.state.collectiviteId} 
-                                                        handleChange={this.onSearchByCollectiviteFieldChange} />
-                                </Cell>
-                            }
-                        </GridX>
-                    </Cell>
-                    <AdminList
-                        title={t('admin.users_list')}
-                        listLength={listUser.length}
-                        labelButton={t('common.button.add_user')}
-                        headTitles={[t('admin.user.first_name_and_name'), t('admin.user.label_email'), t('common.label.actions')]}
-                        headGrid={['medium-auto', 'medium-auto', 'medium-2']}
-                        emptyListMessage={t('common.no_results', {name: t('admin.user.name')})}>
-                            {listUser}
-                    </AdminList>
+                    <div className="grid-x grid-padding-x panel" style={{width:"74em"}}>
+                            <div className=" align-middle " style={{padding:'0.5em', width:"75em"}}>
+                                <h3>{t('admin.users_list')}</h3>
+                            </div>
+
+                        <Input
+                            className="cell medium-3"
+                            labelText=""
+                            value={this.state.fieldSearch}
+                            onChange={this.handleChangeSearchUser}
+                            placeholder={t('admin.user.search_by_first_name_and_name')}
+                            type="text"/>
+                        {this.state.isSuperAdmin &&
+                        <div className="medium-3">
+                            <SelectCollectivite currentCollectiviteId={this.state.collectiviteId}
+                                                handleChange={this.onSearchByCollectiviteFieldChange} />
+                        </div>
+                        }
+                            <table>
+                                <thead>
+                                <tr style={{backgroundColor:"#3299cc", color:"white"}}>
+                                    <td width="200px" className="text-bold">{ t('admin.user.first_name_and_name') }</td>
+                                    <td width="200px" className="text-bold">{  t('admin.user.label_email') }</td>
+                                    <td width="60px" className="text-bold">{ t('common.label.actions') }</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {listUser.length > 0 ?
+                                    listUser :
+                                    <tr>
+                                        <td>
+                                            <span style={{textAlign:"center"}}>{this.props.message}</span>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>}
+                                </tbody>
+                            </table>
+                    </div>
                 </AdminContainer>
             </AdminPage>
         )
@@ -117,37 +131,21 @@ Users.PropTypes = {
 export default translate(['sesile'])(Users)
 
 const RowUser = ({User, handleDeleteUser, collectiviteId}, {t}) =>
-    <AdminListRow>
-        <Cell className="medium-auto">
+    <tr id="classrow" onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
+        <td>
             {User._prenom} {User._nom}
-        </Cell>
-        <Cell className="medium-auto">
+        </td>
+        <td>
             {User.email}
-        </Cell>
-        <Cell className="medium-2">
-            <GridX>
-                <Cell className="medium-auto">
-                    <Link 
-                        to={`/admin/${collectiviteId}/utilisateur/${User.id}`}
-                        className="fa fa-pencil icon-action" 
-                        title={t('common.button.edit')}/>
-                </Cell>
-                <Cell className="medium-auto">
-                    <Link 
-                        to={`/admin/${collectiviteId}/classeurs/${User.id}`}
-                        className="fa fa-th-list icon-action" 
-                        title={t('common.classeur', {count: 2})}/>
-                </Cell>
-                {/*<Cell className="medium-auto">*/}
-                    {/*<ButtonConfirmDelete*/}
-                        {/*id={User.id}*/}
-                        {/*dataToggle={`delete-confirmation-update-${User.id}`}*/}
-                        {/*onConfirm={handleDeleteUser}*/}
-                        {/*content={t('common.confirm_deletion_item')}/>*/}
-                {/*</Cell>*/}
-            </GridX>
-        </Cell>
-    </AdminListRow>
+        </td>
+        <td>
+            <Link
+                to={`/admin/${collectiviteId}/classeurs/${User.id}`}
+                className="fa fa-th-list icon-action"
+                title={t('common.classeur', {count: 2})}/>
+
+        </td>
+    </tr>
 
 RowUser.PropTypes = {
     User: object.isRequired,
