@@ -143,7 +143,7 @@ Users.PropTypes = {
 export default translate(['sesile'])(Users)
 
 const RowUser = ({user, onClick, handleDeleteUser, collectiviteId}, {t}) =>
-    <tr id="classrow" onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${user.id}`)} style={{cursor:"Pointer"}}>
+    <tr onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${user.id}`)} style={{cursor:"Pointer"}}>
         <td style={{cursor:"Pointer"}}>
             {user._nom}
         </td>
