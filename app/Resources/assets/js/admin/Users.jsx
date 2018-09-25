@@ -69,10 +69,20 @@ class Users extends Component {
         this.setState({collectiviteId, fieldSearch: ""})
         this.fetchUsers(collectiviteId)
     }
+    onClickButtonClasseurList = (e, user) => {
+        e.preventDefault()
+        e.stopPropagation()
+        History.push(`/admin/${this.state.collectiviteId}/classeurs/${user.id}`)
+    }
     render() {
         const { t } = this.context
         const listUser = this.state.filteredUsers.map(filteredUser =>
-            <RowUser key={filteredUser.id} User={filteredUser} handleDeleteUser={this.handleDeleteUser} collectiviteId={this.state.collectiviteId}/>)
+            <RowUser
+                key={filteredUser.id}
+                onClick={this.onClickButtonClasseurList}
+                user={filteredUser}
+                handleDeleteUser={this.handleDeleteUser}
+                collectiviteId={this.state.collectiviteId}/>)
 
         return (
             <AdminPage
@@ -112,9 +122,9 @@ class Users extends Component {
                                         <td>
                                             <span style={{textAlign:"center"}}>{this.props.message}</span>
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td/>
+                                        <td/>
+                                        <td/>
                                     </tr>}
                                 </tbody>
                             </table>
@@ -132,20 +142,20 @@ Users.PropTypes = {
 
 export default translate(['sesile'])(Users)
 
-const RowUser = ({User, handleDeleteUser, collectiviteId}, {t}) =>
-    <tr id="classrow">
-        <td onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
-            {User._nom}
+const RowUser = ({user, onClick, handleDeleteUser, collectiviteId}, {t}) =>
+    <tr id="classrow" onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${user.id}`)} style={{cursor:"Pointer"}}>
+        <td style={{cursor:"Pointer"}}>
+            {user._nom}
         </td>
-        <td onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
-            {User._prenom}
+        <td style={{cursor:"Pointer"}}>
+            {user._prenom}
         </td>
-        <td onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${User.id}`)} style={{cursor:"Pointer"}}>
-            {User.email}
+        <td style={{cursor:"Pointer"}}>
+            {user.email}
         </td>
         <td>
-            <Link
-                to={`/admin/${collectiviteId}/classeurs/${User.id}`}
+            <span
+                onClick={(e) => onClick(e, user)}
                 className="fa fa-copy icon-action text-center"
                 title={t('common.classeur', {count: 2})}/>
 
