@@ -76,7 +76,7 @@ class Users extends Component {
 
         return (
             <AdminPage
-                title={t('admin.title', {name: t('admin.user.name_plural')})}>
+                title={t('admin.user.name_plural')}>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
                         <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px"}}>
