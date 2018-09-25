@@ -89,8 +89,8 @@ class Users extends Component {
                 title={t('admin.user.name_plural')}>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
-                        <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px"}}>
-                        <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"17em",marginRight:"10px"}}>
+                        <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"49%"}}>
+                        <div className="" style={{marginTop:"10px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
                         <Input
                             className=""
                             labelText=""
@@ -100,7 +100,7 @@ class Users extends Component {
                             type="text"/>
                         </div>
                         {this.state.isSuperAdmin &&
-                        <div className="" style={{marginTop:"10px",marginLeft:"10px",width:"17em",marginRight:"1%"}}>
+                        <div className="" style={{marginTop:"10px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
                             <SelectCollectivite currentCollectiviteId={this.state.collectiviteId}
                                                 handleChange={this.onSearchByCollectiviteFieldChange} />
                         </div>
