@@ -66,6 +66,10 @@ class SearchClasseurs extends Component {
         this.setState({filteredClasseurs: [], message: null})
     }
 
+    isAdminMenu = () => {
+        return window.location.pathname.search("admin") === 1
+    }
+
     render () {
 
         const { t } = this.context
@@ -79,8 +83,9 @@ class SearchClasseurs extends Component {
                        placeholder={t('common.classeurs.search')}
                        value={ nomClasseur }
                        onChange={ this.searchClasseurs }
-                       tabIndex="0"/>
-                <span className="input-group-label">
+                       tabIndex="0"
+                       style={{borderColor: this.props.color}}/>
+                <span className="input-group-label"  style={{borderColor: this.props.color, color: this.props.color}}>
                     <i className="fa fa-search"/>
                 </span>
                 {filteredClasseurs.length > 0 ?

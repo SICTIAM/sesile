@@ -11,6 +11,7 @@ import Validator from 'validatorjs'
 import SearchClasseurs from './_components/SearchClasseurs'
 import Note from './_components/Note'
 import Menu from './_components/Menu'
+import MenuAdmin from './_components/MenuAdmin'
 import Moment from 'moment'
 import { Route } from 'react-router'
 import SelectCollectivite from './SelectCollectivite'
@@ -104,6 +105,9 @@ class App extends Component {
             this.setState({displaySelectCollectivite: true}) :
             location = redirectLoginUrl
     }
+    isAdminMenu = () => {
+        return window.location.pathname.search("admin") === 1
+    }
     render () {
         const { user } = this.state
         return (
@@ -112,11 +116,14 @@ class App extends Component {
                     <SelectCollectivite /> :
                     <div className="off-canvas-wrapper">
                         <div className="off-canvas position-left hide-for-large grid-y" id="offCanvasLeft" data-off-canvas>
-                            <Route render={routeProps => <Menu {...routeProps} user={user} />} />
+                            {this.isAdminMenu() ?
+                                <Route render={routeProps => <MenuAdmin {...routeProps} user={user}/>}/> :
+                                <Route render={routeProps => <Menu {...routeProps} user={user}/>}/>
+                            }
                         </div>
                         <div className="off-canvas-content" data-off-canvas-content>
                             <div className="grid-x grid-y grid-frame">
-                                <div className="cell header" style={{background: 'white'}}>
+                                <div className="cell header" style={{background: 'white', borderBottom: this.isAdminMenu() ? '#d63284 solid 2px' : '#3299CC solid 2px'}}>
                                     <div className="grid-x align-center-middle">
                                         <div className="cell large-2 small-6 logo text-center">
                                             <button type="button" className="button primary clear hide-for-large float-left" data-toggle="offCanvasLeft">
@@ -128,7 +135,10 @@ class App extends Component {
                                         </div>
                                         <div className="cell large-4 show-for-large">
                                             { user.id &&
-                                            <SearchClasseurs user={this.state.user}/>
+                                            <SearchClasseurs
+                                                user={this.state.user}
+                                                color={this.isAdminMenu() ? '#d63284' : '#3299CC'}
+                                            />
                                             }
                                         </div>
                                         <div className="cell large-3 small-6">
@@ -138,14 +148,19 @@ class App extends Component {
                                         <div className="cell large-3 small-6">
                                             <Login
                                                 handleClickConnection={this.handleClickConnection}
-                                                user={this.state.user}/>
+                                                user={this.state.user}
+                                                color={this.isAdminMenu() ? '#d63284' : '#3299CC'}
+                                            />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="cell auto grid-y">
                                     <div className="grid-x cell auto">
                                         <div className="hide-for-medium-only hide-for-small-only cell large-2 grid-y" style={{backgroundColor: '#f4f4f4', width: '15%'}}>
-                                            <Route render={routeProps => <Menu {...routeProps} user={user} />} />
+                                            {this.isAdminMenu() ?
+                                                <Route render={routeProps => <MenuAdmin {...routeProps} user={user}/>}/> :
+                                                <Route render={routeProps => <Menu {...routeProps} user={user}/>}/>
+                                            }
                                         </div>
                                         <div
                                             style={{paddingLeft: '2.5%', paddingRight: '2.5%'}}

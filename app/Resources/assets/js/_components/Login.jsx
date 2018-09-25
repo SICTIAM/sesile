@@ -28,6 +28,10 @@ class MenuBar extends Component {
         $('.user-log').foundation()
     }
 
+    isAdminMenu = () => {
+        return window.location.pathname.search("admin") === 1
+    }
+
     render(){
 
         const { user } = this.state
@@ -40,7 +44,7 @@ class MenuBar extends Component {
                     user.id ?
                         <ul className="dropdown menu align-center" data-dropdown-menu>
                             <li>
-                                <a href="#" className="button primary hollow user-complete-name">
+                                <a href="#" className="button primary hollow user-complete-name" style={{borderColor: this.props.color, color: this.props.color}}>
                                     <div className="grid-x align-middle">
                                         {
                                             user.path ?

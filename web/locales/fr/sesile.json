@@ -294,7 +294,7 @@
         },
         "group": {
             "name": "groupe",
-            "name_plural": "groupes",
+            "name_plural": "Groupes",
             "complet_name": "groupe d'utilisateurs",
             "complet_name_plural": "groupes d'utilisateurs",
             "success_delete": "Le groupe a été supprimé",
@@ -305,7 +305,7 @@
         },
         "type": {
             "name": "type",
-            "name_plural": "types",
+            "name_plural": "Types",
             "complet_name": "type de classeurs",
             "complet_name_plural": "types de classeurs",
             "help_text_add_type": "Saisir un nom pour ajouter un nouveau type",
@@ -326,7 +326,7 @@
         },
         "circuit": {
             "name": "circuit",
-            "name_plural": "circuits",
+            "name_plural": "Circuits",
             "complet_name": "Circuit de validation",
             "depositor": "Déposant",
             "validator": "Validant",
@@ -351,7 +351,7 @@
         },
         "user": {
             "name": "utilisateur",
-            "name_plural": "utilisateurs",
+            "name_plural": "Utilisateurs",
             "subtitle_user": "Informations utilisateur",
             "subtitle_signature": "Informations signatures",
             "subtitle_certificate": "Informations certificat",
@@ -397,7 +397,7 @@
         "collectivite": {
             "title": "Rechercher une collectivité",
             "name": "collectivité",
-            "name_plural": "collectivités",
+            "name_plural": "Collectivités",
             "message": "Message d'accueil",
             "which": "Laquelle ?",
             "type_name": "Entrez le nom de la collectivité",
@@ -474,7 +474,7 @@
         "notes": {
             "title": "Rechercher une note",
             "name": "note",
-            "name_plural": "notes",
+            "name_plural": "Notes",
             "list_title": "Les notes",
             "complet_name": "Rédiger une note",
             "subtitle": "Puis envoyez à tous les utilisateurs",
@@ -495,7 +495,8 @@
             "name": "role",
             "name_plural": "roles"
         },
-        "migration": "migration"
+        "migration": "Migration",
+        "backuser": "Application"
     },
     "classeur": {
         "name": "Classeur",
