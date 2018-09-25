@@ -35,7 +35,6 @@ class ClasseursButtonList extends Component {
         const { textRefus } = this.state
         const { classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur, display, id, dropdownPosition, user } = this.props
         const { t } = this.context
-        console.log(this.props.checked)
         return (
             <div style={this.props.style} className="grid-x button-list align-middle text-center">
                 <div className="cell medium-3">
@@ -47,7 +46,7 @@ class ClasseursButtonList extends Component {
                             display === "list" ?
                                 <a
                                     title={t('common.classeurs.button.sign_title')}
-                                    className="fa fa-edit success hollow" onClick={() => signClasseur(classeurs)} /> :
+                                    className="fa fa-edit success hollow" onClick={(e) => signClasseur(e,classeurs)} /> :
                                 <div className="user-log">
                                     <button
                                         style={{border: 'none'}}
@@ -81,10 +80,6 @@ class ClasseursButtonList extends Component {
                 <div className="cell medium-3">
                     <ButtonRevert classeurs={ classeurs } revert={ revertClasseur } enabled={this.actionEnabled('retractable')} />
                 </div>
-                {this.props.check !== undefined &&
-                    <div className="cell medium-3" style={{marginTop: '5px'}}>
-                        <input id={this.props.id} value={this.props.checked} onClick={(e) => this.props.check(e)} type="checkbox" />
-                    </div>}
             </div>
         )
     }
@@ -109,7 +104,7 @@ const ButtonValid = ({classeurs, valid, enabled}, {t}) => {
     return(
         enabled ?
             <a
-                onClick={() => valid(classeurs)}
+                onClick={(e) => valid(e, classeurs)}
                 title={t('common.classeurs.button.valid_title')}
                 className="fa fa-check success hollow"/> :
             <i title={t('common.classeurs.button.valid_title')} className="fa fa-check disabled hollow"/>
@@ -125,7 +120,7 @@ const ButtonRevert = ({classeurs, revert, enabled}, {t}) => {
     return(
         enabled ?
             <a
-                onClick={() => revert(classeurs)}
+                onClick={(e) => revert(e, classeurs)}
                 title={ t('common.classeurs.button.revert_title') }
                 className="fa fa-repeat warning hollow"/> :
             <i title={ t('common.classeurs.button.revert_title') } className="fa fa-repeat disabled hollow"/>
@@ -141,7 +136,7 @@ const ButtonRemove = ({classeurs, remove, enabled}, {t}) => {
     return(
         enabled ?
             <a
-                onClick={() => remove(classeurs)}
+                onClick={(e) => remove(e, classeurs)}
                 title={t('common.classeurs.button.remove_title')}
                 className="fa fa-times alert hollow"/> :
             <i title={t('common.classeurs.button.remove_title')} className="fa fa-times disabled hollow"/>
@@ -157,7 +152,7 @@ const ButtonDelete = ({classeurs, deleteClasseur, enabled}, {t}) => {
     return(
         enabled ?
             <a
-                onClick={() => deleteClasseur(classeurs)}
+                onClick={(e) => deleteClasseur(e, classeurs)}
                 title={t('common.classeurs.button.delete_title')}
                 className="fa fa-trash alert hollow"/> :
             <i title={t('common.classeurs.button.delete_title')} className="fa fa-trash disabled hollow"/>

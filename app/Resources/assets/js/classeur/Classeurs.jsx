@@ -3,7 +3,7 @@ import { string, number, func, object }from 'prop-types'
 import { translate } from 'react-i18next'
 
 import { basicNotification } from '../_components/Notifications'
-import { Select } from '../_components/Form'
+import {Input, Select} from '../_components/Form'
 
 import History from '../_utils/History'
 import { handleErrors } from '../_utils/Utils'
@@ -12,7 +12,8 @@ import { refusClasseur, actionClasseur } from '../_utils/Classeur'
 import ClasseursRow from './ClasseursRow'
 import ClasseurPagination from './ClasseurPagination'
 import ClasseursButtonList from './ClasseursButtonList'
-import Moment from "moment";
+import Moment from "moment"
+import {escapedValue} from "../_utils/Search"
 
 class Classeurs extends Component {
 
@@ -23,6 +24,7 @@ class Classeurs extends Component {
     }
     state = {
         classeurs: [],
+        filteredClasseurs: [],
         sort: "id",
         order: "DESC",
         limit: 15,
@@ -30,7 +32,8 @@ class Classeurs extends Component {
         checkedAll: false,
         message: '',
         nbElement: 0,
-        nbElementTotal: 0
+        nbElementTotal: 0,
+        classeurTitle: ''
     }
     statesCaption = [
         {color: '#c82d2e', state: 'refused'},
@@ -72,7 +75,7 @@ class Classeurs extends Component {
             .then(json => {
                 let classeurs = json.list.map(classeur =>
                     Object.defineProperty(classeur, "checked", {value : false, writable : true, enumerable : true, configurable : true}))
-                this.setState({classeurs, nbElement: json.nb_element_in_list, nbElementTotal: json.nb_element_total_of_entity})
+                this.setState({classeurs, filteredClasseurs: classeurs, nbElement: json.nb_element_in_list, nbElementTotal: json.nb_element_total_of_entity})
                 $('#classeurRow').foundation()
                 if(classeurs.length <= 0) this.setState({message: t('common.classeurs.empty_classeur_list')})
                 else this.setState({message: null})
@@ -92,16 +95,25 @@ class Classeurs extends Component {
         this.setState(prevState => prevState.classeurs.map(classeur => classeur.checked = newCheckAll))
     }
     checkClasseur = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
         const target = event.target
-        this.setState(prevState => {
-            const IndexOfClasseurInArray =
-                prevState.classeurs.findIndex(classeur => classeur.id == target.id)
-            const classeur = prevState.classeurs[IndexOfClasseurInArray]
-            return classeur.checked = !classeur.checked
-        })
+        const filteredClasseurs = this.state.filteredClasseurs
+        const IndexOfClasseurInArray =
+            filteredClasseurs.findIndex(classeur => classeur.id == target.id)
+        const filteredClasseur = filteredClasseurs[IndexOfClasseurInArray]
+        filteredClasseur.checked = !filteredClasseur.checked
+        this.setState({classeurs: filteredClasseurs, filteredClasseurs})
     }
-    validClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_validclasseur', classeur.id, 'PUT', 'list')})}
-    signClasseurs = (classeurs) => {
+    validClasseurs = (e, classeurs) => {
+        e.preventDefault()
+        e.stopPropagation()
+        classeurs.map(classeur => {
+            actionClasseur(this, 'sesile_classeur_classeurapi_validclasseur', classeur.id, 'PUT', 'list')})
+    }
+    signClasseurs = (e, classeurs) => {
+        e.preventDefault()
+        e.stopPropagation()
         let ids
         ids = []
         classeurs.map(classeur => {
@@ -109,10 +121,34 @@ class Classeurs extends Component {
         })
         History.push('/classeurs/previsualisation', {classeurs, user: this.context.user})
     }
-    revertClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id, 'PUT', 'list')})}
-    refuseClasseurs = (classeurs, motif) => { classeurs.map(classeur => { refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif, 'list') })}
-    removeClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_removeclasseur', classeur.id, 'PUT', 'list') })}
-    deleteClasseurs = (classeurs) => { classeurs.map(classeur => { actionClasseur(this, 'sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE', 'list') })}
+    revertClasseurs = (e, classeurs) => {
+        e.preventDefault()
+        e.stopPropagation()
+        classeurs.map(classeur => {
+            actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id, 'PUT', 'list')})}
+    refuseClasseurs = (e, classeurs, motif) => {
+        e.preventDefault()
+        e.stopPropagation()
+        classeurs.map(classeur => {
+            refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif, 'list') })}
+    removeClasseurs = (e, classeurs) => {
+        e.preventDefault()
+        e.stopPropagation()
+        classeurs.map(classeur => {
+            actionClasseur(this, 'sesile_classeur_classeurapi_removeclasseur', classeur.id, 'PUT', 'list') })}
+    deleteClasseurs = (e, classeurs) => {
+        e.preventDefault()
+        e.stopPropagation()
+        classeurs.map(classeur => {
+            actionClasseur(this, 'sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE', 'list') })}
+
+    handleSearchByClasseurTitle = (target) => {
+        const {name, value} = target
+        this.setState({classeurTitle: value})
+        const regex = escapedValue(value, this.state.filteredClasseurs, this.state.groups)
+        const filteredClasseurs = this.state.classeurs.filter(classeur => regex.test(classeur.nom))
+        this.setState({filteredClasseurs})
+    }
 
     render(){
         const { classeurs, limit, start, checkedAll } = this.state
@@ -127,20 +163,20 @@ class Classeurs extends Component {
         })
         const statusColorClass = Object.freeze({
             0: '#c82d2e',
-            1: '#e2661d',
-            2: '#2d6725',
-            3: '#1c43a2',
-            4: '#356bfc'
+            1: '#f48c4f',
+            2: '#39922c',
+            3: '#2068a2',
+            4: '#34a3fc'
         })
-        const listClasseur = this.state.classeurs.map(classeur =>
-            <tr key={classeur.id}>
+        const listClasseur = this.state.filteredClasseurs.map(classeur =>
+            <tr key={classeur.id} onClick={() => History.push(`/classeur/${classeur.id}`)} style={{cursor:"Pointer"}}>
                 <td>{classeur.nom}</td>
                 <td>
-                    <div
+                    <span
                         className={`ui label labelStatus`}
                         style={{color: '#fff', backgroundColor: statusColorClass[classeur.status], textAlign: 'center', width: '80px', padding: '5px', fontSize: '0.9em'}}>
                         {t(`common.classeurs.status.${status[classeur.status]}`)}
-                    </div>
+                    </span>
                 </td>
                 <td>
                     <Intervenants classeur={classeur}/>
@@ -168,7 +204,16 @@ class Classeurs extends Component {
                 {limit}
             </option>)
         return (
-            <div className="grid-x" style={{marginBottom: '10px'}}>
+            <div className="grid-x align-center-middle" style={{marginBottom: '10px'}}>
+                <div className="grid-x grid-padding-x medium-6 panel" style={{display:"flex", marginBottom:"1em", width:"50%", padding: '10px'}}>
+                    <input
+                        style={{margin: '0'}}
+                        className="cell medium-auto"
+                        value={this.state.classeurTitle}
+                        onChange={(e) => this.handleSearchByClasseurTitle(e.target)}
+                        placeholder={"Recherche par titre"}
+                        type="text"/>
+                </div>
                 <div className="cell medium-12 align-right">
                     <table>
                         <thead
@@ -177,25 +222,13 @@ class Classeurs extends Component {
                                 color: "#fefefe"
                             }}>
                             <tr>
-                                <th width="350" style={{borderRadius: "0.5rem 0 0 0"}}>Titre</th>
+                                <th style={{borderRadius: "0.5rem 0 0 0"}}>Titre</th>
                                 <th>Status</th>
                                 <th>Intervenants</th>
-                                <th width="100">Date limite</th>
-                                <th width="100">Type</th>
-                                <th width="150" style={{borderRadius: "0 0.5rem 0 0"}}>
-                                    {<ClasseursButtonList
-                                        classeurs={classeurs.filter(classeur => classeur.checked)}
-                                        validClasseur={this.validClasseurs}
-                                        revertClasseur={this.revertClasseurs}
-                                        refuseClasseur={this.refuseClasseurs}
-                                        removeClasseur={this.removeClasseurs}
-                                        deleteClasseur={this.deleteClasseurs}
-                                        signClasseur={this.signClasseurs}
-                                        check={this.checkAllClasseurs}
-                                        checked={checkedAll}
-                                        id={"button-lists-large"}
-                                        user={this.props.user}
-                                        style={{fontSize: '0.8em'}}/>}
+                                <th>Date limite</th>
+                                <th>Type</th>
+                                <th width="150px" style={{borderRadius: "0 0.5rem 0 0"}}>
+                                    Actions
                                 </th>
                             </tr>
                         </thead>
@@ -214,7 +247,7 @@ class Classeurs extends Component {
                                 </tr>}
                         </tbody>
                         {classeurs &&
-                            <tfoot>
+                            <tfoot style={{border: "1px solid #ccc"}}>
                                 <tr>
                                     <td>
                                         <Select
@@ -235,7 +268,7 @@ class Classeurs extends Component {
                                     <td/>
                                     <td/>
                                     <td/>
-                                    <td >
+                                    <td className="float-right">
                                         <ClasseurPagination
                                             limit={limit}
                                             start={start}
@@ -333,22 +366,22 @@ ListClasseur.contextTypes = {
 const Intervenants = ({classeur}) => {
     const validEtape = classeur.etape_classeurs.find(etape_classeur => etape_classeur.etape_validante)
     return (
-        <div>{
+        <ul className="no-bullet">{
             validEtape ?
                 validEtape.users.map(user =>
-                        <span
+                        <li
                             key={`${user._nom}-${user.id}`}
-                            style={{display: 'inline-block', width: '100%'}}>
+                            >
                     {user._prenom + " " + user._nom}
-                </span>
+                </li>
                 ).concat(validEtape.user_packs.map(user_pack =>
-                    <span
+                    <li
                         key={`${user_pack._nom}-${user_pack.id}`}
-                        style={{display: 'inline-block', width: '100%'}}>
+                        >
                         {user_pack.nom}
-                    </span>)) :
+                    </li>)) :
                 `${classeur.user._prenom} ${classeur.user._nom}`
         }
-        </div>
+        </ul>
     )
 }

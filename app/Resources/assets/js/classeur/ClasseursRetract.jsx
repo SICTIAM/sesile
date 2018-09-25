@@ -8,11 +8,7 @@ class ClasseursRetract extends Component {
     static contextTypes = {
         t: func
     }
-
-    constructor(props) {
-        super(props);
-    }
-
+    
     render(){
         const { t } = this.context
 
@@ -21,7 +17,12 @@ class ClasseursRetract extends Component {
                 <div className="cell medium-12 text-center">
                     <h2>{t('common.menu.retractable_classeur')}</h2>
                 </div>
-                <Classeurs url="sesile_classeur_classeurapi_listretract"/>
+                <div className="cell medium-12 panel">
+                    <Classeurs
+                        url="sesile_classeur_classeurapi_listretract"
+                        userId={this.props.userId}
+                        user={this.props.user} />
+                </div>
             </div>
         )
     }

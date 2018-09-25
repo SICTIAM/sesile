@@ -17,7 +17,12 @@ class ClasseursValid extends Component {
                 <div className="cell medium-12 text-center">
                     <h2>{t('common.menu.validate_classeur')}</h2>
                 </div>
-                <Classeurs url="sesile_classeur_classeurapi_valid"/>
+                <div className="cell medium-12 panel">
+                    <Classeurs
+                        url="sesile_classeur_classeurapi_valid"
+                        userId={this.props.userId}
+                        user={this.props.user} />
+                </div>
             </div>
         )
     }

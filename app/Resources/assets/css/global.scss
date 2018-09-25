@@ -40,13 +40,16 @@ $label-radius: 0.3em;
 @import './../../../../node_modules/font-awesome/scss/font-awesome';
 
 $font-color-primary: #ffffff;
-$font-family: "Lato", "Helvetica Neue, Helvetica, Roboto, Arial, sans-serif";
+$font-family: Lato,"Helvetica Neue","Arial","Helvetica","sans-serif";
 $sesile-primary: #fe5e3a;
 
 body, html {
   height: auto;
   background-color: #f4f4f4;
   font-family: $font-family;
+  h1,h2,h3,h4,h5{
+    font-family: $font-family;
+  }
 }
 
 .button {
@@ -393,7 +396,6 @@ body, html {
       color: $sesile-color-1;
     }
     .panel-body {
-      color: map-get($sesile-color, 'dark-blue');
       font-size:0.875em;
       font-weight:normal;
       border-top: solid 1px #a7a7a7;
