@@ -6,6 +6,8 @@ import { translate } from 'react-i18next'
 
 import { AdminList, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
 import ButtonConfirmDelete from '../_components/ButtonConfirmDelete'
+import ButtonPopup from '../_components/ButtonPopup'
+
 import { Input } from '../_components/Form'
 import { basicNotification } from '../_components/Notifications'
 import { Cell, GridX } from '../_components/UI'
@@ -13,6 +15,7 @@ import SelectCollectivite from '../_components/SelectCollectivite'
 
 import { escapedValue } from '../_utils/Search'
 import { handleErrors, DisplayLongText } from "../_utils/Utils"
+import History from "../_utils/History";
 
 class CircuitsValidation extends Component {
     static contextTypes = {
@@ -32,6 +35,7 @@ class CircuitsValidation extends Component {
         this.handleChangeCollectivite(user.current_org_id)
         if(user.roles.includes("ROLE_SUPER_ADMIN")) this.setState({isSuperAdmin: true})
     }
+
     fetchCircuitsValidations(collectiviteId) {
         fetch(
             Routing.generate(
@@ -92,43 +96,57 @@ class CircuitsValidation extends Component {
                 handleClickDelete={this.handleClickDelete} />)
         return (
             <AdminPage
-                title={t('admin.title', {name: t('admin.circuit.name')})}
-                subtitle={t('admin.subtitle')}>
+                title={t('admin.title', {name: t('admin.circuit.name')})}>
                 <AdminContainer>
-                    <Cell className="medium-6">
-                        <GridX className="grid-padding-x align-center-middle">
+                    <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
+                        <div className="grid-x grid-padding-x panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"57em"}}>
+                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
                             <Input
-                                className="cell medium-auto"
-                                labelText={t('admin.circuit.which_circuit')}
+                                className=""
                                 value={this.state.circuitName}
                                 onChange={this.handleChangeCircuitName}
                                 placeholder={t('common.search_by_name')}
                                 type="text"/>
+                            </div>
+                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
                             <Input
-                                className="cell medium-auto"
-                                labelText={t('admin.user.which_user')}
+                                className=""
                                 value={this.state.userName}
                                 onChange={this.handleChangeUserName}
                                 placeholder={t('common.search_by_name')}
                                 type="text"/>
+                            </div>
                             {this.state.isSuperAdmin &&
-                            <Cell className="medium-auto">
+                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
                                 <SelectCollectivite
                                     currentCollectiviteId={this.state.collectiviteId}
                                     handleChange={this.handleChangeCollectivite} />
-                            </Cell>}
-                        </GridX>
-                    </Cell>
-                    <AdminList
-                        title={t('admin.circuit.circuit_list')}
-                        listLength={listCircuits.length}
-                        labelButton={t('admin.circuit.add_circuit')}
-                        addLink={`/admin/${this.state.collectiviteId}/circuit-de-validation`}
-                        headTitles={[t('common.label.name'), t('admin.associated_users'), t('admin.associated_group'), t('common.label.actions')]}
-                        headGrid={['medium-2', 'medium-auto', 'medium-auto', 'medium-2']}
-                        emptyListMessage={t('common.no_results', {name: t('admin.circuit.name')})}>
-                        {listCircuits}
-                    </AdminList>
+                            </div>}
+                            <div className="text-right" style={{marginLeft:"10px",marginRight:"1%"}}>
+                                <button className="button" onClick={() => History.push(`/admin/${this.state.collectiviteId}/circuit-de-validation`)} style={{backgroundColor:"transparent", border:"1px solid rgb(204, 0, 102)", color:"rgb(204, 0, 102)"}}>{t('admin.circuit.add_circuit')}</button>
+                            </div>
+                        </div>
+                        <table style={{margin:"10px", borderRadius:"6px"}}>
+                            <thead>
+                            <tr style={{backgroundColor:"#CC0066", color:"white"}}>
+                                <td width="240px" className="text-bold">{ t('common.label.name') }</td>
+                                <td width="240px" className="text-bold">{ t('admin.associated_users') }</td>
+                                <td width="50px" className="text-bold">{  t('common.label.actions') }</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {listCircuits.length > 0 ?
+                                listCircuits :
+                                <tr>
+                                    <td>
+                                        <span style={{textAlign:"center"}}>{this.props.message}</span>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>}
+                            </tbody>
+                        </table>
+                    </div>
                 </AdminContainer>
             </AdminPage>
         )
@@ -142,46 +160,29 @@ const RowCircuit = ({circuit, collectiviteId, handleClickDelete}, {t}) => {
     const usersPackName = []
     etapeGroupes.map(etapeGroupe => etapeGroupe.user_packs.map(userPack => usersPackName.unshift(userPack.nom)))
     return (
-        <AdminListRow>
-            <Cell className="medium-2">
-                <DisplayLongText text={circuit.nom} maxSize={20}/>
-            </Cell>
-            <Cell className="medium-auto">
-                <DisplayLongText
-                    text=
-                        {etapeGroupes.map(etapeGroupe =>
-                            etapeGroupe.users.map(user => user._nom).join(' | ')).join(' | ')}
-                    title=
-                        {etapeGroupes.map(etapeGroupe =>
-                            etapeGroupe.users.map(user =>
-                                `${user._prenom} ${user._nom}`).join('\n')).join('\n______\n')}
-                    maxSize={30}/>
-            </Cell>
-            <Cell className="medium-auto">
-                <DisplayLongText
-                    text={usersPackName.join(' | ')}
-                    title={usersPackName.join('\n')}
-                    maxSize={30}/>
-            </Cell>
-            <Cell className="medium-2">
-                <GridX>
-                    <Cell className="medium-auto">
-                        <Link
-                            to={`/admin/${collectiviteId}/circuit-de-validation/${circuit.id}`}
-                            className="fa fa-pencil icon-action"
-                            title={t('common.button.edit')}/>
-                    </Cell>
-                    <Cell className="medium-auto">
+            <tr id="classrow">
+                <td onClick={() => History.push(`/admin/${collectiviteId}/circuit-de-validation/${circuit.id}`)} style={{cursor:"Pointer"}}>
+                    {circuit.nom}
+                </td>
+                <td>
+                        <ButtonPopup
+                            id={circuit.id}
+                            dataToggle={`delete-confirmation-update-${circuit.id}`}
+                            onConfirm={handleClickDelete}
+                            content={etapeGroupes.map(etapeGroupe =>
+                                etapeGroupe.users.map(user =>
+                                    `${user._prenom} ${user._nom}`).join(' | ')).join(' | ')}/>
+                </td>
+                <td>
                         <ButtonConfirmDelete
                             id={circuit.id}
                             dataToggle={`delete-confirmation-update-${circuit.id}`}
                             onConfirm={handleClickDelete}
                             content={t('common.confirm_deletion_item')}/>
-                    </Cell>
-                </GridX>
-            </Cell>
-        </AdminListRow>
-    )
+                </td>
+            </tr>
+
+            )
 }
 
 RowCircuit.propTypes = {

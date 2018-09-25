@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { object, func } from 'prop-types'
 import { translate } from 'react-i18next'
 import { arrayMove } from 'react-sortable-hoc'
-import { handleErrors } from '../_utils/Utils'
+import {DisplayLongText, handleErrors} from '../_utils/Utils'
 import History from '../_utils/History'
 import { basicNotification } from '../_components/Notifications'
 import { AdminDetailsWithInputField, SimpleContent } from '../_components/AdminUI'
@@ -10,6 +10,8 @@ import { Button } from '../_components/Form'
 import { GridX, Cell } from '../_components/UI'
 import CircuitValidationSteps from '../circuit/CircuitValidationSteps'
 import UsersCopy from '../classeur/UsersCopy'
+import {Link} from "react-router-dom";
+import ButtonConfirmDelete from "../_components/ButtonConfirmDelete";
 
 class CircuitValidation extends Component {
 
@@ -197,7 +199,7 @@ class CircuitValidation extends Component {
         return (
             <AdminDetailsWithInputField className="circuit-validation" 
                                         title={t('admin.details.title', {name: t('admin.circuit.complet_name')})} 
-                                        subtitle={t('admin.details.subtitle')} 
+                                        subtitle={t('admin.details.subtitle')}
                                         nom={circuit.nom} 
                                         inputName="nom"
                                         handleChangeName={this.handleChangeCircuit}

@@ -40,7 +40,7 @@ $label-radius: 0.3em;
 @import './../../../../node_modules/font-awesome/scss/font-awesome';
 
 $font-color-primary: #ffffff;
-$font-family: 'Lato,Helvetica Neue,Arial,Helvetica,sans-serif';
+$font-family: 'Lato','Helvetica Neue,Arial,Helvetica,sans-serif';
 $sesile-primary: #fe5e3a;
 
 body, html {
@@ -1083,7 +1083,7 @@ label > input {
   color: #4a4c63;
   line-height: 0;
   &:hover {
-    color: #ec5935;
+    color: $sesile-color-2;
   }
 }
 
