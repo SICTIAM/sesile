@@ -99,7 +99,7 @@ class CircuitsValidation extends Component {
                 title={t('admin.title', {name: t('admin.circuit.name')})}>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
-                        <div className="grid-x grid-padding-x panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"57em"}}>
+                        <div className="grid-x grid-padding-x panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"77%"}}>
                             <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
                             <Input
                                 className=""
@@ -166,12 +166,9 @@ const RowCircuit = ({circuit, collectiviteId, handleClickDelete}, {t}) => {
                 </td>
                 <td>
                         <ButtonPopup
-                            id={circuit.id}
-                            dataToggle={`delete-confirmation-update-${circuit.id}`}
-                            onConfirm={handleClickDelete}
-                            content={etapeGroupes.map(etapeGroupe =>
-                                etapeGroupe.users.map(user =>
-                                    `${user._prenom} ${user._nom}`).join(' | ')).join(' | ')}/>
+                            id={circuit.nom}
+                            dataToggle={`user-list-${circuit.id}`}
+                            content={etapeGroupes}/>
                 </td>
                 <td>
                         <ButtonConfirmDelete

@@ -30,19 +30,23 @@ class ButtonPopup extends Component {
             <div id={`container-${this.props.dataToggle}`} className={this.props.className}>
                 <button data-toggle={this.props.dataToggle}>
                     <DisplayLongText
-                        text={this.props.content}
+                        text={this.props.content.map(etapeGroupe =>
+                            etapeGroupe.users.map(user =>
+                                `${user._prenom} ${user._nom}`).join(' | ')).join(' | ')}
                         maxSize={40}/>
                 </button>
                 <div
                     id={this.props.dataToggle}
                     data-position="bottom"
                     data-alignment="center"
-                    className={`dropdown-pane ${this.state.isOpen} dropdown-confirm-delete`}
+                    className={`dropdown-pane ${this.state.isOpen} dropdown-confirm-delete text-center`}
                     data-dropdown
                     data-auto-focus="true">
                     <GridX className="grid-margin-y">
                         <Cell className="medium-12 text-bold text-center">
-                            <span>{this.props.content}</span>
+                            <span>{this.props.content.map(etapeGroupe =>
+                                etapeGroupe.users.map(user =>
+                                    <ul style={{marginLeft:"0"}}>{user._prenom} {user._nom}</ul>))}</span>
                         </Cell>
                     </GridX>
                 </div>
@@ -51,7 +55,7 @@ class ButtonPopup extends Component {
     }
 }
 
-ButtonConfirm.protoTypes = {
+ButtonPopup.protoTypes = {
     id: number.isRequired,
     content: string.isRequired,
     onConfirm: func.isRequired,
@@ -59,4 +63,4 @@ ButtonConfirm.protoTypes = {
     className: string
 }
 
-export default translate(['sesile'])(ButtonConfirm)
+export default translate(['sesile'])(ButtonPopup)
