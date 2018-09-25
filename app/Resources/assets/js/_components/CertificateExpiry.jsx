@@ -1,11 +1,16 @@
 import React, { Component } from 'react'
+import {Link} from "react-router-dom";
 
 const CertificateValidity = ({ certificate, certificateRemainingDays, CertifRemain, NoCertif }) =>
-    <div className="cell small-12 medium-12 large-12">
+    <div className="cell small-6 medium-6 large-6">
         {(certificate && certificateRemainingDays) ?
-            <span style={{margin: '5px'}}>
-                {CertifRemain}
-            </span> :
+            <Link
+                className="text-bold"
+                to="/utilisateur/certificat-electronique">
+                 <span style={{margin: '5px'}}>
+                     {CertifRemain}
+                     </span>
+            </Link> :
             <span style={{margin: '5px'}}>
                 {NoCertif}
             </span>}

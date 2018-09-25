@@ -104,31 +104,18 @@ class DashBoard extends Component {
                             <Classeurs classeurs={urgentClasseurs} message={this.state.messageUrgentClasseur} title={t('common.dashboard.urgent_classeurs')} />
                             <div className="grid-x grid-padding-x panel">
                                 <div className="cell medium-12">
-                                    <div className="grid-x panel-heading grid-padding-x align-middle">
-                                        <div className="cell medium-12 text-center medium-text-left">{ t('common.user.certificate_info')}</div>
+                                    <div className="align-middle" style={{paddingTop:'0.5em'}}>
+                                        <h3>{t('common.user.certificate_info')}</h3>
                                     </div>
-                                    <div className="grid-x panel-body grid-padding-x dashboard-title align-middle">
+                                    <div className="grid-x grid-padding-x dashboard-title align-middle" style={{fontSize:"0.875em"}}>
                                         <CertificateValidity
                                             certificate={this.state.certificate}
                                             certificateRemainingDays={certificateRemainingDays}
                                             CertifRemain={t('common.user.certificate_validity', {count: certificateRemainingDays | 1})}
                                             NoCertif={t('common.no_certificat')}>
                                         </CertificateValidity>
-                                        <div className="cell medium-auto small-12 text-center medium-text-left text-bold">
-                                            <Link
-                                                className="button float-left text-uppercase hollow"
-                                                to="https://www.sictiam.fr/certificat-electronique/"
-                                                target="_blank">
-                                                {t('common.button.certificate_order')}
-                                            </Link>
-                                        </div>
-                                        <div className="cell medium-auto small-12 text-center medium-text-right">
-                                            {this.state.certificate &&
-                                            <Link
-                                                className="button text-uppercase hollow"
-                                                to="/utilisateur/certificat-electronique">
-                                                {t('common.button.certificate_user')}
-                                            </Link>}
+                                        <div className="cell medium-6 small-6 text-right text-bold">
+                                            <a href={"https://www.sictiam.fr/certificat-electronique/"} style={{textDecoration:"underline"}}>{t('common.button.certificate_order')}</a>
                                         </div>
                                     </div>
                                 </div>

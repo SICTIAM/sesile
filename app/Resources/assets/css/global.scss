@@ -1,19 +1,19 @@
 $foundation-palette: (
-    primary: #34a3fc,
-    secondary: #2068a2,
-    success: #39922c,
-    warning: #f48c4f,
-    alert: #c82d2e,
-    ozwillo: #663399,
+        primary: #34a3fc,
+        secondary: #2068a2,
+        success: #39922c,
+        warning: #f48c4f,
+        alert: #c82d2e,
+        ozwillo: #663399,
 );
 
 $foundation-palette-hover: (
-    primary: #356bfc,
-    secondary: #1c43a2,
-    success: #2d6725,
-    warning: #e2661d,
-    alert: #851206,
-    ozwillo: #452c71,
+        primary: #356bfc,
+        secondary: #1c43a2,
+        success: #2d6725,
+        warning: #e2661d,
+        alert: #851206,
+        ozwillo: #452c71,
 );
 
 $button-palette: map-merge($foundation-palette, (
@@ -25,8 +25,8 @@ $sesile-color-1: #3299CC;
 $sesile-color-2: #CC0066;
 $sesile-color-3: #676766;
 $sesile-color: (
-  dark-blue: #4a4c63,
-  gray-blue: #404257
+        dark-blue: #4a4c63,
+        gray-blue: #404257
 );
 
 $label-color: #FFFFFF;
@@ -40,7 +40,7 @@ $label-radius: 0.3em;
 @import './../../../../node_modules/font-awesome/scss/font-awesome';
 
 $font-color-primary: #ffffff;
-$font-family: 'Lato,Helvetica Neue,Arial,Helvetica,sans-serif';
+$font-family: "Lato", "Helvetica Neue, Helvetica, Roboto, Arial, sans-serif";
 $sesile-primary: #fe5e3a;
 
 body, html {
@@ -696,7 +696,7 @@ body, html {
         color: white;
       }
     }
-  
+
     .content-details-user-group {
       padding:1em;
       background: white;
@@ -800,12 +800,12 @@ $list-group-margin: $global-margin;
       box-shadow: $list-group-shadow;
       overflow: hidden;
       color: $list-group-font-color;
-    
+
       & > :last-child {
         margin-bottom: 0;
       }
     }
-    
+
     .list-group-item {
       padding: 0.7em;
       border-bottom: $list-group-border;
@@ -816,20 +816,20 @@ $list-group-margin: $global-margin;
         margin-bottom: 0;
         border-bottom: none;
       }
-    
+
       &.active {
         color: $list-group-font-active-color;
         background-color: $list-group-active-background;
         border-color: $list-group-active-border;
       }
-    
+
       &:hover, &:focus {
         background-color: $list-group-hover-background;
         &.active {
           background-color: $list-group-active-background;
         }
       }
-    
+
       &.disabled,
       &[disabled] {
         &,
