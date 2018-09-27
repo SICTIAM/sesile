@@ -41,9 +41,12 @@ class Helps extends Component {
         const row = helps.map((help, key) => <DocumentationRow key={key} documentation={help} download_route="sesile_main_documentationapi_showdocumentaide" />)
 
         return (
-            <AccordionItem title={t('common.help_board.title_helps')} className="is-active">
-                { row }
-            </AccordionItem>
+                <div className="cell medium-10">
+                    <div className="panel cell medium-10" style={{padding:"1em"}}>
+                        <h3>{t('common.help_board.title_helps')}</h3>
+                        {row}
+                    </div>
+                </div>
         )
     }
 }

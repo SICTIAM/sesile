@@ -19,13 +19,22 @@ class HelpBoard extends Component {
         const { t } = this.context
 
         return (
-            <AdminDetails title={t('common.help_board.title')} nom={t('common.help_board.title')}>
-                <AccordionContent>
-                    <Helps />
-                    <Patchs />
-                    <VideoContent />
-                </AccordionContent>
-            </AdminDetails>
+            <div>
+                <div className="grid-x grid-margin-x grid-padding-x align-top align-center grid-padding-y">
+                    <div className="cell medium-12 text-center">
+                        <h2>{t('common.help_board.title')}</h2>
+                    </div>
+                </div>
+                <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                    <div className="cell medium-12">
+                        <div className="grid-x grid-padding-x list-dashboard align-center">
+                            <VideoContent />
+                            <Helps />
+                            <Patchs />
+                        </div>
+                    </div>
+                </div>
+            </div>
         )
     }
 
@@ -38,9 +47,14 @@ export default translate(['sesile'])(HelpBoard)
 const VideoContent = ({}, {t}) => {
 
     return(
-        <AccordionItem title={t('common.help_board.title_video')} className="is-active" classNameChild="align-center">
-            <a href="https://www.youtube.com/playlist?list=PLN4SrkP6-6UVPVG5gNnldIhNBPuni1m1w" className="fa fa-youtube ico-video" target="_blank"></a>
-        </AccordionItem>
+        <div className="cell medium-10">
+            <div className="panel cell medium-10" style={{padding:"1em", textAlign:"center"}}>
+                <h3 style={{textAlign:"left"}}>{t('common.help_board.title_video')}</h3>
+                <iframe width="560" height="315"
+                        src="https://www.youtube.com/embed/C72d6DJBkgw?rel=0&amp;controls=0&amp;showinfo=0"
+                        frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+            </div>
+        </div>
     )
 }
 VideoContent.contextTypes = {
