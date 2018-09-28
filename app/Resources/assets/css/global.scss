@@ -1035,6 +1035,18 @@ label > input {
   right: 1em;
 }
 
+.HelpBlock {
+  padding: 0.5em;
+  cursor: pointer;
+  width: 360px;
+  display: inline-block;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  box-shadow: rgba(34, 36, 38, 0.15) 0px 1px 2px 0px;
+  border-radius: 0.285714rem;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+}
+
 // Document
 .dropzone {
   background: $white;

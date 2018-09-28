@@ -26,3 +26,4 @@ parameters:
     ozwillo_secret: ***REMOVED***
     only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
     signature_url_applet: 'https://signature.dev.sesile.fr'
+    id_yt_video: 'C72d6DJBkgw'
