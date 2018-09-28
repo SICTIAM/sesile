@@ -106,6 +106,7 @@ parameters:
     informations:
         version: 4.0-sprint11
         contact_link: http://support.sictiam.fr/declarer-un-incident/
+        id_yt_video: '%id_yt%'
     upload:
         path: '%kernel.project_dir%/web/uploads/avatars/'
         fics: '%kernel.project_dir%/web/uploads/docs/'
