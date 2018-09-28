@@ -120,7 +120,7 @@ class Users extends Component {
                                     listUser :
                                     <tr>
                                         <td>
-                                            <span style={{textAlign:"center"}}>{t('common.empty_list')}</span>
+                                            <span style={{textAlign:"center"}}>{t('common.no_results', {name: t('admin.user.name')})}</span>
                                         </td>
                                         <td/>
                                         <td/>
