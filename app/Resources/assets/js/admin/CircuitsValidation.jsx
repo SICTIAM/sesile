@@ -122,7 +122,7 @@ class CircuitsValidation extends Component {
                                     currentCollectiviteId={this.state.collectiviteId}
                                     handleChange={this.handleChangeCollectivite} />
                             </div>}
-                            <div className="text-right" style={{marginLeft:"10px",marginRight:"1%"}}>
+                            <div className="text-right" style={{marginLeft:"10px",marginRight:"1%", marginTop:"10px", marginBotoom:"10px"}}>
                                 <button className="button" onClick={() => History.push(`/admin/${this.state.collectiviteId}/circuit-de-validation`)} style={{backgroundColor:"transparent", border:"1px solid rgb(204, 0, 102)", color:"rgb(204, 0, 102)"}}>{t('admin.circuit.add_circuit')}</button>
                             </div>
                         </div>
