@@ -120,7 +120,7 @@ class Users extends Component {
                                     listUser :
                                     <tr>
                                         <td>
-                                            <span style={{textAlign:"center"}}>{this.props.message}</span>
+                                            <span style={{textAlign:"center"}}>{t('common.empty_list')}</span>
                                         </td>
                                         <td/>
                                         <td/>
