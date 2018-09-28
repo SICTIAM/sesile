@@ -90,10 +90,8 @@ class Users extends Component {
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
                         <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"49%"}}>
-                        <div className="" style={{marginTop:"10px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
-                        <Input
-                            className=""
-                            labelText=""
+                        <div className="" style={{marginTop:"16px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
+                        <input
                             value={this.state.fieldSearch}
                             onChange={this.handleChangeSearchUser}
                             placeholder={t('admin.user.search_by_first_name_and_name')}
@@ -144,13 +142,13 @@ export default translate(['sesile'])(Users)
 
 const RowUser = ({user, onClick, handleDeleteUser, collectiviteId}, {t}) =>
     <tr onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${user.id}`)} style={{cursor:"Pointer"}}>
-        <td style={{cursor:"Pointer"}}>
+        <td>
             {user._nom}
         </td>
-        <td style={{cursor:"Pointer"}}>
+        <td>
             {user._prenom}
         </td>
-        <td style={{cursor:"Pointer"}}>
+        <td>
             {user.email}
         </td>
         <td>

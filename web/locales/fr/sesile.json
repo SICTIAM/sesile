@@ -247,7 +247,7 @@
         "description_not_specified": "Description non renseigné"
     },
     "admin": {
-        "title": "{{name}}",
+        "title": "Rechercher un {{name}}",
         "subtitle": "Puis accéder aux paramètres",
         "associated_users": "Utilisateurs associés",
         "associated_group": "Groupes associés",
