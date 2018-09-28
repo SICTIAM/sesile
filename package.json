@@ -33,6 +33,7 @@
     "i18next-xhr-backend": "^1.4.3",
     "moment": "^2.18.1",
     "node-sass": "^4.5.3",
+    "pretty-checkbox": "^3.0.3",
     "react": "^15.6.1",
     "react-autosuggest": "^9.3.2",
     "react-color": "^2.13.8",

@@ -38,6 +38,7 @@ $label-radius: 0.3em;
 @import './../../../../node_modules/react-datepicker/dist/react-datepicker.css';
 @import './../../../../node_modules/react-select/dist/react-select.css';
 @import './../../../../node_modules/font-awesome/scss/font-awesome';
+@import '~pretty-checkbox/src/pretty-checkbox.scss';
 
 $font-color-primary: #ffffff;
 $font-family: Lato,"Helvetica Neue","Arial","Helvetica","sans-serif";
@@ -1343,4 +1344,8 @@ select {
 .ui.waiting.label {
   border-color: #c58600;
   background-color: #f1a100;
+}
+
+.pretty input[disabled] ~ * {
+  opacity: 0.3;
 }
