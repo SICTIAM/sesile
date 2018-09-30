@@ -99,7 +99,8 @@ class CircuitsValidation extends Component {
                 title={t('admin.title', {name: t('admin.circuit.name')})}>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
-                        <div className="cell medium-12 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"77%"}}>
+                        <div className="cell medium-12 grid-x panel align-center-middle"
+                             style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"62%"}}>
                             <div style={{marginTop:"10px",width:"14em",marginRight:"1%"}}>
                                 <Input
                                     value={this.state.circuitName}
