@@ -210,6 +210,7 @@
         },
         "consult_document": "Voir le document",
         "search_by_name": "Recherche par nom",
+        "search_by_groupname": "Recherche par groupe",
         "type_a_name": "Saisir un nom",
         "file_acceptation_rules": "Les fichiers doivent être au format {{types}} et d'une taille maximale de {{sizeMax}}",
         "sign_classeur": "Signer le classeur",
