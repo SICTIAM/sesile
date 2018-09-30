@@ -93,32 +93,38 @@ class Groups extends Component {
                 title={t('admin.group.name')}>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
-                        <div className="grid-x grid-padding-x panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"77%"}}>
-                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
+                        <div className="cell medium-12 grid-x panel align-center-middle"
+                             style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"62%"}}>
+                            <div style={{marginTop:"10px", width:"14em"}}>
                                 <Input
-                                    className=""
                                     value={this.state.groupName}
                                     onChange={this.handleSearchByGroupName}
                                     placeholder={t('common.search_by_groupname')}
                                     type="text"/>
                             </div>
-                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
+                            <div style={{marginTop:"10px", width:"14em", marginRight:"1%", marginLeft: '1%'}}>
                                 <Input
-                                    className=""
                                     value={this.state.userName}
                                     onChange={this.handleSearchByUserName}
                                     placeholder={t('common.search_by_name')}
                                     type="text"/>
                             </div>
                             {this.state.isSuperAdmin &&
-                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
-                                <SelectCollectivite
-                                    currentCollectiviteId={this.state.collectiviteId}
-                                    handleChange={this.handleChangeCollectivite} />
-                            </div>}
-                            <div className="text-right" style={{marginLeft:"10px",marginRight:"1%"}}>
-                                <button className="button" onClick={() => History.push(`/admin/${this.state.collectiviteId}/groupe`)} style={{backgroundColor:"transparent", border:"1px solid rgb(204, 0, 102)", color:"rgb(204, 0, 102)"}}>{t('admin.group.add_group')}</button>
-                            </div>
+                                <div style={{marginTop:"10px", width:"14em"}}>
+                                    <SelectCollectivite
+                                        currentCollectiviteId={this.state.collectiviteId}
+                                        handleChange={this.handleChangeCollectivite} />
+                                </div>}
+                        </div>
+                        <div className="cell medium-12 text-right"  style={{marginTop:"10px"}}>
+                            <button
+                                className="button hollow"
+                                onClick={() => History.push(`/admin/${this.state.collectiviteId}/groupe`)}
+                                style={{
+                                    border:"1px solid rgb(204, 0, 102)",
+                                    color:"rgb(204, 0, 102)"}}>
+                                {t('admin.group.add_group')}
+                            </button>
                         </div>
                         <table style={{margin:"10px", borderRadius:"6px"}}>
                             <thead>
