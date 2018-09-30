@@ -3,6 +3,8 @@ import { func, object, string } from 'prop-types'
 import { translate } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import Moment from 'moment'
+import {DisplayLongText} from "../_utils/Utils"
+import {Cell} from "../_components/UI";
 
 class DocumentationRow extends Component {
 
@@ -20,17 +22,11 @@ class DocumentationRow extends Component {
         const { t } = this.context
 
         return (
-            <div className="cell small-12">
-                <div className="grid-x grid-padding-x grid-padding-y">
-                    <div className="small-3 medium-4 cell">{ documentation.description }</div>
-                    <div className="small-2 medium-2 cell">{ documentation.version }</div>
-                    <div className="medium-3 cell show-for-medium">{ Moment(documentation.date).format('LL') }</div>
-                    <div className="small-3 cell show-for-small-only">{ Moment(documentation.date).format('L') }</div>
-                    <div className="small-4 medium-3 cell text-center">
-                        { documentation.path &&
-                            <Link to={ Routing.generate(download_route, {id: documentation.id}) } className="button primary hollow" target="_blank">{ t('common.help_board.view_button') }</Link>
-                        }
-                    </div>
+            <div className="HelpBlock" onClick={() => window.open(Routing.generate(download_route, {id: documentation.id}), "_blank")}>
+                <div className="text-bold"><DisplayLongText text={documentation.description} maxSize={30}/></div>
+                <div style={{display:"flex", marginTop:"0.5em"}}>
+                    <div className="align-left" style={{width:"92%"}}>{ Moment(documentation.date).format('LL') }</div>
+                    <div className="align-right">{ documentation.version }</div>
                 </div>
             </div>
         )

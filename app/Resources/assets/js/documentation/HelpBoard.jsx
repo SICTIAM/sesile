@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { func } from 'prop-types'
 import { translate } from 'react-i18next'
-import { AdminDetails, AccordionContent, AccordionItem} from "../_components/AdminUI";
 import Patchs from "./Patchs";
+import VideoCont from './Video'
 import Helps from "./Helps";
 
 class HelpBoard extends Component {
@@ -11,38 +11,29 @@ class HelpBoard extends Component {
         t: func
     }
 
-    componentDidMount() {
-        $("#admin-details").foundation()
-    }
-
     render() {
         const { t } = this.context
 
         return (
-            <AdminDetails title={t('common.help_board.title')} nom={t('common.help_board.title')}>
-                <AccordionContent>
-                    <Helps />
-                    <Patchs />
-                    <VideoContent />
-                </AccordionContent>
-            </AdminDetails>
+            <div>
+                <div className="grid-x grid-margin-x grid-padding-x align-top align-center grid-padding-y">
+                    <div className="cell medium-12 text-center">
+                        <h2>{t('common.help_board.title')}</h2>
+                    </div>
+                </div>
+                <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                    <div className="cell medium-12">
+                        <div className="grid-x grid-padding-x list-dashboard align-center">
+                            <VideoCont />
+                            <Helps />
+                            <Patchs />
+                        </div>
+                    </div>
+                </div>
+            </div>
         )
     }
 
 }
 
 export default translate(['sesile'])(HelpBoard)
-
-
-
-const VideoContent = ({}, {t}) => {
-
-    return(
-        <AccordionItem title={t('common.help_board.title_video')} className="is-active" classNameChild="align-center">
-            <a href="https://www.youtube.com/playlist?list=PLN4SrkP6-6UVPVG5gNnldIhNBPuni1m1w" className="fa fa-youtube ico-video" target="_blank"></a>
-        </AccordionItem>
-    )
-}
-VideoContent.contextTypes = {
-    t: func
-}

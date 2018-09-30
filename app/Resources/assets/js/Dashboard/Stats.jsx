@@ -54,10 +54,10 @@ class Stats extends Component {
                     <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                         <div className="cell medium-12">
                             <div className="grid-x grid-padding-x panel list-dashboard">
-                                <div className="cell medium-12 panel-heading">
+                                <h3 className="cell medium-12" style={{padding:"0.5em"}}>
                                     { t('common.dashboard.stats_classeurs_validate_by_type')}
-                                </div>
-                                <div className="cell medium-12 panel-body-no-padding">
+                                </h3>
+                                <div className="cell medium-12">
                                     <Chart
                                         chartType="PieChart"
                                         data={statsType}
