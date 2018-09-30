@@ -244,10 +244,12 @@
         "no_result_globel_classeur_research": "Aucun classeur ne correspond à votre recherche",
         "no_certificat": "Aucun certificat détecté",
         "expand_preview": "Agrandir",
-        "description_not_specified": "Description non renseigné"
+        "description_not_specified": "Description non renseigné",
+        "search_by_user": "Recherche par utilisateur",
+        "search_by_circuit": "Recherche par circuit"
     },
     "admin": {
-        "title": "Rechercher un {{name}}",
+        "title": "{{name}}",
         "subtitle": "Puis accéder aux paramètres",
         "associated_users": "Utilisateurs associés",
         "associated_group": "Groupes associés",
