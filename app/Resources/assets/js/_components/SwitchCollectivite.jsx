@@ -33,7 +33,7 @@ class SwitchCollectivite extends Component {
         });
         const listItems = collectivities.map((collectivity, key) =>
             currentCollectivityId !== collectivity.id &&
-                <li key={key}>
+                <li key={key} style={{minWidth: '40%'}}>
                     <a
                         href={Routing.generate("sesile_main_default_redirecttosubdomain", {subdomain: collectivity.domain})}
                         className="button secondary clear">
@@ -44,9 +44,9 @@ class SwitchCollectivite extends Component {
         <div className="switch-collectivite text-right" data-toggle="switch-collectivite">
             {collectivities.length > 1 ?
                 <ul className="dropdown menu align-center" data-dropdown-menu>
-                    <li>
+                    <li style={{minWidth: '40%'}}>
                         <a href="#"
-                           style={{borderColor: this.props.color, color: this.props.color, cursor: 'default', minWidth: '40%', padding: '8px'}}
+                           style={{borderColor: this.props.color, color: this.props.color, cursor: 'default', width: '100%', padding: '8px'}}
                            className="button primary hollow user-complete-name text-left">
                             <i className="fa fa-building" style={{marginRight: '5%', fontSize: 'large'}}/>
                             <span>
