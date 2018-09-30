@@ -19,8 +19,10 @@ class Classeurs extends Component {
 
         const { classeurs, title } = this.props
         const { t } = this.context
-        const listItems = classeurs.map((classeur) =>
-            <tr id="classrow" onClick={() => History.push(`/classeur/${classeur.id}`)} style={{cursor:"Pointer", fontSize:"0.9em"}}>
+        const listItems = classeurs.map((classeur, key) =>
+            <tr id="classrow"
+                key={key}
+                onClick={() => History.push(`/classeur/${classeur.id}`)} style={{cursor:"Pointer", fontSize:"0.9em"}}>
                 <td className="text-bold">
                     { classeur.nom }
                 </td>

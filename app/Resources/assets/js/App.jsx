@@ -134,18 +134,19 @@ class App extends Component {
                                             </Link>
                                         </div>
                                         <div className="cell large-4 show-for-large">
-                                            { user.id &&
-                                            <SearchClasseurs
-                                                user={this.state.user}
-                                                color={this.isAdminMenu() ? '#d63284' : '#3299CC'}
-                                            />
-                                            }
+                                            {user.id &&
+                                                <SearchClasseurs
+                                                    user={this.state.user}
+                                                    color={this.isAdminMenu() ? '#d63284' : '#3299CC'}
+                                                />}
                                         </div>
-                                        <div className="cell large-3 small-6">
-                                            { user.id && user.collectivities.length > 1 &&
-                                                <SwitchCollectivite user={user}/>}
-                                        </div>
-                                        <div className="cell large-3 small-6">
+                                        {user.id &&
+                                            <div className="cell large-3 show-for-large">
+                                                <SwitchCollectivite
+                                                    color={this.isAdminMenu() ? '#d63284' : '#3299CC'}
+                                                    user={user}/>
+                                            </div>}
+                                        <div className={`cell large-3 small-6`}>
                                             <Login
                                                 handleClickConnection={this.handleClickConnection}
                                                 user={this.state.user}

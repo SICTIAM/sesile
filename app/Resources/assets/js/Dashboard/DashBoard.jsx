@@ -115,7 +115,10 @@ class DashBoard extends Component {
                                             NoCertif={t('common.no_certificat')}>
                                         </CertificateValidity>
                                         <div className="cell medium-6 small-6 text-right text-bold">
-                                            <a href={"https://www.sictiam.fr/certificat-electronique/"} style={{textDecoration:"underline"}}>{t('common.button.certificate_order')}</a>
+                                            <a href={"https://www.sictiam.fr/certificat-electronique/"}
+                                               style={{textDecoration:"underline"}}>
+                                                {t('common.button.certificate_order')}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

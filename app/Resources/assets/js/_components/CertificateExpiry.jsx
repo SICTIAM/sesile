@@ -6,10 +6,11 @@ const CertificateValidity = ({ certificate, certificateRemainingDays, CertifRema
         {(certificate && certificateRemainingDays) ?
             <Link
                 className="text-bold"
+                style={{textDecoration:"underline"}}
                 to="/utilisateur/certificat-electronique">
-                 <span style={{margin: '5px'}}>
-                     {CertifRemain}
-                     </span>
+                    <span style={{margin: '5px'}}>
+                        {CertifRemain}
+                    </span>
             </Link> :
             <span style={{margin: '5px'}}>
                 {NoCertif}

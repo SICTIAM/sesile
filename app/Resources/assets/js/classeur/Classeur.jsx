@@ -157,12 +157,12 @@ class Classeur extends Component {
     handleChangeClasseur = (key, value) => {
         this.setState(prevState => {classeur: prevState.classeur[key] = value })
     }
-    validClasseurs = (classeurs) => {
+    validClasseurs = (e, classeurs) => {
         classeurs.map(classeur => {
             actionClasseur(this, 'sesile_classeur_classeurapi_validclasseur', classeur.id)
         })
     }
-    signClasseurs = (classeurs, role = '') => {
+    signClasseurs = (e, classeurs, role = '') => {
         let ids
         ids = []
         classeurs.map(classeur => {
@@ -171,22 +171,22 @@ class Classeur extends Component {
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids), role: role}))
         History.push('/classeurs/valides')
     }
-    revertClasseurs = (classeurs) => {
+    revertClasseurs = (e, classeurs) => {
         classeurs.map(classeur => {
             actionClasseur(this, 'sesile_classeur_classeurapi_retractclasseur', classeur.id)
         })
     }
-    refuseClasseurs = (classeurs, motif) => {
+    refuseClasseurs = (e, classeurs, motif) => {
         classeurs.map(classeur => {
             refusClasseur(this, 'sesile_classeur_classeurapi_refuseclasseur', classeur.id, motif)
         })
     }
-    removeClasseurs = (classeurs) => {
+    removeClasseurs = (e, classeurs) => {
         classeurs.map(classeur => {
             actionClasseur(this, 'sesile_classeur_classeurapi_removeclasseur', classeur.id)
         })
     }
-    deleteClasseurs = (classeurs) => {
+    deleteClasseurs = (e, classeurs) => {
         classeurs.map(classeur => {
             actionClasseur(this, 'sesile_classeur_classeurapi_deleteclasseur', classeur.id, 'DELETE')
         })

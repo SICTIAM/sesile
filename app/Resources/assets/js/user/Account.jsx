@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import {func} from 'prop-types'
+import {func, object} from 'prop-types'
 import { translate } from 'react-i18next'
+import Moment from 'moment'
 import { handleErrors } from '../_utils/Utils'
 import { basicNotification } from '../_components/Notifications'
 import AvatarForm from "./AvatarForm"
@@ -12,13 +13,14 @@ class Account extends Component {
 
     static contextTypes = {
         t: func,
-        _addNotification: func
+        _addNotification: func,
+        user: object
     }
 
     constructor(props) {
         super(props);
         this.state = {
-            certificate: {},
+            certificate: null,
             user: {
                 _nom: '',
                 _prenom: '',
@@ -28,20 +30,8 @@ class Account extends Component {
     }
 
     componentDidMount() {
-        this.fetchUser()
-        this.fetchCertificate()
-    }
-
-    fetchUser() {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(user => this.setState({user}))
-            .catch(error => _addNotification(basicNotification(
-                'error',
-                t('admin.error.not_extractable_list', {name: t('admin.user.name'), errorCode: error.status}),
-                error.statusText)))
+        this.setState({user: this.context.user})
+        this.state.certificate === null && this.fetchCertificate()
     }
 
     fetchCertificate() {
@@ -222,22 +212,13 @@ class Account extends Component {
                                     certificate={this.state.certificate}
                                     certificateRemainingDays={certificateRemainingDays}
                                     CertifRemain={t('common.user.certificate_validity', {count: certificateRemainingDays | 1})}
-                                    NoCertif={t('common.no_certificat')}>
-                                </CertificateValidity>
-                                <Link
-                                    className="button float-left text-uppercase hollow"
-                                    to="https://www.sictiam.fr/certificat-electronique/"
-                                    target="_blank">
-                                    {t('common.button.certificate_order')}
-                                </Link>
+                                    NoCertif={t('common.no_certificat')}/>
                             </div>
-                            <div className="medium-6 cell text-right">
-                                {this.state.certificate &&
-                                <Link
-                                    className="button text-uppercase hollow"
-                                    to="/utilisateur/certificat-electronique">
-                                    {t('common.button.certificate_user')}
-                                </Link>}
+                            <div className="cell medium-6 small-6 text-right text-bold">
+                                <a href={"https://www.sictiam.fr/certificat-electronique/"}
+                                   style={{textDecoration:"underline"}}>
+                                    {t('common.button.certificate_order')}
+                                </a>
                             </div>
                         </div>
                     </div>

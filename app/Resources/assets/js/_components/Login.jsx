@@ -54,10 +54,10 @@ class MenuBar extends Component {
                                         &nbsp; { user._prenom + ' ' + user._nom }
                                     </div>
                                 </a>
-                                <ul className="menu">
+                                <ul className="menu" >
                                     <li>
-                                        <Link to="/utilisateur/mon-compte" className="button secondary clear">
-                                            <i className="fa fa-user-circle"></i>
+                                        <Link to="/utilisateur/mon-compte" className="button secondary clear" style={{color: this.props.color}}>
+                                            <i className="fa fa-user-circle" style={{color: this.props.color}}/>
                                             { t('common.menu.account_parameter') }
                                         </Link>
                                     </li>
@@ -65,16 +65,16 @@ class MenuBar extends Component {
                                     {(user.roles.find(role => role.includes("ADMIN"))) &&
                                         <div>
                                             <li>
-                                                <Link to="/admin/circuits-de-validation" className="button secondary clear">
-                                                    <i className="fa fa-cogs"></i>
+                                                <Link to="/admin/circuits-de-validation" className="button secondary clear" style={{color: this.props.color}}>
+                                                    <i className="fa fa-cogs" style={{color: this.props.color}}/>
                                                     { t('common.menu.admin') }
                                                 </Link>
                                             </li>
                                             <hr/>
                                         </div>}
                                     <li>
-                                        <a href="/logout" className="button secondary clear">
-                                            <i className="fa fa-sign-out"></i>
+                                        <a href="/logout" className="button secondary clear" style={{color: this.props.color}}>
+                                            <i className="fa fa-sign-out" style={{color: this.props.color}}/>
                                             { t('common.menu.disconnection') }
                                         </a>
                                     </li>

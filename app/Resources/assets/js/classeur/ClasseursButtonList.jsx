@@ -65,7 +65,7 @@ class ClasseursButtonList extends Component {
                                                 <li key={role.id}>
                                                     <button
                                                         style={{padding: '5px'}}
-                                                        onClick={() => signClasseur(classeurs, role.id)}
+                                                        onClick={(e) => signClasseur(e, classeurs, role.id)}
                                                         title={role.user_roles}
                                                         className="button secondary clear">
                                                         {role.user_roles}
@@ -102,7 +102,7 @@ class ClasseursButtonList extends Component {
                                     placeholder={t('common.classeurs.button.refus_text')}
                                     onChange={this.handleTextrefus}/>
                                 <button
-                                    onClick={() => refuseClasseur(classeurs, textRefus)}
+                                    onClick={(e) => refuseClasseur(e, classeurs, textRefus)}
                                     title={t('common.classeurs.button.refus_title')}
                                     className="alert button hollow" >
                                     {t('common.classeurs.button.refus_title')}
