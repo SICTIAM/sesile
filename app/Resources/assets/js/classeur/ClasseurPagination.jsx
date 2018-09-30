@@ -20,16 +20,17 @@ class ClasseurPagination extends Component {
         url: string
     }
     previousAndNextButtonStyle = {
-        fontSize: '1.9em',
-        background: 'white',
+        background: '#fefefe',
         cursor: 'pointer'
     }
     pageNumberButtonHoverStyle = {
-        minWidth: '2.1em',
-        textAlign: 'center',
-        borderRadius: '50%',
-        padding: '0.6em',
-        cursor: 'pointer'
+        width: "25px",
+        height: "25px",
+        borderRadius: "15px",
+        color: "white",
+        background: "#34a3fc",
+        textAlign: "center",
+        margin: "5px"
     }
 
     render() {
@@ -42,55 +43,44 @@ class ClasseurPagination extends Component {
         const currentPage = start/limit
         if (currentPage === 0) {
             pagesDisplay.push(
-                <li style={buttonStyle} key="previous" className="disabled">
-                    <span style={this.previousAndNextButtonStyle} className="fa fa-chevron-circle-left"/>
-                </li>)
+                    <span key="disabled-pagination-previous" style={this.previousAndNextButtonStyle} className="fa fa-chevron-circle-left disabled"/>)
         } else {
             pagesDisplay.push(
-            <li style={buttonStyle} key="previous">
-                <button
+                <span
+                    key="enabled-pagination-previous"
                     style={this.previousAndNextButtonStyle}
                     className="fa fa-chevron-circle-left primary"
                     onClick={() => this.props.changePreviousPage()}
-                    aria-label={t('common.classeurs.pagination.previous')}/>
-            </li>)
+                    aria-label={t('common.classeurs.pagination.previous')}/>)
         }
         for (let page = 0; page < pages; page++ ) {
-            (currentPage === page)
-                ? pagesDisplay.push(<li key={page} className="current show-for-large">{page + 1}</li>)
-                : pagesDisplay.push(
-                    <li style={buttonStyle} key={page} className="show-for-large">
-                        <button
-                            style={this.pageNumberButtonHoverStyle}
-                            onClick={() => changePage(page)}
-                            aria-label={t('common.classeurs.pagination.page') + " " + page + 1}>
+            (currentPage === page)&&
+                pagesDisplay.push(
+                    <div key={page} className="current" style={this.pageNumberButtonHoverStyle}>
                             {page + 1}
-                        </button>
-                    </li>)
+                    </div>)
         }
         if (currentPage === Math.ceil(pages) -1) {
             pagesDisplay.push(
-                <li style={buttonStyle} key="next" className="disabled">
-                    <span style={this.previousAndNextButtonStyle} className="fa fa-chevron-circle-right"/>
-                </li>)
+                <span key="disabled-pagination-next" style={this.previousAndNextButtonStyle} className="fa fa-chevron-circle-right disabled"/>)
         } else {
             pagesDisplay.push(
-                <li style={buttonStyle} key="next">
-                    <button
-                        style={this.previousAndNextButtonStyle}
-                        className="fa fa-chevron-circle-right primary"
-                        onClick={() => this.props.changeNextPage()}
-                        aria-label="common.classeurs.pagination.next"/>
-                </li>)
+                <span
+                    key="enabled-pagination-next"
+                    style={this.previousAndNextButtonStyle}
+                    className="fa fa-chevron-circle-right primary"
+                    onClick={() => this.props.changeNextPage()}
+                    aria-label="common.classeurs.pagination.next"/>)
         }
 
         return (
-            <ul
-                className="align-middle pagination float-right"
+            <div
+                className="align-middle float-right"
+                style={{width: "100%", display: "flex"}}
                 role="navigation"
                 aria-label="Pagination">
                 {pagesDisplay.map(pageDisplay => pageDisplay)}
-            </ul>
+            </div>
         )
     }
 }

@@ -38,6 +38,7 @@ $label-radius: 0.3em;
 @import './../../../../node_modules/react-datepicker/dist/react-datepicker.css';
 @import './../../../../node_modules/react-select/dist/react-select.css';
 @import './../../../../node_modules/font-awesome/scss/font-awesome';
+@import '~pretty-checkbox/src/pretty-checkbox.scss';
 
 $font-color-primary: #ffffff;
 $font-family: Lato, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
@@ -47,6 +48,9 @@ body, html {
   height: auto;
   background-color: #f4f4f4;
   font-family: $font-family;
+  h1,h2,h3,h4,h5{
+    font-family: $font-family;
+  }
 }
 
 .button {
@@ -393,7 +397,6 @@ body, html {
       color: $sesile-color-1;
     }
     .panel-body {
-      color: map-get($sesile-color, 'dark-blue');
       font-size:0.875em;
       font-weight:normal;
       border-top: solid 1px #a7a7a7;
@@ -1341,4 +1344,8 @@ select {
 .ui.waiting.label {
   border-color: #c58600;
   background-color: #f1a100;
+}
+
+.pretty input[disabled] ~ * {
+  opacity: 0.3;
 }
