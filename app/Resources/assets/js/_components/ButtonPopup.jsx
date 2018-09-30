@@ -40,8 +40,8 @@ class ButtonPopup extends Component {
                     data-position="bottom"
                     data-alignment="center"
                     className={`dropdown-pane ${this.state.isOpen} dropdown-confirm-delete text-center`}
-                    data-dropdown
-                    data-auto-focus="true">
+                    data-close-on-click={true}
+                    data-dropdown data-auto-focus={true}>
                     <GridX className="grid-margin-y">
                         <Cell className="medium-12 text-bold text-center">
                             <span>{this.props.content.map(etapeGroupe =>

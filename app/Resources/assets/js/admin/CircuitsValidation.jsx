@@ -99,32 +99,37 @@ class CircuitsValidation extends Component {
                 title={t('admin.title', {name: t('admin.circuit.name')})}>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
-                        <div className="grid-x grid-padding-x panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"77%"}}>
-                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
-                            <Input
-                                className=""
-                                value={this.state.circuitName}
-                                onChange={this.handleChangeCircuitName}
-                                placeholder={t('common.search_by_name')}
-                                type="text"/>
+                        <div className="cell medium-12 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"77%"}}>
+                            <div style={{marginTop:"10px",width:"14em",marginRight:"1%"}}>
+                                <Input
+                                    value={this.state.circuitName}
+                                    onChange={this.handleChangeCircuitName}
+                                    placeholder={t('common.search_by_user')}
+                                    type="text"/>
                             </div>
-                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
-                            <Input
-                                className=""
-                                value={this.state.userName}
-                                onChange={this.handleChangeUserName}
-                                placeholder={t('common.search_by_name')}
-                                type="text"/>
+                            <div style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"1%"}}>
+                                <Input
+                                    value={this.state.userName}
+                                    onChange={this.handleChangeUserName}
+                                    placeholder={t('common.search_by_circuit')}
+                                    type="text"/>
                             </div>
                             {this.state.isSuperAdmin &&
-                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"10px"}}>
+                            <div className="" style={{marginTop:"10px",marginLeft:"1%",width:"14em"}}>
                                 <SelectCollectivite
                                     currentCollectiviteId={this.state.collectiviteId}
                                     handleChange={this.handleChangeCollectivite} />
                             </div>}
-                            <div className="text-right" style={{marginLeft:"10px",marginRight:"1%", marginTop:"10px", marginBotoom:"10px"}}>
-                                <button className="button" onClick={() => History.push(`/admin/${this.state.collectiviteId}/circuit-de-validation`)} style={{backgroundColor:"transparent", border:"1px solid rgb(204, 0, 102)", color:"rgb(204, 0, 102)"}}>{t('admin.circuit.add_circuit')}</button>
-                            </div>
+                        </div>
+                        <div className="cell medium-12 text-right" style={{marginTop:"10px"}}>
+                            <button
+                                className="button hollow"
+                                onClick={() => History.push(`/admin/${this.state.collectiviteId}/circuit-de-validation`)}
+                                style={{
+                                    border:"1px solid rgb(204, 0, 102)",
+                                    color:"rgb(204, 0, 102)"}}>
+                                {t('admin.circuit.add_circuit')}
+                            </button>
                         </div>
                         <table style={{margin:"10px", borderRadius:"6px"}}>
                             <thead>
