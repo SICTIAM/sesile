@@ -59,9 +59,9 @@ class Users extends Component {
             this.fetchUsers(id_collectivite)
         })
     }
-    handleChangeSearchUser = (key, fieldSearch) => {
-        this.setState({fieldSearch})
-        const regex = escapedValue(fieldSearch, this.state.filteredUsers, this.state.users)
+    handleChangeSearchUser = (e) => {
+        this.setState({fieldSearch : e.target.value})
+        const regex = escapedValue(e.target.value, this.state.filteredUsers, this.state.users)
         const filteredUsers = this.state.users.filter(user => regex.test(user._prenom && user._prenom.concat(user._nom)))
         this.setState({filteredUsers})
     }
@@ -93,7 +93,7 @@ class Users extends Component {
                         <div className="" style={{marginTop:"16px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
                         <input
                             value={this.state.fieldSearch}
-                            onChange={this.handleChangeSearchUser}
+                            onChange={(e) => this.handleChangeSearchUser(e)}
                             placeholder={t('admin.user.search_by_first_name_and_name')}
                             type="text"/>
                         </div>
