@@ -6,7 +6,7 @@ import { Button } from './Form'
 import { GridX, Cell } from './UI'
 import {DisplayLongText} from "../_utils/Utils";
 
-class ButtonPopup extends Component {
+class ButtonDropdown extends Component {
     static contextTypes = {
         t: func
     }
@@ -28,7 +28,7 @@ class ButtonPopup extends Component {
         const { t } = this.context
         return (
             <div id={`container-${this.props.dataToggle}`} className={this.props.className}>
-                <button data-toggle={this.props.dataToggle}>
+                <button data-toggle={this.props.dataToggle} style={{cursor: 'pointer'}}>
                     <DisplayLongText
                         text={this.props.content.map(user => `${user._prenom} ${user._nom}`).join(' | ')}
                         maxSize={40}/>
@@ -38,12 +38,16 @@ class ButtonPopup extends Component {
                     data-position="bottom"
                     data-alignment="center"
                     className={`dropdown-pane ${this.state.isOpen} dropdown-confirm-delete text-center`}
-                    data-dropdown
-                    data-auto-focus="true">
+                    data-close-on-click={true}
+                    data-dropdown data-auto-focus={true}>
                     <GridX className="grid-margin-y">
                         <Cell className="medium-12 text-bold text-center">
-                            <span>{this.props.content.map(user =>
-                                <ul style={{marginLeft:"0", marginBottom:"0"}}>{user._prenom} {user._nom}</ul>)}</span>
+                            <span>
+                                {this.props.content.map((user, key) =>
+                                    <ul key={key} style={{marginLeft:"0", marginBottom:"0"}}>
+                                        {user._prenom} {user._nom}
+                                    </ul>)}
+                            </span>
                         </Cell>
                     </GridX>
                 </div>
@@ -52,7 +56,7 @@ class ButtonPopup extends Component {
     }
 }
 
-ButtonPopup.protoTypes = {
+ButtonDropdown.protoTypes = {
     id: number.isRequired,
     contenttext: string.isRequired,
     content: string.isRequired,
@@ -61,4 +65,4 @@ ButtonPopup.protoTypes = {
     className: string
 }
 
-export default translate(['sesile'])(ButtonPopup)
+export default translate(['sesile'])(ButtonDropdown)
