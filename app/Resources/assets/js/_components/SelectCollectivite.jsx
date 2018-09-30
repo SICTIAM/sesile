@@ -40,7 +40,6 @@ class SelectCollectivite extends Component {
         const { currentCollectivite, collectivites } = this.state
         return (
             <label htmlFor="collectivites_select">
-                <span  className="text-bold">{t('admin.label.which_collectivite')}</span>
                 <Select 
                     id="collectivites_select"
                     placeholder={t('admin.collectivite.select_collectivite')}

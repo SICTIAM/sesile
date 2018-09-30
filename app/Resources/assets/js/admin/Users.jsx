@@ -12,6 +12,8 @@ import SelectCollectivite from '../_components/SelectCollectivite'
 
 import { escapedValue } from '../_utils/Search'
 import { handleErrors } from '../_utils/Utils'
+import History from "../_utils/History";
+import ClasseurProgress from "../classeur/ClasseurProgress";
 
 class Users extends Component {
     static contextTypes = {
@@ -57,9 +59,9 @@ class Users extends Component {
             this.fetchUsers(id_collectivite)
         })
     }
-    handleChangeSearchUser = (key, fieldSearch) => {
-        this.setState({fieldSearch})
-        const regex = escapedValue(fieldSearch, this.state.filteredUsers, this.state.users)
+    handleChangeSearchUser = (e) => {
+        this.setState({fieldSearch : e.target.value})
+        const regex = escapedValue(e.target.value, this.state.filteredUsers, this.state.users)
         const filteredUsers = this.state.users.filter(user => regex.test(user._prenom && user._prenom.concat(user._nom)))
         this.setState({filteredUsers})
     }
@@ -67,42 +69,64 @@ class Users extends Component {
         this.setState({collectiviteId, fieldSearch: ""})
         this.fetchUsers(collectiviteId)
     }
+    onClickButtonClasseurList = (e, user) => {
+        e.preventDefault()
+        e.stopPropagation()
+        History.push(`/admin/${this.state.collectiviteId}/classeurs/${user.id}`)
+    }
     render() {
         const { t } = this.context
         const listUser = this.state.filteredUsers.map(filteredUser =>
-            <RowUser key={filteredUser.id} User={filteredUser} handleDeleteUser={this.handleDeleteUser} collectiviteId={this.state.collectiviteId}/>)
+            <RowUser
+                key={filteredUser.id}
+                onClick={this.onClickButtonClasseurList}
+                user={filteredUser}
+                handleDeleteUser={this.handleDeleteUser}
+                collectiviteId={this.state.collectiviteId}/>)
 
         return (
             <AdminPage
-                title={t('admin.title', {name: t('admin.user.name')})}
-                subtitle={t('admin.subtitle')}>
+                title={t('admin.user.name_plural')}>
                 <AdminContainer>
-                    <Cell className="medium-6">
-                        <GridX className="grid-padding-x align-center-middle">
-                            <Input
-                                className="cell medium-auto"
-                                labelText={t('admin.label.which')}
-                                value={this.state.fieldSearch}
-                                onChange={this.handleChangeSearchUser}
-                                placeholder={t('admin.user.search_by_first_name_and_name')}
-                                type="text"/>
-                            {this.state.isSuperAdmin &&
-                                <Cell className="medium-auto">
-                                    <SelectCollectivite currentCollectiviteId={this.state.collectiviteId} 
-                                                        handleChange={this.onSearchByCollectiviteFieldChange} />
-                                </Cell>
-                            }
-                        </GridX>
-                    </Cell>
-                    <AdminList
-                        title={t('admin.users_list')}
-                        listLength={listUser.length}
-                        labelButton={t('common.button.add_user')}
-                        headTitles={[t('admin.user.first_name_and_name'), t('admin.user.label_email'), t('common.label.actions')]}
-                        headGrid={['medium-auto', 'medium-auto', 'medium-2']}
-                        emptyListMessage={t('common.no_results', {name: t('admin.user.name')})}>
-                            {listUser}
-                    </AdminList>
+                    <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
+                        <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"49%"}}>
+                        <div className="" style={{marginTop:"16px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
+                        <input
+                            value={this.state.fieldSearch}
+                            onChange={(e) => this.handleChangeSearchUser(e)}
+                            placeholder={t('admin.user.search_by_first_name_and_name')}
+                            type="text"/>
+                        </div>
+                        {this.state.isSuperAdmin &&
+                        <div className="" style={{marginTop:"10px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
+                            <SelectCollectivite currentCollectiviteId={this.state.collectiviteId}
+                                                handleChange={this.onSearchByCollectiviteFieldChange} />
+                        </div>
+                        }
+                        </div>
+                            <table style={{margin:"10px", borderRadius:"6px"}}>
+                                <thead>
+                                <tr style={{backgroundColor:"#CC0066", color:"white"}}>
+                                    <td width="160px" className="text-bold">{ t('admin.user.label_name') }</td>
+                                    <td width="160px" className="text-bold">{ t('admin.user.label_firstname') }</td>
+                                    <td width="210px" className="text-bold">{  t('admin.user.label_email') }</td>
+                                    <td width="30px" className="text-bold">{ t('common.label.actions') }</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {listUser.length > 0 ?
+                                    listUser :
+                                    <tr>
+                                        <td>
+                                            <span style={{textAlign:"center"}}>{t('common.no_results', {name: t('admin.user.name')})}</span>
+                                        </td>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                    </tr>}
+                                </tbody>
+                            </table>
+                    </div>
                 </AdminContainer>
             </AdminPage>
         )
@@ -116,38 +140,25 @@ Users.PropTypes = {
 
 export default translate(['sesile'])(Users)
 
-const RowUser = ({User, handleDeleteUser, collectiviteId}, {t}) =>
-    <AdminListRow>
-        <Cell className="medium-auto">
-            {User._prenom} {User._nom}
-        </Cell>
-        <Cell className="medium-auto">
-            {User.email}
-        </Cell>
-        <Cell className="medium-2">
-            <GridX>
-                <Cell className="medium-auto">
-                    <Link 
-                        to={`/admin/${collectiviteId}/utilisateur/${User.id}`}
-                        className="fa fa-pencil icon-action" 
-                        title={t('common.button.edit')}/>
-                </Cell>
-                <Cell className="medium-auto">
-                    <Link 
-                        to={`/admin/${collectiviteId}/classeurs/${User.id}`}
-                        className="fa fa-th-list icon-action" 
-                        title={t('common.classeur', {count: 2})}/>
-                </Cell>
-                {/*<Cell className="medium-auto">*/}
-                    {/*<ButtonConfirmDelete*/}
-                        {/*id={User.id}*/}
-                        {/*dataToggle={`delete-confirmation-update-${User.id}`}*/}
-                        {/*onConfirm={handleDeleteUser}*/}
-                        {/*content={t('common.confirm_deletion_item')}/>*/}
-                {/*</Cell>*/}
-            </GridX>
-        </Cell>
-    </AdminListRow>
+const RowUser = ({user, onClick, handleDeleteUser, collectiviteId}, {t}) =>
+    <tr onClick={() => History.push(`/admin/${collectiviteId}/utilisateur/${user.id}`)} style={{cursor:"Pointer"}}>
+        <td>
+            {user._nom}
+        </td>
+        <td>
+            {user._prenom}
+        </td>
+        <td>
+            {user.email}
+        </td>
+        <td>
+            <span
+                onClick={(e) => onClick(e, user)}
+                className="fa fa-copy icon-action text-center"
+                title={t('common.classeur', {count: 2})}/>
+
+        </td>
+    </tr>
 
 RowUser.PropTypes = {
     User: object.isRequired,
