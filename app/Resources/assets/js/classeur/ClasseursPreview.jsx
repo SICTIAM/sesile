@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { func } from 'prop-types'
+import {func, object} from 'prop-types'
 import { translate } from 'react-i18next'
 
 import { Cell, GridX } from '../_components/UI'
@@ -9,21 +9,28 @@ import History from "../_utils/History"
 
 class ClasseursPreview extends Component {
     static contextTypes = {
-        t: func
+        t: func,
+        user: object
     }
     state = {
         classeurs: []
     }
     componentDidMount() {
-        this.setState({classeurs: this.props.location.state.classeurs, user: this.props.location.state.user})
+        if(this.state.classeurs.length < 1) {
+            this.setState({classeurs: this.props.location.state.classeurs})
+        }
+        $('#sign-classeurs').foundation()
     }
-    componentDidUpdate() {
-        $('.sign-role-list').foundation()
+    componentWillUnmount() {
+        clearInterval(this.interval)
     }
     checkClasseur = (id, checked) => {
         const classeurs = this.state.classeurs
-        classeurs[classeurs.findIndex(classeur => classeur.id === id)].checked = !checked
-        this.setState({classeurs})
+        const classeur = classeurs[classeurs.findIndex(classeur => classeur.id === id)]
+        if(classeur.status === 1) {
+            classeur.checked = !checked
+            this.setState({classeurs})
+        }
     }
     signClasseurs = (role = '') => {
         let idClasseursToSign = []
@@ -31,20 +38,51 @@ class ClasseursPreview extends Component {
             if(classeur.checked) idClasseursToSign.push(classeur.id)
         })
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(idClasseursToSign), role: role}))
-        History.push('/classeurs/valides')
+        this.interval = setInterval(() => {
+            this.getClasseurStatus(idClasseursToSign)
+        }, 10000)
     }
     signClasseur = (id, role) => {
         window.open(Routing.generate('jnlpSignerFiles', {id, role}))
-        History.push('/classeurs/valides')
+        this.interval = setInterval(() => {
+            this.getClasseurStatus(id)
+        }, 10000)
+    }
+    getClasseurStatus = (id) => {
+        fetch(
+            Routing.generate(
+                'sesile_classeur_classeurapi_statusclasseur',
+                {orgId: this.context.user.current_org_id, id: encodeURIComponent(id)}),
+            {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(json => {
+                const classeurs = this.state.classeurs
+                let allSigned = json.map((classeurStatus) => {
+                    const indexOfClasseur = classeurs.findIndex(classeur => classeur.id === classeurStatus.id)
+                    if(classeurs[indexOfClasseur].status !== classeurStatus.status) {
+                        classeurs[indexOfClasseur].status = classeurStatus.status
+                        classeurs[indexOfClasseur].checked = false
+                    }
+                    return classeurStatus.status === 2
+                })
+                if(allSigned.every((value) => value === true)) {
+                    clearInterval(this.interval)
+                    setTimeout(() => History.push('/classeurs/valides'), 5000)
+                }
+                this.setState({classeurs})
+            })
+    }
+    openMultiSignatureDropdown = (e) => {
+        let dropdown = document.getElementById("button-classeurs-sign")
+        dropdown.classList.contains('is-open') ? dropdown.classList.remove("is-open") : dropdown.classList.add("is-open")
     }
     render() {
-        const { t } = this.context
-        const { user } = this.state
+        const { t, user } = this.context
         const documentsPreviewByClasseur =
             this.state.classeurs.map((classeur, key) =>
                 <DocumentsPreviewByClasseur
+                    key={`classeur-${classeur.id}-documents`}
                     signClasseur={this.signClasseur}
-                    key={key}
                     classeur={classeur}
                     user={user} />)
         return (
@@ -55,8 +93,7 @@ class ClasseursPreview extends Component {
                             <h1>{t('common.sign_classeur', {count: this.state.classeurs.length})}</h1>
                         </Cell>
                     </GridX>
-                    {this.state.classeurs.length > 1 &&
-                        <GridX>
+                        <div className="grid-x" style={{visibility: `${this.state.classeurs.length > 1 ? 'visible' : 'hidden'}`}}>
                             <Cell>
                                 <GridX className="grid-padding-y">
                                     <Cell>
@@ -64,24 +101,30 @@ class ClasseursPreview extends Component {
                                             <Cell className="medium-8">
                                                 <h2>{t('common.sign_several_classeurs')}</h2>
                                             </Cell>
-                                            <div className="cell medium-4 text-right sign-role-list">
+                                            <div id="sign-classeurs" className="cell medium-4 text-right">
                                                 <button className="button hollow left-button-group arrow-only" data-toggle="button-classeurs-sign">
-                                                    {t('common.sign_classeur_plural')} <i className="fa fa-caret-down"></i>
+                                                    {t('common.sign_classeur_plural')} <i className="fa fa-caret-down"/>
                                                 </button>
-                                                <div className="dropdown-pane" data-position="bottom" data-alignment="center" id="button-classeurs-sign" data-dropdown>
-                                                    { (user && user.userrole && user.userrole.length > 0)
-                                                        ? user.userrole.map(role => (
-                                                            <li key={role.id} className="text-right">
-                                                                <a onClick={() => this.signClasseurs(role.id)}
-                                                                        title={role.user_roles}
-                                                                        className="button secondary clear">
-                                                                    {t('common.classeurs.button.role_as')} {role.user_roles}
-                                                                </a>
-                                                            </li>
-                                                            )
-                                                        )
-                                                        : t('common.classeurs.button.no_roles')
-                                                    }
+                                                <div
+                                                    className="dropdown-pane"
+                                                    data-position="bottom"
+                                                    data-alignment="right"
+                                                    id="button-classeurs-sign"
+                                                    style={{padding: '0'}}
+                                                    data-close-on-click={true}
+                                                    data-dropdown data-auto-focus={true}>
+                                                    <ul className="no-bullet">
+                                                        {(user && user.userrole && user.userrole.length > 0) ?
+                                                            user.userrole.map(role =>
+                                                                <li key={role.id} className="text-right no-bullet">
+                                                                    <a onClick={() => this.signClasseurs(role.id)}
+                                                                       title={role.user_roles}
+                                                                       className="button secondary clear">
+                                                                        {role.user_roles}
+                                                                    </a>
+                                                                </li>)
+                                                            : t('common.classeurs.button.no_roles')}
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </GridX>
@@ -93,8 +136,7 @@ class ClasseursPreview extends Component {
                                     </Cell>
                                 </GridX>
                             </Cell>
-                        </GridX>
-                    }
+                        </div>
                     <GridX>
                         <Cell>
                             <GridX className="grid-margin-x">
@@ -119,18 +161,23 @@ export default translate(['sesile'])(ClasseursPreview)
 
 const ListClasseursToSign = ({classeurs, handleCheckClasseur}) => {
     let listClasseurs = classeurs.map((classeur, key) =>
-        <li key={key}>
-            <input
-                type="checkbox"
-                id={classeur.id}
-                checked={classeur.checked}
-                onChange={() => handleCheckClasseur(classeur.id, classeur.checked)}/>
-            <a href={`#${classeur.nom}`}>
-                <span className="text-bold">
-                    {` ${classeur.nom}`}
-                </span>
+        <li key={`classeur-${classeur.id}`}>
+            <div className="pretty p-default p-curve p-thick" style={{marginRight: '5px'}}>
+                <input
+                    type="checkbox"
+                    id={classeur.id}
+                    checked={classeur.checked}
+                    disabled={classeur.status === 2}
+                    onChange={() => handleCheckClasseur(classeur.id, classeur.checked)}/>
+                <div className="state p-primary-o">
+                    <label/>
+                </div>
+            </div>
+            <a href={`#${classeur.nom}`} className="text-bold" style={{textDecoration:"underline", marginRight: '5px'}}>
+                {classeur.nom}
             </a>
-            <br/>
+            {classeur.status === 2 &&
+                <i style={{color: '#39922c'}} >signé</i>}
         </li>)
     return (
         <GridX className="grid-padding-x grid-padding-y grid-margin-x">
@@ -155,57 +202,68 @@ const ListClasseursToSign = ({classeurs, handleCheckClasseur}) => {
     )
 }
 
-const DocumentsPreviewByClasseur = ({classeur, user, signClasseur}, {t}) => {
-    const documentList = classeur.documents.map((document, key) =>
-        <Preview key={key} document={document} user={user} />)
-    return (
-        <Cell>
-            <GridX className="grid-padding-y">
-                <Cell>
-                    <div id={classeur.nom} className="grid-x align-center-middle">
-                        <Cell className="medium-8">
-                            <h3>{classeur.nom}</h3>
-                        </Cell>
-                        <div className="cell medium-4 text-right sign-role-list">
-                            <button className="button hollow left-button-group arrow-only" data-toggle={`button-classeur-${classeur.id}-sign`}>
-                                {t('common.sign_classeur')} <i className="fa fa-caret-down"/>
-                            </button>
-                            <div
-                                className="dropdown-pane text-left"
-                                data-position="bottom"
-                                data-alignment="center"
-                                id={`button-classeur-${classeur.id}-sign`}
-                                data-dropdown
-                                style={{padding: '5px'}}>
-                                { (user && user.userrole && user.userrole.length > 0)
-                                    ? user.userrole.map(role => (
-                                            <li key={role.id} className="text-uppercase">
-                                                <button
-                                                    style={{padding: '5px'}}
-                                                    onClick={() => signClasseur(classeur.id, role.id)}
-                                                    title={role.user_roles}
-                                                    className="button secondary clear">
-                                                    {role.user_roles}
-                                                </button>
-                                            </li>
-                                        )
-                                    )
-                                    : t('common.classeurs.button.no_roles')
-                                }
-                            </div>
+class DocumentsPreviewByClasseur extends Component  {
+    componentDidMount() {
+        $(`#sign-classeur-${this.props.classeur.id}`).foundation()
+    }
+    componentWillUnmount() {
+        $(`#sign-classeur-${this.props.classeur.id}`) > 0 && $(`#sign-classeur-${this.props.classeur.id}`).foundation('_destroy')
+    }
+    render() {
+        const { t } = this.context
+        const documentList = this.props.classeur.documents.map((document, key) =>
+            <Preview key={`document-${document.id}`} document={document} user={this.props.user} />)
+        return (
+            <Cell>
+                <GridX className="grid-padding-y">
+                    <Cell>
+                        <div id={this.props.classeur.nom} className="grid-x align-center-middle">
+                            <Cell className="medium-auto">
+                                <h3>{this.props.classeur.nom}</h3>
+                            </Cell>
+                            {this.props.classeur.status === 1 &&
+                                <div id={`sign-classeur-${this.props.classeur.id}`} className={`cell medium-auto text-right`}>
+                                    <button
+                                        className="button hollow left-button-group arrow-only"
+                                        data-toggle={`button-classeur-${this.props.classeur.id}-sign`}>
+                                        {t('common.sign_classeur')} <i className="fa fa-caret-down"/>
+                                    </button>
+                                    <div
+                                        className="dropdown-pane text-left"
+                                        data-position="bottom"
+                                        data-alignment="center"
+                                        id={`button-classeur-${this.props.classeur.id}-sign`}
+                                        data-close-on-click={true}
+                                        data-dropdown data-auto-focus={true}
+                                        style={{padding: '5px'}}>
+                                        <ul className=" no-bullet">
+                                            {(this.props.user && this.props.user.userrole && this.props.user.userrole.length > 0) ?
+                                                this.props.user.userrole.map(role =>
+                                                    <li key={role.id}>
+                                                        <span
+                                                            title={role.user_roles}
+                                                            onClick={() => this.props.signClasseur(this.props.classeur.id, role.id)}
+                                                            className="button secondary clear">
+                                                            {role.user_roles}
+                                                        </span>
+                                                    </li>)
+                                                : t('common.classeurs.button.no_roles')}
+                                        </ul>
+                                    </div>
+                                </div>}
                         </div>
-                    </div>
-                </Cell>
-            </GridX>
-            <GridX>
-                <Cell className="medium-12 panel">
-                    <GridX className="grid-margin-x grid-padding-x grid-padding-y">
-                        {documentList}
-                    </GridX>
-                </Cell>
-            </GridX>
-        </Cell>
-    )
+                    </Cell>
+                </GridX>
+                <GridX>
+                    <Cell className="medium-12 panel">
+                        <GridX className="grid-margin-x grid-padding-x grid-padding-y">
+                            {documentList}
+                        </GridX>
+                    </Cell>
+                </GridX>
+            </Cell>
+        )
+    }
 }
 
 DocumentsPreviewByClasseur.contextTypes = {

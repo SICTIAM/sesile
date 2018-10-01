@@ -38,11 +38,7 @@ class Helios extends Component {
     static contextTypes = { t: func }
 
     componentDidMount () {
-        this.fetchHelios(this.props.document.id)
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.fetchHelios(nextProps.document.id)
+        this.state.pes.vouchers.length === 0 && this.fetchHelios(this.props.document.id)
     }
 
     fetchHelios (id) {

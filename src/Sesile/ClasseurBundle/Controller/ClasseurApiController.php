@@ -626,4 +626,19 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
             return new JsonResponse(array("classeur_valid" => "-1"));
         }
     }
+
+    /**
+     * @Rest\Get("/org/{orgId}/classeurs/{id}/status")
+     * @param $orgId
+     * @param $id
+     * @return JsonResponse
+     */
+    public function statusClasseurAction($orgId, $id) {
+        $ids = explode(",", urldecode($id));
+        $em = $this->getDoctrine()->getManager();
+        $classeurStatus = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseurStatus($orgId, $ids);
+
+
+        return new JsonResponse($classeurStatus);
+    }
 }

@@ -781,4 +781,24 @@ class ClasseurRepository extends EntityRepository {
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param $orgId collectivite Id
+     * @param $classeurId
+     *
+     * @return array
+     */
+    public function getClasseurStatus($orgId, $classeurId) {
+        $classeurStatus =  $this
+            ->createQueryBuilder('c')
+            ->select('c.id, c.status')
+            ->where('c.collectivite = :orgId')
+            ->andWhere('c.id IN (:classeurId)')
+            ->setParameter('orgId', $orgId)
+            ->setParameter('classeurId', $classeurId)
+            ->getQuery()
+            ->getResult();
+
+        return $classeurStatus;
+    }
 }

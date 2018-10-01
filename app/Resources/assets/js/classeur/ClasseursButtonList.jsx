@@ -58,7 +58,8 @@ class ClasseursButtonList extends Component {
                                         data-position={dropdownPosition}
                                         data-alignment="center"
                                         id={id + 'sign'}
-                                        data-dropdown
+                                        data-close-on-click={true}
+                                        data-dropdown data-auto-focus={true}
                                         style={{padding: '5px'}}>
                                         {(user && user.userrole && user.userrole.length > 0) ?
                                             user.userrole.map(role => (

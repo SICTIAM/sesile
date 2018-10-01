@@ -53,6 +53,10 @@ class Classeur extends Component {
             .then(user => this.setState({user}))
     }
 
+    componentWillUnmount() {
+        clearInterval(this.interval)
+    }
+
     getClasseur(id) {
         fetch(Routing.generate('sesile_classeur_classeurapi_getbyid', {orgId: this.props.user.current_org_id, classeurId: id}), {credentials: 'same-origin'})
             .then(response => response.json())
@@ -169,7 +173,9 @@ class Classeur extends Component {
             ids.push(classeur.id)
         })
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids), role: role}))
-        History.push('/classeurs/valides')
+        this.interval = setInterval(() => {
+            this.getClasseurStatus(classeurs[0].id)
+        }, 10000)
     }
     revertClasseurs = (e, classeurs) => {
         classeurs.map(classeur => {
@@ -192,6 +198,22 @@ class Classeur extends Component {
         })
     }
     isFinalizedClasseur = () => this.state.classeur.status === 2
+    getClasseurStatus = (id) => {
+        fetch(
+            Routing.generate(
+                'sesile_classeur_classeurapi_statusclasseur',
+                {orgId: this.props.user.current_org_id, id}),
+                {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(json => {
+                const classeurStatus = json[0]
+                if(classeurStatus.id === this.state.classeur.id && classeurStatus.status !== this.state.classeur.status) {
+                    clearInterval(this.interval)
+                    this.getClasseur(this.state.classeur.id)
+                    setTimeout(() => History.push('/classeurs/valides'), 5000)
+                }
+            })
+    }
     render() {
         const { classeur, user, editClasseur } = this.state
         return (
