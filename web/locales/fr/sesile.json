@@ -313,6 +313,7 @@
             "complet_name_plural": "types de classeurs",
             "help_text_add_type": "Saisir un nom pour ajouter un nouveau type",
             "title_add_type": "Ajout d'un type",
+            "list_type" : "Liste des types",
             "list_editable_type": "Liste des types modifiables",
             "list_not_editable_type": "Liste des types non modifiables",
             "error_save": "Une erreur est survenue à l'enregistrement du type",
