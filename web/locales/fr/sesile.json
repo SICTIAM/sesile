@@ -248,7 +248,8 @@
         "description_not_specified": "Description non renseigné",
         "search_by_user": "Recherche par utilisateur",
         "search_by_circuit": "Recherche par circuit",
-        "workbook_retracted": "Le classeur à été réctracté"
+        "workbook_retracted": "Le classeur à été réctracté",
+        "workbook_deleted": ""
     },
     "admin": {
         "title": "{{name}}",
@@ -510,7 +511,7 @@
         "users_in_copy": "Utilisateurs en copie",
         "success": {
             "edit": "Le classeur à bien été modifié",
-            "delete": "Le classeur à bien été supprimé"
+            "delete": "Le classeur à été supprimé"
         },
         "error": {
             "edit": "Impossible de modifier le classeur - erreur {{errorCode}}"

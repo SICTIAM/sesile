@@ -41,9 +41,11 @@ const actionClasseur = (that, url, id, method = 'PUT', type = '') => {
         .then(handleErrors)
         .then(response => response.json())
         .then(classeur => {
-            type === 'list'
-                ? that.listClasseurs(that.state.sort, that.state.order, that.state.limit, that.state.start, that.state.userId)
-                : that.setState({classeur})
+            if(method !== 'DELETE') {
+                type === 'list'
+                    ? that.listClasseurs(that.state.sort, that.state.order, that.state.limit, that.state.start, that.state.userId)
+                    : that.setState({classeur})
+            }
         })
         .then(() => {
             if (method === 'PUT') {
@@ -62,7 +64,7 @@ const actionClasseur = (that, url, id, method = 'PUT', type = '') => {
                 that.context._addNotification(basicNotification(
                     'success',
                     that.context.t('classeur.success.delete')))
-                History.push(`/classeurs/supprimes`)
+                History.push(`/classeurs/liste`)
             }
         })
         .catch(error => that.context._addNotification(basicNotification(
