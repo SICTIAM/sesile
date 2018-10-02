@@ -134,19 +134,19 @@ class ClasseursList extends Component {
                                 <thead style={{background: "#3199cc", color: "#fefefe"}}>
                                     <tr>
                                         <th style={{borderRadius: "0.5rem 0 0 0"}}>
-                                            Titre
+                                            {t('common.label.title')}
                                         </th>
                                         <th>
-                                            Status
+                                            {t('common.classeurs.status.name')}
                                         </th>
                                         <th>
-                                            Intervenants
+                                            {t('common.stakeholders')}
                                         </th>
                                         <th>
-                                            Date limite
+                                            {t('common.classeurs.sort_label.limit_date')}
                                         </th>
                                         <th style={{borderRadius: "0 0.5rem 0 0"}}>
-                                            Type
+                                            {t('common.classeurs.sort_label.type')}
                                         </th>
                                     </tr>
                                 </thead>
