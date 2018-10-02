@@ -114,6 +114,10 @@ class ClasseursRetract extends Component {
             .then(handleErrors)
             .then(response => response.json())
             .then(() => {
+                this.context._addNotification(
+                    basicNotification(
+                        'success',
+                        this.context.t('common.workbook_retracted')))
                 this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id)
             })
             .catch(error =>

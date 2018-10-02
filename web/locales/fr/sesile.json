@@ -247,7 +247,8 @@
         "expand_preview": "Agrandir",
         "description_not_specified": "Description non renseigné",
         "search_by_user": "Recherche par utilisateur",
-        "search_by_circuit": "Recherche par circuit"
+        "search_by_circuit": "Recherche par circuit",
+        "workbook_retracted": "Le classeur à été réctracté"
     },
     "admin": {
         "title": "{{name}}",

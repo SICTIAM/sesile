@@ -47,9 +47,16 @@ const actionClasseur = (that, url, id, method = 'PUT', type = '') => {
         })
         .then(() => {
             if (method === 'PUT') {
-                that.context._addNotification(basicNotification(
-                    'success',
-                    that.context.t('classeur.success.edit')))
+                if(url === 'sesile_classeur_classeurapi_retractclasseur') {
+                    that.context._addNotification(
+                        basicNotification(
+                            'success',
+                            that.context.t('common.workbook_retracted')))
+                } else {
+                    that.context._addNotification(basicNotification(
+                        'success',
+                        that.context.t('classeur.success.edit')))
+                }
                 History.push(`/classeurs/valides`)
             } else {
                 that.context._addNotification(basicNotification(
