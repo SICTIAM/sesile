@@ -5,9 +5,10 @@ import {array, func, string, object, bool} from 'prop-types'
 
 import {Cell, GridX} from '../_components/UI'
 import DraggablePosition from '../_components/DraggablePosition'
-
 import { BytesToSize } from '../_utils/Utils'
 import { handleErrors } from '../_utils/Utils'
+import DraggablePositionDownload from '../document/VisaDownload'
+import DraggablePositionVisaSignatureDownload from '../document/VisaSignatureDownload'
 
 
 class DocumentsNew extends Component {
@@ -179,6 +180,7 @@ class DocumentsNew extends Component {
                                         collectivite={this.state.collectivite}
                                         dataToggle={`visa-dropdown-${document.id}`}
                                         type="visa"
+                                        id={document.id}
                                         disabled={false}/>
                                     <hr style={{margin: 0}}/>
                                     <div>
@@ -198,6 +200,7 @@ class DocumentsNew extends Component {
                                             collectivite={this.state.collectivite}
                                             dataToggle={`signature-dropdown-${document.id}`}
                                             type="signature"
+                                            id={document.id}
                                             disabled={!this.userNotHaveSignatureImage()}/>
                                             <hr style={{margin: 0}}/>
                                     </div>
@@ -224,6 +227,7 @@ class DocumentsNew extends Component {
                                             collectivite={this.state.collectivite}
                                             dataToggle={`signature-visa-dropdown-${document.id}`}
                                             type="signature"
+                                            id={document.id}
                                             disabled={!this.userNotHaveSignatureImage()}/>
                                         <hr style={{margin: 0}}/>
                                     </div>
@@ -345,121 +349,3 @@ DocumentsNew.propTypes = {
 }
 
 export default translate('sesile')(DocumentsNew)
-
-const DraggablePositionDownload = ({handleChange, label, dataToggle, href, position, type, disabled}, {t}) => {
-    return (
-        <li className="doc-action-button">
-            <a
-                className={`button secondary clear ${disabled && ' disabled'}`}
-                data-toggle={!disabled && dataToggle}>
-                {label}
-            </a>
-            <div
-                style={{
-                    textAlign: 'center',
-                    padding: '1em',
-                    width: '15em',
-                    height: '23em',
-                    marginLeft: '100px',
-                    borderRadius: '5px'
-                }}
-                className="dropdown-pane"
-                id={dataToggle}
-                data-position="right"
-                data-alignment="center"
-                data-close-on-click={true}
-                data-dropdown data-auto-focus={true}>
-                <DraggablePosition
-                    style={{
-                        height: '300px',
-                        width: '210px',
-                        position: 'relative',
-                        overflow: 'auto',
-                        padding: '0',
-                        display: 'flex'}}
-                    position={position}
-                    boxStyle={{height: '30px', width: '65px', padding: 0}}
-                    label={type}
-                    handleChange={handleChange}/>
-                <div>
-                    <a
-                        className="button secondary hollow"
-                        href={href}
-                        target="_blank">
-                        {t('common.download')}
-                    </a>
-                </div>
-            </div>
-        </li>
-    )
-}
-
-DraggablePositionDownload.contextTypes = {
-    t: func
-}
-
-const DraggablePositionVisaSignatureDownload =
-    ({handleChangeVisa, handleChangeSignature, label, dataToggle, href, positionVisa, positionSignature, disabled}, {t}) => {
-    return (
-        <li className="doc-action-button">
-            <a
-                className={`button secondary clear ${disabled && ' disabled'}`}
-                data-toggle={!disabled && dataToggle}>
-                {label}
-            </a>
-            <div
-                style={{
-                    textAlign: 'center',
-                    padding: '1em',
-                    width: '30em',
-                    height: '23em',
-                    marginLeft: '100px',
-                    borderRadius: '5px'
-                }}
-                className="dropdown-pane"
-                id={dataToggle}
-                data-position="right"
-                data-alignment="center"
-                data-close-on-click={true}
-                data-dropdown data-auto-focus={true}>
-                <DraggablePosition
-                    style={{
-                        height: '300px',
-                        width: '210px',
-                        position: 'relative',
-                        overflow: 'auto',
-                        padding: '0',
-                        display: 'flex',
-                        marginRight: '10px'}}
-                    position={positionVisa}
-                    boxStyle={{height: '30px', width: '65px', padding: 0}}
-                    label="visa"
-                    handleChange={handleChangeVisa}/>
-                <DraggablePosition
-                    style={{
-                        height: '300px',
-                        width: '210px',
-                        position: 'relative',
-                        overflow: 'auto',
-                        padding: '0',
-                        display: 'flex'}}
-                    position={positionSignature}
-                    boxStyle={{height: '30px', width: '65px', padding: 0}}
-                    label="signature"
-                    handleChange={handleChangeSignature}/>
-                <div>
-                    <a
-                        className="button secondary hollow"
-                        href={href}
-                        target="_blank">
-                        {t('common.download')}
-                    </a>
-                </div>
-            </div>
-        </li>
-    )
-}
-
-DraggablePositionVisaSignatureDownload.contextTypes = {
-    t: func
-}
