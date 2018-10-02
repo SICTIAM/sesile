@@ -182,8 +182,8 @@ class OzwilloProvisioner
             'contacts' => $contacts,
             'payment_option' => "PAID",
             'target_audience' => ["PUBLIC_BODIES"],
-            'visibility' => "VISIBLE",
-            'access_control' => "RESTRICTED",
+            'visibility' => "NEVER_VISIBLE",
+            'access_control' => "ALWAYS_RESTRICTED",
             'service_uri' => $this->urlRegistrationToKernel(
                     $collectivite,
                     $this->router->generate('sesile_main_default_app')
