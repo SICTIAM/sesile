@@ -54,6 +54,7 @@ class Types extends Component {
                 const types = []
                 this.setState({types, editableTypes: types, filteredEditableTypes: types})
                 json.map(type => types.unshift(type))
+                types.sort((a, b) => a.nom.localeCompare(b.nom))
                 this.setState({types, editableTypes: types, filteredEditableTypes: types})
             })
             .catch(() =>
