@@ -14,6 +14,7 @@ import { handleErrors } from "../_utils/Utils"
 
 import Type from './Type'
 import { basicNotification } from "../_components/Notifications"
+import ButtonConfirmDelete from "../_components/ButtonConfirmDelete";
 
 class Types extends Component {
     static contextTypes = {
@@ -46,20 +47,21 @@ class Types extends Component {
     }
     fetchTypes = (id) => {
         fetch(Routing.generate('sesile_classeur_typeclasseurapi_getall', {id}), { credentials: 'same-origin'})
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(json => {
-            const editableTypes = []
-            const types = []
-            this.setState({types, editableTypes, filteredEditableTypes: editableTypes})
-            json.map(type => type.supprimable ? editableTypes.unshift(type) : types.unshift(type))
-            this.setState({types, editableTypes, filteredEditableTypes: editableTypes})
-        })
-        .catch(() =>
-            this.context._addNotification(
-                basicNotification(
-                    'error',
-                    this.context.t('admin.type.error_fetch_list'))))
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(json => {
+                const editableTypes = []
+                const types = []
+                this.setState({types, editableTypes: types, filteredEditableTypes: types})
+                json.map(type => types.unshift(type))
+                types.sort((a, b) => a.nom.localeCompare(b.nom))
+                this.setState({types, editableTypes: types, filteredEditableTypes: types})
+            })
+            .catch(() =>
+                this.context._addNotification(
+                    basicNotification(
+                        'error',
+                        this.context.t('admin.type.error_fetch_list'))))
     }
     createType = () => {
         const validation = new Validator({nom: this.state.nom}, this.validationRules)
@@ -76,20 +78,20 @@ class Types extends Component {
                 }),
                 credentials: 'same-origin'
             })
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(() => {
-                this.setState({nom: ''})
-                this.context._addNotification(
-                    basicNotification(
-                        'success',
-                        this.context.t('admin.type.success_save')))
-                this.fetchTypes(this.state.collectiviteId)})
-            .catch(() =>
-                this.context._addNotification(
-                    basicNotification(
-                        'error',
-                        this.context.t('admin.type.error_save'))))
+                .then(handleErrors)
+                .then(response => response.json())
+                .then(() => {
+                    this.setState({nom: ''})
+                    this.context._addNotification(
+                        basicNotification(
+                            'success',
+                            this.context.t('admin.type.success_save')))
+                    this.fetchTypes(this.state.collectiviteId)})
+                .catch(() =>
+                    this.context._addNotification(
+                        basicNotification(
+                            'error',
+                            this.context.t('admin.type.error_save'))))
         }
     }
     handleChangeSearchByName = (key, searchByName) => {
@@ -118,80 +120,65 @@ class Types extends Component {
                     type={type}
                     removeType={this.removeType}
                     fetchTypes={this.fetchTypes}/>)
-        const listNotEditableType =
-            this.state.types.map(type =>
-                <AdminListRow key={type.id}>
-                    <Cell className="medium-auto">
-                        {type.nom}
-                    </Cell>
-                </AdminListRow>)
         return (
             <AdminPage
-                title={t('admin.title', {name: t('admin.type.name')})}
-                subtitle={t('admin.subtitle')}>
+                title={t('admin.type.name')}>
                 <AdminContainer>
-                    <Cell className="medium-6">
-                        <GridX className="grid-padding-x align-center-middle">
-                            <Input
-                                className="cell medium-auto"
-                                labelText={t('admin.label.which')}
-                                value={this.state.searchByName}
-                                onChange={this.handleChangeSearchByName}
-                                placeholder={t('common.search_by_name')}
-                                type="text"/>
+                    <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
+                        <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"49%"}}>
+                            <div className="" style={{marginTop:"10px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
+                                <Input
+                                    className="cell medium-auto"
+                                    value={this.state.searchByName}
+                                    onChange={this.handleChangeSearchByName}
+                                    placeholder={t('common.search_by_name')}
+                                    type="text"/>
+                            </div>
                             {this.state.isSuperAdmin &&
-                                <Cell className="medium-auto">
-                                    <SelectCollectivite
-                                        currentCollectiviteId={this.state.collectiviteId}
-                                        handleChange={this.handleChangeCollectivite}/>
-                                </Cell>}
-                        </GridX>
-                    </Cell>
-                    <AdminList
-                        title={t('admin.type.title_add_type')}
-                        listLength={1}
-                        headTitles={[]}>
-                        <Cell className="add-type">
-                            <Form onSubmit={this.createType}>
-                                <GridX className="align-middle">
-                                    <Cell className="medium-6">
+                            <div style={{marginTop:"10px",paddingLeft: "1%", width:"17em", paddingRight:"1%"}}>
+                                <SelectCollectivite
+                                    currentCollectiviteId={this.state.collectiviteId}
+                                    handleChange={this.handleChangeCollectivite}/>
+                            </div>}
+                        </div>
+                        <table style={{margin:"10px", borderRadius:"6px"}}>
+                            <thead>
+                            <tr style={{backgroundColor:"#CC0066", color:"white"}}>
+                                <td width="600px" className="text-bold">{ t('admin.user.label_name') }</td>
+                                <td width="30px" className="text-bold">{ t('common.label.actions') }</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <div style={{width:"50%"}}>
                                         <InputValidation
                                             id="nom"
                                             type="text"
-                                            labelText={`${t('common.label.name')} *`}
-                                            helpText={t('admin.type.help_text_add_type')}
                                             value={this.state.nom}
                                             onChange={this.handleChangeAddField}
                                             validationRule={this.validationRules.nom}
                                             placeholder={t('common.type_a_name')}/>
-                                    </Cell>
-                                    <Cell className="medium-6 text-right">
-                                        <button
-                                            className="button primary hollow text-uppercase"
-                                            disabled={this.state.disabledButtonAdd}
-                                            onClick={() => this.createType()}>
-                                            {t('common.button.save')}
-                                        </button>
-                                    </Cell>
-                                </GridX>
-                            </Form>
-                        </Cell>
-                    </AdminList>
-                    <AdminList
-                        title={t('admin.type.list_editable_type')}
-                        listLength={listEditableType.length}
-                        headTitles={[t('common.label.name'), t('common.label.actions')]}
-                        headGrid={['medium-auto', 'medium-2']}
-                        emptyListMessage={t('common.no_results', {name: t('admin.type.name')})}>
-                        {listEditableType}
-                    </AdminList>
-                    <AdminList
-                        title={t('admin.type.list_not_editable_type')}
-                        listLength={listNotEditableType.length}
-                        headTitles={[t('common.label.name')]}
-                        emptyListMessage={t('common.no_results', {name: t('admin.type.name')})}>
-                        {listNotEditableType}
-                    </AdminList>
+                                    </div>
+                                </td>
+                                <td> <button
+                                    className="button primary hollow text-uppercase"
+                                    disabled={this.state.disabledButtonAdd}
+                                    onClick={() => this.createType()}>
+                                    {t('common.button.add')}
+                                </button> </td>
+                            </tr>
+                            {listEditableType.length > 0 ?
+                                listEditableType :
+                                <tr>
+                                    <td>
+                                        <span style={{textAlign:"center"}}>{t('common.no_results', {name: t('admin.type.name')})}</span>
+                                    </td>
+                                    <td/>
+                                </tr>}
+                            </tbody>
+                        </table>
+                    </div>
                 </AdminContainer>
             </AdminPage>
         )
