@@ -70,7 +70,7 @@ class AvatarForm extends Component {
     }
     userNomAndPrenomIsNotEmpty = () => this.props.user._nom.length > 0 && this.props.user._prenom.length > 0
 
-    userNomAndPrenomAndImagePathIsNotEmpty = () => this.userNomAndPrenomIsNotEmpty() && this.props.user.path.length > 0
+    userNomAndPrenomAndImagePathIsNotEmpty = () => this.userNomAndPrenomIsNotEmpty() && this.props.user.path
 
     render() {
         const { t } = this.context
