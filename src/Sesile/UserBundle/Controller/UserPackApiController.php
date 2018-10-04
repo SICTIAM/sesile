@@ -94,7 +94,7 @@ class UserPackApiController extends FOSRestController implements ClassResourceIn
 
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"userPack"})
      * @Rest\Delete("/{id}/{collectiviteId}")
      * @ParamConverter("UserPack", options={"mapping": {"id": "id"}})
      * @param UserPack $userpack
