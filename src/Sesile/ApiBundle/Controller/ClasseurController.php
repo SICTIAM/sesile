@@ -1,30 +1,23 @@
 <?php
 namespace Sesile\ApiBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Sesile\MainBundle\Domain\Message;
 use Sesile\UserBundle\Entity\EtapeClasseur;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\View\View;
+use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use FOS\RestBundle\Request\ParamFetcher;
-use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Sesile\ClasseurBundle\Entity\Classeur;
 use Sesile\DocumentBundle\Entity\Document;
-use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\ClasseursUsers;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sesile\ClasseurBundle\Service\ActionMailer;
 
 
 /**
@@ -223,6 +216,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
 
     /**
+     * @throws \Doctrine\ORM\OptimisticLockException
      * Cette méthode permet de déposer un classeur
      *
      * Si l'utilisateur courant n'as pas accès au classeur, un 403 not allowed sera renvoyé
@@ -246,7 +240,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * )
      *
      * @var Request $request
-     * @return array
+     * @return JsonResponse
      * @Route("/")
      * @Rest\View()
      * @Method("post")
@@ -279,6 +273,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $serviceOrgs = $em->getRepository('SesileUserBundle:EtapeGroupe')->findByUsers($user->getId());
 
+
         if(!count($serviceOrgs)) {
             $this->get('session')->getFlashBag()->add('notice', 'Vous ne faites parti d\'aucun circuit de validation.');
             return $this->redirect($this->generateUrl('classeur'));
@@ -289,7 +284,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             //@todo ceci peut donner un 500 si $groupetto == null
             $groupes[] = $groupetto->getId();
         }
-
 
         $groupes_unique = array_unique($groupes);
 
@@ -320,15 +314,16 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $type= $request->request->get('type');
 
-        $circuit = $request->request->get('groupe');
 
 
 
 
-        if (empty($name)|| empty($validation)||empty($type)||empty($circuit)) {
+        if (empty($name)|| empty($validation)||empty($type)||empty($request->request->get('groupe'))) {
             $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants', "parametres_recus"=> $request->request ), 400);
             return $this->handleView($view);
         }
+
+        $groupe = $em->getRepository('SesileUserBundle:Groupe')->findOneById($request->request->get('groupe'));
 
 
         $em = $this->getDoctrine()->getManager();
@@ -351,6 +346,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $classeur->setVisibilite($request->request->get('visibilite'));
         $classeur->setCollectivite($collectivity);
+        $classeur->setCircuitId($groupe);
         $em->persist($classeur);
         $em->flush();
 
@@ -421,25 +417,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             }
         }
 
-
-
-        //$tabEtapes = $request->request->get('valeurs');
-      //  $classeur = $em->getRepository('SesileUserBundle:EtapeClasseur')->setEtapesForClasseur($classeur, json_encode($tabEtapes), true);
-
-
-        // Fonction pour enregistrer dans la table Classeur_visible
-        $usersVisible = $em->getRepository('SesileUserBundle:EtapeClasseur')->findAllUsers($classeur);
-        $usersVisible[] = $user->getId();
-        if(!is_null($userAPI))
-        {
-            $usersVisible[] = $userAPI->getId();
-        }
-
-        $usersCV = $this->classeur_visible($request->request->get('visibilite'), $usersVisible, $request->request->get('groupe'));
-        foreach ($usersCV as $userCV) {
-          //  $userVisible = $em->getRepository('SesileUserBundle:User')->findOneById($userCV->getId());
-            $classeur->addVisible($userCV);
-        }
+        $em->getRepository('SesileClasseurBundle:Classeur')->setUserVisible($classeur);
 
 
         $action = new Action();
@@ -449,17 +427,11 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $em->persist($action);
         $em->flush();
 
-        // $respDocument = $this->forward( 'sesile.document:createAction', array('request' => $request));
-
-        // envoi d'un mail au premier validant
-        $this->sendCreationMail($classeur);
-        //  return $circuits['ordre'];
+        $actionMailer = $this->get(ActionMailer::class);
+        $actionMailer->sendNotificationClasseur($classeur);
 
 
-
-
-        return $this->classeurToArray($classeur); //$em->getRepository("SesileClasseurBundle:Classeur")->findOneById($classeur->getId());
-
+        return new JsonResponse(["id" => $classeur->getId(), "message" => "Le classeur a bien été déposé"], JsonResponse::HTTP_OK);
     }
 
 
@@ -911,7 +883,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             'validation' => $classeur->getValidation(), 'type' => $classeur->getType()->getId(),
             'validant' => $tabValidant,
             'visibilite' => $classeur->getVisibilite(),
-            'circuit' => $classeur->getCircuit(),
+            'circuit' => $classeur->getCircuitId(),
             'status' => $classeur->getStatus(),
             'documents' => $cleanTabDocs,
             'actions' => $cleanTabAction);
@@ -959,7 +931,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      * @param null $requestUserGroupe
      * @return string|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    private function classeur_visible($visibilite, $users, $requestUserGroupe = false) {
+    private function classeur_visible($visibilite, $users, $requestUserGroupe = false, $collectivity) {
         $em = $this->getDoctrine()->getManager();
         switch ($visibilite) {
             // Privé soit le circuit
@@ -968,7 +940,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
                 break;
             // Public
             case 1:
-                return $em->getRepository('SesileUserBundle:User')->findByCollectivite($this->get("session")->get("collectivite"));
+                return $em->getRepository('SesileUserBundle:User')->findUsersByCollectivitySiren($collectivity->getSiren());
                 break;
             // Privé à partir de moi
             case 2:

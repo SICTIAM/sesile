@@ -213,10 +213,28 @@ class UserRepository extends EntityRepository {
     {
         return $this
                 ->createQueryBuilder('U')
-            ->select('U.id, U.Nom as nom, U.Prenom as prenom, U.email, U.username, U.ozwilloId, U.ville, U.cp, U.pays, U.departement, U.role, U.qualite, U.roles')
+                ->select('U.id, U.Nom as nom, U.Prenom as prenom, U.email, U.username, U.ozwilloId, U.ville, U.cp, U.pays, U.departement, U.role, U.qualite, U.roles')
                 ->join('U.collectivities', 'C')
                 ->where('C.id = :collectiviteId')
                 ->setParameter('collectiviteId', $collectiviteId)
+                ->getQuery()
+                ->getArrayResult();
+    }
+
+
+    /**
+     * @param string $collectiviteSiren
+     *
+     * @return array
+     */
+    public function findUsersByCollectivitySiren($collectiviteSiren)
+    {
+        return $this
+                ->createQueryBuilder('U')
+                ->select('U.id')
+                ->join('U.collectivities', 'C')
+                ->where('C.id = :collectiviteSiren')
+                ->setParameter('collectiviteSiren', $collectiviteSiren)
                 ->getQuery()
                 ->getArrayResult();
     }
