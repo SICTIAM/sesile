@@ -299,8 +299,6 @@ class Document
      */
     public function getPDFImage($page = 0, $orientation = "PORTRAIT", $path) {
         if($this->getType() == "application/pdf") {
-
-
             $imagick = new Imagick();
             $img = new Imagick($path . $this->getRepourl());
             $nbr_page = $img->getNumberImages() - 1;
@@ -310,12 +308,9 @@ class Document
             // Si le PDF est au format portrait
             if ($orientation == "PORTRAIT") {
                 $imagick->thumbnailImage(210,297,true,true);
-            } else {
-                $imagick->thumbnailImage(297,210,true,true);
-            }
-            if ($orientation == "PORTRAIT") {
                 $imagicklast->thumbnailImage(210,297,true,true);
             } else {
+                $imagick->thumbnailImage(297,210,true,true);
                 $imagicklast->thumbnailImage(297,210,true,true);
             }
             $imagick->setFormat('jpg');
@@ -323,7 +318,6 @@ class Document
 //          $thumb = $imagick->getImageBlob();
 //          header("Content-Type: image/jpg");
             return array(base64_encode($imagick->getImageBlob()), base64_encode($imagicklast->getImageBlob()));
-
         } else return true;
     }
 
