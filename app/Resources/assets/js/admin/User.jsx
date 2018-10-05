@@ -7,7 +7,8 @@ import History from '../_utils/History'
 import { basicNotification } from '../_components/Notifications'
 import AvatarForm from '../user/AvatarForm'
 import SignatureForm from '../user/SignatureForm'
-import {Input, Switch, Select, Textarea} from '../_components/Form'
+import {Input, Switch, Select, Textarea, InputFile} from '../_components/Form'
+import UserAvatar from "react-user-avatar";
 
 class User extends Component {
 
@@ -38,14 +39,14 @@ class User extends Component {
                 apiactivated: false,
                 apitoken: '',
                 apisecret: '',
-                path:'',
+                path: '',
                 path_signature: ''
             }
         }
     }
 
     componentDidMount() {
-        if(this.props.user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
+        if (this.props.user.roles.find(role => role.includes("ROLE_SUPER_ADMIN")) !== undefined) {
             this.setState({isSuperAdmin: true})
         }
         if (this.props.match.params.userId) {
@@ -56,7 +57,7 @@ class User extends Component {
     }
 
     fetchUser(id) {
-        const { t, _addNotification } = this.context
+        const {t, _addNotification} = this.context
         fetch(Routing.generate("sesile_user_userapi_get", {id}), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
@@ -69,26 +70,55 @@ class User extends Component {
                 error.statusText)))
     }
 
-    fetchRoles () {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_user_userapi_getroles'), { credentials: 'same-origin'})
+    fetchRoles() {
+        const {t, _addNotification} = this.context
+        fetch(Routing.generate('sesile_user_userapi_getroles'), {credentials: 'same-origin'})
             .then(this.handleErrors)
             .then(response => response.json())
             .then(roles => this.setState({roles}))
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extractable_list', {name: t('admin.role_application.name', {count: 2}), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {
+                    name: t('admin.role_application.name', {count: 2}),
+                    errorCode: error.status
+                }),
                 error.statusText)))
     }
 
+    putFile = (image) => {
+        const {t, _addNotification} = this.context
+        let formData = new FormData()
+        formData.append('path', image)
+
+        fetch(Routing.generate("sesile_user_userapi_uploadavatar", {id: this.state.user.id}), {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        })
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(user => {
+                _addNotification(basicNotification(
+                    'success',
+                    t('admin.success.update', {name: t('admin.user.image_avatar')})
+                ))
+                this.fetchUser(this.state.userId)
+            })
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.add', {name: t('admin.user.image_avatar'), errorCode: error.status}),
+                error.statusText)))
+    }
+
+
     handleChangeField = (field, value) => {
-        const { user } = this.state
+        const {user} = this.state
         user[field] = value
         this.setState({user})
     }
 
     handleChangeRoles = (options) => {
-        const { user } = this.state
+        const {user} = this.state
         const newRoles = [...options].filter(o => o.selected).map(o => o.value)
 
         user['roles'] = newRoles
@@ -97,11 +127,16 @@ class User extends Component {
 
     handleChangeUserRole = (key, role) => this.setState(prevState => prevState.user.userrole[key].user_roles = role)
     handleRemoveUserRole = (key) => this.setState(prevState => prevState.user.userrole.splice(key, 1))
-    handleAddUserRole = () => this.setState(prevState => prevState.user.userrole.push({user_roles: '', user: this.state.userId}))
+    handleAddUserRole = () => this.setState(prevState => prevState.user.userrole.push({
+        user_roles: '',
+        user: this.state.userId
+    }))
+    userNomAndPrenomIsNotEmpty = () => this.state.user._nom.length > 0 && this.state.user._prenom.length > 0
 
+    userNomAndPrenomAndImagePathIsNotEmpty = () => this.userNomAndPrenomIsNotEmpty() && this.state.user.path
     handleClickSave = () => {
-        const { user } = this.state
-        const { t, _addNotification } = this.context
+        const {user} = this.state
+        const {t, _addNotification} = this.context
         const id = this.state.userId
         user.userrole.map((role, key) => this.setState(prevState => prevState.user.userrole[key].user = id))
 
@@ -128,7 +163,7 @@ class User extends Component {
         })
             .then(handleErrors)
             .then(response => {
-                if(response.ok === true) {
+                if (response.ok === true) {
                     this.fetchUser(id)
                     _addNotification(basicNotification(
                         'success',
@@ -139,12 +174,15 @@ class User extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {
+                    name: t('admin.user.name', {count: 2}),
+                    errorCode: error.status
+                }),
                 error.statusText)))
     }
 
     handleClickDelete = (id) => {
-        const { _addNotification } = this.context
+        const {_addNotification} = this.context
         fetch(Routing.generate("sesile_user_userapi_remove", {id}), {
             method: 'DELETE',
             credentials: 'same-origin'
@@ -160,17 +198,16 @@ class User extends Component {
     }
 
     render() {
-        const { t } = this.context
-        const { user }  = this.state
+        const {t} = this.context
+        const {user} = this.state
         const roles = this.state.roles
         const userId = this.props.match.params.userId
-        const rolesSelect = roles && roles.map((role,key) => <option value={role} key={key}>{role}</option>)
+        const rolesSelect = roles && roles.map((role, key) => <option value={role} key={key}>{role}</option>)
 
         return (
             <div className="grid-x">
                 <div className="admin-details medium-12 cell">
-                    <div className="admin-content-details">
-
+                    <div className="panel" style={{padding: "10px"}}>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_user')}</h3>
@@ -178,74 +215,122 @@ class User extends Component {
                         </div>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
-                                <div className="grid-x grid-padding-x align-center-middle">
-                                    {
-                                        user.id &&
-                                        <AvatarForm
-                                            user={user}
-                                            styleClass="medium-6 cell text-center"
-                                            tyleClass={"medium-4 cell"}
-                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
-                                    }
-
+                                <div className="grid-x grid-padding-x">
                                     <div className="medium-6 cell">
                                         {(user.id) &&
-                                            <div className="grid-x grid-padding-y">
-                                                <span className="cell medium-6 text-bold">{t('admin.user.label_email')}</span>
-                                                <div className="cell medium-6">{user.email}</div>
-                                            </div>}
                                         <div className="grid-x grid-padding-y">
-                                            <span className="cell medium-6 text-bold">{t('admin.user.label_name')}</span>
+                                            <span
+                                                className="cell medium-6 text-bold">{t('admin.user.label_email')}</span>
+                                            <div className="cell medium-6">{user.email}</div>
+                                        </div>}
+                                        <div className="grid-x grid-padding-y">
+                                            <span
+                                                className="cell medium-6 text-bold">{t('admin.user.label_name')}</span>
                                             <div className="cell medium-6">{user._nom}</div>
                                         </div>
                                         <div className="grid-x grid-padding-y">
-                                            <span className="cell medium-6 text-bold">{t('admin.user.label_firstname')}</span>
+                                            <span
+                                                className="cell medium-6 text-bold">{t('admin.user.label_firstname')}</span>
                                             <div className="cell medium-6">{user._prenom}</div>
-                                        </div>
-                                        <div className="grid-x grid-padding-x grid-padding-y">
-                                            <Switch id="enabled"
-                                                    className="cell medium-4"
-                                                    labelText={t('admin.user.placeholder_enable')}
-                                                    checked={user.enabled}
-                                                    onChange={this.handleChangeField}
-                                                    activeText={t('common.label.yes')}
-                                                    inactiveText={t('common.label.no')}/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-
-                        <hr/>
-                        <div className="grid-x grid-margin-x grid-padding-x">
-                            <div className="medium-12 cell">
-                                <h3>{t('admin.user.subtitle_signature')}</h3>
-                            </div>
+                    <div className="panel" style={{padding: "10px"}}>
+                        <div className="medium-12 cell">
+                            <h3>Informations Utilisateur</h3>
+                        </div>
+                        <div className="grid-x grid-margin-x grid-padding-x" style={{height: "4em"}}>
+                            {
+                                user.id &&
+                                <div className="cell medium-6" style={{display: "flex"}}>
+                                    <div className="medium-2" style={{width: "15em"}}>
+                                        <label className="medium-2 text-bold text-capitalize-first-letter"
+                                               htmlFor="profil_img">photo de profil</label>
+                                    </div>
+                                    <div className="cell medium-4" style={{width: "15em"}}>
+                                        <div style={{display: "block", overflow: "hidden"}}>
+                                            {this.userNomAndPrenomAndImagePathIsNotEmpty() ?
+                                                <UserAvatar
+                                                    id="profil_img"
+                                                    size="70"
+                                                    name={`${this.state.user._prenom.charAt(0)}${this.state.user._nom.charAt(0)} `}
+                                                    src={"/uploads/avatars/" + this.state.user.path}
+                                                    className=" float-center"/> :
+                                                this.userNomAndPrenomIsNotEmpty() &&
+                                                <UserAvatar
+                                                    id="profil_img"
+                                                    size="70"
+                                                    name={`${this.state.user._prenom.charAt(0)}${this.state.user._nom.charAt(0)} `}
+                                                    className="txt-avatar"/>}
+                                            <input type="file" accept="image/png,image/jpeg"
+                                                   onChange={e => this.putFile(e.target.files[0])}
+                                                   id="upload_input" name="upload" style={{
+                                                fontSize: "100px",
+                                                width: "80px",
+                                                opacity: "0",
+                                                filter: "alpha(opacity=0)",
+                                                position: "relative",
+                                                top: "-100px"
+                                            }}/>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div className="grid-x grid-padding-x grid-padding-y">
+                            <Switch id="enabled"
+                                    className="cell medium-4"
+                                    labelText={t('admin.user.placeholder_enable')}
+                                    checked={user.enabled}
+                                    onChange={this.handleChangeField}
+                                    activeText={t('common.label.yes')}
+                                    inactiveText={t('common.label.no')}/>
+                        </div>
+                    </div>
+                    <div className="panel" style={{padding: "10px"}}>
+                        <div className="medium-12 cell">
+                            <h3>{t('admin.user.subtitle_signature')}</h3>
                         </div>
                         <div className="grid-x grid-margin-x grid-padding-x">
-                            <div className="medium-12 cell">
-                                <div className="grid-x grid-padding-x align-center-middle">
+                            <div className="medium-6 cell">
+                                <div className="grid-x grid-padding-x">
                                     {
                                         user.id &&
                                         <SignatureForm
                                             user={user}
-                                            styleClass="medium-6 cell text-center"
+                                            styleClass="medium-12 cell text-center"
                                             tyleClass={"medium-4 cell"}
-                                            helpText={t('common.file_acceptation_rules', { types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}/>
+                                            helpText={t('common.file_acceptation_rules', {
+                                                types: '(png, jpeg, gif)',
+                                                sizeMax: '5 Mo'
+                                            })}/>
                                     }
-
-                                    <Textarea id="qualite"
-                                              name="qualite"
-                                              className="cell medium-6"
-                                              labelText={t('admin.user.label_quality')}
-                                              value={user.qualite || ''}
-                                              onChange={this.handleChangeField}/>
                                 </div>
                             </div>
+                            {(userId) &&
+                            <div className="medium-6 cell">
+                                <RolesUser roles={Object.assign([], user.userrole)}
+                                           changeUserRole={this.handleChangeUserRole}
+                                           removeUserRole={this.handleRemoveUserRole}
+                                           addUserRole={this.handleAddUserRole}
+                                />
+                            </div>
+                            }
                         </div>
-
-                        <hr/>
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <Textarea id="qualite"
+                                      name="qualite"
+                                      className="cell medium-6"
+                                      labelText={t('admin.user.label_quality')}
+                                      value={user.qualite || ''}
+                                      onChange={this.handleChangeField}/>
+                        </div>
+                    </div>
+                    <div className="panel" style={{padding: "10px"}}>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_geo')}</h3>
@@ -254,61 +339,41 @@ class User extends Component {
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <div className="grid-x grid-padding-x align-center-middle">
-                                    <Input  id="cp"
-                                            className="cell medium-6"
-                                            labelText={t('admin.user.label_zip')}
-                                            onChange={this.handleChangeField}
-                                            value={user.cp || ''}
-                                            type="text"
+                                    <Input id="cp"
+                                           className="cell medium-6"
+                                           labelText={t('admin.user.label_zip')}
+                                           onChange={this.handleChangeField}
+                                           value={user.cp || ''}
+                                           type="text"
                                     />
-                                    <Input  id="ville"
-                                            className="cell medium-6"
-                                            labelText={t('admin.user.label_city')}
-                                            onChange={this.handleChangeField}
-                                            value={user.ville || ''}
-                                            type="text"
+                                    <Input id="ville"
+                                           className="cell medium-6"
+                                           labelText={t('admin.user.label_city')}
+                                           onChange={this.handleChangeField}
+                                           value={user.ville || ''}
+                                           type="text"
                                     />
                                 </div>
                                 <div className="grid-x grid-padding-x grid-padding-y">
-                                    <Input  id="departement"
-                                            className="cell medium-6"
-                                            labelText={t('admin.user.label_department')}
-                                            onChange={this.handleChangeField}
-                                            value={user.departement || ''}
-                                            type="text"
+                                    <Input id="departement"
+                                           className="cell medium-6"
+                                           labelText={t('admin.user.label_department')}
+                                           onChange={this.handleChangeField}
+                                           value={user.departement || ''}
+                                           type="text"
                                     />
-                                    <Input  id="pays"
-                                            className="cell medium-6"
-                                            labelText={t('admin.user.label_country')}
-                                            onChange={this.handleChangeField}
-                                            value={user.pays || ''}
-                                            type="text"
+                                    <Input id="pays"
+                                           className="cell medium-6"
+                                           labelText={t('admin.user.label_country')}
+                                           onChange={this.handleChangeField}
+                                           value={user.pays || ''}
+                                           type="text"
                                     />
                                 </div>
                             </div>
                         </div>
-
-                        { (userId) &&
-                            <div>
-                                <hr/>
-                                <div className="grid-x grid-margin-x grid-padding-x">
-                                    <div className="medium-12 cell">
-                                        <h3>{t('admin.user.subtitle_role')}</h3>
-                                    </div>
-                                </div>
-
-                                <div className="grid-x grid-margin-x grid-padding-x">
-                                    <RolesUser roles={ Object.assign([], user.userrole) }
-                                               changeUserRole={ this.handleChangeUserRole }
-                                               removeUserRole={ this.handleRemoveUserRole }
-                                               addUserRole={ this.handleAddUserRole }
-                                    />
-                                </div>
-                            </div>
-                        }
-
-
-                        <hr/>
+                    </div>
+                    <div className="panel" style={{padding: "10px"}}>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_application')}</h3>
@@ -317,10 +382,11 @@ class User extends Component {
 
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
-                                <div className="grid-x grid-padding-x align-center-middle">
+                                <div className="grid-x grid-padding-x align-right">
                                     <div className="medium-6 cell">
                                         <label className="text-bold">{t('admin.user.label_role_app')}
-                                            <select name="roles" value={this.state.user.roles || []} onChange={(e) => this.handleChangeRoles(e.target.options)} multiple>
+                                            <select name="roles" value={this.state.user.roles || []}
+                                                    onChange={(e) => this.handleChangeRoles(e.target.options)} multiple>
                                                 {rolesSelect}
                                             </select>
                                         </label>
@@ -332,30 +398,28 @@ class User extends Component {
                                             onChange={this.handleChangeField}
                                             activeText={t('common.label.yes')}
                                             inactiveText={t('common.label.no')}/>
+                                    {
+                                        (userId) &&
+                                        <div className="medium-6 cell" style={{marginTop:"-4em"}}>
+                                            <div className="admin_search_input medium-6 cell">
+                                                <label className="text-bold">{t('admin.user.label_api_key')}
+                                                    <p name="apitoken"> {user.apitoken}</p>
+                                                </label>
+                                            </div>
+                                            <div className="admin_search_input medium-6 cell">
+                                                <label className="text-bold">{t('admin.user.label_api_secret')}
+                                                    <p name="apisecret">{user.apisecret}</p>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                                {
-                                    (userId) &&
-                                    <div className="grid-x grid-padding-x grid-padding-y">
-                                        <div className="admin_search_input medium-6 cell">
-                                            <label className="text-bold">{t('admin.user.label_api_key')}
-                                                <input name="apitoken" value={user.apitoken} />
-                                            </label>
-                                        </div>
-                                        <div className="admin_search_input medium-6 cell">
-                                            <label className="text-bold">{t('admin.user.label_api_secret')}
-                                                <input name="apisecret" value={user.apisecret} />
-                                            </label>
-                                        </div>
-                                    </div>
-                                }
-
-                            </div>
-                            <div className="medium-12 cell">
-                                <button className="button float-right hollow text-uppercase" onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
-                                {(userId) && <button className="alert button float-right hollow text-uppercase" onClick={() => this.handleClickDelete(user.id)}>{t('common.button.delete')}</button>}
                             </div>
                         </div>
-
+                    </div>
+                    <div className="medium-12 cell" style={{marginBottom:"2em"}}>
+                        <button className="button float-right hollow text-uppercase"
+                                onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
                     </div>
                 </div>
             </div>

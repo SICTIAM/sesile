@@ -22,7 +22,7 @@ class RolesUser extends Component {
                         <div key={key} className="grid-x align-middle">
                             <InputValidation    id={key}
                                                 type="text"
-                                                className="cell medium-6"
+                                                className="cell medium-9"
                                                 labelText={t('admin.user.label_role_user')}
                                                 value={role.user_roles}
                                                 onChange={changeUserRole}
