@@ -7,7 +7,7 @@ import { translate } from 'react-i18next'
 import InputValidation from '../_components/InputValidation'
 import CircuitValidationSteps from '../circuit/CircuitValidationSteps'
 import {arrayMove} from 'react-sortable-hoc'
-import {handleErrors} from '../_utils/Utils'
+import { handleErrors, createUUID } from '../_utils/Utils'
 import {basicNotification} from '../_components/Notifications'
 import DocumentsNew from '../document/DocumentsNew'
 import UsersCopy from './UsersCopy'
@@ -173,11 +173,16 @@ class ClasseurNew extends Component {
         this.setState({circuit})
     }
     handleSelectChange = (users_copy) => this.setState({ users_copy })
-    onDrop = (documents) => this.setState(prevState => prevState.documents = [...this.state.documents, ...documents])
-    removeDocument = (key) => {
-        key.preventDefault()
-        key.stopPropagation()
-        this.setState(prevState => prevState.documents.splice(key, 1))
+    onDrop = (documents) => {
+        documents.map(document => {
+            Object.defineProperty(document, "id", {value : createUUID(), writable : false, enumerable : true, configurable : true})
+        })
+        this.setState(prevState => prevState.documents = [...this.state.documents, ...documents])
+    }
+    removeDocument = (e, key) => {
+        e.preventDefault()
+        e.stopPropagation()
+        this.setState(prevState => prevState.documents.splice(prevState.documents.findIndex((document) => document.id === key), 1))
     }
 
     render() {
