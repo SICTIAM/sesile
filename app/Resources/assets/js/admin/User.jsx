@@ -40,9 +40,12 @@ class User extends Component {
                 apitoken: '',
                 apisecret: '',
                 path: '',
-                path_signature: ''
+                path_signature: '',
+                collectivite:'',
+                test:false
             }
         }
+        this.handleChangeRoles = this.handleChangeRoles.bind(this);
     }
 
     componentDidMount() {
@@ -117,18 +120,17 @@ class User extends Component {
         this.setState({user})
     }
 
-    handleChangeRoles = (options) => {
+    handleChangeRoles = (field, value) => {
+        console.log(field)
+        console.log(value)
+        console.log()
         const {user} = this.state
-        const newRoles = [...options].filter(o => o.selected).map(o => o.value)
-
-        user['roles'] = newRoles
-        this.setState({user})
     }
 
     handleChangeUserRole = (key, role) => this.setState(prevState => prevState.user.userrole[key].user_roles = role)
     handleRemoveUserRole = (key) => this.setState(prevState => prevState.user.userrole.splice(key, 1))
-    handleAddUserRole = () => this.setState(prevState => prevState.user.userrole.push({
-        user_roles: '',
+    handleAddUserRole = (role) => this.setState(prevState => prevState.user.userrole.push({
+        user_roles: role,
         user: this.state.userId
     }))
     userNomAndPrenomIsNotEmpty = () => this.state.user._nom.length > 0 && this.state.user._prenom.length > 0
@@ -150,6 +152,7 @@ class User extends Component {
             apiactivated: user.apiactivated,
             roles: user.roles,
             userrole: user.userrole
+            //collectivite: JSON.stringify(user.collectivite)
         }
 
         fetch(Routing.generate("sesile_user_userapi_updateuser", {id}), {
@@ -202,7 +205,15 @@ class User extends Component {
         const {user} = this.state
         const roles = this.state.roles
         const userId = this.props.match.params.userId
-        const rolesSelect = roles && roles.map((role, key) => <option value={role} key={key}>{role}</option>)
+        const rolesSelect = roles && roles.map((role,key) => <Switch  id={role}
+                                                                      key={key}
+                                                                      className="cell medium-4"
+                                                                      labelText={role}
+                                                                      checked={user.test}
+                                                                      onChange={this.handleChangeRoles}
+                                                                      activeText={t('common.label.yes')}
+                                                                      inactiveText={t('common.label.no')}/>)
+        //const collectiviteList = user.collectivite(collectivite => <ul>{collectivite.nom}</ul>)
 
         return (
             <div className="grid-x">
@@ -235,6 +246,14 @@ class User extends Component {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div className="grid-x grid-padding-y">
+                            <div className="cell medium-12 text-right text-bold">
+                                <a href={ "https://" + user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
+                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
+                                    {t('common.user.upadate_account')}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -280,8 +299,12 @@ class User extends Component {
                                     </div>
                                 </div>
                             }
+                            <div className="cell medium-6">
+                                <label className="text-bold text-capitalize-first-letter">collectivités</label>
+                                {user.collectivite && <ul>{user.collectivite.nom}</ul>}
+                            </div>
                         </div>
-                        <div className="grid-x grid-padding-x grid-padding-y">
+                        <div className="grid-x grid-padding-x grid-padding-y" style={{marginLeft:"0.1em"}}>
                             <Switch id="enabled"
                                     className="cell medium-4"
                                     labelText={t('admin.user.placeholder_enable')}
@@ -317,6 +340,7 @@ class User extends Component {
                                            changeUserRole={this.handleChangeUserRole}
                                            removeUserRole={this.handleRemoveUserRole}
                                            addUserRole={this.handleAddUserRole}
+                                           userId={this.state.userId}
                                 />
                             </div>
                             }
@@ -387,8 +411,8 @@ class User extends Component {
                                         <label className="text-bold">{t('admin.user.label_role_app')}
                                             <select name="roles" value={this.state.user.roles || []}
                                                     onChange={(e) => this.handleChangeRoles(e.target.options)} multiple>
-                                                {rolesSelect}
                                             </select>
+                                            {rolesSelect}
                                         </label>
                                     </div>
                                     <Switch id="apiactivated"
