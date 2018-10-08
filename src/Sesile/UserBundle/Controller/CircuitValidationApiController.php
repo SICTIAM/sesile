@@ -154,7 +154,7 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getByIdCircuit"})
      * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      * @Rest\Delete("/{id}/{collectiviteId}")
      * @param Groupe $groupe
@@ -184,7 +184,7 @@ class CircuitValidationApiController extends FOSRestController implements ClassR
             $em->remove($groupe);
             $em->flush();
 
-            $circuits = $em->getRepository('SesileUserBundle:Groupe')->findByCollectivite($collectivite);
+            $circuits = $em->getRepository('SesileUserBundle:Groupe')->findByCollectivite($collectivite->getId());
             return $circuits;
         } else {
             return new JsonResponse(['message' => "Denied Access"], Response::HTTP_FORBIDDEN);
