@@ -22,12 +22,14 @@ class DocumentsNew extends Component {
         accept: '',
         dropFileError: '',
         multiple: false,
-        fileRule : '',
+        fileRule: '',
         collectivite: {}
     }
+
     componentDidMount() {
         this.fetchCollectivite()
     }
+
     fetchCollectivite() {
         fetch(Routing.generate('sesile_main_collectiviteapi_getbyid', {id: this.props.user.current_org_id}),
             {credentials: 'same-origin'})
@@ -36,14 +38,15 @@ class DocumentsNew extends Component {
             .then(collectivite => this.setState({collectivite}))
             .catch(() => this.setState({collectivite: {ordonnees_signature: 10, abscisses_signature: 10}}))
     }
+
     componentWillReceiveProps(nextProps) {
-        const { t } = this.context
-        const { typeClasseur, documents, editClasseur } = nextProps
+        const {t} = this.context
+        const {typeClasseur, documents, editClasseur} = nextProps
 
         if (typeClasseur.nom === "Helios" && documents.length > 0 || !editClasseur) {
             this.setState({disabled: true})
         }
-        else if (!editClasseur){
+        else if (!editClasseur) {
             this.setState({disabled: true})
         }
         else {
@@ -58,8 +61,9 @@ class DocumentsNew extends Component {
             this.setState({fileRule: t('common.documents.error.file_acceptation_rules')})
         }
     }
+
     handleChangeCollectiviteValue = (name, value) => {
-        const { collectivite } = this.state
+        const {collectivite} = this.state
         collectivite[name] = value
         this.setState({collectivite})
     }
@@ -85,10 +89,11 @@ class DocumentsNew extends Component {
     isFinalizedOrRetiredClasseur = () => this.classeurIsFinalized() || this.props.statusClasseur === 3
     userNotHaveSignatureImage = () => this.props.user.path_signature && this.props.user.path_signature.trim() !== ""
     isPendingAndHeliosTypeCLasseur = () => this.props.statusClasseur === 1 && this.props.typeClasseur.nom === 'Helios'
-    render () {
-        const { t } = this.context
-        const { onDrop, removeDocument, onClick, displayReveal, user }  = this.props
-        const { disabled, accept, multiple, fileRule } = this.state
+
+    render() {
+        const {t} = this.context
+        const {onDrop, removeDocument, onClick, displayReveal, user} = this.props
+        const {disabled, accept, multiple, fileRule} = this.state
         const docs = this.props.documents.map((document, key) =>
             <div
                 key={key}
@@ -100,7 +105,8 @@ class DocumentsNew extends Component {
                     marginBottom: '1em',
                     boxShadow: '0 1px 2px 0 rgba(34, 36, 38, 0.15)',
                     borderRadius: '0.28571429rem',
-                    border: '1px solid rgba(34, 36, 38, 0.15'}}>
+                    border: '1px solid rgba(34, 36, 38, 0.15'
+                }}>
                 <div
                     onClick={(e) => onClick(e, document.id)}
                     className="grid-x doc-action-button"
@@ -128,7 +134,9 @@ class DocumentsNew extends Component {
                 <div className="grid-x">
                     <div
                         title={t('common.expand_preview')}
-                        onClick={(e) => {if(!this.isNewDocument(document)) displayReveal(e, document.id)}}
+                        onClick={(e) => {
+                            if (!this.isNewDocument(document)) displayReveal(e, document.id)
+                        }}
                         className={
                             `cell medium-auto align-center
                             doc-action-button
@@ -138,9 +146,9 @@ class DocumentsNew extends Component {
                     </div>
                     {this.isPdfAndExistingDocument(document) && this.classeurIsFinalized(document) ?
                         <DowSign
-                        document={document}
-                        collectivite={this.state.collectivite}
-                        user={user}/> :
+                            document={document}
+                            collectivite={this.state.collectivite}
+                            user={user}/> :
                         this.isNewDocument(document) ?
                             <div
                                 title={t('common.download')}
@@ -149,7 +157,7 @@ class DocumentsNew extends Component {
                                     doc-action-button
                                     disabled`}
                                 style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2'}}>
-                                <i className="fa fa-download"  style={{padding: '5px'}}/>
+                                <i className="fa fa-download" style={{padding: '5px'}}/>
                             </div> :
                             <a
                                 title={t('common.download')}
@@ -159,23 +167,24 @@ class DocumentsNew extends Component {
                                     doc-action-button
                                     ${this.isNewDocument(document) && ' disabled'}`}
                                 style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2'}}>
-                                <i className="fa fa-download"  style={{padding: '5px'}}/>
+                                <i className="fa fa-download" style={{padding: '5px'}}/>
                             </a>}
                     <div
                         title={t('common.button.delete')}
                         className={
                             `cell medium-auto align-center doc-action-button
                              ${(this.isHeliosAndExistingClasseur() || this.isFinalizedOrRetiredClasseur() || !this.props.editClasseur) &&
-                                ' disabled'}`}
+                            ' disabled'}`}
                         style={{
                             display: 'flex',
                             borderLeft: 'solid 1px #b3b2b2',
                             cursor: `${(!this.isHeliosAndExistingClasseur() || !this.isFinalizedOrRetiredClasseur() || this.props.editClasseur) && ' disabled'}`
                         }}
                         onClick={(e) => {
-                            if(!this.isHeliosAndExistingClasseur() && !this.isFinalizedOrRetiredClasseur()){
+                            if (!this.isHeliosAndExistingClasseur() && !this.isFinalizedOrRetiredClasseur()) {
                                 removeDocument(e, document.id)
-                            }}}>
+                            }
+                        }}>
                         <i className="fa fa-trash" style={{padding: '5px'}}/>
                     </div>
                 </div>
@@ -189,38 +198,38 @@ class DocumentsNew extends Component {
                         </div>
                     </div>
                     {(!this.isFinalizedOrRetiredClasseur() && !this.isPendingAndHeliosTypeCLasseur()) && this.props.editClasseur &&
-                        <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
-                            <div className="cell medium-12">
-                                <Dropzone
-                                    className={
-                                        `documentation-dropzone
+                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                        <div className="cell medium-12">
+                            <Dropzone
+                                className={
+                                    `documentation-dropzone
                                         ${this.isHeliosAndHaveOneDocument() && 'disabled'}
                                         grid-x align-middle align-center`}
-                                    accept={accept}
-                                    multiple={multiple}
-                                    name="file"
-                                    disabled={disabled}
-                                    maxSize={104857600}
-                                    onDropRejected={(files) =>
-                                        this.setState({dropFileError: fileRule})}
-                                    onDropAccepted={files => onDrop(files)}>
-                                    <Cell>
-                                        <GridX className="align-center grid-margin-y grid-padding-y">
-                                            <Cell>
-                                                <i className="fa fa-file"/>
-                                            </Cell>
-                                        </GridX>
-                                        <GridX className="align-center">
-                                            <Cell className="medium-11 text-small">
-                                                {(this.state.dropFileError) ?
-                                                    <span className="text-alert">{this.state.dropFileError}</span> :
-                                                    <span>{fileRule}</span>}
-                                            </Cell>
-                                        </GridX>
-                                    </Cell>
-                                </Dropzone>
-                            </div>
-                        </div>}
+                                accept={accept}
+                                multiple={multiple}
+                                name="file"
+                                disabled={disabled}
+                                maxSize={104857600}
+                                onDropRejected={(files) =>
+                                    this.setState({dropFileError: fileRule})}
+                                onDropAccepted={files => onDrop(files)}>
+                                <Cell>
+                                    <GridX className="align-center grid-margin-y grid-padding-y">
+                                        <Cell>
+                                            <i className="fa fa-file"/>
+                                        </Cell>
+                                    </GridX>
+                                    <GridX className="align-center">
+                                        <Cell className="medium-11 text-small">
+                                            {(this.state.dropFileError) ?
+                                                <span className="text-alert">{this.state.dropFileError}</span> :
+                                                <span>{fileRule}</span>}
+                                        </Cell>
+                                    </GridX>
+                                </Cell>
+                            </Dropzone>
+                        </div>
+                    </div>}
                     <GridX className="grid-margin-x grid-padding-x grid-padding-y">
                         <Cell>
                             <div className="">

@@ -10,11 +10,17 @@ class DowSign extends Component {
         t: func
     }
     state = {
-        images: []
+        images: [],
+        collectivite: {}
     }
 
     componentDidMount() {
         this.fetchImage()
+    }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.collectivite !== nextProps.collectivite) {
+            this.setState({collectivite: nextProps.collectivite})
+        }
     }
 
     fetchImage() {
@@ -44,7 +50,8 @@ class DowSign extends Component {
 
     render() {
         const {t} = this.context
-        const {collectivite, document, user} = this.props
+        const { document, user} = this.props
+        const {collectivite} = this.state
         return (
                 <div
                     title={t('common.download')}

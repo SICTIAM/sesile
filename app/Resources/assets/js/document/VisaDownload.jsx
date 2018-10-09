@@ -22,10 +22,10 @@ class DraggablePositionDownload extends Component {
             this.setState({imageUrl: `url(data:image/jpg;base64,${this.state.imageFirstPage})`})
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.images !== prevProps.images) {
-            this.setState({imageFirstPage: this.props.images[0]})
-            this.setState({imageLastPage: this.props.images[1]})
+    componentWillReceiveProps(nextProps) {
+        if (this.props.images !== nextProps.images) {
+            this.setState({imageFirstPage: nextProps.images[0]})
+            this.setState({imageLastPage: nextProps.images[1]})
             this.setState({valid: true})
         }
         if (this.state.valid) {
