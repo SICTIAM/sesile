@@ -11,28 +11,26 @@ class DraggablePositionDownload extends Component {
     state = {
         imageFirstPage: '',
         imageLastPage: '',
-        imageurl: ''
-    }
-
-    fetchImage() {
-        fetch(Routing.generate('sesile_document_documentapi_getpdfpreview', {id: this.props.id}),
-            {credentials: 'same-origin'})
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(images => this.setState({imageFirstPage: images[0], imageLastPage: images[1]}))
-            .then(image => this.isSignatureLastPage())
+        imageUrl: '',
+        valid: false
     }
 
     isSignatureLastPage() {
         this.props.type === "signature" && this.props.collectivite.page_signature === 0 ?
-            this.setState({imageurl: `url(data:image/jpg;base64,${this.state.imageLastPage})`})
+            this.setState({imageUrl: `url(data:image/jpg;base64,${this.state.imageLastPage})`})
             :
-            this.setState({imageurl: `url(data:image/jpg;base64,${this.state.imageFirstPage})`})
-        return (this.state.imageurl)
+            this.setState({imageUrl: `url(data:image/jpg;base64,${this.state.imageFirstPage})`})
     }
 
-    componentDidMount() {
-        this.fetchImage()
+    componentDidUpdate(prevProps) {
+        if (this.props.images !== prevProps.images) {
+            this.setState({imageFirstPage: this.props.images[0]})
+            this.setState({imageLastPage: this.props.images[1]})
+            this.setState({valid: true})
+        }
+        if (this.state.valid) {
+            this.isSignatureLastPage()
+        }
     }
 
     render() {
@@ -67,7 +65,7 @@ class DraggablePositionDownload extends Component {
                             overflow: 'auto',
                             padding: '0',
                             display: 'flex',
-                            background: this.state.imageurl
+                            background: this.state.imageUrl
                         }}
                         position={this.props.position}
                         boxStyle={{height: '30px', width: '65px', padding: 0}}

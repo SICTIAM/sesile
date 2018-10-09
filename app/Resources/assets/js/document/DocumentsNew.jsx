@@ -9,6 +9,7 @@ import { BytesToSize } from '../_utils/Utils'
 import { handleErrors } from '../_utils/Utils'
 import DraggablePositionDownload from '../document/VisaDownload'
 import DraggablePositionVisaSignatureDownload from '../document/VisaSignatureDownload'
+import DowSign from "./DowSign";
 
 
 class DocumentsNew extends Component {
@@ -136,111 +137,10 @@ class DocumentsNew extends Component {
                         <i className="fa fa-expand" style={{padding: '5px'}}/>
                     </div>
                     {this.isPdfAndExistingDocument(document) && this.classeurIsFinalized(document) ?
-                        <div
-                            title={t('common.download')}
-                            className={
-                                `cell medium-auto align-center
-                                doc-action-button
-                                ${this.isNewDocument(document) && ' disabled'}`}
-                            style={{display: 'flex', borderLeft: 'solid 1px #b3b2b2'}}>
-                            <a
-                                style={{
-                                    color: '#404257',
-                                    width: '100%',
-                                    textAlign: 'center'}}
-                                data-toggle={`document-dropdown-${document.id}`}>
-                                <i className="fa fa-download"  style={{padding: '5px'}}/>
-                            </a>
-                            <div
-                                style={{
-                                    textAlign: 'center',
-                                    padding: 0,
-                                    width: '10em',
-                                    borderRadius: '5px',
-                                    marginTop: '5px'
-                                }}
-                                className="dropdown-pane"
-                                id={`document-dropdown-${document.id}`}
-                                data-alignment="center"
-                                data-close-on-click={true}
-                                data-dropdown data-auto-focus={true}>
-                                <ul className="no-bullet" style={{marginBottom: 0}}>
-                                    <hr style={{margin: 0}}/>
-                                    <DraggablePositionDownload
-                                        href={Routing.generate('download_doc_visa', {
-                                            orgId: user.current_org_id,
-                                            id: document.id,
-                                            absVisa: this.state.collectivite.abscisses_visa,
-                                            ordVisa: this.state.collectivite.ordonnees_visa})}
-                                        position={{
-                                            x: this.state.collectivite.abscisses_visa,
-                                            y: this.state.collectivite.ordonnees_visa}}
-                                        label={t('common.documents.btn_visa')}
-                                        handleChange={this.handleChangeVisaPosition}
-                                        collectivite={this.state.collectivite}
-                                        dataToggle={`visa-dropdown-${document.id}`}
-                                        type="visa"
-                                        id={document.id}
-                                        disabled={false}/>
-                                    <hr style={{margin: 0}}/>
-                                    <div>
-                                        <DraggablePositionDownload
-                                            href={
-                                                Routing.generate(
-                                                    'download_doc_sign',
-                                                    {orgId: user.current_org_id,
-                                                        id: document.id,
-                                                        absSign: this.state.collectivite.abscisses_signature,
-                                                        ordSign: this.state.collectivite.ordonnees_signature})}
-                                            position={{
-                                                x: this.state.collectivite.abscisses_signature,
-                                                y: this.state.collectivite.ordonnees_signature}}
-                                            label={t('common.documents.btn_signature')}
-                                            handleChange={this.handleChangeSignaturePosition}
-                                            collectivite={this.state.collectivite}
-                                            dataToggle={`signature-dropdown-${document.id}`}
-                                            type="signature"
-                                            id={document.id}
-                                            disabled={!this.userNotHaveSignatureImage()}/>
-                                            <hr style={{margin: 0}}/>
-                                    </div>
-                                    <div>
-                                        <DraggablePositionVisaSignatureDownload
-                                            href={
-                                                Routing.generate(
-                                                    'download_doc_all',
-                                                    {orgId: user.current_org_id,
-                                                        id: document.id,
-                                                        absSign: this.state.collectivite.abscisses_signature,
-                                                        ordSign: this.state.collectivite.ordonnees_signature,
-                                                        absVisa: this.state.collectivite.abscisses_visa,
-                                                        ordVisa: this.state.collectivite.ordonnees_visa})}
-                                            positionSignature={{
-                                                x: this.state.collectivite.abscisses_signature,
-                                                y: this.state.collectivite.ordonnees_signature}}
-                                            positionVisa={{
-                                                x: this.state.collectivite.abscisses_visa,
-                                                y: this.state.collectivite.ordonnees_visa}}
-                                            label={t('common.documents.btn_both')}
-                                            handleChangeSignature={this.handleChangeSignaturePosition}
-                                            handleChangeVisa={this.handleChangeVisaPosition}
-                                            collectivite={this.state.collectivite}
-                                            dataToggle={`signature-visa-dropdown-${document.id}`}
-                                            type="signature"
-                                            id={document.id}
-                                            disabled={!this.userNotHaveSignatureImage()}/>
-                                        <hr style={{margin: 0}}/>
-                                    </div>
-                                    <li className="doc-action-button">
-                                        <a
-                                            className="button secondary clear"
-                                            href={Routing.generate('download_doc', {id: document.id})}>
-                                            {t('common.electronic_signature')}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div> :
+                        <DowSign
+                        document={document}
+                        collectivite={this.state.collectivite}
+                        user={user}/> :
                         this.isNewDocument(document) ?
                             <div
                                 title={t('common.download')}
