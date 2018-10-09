@@ -5,7 +5,7 @@ namespace Sesile\DocumentBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use Sesile\ClasseurBundle\Entity\Classeur;
-use Imagick;
+use \Imagick;
 
 /**
  * Document
@@ -299,24 +299,25 @@ class Document
      */
     public function getPDFImage($page = 0, $orientation = "PORTRAIT", $path) {
         if($this->getType() == "application/pdf") {
-
-
             $imagick = new Imagick();
-//            $imagick->readImage('mytest.pdf');
-
+            $img = new Imagick($path . $this->getRepourl());
+            $nbr_page = $img->getNumberImages() - 1;
             $imagick->readImage($path . $this->getRepourl() . '[' . $page . ']');
+            $imagicklast = new Imagick($path . $this->getRepourl() . '[' . $nbr_page . ']');
 
             // Si le PDF est au format portrait
             if ($orientation == "PORTRAIT") {
                 $imagick->thumbnailImage(210,297,true,true);
+                $imagicklast->thumbnailImage(210,297,true,true);
             } else {
                 $imagick->thumbnailImage(297,210,true,true);
+                $imagicklast->thumbnailImage(297,210,true,true);
             }
             $imagick->setFormat('jpg');
+            $imagicklast->setFormat('jpg');
 //          $thumb = $imagick->getImageBlob();
 //          header("Content-Type: image/jpg");
-            return base64_encode($imagick->getImageBlob());
-
+            return array(base64_encode($imagick->getImageBlob()), base64_encode($imagicklast->getImageBlob()));
         } else return true;
     }
 

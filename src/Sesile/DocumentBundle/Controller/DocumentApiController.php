@@ -44,9 +44,9 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     public function getPdfPreviewAction(Document $document)
     {
         //@todo
-        return false;
-//        $path = $this->container->getParameter('upload')['fics'];
-//        return $document->getPDFImage(0, "PORTRAIT", $path);
+//        return false;
+        $path = $this->container->getParameter('upload')['fics'];
+        return $document->getPDFImage(0, "PORTRAIT", $path);
     }
 
     /**
