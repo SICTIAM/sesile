@@ -49,9 +49,9 @@ class RolesUser extends Component {
                 { roles.map((role, key) =>
                     (
                         <div key={key} className="grid-x align-middle">
-                            <ul id={key}>{role.user_roles}</ul>
+                            <ul className="cell medium-7" id={key}>{role.user_roles}</ul>
                             <div className="cell medium-1 text-center align-center-middle" style={{marginBottom:"0.6em"}}>
-                                <button className="fa fa-minus-circle medium icon-action" onClick={() => removeUserRole(key)}></button>
+                                <button className="fa fa-minus-circle medium icon-action float-right" onClick={() => removeUserRole(key)}></button>
                             </div>
                         </div>
                     )

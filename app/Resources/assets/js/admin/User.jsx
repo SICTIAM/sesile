@@ -41,8 +41,8 @@ class User extends Component {
                 apisecret: '',
                 path: '',
                 path_signature: '',
-                collectivite:'',
-                test:false
+                collectivities: [],
+                test: false
             }
         }
         this.handleChangeRoles = this.handleChangeRoles.bind(this);
@@ -121,10 +121,17 @@ class User extends Component {
     }
 
     handleChangeRoles = (field, value) => {
-        console.log(field)
-        console.log(value)
-        console.log()
         const {user} = this.state
+        const newRole = user.roles
+        if (value === true) {
+            newRole.indexOf(field) === -1 ? newRole.push(field) : console.log(true)
+        }
+        if (value === false) {
+            const indexs = newRole.indexOf(field)
+            newRole.splice(indexs, 1)
+        }
+        user['roles'] = newRole
+        this.setState({user})
     }
 
     handleChangeUserRole = (key, role) => this.setState(prevState => prevState.user.userrole[key].user_roles = role)
@@ -152,7 +159,6 @@ class User extends Component {
             apiactivated: user.apiactivated,
             roles: user.roles,
             userrole: user.userrole
-            //collectivite: JSON.stringify(user.collectivite)
         }
 
         fetch(Routing.generate("sesile_user_userapi_updateuser", {id}), {
@@ -173,6 +179,7 @@ class User extends Component {
                         t('admin.success.update', {name: t('admin.user.name')}),
                         t('admin.user.succes_update', {name: user._prenom + ' ' + user._nom})
                     ))
+                    History.push(`/admin/utilisateurs/`)
                 }
             })
             .catch(error => _addNotification(basicNotification(
@@ -199,29 +206,34 @@ class User extends Component {
                 History.push(`/admin/utilisateurs`)
             })
     }
+    isCheckedRoleSelect = (role) => {
+        return this.state.user.roles.indexOf(role) === -1 ? false : true
+    }
 
     render() {
         const {t} = this.context
         const {user} = this.state
         const roles = this.state.roles
         const userId = this.props.match.params.userId
-        const rolesSelect = roles && roles.map((role,key) => <Switch  id={role}
+        const rolesSelect = roles && roles.map((role, key) => <Switch id={role}
                                                                       key={key}
                                                                       className="cell medium-4"
                                                                       labelText={role}
-                                                                      checked={user.test}
+                                                                      checked={this.isCheckedRoleSelect(role)}
                                                                       onChange={this.handleChangeRoles}
                                                                       activeText={t('common.label.yes')}
                                                                       inactiveText={t('common.label.no')}/>)
-        //const collectiviteList = user.collectivite(collectivite => <ul>{collectivite.nom}</ul>)
+        const collectiviteList = user.collectivities.map(collectivite => <li>{collectivite.nom}</li>)
 
         return (
             <div className="grid-x">
+                <div className="cell align-center-middle">
+                    <h4 className="text-center text-bold text-uppercase">UTILISATEUR</h4>
+                </div>
                 <div className="admin-details medium-12 cell">
                     <div className="panel" style={{padding: "10px"}}>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
-                                <h3>{t('admin.user.subtitle_user')}</h3>
                             </div>
                         </div>
                         <div className="grid-x grid-margin-x grid-padding-x">
@@ -248,19 +260,13 @@ class User extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="grid-x grid-padding-y">
-                            <div className="cell medium-12 text-right text-bold">
-                                <a href={ "https://" + user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
-                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
-                                    {t('common.user.upadate_account')}
-                                </a>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="panel" style={{padding: "10px"}}>
-                        <div className="medium-12 cell">
-                            <h3>Informations Utilisateur</h3>
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <h3>{t('admin.user.subtitle_user')}</h3>
+                            </div>
                         </div>
                         <div className="grid-x grid-margin-x grid-padding-x" style={{height: "4em"}}>
                             {
@@ -301,10 +307,10 @@ class User extends Component {
                             }
                             <div className="cell medium-6">
                                 <label className="text-bold text-capitalize-first-letter">collectivités</label>
-                                {user.collectivite && <ul>{user.collectivite.nom}</ul>}
+                                {collectiviteList}
                             </div>
                         </div>
-                        <div className="grid-x grid-padding-x grid-padding-y" style={{marginLeft:"0.1em"}}>
+                        <div className="grid-x grid-padding-x grid-padding-y" style={{marginLeft: "0.1em"}}>
                             <Switch id="enabled"
                                     className="cell medium-4"
                                     labelText={t('admin.user.placeholder_enable')}
@@ -315,8 +321,10 @@ class User extends Component {
                         </div>
                     </div>
                     <div className="panel" style={{padding: "10px"}}>
-                        <div className="medium-12 cell">
-                            <h3>{t('admin.user.subtitle_signature')}</h3>
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-12 cell">
+                                <h3>{t('admin.user.subtitle_signature')}</h3>
+                            </div>
                         </div>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-6 cell">
@@ -336,6 +344,17 @@ class User extends Component {
                             </div>
                             {(userId) &&
                             <div className="medium-6 cell">
+                              <Textarea id="qualite"
+                                        name="qualite"
+                                        className="cell medium-6"
+                                        labelText={t('admin.user.label_quality')}
+                                        value={user.qualite || ''}
+                                        onChange={this.handleChangeField}/>
+                            </div>
+                            }
+                        </div>
+                        <div className="grid-x grid-margin-x grid-padding-x">
+                            <div className="medium-7 cell">
                                 <RolesUser roles={Object.assign([], user.userrole)}
                                            changeUserRole={this.handleChangeUserRole}
                                            removeUserRole={this.handleRemoveUserRole}
@@ -343,15 +362,6 @@ class User extends Component {
                                            userId={this.state.userId}
                                 />
                             </div>
-                            }
-                        </div>
-                        <div className="grid-x grid-margin-x grid-padding-x">
-                            <Textarea id="qualite"
-                                      name="qualite"
-                                      className="cell medium-6"
-                                      labelText={t('admin.user.label_quality')}
-                                      value={user.qualite || ''}
-                                      onChange={this.handleChangeField}/>
                         </div>
                     </div>
                     <div className="panel" style={{padding: "10px"}}>
@@ -409,9 +419,6 @@ class User extends Component {
                                 <div className="grid-x grid-padding-x align-right">
                                     <div className="medium-6 cell">
                                         <label className="text-bold">{t('admin.user.label_role_app')}
-                                            <select name="roles" value={this.state.user.roles || []}
-                                                    onChange={(e) => this.handleChangeRoles(e.target.options)} multiple>
-                                            </select>
                                             {rolesSelect}
                                         </label>
                                     </div>
@@ -424,7 +431,7 @@ class User extends Component {
                                             inactiveText={t('common.label.no')}/>
                                     {
                                         (userId) &&
-                                        <div className="medium-6 cell" style={{marginTop:"-4em"}}>
+                                        <div className="medium-6 cell" style={{marginTop: "-10em"}}>
                                             <div className="admin_search_input medium-6 cell">
                                                 <label className="text-bold">{t('admin.user.label_api_key')}
                                                     <p name="apitoken"> {user.apitoken}</p>
@@ -441,7 +448,7 @@ class User extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="medium-12 cell" style={{marginBottom:"2em"}}>
+                    <div className="medium-12 cell" style={{marginBottom: "2em"}}>
                         <button className="button float-right hollow text-uppercase"
                                 onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
                     </div>
