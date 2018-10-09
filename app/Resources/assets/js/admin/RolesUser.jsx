@@ -16,16 +16,13 @@ class RolesUser extends Component {
             value: '',
             userId: ''
         }
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState({value: event.target.value});
-        console.log(this.state.value)
     }
 
-    handleSubmit(event) {
+    handleSubmit = (event)  => {
         this.props.addUserRole(this.state.value)
         this.setState({value: ''})
         event.preventDefault();

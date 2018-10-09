@@ -45,7 +45,6 @@ class User extends Component {
                 test: false
             }
         }
-        this.handleChangeRoles = this.handleChangeRoles.bind(this);
     }
 
     componentDidMount() {
@@ -124,7 +123,7 @@ class User extends Component {
         const {user} = this.state
         const newRole = user.roles
         if (value === true) {
-            newRole.indexOf(field) === -1 ? newRole.push(field) : console.log(true)
+            newRole.indexOf(field) === -1 && newRole.push(field)
         }
         if (value === false) {
             const indexs = newRole.indexOf(field)
