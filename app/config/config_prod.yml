@@ -52,3 +52,9 @@ monolog:
             path:  '%kernel.logs_dir%/migrator-%kernel.environment%.log'
             level: info
             channels: ['!security', '!doctrine']
+        logstash:
+            type: gelf
+            publisher:
+                hostname: ***REMOVED***
+                port: 12201
+            formatter: monolog.formatter.gelf_message

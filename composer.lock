@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c64bae529a58ce4c84094037941771c8",
+    "content-hash": "7d13ba9e90c47b6b74900f9b8479deaf",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1436,6 +1436,62 @@
             "time": "2018-01-08T14:13:45+00:00"
         },
         {
+            "name": "graylog2/gelf-php",
+            "version": "1.5.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bzikarsky/gelf-php.git",
+                "reference": "c4e0743ba323459b6e62222107a0898e77d2fd6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bzikarsky/gelf-php/zipball/c4e0743ba323459b6e62222107a0898e77d2fd6e",
+                "reference": "c4e0743ba323459b6e62222107a0898e77d2fd6e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9",
+                "psr/log": "~1.0"
+            },
+            "provide": {
+                "psr/log-implementation": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.3",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Gelf\\": "src/Gelf"
+                },
+                "files": [
+                    "src/check_technical_requirements.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin Zikarsky",
+                    "email": "benjamin@zikarsky.de"
+                },
+                {
+                    "name": "gelf-php contributors",
+                    "homepage": "https://github.com/bzikarsky/gelf-php/contributors"
+                }
+            ],
+            "description": "A php implementation to send log-messages to a GELF compatible backend like Graylog2.",
+            "time": "2017-06-24T10:38:25+00:00"
+        },
+        {
             "name": "guzzlehttp/guzzle",
             "version": "6.3.0",
             "source": {
@@ -1622,12 +1678,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SICTIAM/HWIOAuthBundle.git",
-                "reference": "d275deed5a565412eda7839e93d312b89c9dc297"
+                "reference": "9fbb81628deffc4bd34f3ec72b116321ca45d9fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SICTIAM/HWIOAuthBundle/zipball/d275deed5a565412eda7839e93d312b89c9dc297",
-                "reference": "d275deed5a565412eda7839e93d312b89c9dc297",
+                "url": "https://api.github.com/repos/SICTIAM/HWIOAuthBundle/zipball/9fbb81628deffc4bd34f3ec72b116321ca45d9fb",
+                "reference": "9fbb81628deffc4bd34f3ec72b116321ca45d9fb",
                 "shasum": ""
             },
             "require": {
@@ -1779,7 +1835,7 @@
             "support": {
                 "source": "https://github.com/SICTIAM/HWIOAuthBundle/tree/add-ozwillo-connection"
             },
-            "time": "2018-06-05T15:18:35+00:00"
+            "time": "2018-07-10T14:34:48+00:00"
         },
         {
             "name": "incenteev/composer-parameter-handler",
