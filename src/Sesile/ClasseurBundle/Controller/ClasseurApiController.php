@@ -219,6 +219,51 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
     }
 
     /**
+     * @Rest\View(serializerGroups={"classeurById"})
+     * @Rest\Get("admin/org/{orgId}/classeurs/{classeurId}")
+     * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
+     * @param string $orgId     id collectivite
+     * @param string $classeur  id classeur
+     *
+     * @return Classeur|JsonResponse
+     */
+    public function getClasseurByIdAsUserAction ($orgId, $classeurId)
+    {
+        $authorized = true;
+
+        if($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            $authorized =
+                $this->getUser()->getcollectivities()->exists(
+                    function ($key, $collectivite) use ($orgId) {
+                        return $collectivite->getId() == $orgId;});
+        }
+
+        if($authorized) {
+            $classeurRepository = $this->getDoctrine()->getManager()->getRepository(Classeur::class);
+            $classeur = $classeurRepository->findOneBy(['id' => $classeurId, 'collectivite' => $orgId]);
+
+            if($classeur) {
+                $classeur = $classeurRepository
+                    ->addClasseurValue($classeur, $this->getUser()->getId());
+
+                foreach ($classeur->getDocuments() as $document) {
+                    $documentPath = $this->getParameter('upload')['fics'] . $document->getRepourl();
+                    $fileSize = 0;
+                    if(file_exists($documentPath)) {
+                        $fileSize = filesize($documentPath);
+                    }
+                    $document->setSize($fileSize);
+                }
+                return $classeur;
+            } else {
+                throw $this->createNotFoundException("Le Classeur n'a pas pu être trouvé ou vous n'avez pas les droits requis");
+            }
+        } else {
+            throw $this->createAccessDeniedException("Le Classeur n'a pas pu être affiché vous n'avez pas les droits requis");
+        }
+    }
+
+    /**
      * @Rest\View("statusCode=Response::HTTP_CREATED", serializerGroups={"classeurById"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Rest\Post("/classeur/new")

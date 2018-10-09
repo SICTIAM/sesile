@@ -204,7 +204,7 @@ const ClasseurField = ({edit , children, label, value}, {t}) => {
                 <div>
                     <GridX className="grid-margin-x grid-padding-x">
                         <Cell>
-                            <label htmlFor="classeur-info-name" className="text-capitalize text-bold">
+                            <label htmlFor={`classeur-info-${label}`} className="text-capitalize text-bold">
                                 {label}
                             </label>
                         </Cell>
@@ -212,7 +212,7 @@ const ClasseurField = ({edit , children, label, value}, {t}) => {
                     <GridX className="grid-margin-x grid-padding-x">
                         <Cell>
                             <span
-                                id="classeur-info-name"
+                                id={`classeur-info-${label}`}
                                 style={{marginLeft: '10px'}}
                                 className="bold-info-details-classeur text-capitalize-first-letter">
                                 {value}

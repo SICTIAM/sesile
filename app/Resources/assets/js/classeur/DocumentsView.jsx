@@ -11,7 +11,8 @@ class DocumentsView extends Component {
 
     static contextTypes = {
         t: func,
-        _addNotification: func
+        _addNotification: func,
+        user: object
     }
 
     static defaultProps = {
@@ -33,7 +34,6 @@ class DocumentsView extends Component {
     }
 
     componentDidMount() {
-        this.fetchUser()
         this.setState({
             documents: this.props.documents,
             currentDocument: this.props.documents[0]
@@ -125,18 +125,10 @@ class DocumentsView extends Component {
     hideRevealDisplay = () => {
         this.setState({revealDisplay: 'none'})
     }
-
-    fetchUser() {
-        fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
-            .then(response => response.json())
-            .then(json => {
-                this.setState({user: json})
-            })
-    }
     isXmlFileType = (document) => document.type && document.type === "text/xml"
     render () {
-        const { t } = this.context
-        const { documents, currentDocument, revealDisplay, user } = this.state
+        const { t, user } = this.context
+        const { documents, currentDocument, revealDisplay } = this.state
         const { classeurType, status, editClasseur } = this.props
         const onlyOfficeType = ['docx', 'doc', 'xlsx', 'xls', 'ppt', 'pptx']
         const imageType = ['png', 'jpg', 'jpeg', 'gif']
@@ -177,8 +169,8 @@ class DocumentsView extends Component {
                                 padding: 0,
                                 border: '5px'}}
                             className="cell medium-12 only-office-height"
-                            src={`./../uploads/docs/${currentDocument.repourl}`}>
-                            {t('common.browser_not_support_pdf')}, <a src={`./../uploads/docs/${currentDocument.repourl}`}>{t('common.download_pdf')}</a>
+                            src={`/uploads/docs/${currentDocument.repourl}`}>
+                            {t('common.browser_not_support_pdf')}, <a src={`/uploads/docs/${currentDocument.repourl}`}>{t('common.download_pdf')}</a>
                         </iframe>}
                     { (onlyOfficeType.includes(fileType) && currentDocument.repourl && revealDisplay === "block" && user.id ) &&
                         <div className="reveal-full" style={{display: revealDisplay}}>
@@ -191,7 +183,7 @@ class DocumentsView extends Component {
                     }
                 </div>}
                 <DocumentsNew
-                    user={this.props.user}
+                    user={this.context.user}
                     documents={documents}
                     onClick={this.handleClickDocument}
                     onDrop={this.onDrop}

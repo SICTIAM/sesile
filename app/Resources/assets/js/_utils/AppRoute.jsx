@@ -3,6 +3,7 @@ import {Route, Switch} from 'react-router-dom'
 import { object } from 'prop-types'
 
 import AdminRoute from './AdminRoute'
+import AdminClasseur from '../admin/AdminClasseur'
 import Emailing from '../admin/Emailing'
 import Collectivites from '../admin/Collectivites'
 import Collectivite from '../admin/Collectivite'
@@ -81,6 +82,9 @@ class AppRoute extends Component {
                 )} />
                 <Route exact={true} path={"/admin/:collectiviteId/classeurs/:userId"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={UserListClasseurs} user={user} match={match} />
+                )} />
+                <Route exact={true} path={"/admin/:collectiviteId/classeur/:classeurId"} render={({match}) => (
+                    <AdminRoute exact={true} path={match.path} component={AdminClasseur} user={user} match={match} />
                 )} />
                 <Route exact={true} path={"/admin/:collectiviteId/circuit-de-validation/:circuitId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={CircuitValidation} user={user} match={match} />

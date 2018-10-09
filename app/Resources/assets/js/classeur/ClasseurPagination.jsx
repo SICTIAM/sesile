@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import { func, array, number, string } from 'prop-types'
 import { translate } from 'react-i18next'
 
-import {basicNotification} from '../_components/Notifications'
-import {handleErrors} from '../_utils/Utils'
-
 class ClasseurPagination extends Component {
     static contextTypes = {
         t: func
