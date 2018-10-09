@@ -86,7 +86,7 @@ class ActionMailer
             'titre_classeur' => $classeur->getNom(),
             'date_limite' => $classeur->getValidation(),
             'type' => strtolower($classeur->getType()->getNom()),
-            'lien' => '<a href="' . $this->router->generate('classeur_edit', ['id' => $classeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '">valider le classeur</a>'
+            'lien' => '<a href="' . $this->router->generate('sesile_main_default_app', [], UrlGeneratorInterface::ABSOLUTE_URL) .'classeur/'. $classeur->getId() .'">valider le classeur</a>'
         ];
 
         foreach($validants as $validant) {
@@ -143,7 +143,7 @@ class ActionMailer
             'titre_classeur' => $classeur->getNom(),
             'date_limite' => $classeur->getValidation(),
             'type' => strtolower($classeur->getType()->getNom()),
-            'lien' => '<a href="' . $this->router->generate('classeur_edit', ['id' => $classeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '">voir le classeur</a>'
+            'lien' => '<a href="' . $this->router->generate('sesile_main_default_app', [], UrlGeneratorInterface::ABSOLUTE_URL) .'classeur/'. $classeur->getId() .'">voir le classeur</a>'
         ];
 
         // notification des users en copy
@@ -192,7 +192,7 @@ class ActionMailer
             'titre_classeur' => $classeur->getNom(),
             'date_limite' => $classeur->getValidation(),
             'type'      => strtolower($classeur->getType()->getNom()),
-            'lien'      => '<a href="' . $this->router->generate('classeur_edit', ['id' => $classeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '">voir le classeur</a>',
+            'lien'      => '<a href="' . $this->router->generate('sesile_main_default_app', [], UrlGeneratorInterface::ABSOLUTE_URL) .'classeur/'. $classeur->getId() .'">voir le classeur</a>',
             'motif'     => $classeur->getMotifRefus()
         ];
 
