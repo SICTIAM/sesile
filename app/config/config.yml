@@ -76,6 +76,7 @@ doctrine:
 # Ozwillo Oauth2
 hwi_oauth:
     firewall_names: [secured_area]
+    use_referer: true
     resource_owners:
         ozwillo:
             type:                ozwillo

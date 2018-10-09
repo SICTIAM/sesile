@@ -35,6 +35,7 @@ assetic:
 hwi_oauth:
     # list of names of the firewalls in which this bundle is active, this setting MUST be set
     firewall_names: [secured_area]
+    use_referer: true
     resource_owners:
         ozwillo:
             type:                ozwillo
