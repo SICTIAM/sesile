@@ -92,7 +92,7 @@ class DocumentsView extends Component {
     }
 
     removeDocument = (e, id) => {
-        if(this.props.edit) {
+        if(this.props.editClasseur) {
             e.preventDefault()
             e.stopPropagation()
             fetch(Routing.generate('sesile_document_documentapi_remove', {id}), {
