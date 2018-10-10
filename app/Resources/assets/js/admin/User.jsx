@@ -122,6 +122,7 @@ class User extends Component {
     handleChangeRoles = (field, value) => {
         const {user} = this.state
         const newRole = user.roles
+        field === "ROLE_USER" ? field = "" : field = field
         if (value === true) {
             newRole.indexOf(field) === -1 && newRole.push(field)
         }
@@ -206,7 +207,13 @@ class User extends Component {
             })
     }
     isCheckedRoleSelect = (role) => {
-        return this.state.user.roles.indexOf(role) === -1 ? false : true
+        role === "ROLE_USER" ? role = "" : role = role
+        return this.state.user.roles.indexOf(role) !== -1
+    }
+
+    handleChangeUser = (user) => {
+        this.setState({user})
+        this.fetchUser(user.id)
     }
 
     render() {
@@ -215,14 +222,14 @@ class User extends Component {
         const roles = this.state.roles
         const userId = this.props.match.params.userId
         const rolesSelect = roles && roles.map((role, key) => <Switch id={role}
-                                                                      key={key}
+                                                                      key={role + key}
                                                                       className="cell medium-4"
                                                                       labelText={role}
                                                                       checked={this.isCheckedRoleSelect(role)}
                                                                       onChange={this.handleChangeRoles}
                                                                       activeText={t('common.label.yes')}
                                                                       inactiveText={t('common.label.no')}/>)
-        const collectiviteList = user.collectivities.map(collectivite => <li>{collectivite.nom}</li>)
+        const collectiviteList = user.collectivities.map((collectivite, key) => <li key={key + collectivite.id.toString()}>{collectivite.nom}</li>)
 
         return (
             <div className="grid-x">
@@ -230,7 +237,7 @@ class User extends Component {
                     <h4 className="text-center text-bold text-uppercase">UTILISATEUR</h4>
                 </div>
                 <div className="admin-details medium-12 cell">
-                    <div className="panel" style={{padding: "10px"}}>
+                    <div className="panel" style={{padding: "10px", borderTop: "2px solid rgb(102, 51, 153)"}}>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                             </div>
@@ -332,6 +339,7 @@ class User extends Component {
                                         user.id &&
                                         <SignatureForm
                                             user={user}
+                                            handleChangeUser={this.handleChangeUser}
                                             styleClass="medium-12 cell text-center"
                                             tyleClass={"medium-4 cell"}
                                             helpText={t('common.file_acceptation_rules', {

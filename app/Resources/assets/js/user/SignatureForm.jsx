@@ -35,6 +35,7 @@ class SignatureForm extends Component {
                     'success',
                     t('admin.success.add', {name: t('admin.user.image_signature')})
                 ))
+                console.log(this.props.user.id)
                 this.props.handleChangeUser(user)
             })
             .catch(error => _addNotification(basicNotification(
@@ -60,7 +61,7 @@ class SignatureForm extends Component {
                     'success',
                     t('admin.success.delete', {name: t('admin.user.image_signature')})
                 ))
-                this.props.handleChangeUser(user)
+                //this.props.handleChangeUser(user)
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
