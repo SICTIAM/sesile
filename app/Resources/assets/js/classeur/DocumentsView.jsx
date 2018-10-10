@@ -125,7 +125,7 @@ class DocumentsView extends Component {
     hideRevealDisplay = () => {
         this.setState({revealDisplay: 'none'})
     }
-    isXmlFileType = (document) => document.type && document.type === "text/xml"
+    isXmlFileType = (document) => document.type && (document.type === "text/xml" || "application/xml")
     render () {
         const { t, user } = this.context
         const { documents, currentDocument, revealDisplay } = this.state
