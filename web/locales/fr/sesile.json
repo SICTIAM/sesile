@@ -402,6 +402,7 @@
         },
         "collectivite": {
             "title": "Rechercher une collectivité",
+            "domain": "Domaine",
             "name": "collectivité",
             "name_plural": "Collectivités",
             "message": "Message d'accueil",
