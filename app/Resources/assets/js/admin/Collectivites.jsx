@@ -39,9 +39,9 @@ class Collectivites extends Component {
                 _addNotification(basicNotification('error', t('admin.collectivite.error.fetch_list'))))
     }
 
-    handleSearchByCollectiviteName = (key, collectiviteName) => {
-        this.setState({collectiviteName})
-        const regex = escapedValue(collectiviteName, this.state.filteredCollectivites, this.state.collectivites)
+    handleSearchByCollectiviteName = (e) => {
+        this.setState({collectiviteName: e.target.value})
+        const regex = escapedValue(e.target.value, this.state.filteredCollectivites, this.state.collectivites)
         const filteredCollectivites = this.state.collectivites.filter(collectivite => regex.test(collectivite.nom))
         this.setState({filteredCollectivites})
     }
@@ -68,7 +68,7 @@ class Collectivites extends Component {
                                     className="cell medium-auto"
                                     style={{margin:"0"}}
                                     value={this.state.collectiviteName}
-                                    onChange={this.handleSearchByCollectiviteName}
+                                    onChange={(e) => this.handleSearchByCollectiviteName(e)}
                                     placeholder={t('common.search_by_name')}
                                     type="text"/>
                         </div>
