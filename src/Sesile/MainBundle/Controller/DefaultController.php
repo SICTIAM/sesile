@@ -72,4 +72,12 @@ class DefaultController extends Controller
                 $subdomain,
                 $this->getParameter('domain')));
     }
+
+    /**
+     * @Rest\Get("/a/logout")
+     */
+    public function logoutAction()
+    {
+        return $this->redirect($this->getParameter('ozwillo_logout_url'));
+    }
 }

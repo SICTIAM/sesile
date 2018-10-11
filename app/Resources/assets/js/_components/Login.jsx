@@ -73,7 +73,7 @@ class MenuBar extends Component {
                                             <hr/>
                                         </div>}
                                     <li>
-                                        <a href="/logout" className="button secondary clear" style={{color: this.props.color}}>
+                                        <a href={Routing.generate("sesile_main_default_logout")} className="button secondary clear" style={{color: this.props.color}}>
                                             <i className="fa fa-sign-out" style={{color: this.props.color}}/>
                                             { t('common.menu.disconnection') }
                                         </a>
