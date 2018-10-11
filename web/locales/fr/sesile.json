@@ -43,7 +43,7 @@
             "update": "Mettre à jour",
             "save": "Enregistrer",
             "edit": "Editer",
-            "list_ozwillo": "Ajouter des utilisateurs",
+            "list_ozwillo": "Liste utilisateurs Ozwillo",
             "change_img": "Changer l'image",
             "upload_img": "Ajouter une image",
             "delete_img": "Supprimer l'image",
@@ -402,6 +402,7 @@
         },
         "collectivite": {
             "title": "Rechercher une collectivité",
+            "domain": "Domaine",
             "name": "collectivité",
             "name_plural": "Collectivités",
             "message": "Message d'accueil",
