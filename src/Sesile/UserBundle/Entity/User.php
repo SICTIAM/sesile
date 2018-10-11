@@ -321,7 +321,7 @@ class User extends BaseUser {
      *  }
      * )
      *
-     * @Serializer\Groups({"currentUser"})
+     * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $collectivities;
 

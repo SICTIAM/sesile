@@ -10,6 +10,23 @@ class RolesUser extends Component {
         t: func,
         _addNotification: func
     }
+    constructor(props) {
+        super(props)
+        this.state = {
+            value: '',
+            userId: ''
+        }
+    }
+
+    handleChange = (event) => {
+        this.setState({value: event.target.value});
+    }
+
+    handleSubmit = (event)  => {
+        this.props.addUserRole(this.state.value)
+        this.setState({value: ''})
+        event.preventDefault();
+    }
 
     render () {
         const { t } = this.context
@@ -17,29 +34,25 @@ class RolesUser extends Component {
 
         return (
             <div className="medium-12 cell">
+                <label className="text-bold text-capitalize-first-letter">Rôles</label>
+                <div className="grid-x">
+                    <div className="medium-9">
+                        <form onSubmit={this.handleSubmit} style={{display:"flex"}}>
+                            <input type="text" value={this.state.value} onChange={this.handleChange} />
+                            <button type="submit" style={{marginLeft:"0.6em", marginBottom:"0.6em"}}><i className="fa fa-plus-circle icon-action"></i></button>
+                        </form>
+                    </div>
+                </div>
                 { roles.map((role, key) =>
                     (
                         <div key={key} className="grid-x align-middle">
-                            <InputValidation    id={key}
-                                                type="text"
-                                                className="cell medium-6"
-                                                labelText={t('admin.user.label_role_user')}
-                                                value={role.user_roles}
-                                                onChange={changeUserRole}
-                                                validationRule='required'
-                                                placeholder={t('admin.user.placeholder_role_user')}
-                            />
-                            <div className="cell medium-1 text-center align-center-middle">
-                                <button className="fa fa-trash medium icon-action" onClick={() => removeUserRole(key)}></button>
+                            <ul className="cell medium-7" id={key}>{role.user_roles}</ul>
+                            <div className="cell medium-1 text-center align-center-middle" style={{marginBottom:"0.6em"}}>
+                                <button className="fa fa-minus-circle medium icon-action float-right" onClick={() => removeUserRole(key)}></button>
                             </div>
                         </div>
                     )
                 )}
-                <div className="grid-x">
-                    <div className="medium-6">
-                        <button className="primary button float-right text-uppercase" onClick={addUserRole}>{t('common.button.add')}</button>
-                    </div>
-                </div>
             </div>
         )
     }
