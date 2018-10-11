@@ -12,6 +12,7 @@ import { basicNotification } from "../_components/Notifications"
 import History from '../_utils/History'
 import { DisplayLongText, handleErrors } from '../_utils/Utils'
 import { escapedValue } from '../_utils/Search'
+import SelectCollectivite from "../_components/SelectCollectivite";
 
 class Notes extends Component {
     static contextTypes = {
@@ -53,38 +54,76 @@ class Notes extends Component {
                 'error',
                 t('admin.notes.error_delete'))))
     }
-    searchNoteByTitle = (key, valueSearchByTitle) => {
-        this.setState({valueSearchByTitle})
-        const regex = escapedValue(valueSearchByTitle, this.state.filtredNotes, this.state.notes)
+    searchNoteByTitle = (e) => {
+        this.setState({valueSearchByTitle: e.target.value})
+        const regex = escapedValue(e.target.value, this.state.filtredNotes, this.state.notes)
         const filtredNotes = this.state.notes.filter(note => regex.test(note.title))
         this.setState({filtredNotes})
     }
+    onClickButton = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+    }
     render () {
-        const { t } = this.context
-        const listNote = this.state.filtredNotes.map((note, key) => <RowNote key={note.id} note={note} deleteNote={this.deleteNote} />)
+        const {t} = this.context
+        const listNote = this.state.filtredNotes.map((note, key) => <RowNote key={note.id} note={note}
+                                                                             onClick={this.onClickButton}
+                                                                             deleteNote={this.deleteNote}/>)
         return (
             <AdminPage
-                title={t('admin.notes.title')}
-                subtitle={t('admin.subtitle')}>
+                title={t('admin.notes.name_plural')}>
                 <AdminContainer>
-                    <div className="grid-x cell medium-12 align-center">
-                        <Input
-                            className="cell medium-6 align-center-middle"
-                            labelText={t('admin.label.which', {context: 'female'})}
-                            value={this.state.valueSearchByTitle}
-                            onChange={this.searchNoteByTitle}
-                            placeholder={t('admin.notes.search_by_title')}
-                            type="text"/>
+                    <div className="grid-x grid-padding-x panel align-center-middle"
+                         style={{width: "74em", marginTop: "1em"}}>
+                        <div className="cell medium-12 grid-x panel align-center-middle"
+                             style={{
+                                 display: "flex",
+                                 marginBottom: "0em",
+                                 marginTop: "10px",
+                                 padding: "10px",
+                                 width: "50%"
+                             }}>
+                            <input
+                                value={this.state.valueSearchByTitle}
+                                style={{margin:"0"}}
+                                onChange={(e) => this.searchNoteByTitle(e)}
+                                placeholder={t('admin.notes.search_by_title')}
+                                type="text"/>
+                        </div>
+
+                        <div className="cell medium-12 text-right" style={{marginTop: "10px"}}>
+                            <button
+                                className="button hollow"
+                                onClick={() => History.push(`/admin/note/`)}
+                                style={{
+                                    border: "1px solid rgb(204, 0, 102)",
+                                    color: "rgb(204, 0, 102)"
+                                }}>
+                                {t('common.button.add')}
+                            </button>
+                        </div>
+                        <table style={{margin:"10px", borderRadius:"6px"}}>
+                            <thead>
+                            <tr style={{backgroundColor:"#CC0066", color:"white"}}>
+                                <td width="300px" className="text-bold">{ t('common.label.title') }</td>
+                                <td width="300px" className="text-bold">{ t('common.label.subtitle') }</td>
+                                <td width="130px" className="text-bold">{ t('common.label.date') }</td>
+                                <td width="20px" className="text-bold">{ t('common.label.actions') }</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {listNote.length > 0 ?
+                                listNote :
+                                <tr>
+                                    <td>
+                                        <span style={{textAlign:"center"}}>{this.props.message}</span>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>}
+                            </tbody>
+                        </table>
                     </div>
-                    <AdminList
-                        title={t('admin.notes.list_title')}
-                        listLength={listNote.length}
-                        labelButton={t('common.button.add')}
-                        addLink="/admin/note/"
-                        headTitles={[t('common.label.title'), t('common.label.subtitle'), t('common.label.date'), t('common.label.actions')]}
-                        emptyListMessage={t('common.no_results', {name: t('admin.notes.name'), context: 'female'})}>
-                            {listNote}
-                    </AdminList>
                 </AdminContainer>
             </AdminPage>
         )
@@ -97,36 +136,26 @@ Notes.PropTypes = {
 
 export default translate(['sesile'])(Notes)
 
-const RowNote = ({note, deleteNote}, {t}) => {
+const RowNote = ({note, deleteNote, onClick}, {t}) => {
     return (
-        <AdminListRow>
-            <Cell className="medium-auto">
+        <tr onClick={() => History.push(`/admin/note/${note.id}`)} style={{cursor:"Pointer"}}>
+            <td>
                 <DisplayLongText text={note.title} />
-            </Cell>
-            <Cell className="medium-auto">
+            </td>
+            <td>
                 <DisplayLongText text={note.subtitle} />
-            </Cell>
-            <Cell className="medium-auto">
+            </td>
+            <td>
                 {Moment(note.created).format('LL')}
-            </Cell>
-            <Cell className="medium-auto">
-                <GridX>
-                    <Cell className="medium-auto">
-                        <i  className="fa fa-pencil icon-action"
-                            title={t('common.button.edit')} 
-                            onClick={() => History.push(`/admin/note/${note.id}`)} >
-                        </i>
-                    </Cell>
-                    <Cell className="medium-auto">
-                        <ButtonConfirmDelete
-                            id={note.id}
-                            dataToggle={`delete-confirmation-note-${note.id}`}
-                            onConfirm={deleteNote}
-                            content={t('common.confirm_deletion_item')} />
-                    </Cell>
-                </GridX>
-            </Cell>
-        </AdminListRow>
+            </td>
+            <td onClick={(e) => onClick(e)}>
+                <ButtonConfirmDelete
+                    id={note.id}
+                    dataToggle={`delete-confirmation-note-${note.id}`}
+                    onConfirm={deleteNote}
+                    content={t('common.confirm_deletion_item')} />
+            </td>
+        </tr>
     )
 }
 
