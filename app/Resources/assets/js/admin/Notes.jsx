@@ -12,7 +12,6 @@ import { basicNotification } from "../_components/Notifications"
 import History from '../_utils/History'
 import { DisplayLongText, handleErrors } from '../_utils/Utils'
 import { escapedValue } from '../_utils/Search'
-import SelectCollectivite from "../_components/SelectCollectivite";
 
 class Notes extends Component {
     static contextTypes = {
