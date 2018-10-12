@@ -11,8 +11,6 @@ import { GridX, Cell } from '../_components/UI'
 import CircuitValidationSteps from '../circuit/CircuitValidationSteps'
 import { AdminList, AdminPage, AdminContainer, AdminListRow } from "../_components/AdminUI"
 import UsersCopy from '../classeur/UsersCopy'
-import {Link} from "react-router-dom";
-import ButtonConfirmDelete from "../_components/ButtonConfirmDelete";
 
 class CircuitValidation extends Component {
 
