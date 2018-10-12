@@ -78,6 +78,8 @@ class DefaultController extends Controller
      */
     public function logoutAction()
     {
+        $this->get('security.token_storage')->setToken(null);
+        $this->get('session')->invalidate();
         return $this->redirect($this->getParameter('ozwillo_logout_url'));
     }
 }
