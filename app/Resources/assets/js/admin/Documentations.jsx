@@ -13,7 +13,6 @@ import { handleErrors, DisplayLongText } from '../_utils/Utils'
 import History from '../_utils/History'
 import { escapedValue } from '../_utils/Search'
 
-
 class Documentations extends Component {
 
     static contextTypes = {
@@ -26,15 +25,34 @@ class Documentations extends Component {
         helps: [],
         patchs: [],
         filteredPatchs: [],
-        filteredHelps: []
+        filteredHelps: [],
+        filetered : [],
+        test: [],
     }
+
     componentDidMount() {
         this.fetchHelps()
         this.fetchPatchs()
     }
+    componentDidUpdate() {
+        if (this.state.filteredHelps.length > 0 && this.state.filteredPatchs.length > 0 && this.state.test.length === 0) {
+           this.concatHelpPatch()
+        }
+    }
+    concatHelpPatch() {
+        const test = []
+        this.state.filteredHelps.map((help) => test.push(help))
+        this.state.filteredPatchs.map((help) => test.push(help))
+        test.sort((a, b) =>{
+            const dateA = new Date(a.date)
+            const dateB = new Date(b.date)
+            return dateB - dateA
+        })
+        this.setState({test: test, filetered: test})
+    }
     fetchHelps = () => {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_main_documentationapi_getallaide'), { credentials: 'same-origin'})
+        const {t, _addNotification} = this.context
+        fetch(Routing.generate('sesile_main_documentationapi_getallaide'), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(helps => {
@@ -42,12 +60,15 @@ class Documentations extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extractable_list', {name: t('common.help_board.title_helps'), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {
+                    name: t('common.help_board.title_helps'),
+                    errorCode: error.status
+                }),
                 error.statusText)))
     }
     fetchPatchs = () => {
-        const { t, _addNotification } = this.context
-        fetch(Routing.generate('sesile_main_documentationapi_getallpatch'), { credentials: 'same-origin'})
+        const {t, _addNotification} = this.context
+        fetch(Routing.generate('sesile_main_documentationapi_getallpatch'), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(patchs => {
@@ -55,11 +76,14 @@ class Documentations extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extractable_list', {name: t('common.help_board.title_patchs'), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {
+                    name: t('common.help_board.title_patchs'),
+                    errorCode: error.status
+                }),
                 error.statusText)))
     }
     deleteHelp = (id) => {
-        const { t, _addNotification } = this.context
+        const {t, _addNotification} = this.context
         fetch(Routing.generate('sesile_main_documentationapi_removeaide', {id}), {
             method: 'DELETE',
             credentials: 'same-origin'
@@ -73,6 +97,7 @@ class Documentations extends Component {
                         t('admin.documentations.succes_delete')))
                 this.setState({helps, filteredHelps: helps})
             })
+            .then(help => this.concatHelpPatch())
             .catch(error => _addNotification(
                 basicNotification(
                     'error',
@@ -80,10 +105,11 @@ class Documentations extends Component {
                     error.statusText)))
     }
     deletePatch = (id) => {
-        const { t, _addNotification } = this.context
+        const {t, _addNotification} = this.context
         fetch(Routing.generate('sesile_main_documentationapi_removepatch', {id}), {
             method: 'DELETE',
-            credentials: 'same-origin'})
+            credentials: 'same-origin'
+        })
             .then(handleErrors)
             .then(response => response.json())
             .then(patchs => {
@@ -92,68 +118,81 @@ class Documentations extends Component {
                     t('admin.documentations.succes_delete')))
                 this.setState({patchs, filteredPatchs: patchs})
             })
+            .then(patch => this.concatHelpPatch())
             .catch(error => _addNotification(
                 basicNotification(
                     'error',
                     t('admin.documentations.error.delete'),
                     error.statusText)))
     }
-    searchPatchByDescription = (key, searchPatchByDescription) => {
+    searchByDescription = (key, searchPatchByDescription) => {
         this.setState({searchPatchByDescription})
-        const regex = escapedValue(searchPatchByDescription, this.state.filteredPatchs, this.state.patchs)
-        const filteredPatchs = this.state.patchs.filter(patch => regex.test(patch.description))
-        this.setState({filteredPatchs})
+        const regex = escapedValue(searchPatchByDescription, this.state.filetered, this.state.test)
+        const filteredPatchs = this.state.test.filter(patch => regex.test(patch.description))
+        this.setState({filetered: filteredPatchs})
     }
-    searchHelpByDescription = (key, searchHelpByDescription) => {
-        this.setState({searchHelpByDescription})
-        const regex = escapedValue(searchHelpByDescription, this.state.filteredHelps, this.state.helps)
-        const filteredHelps = this.state.helps.filter(help => regex.test(help.description))
-        this.setState({filteredHelps})
+    onClickAction = (e) => {
+        e.stopPropagation()
     }
+
     render() {
-        const { t } = this.context
-        const { filteredHelps, filteredPatchs } = this.state
-        const listDocumentEvo = filteredPatchs.map((patch) => <RowDocumentEvo key={patch.id} patch={patch} deletePatch={this.deletePatch} />)
-        const listDocumentHelp = filteredHelps.map((help) => <RowDocumentHelp key={help.id} help={help} deleteHelp={this.deleteHelp} />)
+        const {t} = this.context
+        const {filteredHelps, filteredPatchs, test, filetered} = this.state
+        const listDocumentEvo = filetered.map((patch) => <RowDocumentEvo key={patch.id} patch={patch}
+                                                                         onClickAction={this.onClickAction}
+                                                                         deleteHelp={this.deleteHelp}
+                                                                         deletePatch={this.deletePatch}/>)
         return (
             <AdminPage
-                title={t('admin.documentations.title')}
-                subtitle={t('admin.documentations.subtitle')}>
+                title={t('admin.documentations.title')}>
                 <AdminContainer>
-                    <Input
-                        className="cell medium-6 align-center-middle"
-                        labelText={t('admin.label.which')}
-                        value={this.state.searchPatchByDescription}
-                        onChange={this.searchPatchByDescription}
-                        placeholder={t('admin.documentations.search_by_description')}
-                        type="text"/>
-                    <AdminList
-                        title={t('admin.documentations.list_update_title')}
-                        listLength={listDocumentEvo.length}
-                        labelButton={t('admin.documentations.add_document')}
-                        addLink={"/admin/documentation/mise-a-jour"}
-                        headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.version'), t('common.label.actions')]}
-                        headGrid={['medium-6', 'medium-2', 'medium-2', 'medium-2']}
-                        emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
-                        {listDocumentEvo}
-                    </AdminList>
-                    <Input
-                        className="cell medium-6 align-center-middle"
-                        labelText={t('admin.label.which')}
-                        value={this.state.searchHelpByDescription}
-                        onChange={this.searchHelpByDescription}
-                        placeholder={t('admin.documentations.search_by_description')}
-                        type="text"/>
-                    <AdminList
-                        title={t('admin.documentations.list_help_title')}
-                        listLength={listDocumentHelp.length}
-                        labelButton={t('admin.documentations.add_document')}
-                        addLink={"/admin/documentation/aide"}
-                        headTitles={[t('common.label.description'), t('common.label.date'), t('common.label.actions')]}
-                        headGrid={['medium-6', 'medium-4', 'medium-2']}
-                        emptyListMessage={t('common.no_results', {name: t('admin.documentations.name'), context: 'female'})}>
-                        {listDocumentHelp}
-                    </AdminList>
+                    <div className="grid-x grid-padding-x panel align-center-middle"
+                         style={{width: "74em", marginTop: "1em"}}>
+                        <div className="cell medium-12 grid-x panel align-center-middle"
+                             style={{display: "flex", marginBottom: "0em", marginTop: "10px", width: "33%"}}>
+                            <div style={{marginTop:"10px", width:"100%"}}>
+                            <Input
+                                className="cell medium-6 align-center-middle"
+                                value={this.state.searchPatchByDescription}
+                                onChange={this.searchByDescription}
+                                placeholder={t('admin.documentations.search_by_description')}
+                                type="text"/>
+                            </div>
+                        </div>
+                        <div className="cell medium-12 text-right"  style={{marginTop:"10px"}}>
+                            <button className="button hollow"
+                                    onClick={() => History.push("/admin/documentation/mise-a-jour")}>{t('admin.documentations.add_document')} patch</button>
+                        </div>
+                        <div className="cell medium-12 text-right"  style={{marginTop:"10px"}}>
+                            <button className="button hollow"
+                                    onClick={() => History.push("/admin/documentation/aide")}>{t('admin.documentations.add_document')} aide</button>
+                        </div>
+                        <table style={{margin: "10px", borderRadius: "6px"}}>
+                            <thead>
+                            <tr style={{backgroundColor: "#CC0066", color: "white"}}>
+                                <td width="600px" className="text-bold">{t('admin.user.label_name')}</td>
+                                <td width="100px" className="text-bold">Types</td>
+                                <td width="120px" className="text-bold">{t('common.label.date')}</td>
+                                <td width="50" className="text-bold">{t('common.label.version')}</td>
+                                <td width="30px" className="text-bold">{t('common.label.actions')}</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {filetered.length > 0 ?
+                                listDocumentEvo :
+                                <tr>
+                                    <td>
+                                        <span
+                                            style={{textAlign: "center"}}>{t('common.no_results', {name: t('admin.type.name')})}</span>
+                                    </td>
+                                    <td/>
+                                    <td/>
+                                    <td/>
+                                    <td/>
+                                </tr>}
+                            </tbody>
+                        </table>
+                    </div>
                 </AdminContainer>
             </AdminPage>
         )
@@ -163,32 +202,27 @@ class Documentations extends Component {
 
 export default translate(['sesile'])(Documentations)
 
-const RowDocumentEvo = ({patch, deletePatch}, {t}) => {
+const RowDocumentEvo = ({patch, onClickAction, deletePatch, deleteHelp}, {t}) => {
     return(
-        <AdminListRow>
-            <Cell className="large-6">
+        <tr onClick={() => patch.version ?  History.push(`/admin/documentation/mise-a-jour/${patch.id}`) :  History.push(`/admin/documentation/aide/${patch.id}`)} style={{cursor:"pointer"}}>
+            <td>
                 <DisplayLongText text={patch.description} maxSize={100} />
-            </Cell>
-            <Cell className="medium-2">
+            </td>
+            <td>
+                {patch.version ? "Patch" : "Aide" }
+            </td>
+            <td>
                 {Moment(patch.date).format('LL')}
-            </Cell>
-            <Cell className="small-1">
-                {patch.version}
-            </Cell>
-            <Cell className="medium-3">
+            </td>
+            <td>
+                {patch.version && patch.version}
+            </td>
+            <td onClick={(e) => onClickAction(e)}>
                 <GridX>
-                    <Cell className="medium-auto">
-                        <i
-                            className="fa fa-pencil icon-action"
-                            title={t('common.button.edit')}
-                            onClick={() => History.push(`/admin/documentation/mise-a-jour/${patch.id}`)} >
-                        </i>
-                    </Cell>
                     <Cell className="medium-auto">
                         <Link
                             to={
-                                Routing.generate(
-                                    'sesile_main_documentationapi_showdocumentpatch',
+                                Routing.generate(`sesile_main_documentationapi_showdocument${patch.version ? "patch": "aide"}`,
                                     {id: patch.id})}
                             target="_blank"
                             className="fa fa-file-pdf-o icon-action"
@@ -198,13 +232,13 @@ const RowDocumentEvo = ({patch, deletePatch}, {t}) => {
                     <Cell className="medium-auto">
                         <ButtonConfirmDelete
                             id={patch.id}
-                            dataToggle={`delete-confirmation-update-${patch.id}`}
-                            onConfirm={deletePatch}
+                            dataToggle={`delete-confirmation-${patch.version ? "update": "help"}-${patch.id}`}
+                            onConfirm={patch.version ? deletePatch : deleteHelp}
                             content={t('common.confirm_deletion_item')} />
                     </Cell>
                 </GridX>
-            </Cell>
-        </AdminListRow>
+            </td>
+        </tr>
     )
 }
 
