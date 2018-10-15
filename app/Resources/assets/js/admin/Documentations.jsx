@@ -27,7 +27,7 @@ class Documentations extends Component {
         filteredPatchs: [],
         filteredHelps: [],
         filetered : [],
-        test: [],
+        patchhelp: [],
     }
 
     componentDidMount() {
@@ -35,20 +35,20 @@ class Documentations extends Component {
         this.fetchPatchs()
     }
     componentDidUpdate() {
-        if (this.state.filteredHelps.length > 0 && this.state.filteredPatchs.length > 0 && this.state.test.length === 0) {
+        if (this.state.filteredHelps.length > 0 && this.state.filteredPatchs.length > 0 && this.state.patchhelp.length === 0) {
            this.concatHelpPatch()
         }
     }
     concatHelpPatch() {
-        const test = []
-        this.state.filteredHelps.map((help) => test.push(help))
-        this.state.filteredPatchs.map((help) => test.push(help))
-        test.sort((a, b) =>{
+        const patchhelp = []
+        this.state.filteredHelps.map((help) => patchhelp.push(help))
+        this.state.filteredPatchs.map((help) => patchhelp.push(help))
+        patchhelp.sort((a, b) =>{
             const dateA = new Date(a.date)
             const dateB = new Date(b.date)
             return dateB - dateA
         })
-        this.setState({test: test, filetered: test})
+        this.setState({patchhelp: patchhelp, filetered: patchhelp})
     }
     fetchHelps = () => {
         const {t, _addNotification} = this.context
@@ -127,8 +127,8 @@ class Documentations extends Component {
     }
     searchByDescription = (key, searchPatchByDescription) => {
         this.setState({searchPatchByDescription})
-        const regex = escapedValue(searchPatchByDescription, this.state.filetered, this.state.test)
-        const filteredPatchs = this.state.test.filter(patch => regex.test(patch.description))
+        const regex = escapedValue(searchPatchByDescription, this.state.filetered, this.state.patchhelp)
+        const filteredPatchs = this.state.patchhelp.filter(patch => regex.patchhelp(patch.description))
         this.setState({filetered: filteredPatchs})
     }
     onClickAction = (e) => {
@@ -137,7 +137,7 @@ class Documentations extends Component {
 
     render() {
         const {t} = this.context
-        const {filteredHelps, filteredPatchs, test, filetered} = this.state
+        const {filteredHelps, filteredPatchs, patchhelp, filetered} = this.state
         const listDocumentEvo = filetered.map((patch) => <RowDocumentEvo key={patch.id} patch={patch}
                                                                          onClickAction={this.onClickAction}
                                                                          deleteHelp={this.deleteHelp}
@@ -243,51 +243,5 @@ const RowDocumentEvo = ({patch, onClickAction, deletePatch, deleteHelp}, {t}) =>
 }
 
 RowDocumentEvo.contextTypes = {
-    t: func
-}
-
-const RowDocumentHelp = ({help, deleteHelp}, {t}) => {
-    return(
-        <AdminListRow>
-            <Cell className="large-6">
-                <DisplayLongText text={help.description} maxSize={100} />
-            </Cell>
-            <Cell className="medium-3">
-                {Moment(help.date).format('LL')}
-            </Cell>
-            <Cell className="medium-3">
-                <GridX>
-                    <Cell className="medium-auto">
-                        <i
-                            className="fa fa-pencil icon-action"
-                            title={t('common.button.edit')}
-                            onClick={() => History.push(`/admin/documentation/aide/${help.id}`)} >
-                        </i>
-                    </Cell>
-                    <Cell className="medium-auto">
-                        <Link
-                            to={
-                                Routing.generate(
-                                    'sesile_main_documentationapi_showdocumentaide',
-                                    {id: help.id})}
-                            target="_blank"
-                            className="fa fa-file-pdf-o medium icon-action"
-                            title={t('common.consult_document')}>
-                        </Link>
-                    </Cell>
-                    <Cell className="medium-auto">
-                        <ButtonConfirmDelete
-                            id={help.id}
-                            dataToggle={`delete-confirmation-help-${help.id}`}
-                            onConfirm={deleteHelp}
-                            content={t('common.confirm_deletion_item')} />
-                    </Cell>
-                </GridX>
-            </Cell>
-        </AdminListRow>
-    )
-}
-
-RowDocumentHelp.contextTypes = {
     t: func
 }
