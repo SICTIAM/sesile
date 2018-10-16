@@ -161,11 +161,7 @@ class Documentations extends Component {
                         </div>
                         <div className="cell medium-12 text-right"  style={{marginTop:"10px"}}>
                             <button className="button hollow"
-                                    onClick={() => History.push("/admin/documentation/mise-a-jour")}>{t('admin.documentations.add_document')} patch</button>
-                        </div>
-                        <div className="cell medium-12 text-right"  style={{marginTop:"10px"}}>
-                            <button className="button hollow"
-                                    onClick={() => History.push("/admin/documentation/aide")}>{t('admin.documentations.add_document')} aide</button>
+                                    onClick={() => History.push("/admin/documentation")}>{t('admin.documentations.add_document')}</button>
                         </div>
                         <table style={{margin: "10px", borderRadius: "6px"}}>
                             <thead>
