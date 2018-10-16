@@ -88,28 +88,37 @@ class UsersOzwillo extends Component {
             <RowUser key={userOzwillo.user_id} UserOzwillo={userOzwillo} handleAddUser={this.handleAddUser} />)
 
         return (
-            <AdminPage title={t('admin.user.ozwillo_title_user')}>
+            <AdminPage title={t('admin.users_list_ozwillo')}>
                 <AdminContainer>
-                    <AdminList
-                        title={t('admin.users_list_ozwillo')}
-                        listLength={listUser.length}
-                        headTitles={[t('admin.user.name'), t('admin.user.label_email'), t('common.label.actions')]}
-                        emptyListMessage={this.state.message}>
-                        {
-                            usersOzwillo.length >> 0 &&
-                            <AdminListRow>
-                                <Cell className="medium-auto"></Cell>
-                                <Cell className="medium-auto"></Cell>
-                                <Cell className="medium-auto">
-                                    <button className="button hollow ozwillo" onClick={() => this.handleAddUsers()}>
-                                        <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
-                                        {t('admin.user.ozwillo_provisionning_users')}
-                                    </button>
-                                </Cell>
-                            </AdminListRow>
-                        }
-                            {listUser}
-                    </AdminList>
+                    <div className="grid-x grid-padding-x panel align-center-middle"
+                         style={{width: "74em", marginTop: "1em"}}>
+                        <div className="cell medium-12 text-right"  style={{marginTop:"10px"}}>
+                            <button className="button hollow ozwillo" onClick={() => this.handleAddUsers()}>
+                                <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
+                                {t('admin.user.ozwillo_provisionning_users')}
+                            </button>
+                        </div>
+                    <table style={{margin:"10px", borderRadius:"6px"}}>
+                        <thead>
+                        <tr style={{backgroundColor:"#CC0066", color:"white"}}>
+                            <td width="300px" className="text-bold text-capitalize-first-letter">{ t('admin.user.name') }</td>
+                            <td width="300px" className="text-bold">{ t('admin.user.label_email') }</td>
+                            <td width="200px" className="text-bold">{  t('common.label.actions') }</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {listUser.length > 0 ?
+                            listUser :
+                            <tr>
+                                <td>
+                                    <span style={{textAlign:"center"}}>{this.state.message}</span>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>}
+                        </tbody>
+                    </table>
+                    </div>
                 </AdminContainer>
             </AdminPage>
         )
@@ -124,24 +133,22 @@ UsersOzwillo.PropTypes = {
 export default translate(['sesile'])(UsersOzwillo)
 
 const RowUser = ({UserOzwillo, handleAddUser}, {t}) =>
-    <AdminListRow>
-        <Cell className="medium-auto">
+    <tr>
+        <td>
             {UserOzwillo.user_name}
-        </Cell>
-        <Cell className="medium-auto">
+        </td>
+        <td>
             {UserOzwillo.user_email_address}
-        </Cell>
-        <Cell className="medium-auto">
-            <GridX>
+        </td>
+        <td>
                 <Cell className="medium-auto">
                     <button className="button hollow ozwillo" onClick={() => handleAddUser(UserOzwillo)}>
                         <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
                         {t('admin.user.ozwillo_provisionning_user')}
                     </button>
                 </Cell>
-            </GridX>
-        </Cell>
-    </AdminListRow>
+        </td>
+    </tr>
 
 RowUser.PropTypes = {
     UserOzwillo: object.isRequired,
