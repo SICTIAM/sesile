@@ -27,7 +27,7 @@ class Documentations extends Component {
         filteredPatchs: [],
         filteredHelps: [],
         filetered : [],
-        patchhelp: [],
+        patchhelp: []
     }
 
     componentDidMount() {
@@ -128,7 +128,7 @@ class Documentations extends Component {
     searchByDescription = (key, searchPatchByDescription) => {
         this.setState({searchPatchByDescription})
         const regex = escapedValue(searchPatchByDescription, this.state.filetered, this.state.patchhelp)
-        const filteredPatchs = this.state.patchhelp.filter(patch => regex.patchhelp(patch.description))
+        const filteredPatchs = this.state.patchhelp.filter(patch => regex.test(patch.description))
         this.setState({filetered: filteredPatchs})
     }
     onClickAction = (e) => {
