@@ -80,8 +80,8 @@ class DowSign extends Component {
                         className="dropdown-pane"
                         id={`document-dropdown-${document.id}`}
                         data-alignment="center"
-                        data-close-on-click={true}
-                        data-dropdown data-auto-focus={true}>
+                        data-hover="true" data-hover-pane="true"
+                        data-dropdown>
                         <ul className="no-bullet" style={{marginBottom: 0}}>
                             <hr style={{margin: 0}}/>
                             <DraggablePositionDownload
@@ -101,7 +101,7 @@ class DowSign extends Component {
                                 collectivite={collectivite}
                                 dataToggle={`visa-dropdown-${document.id}`}
                                 type="visa"
-                                id={document.id}
+                                id={    document.id}
                                 disabled={false}/>
                             <hr style={{margin: 0}}/>
                             <div>
