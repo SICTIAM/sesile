@@ -440,7 +440,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $em->flush();
 
         // Ajout d'une action pour le classeur
-        $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_REFUSED, $motif);
+        $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_REFUSED . ': ' . $motif, $motif);
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
 
         $actionMailer = $this->get(ActionMailer::class);
