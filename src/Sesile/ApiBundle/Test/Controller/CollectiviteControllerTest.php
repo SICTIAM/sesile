@@ -5,6 +5,7 @@ namespace Sesile\ApiBundle\Test\Controller;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Sesile\ApiBundle\Service\OzwilloProvisioner;
+use Sesile\ClasseurBundle\Entity\TypeClasseur;
 use Sesile\MainBundle\DataFixtures\CollectiviteFixtures;
 use Sesile\MainBundle\DataFixtures\UserFixtures;
 use Sesile\MainBundle\Domain\Message;
@@ -163,6 +164,8 @@ class CollectiviteControllerTest extends SesileWebTestCase
         self::assertEquals('adb82586-d2f2-4eea-98e9-12999d12c80d', $newCollectivity->getOzwillo()->getInstanceId());
         self::assertNull($newCollectivity->getOzwillo()->getServiceId());
         self::assertEquals('d21ad98e-4db7-49e8-a7de-27a2c335b53a', $newCollectivity->getOzwillo()->getOrganizationId());
+        $types = $em->getRepository(TypeClasseur::class)->findByCollectivites($newCollectivity->getId());
+        self::assertCount(8, $types);
     }
 
     public function testPostActionOnExistingCollecitvityWithoutOzwilloMustAddOzwilloData()

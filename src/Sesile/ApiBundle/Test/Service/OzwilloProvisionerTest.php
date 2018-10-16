@@ -95,8 +95,8 @@ class OzwilloProvisionerTest extends SesileWebTestCase
             'contacts' => ['mailto:'.$this->getContainer()->getParameter('contact')],//demat@sictiam.fr
             'payment_option' => "PAID",
             'target_audience' => ["PUBLIC_BODIES"],
-            'visibility' => "VISIBLE",
-            'access_control' => "RESTRICTED",
+            'visibility' => "NEVER_VISIBLE",
+            'access_control' => "ALWAYS_RESTRICTED",
 //            'service_uri' => $this->urlRegistrationToKernel($collectivite, '/'),
             'service_uri' => 'https://sictiam.'.$domainParameter.'/connect/ozwillo',
 //            'redirect_uris' => [$this->urlRegistrationToKernel($collectivite, '/login/check-ozwillo')],

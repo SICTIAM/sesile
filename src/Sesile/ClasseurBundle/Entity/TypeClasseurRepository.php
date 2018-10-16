@@ -3,6 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Sesile\MainBundle\Entity\Collectivite;
 
 /**
  * TypeClasseurRepository
@@ -12,4 +13,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class TypeClasseurRepository extends EntityRepository
 {
+    public function addBasicClasseurTypesToNewCollectivite(Collectivite $collectivite) {
+        $em = $this->getEntityManager();
+        $types = ["Divers", "Helios", "Acte", "Marchés", "Convocation", "Courrier AR", "Document Urba", "Classique"];
+        foreach ($types as $type) {
+            $newType = new TypeClasseur();
+            $newType->setNom($type);
+            $newType->setCreation(new \DateTime());
+            $newType->setSupprimable(0);
+            $newType->setCollectivites($collectivite);
+
+            $em->persist($newType);
+        }
+
+        $em->flush();
+    }
 }

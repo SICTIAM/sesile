@@ -42,6 +42,7 @@ class CollectiviteController extends Controller
      * - SICTIAM","description":"Tiers de télétransmission",
      * "tos_uri":"https://stela.fr/tos","policy_uri":"https://stela.fr/policy","icon":"https://stela.fr/icon.png","contacts":["admin@stela.fr","demat@sictiam.fr"],"payment_option":"PAID","target_audience":"PUBLIC_BODY","visibility":"VISIBLE","access_control":"RESTRICTED","service_uri":"https://sictiam.stela3-dev.sictiam.fr/login","redirect_uris":["https://sictiam.stela3-dev.sictiam.fr/login"]}]}
      *
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function postAction (Request $request)
     {
@@ -73,6 +74,7 @@ class CollectiviteController extends Controller
             $em->flush();
         } else {
             $collectivite = $em->getRepository('SesileMainBundle:Collectivite')->createCollectiviteFromOzwillo($request);
+            $em->getRepository('SesileClasseurBundle:TypeClasseur')->addBasicClasseurTypesToNewCollectivite($collectivite);
         }
 
         $userOzwillo = $em->getRepository('SesileUserBundle:User')->createUserFromOzwillo($user, $userObject, $collectivite);
