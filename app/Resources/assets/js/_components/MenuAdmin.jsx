@@ -24,7 +24,7 @@ class MenuAdmin extends Component {
                 role="navigation"
                 style={{marginTop: '0.5em', marginLeft: '0.5em', height: 'calc(100% - 1em)', backgroundColor: 'white', boxShadow: '0 2px 2px 0 rgba(34,36,38,.15)'}}>
 
-                <div className="cell medium-auto">
+                <div className="cell medium-auto" style={{overflowY:"scroll"}}>
                     <div id="left-menu">
                         <div className="top-bar-left">
                             { user.id &&

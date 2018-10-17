@@ -25,9 +25,9 @@ class AppInfos extends Component {
     render() {
         const { t } = this.context
         return (
-            <div className="cell shrink align-self-bottom app-infos text-uppercase">
+            <div className="cell shrink align-self-bottom app-infos text-uppercase" style={{marginLeft:"26%", marginRight:"26%"}}>
                 <div className="grid-x align-center">
-                    <div className="cell medium-8"><img src="/images/logo_sictiam.png" /></div>
+                    <div className="cell medium-8"><img src="/images/logo_sictiam.svg" /></div>
                 </div>
                 <div className="grid-x align-center">
                     <div className="cell medium-12">
