@@ -346,6 +346,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $classeur->setVisibilite($request->request->get('visibilite'));
         $classeur->setCollectivite($collectivity);
+        $classeur->setCircuitId($groupe);
         $em->persist($classeur);
         $em->flush();
 
