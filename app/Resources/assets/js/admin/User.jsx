@@ -8,7 +8,7 @@ import { basicNotification } from '../_components/Notifications'
 import AvatarForm from '../user/AvatarForm'
 import SignatureForm from '../user/SignatureForm'
 import {Input, Switch, Select, Textarea, InputFile} from '../_components/Form'
-import UserAvatar from "react-user-avatar";
+import UserAvatar from "react-user-avatar"
 
 class User extends Component {
 
@@ -437,7 +437,7 @@ class User extends Component {
                                             activeText={t('common.label.yes')}
                                             inactiveText={t('common.label.no')}/>
                                     {
-                                        (userId) &&
+                                        (user.apiactivated && userId) &&
                                         <div className="medium-6 cell" style={{marginTop: "-10em"}}>
                                             <div className="admin_search_input medium-6 cell">
                                                 <label className="text-bold">{t('admin.user.label_api_key')}
