@@ -22,11 +22,11 @@ class Menu extends Component {
             <div
                 className="menu-left cell medium-12 grid-y"
                 role="navigation"
-                style={{marginTop: '0.5em', marginLeft: '0.5em', height: 'calc(100% - 1em)', backgroundColor: 'white', boxShadow: '0 2px 2px 0 rgba(34,36,38,.15)'}}>
+                style={{marginTop: '0.5em', marginLeft: '0.5em',overflowY:"scroll", height: 'calc(100% - 1em)', backgroundColor: 'white', boxShadow: '0 2px 2px 0 rgba(34,36,38,.15)'}}>
 
-                <div className="cell medium-auto" style={{overflowY:"scroll"}}>
+                <div className="medium-auto" >
                     <div id="left-menu">
-                        <div className="top-bar-left">
+                        <div className="top-bar-left" style={{height:"100%"}}>
                             { user.id &&
                                 <ul className="dropdown menu vertical icons icon-right" data-dropdown-menu>
                                 <li>
@@ -146,9 +146,7 @@ class Menu extends Component {
                         </div>
                     </div>
                 </div>
-
                 <AppInfos />
-
             </div>
         )
     }
