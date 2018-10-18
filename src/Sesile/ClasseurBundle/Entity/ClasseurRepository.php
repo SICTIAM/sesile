@@ -522,8 +522,11 @@ class ClasseurRepository extends EntityRepository {
             'classeur'  => $classeur,
             'etapeValidante' => true
         ));
-
-        return $em->getRepository('SesileUserBundle:EtapeClasseur')->getUsersForEtape($etapeValidante);
+        if($etapeValidante !== null) {
+            return $em->getRepository('SesileUserBundle:EtapeClasseur')->getUsersForEtape($etapeValidante);
+        } else {
+            return [];
+        }
     }
 
 
