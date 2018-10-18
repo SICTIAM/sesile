@@ -22,7 +22,7 @@ class Menu extends Component {
             <div
                 className="menu-left cell medium-12 grid-y"
                 role="navigation"
-                style={{marginTop: '0.5em', marginLeft: '0.5em',overflowY:"scroll", height: 'calc(100% - 1em)', backgroundColor: 'white', boxShadow: '0 2px 2px 0 rgba(34,36,38,.15)'}}>
+                style={{marginTop: '0.5em', marginLeft: '0.5em', height: 'calc(100% - 1em)', backgroundColor: 'white', boxShadow: '0 2px 2px 0 rgba(34,36,38,.15)'}}>
 
                 <div className="medium-auto" >
                     <div id="left-menu">
