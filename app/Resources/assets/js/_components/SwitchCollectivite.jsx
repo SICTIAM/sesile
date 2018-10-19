@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { number, func } from 'prop-types'
 import { translate } from 'react-i18next'
 import { extractRootDomain } from './../_utils/Utils'
+import SearchCollectivite from "../admin/SearchCollectivite";
 
 class SwitchCollectivite extends Component {
 
@@ -43,7 +44,7 @@ class SwitchCollectivite extends Component {
         return (
         <div className="switch-collectivite text-right" data-toggle="switch-collectivite">
             {collectivities.length > 1 ?
-                <ul className="dropdown menu align-center" data-dropdown-menu>
+                <ul className="dropdown menu align-center" data-dropdown-menu data-close-on-click-inside={false} >
                     <li style={{minWidth: '40%'}}>
                         <a href="#"
                            style={{borderColor: this.props.color, color: this.props.color, cursor: 'default', width: '100%', padding: '8px'}}
@@ -53,9 +54,7 @@ class SwitchCollectivite extends Component {
                                 {currentCollectivity.nom}
                             </span>
                         </a>
-                        <ul className="menu">
-                            {listItems}
-                        </ul>
+                            <SearchCollectivite collectivite={collectivities} className="menu" classButton="button secondary clear"/>
                     </li>
                 </ul> :
                 <span style={{borderColor: this.props.color, color: this.props.color, cursor: 'default', minWidth: '40%', padding: '8px'}}
