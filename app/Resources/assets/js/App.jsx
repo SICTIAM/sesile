@@ -16,6 +16,7 @@ import Moment from 'moment'
 import { Route } from 'react-router'
 import SelectCollectivite from './SelectCollectivite'
 import History from './_utils/History'
+import {handleErrors} from "./_utils/Utils";
 Validator.useLang(window.localStorage.i18nextLng)
 Moment.locale(window.localStorage.i18nextLng || 'fr')
 
@@ -31,6 +32,8 @@ class App extends Component {
                 mainDomain: '',
                 currentDomain: ''
             },
+            collectivitedomain:'',
+            collectivitemessage:'',
             displaySelectCollectivite: false,
             noteObject: {
                 note: {
@@ -51,6 +54,10 @@ class App extends Component {
         t: PropTypes.func,
     }
 
+    createMarkup(message) {
+        return {__html: message};
+    }
+
     getChildContext() {
         return {
             _addNotification: this._addNotification,
@@ -64,6 +71,7 @@ class App extends Component {
         $(document).foundation()
         this.fetchUser()
         this.mainDomainControll()
+        this.fetchMessage()
     }
 
     _addNotification = (notification) => {
@@ -71,7 +79,16 @@ class App extends Component {
             this._notificationSystem.addNotification(notification)
         }
     }
-
+    fetchMessage = () => {
+        fetch(Routing.generate("sesile_main_collectiviteapi_getorganisationlist"), {credentials: 'same-origin'})
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(json => {
+                this.setState({collectivitedomain: window.location.host.substr(0, window.location.host.indexOf('.'))})
+                const indexco = json.findIndex(collectivite => collectivite.domain === this.state.collectivitedomain)
+                this.setState({collectivitemessage: json[indexco].message})
+            })
+    }
     fetchUser = () => {
         fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
             .then(response => response.json())
@@ -170,6 +187,18 @@ class App extends Component {
                                             <div className="grid-x grid-padding-x medium-11">
                                                 <div className="cell medium-12 small-12">
                                                     <NotificationSystem ref={n => this._notificationSystem = n} />
+                                                    {!user.id && this.state.collectivitemessage &&
+                                                    <div className="grid-x" style={{marginTop: "2em"}}>
+                                                        <div className="cell medium-12">
+                                                            <div
+                                                                className="grid-x grid-margin-x grid-padding-x align-top align-center">
+                                                                <div className="grid-x grid-padding-x panel" style={{padding:"1em"}}>
+                                                                    <div dangerouslySetInnerHTML={this.createMarkup(this.state.collectivitemessage)} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    }
                                                     {user.id &&
                                                         <AppRoute user={user} updateUserInfos={this.fetchUser}/>}
                                                 </div>
