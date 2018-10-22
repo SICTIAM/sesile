@@ -75,7 +75,7 @@ class App extends Component {
     }
 
     componentDidUpdate() {
-        if (this.state.collectivitedomain !== '' && this.state.collectivitemessage === '' && !this.state.mainDomain.main) {
+        if (this.state.collectivitedomain !== '' && this.state.collectivitemessage === '' && (this.state.mainDomain.main === false && this.state.mainDomain.mainDomain !== '')) {
             this.fetchMessage()
         }
 
