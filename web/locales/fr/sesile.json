@@ -456,6 +456,7 @@
             "placeholder_description": "Saisir une description",
             "label_version": "Version",
             "placeholder_version": "Saisir une version",
+            "patch":"Patch",
             "success_save": "La documentation a été enregitrée",
             "succes_delete": "La documentation a été supprimée",
             "search_by_description": "Recherche par description",

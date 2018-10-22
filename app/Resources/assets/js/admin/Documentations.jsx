@@ -149,7 +149,7 @@ class Documentations extends Component {
                     <div className="grid-x grid-padding-x panel align-center-middle"
                          style={{width: "74em", marginTop: "1em"}}>
                         <div className="cell medium-12 grid-x panel align-center-middle"
-                             style={{display: "flex", marginBottom: "0em", marginTop: "10px", width: "33%"}}>
+                             style={{display: "flex", marginBottom: "0em", marginTop: "10px", width: "50%"}}>
                             <div style={{marginTop:"10px", width:"100%"}}>
                             <Input
                                 className="cell medium-6 align-center-middle"

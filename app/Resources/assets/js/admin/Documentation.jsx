@@ -171,7 +171,6 @@ class Documentation extends Component {
     handleDropFile = (files) => {
         this.setState({dropFileError: ''})
         this.handleChangeDocumentation('file', files[0])
-        console.log(this.state.type)
     }
     handleChangeType = () => {
         const {type} = this.state
@@ -239,7 +238,7 @@ class Documentation extends Component {
                                                onChange={this.handleChangeType}/>
                                         <div className="state  p-primary-o">
                                             <label/>
-                                            <span>Aide</span>
+                                            <span>{t('common.menu.help')}</span>
                                         </div>
                                     </div>
                                     <div className="pretty p-default p-round">
@@ -247,7 +246,7 @@ class Documentation extends Component {
                                                onChange={this.handleChangeType}/>
                                         <div className="state  p-primary-o">
                                             <label/>
-                                            <span>Patch</span>
+                                            <span>{t('admin.documentations.patch')}</span>
                                         </div>
                                     </div>
                                 </div>
