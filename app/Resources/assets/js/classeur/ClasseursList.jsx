@@ -117,7 +117,10 @@ class ClasseursList extends Component {
 
     handleSearchByStatus = (value) => {
         let research = ''
-        value.id === "42" ? research = '' : research = value.id
+        if (value)
+            value.id === "42" ? research = '' : research = value.id
+        else
+            value = {id: "42", nom: 'Tout'}
         this.setState({currentStatus: value})
         const regex = escapedValue(`${research}`, this.state.filteredClasseurs, this.state.groups)
         const filteredClasseurs = this.state.classeurs.filter(classeur => regex.test(classeur.status))
@@ -126,7 +129,10 @@ class ClasseursList extends Component {
 
     handleSearchByType = (e) => {
         let research = ''
-        e.nom === "Tout" ? research = '' : research = e.nom
+        if (e)
+            e.nom === "Tout" ? research = '' : research = e.nom
+        else
+            e = {nom : "Tout"}
         this.setState({currentType: e})
         const regex = escapedValue(research, this.state.filteredClasseurs, this.state.groups)
         const filteredClasseurs = this.state.classeurs.filter(classeur => regex.test(classeur.type.nom))
