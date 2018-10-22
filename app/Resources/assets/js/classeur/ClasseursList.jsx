@@ -39,12 +39,6 @@ class ClasseursList extends Component {
         type: [],
         currentStatus: '',
         isOpen: false,
-        status: [{"id": '42', "nom": 'Tout'}, {"id": 0, "nom": "Refusé"}, {"id": 1, "nom": "En cours"}, {
-            "id": 2,
-            "nom": "Finalisé"
-        },
-            {"id": 3, "nom": "Retiré"}, {"id": 4, "nom": "Rétracté"}]
-
     }
 
     componentDidMount() {
@@ -148,6 +142,14 @@ class ClasseursList extends Component {
         const {limit, start} = this.state
         const listClasseur = this.state.filteredClasseurs.map(classeur => <CLasseurRow key={`classeur-${classeur.id}`}
                                                                                        classeur={classeur}/>)
+        const status = [
+            {"id": '42', "nom": 'Tout'},
+            {"id": 0, "nom": "Refusé"},
+            {"id": 1, "nom": "En cours"},
+            {"id": 2, "nom": "Finalisé"},
+            {"id": 3, "nom": "Retiré"},
+            {"id": 4, "nom": "Rétracté"}
+            ]
         const listLimit = [15,30,50,100].map(limit =>
             <option key={limit} value={limit}>
                 {limit}
@@ -192,7 +194,7 @@ class ClasseursList extends Component {
                                         wrapperStyle={{marginBottom: "0.65em"}}
                                         valueKey="id"
                                         labelKey="nom"
-                                        options={this.state.status}
+                                        options={status}
                                         onChange={this.handleSearchByStatus}/>
                                 </div>
                                 <div className="cell medium-12 align-center-middle" style={{width: "40%"}}>
