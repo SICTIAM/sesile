@@ -69,9 +69,16 @@ class App extends Component {
 
     componentDidMount() {
         $(document).foundation()
+        this.setState({collectivitedomain: window.location.host.substr(0, window.location.host.indexOf('.'))})
         this.fetchUser()
         this.mainDomainControll()
-        this.fetchMessage()
+    }
+
+    componentDidUpdate() {
+        if (this.state.collectivitedomain !== '' && this.state.collectivitemessage === '') {
+            this.fetchMessage()
+        }
+
     }
 
     _addNotification = (notification) => {
@@ -80,13 +87,11 @@ class App extends Component {
         }
     }
     fetchMessage = () => {
-        fetch(Routing.generate("sesile_main_collectiviteapi_getorganisationlist"), {credentials: 'same-origin'})
+        fetch(Routing.generate("sesile_main_collectiviteapi_getorganisationmessage", {domain: this.state.collectivitedomain}))
             .then(handleErrors)
             .then(response => response.json())
             .then(json => {
-                this.setState({collectivitedomain: window.location.host.substr(0, window.location.host.indexOf('.'))})
-                const indexco = json.findIndex(collectivite => collectivite.domain === this.state.collectivitedomain)
-                this.setState({collectivitemessage: json[indexco].message})
+                this.setState({collectivitemessage: json.message})
             })
     }
     fetchUser = () => {

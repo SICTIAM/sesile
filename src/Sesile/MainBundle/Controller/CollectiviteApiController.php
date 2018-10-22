@@ -58,6 +58,18 @@ class CollectiviteApiController extends Controller
     }
 
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
+     * @Rest\Get("/message/{domain}")
+     * @ParamConverter("Collectivite", options={"mapping": {"domain": "domain"}})
+     * @return Collectivite
+     */
+    public function getOrganisationMessage(Collectivite $collectivite)
+    {
+        return $collectivite;
+    }
+
+    /**
      * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Get("/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
