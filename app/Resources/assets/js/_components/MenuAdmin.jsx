@@ -24,9 +24,9 @@ class MenuAdmin extends Component {
                 role="navigation"
                 style={{marginTop: '0.5em', marginLeft: '0.5em', height: 'calc(100% - 1em)', backgroundColor: 'white', boxShadow: '0 2px 2px 0 rgba(34,36,38,.15)'}}>
 
-                <div className="cell medium-auto">
+                <div className="medium-auto">
                     <div id="left-menu">
-                        <div className="top-bar-left">
+                        <div className="top-bar-left" style={{height:"100%"}}>
                             { user.id &&
                             <ul className="dropdown menu vertical icons icon-right" data-dropdown-menu>
                                 <li>
