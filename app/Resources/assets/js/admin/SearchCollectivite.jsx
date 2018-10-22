@@ -34,7 +34,7 @@ class SearchCollectivite extends Component {
         const regex = escapedValue(value, this.state.filteredCollectivites, this.state.groups)
         const filteredCollectivites = this.state.collectivites.filter(collectivite => regex.test(collectivite.nom))
         this.setState({filteredCollectivites})
-        this.setState({filteredDisplay: this.removeElements(filteredCollectivites, 5)})
+        this.setState({filteredDisplay: filteredCollectivites.slice(0, 5)})
     }
 
     render() {
