@@ -14,7 +14,6 @@ import { handleErrors } from "../_utils/Utils"
 
 import Type from './Type'
 import { basicNotification } from "../_components/Notifications"
-import ButtonConfirmDelete from "../_components/ButtonConfirmDelete";
 
 class Types extends Component {
     static contextTypes = {

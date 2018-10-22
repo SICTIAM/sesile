@@ -27,7 +27,7 @@ class ButtonConfirmDelete extends Component {
         const { t } = this.context
         return (
             <div id={`container-${this.props.dataToggle}`} className={this.props.className}>
-                <button data-toggle={this.props.dataToggle}>
+                <button data-toggle={this.props.dataToggle} style={{cursor:"pointer"}}>
                     <i className="fa fa-trash medium icon-action" title={t('common.button.delete')}></i>
                 </button>
                 <div 

@@ -4,8 +4,8 @@ import { translate } from 'react-i18next'
 import Dropzone from 'react-dropzone'
 import Validator from 'validatorjs'
 
-import { AdminDetails, SimpleContent } from '../_components/AdminUI'
-import { Form, Button } from '../_components/Form'
+import {AdminDetails, AdminPage, SimpleContent} from '../_components/AdminUI'
+import {Form, Button, Switch} from '../_components/Form'
 import { basicNotification } from "../_components/Notifications"
 import InputValidation from '../_components/InputValidation'
 import { GridX, Cell } from '../_components/UI'
@@ -18,6 +18,8 @@ class Documentation extends Component {
         files: [],
         dropFileError: '',
         sending: false,
+        type: '',
+        switch: false,
         documentation: {
             id: null,
             description: '',
@@ -36,99 +38,115 @@ class Documentation extends Component {
         file: 'required'
     }
     type = Object.freeze({help: 'aide', update: 'mise-a-jour'})
+
     componentDidMount() {
-        if(this.props.match.params.id) this.fetchDocumentation(this.props.match.params.id)
+        if (this.props.match.params.type) this.setState({type: this.props.match.params.type})
+        else this.setState({type: this.type.update})
+        if (this.state.type === this.type.help) this.setState({switch: true})
+        if (this.props.match.params.id) this.fetchDocumentation(this.props.match.params.id)
     }
+
     validationHelp(fields) {
         return new Validator(
-            fields, 
+            fields,
             {description: this.validationRules.description, file: this.validationRules.file},
             {'required.file': this.context.t('common.file_is_required')})
     }
+
     validationPatch(fields) {
         return new Validator(
             fields,
-            {   description: this.validationRules.description, 
-                version: this.validationRules.version, 
-                file: this.validationRules.file},
+            {
+                description: this.validationRules.description,
+                version: this.validationRules.version,
+                file: this.validationRules.file
+            },
             {'required.file': this.context.t('common.file_is_required')})
     }
+
     validationErrorFile(validation) {
         const errorMassage = validation.errors.first('file')
         this.setState({dropFileError: errorMassage})
     }
+
     fetchDocumentation(id) {
-        const { t, _addNotification } = this.context
+        const {t, _addNotification} = this.context
         fetch(
             Routing.generate(
-                `sesile_main_documentationapi_${(this.props.match.params.type == this.type.help) ? 'showaide' : 'showpatch' }`, 
-                {id}), 
+                `sesile_main_documentationapi_${(this.props.match.params.type == this.type.help) ? 'showaide' : 'showpatch' }`,
+                {id}),
             {credentials: 'same-origin'})
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(documentation => this.setState({documentation}))
-        .catch(error => 
-            _addNotification(basicNotification('error', t('admin.documentations.error.fetch'))))
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(documentation => this.setState({documentation}))
+            .catch(error =>
+                _addNotification(basicNotification('error', t('admin.documentations.error.fetch'))))
     }
+
     saveDocumentation = () => {
-        if(this.props.match.params.type === this.type.help) this.saveOrUpdateHelp()
-        else if(this.props.match.params.type === this.type.update) this.saveOrUpdatePatch()
+        if (this.state.type === this.type.help) this.saveOrUpdateHelp()
+        else if (this.state.type === this.type.update) this.saveOrUpdatePatch()
     }
     saveOrUpdateHelp = () => {
-        const { t, _addNotification } = this.context
+        const {t, _addNotification} = this.context
         const fields = {
             id: this.state.documentation.id,
             description: this.state.documentation.description,
             file: this.state.documentation.file
         }
         const validation = this.validationHelp(fields)
-        if(validation.passes()) {
+        if (validation.passes()) {
             const data = new FormData()
-            if(fields.file.name != this.state.documentation.path) data.append('file', fields.file)
+            if (fields.file.name != this.state.documentation.path) data.append('file', fields.file)
+            let id = null
+            if(this.props.match.params.id) {
+                id = {id: this.props.match.params.id}
+            }
             data.append('description', fields.description)
             this.setState({sending: true, editState: false})
             fetch(
-                Routing.generate(
-                    `sesile_main_documentationapi_${(this.props.match.params.id) ? 'updateaide' : 'postaide' }`, 
-                    {id: this.props.match.params.id}), 
+                Routing.generate(`sesile_main_documentationapi_${(this.props.match.params.id) ? 'updateaide' : 'postaide' }`, id),
                 {method: 'POST', body: data, credentials: 'same-origin'})
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(help => {
-                History.push('/admin/documentations')
-                _addNotification(
-                    basicNotification(
-                        'success',
-                        this.context.t('admin.documentations.success_save')))
-            })
-            .catch(error => 
-                _addNotification(
-                    basicNotification(
-                        'error',
-                        this.context.t('admin.documentations.error.save'))))
-            .finally(() => this.setState({sending: false, editState: true}))
+                .then(handleErrors)
+                .then(response => response.json())
+                .then(help => {
+                    History.push('/admin/documentations')
+                    _addNotification(
+                        basicNotification(
+                            'success',
+                            this.context.t('admin.documentations.success_save')))
+                })
+                .catch(error =>
+                    _addNotification(
+                        basicNotification(
+                            'error',
+                            this.context.t('admin.documentations.error.save'))))
+                .finally(() => this.setState({sending: false, editState: true}))
         } else this.validationErrorFile(validation)
     }
+
     saveOrUpdatePatch() {
-        const { t, _addNotification } = this.context
+        const {t, _addNotification} = this.context
         const fields = {
             id: this.state.documentation.id,
             description: this.state.documentation.description,
             version: this.state.documentation.version,
             file: this.state.documentation.file
         }
+        let id = null
+        if(this.props.match.params.id) {
+            id = {id: this.props.match.params.id}
+        }
         const validation = this.validationPatch(fields)
-        if(validation.passes()) {
+        if (validation.passes()) {
             const data = new FormData()
-            if(fields.file.name != this.state.documentation.path) data.append('file', fields.file)
+            if (fields.file.name != this.state.documentation.path) data.append('file', fields.file)
             data.append('version', fields.version)
             data.append('description', fields.description)
             this.setState({sending: true, editState: false})
-            fetch(
-                Routing.generate(
-                    `sesile_main_documentationapi_${(this.props.match.params.id) ? 'updatepatch' : 'postpatch' }`, 
-                    {id: this.props.match.params.id}), 
-                {method: 'POST', body: data, credentials: 'same-origin'})
+        fetch(
+            Routing.generate(`sesile_main_documentationapi_${(this.props.match.params.id) ? 'updatepatch' : 'postpatch' }`, id),
+            {method: 'POST', body: data, credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(patch => {
@@ -138,7 +156,7 @@ class Documentation extends Component {
                         'success',
                         this.context.t('admin.documentations.success_save')))
             })
-            .catch(error => 
+            .catch(error =>
                 _addNotification(
                     basicNotification(
                         'error',
@@ -146,100 +164,136 @@ class Documentation extends Component {
             .finally(() => this.setState({sending: false, editState: true}))
         } else this.validationErrorFile(validation)
     }
+
     handleChangeDocumentation = (key, value) => {
-        this.setState(prevState => {documentation: prevState.documentation[key] = value})
-        if(value) this.setState({editState: true})
+        this.setState(prevState => {
+            documentation: prevState.documentation[key] = value
+        })
+        if (value) this.setState({editState: true})
         else this.setState({editState: false})
     }
     handleDropFile = (files) => {
         this.setState({dropFileError: ''})
         this.handleChangeDocumentation('file', files[0])
     }
+    handleChangeType = () => {
+        const {type} = this.state
+        if (type === this.type.help) {
+            this.setState({type: this.type.update})
+            this.setState({switch: false})
+        }
+        else if (type === this.type.update) {
+            this.setState({type: this.type.help})
+            this.setState({switch: true})
+        }
+    }
     handleRemoveFile = (e) => {
         e.preventDefault()
         e.stopPropagation()
         this.handleChangeDocumentation('file', null)
-    }   
-    render () {
-        const { t } = this.context
-        const { documentation, editState } = this.state
+    }
+
+    render() {
+        const {t} = this.context
+        const {documentation, editState} = this.state
         return (
             <Form onSubmit={this.Documentation}>
-                <AdminDetails
-                    title={t('admin.details.title', {context: 'female', name: t('admin.documentations.name')})}
-                    subtitle={t('admin.details.subtitle')} 
-                    nom={(this.props.match.params.type === this.type.help) ? t('admin.documentations.help') : t('admin.documentations.update')} >
-                    <SimpleContent>
+                <AdminPage>
+                    <div className="cell medium-12 text-center" style={{marginBottom: "1.3em"}}>
+                        <h2 className="text-capitalize-first-letter">{(this.state.type === this.type.help) ? t('admin.documentations.help') : t('admin.documentations.update')}</h2>
+                    </div>
+                    <SimpleContent className="panel">
                         <GridX className="grid-padding-x grid-padding-y">
                             <Cell className="medium-6">
                                 <GridX>
                                     <Cell>
-                                        <InputValidation    
+                                        <InputValidation
                                             id="description"
                                             type="text"
                                             className=""
                                             autoFocus={true}
                                             labelText={`${t('common.label.description')} *`}
-                                            value={documentation.description} 
+                                            value={documentation.description}
                                             onChange={this.handleChangeDocumentation}
                                             validationRule={this.validationRules.description}
                                             placeholder={t('admin.documentations.placeholder_description')}/>
                                     </Cell>
-                                    {(this.props.match.params.type === this.type.update) &&
-                                        <Cell>
-                                            <InputValidation    
-                                                id="version"
-                                                type="text"
-                                                className=""
-                                                labelText={`${t('common.label.version')} *`}
-                                                value={documentation.version} 
-                                                onChange={this.handleChangeDocumentation}
-                                                validationRule={this.validationRules.version}
-                                                placeholder={t('admin.documentations.placeholder_version')}/>
-                                        </Cell>
+                                    {(this.state.type === this.type.update) &&
+                                    <Cell>
+                                        <InputValidation
+                                            id="version"
+                                            type="text"
+                                            className=""
+                                            labelText={`${t('common.label.version')} *`}
+                                            value={documentation.version}
+                                            onChange={this.handleChangeDocumentation}
+                                            validationRule={this.validationRules.version}
+                                            placeholder={t('admin.documentations.placeholder_version')}/>
+                                    </Cell>
                                     }
                                 </GridX>
                             </Cell>
                             <Cell className="medium-6">
+                                {!this.props.match.params.id &&
+                                <div style={{ marginBottom:"1em"}}>
+                                    <label className="text-bold text-capitalize-first-letter">Type</label>
+                                    <div className="pretty p-default p-round" style={{marginTop:"1em"}}>
+                                        <input type="radio" name="radio1" checked={this.state.switch}
+                                               onChange={this.handleChangeType}/>
+                                        <div className="state  p-primary-o">
+                                            <label/>
+                                            <span>{t('common.menu.help')}</span>
+                                        </div>
+                                    </div>
+                                    <div className="pretty p-default p-round">
+                                        <input type="radio" name="radio1" checked={!this.state.switch}
+                                               onChange={this.handleChangeType}/>
+                                        <div className="state  p-primary-o">
+                                            <label/>
+                                            <span>{t('admin.documentations.patch')}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
                                 <Dropzone
                                     className="documentation-dropzone grid-x align-middle align-center"
                                     accept="application/pdf"
                                     multiple={false}
                                     name="file"
                                     maxSize={20971520}
-                                    onDropRejected={(files) => 
+                                    onDropRejected={(files) =>
                                         this.setState({dropFileError: t('admin.documentations.error.file_acceptation_rules')})}
                                     onDropAccepted={files => this.handleDropFile(files)}>
                                     {<GridX>
                                         <Cell>
                                             <i className="fa fa-file-pdf-o"></i>
                                         </Cell>
-                                        <DisplayFileName documentation={documentation} onClick={this.handleRemoveFile} />
-                                            <Cell className="text-small">
+                                        <DisplayFileName documentation={documentation} onClick={this.handleRemoveFile}/>
+                                        <Cell className="text-small">
                                             {(this.state.dropFileError) ?
                                                 <span style={{color: 'red'}}>{this.state.dropFileError}</span> :
                                                 <span>{t('admin.documentations.error.file_acceptation_rules')}</span>}
-                                            </Cell>
+                                        </Cell>
                                     </GridX>}
                                 </Dropzone>
                             </Cell>
-                            <Cell>
-                                <GridX>
-                                    <Button 
-                                        disabled={!editState}
-                                        classNameButton="primary"
-                                        className="cell medium-12 text-right"
-                                        onClick={this.saveDocumentation}
-                                        labelText=
-                                            {this.props.match.params.id ? 
-                                                t('common.button.edit_save') : 
-                                                t('common.button.save')}
-                                        loading={this.state.sending}/>
-                                </GridX>
-                            </Cell>
                         </GridX>
                     </SimpleContent>
-                </AdminDetails>
+                    <Cell>
+                        <GridX>
+                            <Button
+                                disabled={!editState}
+                                classNameButton="primary"
+                                className="cell medium-12 text-right"
+                                onClick={this.saveDocumentation}
+                                labelText=
+                                    {this.props.match.params.id ?
+                                        t('common.button.edit_save') :
+                                        t('common.button.save')}
+                                loading={this.state.sending}/>
+                        </GridX>
+                    </Cell>
+                </AdminPage>
             </Form>
         )
     }

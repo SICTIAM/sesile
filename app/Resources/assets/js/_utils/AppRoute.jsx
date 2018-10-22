@@ -95,7 +95,7 @@ class AppRoute extends Component {
                 <Route exact={true} path={"/admin/note/:noteId?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={Note} user={user} match={match} superAdmin={true} />
                 )} />
-                <Route exact={true} path={"/admin/documentation/:type/:id?"} render={({match}) => (
+                <Route exact={true} path={"/admin/documentation/:type?/:id?"} render={({match}) => (
                     <AdminRoute exact={true} path={match.path} component={Documentation} user={user} match={match} superAdmin={true} />
                 )} />
             </Switch>
