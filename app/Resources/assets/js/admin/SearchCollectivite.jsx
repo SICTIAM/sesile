@@ -4,26 +4,12 @@ import {escapedValue} from "../_utils/Search";
 
 class SearchCollectivite extends Component {
     state = {
-        colle: false,
+        collectivite: false,
         alotcall: false,
         search: '',
         collectivites: [],
         filteredCollectivites: [],
         filteredDisplay: []
-    }
-
-
-    removeElements(array, index) {
-        var tempArray = new Array();
-        var counter = 0;
-
-        for (var i = 0; i < array.length; i++) {
-            if (i != index) {
-                tempArray[counter] = array[i];
-                counter++;
-            }
-        }
-        return tempArray;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -32,8 +18,8 @@ class SearchCollectivite extends Component {
             this.setState({collectivites: nextProps.collectivite})
             this.setState({filteredCollectivites: nextProps.collectivite})
             this.isMoreThanFive(nextProps)
-            this.setState({colle: true})
-            this.setState({filteredDisplay: this.removeElements(collectivite, 5)})
+            this.setState({collectivite: true})
+            this.setState({filteredDisplay: collectivite.slice(0, 5)})
         }
     }
 
@@ -74,7 +60,7 @@ class SearchCollectivite extends Component {
                     />
                 </li>
                 }
-                {this.state.colle && collectiviteList}
+                {this.state.collectivite && collectiviteList}
             </ul>
         )
     }
