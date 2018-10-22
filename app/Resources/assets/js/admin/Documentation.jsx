@@ -100,26 +100,49 @@ class Documentation extends Component {
             if (fields.file.name != this.state.documentation.path) data.append('file', fields.file)
             data.append('description', fields.description)
             this.setState({sending: true, editState: false})
-            fetch(
-                Routing.generate(
-                    `sesile_main_documentationapi_${(this.props.match.params.id) ? 'updateaide' : 'postaide' }`,
-                    {id: this.props.match.params.id}),
-                {method: 'POST', body: data, credentials: 'same-origin'})
-                .then(handleErrors)
-                .then(response => response.json())
-                .then(help => {
-                    History.push('/admin/documentations')
-                    _addNotification(
-                        basicNotification(
-                            'success',
-                            this.context.t('admin.documentations.success_save')))
-                })
-                .catch(error =>
-                    _addNotification(
-                        basicNotification(
-                            'error',
-                            this.context.t('admin.documentations.error.save'))))
-                .finally(() => this.setState({sending: false, editState: true}))
+            {
+                this.props.match.params.id ?
+                    fetch(
+                        Routing.generate(
+                            'sesile_main_documentationapi_updateaide',
+                            {id: this.props.match.params.id}),
+                        {method: 'POST', body: data, credentials: 'same-origin'})
+                        .then(handleErrors)
+                        .then(response => response.json())
+                        .then(help => {
+                            History.push('/admin/documentations')
+                            _addNotification(
+                                basicNotification(
+                                    'success',
+                                    this.context.t('admin.documentations.success_save')))
+                        })
+                        .catch(error =>
+                            _addNotification(
+                                basicNotification(
+                                    'error',
+                                    this.context.t('admin.documentations.error.save'))))
+                        .finally(() => this.setState({sending: false, editState: true}))
+                    :
+                    fetch(
+                        Routing.generate(
+                            'sesile_main_documentationapi_postaide'),
+                        {method: 'POST', body: data, credentials: 'same-origin'})
+                        .then(handleErrors)
+                        .then(response => response.json())
+                        .then(help => {
+                            History.push('/admin/documentations')
+                            _addNotification(
+                                basicNotification(
+                                    'success',
+                                    this.context.t('admin.documentations.success_save')))
+                        })
+                        .catch(error =>
+                            _addNotification(
+                                basicNotification(
+                                    'error',
+                                    this.context.t('admin.documentations.error.save'))))
+                        .finally(() => this.setState({sending: false, editState: true}))
+            }
         } else this.validationErrorFile(validation)
     }
 
@@ -138,26 +161,49 @@ class Documentation extends Component {
             data.append('version', fields.version)
             data.append('description', fields.description)
             this.setState({sending: true, editState: false})
-            fetch(
-                Routing.generate(
-                    `sesile_main_documentationapi_${(this.props.match.params.id) ? 'updatepatch' : 'postpatch' }`,
-                    {id: this.props.match.params.id}),
-                {method: 'POST', body: data, credentials: 'same-origin'})
-                .then(handleErrors)
-                .then(response => response.json())
-                .then(patch => {
-                    History.push('/admin/documentations')
-                    _addNotification(
-                        basicNotification(
-                            'success',
-                            this.context.t('admin.documentations.success_save')))
-                })
-                .catch(error =>
-                    _addNotification(
-                        basicNotification(
-                            'error',
-                            this.context.t('admin.documentations.error.save'))))
-                .finally(() => this.setState({sending: false, editState: true}))
+            {
+                this.props.match.params.id ?
+                    fetch(
+                        Routing.generate(
+                            'sesile_main_documentationapi_updatepatch',
+                            {id: this.props.match.params.id}),
+                        {method: 'POST', body: data, credentials: 'same-origin'})
+                        .then(handleErrors)
+                        .then(response => response.json())
+                        .then(patch => {
+                            History.push('/admin/documentations')
+                            _addNotification(
+                                basicNotification(
+                                    'success',
+                                    this.context.t('admin.documentations.success_save')))
+                        })
+                        .catch(error =>
+                            _addNotification(
+                                basicNotification(
+                                    'error',
+                                    this.context.t('admin.documentations.error.save'))))
+                        .finally(() => this.setState({sending: false, editState: true}))
+                    :
+                    fetch(
+                        Routing.generate(
+                            'sesile_main_documentationapi_postpatch'),
+                        {method: 'POST', body: data, credentials: 'same-origin'})
+                        .then(handleErrors)
+                        .then(response => response.json())
+                        .then(patch => {
+                            History.push('/admin/documentations')
+                            _addNotification(
+                                basicNotification(
+                                    'success',
+                                    this.context.t('admin.documentations.success_save')))
+                        })
+                        .catch(error =>
+                            _addNotification(
+                                basicNotification(
+                                    'error',
+                                    this.context.t('admin.documentations.error.save'))))
+                        .finally(() => this.setState({sending: false, editState: true}))
+            }
         } else this.validationErrorFile(validation)
     }
 
