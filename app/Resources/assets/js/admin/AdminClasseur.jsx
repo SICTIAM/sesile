@@ -263,7 +263,7 @@ class AdminClasseur extends Component {
                                                                         this.props.etapeDeposante ?
                                                                             ("text-warning text-bold") :
                                                                             ("text-success text-bold")}>
-                                                                    {this.props.user._prenom} {this.props.user._nom}
+                                                                    {this.state.classeur.user._prenom} {this.state.classeur.user._nom}
                                                                 </span>
                                                     </div>
                                                 </div>
