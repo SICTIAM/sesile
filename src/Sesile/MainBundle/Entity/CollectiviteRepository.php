@@ -74,7 +74,7 @@ class CollectiviteRepository extends EntityRepository
 
         return $this
             ->createQueryBuilder('c')
-            ->select('c.id', 'c.nom', 'c.domain')
+            ->select('c.id', 'c.nom', 'c.domain', 'c.message')
             ->orderBy('c.nom', 'ASC')
             ->getQuery()
             ->getArrayResult();
