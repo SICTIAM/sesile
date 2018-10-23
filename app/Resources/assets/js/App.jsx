@@ -16,7 +16,7 @@ import Moment from 'moment'
 import { Route } from 'react-router'
 import SelectCollectivite from './SelectCollectivite'
 import History from './_utils/History'
-import {handleErrors} from "./_utils/Utils";
+import {handleErrors} from "./_utils/Utils"
 Validator.useLang(window.localStorage.i18nextLng)
 Moment.locale(window.localStorage.i18nextLng || 'fr')
 
@@ -88,10 +88,10 @@ class App extends Component {
     }
     fetchMessage = () => {
         fetch(Routing.generate("sesile_main_collectiviteapi_getorganisationmessage", {domain: this.state.collectivitedomain}))
-            .then(handleErrors)
             .then(response => response.json())
             .then(json => {
-                this.setState({collectivitemessage: json.message})
+                json.message && this.setState({collectivitemessage: json.message})
+                json.code && json.code === 404 ? this.setState({displaySelectCollectivite: true}) : this.setState({displaySelectCollectivite: false})
             })
     }
     fetchUser = () => {
