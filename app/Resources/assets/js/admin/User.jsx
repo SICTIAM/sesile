@@ -270,7 +270,7 @@ class User extends Component {
                         </div>
                     </div>
 
-                    <div className="panel" style={{padding: "10px", height:"16em"}}>
+                    <div className="panel" style={{padding: "10px", height:"17em"}}>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_user')}</h3>

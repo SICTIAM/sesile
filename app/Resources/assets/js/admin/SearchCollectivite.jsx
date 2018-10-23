@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
-import {translate} from "react-i18next"
-import {escapedValue} from "../_utils/Search";
+import { translate } from 'react-i18next'
+import {escapedValue} from "../_utils/Search"
+import { object, func } from 'prop-types'
+
 
 class SearchCollectivite extends Component {
+    static contextTypes = {
+        t: func
+     }
     state = {
         collectivite: false,
         alotcall: false,
@@ -38,6 +43,7 @@ class SearchCollectivite extends Component {
     }
 
     render() {
+        const { t } = this.context
         const collectiviteList = this.state.filteredDisplay.map((collectivite, key) => <li
             key={key + collectivite.id.toString()}
             style={{minWidth: '40%'}}>
@@ -51,12 +57,16 @@ class SearchCollectivite extends Component {
             </li>
         )
         return (
-            <ul className={this.props.className}>
+            <ul className={this.props.className} style={{marginBottom:"0.5em"}}>
                 {this.state.alotcall &&
                 <li style={{listStyle:"none"}}>
                     <input
+                        className="input-group-field"
+                        placeholder={t('admin.collectivite.title')}
+                        type="text"
                         value={this.state.search}
                         onChange={(e) => this.handleSearch(e.target.value)}
+                        style={{margin:"0.5em", borderRadius:"5px", fontSize:"0.8em ", maxWidth:"400px"}}
                     />
                 </li>
                 }
