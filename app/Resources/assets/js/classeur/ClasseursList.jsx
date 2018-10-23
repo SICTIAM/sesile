@@ -192,7 +192,7 @@ class ClasseursList extends Component {
                                  style={{marginTop: "10px", display: "flex"}}>
                                 <div className="cell medium-12 align-center-middle"
                                      style={{width: "40%", marginRight: "20px"}}>
-                                    <span>Statut</span>
+                                    <span>{t('common.classeurs.sort_label.status')}</span>
                                     <Select
                                         id="collectivites_select"
                                         placeholder={t('common.select_statut')}
@@ -204,7 +204,7 @@ class ClasseursList extends Component {
                                         onChange={this.handleSearchByStatus}/>
                                 </div>
                                 <div className="cell medium-12 align-center-middle" style={{width: "40%"}}>
-                                    <span>Type</span>
+                                    <span>{t('common.classeurs.sort_label.type')}</span>
                                     <Select
                                         id="collectivite_select"
                                         placeholder={t('common.select_type')}
