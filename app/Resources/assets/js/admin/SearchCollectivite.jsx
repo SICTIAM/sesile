@@ -19,7 +19,7 @@ class SearchCollectivite extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.collectivite.length > 0) {
-            const collectivite = nextProps.collectivite
+            const collectivite = nextProps.collectivite.sort((a, b) => a.nom.localeCompare(b.nom))
             this.setState({collectivites: nextProps.collectivite})
             this.setState({filteredCollectivites: nextProps.collectivite})
             this.isMoreThanFive(nextProps)
