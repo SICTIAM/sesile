@@ -221,6 +221,8 @@
         "download_pdf": "Télécharger le PDF",
         "infos": "informations",
         "select_collectivite": "Sélectionner la collectivité",
+        "select_type": "Sélectionner le type",
+        "select_statut": "Sélectionner le statut",
         "research": "Recherche",
         "download": "Télécharger",
         "error_loading_list": "Une erreur est survenue lors du chargement de la liste",
