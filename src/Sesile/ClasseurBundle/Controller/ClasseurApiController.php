@@ -689,7 +689,8 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
             $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_SIGN, ClasseurManager::ACTION_SIGN_CLASSEUR);
 
             // Envoie du mail de confirmation
-            //$this->sendValidationMail($classeur, $user);
+            $actionMailer = $this->get(ActionMailer::class);
+            $actionMailer->sendNotificationClasseur($classeur);
 
             //Envoie du callback
             $docs = $classeur->getDocuments();
