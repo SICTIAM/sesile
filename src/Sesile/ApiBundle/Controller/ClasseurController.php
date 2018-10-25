@@ -1,6 +1,7 @@
 <?php
 namespace Sesile\ApiBundle\Controller;
 
+use Sesile\ClasseurBundle\Entity\Callback;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -231,6 +232,10 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"},
      *          {"name"="email", "dataType"="string", "format"="Email valide", "required"=false, "description"="email du déposant"},
+     *          {"name"="callback", "dataType"="boolean", "format"="false si non true si oui", "required"=false, "description"="callback"},
+     *          {"name"="url_withdrawn", "dataType"="string", "format"="url valide", "required"=false, "description"="url callback retract"},
+     *          {"name"="url_delete", "dataType"="string", "format"="url valide", "required"=false, "description"="url callback delete"},
+     *          {"name"="url_signed", "dataType"="string", "format"="url valide", "required"=false, "description"="url callback signed"},
      *          {"name"="siren", "dataType"="string", "format"="string", "required"=false, "description"="siren collectivité, si non renseigné la premiere collectivité de l'utilisateur sera utilisé"},
      *
      *
@@ -429,6 +434,21 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $actionMailer = $this->get(ActionMailer::class);
         $actionMailer->sendNotificationClasseur($classeur);
+
+        if ($request->request->get('callback') == true)
+            $url_withdrawn = null;
+            $url_delete = null;
+            $url_signed = null;
+            if ($request->request->get('delete'))
+                $url_delete = $request->request->get('delete');
+            if ($request->request->get('signed'))
+                $url_signed = $request->request->get('signed');
+            if ($request->request->get('withdrawn'))
+                $url_withdrawn = $request->request->get('withdrawn');
+            $em = $this->getDoctrine()->getManager();
+            $connection = $em->getConnection();
+            $sql = 'INSERT INTO `Callback` (`classeur_id`, `url_delete`, `url_signed`, `url_withdrawn`) VALUES (:classeurId, :url_delete, :url_signed, :url_withdrawn)';
+            $connection->executeQuery($sql, ['classeurId' => $classeur->getId(), 'url_delete' => $url_delete, 'url_signed' => $url_signed, 'url_withdrawn' => $url_withdrawn]);
 
 
         return new JsonResponse(["id" => $classeur->getId(), "message" => "Le classeur a bien été déposé"], JsonResponse::HTTP_OK);

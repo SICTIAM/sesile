@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use GuzzleHttp\Client;
 
 /**
  * @Rest\Route("/api/v4", options = { "expose" = true })
@@ -466,6 +467,20 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         // Ajout d'une action pour le classeur
         $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_REMOVE_CLASSEUR);
 
+        // Envoie Callback
+        $client = new Client();
+        $sql = 'SELECT * FROM `Callback` WHERE classeur_id = :classeurId';
+        $connection = $em->getConnection()->prepare($sql);
+        $connection->bindValue('classeurId', $classeur->getId());
+        $connection->execute();
+        $result = $connection->fetchAll();
+        if ($result && $result[0]['url_withdrawn'])
+            $client->request('POST', $result[0]['url_withdrawn'], [
+                'form_params' => [
+                    'event' => 'withdrawn',
+                ]
+            ]);
+
         return $classeur;
     }
 
@@ -486,6 +501,20 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         }
         $em->remove($classeur);
         $em->flush();
+
+        // envoie Callback
+        $client = new Client();
+        $sql = 'SELECT * FROM `Callback` WHERE classeur_id = :classeurId';
+        $connection = $em->getConnection()->prepare($sql);
+        $connection->bindValue('classeurId', $classeur->getId());
+        $connection->execute();
+        $result = $connection->fetchAll();
+        if ($result && $result[0]['url_delete'])
+            $client->request('POST', $result[0]['url_delete'], [
+                'form_params' => [
+                    'event' => 'delete',
+                ]
+            ]);
 
         return new JsonResponse(['message' => "Classeur remove"], Response::HTTP_OK);
     }
@@ -660,7 +689,36 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
             $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_SIGN, ClasseurManager::ACTION_SIGN_CLASSEUR);
 
             // Envoie du mail de confirmation
-            $this->sendValidationMail($classeur, $user);
+            //$this->sendValidationMail($classeur, $user);
+
+            //Envoie du callback
+            $docs = $classeur->getDocuments();
+            $isSigned = true;
+            foreach($docs as $doc){
+                if ($doc->getSigned() == false)
+                    $isSigned = false;
+            }
+            $client = new Client();
+            $sql = 'SELECT * FROM `Callback` WHERE classeur_id = :classeurId';
+            $connection = $em->getConnection()->prepare($sql);
+            $connection->bindValue('classeurId', $classeur->getId());
+            $connection->execute();
+            $result = $connection->fetchAll();
+            if ($isSigned == true && $result && $result[0]['url_signed']) {
+                $post = array();
+                $path = $this->container->getParameter('upload')['fics'];
+                foreach ($docs as $document) {
+                    $file = [
+                        'name' => $document->getName(),
+                        'contents' => file_get_contents($path . $document->getRepourl()),
+                        'filename' =>  $document->getName(),
+                    ];
+                    $post[] = $file;
+                }
+                $client->request('POST', $result[0]['url_signed'], [
+                    'multipart' => $post
+                ]);
+            }
 
             return new JsonResponse(array("classeur_valid" => "1"));
         }
