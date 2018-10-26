@@ -3,7 +3,7 @@ import { func } from 'prop-types'
 import Select from 'react-select'
 import { translate } from 'react-i18next'
 
-import { handleErrors } from './_utils/Utils'
+import { handleErrors } from '../_utils/Utils'
 
 class SelectCollectivite extends Component {
     static contextTypes = {
