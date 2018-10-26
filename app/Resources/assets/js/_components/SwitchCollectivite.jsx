@@ -54,7 +54,7 @@ class SwitchCollectivite extends Component {
                                 {currentCollectivity.nom}
                             </span>
                         </a>
-                            <SearchCollectivite collectivite={collectivities} className="menu" classButton="button secondary clear"/>
+                            <SearchCollectivite collectivite={collectivities} currentCollectivite={currentCollectivity} className="menu" classButton="button secondary clear"/>
                     </li>
                 </ul> :
                 <span style={{borderColor: this.props.color, color: this.props.color, cursor: 'default', minWidth: '40%', padding: '8px'}}

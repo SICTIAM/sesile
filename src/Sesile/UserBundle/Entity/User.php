@@ -320,7 +320,7 @@ class User extends BaseUser {
      *      @ORM\JoinColumn(name="collectivite_id", referencedColumnName="id")
      *  }
      * )
-     *
+     * @ORM\OrderBy({"nom" = "ASC"})
      * @Serializer\Groups({"currentUser", "UserId"})
      */
     protected $collectivities;
