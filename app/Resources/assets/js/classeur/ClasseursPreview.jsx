@@ -22,7 +22,8 @@ class ClasseursPreview extends Component {
         $('#sign-classeurs').foundation()
     }
     componentWillUnmount() {
-        clearInterval(this.interval)
+        this.interval && clearInterval(this.interval)
+        this.timer && clearTimeout(this.timer)
     }
     checkClasseur = (id, checked) => {
         const classeurs = this.state.classeurs
@@ -67,7 +68,7 @@ class ClasseursPreview extends Component {
                 })
                 if(allSigned.every((value) => value === true)) {
                     clearInterval(this.interval)
-                    setTimeout(() => History.push('/classeurs/valides'), 5000)
+                    this.timer = setTimeout(() => History.push('/classeurs/valides'), 5000)
                 }
                 this.setState({classeurs})
             })

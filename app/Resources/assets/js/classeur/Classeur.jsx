@@ -55,6 +55,7 @@ class Classeur extends Component {
 
     componentWillUnmount() {
         clearInterval(this.interval)
+        this.timer && clearTimeout(this.timer)
     }
 
     getClasseur(id) {
@@ -210,7 +211,7 @@ class Classeur extends Component {
                 if(classeurStatus.id === this.state.classeur.id && classeurStatus.status !== this.state.classeur.status) {
                     clearInterval(this.interval)
                     this.getClasseur(this.state.classeur.id)
-                    setTimeout(() => History.push('/classeurs/valides'), 5000)
+                    this.timer = setTimeout(() => History.push('/classeurs/valides'), 5000)
                 }
             })
     }
