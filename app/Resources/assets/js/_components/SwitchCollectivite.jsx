@@ -21,11 +21,11 @@ class SwitchCollectivite extends Component {
         redirectUrl: {}
     }
 
-    componentDidUpdate() {
+    componentDidMount() {
         $('.switch-collectivite').foundation()
     }
     componentWillReceiveProps(nextProps) {
-       if (nextProps.user) {
+       if (!this.state.currentCollectivite.nom && nextProps.user) {
            const collectivities = nextProps.user.collectivities;
            const currentCollectivityId = nextProps.user.current_org_id;
            const currentCollectivity = collectivities.find((collectivity) => {
