@@ -19,6 +19,7 @@ use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\ClasseursUsers;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sesile\ClasseurBundle\Service\ActionMailer;
+use Sesile\ClasseurBundle\Entity\CallbackRepository;
 
 
 /**
@@ -424,7 +425,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $em->getRepository('SesileClasseurBundle:Classeur')->setUserVisible($classeur);
 
-
         $action = new Action();
         $action->setClasseur($classeur);
         $action->setUser($user);
@@ -435,23 +435,31 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $actionMailer = $this->get(ActionMailer::class);
         $actionMailer->sendNotificationClasseur($classeur);
 
-        if ($request->request->get('callback') == true)
-            $url_withdrawn = null;
-            $url_delete = null;
-            $url_signed = null;
-            if ($request->request->get('delete'))
-                $url_delete = $request->request->get('delete');
-            if ($request->request->get('signed'))
-                $url_signed = $request->request->get('signed');
-            if ($request->request->get('withdrawn'))
-                $url_withdrawn = $request->request->get('withdrawn');
-            $em = $this->getDoctrine()->getManager();
-            $connection = $em->getConnection();
-            $sql = 'INSERT INTO `Callback` (`classeur_id`, `url_delete`, `url_signed`, `url_withdrawn`) VALUES (:classeurId, :url_delete, :url_signed, :url_withdrawn)';
-            $connection->executeQuery($sql, ['classeurId' => $classeur->getId(), 'url_delete' => $url_delete, 'url_signed' => $url_signed, 'url_withdrawn' => $url_withdrawn]);
-
-
-        return new JsonResponse(["id" => $classeur->getId(), "message" => "Le classeur a bien été déposé"], JsonResponse::HTTP_OK);
+        if ($request->request->get('callback') === '1' && $request->request->get('signed')) {
+            $callback = new Callback();
+            $callback->setId($classeur->getId());
+            $callback->setEvent('signed');
+            $callback->setUrl($request->request->get('signed'));
+            $em->persist($callback);
+            $em->flush();
+        }
+        if ($request->request->get('callback') === '1' && $request->request->get('withdrawn')) {
+            $callback = new Callback();
+            $callback->setId($classeur->getId());
+            $callback->setEvent('withdrawn');
+            $callback->setUrl($request->request->get('withdrawn'));
+            $em->persist($callback);
+            $em->flush();
+        }
+        if ($request->request->get('callback') === '1' && $request->request->get('delete')) {
+            $callback = new Callback();
+            $callback->setId($classeur->getId());
+            $callback->setEvent('delete');
+            $callback->setUrl($request->request->get('delete'));
+            $em->persist($callback);
+            $em->flush();
+        }
+        return new JsonResponse(["id" => $classeur->getId(),"message" => "Le classeur a bien été déposé"], JsonResponse::HTTP_OK);
     }
 
 
@@ -600,6 +608,19 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $action->setAction("Classeur retiré");
         $em->persist($action);
         $em->flush();
+
+        // Envoie Callback
+        $client = new Client();
+        $result = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
+        foreach ($result as $event) {
+            if ($event['event'] === 'delete') {
+                $client->request('POST', $event['url'], [
+                    'form_params' => [
+                        'event' => 'delete',
+                    ]
+                ]);
+            }
+        }
 
         return array('code' => '200', 'message' => 'Classeur retiré');
 

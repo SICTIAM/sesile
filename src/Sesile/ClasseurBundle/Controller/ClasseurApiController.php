@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use GuzzleHttp\Client;
+use Sesile\ClasseurBundle\Entity\Callback;
 
 /**
  * @Rest\Route("/api/v4", options = { "expose" = true })
@@ -420,6 +421,18 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         // Ajout d'une action pour le classeur
         $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_RETRACT);
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
+        // Envoie Callback
+        $client = new Client();
+        $result = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
+        foreach ($result as $event) {
+            if ($event['event'] === 'withdrawn') {
+                $client->request('POST', $event['url'], [
+                    'form_params' => [
+                        'event' => 'withdrawn',
+                    ]
+                ]);
+            }
+        }
 
         return $classeur;
     }
@@ -469,17 +482,16 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         // Envoie Callback
         $client = new Client();
-        $sql = 'SELECT * FROM `Callback` WHERE classeur_id = :classeurId';
-        $connection = $em->getConnection()->prepare($sql);
-        $connection->bindValue('classeurId', $classeur->getId());
-        $connection->execute();
-        $result = $connection->fetchAll();
-        if ($result && $result[0]['url_withdrawn'])
-            $client->request('POST', $result[0]['url_withdrawn'], [
-                'form_params' => [
-                    'event' => 'withdrawn',
-                ]
-            ]);
+        $result = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
+        foreach ($result as $event) {
+            if ($event['event'] === 'withdrawn') {
+                $client->request('POST', $event['url'], [
+                    'form_params' => [
+                        'event' => 'withdrawn',
+                    ]
+                ]);
+            }
+        }
 
         return $classeur;
     }
@@ -502,20 +514,18 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $em->remove($classeur);
         $em->flush();
 
-        // envoie Callback
+        // Envoie Callback
         $client = new Client();
-        $sql = 'SELECT * FROM `Callback` WHERE classeur_id = :classeurId';
-        $connection = $em->getConnection()->prepare($sql);
-        $connection->bindValue('classeurId', $classeur->getId());
-        $connection->execute();
-        $result = $connection->fetchAll();
-        if ($result && $result[0]['url_delete'])
-            $client->request('POST', $result[0]['url_delete'], [
-                'form_params' => [
-                    'event' => 'delete',
-                ]
-            ]);
-
+        $result = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
+        foreach ($result as $event) {
+            if ($event['event'] === 'delete') {
+                $client->request('POST', $event['url'], [
+                    'form_params' => [
+                        'event' => 'delete',
+                    ]
+                ]);
+            }
+        }
         return new JsonResponse(['message' => "Classeur remove"], Response::HTTP_OK);
     }
 
@@ -700,12 +710,9 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                     $isSigned = false;
             }
             $client = new Client();
-            $sql = 'SELECT * FROM `Callback` WHERE classeur_id = :classeurId';
-            $connection = $em->getConnection()->prepare($sql);
-            $connection->bindValue('classeurId', $classeur->getId());
-            $connection->execute();
-            $result = $connection->fetchAll();
-            if ($isSigned == true && $result && $result[0]['url_signed']) {
+            $result = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
+            $url = null;
+            if ($isSigned == true) {
                 $post = array();
                 $path = $this->container->getParameter('upload')['fics'];
                 foreach ($docs as $document) {
@@ -716,9 +723,13 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                     ];
                     $post[] = $file;
                 }
-                $client->request('POST', $result[0]['url_signed'], [
-                    'multipart' => $post
-                ]);
+                foreach ($result as $event) {
+                    if ($event['event'] === 'signed') {
+                        $client->request('POST', $event['url'], [
+                            'multipart' => $post
+                        ]);
+                    }
+                }
             }
 
             return new JsonResponse(array("classeur_valid" => "1"));
