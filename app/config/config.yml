@@ -215,3 +215,4 @@ services:
         arguments:
             $fromEmail: '%email_sender_address%'
             $paths: '%upload%'
+            $domain: '%domain%'

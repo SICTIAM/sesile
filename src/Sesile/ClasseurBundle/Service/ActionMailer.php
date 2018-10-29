@@ -19,8 +19,9 @@ class ActionMailer
     private $paths;
     private $router;
     private $twig;
+    private $domain;
 
-    public function __construct(EntityManagerInterface $entityManager, \Swift_Mailer $mailer, \Twig_Environment $twig, TokenStorageInterface $tokenStorage, UrlGeneratorInterface $router, $fromEmail, $paths)
+    public function __construct(EntityManagerInterface $entityManager, \Swift_Mailer $mailer, \Twig_Environment $twig, TokenStorageInterface $tokenStorage, UrlGeneratorInterface $router, $fromEmail, $paths, $domain)
     {
         $this->entityManager = $entityManager;
         $this->mailer = $mailer;
@@ -29,6 +30,7 @@ class ActionMailer
         $this->paths = $paths;
         $this->router = $router;
         $this->twig = $twig;
+        $this->domain = $domain;
     }
 
     public function sendNotification(Classeur $classeur, Action $action)
@@ -76,7 +78,6 @@ class ActionMailer
         $validants = $this->entityManager->getRepository('SesileClasseurBundle:Classeur')->getValidant($classeur);
         $subject = "SESILE - Nouveau classeur déposé";
 
-
         $env = new \Twig_Environment(new \Twig_Loader_Array(array()));
         $template = $env->createTemplate($collectivite->getTextmailnew());
         $template_html = [
@@ -86,7 +87,7 @@ class ActionMailer
             'titre_classeur' => $classeur->getNom(),
             'date_limite' => $classeur->getValidation(),
             'type' => strtolower($classeur->getType()->getNom()),
-            'lien' => '<a href="' . $this->router->generate('sesile_main_default_app', [], UrlGeneratorInterface::ABSOLUTE_URL) .'classeur/'. $classeur->getId() .'">valider le classeur</a>'
+            'lien' => '<a href="' . $this->buildAbsoluteUrl($collectivite) .'classeur/'. $classeur->getId() .'">valider le classeur</a>'
         ];
 
         foreach($validants as $validant) {
@@ -143,7 +144,7 @@ class ActionMailer
             'titre_classeur' => $classeur->getNom(),
             'date_limite' => $classeur->getValidation(),
             'type' => strtolower($classeur->getType()->getNom()),
-            'lien' => '<a href="' . $this->router->generate('sesile_main_default_app', [], UrlGeneratorInterface::ABSOLUTE_URL) .'classeur/'. $classeur->getId() .'">voir le classeur</a>'
+            'lien' => '<a href="' . $this->buildAbsoluteUrl($collectivite) .'classeur/'. $classeur->getId() .'">voir le classeur</a>'
         ];
 
         // notification des users en copy
@@ -192,7 +193,7 @@ class ActionMailer
             'titre_classeur' => $classeur->getNom(),
             'date_limite' => $classeur->getValidation(),
             'type'      => strtolower($classeur->getType()->getNom()),
-            'lien'      => '<a href="' . $this->router->generate('sesile_main_default_app', [], UrlGeneratorInterface::ABSOLUTE_URL) .'classeur/'. $classeur->getId() .'">voir le classeur</a>',
+            'lien'      => '<a href="' . $this->buildAbsoluteUrl($collectivite) .'classeur/'. $classeur->getId() .'">voir le classeur</a>',
             'motif'     => $classeur->getMotifRefus()
         ];
 
@@ -249,6 +250,17 @@ class ActionMailer
             ->setContentType('text/html');
 
         $this->mailer->send($message);
+    }
+
+    private function buildAbsoluteUrl($collectivite) {
+        $absoluteUrl = $this->router->generate('sesile_main_default_app', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $parsedUrl = parse_url($absoluteUrl);
+
+        if((isset($parsedUrl['host']) && isset($this->domain)) && $parsedUrl['host'] == $this->domain) {
+            $absoluteUrl = parse_url($absoluteUrl)['scheme'] . "://" . $collectivite->getDomain() . "." . parse_url($absoluteUrl)['host'];
+        }
+
+        return $absoluteUrl;
     }
 
 }
