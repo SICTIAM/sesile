@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { number, func } from 'prop-types'
+import { number, func, object } from 'prop-types'
 import { translate } from 'react-i18next'
 import { extractRootDomain } from './../_utils/Utils'
 import SearchCollectivite from "../admin/SearchCollectivite";
@@ -7,7 +7,8 @@ import SearchCollectivite from "../admin/SearchCollectivite";
 class SwitchCollectivite extends Component {
 
     static contextTypes = {
-        t: func 
+        t: func,
+        user: object
     }
 
     static propTypes = {
@@ -27,7 +28,7 @@ class SwitchCollectivite extends Component {
     componentWillReceiveProps(nextProps) {
        if (!this.state.currentCollectivite.nom && nextProps.user) {
            const collectivities = nextProps.user.collectivities;
-           const currentCollectivityId = nextProps.user.current_org_id;
+           const currentCollectivityId = this.context.user.current_org_id;
            const currentCollectivity = collectivities.find((collectivity) => {
                return currentCollectivityId == collectivity.id
            });
@@ -35,7 +36,7 @@ class SwitchCollectivite extends Component {
        }
     }
     render() {
-        const { user } = this.props;
+        const { user } = this.context;
         const collectivities = user.collectivities;
 
         return (
