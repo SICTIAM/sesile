@@ -15,14 +15,13 @@ class CircuitValidationSteps extends Component {
     render() {
 
         const { t } = this.context
-        const { steps, collectiviteId, onSortEnd, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, handleClickAddStep, addUser, addGroup } = this.props
+        const { steps, onSortEnd, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, handleClickAddStep, addUser, addGroup } = this.props
 
         return (
             <CircuitValidationStepList  axis="x"
                                         pressDelay={200}
                                         pressThreshold={15}
                                         steps={steps}
-                                        collectiviteId={collectiviteId}
                                         onSortEnd={onSortEnd}
                                         handleClickDeleteUser={handleClickDeleteUser}
                                         handleClickDeleteGroup={handleClickDeleteGroup}
@@ -50,12 +49,11 @@ CircuitValidationSteps.propTypes = {
 export default translate('sesile')(CircuitValidationSteps)
 
 
-const CircuitValidationStepList = SortableContainer(({steps, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, handleClickAddStep, addGroup, addUser, labelButtonAddStep}) => {
+const CircuitValidationStepList = SortableContainer(({steps, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, handleClickAddStep, addGroup, addUser, labelButtonAddStep}) => {
     const listStep = steps.map((step, key) => <SortableCircuitValidationStep    key={`item-${key}`}
                                                                                 index={key}
                                                                                 stepKey={key}
                                                                                 step={step}
-                                                                                collectiviteId={collectiviteId}
                                                                                 handleClickDeleteUser={handleClickDeleteUser}
                                                                                 handleClickDeleteGroup={handleClickDeleteGroup}
                                                                                 handleClickDeleteStep={handleClickDeleteStep}
@@ -80,11 +78,10 @@ const CircuitValidationStepList = SortableContainer(({steps, collectiviteId, han
 })
 
 
-const SortableCircuitValidationStep = SortableElement(({stepKey, step, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser}) => {
+const SortableCircuitValidationStep = SortableElement(({stepKey, step, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser}) => {
     return (
         <CircuitValidationStep  key={stepKey}
                                 stepKey={stepKey}
-                                collectiviteId={collectiviteId}
                                 step={step}
                                 handleClickDeleteUser={handleClickDeleteUser}
                                 handleClickDeleteGroup={handleClickDeleteGroup}
@@ -104,7 +101,7 @@ class CircuitValidationStep extends Component {
 
     render() {
         const { t } = this.context
-        const { stepKey, step, collectiviteId, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser } = this.props
+        const { stepKey, step, handleClickDeleteUser, handleClickDeleteGroup, handleClickDeleteStep, addGroup, addUser } = this.props
         const listUsers =
             step.users && step.users.map((user, key) =>
                 <li key={key} className="text-wrap" title={user._prenom + " " + user._nom}>
@@ -150,7 +147,7 @@ class CircuitValidationStep extends Component {
                     {listGroups && listGroups.length > 0 &&
                         <li className="text-capitalize text-bold text-truncate">{t('admin.group.name', {count: listGroups.length})}</li>}
                     {listGroups}
-                    <SearchUserAndGroup placeholder={t('admin.placeholder.type_userName_or_groupName')} addGroup={addGroup} addUser={addUser} stepKey={stepKey} step={step} collectiviteId={collectiviteId} />
+                    <SearchUserAndGroup placeholder={t('admin.placeholder.type_userName_or_groupName')} addGroup={addGroup} addUser={addUser} stepKey={stepKey} step={step}/>
                 </ul>
             </StepItem>
         )

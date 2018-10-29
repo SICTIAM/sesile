@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PropTypes, { func, object, string } from 'prop-types'
+import { func, object, string } from 'prop-types'
 import Draggable from 'react-draggable'
 
 export default class DraggablePosition extends Component {

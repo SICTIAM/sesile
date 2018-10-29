@@ -1,8 +1,8 @@
-import DraggablePosition from "../_components/DraggablePosition";
-import React, {Component} from "react";
-import {translate} from "react-i18next";
-import {array, func, string, object, bool} from 'prop-types'
-import { handleErrors } from '../_utils/Utils'
+import React, {Component} from "react"
+import {translate} from "react-i18next"
+import {func} from 'prop-types'
+
+import DraggablePosition from "../_components/DraggablePosition"
 
 class DraggablePositionDownload extends Component {
     static contextTypes = {

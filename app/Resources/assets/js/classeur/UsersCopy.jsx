@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import {func, number, array, string} from 'prop-types'
+import {func, array, string, object} from 'prop-types'
 import Select from 'react-select'
 import { translate } from 'react-i18next'
 
 class UsersCopy extends Component {
 
     static contextTypes = {
-        t: func
+        t: func,
+        user: object
     }
 
     static propTypes = {
-        currentCollectiviteId: number,
         handleChange: func,
         className: string,
         users_copy: array
@@ -21,11 +21,11 @@ class UsersCopy extends Component {
     }
 
     componentDidMount() {
-        this.fetchUsersCollectivite(this.props.currentCollectiviteId)
+        this.fetchUsersCollectivite()
     }
 
-    fetchUsersCollectivite(id) {
-        fetch(Routing.generate('sesile_user_userapi_userscollectiviteselect', {id}) , { credentials: 'same-origin'})
+    fetchUsersCollectivite() {
+        fetch(Routing.generate('sesile_user_userapi_userscollectiviteselect', {id: this.context.user.current_org_id}) , { credentials: 'same-origin'})
             .then(response => response.json())
             .then(users_collectivite => this.setState({users_collectivite}))
     }
