@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { func } from 'prop-types'
+import {func, object} from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import Debounce from 'debounce'
 import { escapedValue } from '../_utils/Search'
@@ -7,7 +7,8 @@ import { escapedValue } from '../_utils/Search'
 class SearchUserAndGroup extends Component {
 
     static contextTypes = {
-        t: func
+        t: func,
+        user: object
     }
     
     state = {
@@ -18,7 +19,7 @@ class SearchUserAndGroup extends Component {
     }
 
     componentDidMount() {
-        this.fetchGroups(this.props.collectiviteId)
+        this.fetchGroups()
     }
     
     handleChange = (event, { newValue }) => this.setState({value: newValue})
@@ -33,7 +34,7 @@ class SearchUserAndGroup extends Component {
     }
 
     findUser = Debounce((value) => {
-        fetch(Routing.generate('sesile_user_userapi_findbynomorprenom', {value, collectiviteId: this.props.collectiviteId}), {credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_user_userapi_findbynomorprenom', {value, collectiviteId: this.context.user.current_org_id}), {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => this.setSuggestions('Utilisateurs', json.filter(userReceived => !this.props.step.users.find(user => userReceived.id === user.id))))
     } , 500)
@@ -44,8 +45,8 @@ class SearchUserAndGroup extends Component {
         groups.length !== 0 && this.setSuggestions('Groupes', groups.filter(group => regex.test(group.nom) && !this.props.step.user_packs.find(user_pack => group.id === user_pack.id)))
     }
 
-    fetchGroups = (collectiviteId) => {
-        fetch(Routing.generate('sesile_user_userpackapi_getbycollectivite', {collectiviteId}), {credentials: 'same-origin'})
+    fetchGroups = () => {
+        fetch(Routing.generate('sesile_user_userpackapi_getbycollectivite', {collectiviteId: this.context.user.current_org_id}), {credentials: 'same-origin'})
         .then(response => response.json())
         .then(json => this.setState({groups: json}))
     }

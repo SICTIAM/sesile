@@ -1,15 +1,11 @@
 import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import Dropzone from 'react-dropzone'
-import {array, func, string, object, bool} from 'prop-types'
+import {array, func, object, bool} from 'prop-types'
 
 import {Cell, GridX} from '../_components/UI'
-import DraggablePosition from '../_components/DraggablePosition'
-import { BytesToSize } from '../_utils/Utils'
-import { handleErrors } from '../_utils/Utils'
-import DraggablePositionDownload from '../document/VisaDownload'
-import DraggablePositionVisaSignatureDownload from '../document/VisaSignatureDownload'
-import DowSign from "./DowSign";
+import { BytesToSize, handleErrors } from '../_utils/Utils'
+import DowSign from "./DowSign"
 
 
 class DocumentsNew extends Component {

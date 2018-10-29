@@ -1,23 +1,26 @@
 import React, { Component } from 'react'
-import {func, object} from 'prop-types'
-import {Button, Form, Select, Textarea} from '../_components/Form'
+import { func, object } from 'prop-types'
 import Moment from 'moment/moment'
 import Validator from 'validatorjs'
 import { translate } from 'react-i18next'
+import { arrayMove } from 'react-sortable-hoc'
+
+import {Button, Form, Select, Textarea} from '../_components/Form'
 import InputValidation from '../_components/InputValidation'
-import CircuitValidationSteps from '../circuit/CircuitValidationSteps'
-import {arrayMove} from 'react-sortable-hoc'
-import { handleErrors, createUUID } from '../_utils/Utils'
 import {basicNotification} from '../_components/Notifications'
+import CircuitValidationSteps from '../circuit/CircuitValidationSteps'
+
 import DocumentsNew from '../document/DocumentsNew'
 import UsersCopy from './UsersCopy'
 import History from '../_utils/History'
+import { handleErrors, createUUID } from '../_utils/Utils'
 
 class ClasseurNew extends Component {
 
     static contextTypes = {
         t: func,
-        _addNotification: func
+        _addNotification: func,
+        user: object
     }
 
     state = {
@@ -34,7 +37,6 @@ class ClasseurNew extends Component {
             visibility: 3,
             description: ''
         },
-        user: {},
         users_copy: [],
         documents: []
     }
@@ -46,14 +48,11 @@ class ClasseurNew extends Component {
 
     componentDidMount() {
         this.getCircuitsValidation()
-        fetch(Routing.generate('sesile_user_userapi_getcurrent'), { credentials: 'same-origin' })
-            .then(response => response.json())
-            .then(user => this.setState({user}))
     }
 
     getCircuitsValidation() {
         const { t, _addNotification} = this.context
-        fetch(Routing.generate('sesile_user_circuitvalidationapi_listbyuser', {orgId: this.props.user.current_org_id}), {credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_user_circuitvalidationapi_listbyuser', {orgId: this.context.user.current_org_id}), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(circuits => {
                 if (circuits.length === 0) {
@@ -96,7 +95,8 @@ class ClasseurNew extends Component {
     }
 
     postClasseur () {
-        const { classeur, documents, user, type, circuit, users_copy } = this.state
+        const { classeur, documents, type, circuit, users_copy } = this.state
+        const { user } = this.context
         const etape_classeurs = circuit.etape_groupes
         let formData  = new FormData()
 
@@ -186,7 +186,8 @@ class ClasseurNew extends Component {
     }
 
     render() {
-        const { circuits, circuit, type, classeur, user, documents, users_copy } = this.state
+        const { circuits, circuit, type, classeur, documents, users_copy } = this.state
+        const { user } = this.context
         const { t } = this.context
         const { i18nextLng } = window.localStorage
         const listCircuits = circuits.map(circuit => <option key={circuit.id} value={circuit.id}>{circuit.nom}</option>)
@@ -219,15 +220,13 @@ class ClasseurNew extends Component {
                                                     label={t('common.classeurs.label.circuits')}
                                                     value={circuit.id}
                                                     onChange={this.handleChangeCircuit}
-                                                    children={listCircuits}
-                                            />
+                                                    children={listCircuits}/>
                                             <Select id="types"
                                                     className="cell medium-6"
                                                     label={`${t('common.classeurs.label.types')} *`}
                                                     value={type.id}
                                                     onChange={this.handleChangeType}
-                                                    children={listTypes}
-                                            />
+                                                    children={listTypes}/>
                                         </div>
                                         <div className="grid-x grid-margin-x grid-padding-x">
                                             <InputValidation id="nom"
@@ -237,8 +236,7 @@ class ClasseurNew extends Component {
                                                              value={classeur.nom}
                                                              onChange={this.handleChangeClasseur}
                                                              validationRule={this.validationRules.nom}
-                                                             placeholder={t('common.classeurs.classeur_name')}
-                                            />
+                                                             placeholder={t('common.classeurs.classeur_name')}/>
                                             <InputValidation id="validation"
                                                              type="date"
                                                              className="cell medium-6"
@@ -248,8 +246,7 @@ class ClasseurNew extends Component {
                                                              locale={i18nextLng}
                                                              validationRule={this.validationRules.validation}
                                                              onChange={this.handleChangeLimitDate}
-                                                             minDate={Moment()}
-                                            />
+                                                             minDate={Moment()}/>
                                         </div>
                                         <div className="grid-x grid-margin-x grid-padding-x">
                                             <Visibility visibility={classeur.visibility} handleChangeClasseur={this.handleChangeClasseur} />
@@ -275,25 +272,23 @@ class ClasseurNew extends Component {
                                     </div>
                                     <div className="grid-x grid-margin-x grid-padding-x">
                                         <div className="cell medium-12">
-                                            { (circuit.etape_groupes && user.current_org_id) &&
-                                            <CircuitValidationSteps  steps={Object.assign([], circuit.etape_groupes)}
-                                                                     collectiviteId={user.current_org_id}
-                                                                     onSortEnd={this.onSortEnd}
-                                                                     handleClickDeleteUser={this.handleClickDeleteUser}
-                                                                     handleClickDeleteGroup={this.handleClickDeleteGroup}
-                                                                     handleClickDeleteStep={this.handleClickDeleteStep}
-                                                                     handleClickAddStep={this.handleClickAddStep}
-                                                                     addUser={this.addUser}
-                                                                     addGroup={this.addGroup}
-                                            />
-                                            }
+                                            { (circuit.etape_groupes && this.context.user.current_org_id) &&
+                                                <CircuitValidationSteps  steps={Object.assign([], circuit.etape_groupes)}
+                                                                         collectiviteId={this.context.user.current_org_id}
+                                                                         onSortEnd={this.onSortEnd}
+                                                                         handleClickDeleteUser={this.handleClickDeleteUser}
+                                                                         handleClickDeleteGroup={this.handleClickDeleteGroup}
+                                                                         handleClickDeleteStep={this.handleClickDeleteStep}
+                                                                         handleClickAddStep={this.handleClickAddStep}
+                                                                         addUser={this.addUser}
+                                                                         addGroup={this.addGroup}/>}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="cell medium-12">
                                 <DocumentsNew
-                                    user={this.props.user}
+                                    user={this.context.user}
                                     documents={Object.assign([],documents)}
                                     onDrop={this.onDrop}
                                     removeDocument={this.removeDocument}
@@ -308,18 +303,13 @@ class ClasseurNew extends Component {
                                         </div>
                                     </div>
                                     <div className="grid-x grid-margin-x grid-padding-x">
-                                        {
-                                            (user.current_org_id) &&
-                                            <UsersCopy currentCollectiviteId={user.current_org_id}
-                                                       handleChange={this.handleSelectChange}
+                                        {(user.current_org_id) &&
+                                            <UsersCopy handleChange={this.handleSelectChange}
                                                        className="cell medium-12"
-                                                       users_copy={users_copy}
-                                            />
-                                        }
+                                                       users_copy={users_copy}/>}
                                     </div>
                                 </div>
                             </div>
-
                             <div className="grid-x grid-margin-x grid-padding-x grid-margin-y grid-padding-y">
                                 <div className="cell medium-12">
                                     <Button id="submit-classeur-infos"
@@ -331,9 +321,7 @@ class ClasseurNew extends Component {
                                             labelText={t('common.button.save')}/>
                                 </div>
                             </div>
-
-                        </div>
-                    }
+                        </div>}
                 </div>
             </div>
         )

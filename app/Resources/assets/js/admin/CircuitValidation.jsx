@@ -284,7 +284,6 @@ class CircuitValidation extends Component {
                     </div>
                     <GridX className="grid-padding-y">
                         {<UsersCopy
-                            currentCollectiviteId={parseInt(this.props.match.params.collectiviteId)}
                             handleChange={this.handleUsersCopyChange}
                             className="cell medium-12"
                             users_copy={circuit.users_copy}/>}

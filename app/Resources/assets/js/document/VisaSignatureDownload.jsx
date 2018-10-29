@@ -1,8 +1,8 @@
-import DraggablePosition from "../_components/DraggablePosition";
-import {func} from "prop-types";
-import React, {Component} from "react";
-import {handleErrors} from "../_utils/Utils";
-import {translate} from "react-i18next";
+import React, {Component} from "react"
+import {func} from "prop-types"
+import {translate} from "react-i18next"
+
+import DraggablePosition from "../_components/DraggablePosition"
 
 class DraggablePositionVisaSignatureDownload extends Component {
     static contextTypes = {

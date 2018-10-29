@@ -25,7 +25,9 @@ class App extends Component {
     constructor() {
         super()
         this.state = {
-            user: {},
+            user: {
+                id: null
+            },
             isAuthenticated: null,
             mainDomain: {
                 main: false,
@@ -75,7 +77,7 @@ class App extends Component {
     }
 
     componentDidUpdate() {
-        if (this.state.collectivitedomain !== '' && this.state.collectivitemessage === '' && (this.state.mainDomain.main === false && this.state.mainDomain.mainDomain !== '')) {
+        if (this.state.collectivitedomain !== '' && this.state.collectivitemessage === '' && (this.state.mainDomain.main === false && this.state.mainDomain.mainDomain !== '') && this.state.user.id === null) {
             this.fetchMessage()
         }
 
