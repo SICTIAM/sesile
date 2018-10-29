@@ -105,14 +105,14 @@ class CircuitsValidation extends Component {
                                 <Input
                                     value={this.state.circuitName}
                                     onChange={this.handleChangeCircuitName}
-                                    placeholder={t('common.search_by_user')}
+                                    placeholder={t('common.search_by_circuit')}
                                     type="text"/>
                             </div>
                             <div style={{marginTop:"10px",marginLeft:"1%",width:"14em",marginRight:"1%"}}>
                                 <Input
                                     value={this.state.userName}
                                     onChange={this.handleChangeUserName}
-                                    placeholder={t('common.search_by_circuit')}
+                                    placeholder={t('common.search_by_user')}
                                     type="text"/>
                             </div>
                             {this.state.isSuperAdmin &&
