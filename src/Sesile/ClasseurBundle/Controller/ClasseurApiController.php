@@ -492,7 +492,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 ]);
             }
         }
-
         return $classeur;
     }
 
@@ -507,14 +506,8 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      */
     public function deleteClasseurAction (Classeur $classeur) {
 
-        $em = $this->getDoctrine()->getManager();
-        foreach ($classeur->getDocuments() as $document) {
-            $delete = $em->getRepository('SesileDocumentBundle:Document')->removeDocument($this->getParameter('upload')['fics'] . $document->getRepourl());
-        }
-        $em->remove($classeur);
-        $em->flush();
-
         // Envoie Callback
+        $em = $this->getDoctrine()->getManager();
         $client = new Client();
         $result = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
         foreach ($result as $event) {
@@ -526,6 +519,13 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 ]);
             }
         }
+
+        $em = $this->getDoctrine()->getManager();
+        foreach ($classeur->getDocuments() as $document) {
+            $delete = $em->getRepository('SesileDocumentBundle:Document')->removeDocument($this->getParameter('upload')['fics'] . $document->getRepourl());
+        }
+        $em->remove($classeur);
+        $em->flush();
         return new JsonResponse(['message' => "Classeur remove"], Response::HTTP_OK);
     }
 
