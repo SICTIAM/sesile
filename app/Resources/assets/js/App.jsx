@@ -14,7 +14,7 @@ import Menu from './_components/Menu'
 import MenuAdmin from './_components/MenuAdmin'
 import Moment from 'moment'
 import { Route } from 'react-router'
-import SelectCollectivite from './SelectCollectivite'
+import SelectCollectivite from './admin/SelectCollectivite'
 import History from './_utils/History'
 import {handleErrors} from "./_utils/Utils"
 Validator.useLang(window.localStorage.i18nextLng)

@@ -9,6 +9,7 @@ import AvatarForm from '../user/AvatarForm'
 import SignatureForm from '../user/SignatureForm'
 import {Input, Switch, Select, Textarea, InputFile} from '../_components/Form'
 import UserAvatar from "react-user-avatar"
+import SearchCollectivite from "./SearchCollectivite"
 
 class User extends Component {
 
@@ -229,7 +230,8 @@ class User extends Component {
                                                                       onChange={this.handleChangeRoles}
                                                                       activeText={t('common.label.yes')}
                                                                       inactiveText={t('common.label.no')}/>)
-        const collectiviteList = user.collectivities.map((collectivite, key) => <li key={key + collectivite.id.toString()}>{collectivite.nom}</li>)
+        const collectiviteList = user.collectivities.map((collectivite, key) => <li
+            key={key + collectivite.id.toString()}>{collectivite.nom}</li>)
 
         return (
             <div className="grid-x">
@@ -268,7 +270,7 @@ class User extends Component {
                         </div>
                     </div>
 
-                    <div className="panel" style={{padding: "10px"}}>
+                    <div className="panel" style={{padding: "10px", height:"17em"}}>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_user')}</h3>
@@ -313,7 +315,10 @@ class User extends Component {
                             }
                             <div className="cell medium-6">
                                 <label className="text-bold text-capitalize-first-letter">collectivités</label>
-                                {collectiviteList}
+                                <div style={{height: "11em"}}>
+                                    <SearchCollectivite
+                                        collectivite={this.state.user.collectivities}/>
+                                </div>
                             </div>
                         </div>
                         <div className="grid-x grid-padding-x grid-padding-y" style={{marginLeft: "0.1em"}}>
