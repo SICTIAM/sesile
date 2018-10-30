@@ -44,18 +44,21 @@ class ButtonPopup extends Component {
                     className={`dropdown-pane ${this.state.isOpen} dropdown-confirm-delete text-center`}
                     data-close-on-click={true}
                     data-dropdown data-auto-focus={true}
-                    style={{marginBottom:"0"}}>
+                    style={{marginBottom: "0"}}>
                     <GridX className="grid-margin-y">
                         <Cell className="medium-12 text-bold text-center">
-                            <span>
-                                {this.props.content.map(etapeGroupe =>
-                                        <ul style={{marginLeft: "0", fontSize: "0.8em"}}>
+                                {this.props.content.map((etapeGroupe, key) =>
+                                    <div style={{marginLeft: "0", fontSize: "0.8em"}}>
+                                        <div className="text-left">{`Etape ${key + 1} :`}</div>
+                                        <div className="panel" style={{fontWeight:"500", marginBottom:"1em"}}>
                                             {etapeGroupe.users.map(user =>
-                                            `${user._prenom} ${user._nom} `)}
-                                        </ul>
-                                )
-                                }
-                                </span>
+                                                <div>
+                                                    <span>{`${user._prenom} ${user._nom}`}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                         </Cell>
                     </GridX>
                 </div>
