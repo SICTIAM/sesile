@@ -172,6 +172,7 @@ const RowCircuit = ({circuit, collectiviteId, handleClickDelete}, {t}) => {
                 </td>
                 <td>
                         <ButtonPopup
+                            key={circuit.id}
                             id={circuit.nom}
                             dataToggle={`user-list-${circuit.id}`}
                             content={etapeGroupes}/>
