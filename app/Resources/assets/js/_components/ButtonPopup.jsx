@@ -20,12 +20,14 @@ class ButtonPopup extends Component {
     }
     componentDidMount = () => $(`#container-${this.props.dataToggle}`).foundation()
     componentWillUnmount = () => $(`#${this.props.dataToggle}`).foundation('_destroy')
+
     onConfirm() {
         this.props.onConfirm(this.props.id)
         $(`#${this.props.dataToggle}`).foundation('close')
     }
+
     render() {
-        const { t } = this.context
+        const {t} = this.context
         return (
             <div id={`container-${this.props.dataToggle}`} className={this.props.className}>
                 <button data-toggle={this.props.dataToggle}>
@@ -33,7 +35,7 @@ class ButtonPopup extends Component {
                         text={this.props.content.map(etapeGroupe =>
                             etapeGroupe.users.map(user =>
                                 `${user._prenom} ${user._nom}`).join(' | ')).join(' | ')}
-                        maxSize={40}/>
+                        maxSize={70}/>
                 </button>
                 <div
                     id={this.props.dataToggle}
@@ -41,12 +43,19 @@ class ButtonPopup extends Component {
                     data-alignment="center"
                     className={`dropdown-pane ${this.state.isOpen} dropdown-confirm-delete text-center`}
                     data-close-on-click={true}
-                    data-dropdown data-auto-focus={true}>
+                    data-dropdown data-auto-focus={true}
+                    style={{marginBottom:"0"}}>
                     <GridX className="grid-margin-y">
                         <Cell className="medium-12 text-bold text-center">
-                            <span>{this.props.content.map(etapeGroupe =>
-                                etapeGroupe.users.map(user =>
-                                    <ul style={{marginLeft:"0"}}>{user._prenom} {user._nom}</ul>))}</span>
+                            <span>
+                                {this.props.content.map(etapeGroupe =>
+                                        <ul style={{marginLeft: "0", fontSize: "0.8em"}}>
+                                            {etapeGroupe.users.map(user =>
+                                            `${user._prenom} ${user._nom} `)}
+                                        </ul>
+                                )
+                                }
+                                </span>
                         </Cell>
                     </GridX>
                 </div>
