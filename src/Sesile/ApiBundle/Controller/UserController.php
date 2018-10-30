@@ -2,7 +2,9 @@
 namespace Sesile\ApiBundle\Controller;
 
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Sesile\UserBundle\Entity\Groupe;
+use Sesile\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -242,5 +244,56 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
             return new JsonResponse("An Error occurred, could not get requested data", Response::HTTP_SERVICE_UNAVAILABLE);
         }
         return new JsonResponse($result->getData(), Response::HTTP_OK);
+    }
+
+
+    /**
+     * Cette méthode permet de créer un nouvelle utilisateur ou de l'ajouter à une collectivité si celui-ci existe déjà
+     * (à condition que la colléctivité (organisation) soit déjà instancier dans Ozwillo)
+     *
+     * @var Request $request
+     * @return JsonResponse
+     * @Route("s/{userId}")
+     * @Rest\View()
+     * @Method("POST")
+     *
+     *
+     * @param ParamFetcher $param
+     *
+     * @ApiDoc(
+     *  resource=false,
+     *  description="Cette méthode permet de créer un nouvelle utilisateur ou de l'ajouter à une collectivité si celui-ci existe déjà",
+     *  requirements={
+     *      {"name"="instance_id", "dataType"="string", "Ozwillo application instance id"},
+     *      {"name"="client_id", "dataType"="string", "description"="used for authentication purposes"},
+     *      {"name"="organization", "dataType"="object", "a description of the organization, containing at least Ozwillo organization id and name"},
+     *      {"name"="user", "dataType"="object", "user"}
+     *  }
+     * )
+     */
+    public function createNewUserOrAddItToCollectivityFromOzwilloAction(Request $request, $userId) {
+        $result = $this->get('collectivite.manager')->getOzwilloCollectivityByClientId($request->request->get('client_id'));
+        if (false === $result->isSuccess() || $result->getData() == null) {
+            return new JsonResponse(sprintf('No Collectivity found with the given Client_id %s', $request->request->get('client_id')), Response::HTTP_NOT_FOUND);
+        }
+        $collectivteOzwillo = $result->getData();
+
+        if(!$collectivteOzwillo instanceof CollectiviteOzwillo && $collectivteOzwillo->getOrganizationId() !== $request->request->get('organization')["id"]) {
+            return new JsonResponse(sprintf('The organisation id don\'t match  %s with organization id of collectivity', $request->request->get('organization')["id"]), Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByOzwilloId($userId);
+        if(!$user instanceof User) {
+            $user = $em->getRepository('SesileUserBundle:User')->addOzwilloUser($collectivteOzwillo->getCollectivite(), $request->request->get('user'), $request->request->get('organization'));
+            $this->get('logger')->info('New User {email} created', array('email' => $user->getEmail()));
+            return new JsonResponse('', Response::HTTP_CREATED);
+        } else if ($this->get('collectivite.manager')->userHasOzwilloCollectivity($userId, $request->request->get('client_id'))->isSuccess()) {
+            return new JsonResponse(sprintf('The user %s exist and already have collectivity with ozwillo client_id %s', $user->getEmail(), $request->request->get('client_id')), Response::HTTP_CONFLICT);
+        } else {
+            $em->getRepository('SesileUserBundle:User')->addCollectiviteAndOzwilloIdToUser($user, $collectivteOzwillo->getCollectivite(), $request->request->get('organization'));
+            $this->get('logger')->info('Collectivity {collectiviteId} added to user {email}', array('email' => $user->getEmail(), 'collectiviteId' => $collectivteOzwillo->getCollectivite()->getId()));
+            return new JsonResponse($result->getData(), Response::HTTP_OK);
+        }
     }
 }

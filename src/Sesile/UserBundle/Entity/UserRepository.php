@@ -239,4 +239,32 @@ class UserRepository extends EntityRepository {
                 ->getQuery()
                 ->getArrayResult();
     }
+
+    public function addOzwilloUser(Collectivite $collectivite, $userObject, $organization) {
+        $em = $this->getEntityManager();
+        $user = new User();
+        $user->setEnabled(true);
+        $user->setUsername($userObject['email_address']);
+        $user->setNom($userObject['family_name']);
+        $user->setPrenom($userObject['given_name']);
+        $user->setEmail($userObject['email_address']);
+        $user->setPlainPassword(md5(uniqid(rand(), true)));
+        $user->setOzwilloId($organization['id']);
+        $user->addCollectivity($collectivite);
+        $em->persist($user);
+
+        $em->flush();
+
+        return $user;
+    }
+
+    public function addCollectiviteAndOzwilloIdToUser(User $user, Collectivite $collectivite, $organization) {
+        $em = $this->getEntityManager();
+
+        $user->setOzwilloId($organization['id']);
+        $user->addCollectivity($collectivite);
+
+        $em->persist($user);
+        $em->flush();
+    }
 }
