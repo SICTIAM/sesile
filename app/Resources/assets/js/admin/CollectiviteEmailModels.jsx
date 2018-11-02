@@ -36,43 +36,48 @@ class CollectiviteEmailModels extends Component {
 
     render() {
         const { t } = this.context
-        const { collectivite, handleChange, editState } = this.props
+        const { collectivite, news, valid, refus, handleChange, editState } = this.props
         return (
             <AccordionItem title={t('admin.collectivite.mails_templates')}>
                 <Editor id="message" 
                         label={t('admin.collectivite.message')} 
                         className="cell medium-6" 
-                        value={collectivite.message} 
+                        value={collectivite.message}
                         handleChange={handleChange}/>
 
                 <Editor id="textmailnew"
                         label={t('admin.collectivite.mail.new_classeur')}
                         className="cell medium-6"
                         value={collectivite.textmailnew}
+                        template={news}
                         handleChange={handleChange}/>
 
                 <Editor id="textmailrefuse"
                         label={t('admin.collectivite.mail.refused_classeur')}
                         className="cell medium-6"
                         value={collectivite.textmailrefuse}
+                        template={refus}
                         handleChange={handleChange}/>
 
                 <Editor id="textmailwalid"
                         label={t('admin.collectivite.mail.valid_classeur')}
                         className="cell medium-6"
                         value={collectivite.textmailwalid}
+                        template={valid}
                         handleChange={handleChange}/>
 
                 <Editor id="textcopymailnew"
                         label={t('admin.collectivite.mail.new_copy_classeur')}
                         className="cell medium-6"
                         value={collectivite.textcopymailnew}
+                        template={news}
                         handleChange={handleChange}/>
 
                 <Editor id="textcopymailwalid"
                         label={t('admin.collectivite.mail.valid_copy_classeur')}
                         className="cell medium-6"
                         value={collectivite.textcopymailwalid}
+                        template={valid}
                         handleChange={handleChange}/>
                 {(collectivite.id) && 
                 <Button id="submit-mails"

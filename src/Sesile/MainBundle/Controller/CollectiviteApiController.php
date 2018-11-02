@@ -70,6 +70,19 @@ class CollectiviteApiController extends Controller
     }
 
     /**
+     * @Rest\View()
+     * @Rest\Get("/email/template")
+     * @return JsonResponse
+     */
+    public function getEmailTemplate()
+    {
+        $valid = ['validant', 'role', 'qualite', 'titre_classeur', 'date_limite', 'type', 'lien', 'deposant'];
+        $refus = ['validant', 'role', 'qualites', 'titre_classeur', 'date_limite', 'type', 'lien', 'motif', 'deposant'];
+        $new = ['role', 'deposant', 'qualite', 'titre_classeur', 'date_limite', 'type', 'lien', 'validant'];
+        return new JsonResponse(array($new, $valid, $refus), Response::HTTP_OK);
+    }
+
+    /**
      * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Get("/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})

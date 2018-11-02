@@ -25,10 +25,15 @@ class Collectivite extends Component {
             delete_classeur_after: 0,
             active: false
         },
+        valid: [],
+        refus: [],
+        news: [],
+        suggestion:false,
         editState: false
     }
 
     componentDidMount() {
+        this.fetchTemplate()
         this.fetchCollectivite(this.props.match.params.collectiviteId)
         $("#admin-details").foundation()
     }
@@ -49,6 +54,16 @@ class Collectivite extends Component {
         const { collectivite } = this.state
         collectivite[name] = value
         this.setState({collectivite})
+    }
+
+
+    fetchTemplate = () => {
+        fetch(Routing.generate('sesile_main_collectiviteapi_getemailtemplate'), {
+            method: 'GET'
+        })
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(json => this.setState({news:json[0], valid: json[1], refus:json[2]}))
     }
 
     putCollectivite = (id, fields) => {
@@ -77,7 +92,7 @@ class Collectivite extends Component {
     
     render() {
         const { t } = this.context
-        const { collectivite, editState } = this.state
+        const { collectivite, editState, valid, refus, news } = this.state
         return (
             <AdminDetails   title={t('admin.details.title', {name: t('admin.collectivite.name'), context: 'female'})}
                             subtitle={t('admin.details.subtitle')}
@@ -93,8 +108,11 @@ class Collectivite extends Component {
                                         editState={editState}/>
 
                     <CollectiviteEmailModels    collectivite={collectivite} 
-                                                editState={editState} 
-                                                handleChange={this.handleChangeCollectiviteValue} 
+                                                editState={editState}
+                                                valid={valid}
+                                                refus={refus}
+                                                news={news}
+                                                handleChange={this.handleChangeCollectiviteValue}
                                                 putCollectivite={this.putCollectivite}/>
 
                     <CollectiviteVisa   id={collectivite.id}
