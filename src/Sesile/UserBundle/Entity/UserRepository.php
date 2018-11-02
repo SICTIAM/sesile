@@ -173,6 +173,7 @@ class UserRepository extends EntityRepository {
             ->setParameter('collectiviteId', $collectiviteId)
             ->andWhere('CONCAT(U.Nom, \' \', U.Prenom) LIKE :value')
             ->setParameter('value', '%' .$value. '%')
+            ->andWhere('U.enabled = 1')
             ->getQuery()
             ->getResult();
     }
