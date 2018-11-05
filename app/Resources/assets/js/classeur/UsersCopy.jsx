@@ -29,11 +29,7 @@ class UsersCopy extends Component {
             .then(response => response.json())
             .then(users_collectivite => this.setState({users_collectivite}))
             .then(response => {
-                this.state.users_collectivite.map((user, key) => {
-                    if (!user.active) {
-                        this.state.users_collectivite.splice(key, 1)
-                    }
-                })
+                this.state.users_collectivite.filter(user => user.active === true)
             })
     }
 
