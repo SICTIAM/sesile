@@ -112,10 +112,12 @@ class UserRepositoryTest extends SesileWebTestCase
         self::assertCount(1, $result);
         self::assertInstanceOf(User::class, $result[0]);
         self::assertEquals($user->getId(), $result[0]->getId());
+        self::assertTrue($result[0]->getEnabled());
         $result = $this->em->getRepository(User::class)->findByNameOrFirstName($user->getPrenom(), $collectivity->getId());
         self::assertCount(1, $result);
         self::assertInstanceOf(User::class, $result[0]);
         self::assertEquals($user->getId(), $result[0]->getId());
+        self::assertTrue($result[0]->getEnabled());
     }
 
 }

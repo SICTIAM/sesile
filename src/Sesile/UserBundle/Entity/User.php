@@ -409,6 +409,13 @@ class User extends BaseUser {
     public function getPrenom() {
         return $this->Prenom;
     }
+    /**
+     * Renvoie active
+     * @return boolean
+     */
+    public function getEnabled() {
+        return $this->enabled;
+    }
 
     /**
      * @ORM\PrePersist()
