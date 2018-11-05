@@ -48,11 +48,11 @@ class ButtonPopup extends Component {
                     <GridX className="grid-margin-y">
                         <Cell className="medium-12 text-bold text-center">
                                 {this.props.content.map((etapeGroupe, key) =>
-                                    <div style={{marginLeft: "0", fontSize: "0.8em"}}>
+                                    <div key={`step-${etapeGroupe.id}`} style={{marginLeft: "0", fontSize: "0.8em"}}>
                                         <div className="text-left">{`Etape ${key + 1} :`}</div>
                                         <div className="panel" style={{fontWeight:"500", marginBottom:"1em"}}>
                                             {etapeGroupe.users.map(user =>
-                                                <div>
+                                                <div key={`user-${user.id}`}>
                                                     <span>{`${user._prenom} ${user._nom}`}</span>
                                                 </div>
                                             )}
