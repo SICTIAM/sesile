@@ -76,10 +76,41 @@ class CollectiviteApiController extends Controller
      */
     public function getEmailTemplate()
     {
-        $valid = ['validant', 'role', 'qualite', 'titre_classeur', 'date_limite', 'type', 'lien', 'deposant'];
-        $refus = ['validant', 'role', 'qualites', 'titre_classeur', 'date_limite', 'type', 'lien', 'motif', 'deposant'];
-        $new = ['role', 'deposant', 'qualite', 'titre_classeur', 'date_limite', 'type', 'lien', 'validant'];
-        return new JsonResponse(array($new, $valid, $refus), Response::HTTP_OK);
+        $template = [
+            'new' => [
+                'role',
+                'deposant',
+                'qualite',
+                'titre_classeur',
+                'date_limite | date(\'d/m/Y\')',
+                'type',
+                'lien|raw',
+                'validant'
+            ],
+            'valid' => [
+                'validant',
+                'role',
+                'qualite',
+                'titre_classeur',
+                'date_limite | date(\'d/m/Y\')',
+                'type',
+                'lien|raw',
+                'deposant'
+            ],
+            'refus' => [
+                'validant',
+                'role',
+                'qualites',
+                'titre_classeur',
+                'date_limite | date(\'d/m/Y\')',
+                'type',
+                'lien|raw',
+                'motif',
+                'deposant'
+            ]
+        ];
+
+        return new JsonResponse($template, Response::HTTP_OK);
     }
 
     /**

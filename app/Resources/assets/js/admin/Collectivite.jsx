@@ -25,9 +25,11 @@ class Collectivite extends Component {
             delete_classeur_after: 0,
             active: false
         },
-        valid: [],
-        refus: [],
-        news: [],
+        template: {
+            new:[],
+            valid:[],
+            refus:[]
+        },
         suggestion:false,
         editState: false
     }
@@ -63,7 +65,7 @@ class Collectivite extends Component {
         })
             .then(handleErrors)
             .then(response => response.json())
-            .then(json => this.setState({news:json[0], valid: json[1], refus:json[2]}))
+            .then(template => this.setState({template}))
     }
 
     putCollectivite = (id, fields) => {
@@ -92,7 +94,7 @@ class Collectivite extends Component {
     
     render() {
         const { t } = this.context
-        const { collectivite, editState, valid, refus, news } = this.state
+        const { collectivite, editState, template } = this.state
         return (
             <AdminDetails   title={t('admin.details.title', {name: t('admin.collectivite.name'), context: 'female'})}
                             subtitle={t('admin.details.subtitle')}
@@ -109,9 +111,9 @@ class Collectivite extends Component {
 
                     <CollectiviteEmailModels    collectivite={collectivite} 
                                                 editState={editState}
-                                                valid={valid}
-                                                refus={refus}
-                                                news={news}
+                                                valid={template.valid}
+                                                refus={template.refus}
+                                                news={template.new}
                                                 handleChange={this.handleChangeCollectiviteValue}
                                                 putCollectivite={this.putCollectivite}/>
 

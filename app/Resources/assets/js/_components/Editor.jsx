@@ -47,8 +47,10 @@ export default class Editor extends Component {
             closingBracket = value.indexOf("}}", nbr)
             if ((closingBracket - openingBracket) > 40 && openingBracket !== -1) {
                 suggest = true
-                const complete = value.substring(openingBracket + 2, openingBracket + 3)
-                this.setState({suggestion: true, insertHere: openingBracket + 2, autocomplete:complete})
+                let complete = value.substring(openingBracket + 2, openingBracket + 3)
+                if (!complete.match(/[a-z]/i))
+                    complete = ''
+                this.setState({suggestion: true, insertHere: openingBracket + 2, autocomplete: complete})
             }
         }
         if (suggest === false) this.setState({suggestion: suggest})
@@ -67,7 +69,7 @@ export default class Editor extends Component {
     }
     handleClick = (value) => {
         let valueInserted = this.state.value.toString('html')
-        valueInserted = valueInserted.substring(0, this.state.insertHere) + value + "}}" + valueInserted.substring(this.state.insertHere + 1)
+        valueInserted = valueInserted.substring(0, this.state.insertHere) + value + "}}" + valueInserted.substring(this.state.autocomplete ? this.state.insertHere + 1 : this.state.insertHere)
         this.setState({value: RichTextEditor.createValueFromString(valueInserted, 'html')})
     }
 
@@ -84,7 +86,7 @@ export default class Editor extends Component {
                     listStyleType: "none",
                     position: "absolute",
                     textAlign: "center",
-                    border : "2px solid",
+                    border: "2px solid",
                     color: "black",
                     padding: "5px",
                     fontSize: "1em",
