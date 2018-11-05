@@ -27,9 +27,9 @@ class UsersCopy extends Component {
     fetchUsersCollectivite() {
         fetch(Routing.generate('sesile_user_userapi_userscollectiviteselect', {id: this.context.user.current_org_id}) , { credentials: 'same-origin'})
             .then(response => response.json())
-            .then(users_collectivite => this.setState({users_collectivite}))
-            .then(response => {
-                this.state.users_collectivite.filter(user => user.active === true)
+            .then((users_collectivite) => {
+                let users = users_collectivite.filter(user => user.active)
+                this.setState({users_collectivite : users})
             })
     }
 
