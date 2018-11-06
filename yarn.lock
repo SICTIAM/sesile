@@ -2651,13 +2651,13 @@ hoek@4.x.x:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.2.0.tgz#72d9d0754f7fe25ca2d01ad8f8f9a9449a89526d"
 
-hoist-non-react-statics@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
-
 hoist-non-react-statics@^2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.3.1.tgz#343db84c6018c650778898240135a1420ee22ce0"
+
+hoist-non-react-statics@^2.3.1:
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
 
 home-or-tmp@^2.0.0:
   version "2.0.0"
@@ -2766,17 +2766,17 @@ https-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
 
-i18next-browser-languagedetector@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-2.0.0.tgz#4d9df2bd1a5deda3c8c0a6d3db62d50388b9eedd"
+i18next-browser-languagedetector@^2.2.2:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-2.2.3.tgz#4196a9964b6d51b76254706a267ba746c9ca19de"
 
-i18next-xhr-backend@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-1.4.3.tgz#d72f70536a3bf6a3892261dde352bc77d708886a"
+i18next-xhr-backend@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-1.5.1.tgz#50282610780c6a696d880dfa7f4ac1d01e8c3ad5"
 
-i18next@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-9.0.0.tgz#a89ab0481b5b6b3964f55b12f03de9063d8f4500"
+i18next@^11.5.0:
+  version "11.10.2"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-11.10.2.tgz#e5f10346f6320ecf15595419926c25255381a56c"
 
 iconv-lite@~0.4.13:
   version "0.4.24"
@@ -4329,6 +4329,13 @@ prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7,
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
+prop-types@^15.6.0:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
+  dependencies:
+    loose-envify "^1.3.1"
+    object-assign "^4.1.1"
+
 proxy-addr@~1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-1.1.5.tgz#71c0ee3b102de3f202f3b64f608d173fcba1a918"
@@ -4496,15 +4503,13 @@ react-google-charts@^1.5.5:
     react "^15.3.2"
     react-dom "^15.3.2"
 
-react-i18next@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-6.0.0.tgz#464a90ff71fe190879528efe97308fb9a2e4fe6f"
+react-i18next@^7.10.1:
+  version "7.13.0"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-7.13.0.tgz#a6f64fd749215ec70400f90da6cbde2a9c5b1588"
   dependencies:
-    hoist-non-react-statics "1.2.0"
+    hoist-non-react-statics "^2.3.1"
     html-parse-stringify2 "2.0.1"
-    prop-types "^15.5.10"
-    react "^15.6.1"
-    react-dom "^15.6.1"
+    prop-types "^15.6.0"
 
 react-iframe@^1.1.0:
   version "1.1.0"
@@ -5539,9 +5544,9 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
-validatorjs@^3.13.5:
-  version "3.13.5"
-  resolved "https://registry.yarnpkg.com/validatorjs/-/validatorjs-3.13.5.tgz#4013c71122ef3ef83ba3cb81b270d8f0217a7658"
+validatorjs@^3.15.0:
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/validatorjs/-/validatorjs-3.15.1.tgz#e674b6330c1432913a81128cdb7ff679463d4d2d"
 
 value-equal@^0.4.0:
   version "0.4.0"
