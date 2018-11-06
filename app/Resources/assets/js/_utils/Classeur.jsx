@@ -76,7 +76,7 @@ const actionClasseur = (that, url, id, method = 'PUT', type = '') => {
 const Intervenants = ({classeur}) => {
     const currentFlowStep = classeur.etape_classeurs.find(etape_classeur => etape_classeur.etape_validante)
     return (
-        classeur.status !== 2 &&
+        classeur.status !== 2 && classeur.status !== 3 &&
             <ul className="no-bullet">
                 {currentFlowStep ?
                     currentFlowStep.users.map(user =>
