@@ -103,7 +103,7 @@ class CollectiviteApiController extends Controller
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Patch("/{id}")
      * @param Request $request
      * @param Collectivite $collectivite
