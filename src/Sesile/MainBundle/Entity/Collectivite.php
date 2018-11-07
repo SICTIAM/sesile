@@ -48,6 +48,8 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="siren", type="string", length=10, nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"
+     * })
      */
     private $siren;
 

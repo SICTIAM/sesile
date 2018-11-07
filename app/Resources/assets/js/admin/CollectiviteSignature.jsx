@@ -52,7 +52,10 @@ class CollectiviteSignature extends Component {
         const { id, page_signature, abscisses_signature, ordonnees_signature, handleChange, editState, putCollectivite } = this.props
         const ListPageSignature = this.optionsPageSignature.map(option => <option key={option.value} value={option.value}>{option.text}</option>)
         return (
-            <AccordionItem title={t('admin.collectivite.signature_location')}>
+            <div className="grid-x grid-padding-x grid-padding-y panel">
+                <div className="cell">
+                    <h3>Signature</h3>
+                </div>
                 <div className="medium-6 cell">
                     <div className="grid-x grid-padding-y">
                         <Select id="page_signature"
@@ -80,7 +83,7 @@ class CollectiviteSignature extends Component {
                         onClick={this.saveSignature}
                         disabled={!editState}
                         labelText={t('common.button.edit_save')}/>}
-            </AccordionItem>
+            </div>
         )
     }
 }

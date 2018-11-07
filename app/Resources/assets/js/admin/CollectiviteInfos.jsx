@@ -18,6 +18,7 @@ class CollectiviteInfos extends Component {
     static propTypes = {
         id: number,
         nom: string.isRequired,
+        siren: string,
         image: string,
         active: bool.isRequired,
         delete_classeur_after: number.isRequired,
@@ -26,17 +27,18 @@ class CollectiviteInfos extends Component {
         editState: bool.isRequired
     }
 
-    state = { isFormValid: false }
+    state = {isFormValid: false}
 
     validationRules = {
-        nom: 'required',
         delete_classeur_after: 'required|min:10|max:365'
     }
 
     customErrorMessages = {
-        delete_classeur_after: {min: this.context.t('admin.collectivite.error.field_delay_min'),
+        delete_classeur_after: {
+            min: this.context.t('admin.collectivite.error.field_delay_min'),
             max: this.context.t('admin.collectivite.error.field_delay_max'),
-            required: this.context.t('admin.collectivite.error.field_delay_required')}
+            required: this.context.t('admin.collectivite.error.field_delay_required')
+        }
     }
 
     updateAvatar = (file) => {
@@ -51,10 +53,11 @@ class CollectiviteInfos extends Component {
                 .then(handleErrors)
                 .then(response => response.json())
                 .then(json => {
-                    this.context._addNotification(basicNotification(
-                        'success',
-                        this.context.t('admin.collectivite.success_upload_avatar')))
-                    this.props.handleChange('image', json.image)}
+                        this.context._addNotification(basicNotification(
+                            'success',
+                            this.context.t('admin.collectivite.success_upload_avatar')))
+                        this.props.handleChange('image', json.image)
+                    }
                 )
                 .catch(error => this.context._addNotification(basicNotification(
                     'error',
@@ -64,7 +67,7 @@ class CollectiviteInfos extends Component {
     }
 
     deleteAvatar = () => {
-        const { id } = this.props
+        const {id} = this.props
         fetch(Routing.generate('sesile_main_collectiviteapi_deleteavatar', {id}), {
             credentials: 'same-origin',
             method: 'DELETE'
@@ -82,74 +85,109 @@ class CollectiviteInfos extends Component {
     }
 
     saveCollectivite = () => {
-        const { putCollectivite, id, nom, active, delete_classeur_after, editState } = this.props
-        const fields = { nom, active, delete_classeur_after }
+        const {putCollectivite, id, nom, active, delete_classeur_after, editState} = this.props
+        const fields = {active, delete_classeur_after}
         const validation = new Validator(fields, this.validationRules)
-        if(validation.passes()) if(id) putCollectivite(id, fields)
+        if (validation.passes()) if (id) putCollectivite(id, fields)
     }
 
     render() {
-        const { t } = this.context
-        const { id, nom, image, active, delete_classeur_after, handleChange, putCollectivite, editState } = this.props
+        const {t} = this.context
+        const {id, nom, image, active, siren, delete_classeur_after, handleChange, putCollectivite, editState} = this.props
         return (
-            <AccordionItem className="is-active" title={t('admin.collectivite.infos')}>
-                <div className="medium-6 cell">
-                    <div className="grid-x grid-padding-y">
-                        <Avatar className="cell medium-12" size={200} nom={nom} fileName={image ? "/uploads/logo_coll/" + image : null}/>
-                        <InputFile  id="add_collectivite_img"
-                                    className="columns medium-3"
-                                    labelText={image ? t('common.button.change_img') : t('common.button.upload_img')}
-                                    accept="image/png,image/jpeg"
-                                    onChange={this.updateAvatar}/>
-                        <ButtonConfirm  id="confirm_delete"
-                                        className="columns medium-3"
-                                        labelButton={t('common.button.delete_img')}
-                                        confirmationText={t('common.confirm_delete_img')}
-                                        labelConfirmButton={t('common.button.confirm')}
-                                        handleClickConfirm={this.deleteAvatar}
-                                        disabled={!image}/>
+            <div>
+                <div className="grid-x grid-padding-x grid-padding-y panel"
+                     style={{borderTop: '2px solid #663399'}}>
+                    <div className="cell medium-12" style={{padding: '20px'}}>
+                        <div className="grid-x grid-padding-y">
+                            <label className="cell medium-2 text-bold" htmlFor="nom">
+                                {t('common.label.name')}
+                            </label>
+                            <div className="cell medium-10" id="nom">
+                                {nom}
+                            </div>
+                        </div>
+                        <div className="grid-x grid-padding-y">
+                            <label className="cell medium-2 text-bold text-capitalize-first-letter" htmlFor="nom">
+                                {t('common.siren')}
+                            </label>
+                            <div className="cell medium-10" id="nom">
+                                {siren}
+                            </div>
+                        </div>
+                        <div className="grid-x grid-padding-y">
+                            <label className="cell medium-2 text-bold text-capitalize-first-letter" htmlFor="nom">
+                                Ozwillo Id
+                            </label>
+                            <div className="cell medium-10" id="nom">
+                                {siren}
+                            </div>
+                        </div>
+                        <div className="grid-x grid-padding-y">
+                            <div className="cell medium-12 text-right text-bold">
+                                <a href={"https://" + siren + "/my/profile"} target="_blank"
+                                   className="button hollow ozwillo">
+                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png"
+                                         alt="Ozwillo" className="image-button"/>
+                                    Orga
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="medium-6 cell">
-                    <div className="grid-x">
-                        <InputValidation    id="nom"
-                                            type="text"
-                                            className={"medium-12 cell"}
-                                            labelText={`${t('common.label.name')} *`}
-                                            value={nom}
-                                            onChange={handleChange}
-                                            validationRule={this.validationRules.nom}
-                                            placeholder={t('admin.collectivite.placeholder_type_name')}
-                                            disabled/>
-
-                        <InputValidation    id="delete_classeur_after"
-                                            type="number"
-                                            className={"medium-12 cell"}
-                                            labelText={`${t('admin.collectivite.classeur_delay')} *`}
-                                            value={delete_classeur_after}
-                                            onChange={handleChange}
-                                            placeholder={t('admin.collectivite.placeholder_delay')}
-                                            customErrorMessages={this.customErrorMessages.delete_classeur_after}
-                                            validationRule={this.validationRules.delete_classeur_after}
-                                            helpText={t('admin.collectivite.classeur_delay_help_text')}/>
-
-                        <Switch id="active"
-                                className="cell medium-12"
-                                labelText={t('common.label.enabled')}
-                                checked={active}
-                                onChange={handleChange}
-                                activeText={t('common.label.yes')}
-                                inactiveText={t('common.label.no')}/>
+                <div className="grid-x grid-padding-x grid-padding-y panel">
+                    <div className="cell">
+                        <h3>Informations</h3>
                     </div>
+                    <div className="medium-6 cell">
+                        <div className="grid-x">
+                            <InputValidation id="delete_classeur_after"
+                                             type="number"
+                                             className={"medium-12 cell"}
+                                             labelText={`${t('admin.collectivite.classeur_delay')} *`}
+                                             value={delete_classeur_after}
+                                             onChange={handleChange}
+                                             placeholder={t('admin.collectivite.placeholder_delay')}
+                                             customErrorMessages={this.customErrorMessages.delete_classeur_after}
+                                             validationRule={this.validationRules.delete_classeur_after}
+                                             helpText={t('admin.collectivite.classeur_delay_help_text')}/>
+
+                            <Switch id="active"
+                                    className="cell medium-12"
+                                    labelText={t('common.label.enabled')}
+                                    checked={active}
+                                    onChange={handleChange}
+                                    activeText={t('common.label.yes')}
+                                    inactiveText={t('common.label.no')}/>
+                        </div>
+                    </div>
+                    <div className="medium-6 cell">
+                        <div className="grid-x grid-padding-y">
+                            <Avatar className="cell medium-12" size={200} nom={nom}
+                                    fileName={image ? "/uploads/logo_coll/" + image : null}/>
+                            <InputFile id="add_collectivite_img"
+                                       className="columns medium-3"
+                                       labelText={image ? t('common.button.change_img') : t('common.button.upload_img')}
+                                       accept="image/png,image/jpeg"
+                                       onChange={this.updateAvatar}/>
+                            <ButtonConfirm id="confirm_delete"
+                                           className="columns medium-3"
+                                           labelButton={t('common.button.delete_img')}
+                                           confirmationText={t('common.confirm_delete_img')}
+                                           labelConfirmButton={t('common.button.confirm')}
+                                           handleClickConfirm={this.deleteAvatar}
+                                           disabled={!image}/>
+                        </div>
+                    </div>
+                    {(id) &&
+                    <Button id="submit-infos"
+                            className="cell medium-12"
+                            classNameButton="float-right"
+                            onClick={this.saveCollectivite}
+                            disabled={!editState}
+                            labelText={t('common.button.edit_save')}/>}
                 </div>
-                {(id) &&
-                <Button id="submit-infos"
-                        className="cell medium-12"
-                        classNameButton="float-right"
-                        onClick={this.saveCollectivite}
-                        disabled={!editState}
-                        labelText={t('common.button.edit_save')}/>}
-            </AccordionItem>
+            </div>
         )
     }
 }

@@ -19,6 +19,10 @@ export default class Editor extends Component {
     isSet: false
   }
 
+  componentDidMount() {
+      const value = RichTextEditor.createValueFromString(this.props.value, 'html')
+      this.setState({value: value})
+  }
   componentWillReceiveProps(nextProps) {
       if(!this.state.isSet && nextProps.value != null) {
         const value = RichTextEditor.createValueFromString(nextProps.value, 'html')
