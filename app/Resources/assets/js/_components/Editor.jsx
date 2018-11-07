@@ -70,7 +70,7 @@ export default class Editor extends Component {
     handleClick = (value) => {
         let valueInserted = this.state.value.toString('html')
         valueInserted = valueInserted.substring(0, this.state.insertHere) + value + "}}" + valueInserted.substring(this.state.autocomplete ? this.state.insertHere + 1 : this.state.insertHere)
-        this.setState({value: RichTextEditor.createValueFromString(valueInserted, 'html')})
+        this.setState({value: RichTextEditor.createValueFromString(valueInserted, 'html'), suggestion:false})
     }
 
     render() {
