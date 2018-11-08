@@ -107,6 +107,49 @@ class ClasseurRepository extends EntityRepository {
 
         return $classeurs;
     }
+    /**
+     * @param $orgId collectivite id
+     * @param $userId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     * @param $type
+     * @param $status
+     * @param $nom
+     *
+     * @return array
+     */
+    public function getClasseursVisiblesSorted ($orgId, $userId, $sort, $order, $limit, $start, $type, $status, $nom)
+    {
+        ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
+        $classeurs =  $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userId)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->where('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
+            ->orderBy($sort, $order)
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
+            ->andWhere('c.type = :type')
+            ->setParameter('type', $type)
+            ->andWhere('c.status = :status')
+            ->setParameter('status', $status)
+            ->andWhere('c.nom LIKE :nom')
+            ->setParameter('nom', '%'.$nom.'%')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
+
+        return $classeurs;
+    }
 
     /**
      * @param $orgId collectivite id
