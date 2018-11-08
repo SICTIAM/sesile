@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Sesile\MainBundle\Form\CollectiviteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -77,6 +78,16 @@ class CollectiviteApiController extends Controller
      */
     public function getByIdAction(Collectivite $collectivite) {
         return $collectivite;
+    }
+
+    /**
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
+     * @Rest\Get("/ozwillo/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @return CollectiviteOzwillo
+     */
+    public function getOzByIdAction(Collectivite $collectivite) {
+        return  $collectivite->getOzwillo()->getOrganizationId();
     }
 
     /**

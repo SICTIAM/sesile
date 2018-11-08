@@ -19,6 +19,7 @@ class CollectiviteInfos extends Component {
         id: number,
         nom: string.isRequired,
         siren: string,
+        ozwilloId: string,
         image: string,
         active: bool.isRequired,
         delete_classeur_after: number.isRequired,
@@ -93,7 +94,7 @@ class CollectiviteInfos extends Component {
 
     render() {
         const {t} = this.context
-        const {id, nom, image, active, siren, delete_classeur_after, handleChange, putCollectivite, editState} = this.props
+        const {id, nom, image, active, siren, ozwilloId, ozwilloUrl, delete_classeur_after, handleChange, putCollectivite, editState} = this.props
         return (
             <div>
                 <div className="grid-x grid-padding-x grid-padding-y panel"
@@ -120,12 +121,12 @@ class CollectiviteInfos extends Component {
                                 Ozwillo Id
                             </label>
                             <div className="cell medium-10" id="nom">
-                                {siren}
+                                {ozwilloId}
                             </div>
                         </div>
                         <div className="grid-x grid-padding-y">
                             <div className="cell medium-12 text-right text-bold">
-                                <a href={"https://" + siren + "/my/profile"} target="_blank"
+                                <a href={"https://" + ozwilloUrl + "/my/organization/" + ozwilloId} target="_blank"
                                    className="button hollow ozwillo">
                                     <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png"
                                          alt="Ozwillo" className="image-button"/>

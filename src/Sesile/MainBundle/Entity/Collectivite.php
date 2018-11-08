@@ -41,6 +41,8 @@ class Collectivite
 
     /**
      * @ORM\OneToOne(targetEntity="Sesile\MainBundle\Entity\CollectiviteOzwillo", mappedBy="collectivite", cascade={"persist"})
+     * @Serializer\Groups({"getCollectiviteById"
+     * })
      */
     private $ozwillo;
 

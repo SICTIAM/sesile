@@ -25,19 +25,39 @@ class Collectivite extends Component {
             delete_classeur_after: 0,
             active: false
         },
+        user:{},
+        ozwilloId:'',
         editState: false
     }
 
     componentDidMount() {
         this.fetchCollectivite(this.props.match.params.collectiviteId)
+        this.fetchOzwilloId(this.props.match.params.collectiviteId)
+        this.fetchUser()
         $("#admin-details").foundation()
     }
-
+    fetchUser() {
+        fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(user => this.setState({user}))
+    }
     fetchCollectivite(id) {
         fetch(Routing.generate('sesile_main_collectiviteapi_getbyid', {id}), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(json => this.setState({collectivite: json}))
+            .catch(error => this.context._addNotification(basicNotification(
+                'error',
+                this.context.t('admin.collectivite.error.fetch', {errorCode: error.status}),
+                error.statusText)))
+    }
+
+    fetchOzwilloId(id) {
+        fetch(Routing.generate('sesile_main_collectiviteapi_getozbyid', {id}), {credentials: 'same-origin'})
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(json => this.setState({ozwilloId: json}))
             .catch(error => this.context._addNotification(basicNotification(
                 'error',
                 this.context.t('admin.collectivite.error.fetch', {errorCode: error.status}),
@@ -77,7 +97,7 @@ class Collectivite extends Component {
 
     render() {
         const {t} = this.context
-        const {collectivite, editState} = this.state
+        const {collectivite, editState, ozwilloId} = this.state
         return (
             <AdminPage>
                 <div className="cell medium-12 text-center" style={{marginBottom: "1.3em"}}>
@@ -89,6 +109,8 @@ class Collectivite extends Component {
                                    image={collectivite.image}
                                    active={collectivite.active}
                                    siren={collectivite.siren}
+                                   ozwilloId={ozwilloId}
+                                   ozwilloUrl={this.state.user.ozwillo_url}
                                    handleChange={this.handleChangeCollectiviteValue}
                                    putCollectivite={this.putCollectivite}
                                    editState={editState}/>
