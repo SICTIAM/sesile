@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use phpDocumentor\Reflection\Types\Array_;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sesile\UserBundle\Entity\User;
+use Sesile\ClasseurBundle\Entity\TypeClasseur as TypeClasseur;
 
 /**
  * ClasseurRepository
@@ -123,7 +124,20 @@ class ClasseurRepository extends EntityRepository {
     public function getClasseursVisiblesSorted ($orgId, $userId, $sort, $order, $limit, $start, $type, $status, $nom)
     {
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
-        $classeurs =  $this
+        $repository = $this->getEntityManager()->getRepository('Sesile\ClasseurBundle\Entity\TypeClasseur');
+        $types = $repository
+            ->createQueryBuilder('z')
+            ->from(TypeClasseur::class, 'c')
+            ->select('z.id')
+            ->where('z.nom = :type')
+            ->setParameter('type', $type)
+            ->andWhere('z.collectivites = :orgId')
+            ->setParameter('orgId', $orgId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+        $qb =  $this
             ->createQueryBuilder('c')
             ->join('c.visible', 'v', 'WITH', 'v.id = :id')
             ->setParameter('id', $userId)
@@ -136,12 +150,11 @@ class ClasseurRepository extends EntityRepository {
             ->orderBy($sort, $order)
             ->setFirstResult($start)
             ->setMaxResults($limit)
-            ->andWhere('c.type = :type')
-            ->setParameter('type', $type)
-            ->andWhere('c.status = :status')
-            ->setParameter('status', $status)
-            ->andWhere('c.nom LIKE :nom')
-            ->setParameter('nom', '%'.$nom.'%')
+           ;
+        ($type != "0") ? $qb->andWhere('c.type = :type')->setParameter('type', $type) : $type = $type;
+        ($nom != "null") ? $qb->andWhere('c.nom LIKE :nom')->setParameter('nom', '%'.$nom.'%') : $nom = $nom;
+        ($status != "42") ? $qb->andWhere('c.status = :status')->setParameter('status', $status) : $status = $status;
+        $classeurs = $qb
             ->getQuery()
             ->getResult()
         ;
@@ -150,7 +163,6 @@ class ClasseurRepository extends EntityRepository {
 
         return $classeurs;
     }
-
     /**
      * @param $orgId collectivite id
      * @param $classeursId
