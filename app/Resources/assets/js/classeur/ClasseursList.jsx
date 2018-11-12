@@ -114,9 +114,10 @@ class ClasseursList extends Component {
     }
 
     listSortedClasseurs = (sort, order, limit, start, userId, name, type, status) => {
-        name === "" ? name = "null" : name = name
+        if (name === "") name = "null"
+        if (type === undefined)  type = 0
+        if (status === undefined) status = 42
         const {t, _addNotification} = this.context
-        this.setState({message: t('common.loading')})
         fetch(
             Routing.generate(
                 'sesile_classeur_classeurapi_listsorted',
@@ -126,12 +127,8 @@ class ClasseursList extends Component {
             .then(response => response.json())
             .then(json => {
                 let classeurs = json.list
-                let message = null
-                this.setState({})
-                if (classeurs.length <= 0) message = t('common.classeurs.empty_classeur_list')
                 this.setState({
                     start,
-                    message,
                     classeurs,
                     filteredClasseurs: classeurs,
                     nbElement: json.nb_element_in_list,
