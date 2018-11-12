@@ -70,16 +70,19 @@ class CircuitsValidation extends Component {
                 t('admin.circuit.error_delete'))))
     }
     handleChangeUserName = (key, userName) => {
-        this.setState({userName})
-        const regex = escapedValue(userName, this.state.filteredCircuits, this.state.circuits)
-        let filteredCircuits = this.state.circuits.filter(circuit =>
-                                 regex.test(circuit.etape_groupes.map(groupe => groupe.users.map(user => user._nom))))
-        this.setState({filteredCircuits})
+        this.setState({userName, filteredCircuits: this.state.circuits})
+        let regexName = escapedValue(this.state.circuitName, this.state.filteredCircuits, this.state.circuits)
+        let regexUser = escapedValue(userName, this.state.filteredCircuits, this.state.circuits)
+        this.handleDualSearch(regexName, regexUser)
     }
     handleChangeCircuitName = (key, circuitName) => {
-        this.setState({circuitName})
-        const regex = escapedValue(circuitName, this.state.filteredCircuits, this.state.circuits)
-        const filteredCircuits = this.state.circuits.filter(circuit => regex.test(circuit.nom))
+        this.setState({circuitName, filteredCircuits: this.state.circuits})
+        let regexName = escapedValue(circuitName, this.state.filteredCircuits, this.state.circuits)
+        let regexUser = escapedValue(this.state.userName, this.state.filteredCircuits, this.state.circuits)
+        this.handleDualSearch(regexName, regexUser)
+    }
+    handleDualSearch = (regexName, regexUser) => {
+        let filteredCircuits = this.state.circuits.filter(circuit => regexName.test(circuit.nom) && regexUser.test(circuit.etape_groupes.map(groupe => groupe.users.map(user => user._nom))))
         this.setState({filteredCircuits})
     }
     handleChangeCollectivite = (collectiviteId) => {
