@@ -14,6 +14,7 @@ class Collectivite extends Component {
 
     static contextTypes = {
         t: func,
+        user: object,
         _addNotification: func
     }
 
@@ -25,7 +26,6 @@ class Collectivite extends Component {
             delete_classeur_after: 0,
             active: false
         },
-        user:{},
         ozwilloId:'',
         editState: false
     }
@@ -33,14 +33,7 @@ class Collectivite extends Component {
     componentDidMount() {
         this.fetchCollectivite(this.props.match.params.collectiviteId)
         this.fetchOzwilloId(this.props.match.params.collectiviteId)
-        this.fetchUser()
         $("#admin-details").foundation()
-    }
-    fetchUser() {
-        fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(user => this.setState({user}))
     }
     fetchCollectivite(id) {
         fetch(Routing.generate('sesile_main_collectiviteapi_getbyid', {id}), {credentials: 'same-origin'})
@@ -110,7 +103,7 @@ class Collectivite extends Component {
                                    active={collectivite.active}
                                    siren={collectivite.siren}
                                    ozwilloId={ozwilloId}
-                                   ozwilloUrl={this.state.user.ozwillo_url}
+                                   ozwilloUrl={this.context.user.ozwillo_url}
                                    handleChange={this.handleChangeCollectiviteValue}
                                    putCollectivite={this.putCollectivite}
                                    editState={editState}/>

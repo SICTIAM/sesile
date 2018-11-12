@@ -84,14 +84,14 @@ class CollectiviteApiController extends Controller
      * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Get("/ozwillo/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
-     * @return CollectiviteOzwillo
+     * @return String
      */
     public function getOzByIdAction(Collectivite $collectivite) {
-        return  $collectivite->getOzwillo()->getOrganizationId();
+        return $collectivite->getOzwillo()->getOrganizationId();
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Post("/avatar/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Request $request
@@ -103,7 +103,7 @@ class CollectiviteApiController extends Controller
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Delete("/avatar/{id}")
      * @param Request $request
      * @param Collectivite $collectivite

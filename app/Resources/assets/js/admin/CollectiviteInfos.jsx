@@ -130,7 +130,7 @@ class CollectiviteInfos extends Component {
                                    className="button hollow ozwillo">
                                     <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png"
                                          alt="Ozwillo" className="image-button"/>
-                                    Orga
+                                    Organisation
                                 </a>
                             </div>
                         </div>
@@ -163,21 +163,20 @@ class CollectiviteInfos extends Component {
                         </div>
                     </div>
                     <div className="medium-6 cell">
-                        <div className="grid-x grid-padding-y">
+                        <div className="grid-x grid-padding-y" style={{overflow: "hidden", display:"-webkit-inline-box"}}>
                             <Avatar className="cell medium-12" size={200} nom={nom}
                                     fileName={image ? "/uploads/logo_coll/" + image : null}/>
-                            <InputFile id="add_collectivite_img"
-                                       className="columns medium-3"
-                                       labelText={image ? t('common.button.change_img') : t('common.button.upload_img')}
-                                       accept="image/png,image/jpeg"
-                                       onChange={this.updateAvatar}/>
-                            <ButtonConfirm id="confirm_delete"
-                                           className="columns medium-3"
-                                           labelButton={t('common.button.delete_img')}
-                                           confirmationText={t('common.confirm_delete_img')}
-                                           labelConfirmButton={t('common.button.confirm')}
-                                           handleClickConfirm={this.deleteAvatar}
-                                           disabled={!image}/>
+                            <input type="file" accept="image/png,image/jpeg"
+                                   onChange={e => this.updateAvatar(e.target.files[0])}
+                                   id="upload_input" name="upload" style={{
+                                fontSize: "170px",
+                                width: "200px",
+                                opacity: "0",
+                                filter: "alpha(opacity=0)",
+                                position: "relative",
+                                top: "10px",
+                                left: "-400px"
+                            }}/>
                         </div>
                     </div>
                     {(id) &&
