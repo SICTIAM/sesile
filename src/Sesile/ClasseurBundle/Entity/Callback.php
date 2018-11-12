@@ -3,8 +3,7 @@
 namespace Sesile\ClasseurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use Sesile\UserBundle\Entity\User;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -21,43 +20,75 @@ class Callback
     /**
      * @var integer
      *
-     * @ORM\Column(name="classeur_id", type="integer")
-     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $classeur_id;
+    private $id;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="classeurId", type="integer")
      *
      */
-    private $id;
-    /**
-     * @var string
-     * @ORM\Id
-     *
-     * @ORM\Column(name="event", type="string")
-     *
-     */
-    private $event;
+    private $classeurId;
 
     /**
-     * @var string
+     * @Assert\Url(
+     *    protocols = {"http", "https"}
+     * )
      *
      * @ORM\Column(name="url", type="string")
      *
      */
     private $url;
 
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
-    public function setId($classeurId) {
-        $this->classeur_id = $classeurId;
+    /**
+     * @param int $id
+     */
+    public function setId(int $id)
+    {
+        $this->id = $id;
     }
-    public function setEvent($event) {
-        $this->event = $event;
+
+    /**
+     * @return int
+     */
+    public function getClasseurId(): int
+    {
+        return $this->classeurId;
     }
-    public function setUrl($url) {
+
+    /**
+     * @param int $classeurId
+     */
+    public function setClasseurId(int $classeurId)
+    {
+        $this->classeurId = $classeurId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
         $this->url = $url;
     }
 }

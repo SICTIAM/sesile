@@ -233,15 +233,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"},
      *          {"name"="email", "dataType"="string", "format"="Email valide", "required"=false, "description"="email du déposant"},
-     *          {"name"="callback", "dataType"="boolean", "format"="false si non true si oui", "required"=false, "description"="callback"},
-     *          {"name"="url_withdrawn", "dataType"="string", "format"="url valide", "required"=false, "description"="url callback retract"},
-     *          {"name"="url_delete", "dataType"="string", "format"="url valide", "required"=false, "description"="url callback delete"},
-     *          {"name"="url_signed", "dataType"="string", "format"="url valide", "required"=false, "description"="url callback signed"},
+     *          {"name"="callback", "dataType"="string", "format"="URL valide", "required"=false, "description"="URL de rappel, sur les événements classeur (signé, retiré, supprimé)"},
      *          {"name"="siren", "dataType"="string", "format"="string", "required"=false, "description"="siren collectivité, si non renseigné la premiere collectivité de l'utilisateur sera utilisé"},
-     *
-     *
-     *
-     *
      *  }
      * )
      *
@@ -435,31 +428,25 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $actionMailer = $this->get(ActionMailer::class);
         $actionMailer->sendNotificationClasseur($classeur);
 
-        if ($request->request->get('callback') === '1' && $request->request->get('signed')) {
-            $callback = new Callback();
-            $callback->setId($classeur->getId());
-            $callback->setEvent('signed');
-            $callback->setUrl($request->request->get('signed'));
-            $em->persist($callback);
-            $em->flush();
+        if (!empty($request->request->get('callback')) && trim($request->request->get('callback')) != "") {
+            try {
+                $callback = new Callback();
+                $callback->setId($classeur->getId());
+                $callback->setUrl($request->request->get('callback'));
+                $em->persist($callback);
+                $em->flush();
+            } catch (\Exception $e) {
+                $this->get('logger')->error(sprintf('[SesileApiBundleClasseur]/new Error add callback url: %s, for classeur %s', $e->getMessage(), $classeur->getId()));
+            }
+        } else {
+            $this->get('logger')->debug(sprintf('[SesileApiBundleClasseur]/new Callback url not specified, for classeur %s', $classeur->getId()));
         }
-        if ($request->request->get('callback') === '1' && $request->request->get('withdrawn')) {
-            $callback = new Callback();
-            $callback->setId($classeur->getId());
-            $callback->setEvent('withdrawn');
-            $callback->setUrl($request->request->get('withdrawn'));
-            $em->persist($callback);
-            $em->flush();
-        }
-        if ($request->request->get('callback') === '1' && $request->request->get('delete')) {
-            $callback = new Callback();
-            $callback->setId($classeur->getId());
-            $callback->setEvent('delete');
-            $callback->setUrl($request->request->get('delete'));
-            $em->persist($callback);
-            $em->flush();
-        }
-        return new JsonResponse(["id" => $classeur->getId(),"message" => "Le classeur a bien été déposé"], JsonResponse::HTTP_OK);
+        return new JsonResponse(
+            [
+                "id" => $classeur->getId(),
+                "url" => $actionMailer->buildAbsoluteUrl($collectivity) . 'classeur/' . $classeur->getId(),
+                "message" => "Le classeur a bien été déposé",
+            ], JsonResponse::HTTP_OK);
     }
 
 
@@ -608,19 +595,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $action->setAction("Classeur retiré");
         $em->persist($action);
         $em->flush();
-
-        // Envoie Callback
-        $client = new Client();
-        $result = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
-        foreach ($result as $event) {
-            if ($event['event'] === 'delete') {
-                $client->request('POST', $event['url'], [
-                    'form_params' => [
-                        'event' => 'delete',
-                    ]
-                ]);
-            }
-        }
 
         return array('code' => '200', 'message' => 'Classeur retiré');
 

@@ -20,9 +20,9 @@ class CallbackRepository extends EntityRepository
         return $this->createQueryBuilder('q')
             ->select('q')
             ->from(Callback::class, 'c')
-            ->where('q.classeur_id = :id')
+            ->where('q.classeurId = :id')
             ->setParameter('id', $idClasseur)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 }
