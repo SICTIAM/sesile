@@ -102,7 +102,8 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
         foreach ($users as $user) {
             $users_select[] = array(
                 'label' => $user->getPrenom() . " " . $user->getNom(),
-                'value' => $user->getId()
+                'value' => $user->getId(),
+                'active' => $user->getEnabled()
             );
         }
 
@@ -188,7 +189,6 @@ class UserApiController extends FOSRestController implements ClassResourceInterf
      */
      public function findByNomOrPrenomAction(ParamFetcher $paramFetcher)
      {
-         //TODO: return just actif users
          $value = $paramFetcher->get('value');
          $collectiviteId = $paramFetcher->get('collectiviteId');
          if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->getUser()->hasCollectivity($collectiviteId)) {

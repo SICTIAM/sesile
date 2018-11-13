@@ -15,9 +15,9 @@ import MenuAdmin from './_components/MenuAdmin'
 import Moment from 'moment'
 import { Route } from 'react-router'
 import SelectCollectivite from './admin/SelectCollectivite'
-import History from './_utils/History'
-import {handleErrors} from "./_utils/Utils"
-Validator.useLang(window.localStorage.i18nextLng)
+import { fr } from 'validatorjs/src/lang/fr'
+Validator.useLang(window.localStorage.i18nextLng || 'fr')
+Validator.setMessages('fr', fr)
 Moment.locale(window.localStorage.i18nextLng || 'fr')
 
 class App extends Component {

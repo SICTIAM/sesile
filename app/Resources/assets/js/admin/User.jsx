@@ -316,8 +316,7 @@ class User extends Component {
                             <div className="cell medium-6">
                                 <label className="text-bold text-capitalize-first-letter">collectivités</label>
                                 <div style={{height: "11em"}}>
-                                    <SearchCollectivite
-                                        collectivite={this.state.user.collectivities}/>
+                                    <SearchCollectivite />
                                 </div>
                             </div>
                         </div>

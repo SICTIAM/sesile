@@ -27,6 +27,7 @@ class ClasseursValid extends Component {
         nbClasseurChecked: 0,
         sort: "id",
         order: "DESC",
+        checkAll: false,
         limit: 15,
         start: 0,
         message: '',
@@ -165,6 +166,18 @@ class ClasseursValid extends Component {
         this.setState({nbClasseurChecked, classeurs: filteredClasseurs, filteredClasseurs})
     }
 
+    checkAllClasseur = (e) => {
+        e.stopPropagation()
+        const filteredClasseurs = this.state.filteredClasseurs
+        this.setState({checkAll: !this.state.checkAll})
+        filteredClasseurs.map(clas => {
+            if (!!clas['signable_and_last_validant'])
+                clas.checked = !this.state.checkAll
+        })
+        const nbClasseurChecked = filteredClasseurs.filter(classeur => !!classeur.checked).length
+        this.setState({nbClasseurChecked, classeurs: filteredClasseurs, filteredClasseurs})
+    }
+
     onClickSignMultiClasseur = (e) => {
         const classeursChecked = this.state.filteredClasseurs.filter(classeur => !!classeur.checked)
         this.signClasseurs(e, classeursChecked)
@@ -233,7 +246,17 @@ class ClasseursValid extends Component {
                                         <th className="text-right">
                                             {t('common.classeurs.sort_label.actions')}
                                         </th>
-                                        <th style={{borderRadius: "0 0.5rem 0 0"}}/>
+                                        <th className="text-center" style={{borderRadius: "0 0.5rem 0 0"}}>
+                                            <div className="pretty p-default p-curve p-thick" onClick={(e) => this.checkAllClasseur(e)}>
+                                                <input
+                                                    checked={this.state.checkAll}
+                                                    onChange={(e) => {e.stopPropagation()}}
+                                                    type="checkbox"/>
+                                                <div className="state p-info-o">
+                                                    <label/>
+                                                </div>
+                                            </div>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -314,7 +337,7 @@ const CLasseurRow = ({classeur, validateClasseur, signClasseurs, revertClasseur,
                 <input
                     value={classeur.checked}
                     checked={classeur.checked}
-                    onChange={(e) => e.stopPropagation()}
+                    onChange={(e) => {e.stopPropagation()}}
                     disabled={!classeur['signable_and_last_validant']}
                     type="checkbox"/>
                 <div className="state p-primary-o">

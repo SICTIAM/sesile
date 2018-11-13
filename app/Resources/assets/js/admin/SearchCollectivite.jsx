@@ -6,7 +6,8 @@ import { object, func } from 'prop-types'
 
 class SearchCollectivite extends Component {
     static contextTypes = {
-        t: func
+        t: func,
+        user: object
     }
     state = {
         collectivite: false,
@@ -16,18 +17,14 @@ class SearchCollectivite extends Component {
         filteredDisplay: []
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.collectivite.length > 0) {
-            const collectivity = nextProps.collectivite
-            if (nextProps.currentCollectivite) {
-                const currentCollectiviteIndex = collectivity.indexOf(nextProps.currentCollectivite)
-                collectivity.splice(currentCollectiviteIndex, 1);
-            }
+    componentWillReceiveProps() {
+        const collectivities = this.context.user.collectivities
+        if (collectivities.length > 0) {
             this.setState({
-                collectivites: nextProps.collectivite,
-                filteredCollectivites: nextProps.collectivite,
+                collectivites: collectivities,
+                filteredCollectivites: collectivities,
                 collectivite: true,
-                filteredDisplay: collectivity.slice(0, 5)
+                filteredDisplay: collectivities.slice(0, 5)
             })
         }
     }

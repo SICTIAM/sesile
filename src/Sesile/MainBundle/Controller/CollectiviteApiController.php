@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Sesile\MainBundle\Form\CollectiviteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -124,7 +125,17 @@ class CollectiviteApiController extends Controller
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
+     * @Rest\Get("/ozwillo/{id}")
+     * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
+     * @return String
+     */
+    public function getOzByIdAction(Collectivite $collectivite) {
+        return $collectivite->getOzwillo()->getOrganizationId();
+    }
+
+    /**
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Post("/avatar/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Request $request
@@ -136,7 +147,7 @@ class CollectiviteApiController extends Controller
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Delete("/avatar/{id}")
      * @param Request $request
      * @param Collectivite $collectivite
@@ -147,7 +158,7 @@ class CollectiviteApiController extends Controller
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Patch("/{id}")
      * @param Request $request
      * @param Collectivite $collectivite
