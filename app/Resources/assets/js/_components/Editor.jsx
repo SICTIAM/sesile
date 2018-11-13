@@ -40,12 +40,14 @@ export default class Editor extends Component {
     handleInsert = (value) => {
         let openingBracket = 0
         let closingBracket = 0
-        let suggest = false;
+        let nextOpening = 0
+        let suggest = false
 
-        for (let nbr = 0; openingBracket !== -1; nbr++) {
+        for (let nbr = 0; nextOpening !== -1; nbr++) {
             openingBracket = value.indexOf("{{", nbr)
+            nextOpening = value.indexOf("{{", (openingBracket + 1))
             closingBracket = value.indexOf("}}", nbr)
-            if ((closingBracket - openingBracket) > 40 && openingBracket !== -1) {
+            if (nextOpening < closingBracket && nextOpening !== -1) {
                 suggest = true
                 let complete = value.substring(openingBracket + 2, openingBracket + 3)
                 if (!complete.match(/[a-z]/i))
