@@ -86,6 +86,7 @@ class CollectiviteEmailModels extends Component {
                         label={t('admin.collectivite.mail.new_classeur')}
                         className="cell medium-10"
                         value={collectivite.textmailnew}
+                        template={news}
                         handleChange={handleChange}/>
                 }
                 {this.state.currentMail === "3" &&
@@ -93,6 +94,7 @@ class CollectiviteEmailModels extends Component {
                         label={t('admin.collectivite.mail.refused_classeur')}
                         className="cell medium-10"
                         value={collectivite.textmailrefuse}
+                        template={refus}
                         handleChange={handleChange}/>
                 }
                 {this.state.currentMail === "4" &&
@@ -100,6 +102,7 @@ class CollectiviteEmailModels extends Component {
                         label={t('admin.collectivite.mail.valid_classeur')}
                         className="cell medium-10"
                         value={collectivite.textmailwalid}
+                        template={valid}
                         handleChange={handleChange}/>
                 }
                 {this.state.currentMail === "5" &&
@@ -107,6 +110,7 @@ class CollectiviteEmailModels extends Component {
                         label={t('admin.collectivite.mail.new_copy_classeur')}
                         className="cell medium-10"
                         value={collectivite.textcopymailnew}
+                        template={news}
                         handleChange={handleChange}/>
                 }
                 {this.state.currentMail === "6" &&
@@ -114,6 +118,7 @@ class CollectiviteEmailModels extends Component {
                         label={t('admin.collectivite.mail.valid_copy_classeur')}
                         className="cell medium-10"
                         value={collectivite.textcopymailwalid}
+                        template={valid}
                         handleChange={handleChange}/>
                 }
                 {(collectivite.id) &&

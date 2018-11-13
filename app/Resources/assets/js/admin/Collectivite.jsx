@@ -29,10 +29,17 @@ class Collectivite extends Component {
                 organization_id: ''
             }
         },
+        template: {
+            new:[],
+            valid:[],
+            refus:[]
+        },
+        suggestion:false,
         editState: false
     }
 
     componentDidMount() {
+        this.fetchTemplate()
         this.fetchCollectivite(this.props.match.params.collectiviteId)
         $("#admin-details").foundation()
     }
@@ -52,6 +59,16 @@ class Collectivite extends Component {
         const {collectivite} = this.state
         collectivite[name] = value
         this.setState({collectivite})
+    }
+
+
+    fetchTemplate = () => {
+        fetch(Routing.generate('sesile_main_collectiviteapi_getemailtemplate'), {
+            method: 'GET'
+        })
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(template => this.setState({template}))
     }
 
     putCollectivite = (id, fields) => {
@@ -79,8 +96,8 @@ class Collectivite extends Component {
     }
 
     render() {
-        const {t} = this.context
-        const {collectivite, editState} = this.state
+        const { t } = this.context
+        const { collectivite, editState, template } = this.state
         return (
             <AdminPage>
                 <div className="cell medium-12 text-center" style={{marginBottom: "1.3em"}}>
@@ -98,10 +115,13 @@ class Collectivite extends Component {
                                    putCollectivite={this.putCollectivite}
                                    editState={editState}/>
 
-                <CollectiviteEmailModels collectivite={collectivite}
-                                         editState={editState}
-                                         handleChange={this.handleChangeCollectiviteValue}
-                                         putCollectivite={this.putCollectivite}/>
+                    <CollectiviteEmailModels    collectivite={collectivite} 
+                                                editState={editState}
+                                                valid={template.valid}
+                                                refus={template.refus}
+                                                news={template.new}
+                                                handleChange={this.handleChangeCollectiviteValue}
+                                                putCollectivite={this.putCollectivite}/>
 
                 <CollectiviteVisa id={collectivite.id}
                                   abscisses_visa={collectivite.abscisses_visa}
