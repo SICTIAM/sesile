@@ -114,8 +114,7 @@ class Collectivite extends Component {
                                    handleChange={this.handleChangeCollectiviteValue}
                                    putCollectivite={this.putCollectivite}
                                    editState={editState}/>
-
-                    <CollectiviteEmailModels    collectivite={collectivite} 
+                <CollectiviteEmailModels        collectivite={collectivite}
                                                 editState={editState}
                                                 valid={template.valid}
                                                 refus={template.refus}

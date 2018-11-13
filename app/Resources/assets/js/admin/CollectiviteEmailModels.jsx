@@ -47,7 +47,7 @@ class CollectiviteEmailModels extends Component {
 
     render() {
         const {t} = this.context
-        const {collectivite, handleChange, editState} = this.props
+        const {collectivite, handleChange, editState, news, valid, refus} = this.props
         const template = [{id: 1, nom: "Message d'accueil"},
             {id: 2, nom: "Mail nouveau classeur"},
             {id: 3, nom: "Mail classeur refusé"},

@@ -27,6 +27,16 @@ export default class Editor extends Component {
         autocomplete: ''
     }
 
+    componentDidMount() {
+        if (!this.state.isSet && this.props.value != null) {
+            const value = RichTextEditor.createValueFromString(this.props.value, 'html')
+            this.setState({value: value, isSet: true, valueStr: this.props.value})
+        }
+        if (this.props.template != null) {
+            this.setState({template: this.props.template})
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!this.state.isSet && nextProps.value != null) {
             const value = RichTextEditor.createValueFromString(nextProps.value, 'html')
@@ -73,6 +83,7 @@ export default class Editor extends Component {
         let valueInserted = this.state.value.toString('html')
         valueInserted = valueInserted.substring(0, this.state.insertHere) + value + "}}" + valueInserted.substring(this.state.autocomplete ? this.state.insertHere + 1 : this.state.insertHere)
         this.setState({value: RichTextEditor.createValueFromString(valueInserted, 'html'), suggestion:false})
+        this.props.handleChange(this.props.id, valueInserted)
     }
 
     render() {
