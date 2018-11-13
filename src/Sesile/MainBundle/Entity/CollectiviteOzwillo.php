@@ -3,6 +3,7 @@
 namespace Sesile\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * CollectiviteOzwillo
@@ -107,6 +108,7 @@ class CollectiviteOzwillo
     /**
      * @var string
      *
+     * @Serializer\Groups({"getCollectiviteById"})
      * @ORM\Column(name="organizationId", type="string", length=100, nullable=true)
      */
     private $organizationId;

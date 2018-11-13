@@ -24,15 +24,16 @@ class Collectivite extends Component {
             nom: '',
             image: '',
             delete_classeur_after: 0,
-            active: false
+            active: false,
+            ozwillo: {
+                organization_id: ''
+            }
         },
-        ozwilloId:'',
         editState: false
     }
 
     componentDidMount() {
         this.fetchCollectivite(this.props.match.params.collectiviteId)
-        this.fetchOzwilloId(this.props.match.params.collectiviteId)
         $("#admin-details").foundation()
     }
     fetchCollectivite(id) {
@@ -40,17 +41,6 @@ class Collectivite extends Component {
             .then(handleErrors)
             .then(response => response.json())
             .then(json => this.setState({collectivite: json}))
-            .catch(error => this.context._addNotification(basicNotification(
-                'error',
-                this.context.t('admin.collectivite.error.fetch', {errorCode: error.status}),
-                error.statusText)))
-    }
-
-    fetchOzwilloId(id) {
-        fetch(Routing.generate('sesile_main_collectiviteapi_getozbyid', {id}), {credentials: 'same-origin'})
-            .then(handleErrors)
-            .then(response => response.json())
-            .then(json => this.setState({ozwilloId: json}))
             .catch(error => this.context._addNotification(basicNotification(
                 'error',
                 this.context.t('admin.collectivite.error.fetch', {errorCode: error.status}),
@@ -90,7 +80,7 @@ class Collectivite extends Component {
 
     render() {
         const {t} = this.context
-        const {collectivite, editState, ozwilloId} = this.state
+        const {collectivite, editState} = this.state
         return (
             <AdminPage>
                 <div className="cell medium-12 text-center" style={{marginBottom: "1.3em"}}>
@@ -102,7 +92,7 @@ class Collectivite extends Component {
                                    image={collectivite.image}
                                    active={collectivite.active}
                                    siren={collectivite.siren}
-                                   ozwilloId={ozwilloId}
+                                   ozwilloId={collectivite.ozwillo.organization_id}
                                    ozwilloUrl={this.context.user.ozwillo_url}
                                    handleChange={this.handleChangeCollectiviteValue}
                                    putCollectivite={this.putCollectivite}
