@@ -38,6 +38,7 @@ class ClasseursList extends Component {
         currentType: '',
         type: [],
         currentStatus: '',
+        isSorted:false,
         isOpen: false,
     }
 
@@ -50,22 +51,34 @@ class ClasseursList extends Component {
 
     changeLimit = (name, value) => {
         this.setState({limit: parseInt(value)})
-        this.listClasseurs(this.state.sort, this.state.order, value, this.state.start, this.context.user.id)
+        this.state.isSorted === false ?
+            this.listClasseurs(this.state.sort, this.state.order, value, this.state.start, this.context.user.id)
+            :
+            this.listSortedClasseurs(this.state.sort, this.state.order, value, this.state.start, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
     changePage = (start) => {
         const newStart = (start * this.state.limit)
+        this.state.isSorted === false ?
         this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+        :
+            this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
     changePreviousPage = () => {
         const newStart = (this.state.start - this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+        this.state.isSorted === false ?
+            this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+            :
+            this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
     changeNextPage = () => {
         const newStart = (this.state.start + this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+        this.state.isSorted === false ?
+            this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+            :
+            this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
     getTypes() {
@@ -74,7 +87,7 @@ class ClasseursList extends Component {
             .then(response => response.json())
             .then(circuits => {
                 const type = circuits[0].types
-                const all = {id: 0, nom:"Tout"}
+                const all = {id: "null", nom:"Tout"}
                 type.unshift(all)
                 this.setState({type})
             })
@@ -115,8 +128,8 @@ class ClasseursList extends Component {
 
     listSortedClasseurs = (sort, order, limit, start, userId, name, type, status) => {
         if (name === "") name = "null"
-        if (type === undefined)  type = 0
-        if (status === undefined) status = 42
+        if (type === undefined)  type = "null"
+        if (status === undefined) status = "null"
         const {t, _addNotification} = this.context
         fetch(
             Routing.generate(
@@ -130,6 +143,7 @@ class ClasseursList extends Component {
                 this.setState({
                     start,
                     classeurs,
+                    isSorted:true,
                     filteredClasseurs: classeurs,
                     nbElement: json.nb_element_in_list,
                     nbElementTotal: json.nb_element_total_of_entity
@@ -151,21 +165,15 @@ class ClasseursList extends Component {
     }
 
     handleSearchByStatus = (value) => {
-        let research = ''
-        if (value)
-            value.id === "42" ? research = '' : research = value.id
-        else
-            value = {id: "42", nom: 'Tout'}
+        if (!value)
+            value = {id: "null", nom: 'Tout'}
         this.setState({currentStatus: value})
         this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, value.id)
     }
 
     handleSearchByType = (e) => {
-        let research = ''
-        if (e)
-            e.nom === "Tout" ? research = '' : research = e.nom
-        else
-            e = {nom : "Tout"}
+        if (!e)
+            e = {id : "null", nom : "Tout"}
         this.setState({currentType: e})
         this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, e.id, this.state.currentStatus.id)
     }
@@ -180,7 +188,7 @@ class ClasseursList extends Component {
         const listClasseur = this.state.filteredClasseurs.map(classeur => <CLasseurRow key={`classeur-${classeur.id}`}
                                                                                        classeur={classeur}/>)
         const status = [
-            {"id": '42', "nom": 'Tout'},
+            {"id": 'null', "nom": 'Tout'},
             {"id": 0, "nom": "Refusé"},
             {"id": 1, "nom": "En cours"},
             {"id": 2, "nom": "Finalisé"},

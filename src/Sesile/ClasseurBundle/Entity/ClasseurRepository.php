@@ -124,19 +124,6 @@ class ClasseurRepository extends EntityRepository {
     public function getClasseursVisiblesSorted ($orgId, $userId, $sort, $order, $limit, $start, $type, $status, $nom)
     {
         ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
-        $repository = $this->getEntityManager()->getRepository('Sesile\ClasseurBundle\Entity\TypeClasseur');
-        $types = $repository
-            ->createQueryBuilder('z')
-            ->from(TypeClasseur::class, 'c')
-            ->select('z.id')
-            ->where('z.nom = :type')
-            ->setParameter('type', $type)
-            ->andWhere('z.collectivites = :orgId')
-            ->setParameter('orgId', $orgId)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getResult()
-        ;
         $qb =  $this
             ->createQueryBuilder('c')
             ->join('c.visible', 'v', 'WITH', 'v.id = :id')
@@ -151,9 +138,14 @@ class ClasseurRepository extends EntityRepository {
             ->setFirstResult($start)
             ->setMaxResults($limit)
            ;
-        ($type != "0") ? $qb->andWhere('c.type = :type')->setParameter('type', $type) : $type = $type;
-        ($nom != "null") ? $qb->andWhere('c.nom LIKE :nom')->setParameter('nom', '%'.$nom.'%') : $nom = $nom;
-        ($status != "42") ? $qb->andWhere('c.status = :status')->setParameter('status', $status) : $status = $status;
+
+        if ($type != "null")
+            $qb->andWhere('c.type = :type')->setParameter('type', $type);
+        if ($nom != "null")
+            $qb->andWhere('c.nom LIKE :nom')->setParameter('nom', '%'.$nom.'%');
+        if ($status != "null")
+            $qb->andWhere('c.status = :status')->setParameter('status', $status);
+
         $classeurs = $qb
             ->getQuery()
             ->getResult()
