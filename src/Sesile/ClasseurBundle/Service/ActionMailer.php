@@ -257,7 +257,7 @@ class ActionMailer
         $parsedUrl = parse_url($absoluteUrl);
 
         if((isset($parsedUrl['host']) && isset($this->domain)) && $parsedUrl['host'] == $this->domain) {
-            $absoluteUrl = parse_url($absoluteUrl)['scheme'] . "://" . $collectivite->getDomain() . "." . parse_url($absoluteUrl)['host'];
+            $absoluteUrl = parse_url($absoluteUrl)['scheme'] . "://" . $collectivite->getDomain() . "." . parse_url($absoluteUrl)['host'] . "/";
         }
 
         return $absoluteUrl;
