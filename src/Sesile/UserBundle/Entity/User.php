@@ -297,7 +297,7 @@ class User extends BaseUser {
 
     /**
      * @var array
-     * @Serializer\Groups({"currentUser", "UserId"})
+     * @Serializer\Groups({"currentUser", "searchUser", "listUsers", "UserId"})
      */
     protected $enabled;
 

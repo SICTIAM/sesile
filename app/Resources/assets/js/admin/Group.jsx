@@ -132,8 +132,8 @@ class Group extends Component {
         fetch(Routing.generate('sesile_user_userapi_userscollectivite', {id: this.context.user.current_org_id}) , { credentials: 'same-origin'})
             .then(response => response.json())
             .then((users_collectivite) => {
-                this.setState({users_collectivite : users_collectivite})
-
+                let users = users_collectivite.filter(user => user.enabled)
+                this.setState({users_collectivite : users})
             })
             .then(() => {
                 let groups = []
@@ -180,7 +180,7 @@ class Group extends Component {
                     <div className="grid-x grid-margin-x">
                         <Cell>
                             <InputValidation
-                                id="nomName"
+                                id="groupName"
                                 type="text"
                                 autoFocus={true}
                                 labelText={t('common.label.name')}
