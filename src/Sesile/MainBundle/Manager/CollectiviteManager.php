@@ -70,7 +70,6 @@ class CollectiviteManager
                 $userId,
                 $ozwilloCollectivityClientId
             );
-
             return new Message(true, $data);
         } catch (\Exception $e) {
             $this->logger->error(
@@ -317,10 +316,10 @@ class CollectiviteManager
         try {
             $collectivityResult = $this->getCollectivity($collectivityId);
             if (false === $collectivityResult->isSuccess()) {
-                $msg = sprintf('[CollectiviteManager]/removeCollectivity Unable to find Collectivity %s.', $collectivity->getId());
+                $msg = sprintf('[CollectiviteManager]/removeCollectivity Unable to find Collectivity %s.', $collectivityId);
                 $this->logger->warning($msg);
 
-                return new Message(false, $collectivity, [$msg]);
+                return new Message(false, $collectivityResult, [$msg]);
             }
             $collectivity = $collectivityResult->getData();
             if ($collectivity->getOzwillo() instanceof CollectiviteOzwillo) {
