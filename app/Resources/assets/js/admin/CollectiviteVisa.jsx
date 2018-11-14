@@ -58,7 +58,7 @@ class CollectiviteVisa extends Component {
         return (
             <div className="grid-x grid-padding-x grid-padding-y panel">
                 <div className="cell">
-                    <h3>Visa</h3>
+                    <h3 className="text-capitalize-first-letter">{t('common.documents.btn_visa')}</h3>
                 </div>
                 <div className="medium-6 cell">
                     <div className="grid-x grid-padding-y">

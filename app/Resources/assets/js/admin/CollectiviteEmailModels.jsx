@@ -20,11 +20,7 @@ class CollectiviteEmailModels extends Component {
         textcopymailnew: 'required'
     }
     state = {
-        currentMail: {}
-    }
-
-    componentDidMount() {
-        this.setState({currentMail: "1"})
+        currentMail: "1"
     }
 
     saveCollectivite = () => {
@@ -38,7 +34,7 @@ class CollectiviteEmailModels extends Component {
             textcopymailwalid: collectivite.textcopymailwalid
         }
         const validation = new Validator(fields, this.validationRules)
-        if (validation.passes()) if (collectivite.id) putCollectivite(collectivite.id, fields)
+        if (validation.passes() && collectivite.id) putCollectivite(collectivite.id, fields)
     }
 
     handleChange = (template, value) => {
@@ -48,12 +44,12 @@ class CollectiviteEmailModels extends Component {
     render() {
         const {t} = this.context
         const {collectivite, handleChange, editState, news, valid, refus} = this.props
-        const template = [{id: 1, nom: "Message d'accueil"},
-            {id: 2, nom: "Mail nouveau classeur"},
-            {id: 3, nom: "Mail classeur refusé"},
-            {id: 4, nom: "Mail classeur validé"},
-            {id: 5, nom: "Mail nouveau classeur pour utilisateur en copie"},
-            {id: 6, nom: "Mail classeur validé pour utilisateur en copie"}]
+        const template = [{id: 1, nom: t('admin.template_mail.message')},
+            {id: 2, nom: t('admin.template_mail.new')},
+            {id: 3, nom: `${t('admin.template_mail.refus')}`},
+            {id: 4, nom: `${t('admin.template_mail.valid')}`},
+            {id: 5, nom: `${t('admin.template_mail.copy_new')}`},
+            {id: 6, nom: `${t('admin.template_mail.copy_valid')}`}]
         const ListTemplate = template.map(option => <option key={`${option.id}`} value={option.id}>{option.nom}</option>)
         return (
             <div className="grid-x grid-padding-x grid-padding-y panel align-center-middle">
