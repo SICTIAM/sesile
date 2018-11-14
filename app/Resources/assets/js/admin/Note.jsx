@@ -7,7 +7,7 @@ import { basicNotification } from '../_components/Notifications'
 import { Button, Form } from '../_components/Form'
 import { GridX, Cell } from '../_components/UI'
 import Editor from '../_components/Editor'
-import { SimpleContent, AdminDetails } from '../_components/AdminUI'
+import { SimpleContent, AdminDetails, AdminPage } from '../_components/AdminUI'
 import InputValidation from '../_components/InputValidation'
 
 import History from '../_utils/History'
@@ -126,11 +126,10 @@ class Note extends Component {
         const { note, editState, validator } = this.state
         return (
             <Form onSubmit={this.handleClickSave}>
-                <AdminDetails
+                <AdminPage
                     title={t('admin.details.title', {context: 'female', name: t('admin.notes.name')})}
-                    subtitle={t('admin.details.subtitle')} 
-                    nom={t('admin.notes.name')} >
-                    <SimpleContent>
+                >
+                    <SimpleContent className="panel">
                         <GridX className="grid-padding-x grid-padding-y">
                             <Cell className="medium-6">
                                 <InputValidation    
@@ -175,7 +174,7 @@ class Note extends Component {
                                         t('common.button.save')}/>
                         </GridX>
                     </SimpleContent>
-                </AdminDetails>
+                </AdminPage>
             </Form>
         )
     }
