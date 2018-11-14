@@ -3,16 +3,21 @@ import { number, array, func, object } from 'prop-types'
 import Debounce from 'debounce'
 import { translate } from 'react-i18next'
 import History from '../_utils/History'
+import Select from 'react-select'
 import { handleErrors } from '../_utils/Utils'
 import { ButtonConfirm } from '../_components/Form'
 import { GridX, Cell } from '../_components/UI'
 import { basicNotification } from '../_components/Notifications'
-import { AdminDetailsWithInputField, SimpleContent } from '../_components/AdminUI'
+import {AdminDetailsWithInputField, AdminPage, SimpleContent} from '../_components/AdminUI'
+import InputValidation from "../_components/InputValidation";
+import UsersCopy from "../classeur/UsersCopy";
+import Validator from "validatorjs";
 
 class Group extends Component {
 
     static contextTypes = {
         t: func,
+        user: object,
         _addNotification: func
     }
 
@@ -27,40 +32,40 @@ class Group extends Component {
             },
             collectiviteId: '',
             users: [],
+            users_collectivite: [],
+            user_option : [],
+            selectGroup:[],
             inputDisplayed: false,
             inputSearchUser: ''
         }
     }
-
+    validationRules = {
+        title: 'required|string',
+     }
     componentDidMount() {
         $(document).foundation()
+        this.fetchUsersCollectivite()
         const { collectiviteId, groupId } = this.props.match.params
         this.setState({collectiviteId})
         if(!!groupId) this.getGroup(groupId)
     }
 
     handleChangeGroupName = (key, value) => {
-        const { group } = this.state
-        group[key] = value
-        this.setState({group})
-    }
-
-    handleChangeSearchUser = (value) => {
-        this.setState({inputSearchUser: value})
-        if(value.trim().length > 2) this.findUser(value, this.state.collectiviteId)
-        else this.setState({users: []})
-    }
-
-    handleClickUser = (user) => {
-        const { group } = this.state
-        group.users.push(user)
-        this.setState({inputSearchUser: '', users: [], group})
-    }
-
-    handleClickRemoveUser = (key) => {
         const group = this.state.group
-        group.users.splice(key, 1)
+        group.nom = value
         this.setState({group})
+    }
+
+    handleClickUser = (users) => {
+        const { group } = this.state
+        let groupe = group
+        let users_group = []
+        users.map((user) => {
+            const index = this.state.users_collectivite.findIndex(users_collectivite => `${users_collectivite.id}` === user.value)
+            users_group.push(this.state.users_collectivite[index])
+        })
+        groupe.users = users_group
+        this.setState({selectGroup:users, group: groupe})
     }
 
     handleClickSave = () => {
@@ -123,10 +128,36 @@ class Group extends Component {
         this.setState({inputDisplayed: true})
     }
 
+    fetchUsersCollectivite() {
+        fetch(Routing.generate('sesile_user_userapi_userscollectivite', {id: this.context.user.current_org_id}) , { credentials: 'same-origin'})
+            .then(response => response.json())
+            .then((users_collectivite) => {
+                this.setState({users_collectivite : users_collectivite})
+
+            })
+            .then(() => {
+                let groups = []
+                this.state.users_collectivite.map((group) => {
+                    const user = {label:`${group._prenom} ${group._nom}`, value:`${group.id}`}
+                    groups.push(user)
+                })
+                this.setState({user_option: groups})
+            })
+    }
+
+
     getGroup(id) {
         fetch(Routing.generate("sesile_user_userpackapi_getbyid", {id}), {credentials: 'same-origin'})
-        .then(response => response.json())
-        .then(json => { this.setState({group: json}) })
+            .then(response => response.json())
+            .then(json => { this.setState({group: json})})
+            .then(() => {
+                let groups = []
+                this.state.group.users.map((group) => {
+                    const user = {label:`${group._prenom} ${group._nom}`, value:`${group.id}`}
+                    groups.push(user)
+                    })
+                this.setState({selectGroup:groups})
+            })
     }
 
     findUser = Debounce((value, collectiviteId) => {
@@ -141,41 +172,34 @@ class Group extends Component {
 
     render() {
         const { t } = this.context
-        const { group, inputDisplayed, inputSearchUser, users, value, suggestions } = this.state
-        const ListUser = group.users.map((user, key) => 
-                        <li key={key}>{user._prenom + ' ' + user._nom} 
-                            <a onClick={() => this.handleClickRemoveUser(key)}>X</a>
-                        </li>)
+        const { group, inputDisplayed, inputSearchUser, users, value, suggestions, validator } = this.state
         return (
-            <AdminDetailsWithInputField className="parameters-user-group" 
-                                        title={t('admin.details.title', {name: t('admin.group.complet_name')})} 
-                                        subtitle={t('admin.details.subtitle')} 
-                                        nom={group.nom} 
-                                        inputName="nom"
-                                        handleChangeName={this.handleChangeGroupName}
-                                        placeholder={t('admin.placeholder.name', {name: t('admin.group.name')})} >
-                <SimpleContent>
+            <AdminPage  className="parameters-user-group"
+                        title={t('admin.group.complet_name')}>
+                <SimpleContent className="panel">
                     <div className="grid-x grid-margin-x">
-                        <div className="medium-3 cell">
-                            <div className="grid-x list-user-group">
-                                <div className="medium-12 cell name-list-user-group">
-                                    {t("admin.users_list")}
-                                </div>
-                                <div className="medium-12 cell content-list-user-group">
-                                    <ul className="no-bullet">
-                                        {ListUser}
-                                        {inputDisplayed && 
-                                            <div className="autocomplete">
-                                                <input value={inputSearchUser} type={"text"} onChange={(e) => this.handleChangeSearchUser(e.target.value)} className="input-autocomplete"></input>
-                                                {users.length > 0 &&
-                                                    <ListSearchUser users={users} onClick={this.handleClickUser} />
-                                                }
-                                            </div>
-                                        }
-                                        <li><button className={"btn-add"} type={"button"} onClick={this.addUser}>{t('common.button.add_user')}</button></li>
-                                    </ul>
-                                </div>
+                        <Cell>
+                            <InputValidation
+                                id="nomName"
+                                type="text"
+                                autoFocus={true}
+                                labelText={t('common.label.name')}
+                                value={group.nom}
+                                validationRule={this.validationRules.title}
+                                onChange={this.handleChangeGroupName}
+                                placeholder={t('admin.placeholder.name', {name: t('admin.group.name')})}/>
+                        </Cell>
+                        <div className="cell" style={{marginBottom: "1em"}}>
+                            <div className="cell text-bold text-capitalize-first-letter">
+                                {t("admin.users_list")}
                             </div>
+                            <Select id="users_copy_select"
+                                    value={this.state.selectGroup}
+                                    multi
+                                    placeholder={t('common.classeurs.users_copy_select')}
+                                    options={this.state.user_option}
+                                    onChange={this.handleClickUser}
+                            />
                         </div>
                         <Cell>
                             <GridX className="grid-margin-x">
@@ -186,16 +210,16 @@ class Group extends Component {
                                                 confirmationText={"Voulez-vous le supprimer ?"}
                                                 labelConfirmButton={t('common.button.confirm')}/>
                                 <Cell className="medium-3">
-                                    <button className="button float-right text-uppercase" 
+                                    <button className="button hollow float-right text-uppercase"
                                             onClick={() => this.handleClickSave()}>
                                             {(!group.id) ? t('admin.button.save', {name: t('admin.group.name')}) : t('common.button.edit_save')}
-                                    </button>        
+                                    </button>
                                 </Cell>
                             </GridX>
                         </Cell>
                     </div>
                 </SimpleContent>
-            </AdminDetailsWithInputField>
+            </AdminPage>
         )
     }
 }
