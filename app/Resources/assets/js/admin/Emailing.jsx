@@ -7,7 +7,7 @@ import { basicNotification } from '../_components/Notifications'
 import { Button, Form } from '../_components/Form'
 import { GridX, Cell } from '../_components/UI'
 import Editor from '../_components/Editor'
-import { SimpleContent, AdminDetails } from '../_components/AdminUI'
+import {SimpleContent, AdminDetails, AdminPage} from '../_components/AdminUI'
 import InputValidation from '../_components/InputValidation'
 
 import { handleErrors } from '../_utils/Utils'
@@ -78,11 +78,10 @@ class Emailing extends Component {
         const { t } = this.context
         return (
             <Form onSubmit={this.sendEmailing}>
-                <AdminDetails
+                <AdminPage
                     title={t('admin.emailing.title')}
-                    subtitle={t('admin.emailing.subtitle')}
-                    nom={t('admin.emailing.write_an_message')} >
-                    <SimpleContent>
+                >
+                    <SimpleContent className="panel">
                         <GridX className="grid-padding-x grid-padding-y">
                             <Cell>
                                 <InputValidation
@@ -114,7 +113,7 @@ class Emailing extends Component {
                                 disabled={!this.state.editState}/>
                         </GridX>
                     </SimpleContent>
-                </AdminDetails>
+                </AdminPage>
             </Form>
         )
     }
