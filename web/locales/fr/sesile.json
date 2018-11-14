@@ -264,6 +264,14 @@
             "save": "Ajouter le {{name}}",
             "send": "Envoyer"
         },
+        "template_mail": {
+            "message":"Message d'accueil",
+            "valid":"Mail classeur validé",
+            "new":"Mail nouveau classeur",
+            "refus":"Mail classeur refusé",
+            "copy_new":"Mail nouveau classeur pour utilisateur en copie",
+            "copy_valid":"Mail classeur validé pour utilisateur en copie"
+        },
         "error": {
             "not_extractable_list": "Impossible de récuperer la liste de {{name}} - erreur {{errorCode}}",
             "not_extractable": "Impossible de récuperer {{name}} - erreur {{errorCode}}",

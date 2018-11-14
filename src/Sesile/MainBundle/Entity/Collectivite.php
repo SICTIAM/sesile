@@ -40,7 +40,9 @@ class Collectivite
     private $id;
 
     /**
+     * @Serializer\Groups({"getCollectiviteById"})
      * @ORM\OneToOne(targetEntity="Sesile\MainBundle\Entity\CollectiviteOzwillo", mappedBy="collectivite", cascade={"persist"})
+     *
      */
     private $ozwillo;
 
@@ -48,6 +50,8 @@ class Collectivite
      * @var string
      *
      * @ORM\Column(name="siren", type="string", length=10, nullable=true)
+     * @Serializer\Groups({"getCollectiviteById"
+     * })
      */
     private $siren;
 

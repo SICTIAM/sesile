@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\CollectiviteOzwillo;
 use Sesile\MainBundle\Form\CollectiviteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,6 +71,50 @@ class CollectiviteApiController extends Controller
     }
 
     /**
+     * @Rest\View()
+     * @Rest\Get("/email/template")
+     * @return JsonResponse
+     */
+    public function getEmailTemplate()
+    {
+        $template = [
+            'new' => [
+                'role',
+                'deposant',
+                'qualite',
+                'titre_classeur',
+                'date_limite | date(\'d/m/Y\')',
+                'type',
+                'lien|raw',
+                'validant'
+            ],
+            'valid' => [
+                'validant',
+                'role',
+                'qualite',
+                'titre_classeur',
+                'date_limite | date(\'d/m/Y\')',
+                'type',
+                'lien|raw',
+                'deposant'
+            ],
+            'refus' => [
+                'validant',
+                'role',
+                'qualites',
+                'titre_classeur',
+                'date_limite | date(\'d/m/Y\')',
+                'type',
+                'lien|raw',
+                'motif',
+                'deposant'
+            ]
+        ];
+
+        return new JsonResponse($template, Response::HTTP_OK);
+    }
+
+    /**
      * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Get("/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
@@ -80,7 +125,7 @@ class CollectiviteApiController extends Controller
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Post("/avatar/{id}")
      * @ParamConverter("Collectivite", options={"mapping": {"id": "id"}})
      * @param Request $request
@@ -92,7 +137,7 @@ class CollectiviteApiController extends Controller
     }
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"getCollectiviteById"})
      * @Rest\Delete("/avatar/{id}")
      * @param Request $request
      * @param Collectivite $collectivite

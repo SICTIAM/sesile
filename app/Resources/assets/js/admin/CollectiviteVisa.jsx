@@ -56,7 +56,10 @@ class CollectiviteVisa extends Component {
         const { t } = this.context
         const { id, abscisses_visa, ordonnees_visa, titre_visa, handleChange, couleur_visa, editState } = this.props
         return (
-            <AccordionItem title={t('admin.collectivite.visa_location')}>
+            <div className="grid-x grid-padding-x grid-padding-y panel">
+                <div className="cell">
+                    <h3 className="text-capitalize-first-letter">{t('common.documents.btn_visa')}</h3>
+                </div>
                 <div className="medium-6 cell">
                     <div className="grid-x grid-padding-y">
                         <InputValidation    id="titre_visa"
@@ -88,7 +91,7 @@ class CollectiviteVisa extends Component {
                         onClick={this.saveVisa}
                         disabled={!editState}
                         labelText={t('common.button.edit_save')}/>}
-            </AccordionItem>
+            </div>
         )
     }
 }
