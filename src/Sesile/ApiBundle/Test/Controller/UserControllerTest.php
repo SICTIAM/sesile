@@ -20,6 +20,8 @@ class UserControllerTest extends SesileWebTestCase
      */
     protected $fixtures;
 
+    protected $ozwilloSecret;
+
     public function setUp()
     {
         $this->fixtures = $this->loadFixtures(
@@ -30,6 +32,7 @@ class UserControllerTest extends SesileWebTestCase
                 UserPackFixtures::class,
             ]
         )->getReferenceRepository();
+        $this->ozwilloSecret = $this->getContainer()->getParameter('ozwillo_secret');
         parent::setUp();
     }
 
@@ -250,6 +253,98 @@ class UserControllerTest extends SesileWebTestCase
             'types' => ['type1' => $type1, 'type2' => $type2, 'type3' => $type3],
             'circuits' => ['circuit1' => $circuit1, 'circuit2' => $circuit2, 'circuit3' => $circuit3, 'circuit4' => $circuit4],
         ];
+    }
+
+    public function testCreateNewUserFromOzwillo() {
+        $user = $this->fixtures->getReference('user-two');
+        $collectivite1 = $this->fixtures->getReference('collectivite-one');
+
+        $postData = [
+            'client_id' => $collectivite1->getOzwillo()->getClientId(),
+            'organization' => [
+                'id'=> $collectivite1->getOzwillo()->getOrganizationId()
+            ],
+            'user' => [
+                'email_address' => "user3@domain.com",
+                'family_name' => "nom3",
+                'given_name' => "prenom3"
+            ]
+        ];
+
+        $this->client->request(
+            'POST',
+            sprintf('/api/users/%s', 'da10919b-6d2a-4335-ad75-9c070f5d26d4'),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_X-Hub-Signature' => 'sha1='. hash_hmac('sha1', json_encode($postData), $this->ozwilloSecret)
+            ),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(201, $this->client);
+    }
+
+    public function testAddUserToCollectivityFromOzwillo() {
+        $user = $this->fixtures->getReference('user-two');
+        $collectivite2 = $this->fixtures->getReference('collectivite-two');
+
+        $postData = [
+            'client_id' => $collectivite2->getOzwillo()->getClientId(),
+            'organization' => [
+                'id'=> $collectivite2->getOzwillo()->getOrganizationId()
+            ],
+            'user' => [
+                'email_address' => $user->getEmail(),
+                'family_name' => $user->getNom(),
+                'given_name' => $user->getPrenom()
+            ]
+        ];
+
+        $this->client->request(
+            'POST',
+            sprintf('/api/users/%s', '76fd56f5-502b-4210-abef-c8f67e60b8ac'),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_X-Hub-Signature' => 'sha1='. hash_hmac('sha1', json_encode($postData), $this->ozwilloSecret)
+            ),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(200, $this->client);
+        self::assertContains($collectivite2, $user->getCollectivities());
+    }
+
+    public function testAddUserToCollectivityAlreadyHaveItFromOzwillo() {
+        $user = $this->fixtures->getReference('user-two');
+        $collectivite1 = $this->fixtures->getReference('collectivite-one');
+
+        $postData = [
+            'client_id' => $collectivite1->getOzwillo()->getClientId(),
+            'organization' => [
+                'id'=> $collectivite1->getOzwillo()->getOrganizationId()
+            ],
+            'user' => [
+                'email_address' => $user->getEmail(),
+                'family_name' => $user->getNom(),
+                'given_name' => $user->getPrenom()
+            ]
+        ];
+
+        $this->client->request(
+            'POST',
+            sprintf('/api/users/%s', $user->getOzwilloId()),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_X-Hub-Signature' => 'sha1='. hash_hmac('sha1', json_encode($postData), $this->ozwilloSecret)
+            ),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(409, $this->client);
+        self::assertContains($collectivite1, $user->getCollectivities());
     }
 
 }

@@ -258,10 +258,9 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
-    public function addCollectiviteAndOzwilloIdToUser(User $user, Collectivite $collectivite, $organization) {
+    public function addCollectiviteToUser(User $user, Collectivite $collectivite) {
         $em = $this->getEntityManager();
 
-        $user->setOzwilloId($organization['id']);
         $user->addCollectivity($collectivite);
 
         $em->persist($user);

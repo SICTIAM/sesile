@@ -70,7 +70,6 @@ class CollectiviteManager
                 $userId,
                 $ozwilloCollectivityClientId
             );
-
             return new Message(true, $data);
         } catch (\Exception $e) {
             $this->logger->error(

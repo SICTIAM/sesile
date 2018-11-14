@@ -35,6 +35,7 @@ class CollectiviteOzwilloRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getArrayResult();
+
         if (count($result) > 0) {
             return true;
         }

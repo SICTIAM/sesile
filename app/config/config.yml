@@ -200,7 +200,7 @@ services:
 
     sesile.tokens.action_listener:
         class: Sesile\ApiBundle\EventListener\TokenListener
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", '%ozwillo_secret%']
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
     sesile.command.delayed_classeurs:
