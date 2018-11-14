@@ -271,7 +271,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *      {"name"="userId", "dataType"="integer", "user id"}
      *  },
      *  parameters={
-     *      {"name"="instance_id", "dataType"="string", "Ozwillo application instance id"},
+     *      {"name"="instance_id", "dataType"="string", "required"=true, "Ozwillo application instance id"},
      *      {"name"="client_id", "dataType"="string", "required"=true, "description"="used for authentication purposes"},
      *      {"name"="organization", "dataType"="object", "required"=true, "a description of the organization, containing at least Ozwillo organization id and name"},
      *      {"name"="user", "dataType"="object", "required"=true, "user"}
@@ -282,14 +282,18 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         $validator = Validation::createValidator();
 
         $constraint = new Assert\Collection(array(
-            'client_id' => new Assert\NotBlank(),
+            'instance_id' => new Assert\Uuid(),
+            'client_id' => new Assert\Uuid(),
             'organization' => new Assert\Collection(array(
-                'id' => new Assert\NotBlank()
+                'id' => new Assert\Uuid(),
+                'name' => new Assert\Optional()
             )),
             'user' => new Assert\Collection(array(
                 'email_address' => new Assert\Email(),
-                'family_name' => new Assert\NotBlank(),
-                'given_name' => new Assert\NotBlank()
+                'family_name' => new Assert\Optional(),
+                'given_name' => new Assert\Optional(),
+                'gender' => new Assert\Optional(),
+                'phone_number' => new Assert\Optional()
             ))
         ));
 
