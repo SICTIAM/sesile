@@ -126,7 +126,8 @@ class ClasseursList extends Component {
             })
     }
 
-    listSortedClasseurs = (sort, order, limit, start, userId, name, type, status) => {
+    listSortedClasseurs = (sort, order, limit, start, userId, name, type, status, search) => {
+        if (search) start = 0
         if (name === "") name = "null"
         if (type === undefined)  type = "null"
         if (status === undefined) status = "null"
@@ -161,21 +162,21 @@ class ClasseursList extends Component {
     handleSearchByClasseurTitle = (e) => {
         const {value} = e.target
         this.setState({valueSearchByTitle: value})
-        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, value, this.state.currentType.id, this.state.currentStatus.id)
+        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, value, this.state.currentType.id, this.state.currentStatus.id, true)
     }
 
     handleSearchByStatus = (value) => {
         if (!value)
             value = {id: "null", nom: 'Tout'}
         this.setState({currentStatus: value})
-        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, value.id)
+        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, value.id, true)
     }
 
     handleSearchByType = (e) => {
         if (!e)
             e = {id : "null", nom : "Tout"}
         this.setState({currentType: e})
-        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, e.id, this.state.currentStatus.id)
+        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, e.id, this.state.currentStatus.id, true)
     }
     handleDropdown = () => {
         this.setState({isOpen: !this.state.isOpen})
