@@ -256,24 +256,27 @@ class UserControllerTest extends SesileWebTestCase
     }
 
     public function testCreateNewUserFromOzwillo() {
-        $user = $this->fixtures->getReference('user-two');
         $collectivite1 = $this->fixtures->getReference('collectivite-one');
 
         $postData = [
+            'instance_id' => $collectivite1->getOzwillo()->getInstanceId(),
             'client_id' => $collectivite1->getOzwillo()->getClientId(),
             'organization' => [
-                'id'=> $collectivite1->getOzwillo()->getOrganizationId()
+                'id'=> $collectivite1->getOzwillo()->getOrganizationId(),
+                'name' => $collectivite1->getNom()
             ],
             'user' => [
                 'email_address' => "user3@domain.com",
                 'family_name' => "nom3",
-                'given_name' => "prenom3"
+                'given_name' => "prenom3",
+                'gender' => "",
+                'phone_number' => ""
             ]
         ];
 
         $this->client->request(
             'POST',
-            sprintf('/api/users/%s', 'da10919b-6d2a-4335-ad75-9c070f5d26d4'),
+            sprintf('/api/users/ozwillo/%s', 'da10919b-6d2a-4335-ad75-9c070f5d26d4'),
             array(),
             array(),
             array(
@@ -290,20 +293,24 @@ class UserControllerTest extends SesileWebTestCase
         $collectivite2 = $this->fixtures->getReference('collectivite-two');
 
         $postData = [
+            'instance_id' => $collectivite2->getOzwillo()->getInstanceId(),
             'client_id' => $collectivite2->getOzwillo()->getClientId(),
             'organization' => [
-                'id'=> $collectivite2->getOzwillo()->getOrganizationId()
+                'id'=> $collectivite2->getOzwillo()->getOrganizationId(),
+                'name' => $collectivite2->getNom()
             ],
             'user' => [
                 'email_address' => $user->getEmail(),
                 'family_name' => $user->getNom(),
-                'given_name' => $user->getPrenom()
+                'given_name' => $user->getPrenom(),
+                'gender' => "",
+                'phone_number' => ""
             ]
         ];
 
         $this->client->request(
             'POST',
-            sprintf('/api/users/%s', '76fd56f5-502b-4210-abef-c8f67e60b8ac'),
+            sprintf('/api/users/ozwillo/%s', '76fd56f5-502b-4210-abef-c8f67e60b8ac'),
             array(),
             array(),
             array(
@@ -321,20 +328,24 @@ class UserControllerTest extends SesileWebTestCase
         $collectivite1 = $this->fixtures->getReference('collectivite-one');
 
         $postData = [
+            'instance_id' => $collectivite1->getOzwillo()->getInstanceId(),
             'client_id' => $collectivite1->getOzwillo()->getClientId(),
             'organization' => [
-                'id'=> $collectivite1->getOzwillo()->getOrganizationId()
+                'id'=> $collectivite1->getOzwillo()->getOrganizationId(),
+                'name' => $collectivite1->getNom()
             ],
             'user' => [
                 'email_address' => $user->getEmail(),
-                'family_name' => $user->getNom(),
-                'given_name' => $user->getPrenom()
+                'family_name' => "ezfzefze",
+                'given_name' => "fzefzefzfze",
+                'gender' => "",
+                'phone_number' => ""
             ]
         ];
 
         $this->client->request(
             'POST',
-            sprintf('/api/users/%s', $user->getOzwilloId()),
+            sprintf('/api/users/ozwillo/%s', $user->getOzwilloId()),
             array(),
             array(),
             array(
@@ -345,6 +356,39 @@ class UserControllerTest extends SesileWebTestCase
         );
         $this->assertStatusCode(409, $this->client);
         self::assertContains($collectivite1, $user->getCollectivities());
+    }
+
+    public function testCreateNewUserWithoutNamesFromOzwillo() {
+        $collectivite1 = $this->fixtures->getReference('collectivite-one');
+
+        $postData = [
+            'instance_id' => $collectivite1->getOzwillo()->getInstanceId(),
+            'client_id' => $collectivite1->getOzwillo()->getClientId(),
+            'organization' => [
+                'id'=> $collectivite1->getOzwillo()->getOrganizationId(),
+                'name' => $collectivite1->getNom()
+            ],
+            'user' => [
+                'email_address' => "user4@domain.com",
+                'family_name' => "",
+                'given_name' => "",
+                'gender' => "",
+                'phone_number' => ""
+            ]
+        ];
+
+        $this->client->request(
+            'POST',
+            sprintf('/api/users/ozwillo/%s', '9f643d24-4cf0-401f-a113-40a3b8219027'),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_X-Hub-Signature' => 'sha1='. hash_hmac('sha1', json_encode($postData), $this->ozwilloSecret)
+            ),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(201, $this->client);
     }
 
 }

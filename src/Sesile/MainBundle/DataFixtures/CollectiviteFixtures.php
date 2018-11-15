@@ -39,7 +39,7 @@ class CollectiviteFixtures extends Fixture
         $collectiviteOzwillo2 = self::aValidCollectiviteOzwillo(
             $collectivite2,
             '2ca106ea-bf4b-4d08-9dc3-082b916d8fdf',
-            'nice-client-id',
+            'ad284e47-10ce-470a-9f33-bf1b74a46d60',
             'secret',
             '11111'
         );
@@ -81,7 +81,7 @@ class CollectiviteFixtures extends Fixture
     public static function aValidCollectiviteOzwillo(
         $collectivite,
         $instanceId = '2e771747-f906-4125-ba96-806553bc2ce2',
-        $clientId = 'ozwillo-client-id',
+        $clientId = 'ad284e47-10ce-470a-9f33-bf1b74a46d60',
         $secret = 'ozwillo-client-secret',
         $dcId = '123456789',
         $serviceId = '49d86a4c-d814-417f-8308-ed2302034b87',

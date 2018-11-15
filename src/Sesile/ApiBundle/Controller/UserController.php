@@ -300,9 +300,9 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         $violations = $validator->validate($request->request->all(), $constraint);
 
         if($violations->count() > 0) {
-            return new JsonResponse(
-                array_map(function ($violation) {return $violation->getMessage() . " " . $violation->getInvalidValue();}, iterator_to_array($violations)),
-                Response::HTTP_BAD_REQUEST);
+            $messageViolations =  array_map(function ($violation) {return $violation->getMessage() . " " . $violation->getInvalidValue();}, iterator_to_array($violations));
+            $this->get('logger')->error(sprintf("StatusCode : %s, Errors : %s", Response::HTTP_BAD_REQUEST, $messageViolations));
+            return new JsonResponse($messageViolations, Response::HTTP_BAD_REQUEST);
         }
 
         $result = $this->get('collectivite.manager')->getOzwilloCollectivityByClientId($request->request->get('client_id'));
