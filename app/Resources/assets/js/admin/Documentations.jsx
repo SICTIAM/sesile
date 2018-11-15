@@ -143,8 +143,10 @@ class Documentations extends Component {
                                                                          deleteHelp={this.deleteHelp}
                                                                          deletePatch={this.deletePatch}/>)
         return (
-            <AdminPage
-                title={t('admin.documentations.title')}>
+            <AdminPage>
+                <div className="cell medium-12 text-center">
+                    <h2>{t('admin.documentations.title')}</h2>
+                </div>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle"
                          style={{width: "74em", marginTop: "1em"}}>

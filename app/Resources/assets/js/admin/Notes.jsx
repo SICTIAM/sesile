@@ -69,8 +69,10 @@ class Notes extends Component {
                                                                              onClick={this.onClickButton}
                                                                              deleteNote={this.deleteNote}/>)
         return (
-            <AdminPage
-                title={t('admin.notes.name_plural')}>
+            <AdminPage>
+                <div className="cell medium-12 text-center">
+                    <h2>{t('admin.notes.name_plural')}</h2>
+                </div>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle"
                          style={{width: "74em", marginTop: "1em"}}>

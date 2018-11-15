@@ -85,8 +85,10 @@ class Users extends Component {
                 collectiviteId={this.state.collectiviteId}/>)
 
         return (
-            <AdminPage
-                title={t('admin.user.name_plural')}>
+            <AdminPage>
+                <div className="cell medium-12 text-center">
+                    <h2>{t('admin.user.name_plural')}</h2>
+                </div>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
                         <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"49%"}}>

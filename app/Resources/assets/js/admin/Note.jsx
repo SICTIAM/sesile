@@ -126,9 +126,10 @@ class Note extends Component {
         const { note, editState, validator } = this.state
         return (
             <Form onSubmit={this.handleClickSave}>
-                <AdminPage
-                    title={t('admin.details.title', {context: 'female', name: t('admin.notes.name')})}
-                >
+                <AdminPage>
+                    <div className="cell medium-12 text-center">
+                        <h2>{t('admin.details.title', { context: 'female', name: t('admin.notes.name') })}</h2>
+                    </div>
                     <SimpleContent className="panel">
                         <GridX className="grid-padding-x grid-padding-y">
                             <Cell className="medium-6">

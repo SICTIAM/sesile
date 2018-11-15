@@ -89,8 +89,10 @@ class Groups extends Component {
                 collectiviteId={this.state.collectiviteId}
                 handleClickDelete={this.handleClickDelete} />)
         return (
-            <AdminPage
-                title={t('admin.group.name')}>
+            <AdminPage>
+                <div className="cell medium-12 text-center">
+                    <h2>{t('admin.group.name')}</h2>
+                </div>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
                         <div className="cell medium-12 grid-x panel align-center-middle"
