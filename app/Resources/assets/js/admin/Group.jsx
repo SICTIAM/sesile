@@ -174,8 +174,10 @@ class Group extends Component {
         const { t } = this.context
         const { group, inputDisplayed, inputSearchUser, users, value, suggestions, validator } = this.state
         return (
-            <AdminPage  className="parameters-user-group"
-                        title={t('admin.group.complet_name')}>
+            <AdminPage  className="parameters-user-group">
+                <div className="cell medium-12 text-center">
+                    <h2>{t('admin.group.complet_name')}</h2>
+                </div>
                 <SimpleContent className="panel">
                     <div className="grid-x grid-margin-x">
                         <Cell>

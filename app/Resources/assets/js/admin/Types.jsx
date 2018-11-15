@@ -120,8 +120,10 @@ class Types extends Component {
                     removeType={this.removeType}
                     fetchTypes={this.fetchTypes}/>)
         return (
-            <AdminPage
-                title={t('admin.type.name')}>
+            <AdminPage>
+                <div className="cell medium-12 text-center">
+                    <h2>{t('admin.type.name')}</h2>
+                </div>
                 <AdminContainer>
                     <div className="grid-x grid-padding-x panel align-center-middle" style={{width:"74em", marginTop:"1em"}}>
                         <div className="grid-x grid-padding-x medium-6 panel align-center-middle" style={{display:"flex", marginBottom:"0em", marginTop:"10px", width:"49%"}}>

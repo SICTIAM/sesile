@@ -78,9 +78,10 @@ class Emailing extends Component {
         const { t } = this.context
         return (
             <Form onSubmit={this.sendEmailing}>
-                <AdminPage
-                    title={t('admin.emailing.title')}
-                >
+                <AdminPage>
+                    <div className="cell medium-12 text-center">
+                        <h2>{t('admin.emailing.title')}</h2>
+                    </div>
                     <SimpleContent className="panel">
                         <GridX className="grid-padding-x grid-padding-y">
                             <Cell>
