@@ -121,7 +121,6 @@ parameters:
         buildnumber: 0
     majorversion: 4
     url_applet: '%signature_url_applet%'
-    ozwillo_portal: '%ozwillo_portal%'
     ovh_credential:
         application: ***REMOVED***
         secret: ***REMOVED***
