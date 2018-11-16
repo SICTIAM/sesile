@@ -13,14 +13,15 @@ parameters:
     locale: fr
     sesile_domain: sesile-dev.local
     secret: ***REMOVED***
-    ozwillo_user_gateway_uri: 'https://usersgw.ozwillo-preprod.eu/api/usersgw'
+    ozwillo_domain: 'ozwillo-preprod.eu'
+    ozwillo_user_gateway_uri: 'https://usersgw.%ozwillo_domain%/api/usersgw'
     ozwillo_user_gateway_username: admin
     ozwillo_user_gateway_password: ***REMOVED***
-    ozwillo_access_token_url: 'https://accounts.ozwillo-preprod.eu/a/token'
-    ozwillo_authorization_url: 'https://accounts.ozwillo-preprod.eu/a/auth'
-    ozwillo_acl_instance_url: 'https://kernel.ozwillo-preprod.eu/apps/acl/instance'
-    ozwillo_infos_url: 'https://accounts.ozwillo-preprod.eu/a/userinfo'
-    ozwillo_logout_url: 'https://accounts.ozwillo-preprod.eu/a/logout'
+    ozwillo_access_token_url: 'https://accounts.%ozwillo_domain%/a/token'
+    ozwillo_authorization_url: 'https://accounts.%ozwillo_domain%/a/auth'
+    ozwillo_acl_instance_url: 'https://kernel.%ozwillo_domain%/apps/acl/instance'
+    ozwillo_infos_url: 'https://accounts.%ozwillo_domain%/a/userinfo'
+    ozwillo_logout_url: 'https://accounts.%ozwillo_domain%/a/logout'
     ozwillo_client_id: 2e771747-f906-4125-ba96-806553bc2ce2
     ozwillo_client_secret: ***REMOVED***
     contact_email: demat@sictiam.fr
@@ -28,3 +29,4 @@ parameters:
     only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
     signature_url_applet: 'https://signature.dev.sesile.fr'
     id_yt_video: 'C72d6DJBkgw'
+    ozwillo_portal: 'https://portal.ozwillo-preprod.eu'
