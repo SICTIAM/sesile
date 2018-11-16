@@ -33,7 +33,7 @@ class RolesUser extends Component {
         const { roles, changeUserRole, removeUserRole, addUserRole } = this.props
 
         return (
-            <div className="medium-12 cell">
+            <div className="medium-12 cell" style={{marginLeft:"0.8em"}}>
                 <label className="text-bold text-capitalize-first-letter">Rôles</label>
                 <div className="grid-x">
                     <div className="medium-9">
@@ -46,8 +46,8 @@ class RolesUser extends Component {
                 { roles.map((role, key) =>
                     (
                         <div key={key} className="grid-x align-middle">
-                            <ul className="cell medium-7" id={key}>{role.user_roles}</ul>
-                            <div className="cell medium-1 text-center align-center-middle" style={{marginBottom:"0.6em"}}>
+                            <ul className="cell medium-7" id={key} style={{marginLeft:"0.2em"}}>{role.user_roles}</ul>
+                            <div className="cell medium-1 text-center align-center-middle" style={{marginBottom:"0.6em", marginLeft:"3.95em"}}>
                                 <button className="fa fa-minus-circle medium icon-action float-right" onClick={() => removeUserRole(key)}></button>
                             </div>
                         </div>

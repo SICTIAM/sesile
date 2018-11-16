@@ -6,6 +6,7 @@ import RolesUser from './RolesUser'
 import History from '../_utils/History'
 import { basicNotification } from '../_components/Notifications'
 import AvatarForm from '../user/AvatarForm'
+import { AdminDetails, AccordionContent, AdminPage } from '../_components/AdminUI'
 import SignatureForm from '../user/SignatureForm'
 import {Input, Switch, Select, Textarea, InputFile} from '../_components/Form'
 import UserAvatar from "react-user-avatar"
@@ -222,6 +223,12 @@ class User extends Component {
         const {user} = this.state
         const roles = this.state.roles
         const userId = this.props.match.params.userId
+        const collectiviteLists = this.state.user.collectivities.map((collectivite, key) => <li
+            key={key + collectivite.nom}
+            style={{ minWidth: '40%', listStyleType: "none" }}>
+                {collectivite.nom}
+        </li>
+        )
         const rolesSelect = roles && roles.map((role, key) => <Switch id={role}
                                                                       key={role + key}
                                                                       className="cell medium-4"
@@ -230,13 +237,10 @@ class User extends Component {
                                                                       onChange={this.handleChangeRoles}
                                                                       activeText={t('common.label.yes')}
                                                                       inactiveText={t('common.label.no')}/>)
-        const collectiviteList = user.collectivities.map((collectivite, key) => <li
-            key={key + collectivite.id.toString()}>{collectivite.nom}</li>)
-
         return (
-            <div className="grid-x">
-                <div className="cell align-center-middle">
-                    <h4 className="text-center text-bold text-uppercase">UTILISATEUR</h4>
+            <AdminPage>
+                <div className="cell medium-12 text-center" style={{ marginBottom: "1.3em" }}>
+                    <h2>{t('admin.user.name')}</h2>
                 </div>
                 <div className="admin-details medium-12 cell">
                     <div className="panel" style={{padding: "10px", borderTop: "2px solid rgb(102, 51, 153)"}}>
@@ -270,7 +274,7 @@ class User extends Component {
                         </div>
                     </div>
 
-                    <div className="panel" style={{padding: "10px", height:"17em"}}>
+                    <div className="panel" style={{padding: "10px", height:"14em"}}>
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_user')}</h3>
@@ -315,8 +319,8 @@ class User extends Component {
                             }
                             <div className="cell medium-6">
                                 <label className="text-bold text-capitalize-first-letter">collectivités</label>
-                                <div style={{height: "11em"}}>
-                                    <SearchCollectivite />
+                                <div style={{height: "8em", overflow:"auto"}}>
+                                    {collectiviteLists}
                                 </div>
                             </div>
                         </div>
@@ -459,12 +463,12 @@ class User extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="medium-12 cell" style={{marginBottom: "2em"}}>
+                    <div className="medium-12 cell" style={{marginBottom: "6em"}}>
                         <button className="button float-right hollow text-uppercase"
                                 onClick={() => this.handleClickSave()}>{(!userId) ? t('common.button.add_user') : t('common.button.edit_save')}</button>
                     </div>
                 </div>
-            </div>
+            </AdminPage>
         )
     }
 }
