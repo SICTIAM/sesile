@@ -143,7 +143,7 @@ class AdminDashboard extends Component {
                 </div>
                 <div className="admin-content-details panel" style={{height: "15em"}}>
                     <div className="cell">
-                        <h3>Information Générales</h3>
+                        <h3>{t('admin.collectivite.infos')}</h3>
                     </div>
                     <div className="grid-x grid-padding-y" style={{paddingLeft: "1em"}}>
                         <label className="cell medium-2 text-bold text-capitalize-first-letter" htmlFor="nom">
@@ -168,7 +168,7 @@ class AdminDashboard extends Component {
                 </div>
                 <SimpleContent className="panel">
                     <div className="cell">
-                        <h3>Utilisateurs</h3>
+                        <h3>{t('admin.user.name_plural')}</h3>
                     </div>
                     <div className="grid-x grid-padding-y">
                         <div style={{marginLeft:"76em"}}>
@@ -208,7 +208,7 @@ class AdminDashboard extends Component {
                 <div style={{display:"flex"}}>
                     <div className="admin-content-details panel" style={{width: '49%', marginRight:'2em'}}>
                         <div className="cell">
-                            <h3>Groupes</h3>
+                            <h3>{t('admin.group.name_plural')}</h3>
                         </div>
                         <div className="grid-x grid-padding-y">
                             <div style={{marginLeft:"30em"}}>
@@ -241,7 +241,7 @@ class AdminDashboard extends Component {
                     </div>
                     <div className="admin-content-details panel" style={{width: '49%'}}>
                         <div className="cell">
-                            <h3>Circuits</h3>
+                            <h3>{t('admin.circuit.name_plural')}</h3>
                         </div>
                         <div className="grid-x grid-padding-y">
                             <div style={{marginLeft:"30em"}}>
