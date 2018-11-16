@@ -224,7 +224,7 @@ class User extends Component {
         const roles = this.state.roles
         const userId = this.props.match.params.userId
         const collectiviteLists = this.state.user.collectivities.map((collectivite, key) => <li
-            key={key + collectivite.id.toString()}
+            key={key + collectivite.nom}
             style={{ minWidth: '40%', listStyleType: "none" }}>
                 {collectivite.nom}
         </li>
@@ -237,13 +237,10 @@ class User extends Component {
                                                                       onChange={this.handleChangeRoles}
                                                                       activeText={t('common.label.yes')}
                                                                       inactiveText={t('common.label.no')}/>)
-        const collectiviteList = user.collectivities.map((collectivite, key) => <li
-            key={key + collectivite.id.toString()}>{collectivite.nom}</li>)
-
         return (
             <AdminPage>
                 <div className="cell medium-12 text-center" style={{ marginBottom: "1.3em" }}>
-                    <h2>UTILISATEUR</h2>
+                    <h2>{t('admin.user.name')}</h2>
                 </div>
                 <div className="admin-details medium-12 cell">
                     <div className="panel" style={{padding: "10px", borderTop: "2px solid rgb(102, 51, 153)"}}>
