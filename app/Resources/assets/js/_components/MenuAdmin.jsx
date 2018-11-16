@@ -30,6 +30,22 @@ class MenuAdmin extends Component {
                             { user.id &&
                             <ul className="dropdown menu vertical icons icon-right" data-dropdown-menu>
                                 <li>
+                                    <NavLink to="/admin/tableau-de-bord" className="grid-x align-middle">
+                                        <div className="cell small-12">
+                                            <div className="grid-x text-center large-text-left align-middle">
+                                                <div className="cell small-12 small-order-2 large-10 large-order-1">
+                                                    <span className="text-bold">
+                                                        {t('admin.collectivite.name')}
+                                                        </span>
+                                                </div>
+                                                <div className="cell small-12 small-order-1 large-2 large-order-2">
+                                                    <i className="fa fa-building"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li>
                                     <NavLink to="/admin/utilisateurs" className="grid-x align-middle">
                                         <div className="cell small-12">
                                             <div className="grid-x text-center large-text-left align-middle">
@@ -103,7 +119,7 @@ class MenuAdmin extends Component {
                                                     </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
-                                                    <i className="fa fa-building"></i>
+                                                    <i className="fa fa-city"></i>
                                                 </div>
                                             </div>
                                         </div>

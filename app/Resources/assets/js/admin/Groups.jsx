@@ -13,7 +13,7 @@ import SelectCollectivite from '../_components/SelectCollectivite'
 import { escapedValue } from '../_utils/Search'
 import { handleErrors, DisplayLongText } from "../_utils/Utils"
 import History from "../_utils/History";
-import ButtonDropdown from "../_components/ButtonDropdown";
+import ButtonDropdown from "../_components/ButtonDropdown"
 
 class Groups extends Component {
     static contextTypes = {

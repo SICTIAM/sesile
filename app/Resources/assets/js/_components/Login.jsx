@@ -65,7 +65,7 @@ class MenuBar extends Component {
                                     {(user.roles.find(role => role.includes("ADMIN"))) &&
                                         <div>
                                             <li>
-                                                <Link to="/admin/circuits-de-validation" className="button secondary clear" style={{color: this.props.color}}>
+                                                <Link to="/admin/tableau-de-bord" className="button secondary clear" style={{color: this.props.color}}>
                                                     <i className="fa fa-cogs" style={{color: this.props.color}}/>
                                                     { t('common.menu.admin') }
                                                 </Link>
