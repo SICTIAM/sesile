@@ -95,11 +95,14 @@ class ClasseursList extends Component {
 
     listClasseurs = (sort, order, limit, start, userId) => {
         const {t, _addNotification} = this.context
+        const name = "null"
+        const type = "null"
+        const status = "null"
         this.setState({message: t('common.loading')})
         fetch(
             Routing.generate(
-                'sesile_classeur_classeurapi_list',
-                {orgId: this.context.user.current_org_id, sort, order, limit, start, userId}),
+                'sesile_classeur_classeurapi_listsorted',
+                {orgId: this.context.user.current_org_id, sort, order, limit, start, userId, name, type, status}),
             {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
