@@ -161,7 +161,7 @@ class AdminDashboard extends Component {
                             {this.state.collectivite.ozwillo.organization_id}
                         </div>
                     </div>
-                    <div style={{marginTop: "-7em", marginLeft: "55em"}}>
+                    <div style={{marginTop: "-7em", float:"right"}}>
                         <Avatar className="cell medium-3" size={150} nom={this.state.collectivite.nom}
                                 fileName={this.state.collectivite.image ? "/uploads/logo_coll/" + this.state.collectivite.image : null}/>
                     </div>
@@ -170,16 +170,14 @@ class AdminDashboard extends Component {
                     <div className="cell">
                         <h3>{t('admin.user.name_plural')}</h3>
                     </div>
-                    <div className="grid-x grid-padding-y">
-                        <div style={{marginLeft:"76em"}}>
+                    <div style={{width:"12em", float:"right"}}>
                             <Input
                                 value={this.state.UserName}
                                 onChange={this.handleChangeName}
                                 placeholder={t('common.search_by_name')}
                                 type="text"/>
                         </div>
-                    </div>
-                    <div className="grid-x grid-padding-y">
+                    <div>
                         <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
                             <thead>
                             <tr style={{backgroundColor: "#CC0066", color: "white"}}>
@@ -210,16 +208,14 @@ class AdminDashboard extends Component {
                         <div className="cell">
                             <h3>{t('admin.group.name_plural')}</h3>
                         </div>
-                        <div className="grid-x grid-padding-y">
-                            <div style={{marginLeft:"30em"}}>
+                            <div style={{width:"12em", float:"right"}}>
                                 <Input
                                     value={this.state.groupName}
                                     onChange={this.handleChangeGroupName}
                                     placeholder={t('common.search_by_groupname')}
                                     type="text"/>
                             </div>
-                        </div>
-                        <div className="grid-x grid-padding-y">
+                        <div>
                             <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
                                 <thead>
                                 <tr style={{backgroundColor: "#CC0066", color: "white"}}>
@@ -243,16 +239,14 @@ class AdminDashboard extends Component {
                         <div className="cell">
                             <h3>{t('admin.circuit.name_plural')}</h3>
                         </div>
-                        <div className="grid-x grid-padding-y">
-                            <div style={{marginLeft:"30em"}}>
+                            <div style={{width:"12em", float:"right"}}>
                                 <Input
                                     value={this.state.circuitName}
                                     onChange={this.handleChangeCircuitName}
                                     placeholder={t('common.search_by_circuit')}
                                     type="text"/>
                             </div>
-                        </div>
-                        <div className="grid-x grid-padding-y">
+                        <div>
                             <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
                                 <thead>
                                 <tr style={{backgroundColor: "#CC0066", color: "white"}}>
