@@ -45,7 +45,7 @@ class ClasseursList extends Component {
     componentDidMount() {
         if (this.state.classeurs.length === 0) {
             this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id)
-            this.getTypes()
+            this.getTypes(this.context.user.current_org_id)
         }
     }
 
@@ -60,8 +60,8 @@ class ClasseursList extends Component {
     changePage = (start) => {
         const newStart = (start * this.state.limit)
         this.state.isSorted === false ?
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
-        :
+            this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+            :
             this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
@@ -81,12 +81,12 @@ class ClasseursList extends Component {
             this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
-    getTypes() {
+    getTypes(id) {
         const { t, _addNotification} = this.context
-        fetch(Routing.generate('sesile_user_circuitvalidationapi_listbyuser', {orgId: this.context.user.current_org_id}), {credentials: 'same-origin'})
+        fetch(Routing.generate('sesile_classeur_typeclasseurapi_getall', {id}), {credentials: 'same-origin'})
             .then(response => response.json())
             .then(circuits => {
-                const type = circuits[0].types
+                const type = circuits
                 const all = {id: "null", nom:"Tout"}
                 type.unshift(all)
                 this.setState({type})
