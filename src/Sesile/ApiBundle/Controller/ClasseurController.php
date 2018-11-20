@@ -431,7 +431,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         if (!empty($request->request->get('callback')) && trim($request->request->get('callback')) != "") {
             try {
                 $callback = new Callback();
-                $callback->setId($classeur->getId());
+                $callback->setClasseurId($classeur->getId());
                 $callback->setUrl($request->request->get('callback'));
                 $em->persist($callback);
                 $em->flush();

@@ -775,12 +775,6 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                             sprintf("Une erreur est survenue lors de la notification du service %s de la signature du classeur", $callback->getUrl()));
                     }
                 }
-
-                foreach ($callbacks as $callback) {
-                    $client->request('POST', $callback->getUrl(), [
-                        'multipart' => $files
-                    ]);
-                }
             }
 
             return new JsonResponse(array("classeur_valid" => "1"));
