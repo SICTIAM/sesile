@@ -735,7 +735,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 $path = $this->container->getParameter('upload')['fics'];
                 foreach ($docs as $document) {
                     $file = [
-                        'name' => $document->getName(),
+                        'name' => 'file',
                         'contents' => file_get_contents($path . $document->getRepourl()),
                         'filename' =>  $document->getName(),
                     ];
