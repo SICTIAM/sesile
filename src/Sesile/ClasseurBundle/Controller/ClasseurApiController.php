@@ -725,7 +725,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 $em->flush();
 
                 // Ajout d'une action pour le classeur
-                $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_SIGN, ClasseurManager::ACTION_SIGN_CLASSEUR);
+                $this->get('classeur.manager')->addClasseurAction($classeur, $user, ClasseurManager::ACTION_SIGN, ClasseurManager::ACTION_SIGN_CLASSEUR);
 
                 // Envoie du mail de confirmation
                 $actionMailer = $this->get(ActionMailer::class);
@@ -748,7 +748,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                     try {
                         $response = $client->request(
                             'POST',
-                            $callback['url'] . "/SIGNED",
+                            $callback->getUrl() . "/SIGNED",
                             [
                                 'multipart' => $files
                             ]
@@ -756,7 +756,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                         if($response->getStatusCode() === Response::HTTP_OK) {
                             $this->get('classeur.manager')->addClasseurAction(
                                 $classeur,
-                                $this->getUser(),
+                                $user,
                                 ClasseurManager::ACTION_SIGN,
                                 sprintf("Le service %s à été notifié de la signature du classeur", $callback->getUrl()));
                         }
@@ -770,7 +770,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
                         $this->get('classeur.manager')->addClasseurAction(
                             $classeur,
-                            $this->getUser(),
+                            $user,
                             ClasseurManager::ACTION_SIGN,
                             sprintf("Une erreur est survenue lors de la notification du service %s de la signature du classeur", $callback->getUrl()));
                     }

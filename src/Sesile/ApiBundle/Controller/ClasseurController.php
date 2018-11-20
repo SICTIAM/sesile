@@ -249,7 +249,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      */
     public function newAction(Request $request)
     {
-
+        $this->get('logger')->debug("[SesileApiBundleClasseur]/new Debug : Request containt {request}", array('request' => $request->request->all()));
         $em = $this->getDoctrine()->getManager();
         $email = $request->request->get('email');
         if(is_null($email))

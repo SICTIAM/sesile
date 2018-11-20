@@ -17,11 +17,9 @@ class CallbackRepository extends EntityRepository
 {
     public function getEvent($idClasseur)
     {
-        return $this->createQueryBuilder('q')
-            ->select('q')
-            ->from(Callback::class, 'c')
-            ->where('q.classeurId = :id')
-            ->setParameter('id', $idClasseur)
+        return $this->createQueryBuilder('c')
+            ->where('c.classeurId = :classeur')
+            ->setParameter('classeur', $idClasseur)
             ->getQuery()
             ->getResult();
     }
