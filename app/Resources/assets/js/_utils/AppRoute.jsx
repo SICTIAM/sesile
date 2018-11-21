@@ -4,6 +4,7 @@ import { object } from 'prop-types'
 
 import AdminRoute from './AdminRoute'
 import AdminClasseur from '../admin/AdminClasseur'
+import AdminDashboard from '../admin/AdminDashboard'
 import Emailing from '../admin/Emailing'
 import Collectivites from '../admin/Collectivites'
 import Collectivite from '../admin/Collectivite'
@@ -62,6 +63,7 @@ class AppRoute extends Component {
                 <Route exact={true} path={"/classeur/:classeurId"} render={({ match }) => (
                     <Classeur classeurId={match.params.classeurId} user={user} />
                 )} />
+                <AdminRoute exact={true} path={"/admin/tableau-de-bord"} component={AdminDashboard} user={user} />
                 <AdminRoute exact={true} path={"/admin/circuits-de-validation"} component={CircuitsValidation} user={user} />
                 <AdminRoute exact={true} path={"/admin/groupes"} component={Groups} user={user} />
                 <AdminRoute exact={true} path={"/admin/utilisateurs"} component={Users} user={user} />
