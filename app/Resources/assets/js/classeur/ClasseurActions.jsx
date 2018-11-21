@@ -20,7 +20,7 @@ class ClasseurActions extends Component {
 
         return (
             <div className="grid-x panel grid-padding-y">
-                <div className="cell medium-12">
+                <div className="cell medium-12" style={{paddingBottom: 0}}>
                     <div className="grid-x grid-margin-x grid-padding-x">
                         <h3 className="cell medium-12">{ t('common.classeurs.comments.name') }</h3>
                     </div>
