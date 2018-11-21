@@ -80,7 +80,7 @@ class Classeur extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    action: this.state.action
+                    commentaire:this.state.action
                 }),
                 credentials: 'same-origin'
             })

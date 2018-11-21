@@ -56,8 +56,18 @@ class ClasseurActions extends Component {
                                         display: 'inline-block',
                                         width: '90%',
                                         marginLeft: '1em'}}>
-                                    {action.action}
-                                    <br/>
+                                    {action.action &&
+                                        <div>
+                                            <span className="text-bold">{action.action}</span>
+                                            <br />
+                                        </div>
+                                    }
+                                    {action.commentaire &&
+                                    <div>
+                                        {action.commentaire}
+                                        <br/>
+                                    </div>
+                                    }
                                     <span className="text-author text-capitalize">
                                         {action.user_action ?
                                             `${action.user_action._prenom}  ${action.user_action._nom}` :
