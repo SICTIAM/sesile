@@ -482,7 +482,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                         $classeur,
                         $this->getUser(),
                         ClasseurManager::ACTION_REMOVE_CLASSEUR,
-                        sprintf("Le service %s à été notifié de la rétraction du classeur", $callback->getUrl()));
+                        sprintf("Le service %s à été notifié", $callback->getUrl()));
                 }
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
                 $msg = sprintf(
@@ -496,7 +496,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                     $classeur,
                     $this->getUser(),
                     ClasseurManager::ACTION_REMOVE_CLASSEUR,
-                    sprintf("Une erreur est survenue lors de la notification du service %s de la rétractation du classeur", $callback->getUrl()));
+                    sprintf("Une erreur est survenue lors de la notification du service %s", $callback->getUrl()));
             }
         }
         return $classeur;
@@ -758,7 +758,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                                 $classeur,
                                 $user,
                                 ClasseurManager::ACTION_SIGN,
-                                sprintf("Le service %s à été notifié de la signature du classeur", $callback->getUrl()));
+                                sprintf("Le service %s à été notifié", $callback->getUrl()));
                         }
                     } catch (\GuzzleHttp\Exception\GuzzleException $e) {
                         $msg = sprintf(
@@ -772,7 +772,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                             $classeur,
                             $user,
                             ClasseurManager::ACTION_SIGN,
-                            sprintf("Une erreur est survenue lors de la notification du service %s de la signature du classeur", $callback->getUrl()));
+                            sprintf("Une erreur est survenue lors de la notification du service %s", $callback->getUrl()));
                     }
                 }
             }
