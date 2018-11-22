@@ -115,6 +115,11 @@ class AdminDashboard extends Component {
         const filteredUsers = this.state.users.filter(user => regex.test(user._nom))
         this.setState({filteredUsers})
     }
+    onClickButtonClasseurList = (e, user) => {
+        e.preventDefault()
+        e.stopPropagation()
+        History.push(`/admin/${this.context.user.current_org_id}/classeurs/${user.id}`)
+    }
 
     render() {
         const {t} = this.context
@@ -124,7 +129,7 @@ class AdminDashboard extends Component {
                 onClick={this.onClickButtonClasseurList}
                 user={filteredUser}
                 handleDeleteUser={this.handleDeleteUser}
-                collectiviteId={this.state.collectiviteId}/>)
+                collectiviteId={this.context.user.current_org_id}/>)
         const listFilteredGroups = this.state.filteredGroups.map((group, key) =>
             <RowGroup
                 key={key}

@@ -141,7 +141,7 @@ class Groups extends Component {
                                 listFilteredGroups :
                                 <tr>
                                     <td>
-                                        <span style={{textAlign:"center"}}>{this.props.message}</span>
+                                        <span style={{textAlign:"center"}}>{t('common.no_results', {name: t('admin.group.name')})}</span>
                                     </td>
                                     <td></td>
                                     <td></td>

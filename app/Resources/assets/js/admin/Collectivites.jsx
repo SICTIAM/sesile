@@ -88,7 +88,7 @@ class Collectivites extends Component {
                                 listFilteredCollectivites :
                                 <tr>
                                     <td>
-                                        <span style={{textAlign:"center"}}>{this.props.message}</span>
+                                        <span style={{textAlign:"center"}}>{t('common.no_results_female', {name: t('admin.collectivite.name')})}</span>
                                     </td>
                                     <td></td>
                                     <td></td>

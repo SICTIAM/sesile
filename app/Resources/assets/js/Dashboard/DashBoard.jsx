@@ -101,7 +101,7 @@ class DashBoard extends Component {
                             <Classeurs classeurs={lastClasseurs} message={this.state.messageLastClasseur} title={t('common.dashboard.last_classeurs')} />
                         </div>
                         <div className="cell large-6 medium-12">
-                            <Classeurs classeurs={urgentClasseurs} message={this.state.messageUrgentClasseur} title={t('common.dashboard.urgent_classeurs')} />
+                            <Classeurs classeurs={urgentClasseurs} message={t('common.no_result_classeur_validate')} title={t('common.dashboard.urgent_classeurs')} />
                             <div className="grid-x grid-padding-x panel">
                                 <div className="cell medium-12">
                                     <div className="align-middle" style={{paddingTop:'0.5em'}}>
