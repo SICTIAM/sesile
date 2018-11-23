@@ -35,8 +35,8 @@ class MenuAdmin extends Component {
                                             <div className="grid-x text-center large-text-left align-middle">
                                                 <div className="cell small-12 small-order-2 large-10 large-order-1">
                                                     <span className="text-bold text-capitalize-first-letter">
-                                                        {t('admin.collectivite.name')}
-                                                        </span>
+                                                        {t('admin.collectivite.name_menu')}
+                                                    </span>
                                                 </div>
                                                 <div className="cell small-12 small-order-1 large-2 large-order-2">
                                                     <i className="fa fa-building"></i>

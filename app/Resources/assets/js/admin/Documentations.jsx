@@ -181,7 +181,7 @@ class Documentations extends Component {
                                 <tr>
                                     <td>
                                         <span
-                                            style={{textAlign: "center"}}>{t('common.no_results', {name: t('admin.type.name')})}</span>
+                                            style={{textAlign: "center"}}>{t('common.no_results_female', {name: t('common.help_board.name')})}</span>
                                     </td>
                                     <td/>
                                     <td/>
