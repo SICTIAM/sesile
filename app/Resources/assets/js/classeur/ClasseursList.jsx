@@ -7,6 +7,7 @@ import Select from 'react-select'
 import { Select as Selection} from '../_components/Form'
 import { basicNotification } from '../_components/Notifications'
 
+import Debounce from 'debounce'
 import {handleErrors} from '../_utils/Utils'
 import {escapedValue} from '../_utils/Search'
 import History from '../_utils/History'
@@ -129,7 +130,7 @@ class ClasseursList extends Component {
             })
     }
 
-    listSortedClasseurs = (sort, order, limit, start, userId, name, type, status, search) => {
+    listSortedClasseurs = Debounce((sort, order, limit, start, userId, name, type, status, search) => {
         if (search) start = 0
         if (name === "") name = "null"
         if (type === undefined)  type = "null"
@@ -160,7 +161,7 @@ class ClasseursList extends Component {
                     t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
                     error.statusText))
             })
-    }
+    },500)
 
     handleSearchByClasseurTitle = (e) => {
         const {value} = e.target
@@ -180,6 +181,7 @@ class ClasseursList extends Component {
             e = {id : "null", nom : "Tout"}
         this.setState({currentType: e})
         this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, e.id, this.state.currentStatus.id, true)
+
     }
     handleDropdown = () => {
         this.setState({isOpen: !this.state.isOpen})
