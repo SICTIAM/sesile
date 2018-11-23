@@ -1286,6 +1286,11 @@ select {
   background-color: map-get($foundation-palette, 'alert');
 }
 
+.ui.progressSign.label {
+  border-color: map-get($foundation-palette-hover, 'primary');
+  background-color: map-get($foundation-palette, 'primary');
+}
+
 .fa.success {
   color: map-get($foundation-palette, 'success');
 }
