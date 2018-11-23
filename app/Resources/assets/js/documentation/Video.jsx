@@ -39,7 +39,7 @@ class VideoCont extends Component {
         if(id_yt_video) {
             video =  <iframe width="560" height="315"
                              src={`https://www.youtube.com/embed/${id_yt_video}?rel=0&amp;controls=0&amp;showinfo=0`}
-                             frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+                             frameBorder="0" allowFullScreen></iframe>
         }
         return(
             <div className="cell medium-10">
