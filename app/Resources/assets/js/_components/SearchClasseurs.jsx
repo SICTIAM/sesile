@@ -84,6 +84,7 @@ class SearchClasseurs extends Component {
                        value={ nomClasseur }
                        onChange={ this.searchClasseurs }
                        tabIndex="0"
+                       aria-label="search"
                        style={{borderColor: this.props.color}}/>
                 <span className="input-group-label"  style={{borderColor: this.props.color, color: this.props.color}}>
                     <i className="fa fa-search"/>

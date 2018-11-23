@@ -27,11 +27,11 @@ class AppInfos extends Component {
         return (
             <div className="cell app-infos text-uppercase" style={{width:"70%", marginLeft:"15%"}}>
                 <div className="grid-x align-center shrink align-self-bottom">
-                    <div className="cell medium-8"><img src="/images/logo_sictiam.svg" /></div>
+                    <div className="cell medium-8"><img alt="Logo Sictiam" src="/images/logo_sictiam.svg" /></div>
                 </div>
                 <div className="grid-x align-center">
                     <div className="cell medium-12">
-                        <a href={this.state.informations.contact_link} target="_blank">{t('footer.contact')}</a>
+                        <a href={this.state.informations.contact_link} target="_blank" rel="noreferrer">{t('footer.contact')}</a>
                     </div>
                 </div>
                 <div className="grid-x align-center">

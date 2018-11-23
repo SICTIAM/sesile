@@ -142,7 +142,7 @@ class App extends Component {
                         <div className="off-canvas position-left hide-for-large grid-y" id="offCanvasLeft" data-off-canvas>
                             {this.isAdminMenu() ?
                                 <Route render={routeProps => <MenuAdmin {...routeProps} user={user}/>}/> :
-                                <Route render={routeProps => <Menu {...routeProps} user={user}/>}/>
+                                <Route render={routeProps => <Menu {...routeProps} user={user} device="desktop"/>}/>
                             }
                         </div>
                         <div className="off-canvas-content" data-off-canvas-content>
@@ -154,7 +154,7 @@ class App extends Component {
                                                 <i className="fa fa-2x fa-bars" aria-hidden="true"></i>
                                             </button>
                                             <Link to={'/tableau-de-bord'}>
-                                                <img src="/images/logo_sesile.png" />
+                                                <img alt="Logo Sesile" src="/images/logo_sesile.png" />
                                             </Link>
                                         </div>
                                         <div className="cell large-4 show-for-large">
@@ -184,7 +184,7 @@ class App extends Component {
                                         <div className="hide-for-medium-only hide-for-small-only cell large-2 grid-y" style={{backgroundColor: '#f4f4f4', width: '15%'}}>
                                             {this.isAdminMenu() ?
                                                 <Route render={routeProps => <MenuAdmin {...routeProps} user={user}/>}/> :
-                                                <Route render={routeProps => <Menu {...routeProps} user={user}/>}/>
+                                                <Route render={routeProps => <Menu {...routeProps} user={user} device="mobile"/>}/>
                                             }
                                         </div>
                                         <div
