@@ -328,7 +328,7 @@ const RowCircuit = ({circuit, collectiviteId, handleClickDelete}, {t}) => {
     const usersPackName = []
     etapeGroupes.map(etapeGroupe => etapeGroupe.user_packs.map(userPack => usersPackName.unshift(userPack.nom)))
     return (
-        <tr id="classrow">
+        <tr id="classrow-dashboard">
             <td onClick={() => History.push(`/admin/${collectiviteId}/circuit-de-validation/${circuit.id}`)} style={{cursor:"Pointer"}}>
                 {circuit.nom}
             </td>
