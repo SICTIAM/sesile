@@ -95,7 +95,8 @@ class ClasseurInfos extends Component {
                                 disabled={!!this.props.isFinalizedClasseur()}
                                 locale={i18nextLng}
                                 validationRule={this.validationRules.validation}
-                                onChange={this.handleChangeLimitDate}/>
+                                onChange={this.handleChangeLimitDate}
+                                minDate={Moment()}/>
                         </ClasseurField>
                         <ClasseurField
                             edit={this.props.edit}
