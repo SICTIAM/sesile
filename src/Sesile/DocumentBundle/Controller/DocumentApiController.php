@@ -151,7 +151,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
 
         if ($em->getRepository('SesileDocumentBundle:Document')->removeDocument($this->getParameter('upload')['fics'] . $document->getRepourl()) ) {
 
-            $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction($document->getClasseur(), "Suppression du document " . $document->getName(), "", "", $this->getUser());
+            $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction($document->getClasseur(), "Suppression du document ", "", $document->getName(), $this->getUser());
 
             $em->remove($document);
             $em->flush();

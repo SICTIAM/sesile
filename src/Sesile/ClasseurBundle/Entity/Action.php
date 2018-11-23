@@ -84,7 +84,7 @@ class Action
     /**
      * @var string
      *
-     * @ORM\Column(name="action", type="text")
+     * @ORM\Column(name="action", type="text", nullable=true)
      *  
      * @Groups("classeurById")
      */

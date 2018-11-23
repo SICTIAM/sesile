@@ -47,9 +47,9 @@ class DocumentRepository extends EntityRepository
 
             $em->getRepository('SesileClasseurBundle:Action')->addDocumentAction(
                 $classeur,
-                "Ajout du document " . $document->getShortName(),
+                "Ajout du document",
                 "",
-                "",
+                $document->getShortName(),
                 $user
             );
 

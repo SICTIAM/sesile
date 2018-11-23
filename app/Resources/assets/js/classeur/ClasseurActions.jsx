@@ -42,7 +42,7 @@ class ClasseurActions extends Component {
                                 className="cell medium-10 text-right"
                                 onClick={submitComment}/>
                     </div>
-                    <div style={{height:"22em", overflow:"auto"}}>
+                    <div style={{maxHeight:"22em", overflow:"auto"}}>
                     { actions && actions.map((action) =>
                         <div key={action.id}>
                             <hr style={{height: '0.2rem', margin: '1rem auto'}}/>
@@ -56,8 +56,18 @@ class ClasseurActions extends Component {
                                         display: 'inline-block',
                                         width: '90%',
                                         marginLeft: '1em'}}>
-                                    {action.action}
-                                    <br/>
+                                    {action.action &&
+                                        <div>
+                                            <span className="text-bold">{action.action}</span>
+                                            <br />
+                                        </div>
+                                    }
+                                    {action.commentaire &&
+                                    <div>
+                                        {action.commentaire}
+                                        <br/>
+                                    </div>
+                                    }
                                     <span className="text-author text-capitalize">
                                         {action.user_action ?
                                             `${action.user_action._prenom}  ${action.user_action._nom}` :

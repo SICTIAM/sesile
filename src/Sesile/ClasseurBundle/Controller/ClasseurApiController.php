@@ -380,12 +380,16 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      */
     public function validClasseurAction (Classeur $classeur) {
 
+        // Ajout d'une action pour le classeur
+        if ($classeur->getStatus() == 0)
+            $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_RE_DEPOSIT_CLASSEUR);
+        else
+            $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_VALIDATION_CLASSEUR);
+
         $em = $this->getDoctrine()->getManager();
         $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
         $em->flush();
 
-        // Ajout d'une action pour le classeur
-        $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_VALIDATION_CLASSEUR);
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
 
         $actionMailer = $this->get(ActionMailer::class);
@@ -440,7 +444,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $em->flush();
 
         // Ajout d'une action pour le classeur
-        $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_REFUSED . ': ' . $motif, $motif);
+        $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_REFUSED, $motif);
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->addClasseurValue($classeur, $this->getUser()->getId());
 
         $actionMailer = $this->get(ActionMailer::class);
