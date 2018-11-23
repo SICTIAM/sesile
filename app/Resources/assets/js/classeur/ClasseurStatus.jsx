@@ -17,14 +17,16 @@ class ClasseurStatus extends Component {
         1: 'pending',
         2: 'finished',
         3: 'withdrawn',
-        4: 'retracted'
+        4: 'retracted',
+        5: 'progressSign'
     })
     statusColorClass = Object.freeze({
         0: 'alert',
         1: 'warning',
         2: 'success',
         3: 'secondary',
-        4: 'primary'
+        4: 'primary',
+        5: 'progressSign'
     })
     render() {
         const { t } = this.context
@@ -34,6 +36,8 @@ class ClasseurStatus extends Component {
                 className={`ui ${this.statusColorClass[this.props.status]} ribbon label labelStatus`}
                 style={{color: '#fff'}}>
                 {t(`common.classeurs.status.${this.status[this.props.status]}`)}
+                {this.props.status === 5 &&
+                    <i className='fa fa-spinner fa-spin' style={{fontSize: '1.1em', color: '#ffff', marginLeft: '5px'}} />}
             </div>
         )
     }

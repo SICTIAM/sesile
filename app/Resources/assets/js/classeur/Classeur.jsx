@@ -36,7 +36,7 @@ class Classeur extends Component {
         },
         user: {},
         action: '',
-        editClasseur: false
+        signatureInProgress: false
     }
 
     componentWillReceiveProps(nextProps) {
@@ -141,7 +141,7 @@ class Classeur extends Component {
     }
 
     isEditableClasseur = () => {
-        return this.state.classeur.signable_and_last_validant || this.state.classeur.validable
+        return (this.state.classeur.signable_and_last_validant || this.state.classeur.validable) && !this.state.signatureInProgress
     }
     handleRemoveEtape = (stepKey) => {
         this.setState(prevState => prevState.classeur.etape_classeurs.splice(stepKey,1))
@@ -174,6 +174,7 @@ class Classeur extends Component {
             ids.push(classeur.id)
         })
         window.open(Routing.generate('jnlpSignerFiles', {id: encodeURIComponent(ids), role: role}))
+        this.setState({signatureInProgress: true})
         this.interval = setInterval(() => {
             this.getClasseurStatus(classeurs[0].id)
         }, 10000)
@@ -216,7 +217,7 @@ class Classeur extends Component {
             })
     }
     render() {
-        const { classeur, user, editClasseur } = this.state
+        const { classeur, user } = this.state
         return (
             <GridX className="details-classeur">
                 <Cell>
@@ -237,6 +238,7 @@ class Classeur extends Component {
                                                      refuseClasseur={this.refuseClasseurs}
                                                      removeClasseur={this.removeClasseurs}
                                                      deleteClasseur={this.deleteClasseurs}
+                                                     signatureInProgress={this.state.signatureInProgress}
                                                      display="edit"
                                                      id={"button-list-" + classeur.id}
                                                      user={user}
@@ -263,7 +265,9 @@ class Classeur extends Component {
                                 {
                                     classeur.id &&
                                     <div className="cell large-12">
-                                        <ClasseurStatus status={classeur.status}/>
+                                        {!this.state.signatureInProgress ?
+                                            <ClasseurStatus status={classeur.status}/> :
+                                            <ClasseurStatus status={5}/>}
                                         <ClasseursButtonList classeurs={[classeur]}
                                                              validClasseur={this.validClasseurs}
                                                              signClasseur={this.signClasseurs}
@@ -271,6 +275,7 @@ class Classeur extends Component {
                                                              refuseClasseur={this.refuseClasseurs}
                                                              removeClasseur={this.removeClasseurs}
                                                              deleteClasseur={this.deleteClasseurs}
+                                                             signatureInProgress={this.state.signatureInProgress}
                                                              display="edit"
                                                              id={"button-list-top-" + classeur.id}
                                                              user={user}
@@ -288,7 +293,6 @@ class Classeur extends Component {
                                             description={classeur.description}
                                             handleChangeClasseur={this.handleChangeClasseur}
                                             putClasseur={this.putClasseur}
-                                            handleEditClasseur={this.handleEditClasseur}
                                             isFinalizedClasseur={this.isFinalizedClasseur}
                                             edit={this.isEditableClasseur()}
                                             usersCopy={classeur.copy}/>

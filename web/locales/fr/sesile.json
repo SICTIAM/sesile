@@ -118,7 +118,8 @@
                 "finished": "Finalisé",
                 "withdrawn": "Retiré",
                 "retracted": "Rétracté",
-                "waiting": "En attente"
+                "waiting": "En attente",
+                "progressSign": "En cours de signature"
             },
             "pagination" : {
                 "previous": "Précédent",

@@ -38,11 +38,11 @@ class ClasseursButtonList extends Component {
         return (
             <div style={this.props.style} className="grid-x button-list align-middle text-center">
                 <div className="cell medium-auto">
-                    <ButtonValid classeurs={ classeurs } valid={ validClasseur } enabled={this.actionEnabled('validable')} />
+                    <ButtonValid classeurs={ classeurs } valid={ validClasseur } enabled={this.actionEnabled('validable') && !this.props.signatureInProgress} />
                 </div>
                 <div className="cell medium-auto">
                     <div className={"btn-sign-" + id}>
-                        {this.actionEnabled('signable_and_last_validant') ?
+                        {this.actionEnabled('signable_and_last_validant') && !this.props.signatureInProgress ?
                             display === "list" ?
                                 <a
                                     title={t('common.classeurs.button.sign_title')}
@@ -79,10 +79,10 @@ class ClasseursButtonList extends Component {
                     </div>
                 </div>
                 <div className="cell medium-auto">
-                    <ButtonRevert classeurs={ classeurs } revert={ revertClasseur } enabled={this.actionEnabled('retractable')} />
+                    <ButtonRevert classeurs={ classeurs } revert={ revertClasseur } enabled={this.actionEnabled('retractable') && !this.props.signatureInProgress} />
                 </div>
                 <div className="cell medium-auto">
-                    {this.actionEnabled('refusable') ?
+                    {this.actionEnabled('refusable') && !this.props.signatureInProgress ?
                         <div className={"btn-refuser-" + id}>
                             <a
                                 data-toggle={`toggle-refus-${id}`} title={t('common.classeurs.button.refus_title')}
@@ -116,13 +116,13 @@ class ClasseursButtonList extends Component {
                     <ButtonRemove
                         classeurs={classeurs}
                         remove={removeClasseur}
-                        enabled={this.actionEnabled('removable')} />
+                        enabled={this.actionEnabled('removable') && !this.props.signatureInProgress} />
                 </div>
                 <div className="cell medium-auto">
                     <ButtonDelete
                         classeurs={classeurs}
                         deleteClasseur={deleteClasseur}
-                        enabled={this.actionEnabled('deletable')} />
+                        enabled={this.actionEnabled('deletable') && !this.props.signatureInProgress} />
                 </div>
                 {this.props.check !== undefined &&
                     <div className="cell medium-auto">

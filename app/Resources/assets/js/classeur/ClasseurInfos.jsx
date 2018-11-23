@@ -52,7 +52,7 @@ class ClasseurInfos extends Component {
     }
 
     render() {
-        const { nom, validation, creation, type, description, status, handleChangeClasseur, handleEditClasseur, usersCopy } = this.props
+        const { nom, validation, creation, type, description, status, handleChangeClasseur, usersCopy } = this.props
         const { t } = this.context
         const { i18nextLng } = window.localStorage
         //@todo verify usersCopy isn't empty
