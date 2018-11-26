@@ -14,6 +14,7 @@ class MenuBar extends Component {
         super(props)
         this.state = {
             user: {
+                id:'',
                 collectivite: {}
             }
         }
@@ -21,15 +22,15 @@ class MenuBar extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({user: nextProps.user})
-
-    }
-
-    componentDidUpdate() {
-        $('.user-log').foundation()
     }
 
     isAdminMenu = () => {
         return window.location.pathname.search("admin") === 1
+    }
+
+    isLoaded() {
+        $('.user-log').foundation()
+
     }
 
     render(){
@@ -42,7 +43,7 @@ class MenuBar extends Component {
             <div className="user-log" data-toggle="user-infos">
                 {
                     user.id ?
-                        <ul className="dropdown menu align-center" data-dropdown-menu>
+                        <ul className="dropdown menu align-center" data-dropdown-menu onLoad={() => this.isLoaded()}>
                             <li>
                                 <a href="#" className="button primary hollow user-complete-name" style={{borderColor: this.props.color, color: this.props.color}}>
                                     <div className="grid-x align-middle">

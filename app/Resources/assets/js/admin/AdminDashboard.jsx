@@ -8,6 +8,7 @@ import { handleErrors } from '../_utils/Utils'
 import History from "../_utils/History"
 import {Avatar, Input} from '../_components/Form'
 import { escapedValue } from '../_utils/Search'
+import UserAvatar from "react-user-avatar"
 
 
 
@@ -24,8 +25,8 @@ class AdminDashboard extends Component {
                 organization_id: ''
             },
             siren: '',
-            nom: ' ',
-            image: ' '
+            nom: '',
+            image: ''
         },
         users: [],
         filteredUsers: [],
@@ -167,8 +168,16 @@ class AdminDashboard extends Component {
                         </div>
                     </div>
                     <div style={{marginTop: "-7em", float:"right"}}>
+                        {this.state.collectivite.image ?
                         <Avatar className="cell medium-3" size={150} nom={this.state.collectivite.nom}
-                                fileName={this.state.collectivite.image ? "/uploads/logo_coll/" + this.state.collectivite.image : null}/>
+                                fileName={"/uploads/logo_coll/" + this.state.collectivite.image }/>
+                        :
+                            this.state.collectivite.nom &&
+                            <UserAvatar
+                                id="profil_img"
+                                size="150"
+                                name={this.state.collectivite.nom}
+                                className="txt-avatar"/>}
                     </div>
                 </div>
                 <SimpleContent className="panel">
