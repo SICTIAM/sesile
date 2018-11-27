@@ -30,6 +30,7 @@ class ClasseurManager
     const ACTION_RE_DEPOSIT_CLASSEUR = 'Classeur à nouveau soumis';
     const ACTION_REFUSED = 'Refus';
     const ACTION_RETRACT = 'Rétractation';
+
     /**
      * @var EntityManager
      */

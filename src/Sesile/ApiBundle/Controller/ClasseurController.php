@@ -1,6 +1,7 @@
 <?php
 namespace Sesile\ApiBundle\Controller;
 
+use Sesile\ClasseurBundle\Entity\Callback;
 use Sesile\MainBundle\Domain\Message;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,6 +19,7 @@ use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\ClasseursUsers;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sesile\ClasseurBundle\Service\ActionMailer;
+use Sesile\ClasseurBundle\Entity\CallbackRepository;
 
 
 /**
@@ -231,11 +233,8 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *          {"name"="groupe", "dataType"="integer", "format"="", "required"=true, "description"="groupe de validation du classeur"},
      *          {"name"="visibilite", "dataType"="integer", "format"="0 si Privé, 1 Public, 3 pour le groupe fonctionnel, (2 est indisponible pour le dépôt d'un classeur)", "required"=true, "description"="Visibilité du classeur"},
      *          {"name"="email", "dataType"="string", "format"="Email valide", "required"=false, "description"="email du déposant"},
+     *          {"name"="callback", "dataType"="string", "format"="URL valide", "required"=false, "description"="URL de rappel, sur les événements classeur (signé, retiré, supprimé)"},
      *          {"name"="siren", "dataType"="string", "format"="string", "required"=false, "description"="siren collectivité, si non renseigné la premiere collectivité de l'utilisateur sera utilisé"},
-     *
-     *
-     *
-     *
      *  }
      * )
      *
@@ -250,7 +249,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      */
     public function newAction(Request $request)
     {
-
+        $this->get('logger')->debug("[SesileApiBundleClasseur]/new Debug : Request containt {request}", array('request' => $request->request->all()));
         $em = $this->getDoctrine()->getManager();
         $email = $request->request->get('email');
         if(is_null($email))
@@ -419,7 +418,6 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
 
         $em->getRepository('SesileClasseurBundle:Classeur')->setUserVisible($classeur);
 
-
         $action = new Action();
         $action->setClasseur($classeur);
         $action->setUser($user);
@@ -430,8 +428,25 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $actionMailer = $this->get(ActionMailer::class);
         $actionMailer->sendNotificationClasseur($classeur);
 
-
-        return new JsonResponse(["id" => $classeur->getId(), "message" => "Le classeur a bien été déposé"], JsonResponse::HTTP_OK);
+        if (!empty($request->request->get('callback')) && trim($request->request->get('callback')) != "") {
+            try {
+                $callback = new Callback();
+                $callback->setClasseurId($classeur->getId());
+                $callback->setUrl($request->request->get('callback'));
+                $em->persist($callback);
+                $em->flush();
+            } catch (\Exception $e) {
+                $this->get('logger')->error(sprintf('[SesileApiBundleClasseur]/new Error add callback url: %s, for classeur %s', $e->getMessage(), $classeur->getId()));
+            }
+        } else {
+            $this->get('logger')->debug(sprintf('[SesileApiBundleClasseur]/new Callback url not specified, for classeur %s', $classeur->getId()));
+        }
+        return new JsonResponse(
+            [
+                "id" => $classeur->getId(),
+                "url" => $actionMailer->buildAbsoluteUrl($collectivity) . 'classeur/' . $classeur->getId(),
+                "message" => "Le classeur a bien été déposé",
+            ], JsonResponse::HTTP_OK);
     }
 
 

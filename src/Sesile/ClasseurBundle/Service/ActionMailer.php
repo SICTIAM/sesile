@@ -252,7 +252,7 @@ class ActionMailer
         $this->mailer->send($message);
     }
 
-    private function buildAbsoluteUrl($collectivite) {
+    public function buildAbsoluteUrl($collectivite) {
         $absoluteUrl = $this->router->generate('sesile_main_default_app', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $parsedUrl = parse_url($absoluteUrl);
 

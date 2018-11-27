@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use GuzzleHttp\Client;
+use Sesile\ClasseurBundle\Entity\Callback;
 
 /**
  * @Rest\Route("/api/v4", options = { "expose" = true })
@@ -387,6 +389,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
             $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_VALIDATION_CLASSEUR);
 
         $em = $this->getDoctrine()->getManager();
+        if($classeur)
         $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $this->getUser());
         $em->flush();
 
@@ -416,6 +419,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @return Classeur
      */
     public function retractClasseurAction (Classeur $classeur) {
+        $client = new Client();
 
         $em = $this->getDoctrine()->getManager();
         $em->getRepository('SesileClasseurBundle:Classeur')->retractClasseur($classeur);
@@ -462,7 +466,7 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @return Classeur
      */
     public function removeClasseurAction (Classeur $classeur) {
-
+        $client = new Client();
         $em = $this->getDoctrine()->getManager();
         $em->getRepository('SesileClasseurBundle:Classeur')->removeClasseur($classeur);
         $em->flush();
@@ -470,6 +474,35 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         // Ajout d'une action pour le classeur
         $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_REMOVE_CLASSEUR);
 
+        $callbacks = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
+        foreach ($callbacks as $callback) {
+            try {
+                $response = $client->request(
+                    'POST',
+                    $callback['url'] . "/WITHDRAWN"
+                );
+                if($response->getStatusCode() === Response::HTTP_OK) {
+                    $this->get('classeur.manager')->addClasseurAction(
+                        $classeur,
+                        $this->getUser(),
+                        ClasseurManager::ACTION_REMOVE_CLASSEUR,
+                        sprintf("Le service %s à été notifié", $callback->getUrl()));
+                }
+            } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                $msg = sprintf(
+                    '[SesileClasseurBundleClasseurApi]/removeClasseur  GuzzleException WARNING for notification: %s CODE: %s :: %s',
+                    $callback->getUrl(),
+                    $e->getCode(),
+                    $e->getMessage());
+                $this->get('logger')->error($msg);
+
+                $this->get('classeur.manager')->addClasseurAction(
+                    $classeur,
+                    $this->getUser(),
+                    ClasseurManager::ACTION_REMOVE_CLASSEUR,
+                    sprintf("Une erreur est survenue lors de la notification du service %s", $callback->getUrl()));
+            }
+        }
         return $classeur;
     }
 
@@ -483,6 +516,8 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
      * @Security("has_role('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN')")
      */
     public function deleteClasseurAction (Classeur $classeur) {
+        $em = $this->getDoctrine()->getManager();
+        $client = new Client();
 
         $em = $this->getDoctrine()->getManager();
         foreach ($classeur->getDocuments() as $document) {
@@ -491,7 +526,31 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
         $em->remove($classeur);
         $em->flush();
 
-        return new JsonResponse(['message' => "Classeur remove"], Response::HTTP_OK);
+        $callbacks = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
+        foreach ($callbacks as $callback) {
+            try {
+                $response = $client->request(
+                    'POST',
+                    $callback['url'] . "/DELETED"
+                );
+                if($response->getStatusCode() === Response::HTTP_OK) {
+                    $msg = sprintf(
+                        '[SesileClasseurBundleClasseurApi]/deleteClasseur  The service %s has been notified for deleting of classeur %s',
+                        $callback->getUrl(),
+                        $classeur->getNom());
+                    $this->get('logger')->debug($msg);;
+                }
+            } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                $msg = sprintf(
+                    '[SesileClasseurBundleClasseurApi]/deleteClasseur  GuzzleException WARNING for notification: %s CODE: %s :: %s',
+                    $callback->getUrl(),
+                    $e->getCode(),
+                    $e->getMessage());
+                $this->get('logger')->error($msg);
+            }
+        }
+
+        return new JsonResponse(['message' => "Classeur removed"], Response::HTTP_OK);
     }
 
     /**
@@ -656,19 +715,75 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
                 throw $this->createNotFoundException('Unable to find Classeur entity.');
             }
 
-            // Validation du classeur
-            $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $user);
-            $em->flush();
+            $docs = $classeur->getDocuments();
+            $isSigned = true;
 
-            // Ajout d'une action pour le classeur
-            $this->get('classeur.manager')->addClasseurAction($classeur, $this->getUser(), ClasseurManager::ACTION_SIGN, ClasseurManager::ACTION_SIGN_CLASSEUR);
+            foreach($docs as $doc){
+                if ($doc->getSigned() == false)
+                    $isSigned = false;
+            }
+            $client = new Client();
+            if ($isSigned === true) {
+                // Validation du classeur
+                $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->validerClasseur($classeur, $user);
+                $em->flush();
 
-            // Envoie du mail de confirmation
-            $this->sendValidationMail($classeur, $user);
+                // Ajout d'une action pour le classeur
+                $this->get('classeur.manager')->addClasseurAction($classeur, $user, ClasseurManager::ACTION_SIGN, ClasseurManager::ACTION_SIGN_CLASSEUR);
+
+                // Envoie du mail de confirmation
+                $actionMailer = $this->get(ActionMailer::class);
+                $actionMailer->sendNotificationClasseur($classeur);
+
+                $files = array();
+                $path = $this->container->getParameter('upload')['fics'];
+                foreach ($docs as $document) {
+                    $file = [
+                        'name' => 'file',
+                        'contents' => file_get_contents($path . $document->getRepourl()),
+                        'filename' =>  $document->getName(),
+                    ];
+                    $files[] = $file;
+                }
+
+                $callbacks = $em->getRepository('SesileClasseurBundle:Callback')->getEvent($classeur->getId());
+
+                foreach ($callbacks as $callback) {
+                    try {
+                        $response = $client->request(
+                            'POST',
+                            $callback->getUrl() . "/SIGNED",
+                            [
+                                'multipart' => $files
+                            ]
+                        );
+                        if($response->getStatusCode() === Response::HTTP_OK) {
+                            $this->get('classeur.manager')->addClasseurAction(
+                                $classeur,
+                                $user,
+                                ClasseurManager::ACTION_SIGN,
+                                sprintf("Le service %s à été notifié", $callback->getUrl()));
+                        }
+                    } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                        $msg = sprintf(
+                            '[SesileClasseurBundleClasseurApi]/valider_classeur_jws  GuzzleException WARNING for notification: %s CODE: %s :: %s',
+                            $callback->getUrl(),
+                            $e->getCode(),
+                            $e->getMessage());
+                        $this->get('logger')->error($msg);
+
+                        $this->get('classeur.manager')->addClasseurAction(
+                            $classeur,
+                            $user,
+                            ClasseurManager::ACTION_SIGN,
+                            sprintf("Une erreur est survenue lors de la notification du service %s", $callback->getUrl()));
+                    }
+                }
+            }
 
             return new JsonResponse(array("classeur_valid" => "1"));
         }
-        elseif ($valid == 0) {
+        else if ($valid == 0) {
             return new JsonResponse(array("classeur_valid" => "0"));
         }
         else {

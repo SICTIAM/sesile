@@ -291,7 +291,7 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
 
         // Vérification que le document existe
         if (empty($doc)) {
-            return new JsonResponse(array("error" => "nodocumentwiththisname", "name" => $uploadedfile->getClientOriginalName()));
+            return new JsonResponse(sprintf("Unable to find Document entity id : %s", $uploadedfile->getClientOriginalName()));
         }
 
         // Vérification du token
