@@ -16,7 +16,8 @@ class MenuBar extends Component {
             user: {
                 id:'',
                 collectivite: {}
-            }
+            },
+            loaded: false
         }
     }
 
@@ -28,9 +29,11 @@ class MenuBar extends Component {
         return window.location.pathname.search("admin") === 1
     }
 
-    isLoaded() {
-        $('.user-log').foundation()
-
+    componentDidUpdate() {
+        if (!this.state.loaded && this.state.user.id) {
+            $('.user-log').foundation()
+            this.setState({loaded:true})
+        }
     }
 
     render(){
@@ -43,7 +46,7 @@ class MenuBar extends Component {
             <div className="user-log" data-toggle="user-infos">
                 {
                     user.id ?
-                        <ul className="dropdown menu align-center" data-dropdown-menu onLoad={() => this.isLoaded()}>
+                        <ul className="dropdown menu align-center" data-dropdown-menu>
                             <li>
                                 <a href="#" className="button primary hollow user-complete-name" style={{borderColor: this.props.color, color: this.props.color}}>
                                     <div className="grid-x align-middle">
@@ -64,15 +67,15 @@ class MenuBar extends Component {
                                     </li>
                                     <hr/>
                                     {(user.roles.find(role => role.includes("ADMIN"))) &&
-                                        <div>
-                                            <li>
-                                                <Link to="/admin/tableau-de-bord" className="button secondary clear" style={{color: this.props.color}}>
-                                                    <i className="fa fa-cogs" style={{color: this.props.color}}/>
-                                                    { t('common.menu.admin') }
-                                                </Link>
-                                            </li>
-                                            <hr/>
-                                        </div>}
+                                    <div>
+                                        <li>
+                                            <Link to="/admin/tableau-de-bord" className="button secondary clear" style={{color: this.props.color}}>
+                                                <i className="fa fa-cogs" style={{color: this.props.color}}/>
+                                                { t('common.menu.admin') }
+                                            </Link>
+                                        </li>
+                                        <hr/>
+                                    </div>}
                                     <li>
                                         <a href={Routing.generate("sesile_main_default_logout")} className="button secondary clear" style={{color: this.props.color}}>
                                             <i className="fa fa-sign-out" style={{color: this.props.color}}/>
@@ -82,9 +85,9 @@ class MenuBar extends Component {
                                 </ul>
                             </li>
                         </ul> :
-                    <button onClick={() => this.props.handleClickConnection()} className="button primary hollow">
-                        {t('common.menu.connection')}
-                    </button>
+                        <button onClick={() => this.props.handleClickConnection()} className="button primary hollow">
+                            {t('common.menu.connection')}
+                        </button>
                 }
             </div>
         )
