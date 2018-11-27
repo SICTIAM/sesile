@@ -101,6 +101,12 @@ class UserRepository extends EntityRepository {
                 }
             }
         }
+        $classeurs = $user->getClasseurs();
+        foreach ($classeurs as $classeur) {
+            if ($classeur->getUser()->getId() == $user->getId() && ($classeur->getStatus() == 0 || $classeur->getStatus() == 4)) {
+                $classeursId[] = $classeur->getId();
+            }
+        }
         return array_unique($classeursId);
     }
 
