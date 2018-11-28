@@ -300,11 +300,7 @@ class UserControllerTest extends SesileWebTestCase
                 'name' => $collectivite2->getNom()
             ],
             'user' => [
-                'email_address' => $user->getEmail(),
-                'family_name' => $user->getNom(),
-                'given_name' => $user->getPrenom(),
-                'gender' => "",
-                'phone_number' => ""
+                'email_address' => $user->getEmail()
             ]
         ];
 

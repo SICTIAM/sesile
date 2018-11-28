@@ -257,7 +257,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *
      * @var Request $request
      * @return JsonResponse
-     * @Route("s/ozwillo/{userId}")
+     * @Route("s/ozwillo/{userOzwilloId}")
      * @Rest\View()
      * @Method("POST")
      *
@@ -268,7 +268,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *  resource=false,
      *  description="Cette méthode permet de créer un nouvelle utilisateur ou de l'ajouter à une collectivité si celui-ci existe déjà",
      *  requirements={
-     *      {"name"="userId", "dataType"="integer", "user id"}
+     *      {"name"="userOzwilloId", "dataType"="integer", "user id"}
      *  },
      *  parameters={
      *      {"name"="instance_id", "dataType"="string", "required"=true, "Ozwillo application instance id"},
@@ -278,7 +278,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      *  }
      * )
      */
-    public function createNewUserOrAddItToCollectivityFromOzwilloAction(Request $request, $userId) {
+    public function createNewUserOrAddItToCollectivityFromOzwilloAction(Request $request, $userOzwilloId) {
         $validator = Validation::createValidator();
 
         $constraint = new Assert\Collection(array(
@@ -316,9 +316,9 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByOzwilloId($userId);
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByOzwilloId($userOzwilloId);
         if(!$user instanceof User) {
-            $user = $em->getRepository('SesileUserBundle:User')->addOzwilloUser($collectivteOzwillo->getCollectivite(), $request->request->get('user'), $request->request->get('organization'));
+            $user = $em->getRepository('SesileUserBundle:User')->addOzwilloUser($collectivteOzwillo->getCollectivite(), $request->request->get('user'), $request->request->get('organization'), $userOzwilloId);
             $this->get('logger')->info('New user {email} created', array('email' => $user->getEmail()));
             return new JsonResponse('', Response::HTTP_CREATED);
         } else  {

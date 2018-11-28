@@ -246,7 +246,14 @@ class UserRepository extends EntityRepository {
                 ->getArrayResult();
     }
 
-    public function addOzwilloUser(Collectivite $collectivite, $userObject, $organization) {
+    public function addOzwilloUser(Collectivite $collectivite, $userObject, $organization, $userOzwilloId) {
+        $extractedUsernameMail = explode('@', $userObject['email_address'])[0];
+        if(empty($userObject['family_name'])) {
+            $userObject['family_name'] = $extractedUsernameMail;
+        }
+        if(empty($userObject['given_name'])) {
+            $userObject['given_name'] = $extractedUsernameMail;
+        }
         $em = $this->getEntityManager();
         $user = new User();
         $user->setEnabled(true);
@@ -255,7 +262,7 @@ class UserRepository extends EntityRepository {
         $user->setPrenom($userObject['given_name']);
         $user->setEmail($userObject['email_address']);
         $user->setPlainPassword(md5(uniqid(rand(), true)));
-        $user->setOzwilloId($organization['id']);
+        $user->setOzwilloId($userOzwilloId);
         $user->addCollectivity($collectivite);
         $em->persist($user);
 
