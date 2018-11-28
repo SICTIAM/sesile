@@ -316,7 +316,7 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByOzwilloId($userOzwilloId);
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($request->request->get('user')['email_address']);
         if(!$user instanceof User) {
             $user = $em->getRepository('SesileUserBundle:User')->addOzwilloUser($collectivteOzwillo->getCollectivite(), $request->request->get('user'), $request->request->get('organization'), $userOzwilloId);
             $this->get('logger')->info('New user {email} created', array('email' => $user->getEmail()));
