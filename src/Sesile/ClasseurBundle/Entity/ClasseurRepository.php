@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use phpDocumentor\Reflection\Types\Array_;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sesile\UserBundle\Entity\User;
+use Sesile\ClasseurBundle\Entity\TypeClasseur as TypeClasseur;
 
 /**
  * ClasseurRepository
@@ -107,7 +108,53 @@ class ClasseurRepository extends EntityRepository {
 
         return $classeurs;
     }
+    /**
+     * @param $orgId collectivite id
+     * @param $userId
+     * @param $sort
+     * @param $order
+     * @param $limit
+     * @param $start
+     * @param $type
+     * @param $status
+     * @param $nom
+     *
+     * @return array
+     */
+    public function getClasseursVisiblesSorted ($orgId, $userId, $sort, $order, $limit, $start, $type, $status, $nom)
+    {
+        ($sort == "type") ? $sort = "t.nom" : $sort = "c.".$sort;
+        $qb =  $this
+            ->createQueryBuilder('c')
+            ->join('c.visible', 'v', 'WITH', 'v.id = :id')
+            ->setParameter('id', $userId)
+            ->join('c.type', 't')
+            ->addSelect('t')
+            ->join('c.user', 'u')
+            ->addSelect('u')
+            ->where('c.collectivite = :orgId')
+            ->setParameter('orgId', $orgId)
+            ->orderBy($sort, $order)
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
+           ;
 
+        if ($type != "null")
+            $qb->andWhere('c.type = :type')->setParameter('type', $type);
+        if ($nom != "null")
+            $qb->andWhere('c.nom LIKE :nom')->setParameter('nom', '%'.$nom.'%');
+        if ($status != "null")
+            $qb->andWhere('c.status = :status')->setParameter('status', $status);
+
+        $classeurs = $qb
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $classeurs = $this->addClasseursValue($classeurs, $userId);
+
+        return $classeurs;
+    }
     /**
      * @param $orgId collectivite id
      * @param $classeursId

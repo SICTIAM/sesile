@@ -7,6 +7,7 @@ import Select from 'react-select'
 import { Select as Selection} from '../_components/Form'
 import { basicNotification } from '../_components/Notifications'
 
+import Debounce from 'debounce'
 import {handleErrors} from '../_utils/Utils'
 import {escapedValue} from '../_utils/Search'
 import History from '../_utils/History'
@@ -38,42 +39,71 @@ class ClasseursList extends Component {
         currentType: '',
         type: [],
         currentStatus: '',
+        isSorted:false,
         isOpen: false,
     }
 
     componentDidMount() {
         if (this.state.classeurs.length === 0) {
             this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id)
+            this.getTypes(this.context.user.current_org_id)
         }
     }
 
     changeLimit = (name, value) => {
         this.setState({limit: parseInt(value)})
-        this.listClasseurs(this.state.sort, this.state.order, value, this.state.start, this.context.user.id)
+        this.state.isSorted === false ?
+            this.listClasseurs(this.state.sort, this.state.order, value, this.state.start, this.context.user.id)
+            :
+            this.listSortedClasseurs(this.state.sort, this.state.order, value, this.state.start, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
     changePage = (start) => {
         const newStart = (start * this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+        this.state.isSorted === false ?
+            this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+            :
+            this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
     changePreviousPage = () => {
         const newStart = (this.state.start - this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+        this.state.isSorted === false ?
+            this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+            :
+            this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
     }
 
     changeNextPage = () => {
         const newStart = (this.state.start + this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+        this.state.isSorted === false ?
+            this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id)
+            :
+            this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, this.state.currentStatus.id)
+    }
+
+    getTypes(id) {
+        const { t, _addNotification} = this.context
+        fetch(Routing.generate('sesile_classeur_typeclasseurapi_getall', {id}), {credentials: 'same-origin'})
+            .then(response => response.json())
+            .then(circuits => {
+                const type = circuits
+                const all = {id: "null", nom:"Tout"}
+                type.unshift(all)
+                this.setState({type})
+            })
     }
 
     listClasseurs = (sort, order, limit, start, userId) => {
         const {t, _addNotification} = this.context
+        const name = "null"
+        const type = "null"
+        const status = "null"
         this.setState({message: t('common.loading')})
         fetch(
             Routing.generate(
-                'sesile_classeur_classeurapi_list',
-                {orgId: this.context.user.current_org_id, sort, order, limit, start, userId}),
+                'sesile_classeur_classeurapi_listsorted',
+                {orgId: this.context.user.current_org_id, sort, order, limit, start, userId, name, type, status}),
             {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
@@ -91,13 +121,6 @@ class ClasseursList extends Component {
                     nbElementTotal: json.nb_element_total_of_entity
                 })
             })
-            .then(json => {
-                let type = []
-                const all = {"nom": "Tout"}
-                type[0] = all
-                this.state.classeurs.map(classeur => type.findIndex(i => i.nom === classeur.type.nom) === -1 && type.push(classeur.type))
-                this.setState({type})
-            })
             .catch(error => {
                 this.setState({message: t('common.error_loading_list')})
                 _addNotification(basicNotification(
@@ -107,36 +130,58 @@ class ClasseursList extends Component {
             })
     }
 
+    listSortedClasseurs = Debounce((sort, order, limit, start, userId, name, type, status, search) => {
+        if (search) start = 0
+        if (name === "") name = "null"
+        if (type === undefined)  type = "null"
+        if (status === undefined) status = "null"
+        const {t, _addNotification} = this.context
+        fetch(
+            Routing.generate(
+                'sesile_classeur_classeurapi_listsorted',
+                {orgId: this.context.user.current_org_id, sort, order, limit, start, userId, name, type, status}),
+            {credentials: 'same-origin'})
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(json => {
+                let classeurs = json.list
+                this.setState({
+                    start,
+                    classeurs,
+                    isSorted:true,
+                    filteredClasseurs: classeurs,
+                    nbElement: json.nb_element_in_list,
+                    nbElementTotal: json.nb_element_total_of_entity
+                })
+            })
+            .catch(error => {
+                this.setState({message: t('common.error_loading_list')})
+                _addNotification(basicNotification(
+                    'error',
+                    t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
+                    error.statusText))
+            })
+    },500)
+
     handleSearchByClasseurTitle = (e) => {
         const {value} = e.target
         this.setState({valueSearchByTitle: value})
-        const regex = escapedValue(value, this.state.filteredClasseurs, this.state.groups)
-        const filteredClasseurs = this.state.classeurs.filter(classeur => regex.test(classeur.nom))
-        this.setState({filteredClasseurs})
+        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, value, this.state.currentType.id, this.state.currentStatus.id, true)
     }
 
     handleSearchByStatus = (value) => {
-        let research = ''
-        if (value)
-            value.id === "42" ? research = '' : research = value.id
-        else
-            value = {id: "42", nom: 'Tout'}
+        if (!value)
+            value = {id: "null", nom: 'Tout'}
         this.setState({currentStatus: value})
-        const regex = escapedValue(`${research}`, this.state.filteredClasseurs, this.state.groups)
-        const filteredClasseurs = this.state.classeurs.filter(classeur => regex.test(classeur.status))
-        this.setState({filteredClasseurs})
+        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, this.state.currentType.id, value.id, true)
     }
 
     handleSearchByType = (e) => {
-        let research = ''
-        if (e)
-            e.nom === "Tout" ? research = '' : research = e.nom
-        else
-            e = {nom : "Tout"}
+        if (!e)
+            e = {id : "null", nom : "Tout"}
         this.setState({currentType: e})
-        const regex = escapedValue(research, this.state.filteredClasseurs, this.state.groups)
-        const filteredClasseurs = this.state.classeurs.filter(classeur => regex.test(classeur.type.nom))
-        this.setState({filteredClasseurs})
+        this.listSortedClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.context.user.id, this.state.valueSearchByTitle, e.id, this.state.currentStatus.id, true)
+
     }
     handleDropdown = () => {
         this.setState({isOpen: !this.state.isOpen})
@@ -149,7 +194,7 @@ class ClasseursList extends Component {
         const listClasseur = this.state.filteredClasseurs.map(classeur => <CLasseurRow key={`classeur-${classeur.id}`}
                                                                                        classeur={classeur}/>)
         const status = [
-            {"id": '42', "nom": 'Tout'},
+            {"id": 'null', "nom": 'Tout'},
             {"id": 0, "nom": "Refusé"},
             {"id": 1, "nom": "En cours"},
             {"id": 2, "nom": "Finalisé"},

@@ -17,7 +17,7 @@ use Sesile\ClasseurBundle\Form\ClasseurPostType;
 use Sesile\ClasseurBundle\Form\ClasseurType;
 use Sesile\ClasseurBundle\Manager\ClasseurManager;
 use Sesile\ClasseurBundle\Service\ActionMailer;
-use Sesile\MainBundle\Entity\Collectivite;
+use Sesile\MainBundle\Entity\Collectivite as Collectivite;
 use Sesile\UserBundle\Entity\User;
 use Sesile\UserBundle\Entity\UserRole;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -92,6 +92,33 @@ class ClasseurApiController extends FOSRestController implements ClassResourceIn
 
         $em = $this->getDoctrine()->getManager();
         $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisibles($orgId, $userId, $sort, $order, $limit, $start);
+
+        $nbClasseur = $em->getRepository('SesileClasseurBundle:Classeur')->countVisibleClasseur($orgId, $userId);
+
+        return new ListPagination($classeurs, count($classeurs), (int)$nbClasseur[0][1]);
+    }
+    /**
+     * @param null $sort
+     * @param null $order
+     * @param int $limit
+     * @param int $start
+     * @param null $userId
+     * @param null $name
+     * @param null $type
+     * @param null $status
+     * @return array
+     * @Rest\View(serializerGroups={"listClasseur"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Rest\Get("/org/{orgId}/classeurs/listsorted/{sort}/{order}/{limit}/{start}/{userId}/{name}/{type}/{status}", requirements={"limit" = "\d+", "start" = "\d+"}, defaults={"sort" = "creation", "order"="DESC", "limit" = 10, "start" = 0})
+     */
+    public function listSortedAction($orgId, $sort = null, $order = null, $limit, $start, $userId = null, $name, $type, $status = null)
+    {
+        if (
+            $userId === null
+            || !($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') || $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))
+        ) $userId = $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $classeurs = $em->getRepository('SesileClasseurBundle:Classeur')->getClasseursVisiblesSorted($orgId, $userId, $sort, $order, $limit, $start, $type, $status, $name);
 
         $nbClasseur = $em->getRepository('SesileClasseurBundle:Classeur')->countVisibleClasseur($orgId, $userId);
 
