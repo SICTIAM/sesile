@@ -527,6 +527,7 @@
         "users_in_copy": "Utilisateurs en copie",
         "success": {
             "edit": "Le classeur à bien été modifié",
+            "repost": "Le classeur à bien été réémis",
             "delete": "Le classeur à été supprimé"
         },
         "error": {

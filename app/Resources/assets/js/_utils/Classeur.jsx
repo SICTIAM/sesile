@@ -55,9 +55,14 @@ const actionClasseur = (that, url, id, method = 'PUT', type = '') => {
                             'success',
                             that.context.t('common.workbook_retracted')))
                 } else {
-                    that.context._addNotification(basicNotification(
-                        'success',
-                        that.context.t('classeur.success.edit')))
+                    if (that.state.classeur.status === 1)
+                        that.context._addNotification(basicNotification(
+                            'success',
+                            that.context.t('classeur.success.repost')))
+                    else
+                        that.context._addNotification(basicNotification(
+                            'success',
+                            that.context.t('classeur.success.edit')))
                 }
                 History.push(`/classeurs/valides`)
             } else {
