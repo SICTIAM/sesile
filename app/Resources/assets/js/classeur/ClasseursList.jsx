@@ -269,7 +269,7 @@ class ClasseursList extends Component {
                                     <th style={{borderRadius: "0.5rem 0 0 0"}}>
                                         {t('common.label.title')}
                                     </th>
-                                    <th>
+                                    <th className="text-capitalize-first-letter">
                                         {t('common.classeurs.status.name')}
                                     </th>
                                     <th>
