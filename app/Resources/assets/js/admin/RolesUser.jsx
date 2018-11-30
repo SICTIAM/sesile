@@ -33,8 +33,10 @@ class RolesUser extends Component {
         const { roles, changeUserRole, removeUserRole, addUserRole } = this.props
 
         return (
-            <div className="medium-12 cell" style={{marginLeft:"0.8em"}}>
+            <div className="medium-12 cell" style={{marginLeft:this.props.disabled ?'14.6em':'0.8em', marginTop:this.props.disabled ? '-1em':'0'}}>
+                {!this.props.disabled &&
                 <label className="text-bold text-capitalize-first-letter">Rôles</label>
+                }
                 <div className="grid-x">
                     <div className="medium-9">
                         <form onSubmit={this.handleSubmit} style={{display:"flex"}}>

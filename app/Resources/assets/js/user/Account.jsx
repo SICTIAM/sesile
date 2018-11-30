@@ -8,6 +8,7 @@ import AvatarForm from "./AvatarForm"
 import SignatureForm from "./SignatureForm"
 import {Link} from 'react-router-dom'
 import { CertificateValidity } from '../_components/CertificateExpiry'
+import RolesUser from "../admin/RolesUser"
 
 class Account extends Component {
 
@@ -24,7 +25,8 @@ class Account extends Component {
             user: {
                 _nom: '',
                 _prenom: '',
-                qualite: ' '
+                qualite: ' ',
+                userrole: []
             }
         }
     }
@@ -49,6 +51,9 @@ class Account extends Component {
 
     handleClickSave = () => {
         const { user } = this.state
+        const id = user.id
+        user.userrole.map((role, key) => this.setState(prevState => prevState.user.userrole[key].user = id))
+
         const field = {
             qualite: user.qualite,
             cp: user.cp,
@@ -56,11 +61,11 @@ class Account extends Component {
             departement: user.departement,
             pays: user.pays,
             enabled: user.enabled,
-            apiactivated: user.apiactivated,
+            apiactivated: false,
             roles: user.roles,
+            userrole: user.userrole
             // collectivite: user.collectivite.id
         }
-
         this.putUser(field, this.state.user.id)
     }
 
@@ -95,6 +100,12 @@ class Account extends Component {
         this.setState({user})
         this.props.updateUserInfos()
     }
+    handleChangeUserRole = (key, role) => this.setState(prevState => prevState.user.userrole[key].user_roles = role)
+    handleRemoveUserRole = (key) => this.setState(prevState => prevState.user.userrole.splice(key, 1))
+    handleAddUserRole = (role) => this.setState(prevState => prevState.user.userrole.push({
+        user_roles: role,
+        user: this.state.userId
+    }))
     render () {
         const { t } = this.context
         const { user } = this.state
@@ -178,6 +189,16 @@ class Account extends Component {
                                         name="qualite"
                                         value={this.state.user.qualite || " "}
                                         onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} />
+                                    </div>
+                                    <div className="medium-7 cell">
+                                        <label className="text-bold text-capitalize-first-letter">Rôles</label>
+                                        <RolesUser roles={Object.assign([], user.userrole)}
+                                                   changeUserRole={this.handleChangeUserRole}
+                                                   removeUserRole={this.handleRemoveUserRole}
+                                                   addUserRole={this.handleAddUserRole}
+                                                   userId={user.id}
+                                                   disabled={true}
+                                        />
                                     </div>
                                 </div>
                                 <div className="grid-x grid-padding-x align-center-middle">

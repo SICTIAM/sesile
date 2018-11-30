@@ -19,7 +19,7 @@ class UserRole
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"userRole", "currentUser"})
+     * @Groups({"userRole"})
      */
     private $id;
 
