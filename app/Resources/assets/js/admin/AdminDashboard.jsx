@@ -192,7 +192,7 @@ class AdminDashboard extends Component {
                                 type="text"/>
                         </div>
                     <div>
-                        <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
+                        <table style={{borderRadius:"6px"}}>
                             <thead>
                             <tr style={{backgroundColor: "#CC0066", color: "white"}}>
                                 <td width="160px" className="text-bold">{t('admin.user.label_name')}</td>
@@ -230,7 +230,7 @@ class AdminDashboard extends Component {
                                     type="text"/>
                             </div>
                         <div>
-                            <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
+                            <table style={{borderRadius:"6px"}}>
                                 <thead>
                                 <tr style={{backgroundColor: "#CC0066", color: "white"}}>
                                     <td width="240px" className="text-bold">{t('common.label.name')}</td>
@@ -261,7 +261,7 @@ class AdminDashboard extends Component {
                                     type="text"/>
                             </div>
                         <div>
-                            <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
+                            <table style={{borderRadius:"6px"}}>
                                 <thead>
                                 <tr style={{backgroundColor: "#CC0066", color: "white"}}>
                                     <td width="240px" className="text-bold">{t('common.label.name')}</td>
