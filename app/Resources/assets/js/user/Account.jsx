@@ -4,11 +4,10 @@ import { translate } from 'react-i18next'
 import Moment from 'moment'
 import { handleErrors } from '../_utils/Utils'
 import { basicNotification } from '../_components/Notifications'
-import AvatarForm from "./AvatarForm"
 import SignatureForm from "./SignatureForm"
-import {Link} from 'react-router-dom'
 import { CertificateValidity } from '../_components/CertificateExpiry'
 import RolesUser from "../admin/RolesUser"
+import UserAvatar from "react-user-avatar"
 
 class Account extends Component {
 
@@ -44,13 +43,13 @@ class Account extends Component {
     }
 
     handleChangeField = (field, value) => {
-        const { user } = this.state
+        const {user} = this.state
         user[field] = value
         this.setState({user})
     }
 
     handleClickSave = () => {
-        const { user } = this.state
+        const {user} = this.state
         const id = user.id
         user.userrole.map((role, key) => this.setState(prevState => prevState.user.userrole[key].user = id))
 
@@ -70,7 +69,7 @@ class Account extends Component {
     }
 
     putUser = (user, id) => {
-        const { t, _addNotification } = this.context
+        const {t, _addNotification} = this.context
         fetch(Routing.generate("sesile_user_userapi_updateuser", {id}), {
             method: 'PUT',
             headers: {
@@ -82,7 +81,7 @@ class Account extends Component {
         })
             .then(this.handleErrors)
             .then(response => {
-                if(response.ok === true) {
+                if (response.ok === true) {
                     _addNotification(basicNotification(
                         'success',
                         t('admin.success.update', {name: t('admin.user.name')}),
@@ -93,7 +92,34 @@ class Account extends Component {
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
-                t('admin.error.not_extractable_list', {name: t('admin.user.name', {count: 2}), errorCode: error.status}),
+                t('admin.error.not_extractable_list', {
+                    name: t('admin.user.name', {count: 2}),
+                    errorCode: error.status
+                }),
+                error.statusText)))
+    }
+    putFile = (image) => {
+        const {t, _addNotification} = this.context
+        let formData = new FormData()
+        formData.append('path', image)
+
+        fetch(Routing.generate("sesile_user_userapi_uploadavatar", {id: this.state.user.id}), {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        })
+            .then(handleErrors)
+            .then(response => response.json())
+            .then(user => {
+                _addNotification(basicNotification(
+                    'success',
+                    t('admin.success.update', {name: t('admin.user.image_avatar')})
+                ))
+                this.handleChangeUser(user)
+            })
+            .catch(error => _addNotification(basicNotification(
+                'error',
+                t('admin.error.add', {name: t('admin.user.image_avatar'), errorCode: error.status}),
                 error.statusText)))
     }
     handleChangeUser = (user) => {
@@ -104,11 +130,14 @@ class Account extends Component {
     handleRemoveUserRole = (key) => this.setState(prevState => prevState.user.userrole.splice(key, 1))
     handleAddUserRole = (role) => this.setState(prevState => prevState.user.userrole.push({
         user_roles: role,
-        user: this.state.userId
+        user: this.state.user.id
     }))
-    render () {
-        const { t } = this.context
-        const { user } = this.state
+    userNomAndPrenomIsNotEmpty = () => this.state.user._nom.length > 0 && this.state.user._prenom.length > 0
+    userNomAndPrenomAndImagePathIsNotEmpty = () => this.userNomAndPrenomIsNotEmpty() && this.state.user.path
+
+    render() {
+        const {t} = this.context
+        const {user} = this.state
         const userId = user.id
 
         if (this.state.certificate && this.state.certificate.HTTP_X_SSL_CLIENT_NOT_AFTER) {
@@ -153,8 +182,10 @@ class Account extends Component {
                         </div>
                         <div className="grid-x grid-padding-y">
                             <div className="cell medium-12 text-right text-bold">
-                                <a href={user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
-                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
+                                <a href={user.ozwillo_url + "/my/profile"} target="_blank"
+                                   className="button hollow ozwillo">
+                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png"
+                                         alt="Ozwillo" className="image-button"/>
                                     {t('common.user.upadate_account')}
                                 </a>
                             </div>
@@ -174,41 +205,72 @@ class Account extends Component {
                                     <SignatureForm
                                         handleChangeUser={this.handleChangeUser}
                                         user={user}
-                                        styleClass="small-12 medium-12 large-12 cell"/>
-                                    <AvatarForm
-                                        handleChangeUser={this.handleChangeUser}
-                                        user={user}
-                                        styleClass={"cell small-12 medium-12 large-12"}/>
+                                        styleClass="small-6 medium-6 large-6 cell"/>
+                                    <div className="small-6 medium-6 large-6 cell">
+                                        <div className="grid-x grid-padding-x align-middle">
+                                            <label className="cell medium-2 text-bold text-capitalize-first-letter"
+                                                   htmlFor="profil_img">
+                                                {t('admin.user.image_avatar')}
+                                            </label>
+                                            <div className="cell medium-4"
+                                                 style={{display: "block", overflow: "hidden", height: "5em"}}>
+                                                {this.userNomAndPrenomAndImagePathIsNotEmpty() ?
+                                                    <UserAvatar
+                                                        id="profil_img"
+                                                        size="70"
+                                                        name={`${this.state.user._prenom.charAt(0)}${this.state.user._nom.charAt(0)} `}
+                                                        src={"/uploads/avatars/" + this.state.user.path}
+                                                        className=" float-center"/> :
+                                                    this.userNomAndPrenomIsNotEmpty() &&
+                                                    <UserAvatar
+                                                        id="profil_img"
+                                                        size="70"
+                                                        name={`${this.state.user._prenom.charAt(0)}${this.state.user._nom.charAt(0)} `}
+                                                        className="txt-avatar"/>}
+                                                <input type="file" accept="image/png,image/jpeg"
+                                                       onChange={e => this.putFile(e.target.files[0])}
+                                                       id="upload_input" name="upload" style={{
+                                                    fontSize: "60px",
+                                                    width: "70px",
+                                                    opacity: "0",
+                                                    filter: "alpha(opacity=0)",
+                                                    position: "relative",
+                                                    top: "-73px"
+                                                }}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="cell small-12 medium-12 large-12">
+                                    <span className="help-text align-left" style={{fontSize: '0.65em'}}>
+                                        {t('common.file_acceptation_rules',
+                                            {types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}
+                                    </span>
+                                    </div>
                                 </div>
                                 <div className="grid-x grid-padding-y">
-                                    <div className="cell medium-2">
-                                        <label className="text-bold">{t('admin.user.label_quality')}</label>
+                                    <div className="cell medium-6">
+                                        <div className="cell medium-2">
+                                            <label className="text-bold">{t('admin.user.label_quality')}</label>
+                                        </div>
+                                        <div className="cell medium-10" style={{paddingRight: "1em"}}>
+                                            <textarea
+                                                name="qualite"
+                                                value={this.state.user.qualite || " "}
+                                                onChange={(e) => this.handleChangeField(e.target.name, e.target.value)}
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="cell medium-10">
-                                    <textarea
-                                        name="qualite"
-                                        value={this.state.user.qualite || " "}
-                                        onChange={(e) => this.handleChangeField(e.target.name, e.target.value)} />
-                                    </div>
-                                    <div className="medium-7 cell">
-                                        <label className="text-bold text-capitalize-first-letter">Rôles</label>
+                                    <div className="medium-6 cell">
                                         <RolesUser roles={Object.assign([], user.userrole)}
                                                    changeUserRole={this.handleChangeUserRole}
                                                    removeUserRole={this.handleRemoveUserRole}
                                                    addUserRole={this.handleAddUserRole}
                                                    userId={user.id}
-                                                   disabled={true}
                                         />
                                     </div>
                                 </div>
                                 <div className="grid-x grid-padding-x align-center-middle">
-                                    <div className="cell small-12 medium-6 large-6">
-                                    <span className="help-text" style={{fontSize: '0.65em'}}>
-                                        {t('common.file_acceptation_rules',
-                                            {types: '(png, jpeg, gif)', sizeMax: '5 Mo'})}
-                                    </span>
-                                    </div>
-                                    <div className="cell small-12 medium-6 large-6">
+                                    <div className="cell small-12 medium-12 large-12">
                                         <button
                                             className="button float-right text-uppercase hollow"
                                             onClick={() => this.handleClickSave()}>
@@ -237,7 +299,7 @@ class Account extends Component {
                             </div>
                             <div className="cell medium-6 small-6 text-right text-bold">
                                 <a href={"https://www.sictiam.fr/certificat-electronique/"}
-                                   style={{textDecoration:"underline"}}>
+                                   style={{textDecoration: "underline"}}>
                                     {t('common.button.certificate_order')}
                                 </a>
                             </div>
@@ -245,7 +307,8 @@ class Account extends Component {
                     </div>
                 </div>
             </div>
-        )}
+        )
+    }
 }
 
 export default translate(['sesile'])(Account)
