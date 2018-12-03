@@ -9,7 +9,7 @@ import { basicNotification } from '../_components/Notifications'
 import { handleErrors } from '../_utils/Utils'
 import { escapedValue} from '../_utils/Search'
 import History from '../_utils/History'
-import { Intervenants} from '../_utils/Classeur'
+import {Intervenants, StatusLabel} from '../_utils/Classeur'
 
 import ClasseurPagination from './ClasseurPagination'
 
@@ -234,6 +234,9 @@ class ClasseursValid extends Component {
                                         <th style={{borderRadius: "0.5rem 0 0 0"}}>
                                             {t('common.label.title')}
                                         </th>
+                                        <th className="text-capitalize-first-letter">
+                                            {t('common.classeurs.status.name')}
+                                        </th>
                                         <th>
                                             {t('common.stakeholders')}
                                         </th>
@@ -285,6 +288,7 @@ class ClasseursValid extends Component {
                                             <td/>
                                             <td/>
                                             <td/>
+                                            <td/>
                                             <td className="float-right">
                                                 <ClasseurPagination
                                                     limit={limit}
@@ -322,6 +326,8 @@ const CLasseurRow = ({classeur, validateClasseur, signClasseurs, revertClasseur,
     <tr key={classeur.id} onClick={() => History.push(`/classeur/${classeur.id}`)} style={{cursor:"Pointer"}}>
         <td className="text-bold">{classeur.nom}</td>
         <td>
+            <StatusLabel status={classeur.status} />
+        </td>        <td>
             <Intervenants classeur={classeur}/>
         </td>
         <td>{Moment(classeur.validation).format('L')}</td>
