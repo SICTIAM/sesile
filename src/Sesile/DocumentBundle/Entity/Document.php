@@ -294,10 +294,12 @@ class Document
 
     /**
      * @param int $page
-     * @param string $format
-     * @return bool|string
+     * @param int $format
+     * @param string $path
+     * @return true|array
+     * @throws \ImagickException
      */
-    public function getPDFImage($page = 0, $orientation = "PORTRAIT", $path) {
+    public function getPDFImage($page = 0, $format, $path) {
         if($this->getType() == "application/pdf") {
             $imagick = new Imagick();
             $img = new Imagick($path . $this->getRepourl());
@@ -306,7 +308,7 @@ class Document
             $imagicklast = new Imagick($path . $this->getRepourl() . '[' . $nbr_page . ']');
 
             // Si le PDF est au format portrait
-            if ($orientation == "PORTRAIT") {
+            if ($format == 0) {
                 $imagick->thumbnailImage(210,297,true,true);
                 $imagicklast->thumbnailImage(210,297,true,true);
             } else {

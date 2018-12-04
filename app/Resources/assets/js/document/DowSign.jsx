@@ -12,6 +12,7 @@ class DowSign extends Component {
     }
     state = {
         images: [],
+        orientation:0,
         collectivite: {}
     }
 
@@ -29,7 +30,7 @@ class DowSign extends Component {
             {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
-            .then(images => this.setState({images: images}))
+            .then(json => this.setState({images: json["images"], orientation: json["orientation"]}))
             .then(() => this.setState({valid: true}))
     }
 
@@ -87,6 +88,7 @@ class DowSign extends Component {
                         <hr style={{margin: 0}}/>
                         <DraggablePositionDownload
                             images={this.state.images}
+                            orientation={this.state.orientation}
                             href={Routing.generate('download_doc_visa', {
                                 orgId: user.current_org_id,
                                 id: document.id,
@@ -102,12 +104,13 @@ class DowSign extends Component {
                             collectivite={collectivite}
                             dataToggle={`visa-dropdown-${document.id}`}
                             type="visa"
-                            id={    document.id}
+                            id={document.id}
                             disabled={false}/>
                         <hr style={{margin: 0}}/>
                         <div>
                             <DraggablePositionDownload
                                 images={this.state.images}
+                                orientation={this.state.orientation}
                                 href={
                                     Routing.generate(
                                         'download_doc_sign',
@@ -133,6 +136,7 @@ class DowSign extends Component {
                         <div>
                             <DraggablePositionVisaSignatureDownload
                                 images={this.state.images}
+                                orientation={this.state.orientation}
                                 href={
                                     Routing.generate(
                                         'download_doc_all',

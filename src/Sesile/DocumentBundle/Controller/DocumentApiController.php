@@ -39,14 +39,23 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("/{id}/preview")
      * @param Document $document
-     * @return Document
+     * @return array
      */
     public function getPdfPreviewAction(Document $document)
     {
-        //@todo
-//        return false;
         $path = $this->container->getParameter('upload')['fics'];
-        return $document->getPDFImage(0, "PORTRAIT", $path);
+        $filename = $this->container->getParameter('upload')['fics'] . $document->getRepourl();
+        $Document = \SetaPDF_Core_Document::loadByFilename($filename);
+        $orientationPDFFirst = $Document->getCatalog()->getPages()->getPage(1)->getWidthAndHeight();
+        $width = $orientationPDFFirst[0];
+        $height = $orientationPDFFirst[1];
+        if ($width < $height) {
+            $orientation = 0;
+        } else {
+            $orientation = 1;
+        }
+
+        return array("images" => $document->getPDFImage(0, $orientation, $path),"orientation" => $orientation);
     }
 
     /**
