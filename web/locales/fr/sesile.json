@@ -146,7 +146,7 @@
                 "sign_title": "Signer le classeur",
                 "sign_tooltip" : "Permet la signature des documents",
                 "revert_title": "Rétracter le classeur",
-                "revert_tooltip": "Permet au validant de l'étape précédente peut revenir sur sa décision",
+                "revert_tooltip": "Permet au validant de l'étape précédente de revenir sur sa décision",
                 "refus_title": "Refuser le classeur",
                 "refus_text": "Motif du refus",
                 "remove_title": "Retirer le classeur",
