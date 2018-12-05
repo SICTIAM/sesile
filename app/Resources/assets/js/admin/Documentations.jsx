@@ -165,7 +165,7 @@ class Documentations extends Component {
                             <button className="button hollow"
                                     onClick={() => History.push("/admin/documentation")}>{t('admin.documentations.add_document')}</button>
                         </div>
-                        <table style={{margin: "10px", borderRadius: "6px"}}>
+                        <table style={{borderRadius: "6px"}}>
                             <thead>
                             <tr style={{backgroundColor: "#CC0066", color: "white"}}>
                                 <td width="600px" className="text-bold">{t('admin.user.label_name')}</td>

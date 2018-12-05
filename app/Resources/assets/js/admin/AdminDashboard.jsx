@@ -147,7 +147,7 @@ class AdminDashboard extends Component {
                 <div className="cell medium-12 text-center" style={{marginBottom: "1.3em"}}>
                     <h2>{this.state.collectivite.nom}</h2>
                 </div>
-                <div className="admin-content-details panel" style={{height: "15em"}}>
+                <div className="admin-content-details panel dashboard-admin-info">
                     <div className="cell">
                         <h3>{t('admin.collectivite.infos')}</h3>
                     </div>
@@ -167,7 +167,7 @@ class AdminDashboard extends Component {
                             {this.state.collectivite.ozwillo.organization_id}
                         </div>
                     </div>
-                    <div style={{marginTop: "-7em", float:"right"}}>
+                    <div className="dashboard-admin-image-collectivite">
                         {this.state.collectivite.image ?
                         <Avatar className="cell medium-3" size={150} nom={this.state.collectivite.nom}
                                 fileName={"/uploads/logo_coll/" + this.state.collectivite.image }/>
@@ -192,7 +192,7 @@ class AdminDashboard extends Component {
                                 type="text"/>
                         </div>
                     <div>
-                        <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
+                        <table style={{borderRadius:"6px"}}>
                             <thead>
                             <tr style={{backgroundColor: "#CC0066", color: "white"}}>
                                 <td width="160px" className="text-bold">{t('admin.user.label_name')}</td>
@@ -217,8 +217,8 @@ class AdminDashboard extends Component {
                         </table>
                     </div>
                 </SimpleContent>
-                <div style={{display:"flex"}}>
-                    <div className="admin-content-details panel" style={{width: '49%', marginRight:'2em'}}>
+                <div className="dashboard-admin">
+                    <div className="admin-content-details panel dashboard-admin-content" style={{minWidth: '49%', maxWidth:'100%'}}>
                         <div className="cell">
                             <h3>{t('admin.group.name_plural')}</h3>
                         </div>
@@ -230,7 +230,7 @@ class AdminDashboard extends Component {
                                     type="text"/>
                             </div>
                         <div>
-                            <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
+                            <table style={{borderRadius:"6px"}}>
                                 <thead>
                                 <tr style={{backgroundColor: "#CC0066", color: "white"}}>
                                     <td width="240px" className="text-bold">{t('common.label.name')}</td>
@@ -249,7 +249,7 @@ class AdminDashboard extends Component {
                             </table>
                         </div>
                     </div>
-                    <div className="admin-content-details panel" style={{width: '49%'}}>
+                    <div className="admin-content-details panel" style={{minWidth: '49%', maxWidth:'100%'}}>
                         <div className="cell">
                             <h3>{t('admin.circuit.name_plural')}</h3>
                         </div>
@@ -261,7 +261,7 @@ class AdminDashboard extends Component {
                                     type="text"/>
                             </div>
                         <div>
-                            <table style={{margin: "10px", borderRadius: "6px", width: "98%"}}>
+                            <table style={{borderRadius:"6px"}}>
                                 <thead>
                                 <tr style={{backgroundColor: "#CC0066", color: "white"}}>
                                     <td width="240px" className="text-bold">{t('common.label.name')}</td>

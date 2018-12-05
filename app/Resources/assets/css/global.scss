@@ -52,6 +52,37 @@ body, html {
   }
 }
 
+.dashboard-admin {
+  display: flex;
+}
+.dashboard-admin-content {
+  margin-right: 2em;
+}
+.dashboard-admin-info {
+  height: 15em;
+}
+.dashboard-admin-image-collectivite {
+  margin-top: -7em;
+  float: right;
+}
+
+@media screen and (max-width: 800px) {
+  .dashboard-admin {
+    display: block;
+  }
+  .dashboard-admin-content {
+    margin-right: 0;
+  }
+  .dashboard-admin-info {
+    height: 25em;
+  }
+  .dashboard-admin-image-collectivite {
+    margin-top: 0;
+    float: none;
+  }
+
+}
+
 .button {
   border-radius:0.5em;
   text-transform: uppercase;

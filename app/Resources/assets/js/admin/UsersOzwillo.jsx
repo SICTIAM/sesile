@@ -98,7 +98,7 @@ class UsersOzwillo extends Component {
                                 {t('admin.user.ozwillo_provisionning_users')}
                             </button>
                         </div>
-                    <table style={{margin:"10px", borderRadius:"6px", width:"98%"}}>
+                    <table style={{borderRadius:"6px"}}>
                         <thead>
                         <tr style={{backgroundColor:"#CC0066", color:"white"}}>
                             <td width="300px" className="text-bold text-capitalize-first-letter">{ t('admin.user.name') }</td>
