@@ -60,7 +60,7 @@ class Account extends Component {
             departement: user.departement,
             pays: user.pays,
             enabled: user.enabled,
-            apiactivated: false,
+            apiactivated: user.apiactivated,
             roles: user.roles,
             userrole: user.userrole
             // collectivite: user.collectivite.id
@@ -287,9 +287,9 @@ class Account extends Component {
                         <div className="grid-x grid-margin-x grid-padding-x">
                             <div className="medium-12 cell">
                                 <h3>{t('admin.user.subtitle_certificate')}</h3>
-                            </div>
-                        </div>
-                        <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
+                                        </div>
+                                    </div>
+                                    <div className="grid-x grid-margin-x grid-padding-x grid-padding-y">
                             <div className="medium-6 cell">
                                 <CertificateValidity
                                     certificate={this.state.certificate}
