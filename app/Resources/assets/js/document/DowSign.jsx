@@ -30,7 +30,7 @@ class DowSign extends Component {
             {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
-            .then(json => this.setState({images: json["images"], orientation: json["orientation"]}))
+            .then(json => this.setState({images: json.images, orientation: json.orientation}))
             .then(() => this.setState({valid: true}))
     }
 

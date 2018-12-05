@@ -35,27 +35,29 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
     {
         return $document;
     }
+
     /**
      * @Rest\View(serializerGroups={"classeurById"})
      * @Rest\Get("/{id}/preview")
      * @param Document $document
-     * @return array
+     * @return JsonResponse
+     * @throws \ImagickException
      */
     public function getPdfPreviewAction(Document $document)
     {
         $path = $this->container->getParameter('upload')['fics'];
         $filename = $this->container->getParameter('upload')['fics'] . $document->getRepourl();
-        $Document = \SetaPDF_Core_Document::loadByFilename($filename);
-        $orientationPDFFirst = $Document->getCatalog()->getPages()->getPage(1)->getWidthAndHeight();
-        $width = $orientationPDFFirst[0];
-        $height = $orientationPDFFirst[1];
+        $pdf = \SetaPDF_Core_Document::loadByFilename($filename);
+        $pdfSize = $pdf->getCatalog()->getPages()->getPage(1)->getWidthAndHeight();
+        $width = $pdfSize[0];
+        $height = $pdfSize[1];
         if ($width < $height) {
             $orientation = 0;
         } else {
             $orientation = 1;
         }
 
-        return array("images" => $document->getPDFImage(0, $orientation, $path),"orientation" => $orientation);
+        return new JsonResponse(array("images" => $document->getPDFImage(0, $orientation, $path),"orientation" => $orientation));
     }
 
     /**
