@@ -173,9 +173,7 @@ class AdminClasseur extends Component {
                                 {
                                     classeur.id &&
                                     <div className="cell large-12">
-                                        {!this.state.signatureInProgress ?
-                                            <ClasseurStatus status={classeur.status}/> :
-                                            <ClasseurStatus status={5}/>}
+                                        <ClasseurStatus status={classeur.status}/>
                                         <div className="grid-x button-list align-middle text-center">
                                             <div className="cell medium-auto">
                                                 <ButtonRevert classeurs={[classeur]} revert={this.revertClasseurs}/>
