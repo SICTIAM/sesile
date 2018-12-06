@@ -51,10 +51,11 @@ class DocumentApiController extends FOSRestController implements ClassResourceIn
         $pdfSize = $pdf->getCatalog()->getPages()->getPage(1)->getWidthAndHeight();
         $width = $pdfSize[0];
         $height = $pdfSize[1];
+
         if ($width < $height) {
-            $orientation = 0;
+            $orientation = "PORTRAIT";
         } else {
-            $orientation = 1;
+            $orientation = "PAYSAGE";
         }
 
         return new JsonResponse(array("images" => $document->getPDFImage(0, $orientation, $path),"orientation" => $orientation));

@@ -12,7 +12,7 @@ class DowSign extends Component {
     }
     state = {
         images: [],
-        orientation:0,
+        orientation:'',
         collectivite: {}
     }
 

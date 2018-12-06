@@ -42,7 +42,7 @@ class DraggablePositionDownload extends Component {
                     data-toggle={!this.props.disabled && this.props.dataToggle}>
                     {this.props.label}
                 </a>
-                {this.props.orientation === 0 ?
+                {this.props.orientation === "PORTRAIT" ?
                 <div
                     style={{
                         textAlign: 'center',

@@ -308,7 +308,7 @@ class Document
             $imagicklast = new Imagick($path . $this->getRepourl() . '[' . $nbr_page . ']');
 
             // Si le PDF est au format portrait
-            if ($format == 0) {
+            if ($format == "PORTRAIT") {
                 $imagick->thumbnailImage(210,297,true,true);
                 $imagicklast->thumbnailImage(210,297,true,true);
             } else {
