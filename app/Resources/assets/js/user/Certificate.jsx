@@ -64,7 +64,7 @@ class Certificate extends Component {
                         </div>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-4 cell">
+                        <div className="medium-4 cell text-bold">
                             {t('common.user.certificate_serial')}
                         </div>
                         <div className="medium-8 cell">
@@ -72,7 +72,7 @@ class Certificate extends Component {
                         </div>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-4 cell">
+                        <div className="medium-4 cell text-bold">
                             {t('common.user.certificate_transmitter')}
                         </div>
                         <div className="medium-8 cell">
@@ -81,46 +81,46 @@ class Certificate extends Component {
                     </div>
 
                     <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-4 cell">
+                        <div className="medium-4 cell text-bold">
                             <div className="grid-x">
                                 <div className="medium-12 text-center">
-                                    <h3>{t('common.user.transmitter_for')}</h3>
+                                    <h2>{t('common.user.transmitter_for')}</h2>
                                 </div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.common_name')}</div>
-                                <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_S_DN_CN}</div>
+                                <div className="medium-6 text-bold">{t('common.user.common_name')}</div>
+                                <div className="medium-6" style={{fontWeight:"500"}}>{certificate.HTTP_X_SSL_CLIENT_S_DN_CN}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.organisation')}</div>
-                                <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_S_DN_O}</div>
+                                <div className="medium-6 text-bold">{t('common.user.organisation')}</div>
+                                <div className="medium-6" style={{fontWeight:"500"}}>{certificate.HTTP_X_SSL_CLIENT_S_DN_O}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.organisation_unit')}</div>
-                                <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_S_DN_OU}</div>
+                                <div className="medium-6 text-bold">{t('common.user.organisation_unit')}</div>
+                                <div className="medium-6" style={{fontWeight:"500"}}>{certificate.HTTP_X_SSL_CLIENT_S_DN_OU}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.email')}</div>
-                                <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_S_DN_EMAIL}</div>
+                                <div className="medium-6 text-bold">{t('common.user.email')}</div>
+                                <div className="medium-6" style={{fontWeight:"500"}}>{certificate.HTTP_X_SSL_CLIENT_S_DN_EMAIL}</div>
                             </div>
                         </div>
 
                         <div className="medium-4 cell">
                             <div className="grid-x">
                                 <div className="medium-12 text-center">
-                                    <h3>{t('common.user.transmitter_from')}</h3>
+                                    <h2>{t('common.user.transmitter_from')}</h2>
                                 </div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.common_name')}</div>
+                                <div className="medium-6 text-bold">{t('common.user.common_name')}</div>
                                 <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_I_DN_CN}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.organisation')}</div>
+                                <div className="medium-6 text-bold">{t('common.user.organisation')}</div>
                                 <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_I_DN_O}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.email')}</div>
+                                <div className="medium-6 text-bold">{t('common.user.email')}</div>
                                 <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_I_DN_EMAIL}</div>
                             </div>
                         </div>
@@ -128,16 +128,16 @@ class Certificate extends Component {
                         <div className="medium-4 cell">
                             <div className="grid-x">
                                 <div className="medium-12 text-center">
-                                    <h3>{t('common.user.validity')}</h3>
+                                    <h2>{t('common.user.validity')}</h2>
                                 </div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.from')}</div>
+                                <div className="medium-6 text-bold">{t('common.user.from')}</div>
                                 <div
                                     className="medium-6">{Moment(certificate.HTTP_X_SSL_CLIENT_NOT_BEFORE).format('LL')}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.to')}</div>
+                                <div className="medium-6 text-bold">{t('common.user.to')}</div>
                                 <div
                                     className="medium-6">{Moment(certificate.HTTP_X_SSL_CLIENT_NOT_AFTER).format('LL')}</div>
                             </div>
