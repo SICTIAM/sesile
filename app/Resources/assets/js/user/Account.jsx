@@ -14,7 +14,8 @@ class Account extends Component {
     static contextTypes = {
         t: func,
         _addNotification: func,
-        user: object
+        user: object,
+        updateUser: func,
     }
 
     state = {
@@ -84,7 +85,7 @@ class Account extends Component {
                         t('admin.success.update', {name: t('admin.user.name')}),
                         t('admin.success.update', {name: t('admin.user.name')})
                     ))
-                    this.props.updateUserInfos()
+                    this.context.updateUser()
                 }
             })
             .catch(error => _addNotification(basicNotification(
@@ -121,7 +122,7 @@ class Account extends Component {
     }
     handleChangeUser = (user) => {
         this.setState({user})
-        this.props.updateUserInfos()
+        this.context.updateUser()
     }
     handleChangeUserRole = (key, role) => this.setState(prevState => prevState.user.userrole[key].user_roles = role)
     handleRemoveUserRole = (key) => this.setState(prevState => prevState.user.userrole.splice(key, 1))
