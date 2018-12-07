@@ -109,7 +109,7 @@ class Collectivite extends Component {
                                    image={collectivite.image}
                                    active={collectivite.active}
                                    siren={collectivite.siren}
-                                   ozwilloId={collectivite.ozwillo.organization_id}
+                                   ozwilloId={collectivite.ozwillo ? collectivite.ozwillo.organization_id : ""}
                                    ozwilloUrl={this.context.user.ozwillo_url}
                                    handleChange={this.handleChangeCollectiviteValue}
                                    putCollectivite={this.putCollectivite}

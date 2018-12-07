@@ -4,7 +4,7 @@ $foundation-palette: (
         success: #39922c,
         warning: #f48c4f,
         alert: #c82d2e,
-        ozwillo: #663399,
+        ozwillo: #2c56a2,
 );
 
 $foundation-palette-hover: (
@@ -50,6 +50,37 @@ body, html {
   h1,h2,h3,h4,h5{
     font-family: $font-family;
   }
+}
+
+.dashboard-admin {
+  display: flex;
+}
+.dashboard-admin-content {
+  margin-right: 2em;
+}
+.dashboard-admin-info {
+  height: 15em;
+}
+.dashboard-admin-image-collectivite {
+  margin-top: -7em;
+  float: right;
+}
+
+@media screen and (max-width: 800px) {
+  .dashboard-admin {
+    display: block;
+  }
+  .dashboard-admin-content {
+    margin-right: 0;
+  }
+  .dashboard-admin-info {
+    height: 25em;
+  }
+  .dashboard-admin-image-collectivite {
+    margin-top: 0;
+    float: none;
+  }
+
 }
 
 .button {
@@ -1362,4 +1393,32 @@ select {
 
 .pretty input[disabled] ~ * {
   opacity: 0.3;
+}
+
+.tooltip {
+  background-color: transparent;
+  font-size: 100%;
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+  background-color: black;
+  color: #fff;
+  font-size: 80%;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

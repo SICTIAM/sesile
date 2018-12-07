@@ -74,7 +74,7 @@ class Collectivites extends Component {
                                     placeholder={t('common.search_by_name')}
                                     type="text"/>
                         </div>
-                        <table style={{margin:"10px", borderRadius:"6px", width:"98%"}}>
+                        <table style={{borderRadius:"6px"}}>
                             <thead>
                             <tr style={{backgroundColor:"#CC0066", color:"white"}}>
                                 <td width="300px" className="text-bold">{ t('common.label.name') }</td>
@@ -120,7 +120,7 @@ const RowCollectivite = ({collectivite, onClick}, {t}) =>
             {(collectivite.active) ? <div className="text-success">{t('common.label.enabled')}</div> : <div className="text-alert">{t('common.label.disabled')}</div>}
         </td>
         <td>
-            <img onClick={(e) => onClick(e, collectivite)} title={t('common.button.list_ozwillo')} src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" style={{width:"24px"}}/>
+            <img onClick={(e) => onClick(e, collectivite)} title={t('common.button.list_ozwillo')} src="https://services.sictiam.fr/img/favicons/sictiam/favicon-32x32.png" style={{width:"24px"}}/>
         </td>
     </tr>
 

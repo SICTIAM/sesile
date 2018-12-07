@@ -94,11 +94,11 @@ class UsersOzwillo extends Component {
                          style={{width: "74em", marginTop: "1em"}}>
                         <div className="cell medium-12 text-right"  style={{marginTop:"10px"}}>
                             <button className="button hollow ozwillo" onClick={() => this.handleAddUsers()}>
-                                <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
+                                <img src="https://services.sictiam.fr/img/favicons/sictiam/favicon-32x32.png" alt="Portail Services" className="image-button" />
                                 {t('admin.user.ozwillo_provisionning_users')}
                             </button>
                         </div>
-                    <table style={{margin:"10px", borderRadius:"6px", width:"98%"}}>
+                    <table style={{borderRadius:"6px"}}>
                         <thead>
                         <tr style={{backgroundColor:"#CC0066", color:"white"}}>
                             <td width="300px" className="text-bold text-capitalize-first-letter">{ t('admin.user.name') }</td>
@@ -143,7 +143,7 @@ const RowUser = ({UserOzwillo, handleAddUser}, {t}) =>
         <td>
                 <Cell className="medium-auto">
                     <button className="button hollow ozwillo" onClick={() => handleAddUser(UserOzwillo)}>
-                        <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png" alt="Ozwillo" className="image-button" />
+                        <img src="https://services.sictiam.fr/img/favicons/sictiam/favicon-32x32.png" alt="Portail Services" className="image-button" />
                         {t('admin.user.ozwillo_provisionning_user')}
                     </button>
                 </Cell>

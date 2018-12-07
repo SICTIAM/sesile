@@ -152,7 +152,7 @@ class Account extends Component {
                 </div>
                 <div
                     className="grid-x grid-padding-y panel"
-                    style={{borderTop: '2px solid #663399'}}>
+                    style={{borderTop: '2px solid #2C56A2'}}>
                     <div className="cell medium-12" style={{padding: '10px'}}>
                         <div className="grid-x grid-padding-y">
                             <label className="cell medium-2 text-bold" htmlFor="nom">
@@ -180,10 +180,8 @@ class Account extends Component {
                         </div>
                         <div className="grid-x grid-padding-y">
                             <div className="cell medium-12 text-right text-bold">
-                                <a href={user.ozwillo_url + "/my/profile"} target="_blank"
-                                   className="button hollow ozwillo">
-                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png"
-                                         alt="Ozwillo" className="image-button"/>
+                                <a href={user.ozwillo_url + "/my/profile"} target="_blank" className="button hollow ozwillo">
+                                    <img src="https://services.sictiam.fr/img/favicons/sictiam/favicon-32x32.png" alt="Portail Services" className="image-button" />
                                     {t('common.user.upadate_account')}
                                 </a>
                             </div>
