@@ -30,29 +30,34 @@ class ClasseursButtonList extends Component {
     actionEnabled = (actionName) => {
         return !this.props.classeurs.filter(classeur => !classeur[actionName]).length && this.props.classeurs.length > 0
     }
-    render () {
 
-        const { textRefus } = this.state
-        const { classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur, display, id, dropdownPosition, user } = this.props
-        const { t } = this.context
+    render() {
+
+        const {textRefus} = this.state
+        const {classeurs, validClasseur, signClasseur, revertClasseur, removeClasseur, deleteClasseur, refuseClasseur, display, id, dropdownPosition, user} = this.props
+        const {t} = this.context
         return (
             <div style={this.props.style} className="grid-x button-list align-middle text-center">
                 <div className="cell medium-auto">
-                    <ButtonValid classeurs={ classeurs } valid={ validClasseur } enabled={this.actionEnabled('validable') && !this.props.signatureInProgress} />
+                    <ButtonValid classeurs={classeurs} valid={validClasseur}
+                                 enabled={this.actionEnabled('validable') && !this.props.signatureInProgress}/>
                 </div>
                 <div className="cell medium-auto">
                     <div className={"btn-sign-" + id}>
                         {this.actionEnabled('signable_and_last_validant') && !this.props.signatureInProgress ?
                             display === "list" ?
                                 <a
-                                    title={t('common.classeurs.button.sign_title')}
-                                    className="fa fa-edit success hollow" onClick={(e) => signClasseur(e,classeurs)} /> :
+                                    className="fa fa-edit success hollow"
+                                    onClick={(e) => signClasseur(e, classeurs)}/> :
                                 <div className="user-log">
-                                    <button
-                                        style={{border: 'none'}}
-                                        data-toggle={id + 'sign'}
-                                        title={t('common.classeurs.button.sign_title')}
-                                        className="fa fa-edit success button hollow"/>
+                                    <div className="tooltip">
+                                        <button
+                                            style={{border: 'none'}}
+                                            data-toggle={id + 'sign'}
+                                            title={t('common.classeurs.button.sign_title')}
+                                            className="fa fa-edit success button hollow"/>
+                                        <span className="tooltiptext">{t('common.classeurs.button.sign_tooltip')}</span>
+                                    </div>
                                     <div
                                         className="dropdown-pane text-left"
                                         data-position={dropdownPosition}
@@ -75,11 +80,12 @@ class ClasseursButtonList extends Component {
                                             t('common.classeurs.button.no_roles')}
                                     </div>
                                 </div> :
-                            <i title={t('common.classeurs.button.sign_title')} className="fa fa-edit disabled hollow" />}
+                            <i title={t('common.classeurs.button.sign_title')} className="fa fa-edit disabled hollow"/>}
                     </div>
                 </div>
                 <div className="cell medium-auto">
-                    <ButtonRevert classeurs={ classeurs } revert={ revertClasseur } enabled={this.actionEnabled('retractable') && !this.props.signatureInProgress} />
+                    <ButtonRevert classeurs={classeurs} revert={revertClasseur}
+                                  enabled={this.actionEnabled('retractable') && !this.props.signatureInProgress}/>
                 </div>
                 <div className="cell medium-auto">
                     {this.actionEnabled('refusable') && !this.props.signatureInProgress ?
@@ -98,36 +104,37 @@ class ClasseursButtonList extends Component {
                                 <Textarea
                                     id={`textarea-${id}`}
                                     name="text-refus"
-                                    value={ textRefus }
-                                    style={{ height: 200 }}
+                                    value={textRefus}
+                                    style={{height: 200}}
                                     placeholder={t('common.classeurs.button.refus_text')}
                                     onChange={this.handleTextrefus}/>
                                 <button
                                     onClick={(e) => refuseClasseur(e, classeurs, textRefus)}
                                     title={t('common.classeurs.button.refus_title')}
-                                    className="alert button hollow" >
+                                    className="alert button hollow">
                                     {t('common.classeurs.button.refus_title')}
                                 </button>
                             </div>
                         </div> :
-                        <i title={t('common.classeurs.button.refus_title')} className="fa fa-minus-circle disabled" />}
+                        <i title={t('common.classeurs.button.refus_title')} className="fa fa-minus-circle disabled"/>}
                 </div>
                 <div className="cell medium-auto">
                     <ButtonRemove
                         classeurs={classeurs}
                         remove={removeClasseur}
-                        enabled={this.actionEnabled('removable') && !this.props.signatureInProgress} />
+                        enabled={this.actionEnabled('removable') && !this.props.signatureInProgress}/>
                 </div>
                 <div className="cell medium-auto">
                     <ButtonDelete
                         classeurs={classeurs}
                         deleteClasseur={deleteClasseur}
-                        enabled={this.actionEnabled('deletable') && !this.props.signatureInProgress} />
+                        enabled={this.actionEnabled('deletable') && !this.props.signatureInProgress}/>
                 </div>
                 {this.props.check !== undefined &&
-                    <div className="cell medium-auto">
-                        <input id={this.props.id} value={this.props.checked} onClick={(e) => this.props.check(e)} type="checkbox" />
-                    </div>}
+                <div className="cell medium-auto">
+                    <input id={this.props.id} value={this.props.checked} onClick={(e) => this.props.check(e)}
+                           type="checkbox"/>
+                </div>}
             </div>
         )
     }
@@ -149,12 +156,14 @@ ClasseursButtonList.PropTypes = {
 export default translate(['sesile'])(ClasseursButtonList)
 
 const ButtonValid = ({classeurs, valid, enabled}, {t}) => {
-    return(
+    return (
         enabled ?
-            <a
-                onClick={(e) => valid(e, classeurs)}
-                title={t('common.classeurs.button.valid_title')}
-                className="fa fa-check success hollow"/> :
+            <div className="tooltip">
+                <a
+                    onClick={(e) => valid(e, classeurs)}
+                    className="fa fa-check success hollow"/>
+                <span className="tooltiptext">{t('common.classeurs.button.valid_tooltip')}</span>
+            </div> :
             <i title={t('common.classeurs.button.valid_title')} className="fa fa-check disabled hollow"/>
     )
 }
@@ -165,13 +174,15 @@ ButtonValid.propTypes = {
 }
 
 const ButtonRevert = ({classeurs, revert, enabled}, {t}) => {
-    return(
+    return (
         enabled ?
-            <a
-                onClick={(e) => revert(e, classeurs)}
-                title={ t('common.classeurs.button.revert_title') }
-                className="fa fa-repeat warning hollow"/> :
-            <i title={ t('common.classeurs.button.revert_title') } className="fa fa-repeat disabled hollow"/>
+            <div className="tooltip">
+                <a
+                    onClick={(e) => revert(e, classeurs)}
+                    className="fa fa-repeat warning hollow"/>
+                <span className="tooltiptext">{t('common.classeurs.button.revert_tooltip')}</span>
+            </div> :
+            <i title={t('common.classeurs.button.revert_title')} className="fa fa-repeat disabled hollow"/>
     )
 }
 ButtonRevert.contextTypes = { t: func }
@@ -181,12 +192,14 @@ ButtonRevert.propTypes = {
 }
 
 const ButtonRemove = ({classeurs, remove, enabled}, {t}) => {
-    return(
+    return (
         enabled ?
-            <a
-                onClick={(e) => remove(e, classeurs)}
-                title={t('common.classeurs.button.remove_title')}
-                className="fa fa-times alert hollow"/> :
+            <div className="tooltip">
+                <a
+                    onClick={(e) => remove(e, classeurs)}
+                    className="fa fa-times alert hollow"/>
+                <span className="tooltiptext">{t('common.classeurs.button.remove_tooltip')}</span>
+            </div> :
             <i title={t('common.classeurs.button.remove_title')} className="fa fa-times disabled hollow"/>
     )
 }
@@ -197,12 +210,14 @@ ButtonRemove.propTypes = {
 }
 
 const ButtonDelete = ({classeurs, deleteClasseur, enabled}, {t}) => {
-    return(
+    return (
         enabled ?
-            <a
-                onClick={(e) => deleteClasseur(e, classeurs)}
-                title={t('common.classeurs.button.delete_title')}
-                className="fa fa-trash alert hollow"/> :
+            <div className="tooltip">
+                <a
+                    onClick={(e) => deleteClasseur(e, classeurs)}
+                    className="fa fa-trash alert hollow"/>
+                <span className="tooltiptext">{t('common.classeurs.button.delete_tooltip')}</span>
+            </div> :
             <i title={t('common.classeurs.button.delete_title')} className="fa fa-trash disabled hollow"/>
     )
 }

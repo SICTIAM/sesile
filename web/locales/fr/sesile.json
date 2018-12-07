@@ -142,12 +142,17 @@
             "button": {
                 "add_classeur": "Nouveau classeur",
                 "valid_title": "Valider le classeur",
+                "valid_tooltip": "Permet de passer a l'étape de validation suivante",
                 "sign_title": "Signer le classeur",
+                "sign_tooltip" : "Permet la signature des documents",
                 "revert_title": "Rétracter le classeur",
+                "revert_tooltip": "Permet au validant de l'étape précédente de revenir sur sa décision",
                 "refus_title": "Refuser le classeur",
                 "refus_text": "Motif du refus",
                 "remove_title": "Retirer le classeur",
+                "remove_tooltip": "Retrait definitif du classeur",
                 "delete_title": "Suprimer le classeur",
+                "delete_tooltip": "Supression définitive du classeur",
                 "comment_title": "Commenter le classeur",
                 "no_roles" : "Vous ne disposez pas de rôles pour la signature",
                 "role_as" : "En tant que"
