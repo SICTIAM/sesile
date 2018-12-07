@@ -42,6 +42,7 @@ class DraggablePositionDownload extends Component {
                     data-toggle={!this.props.disabled && this.props.dataToggle}>
                     {this.props.label}
                 </a>
+                {this.props.orientation === "PORTRAIT" ?
                 <div
                     style={{
                         textAlign: 'center',
@@ -65,12 +66,14 @@ class DraggablePositionDownload extends Component {
                             overflow: 'auto',
                             padding: '0',
                             display: 'flex',
-                            background: this.state.imageUrl
+                            background: this.state.imageUrl,
+                            backgroundRepeat: 'no-repeat'
+
                         }}
                         position={this.props.position}
                         boxStyle={{height: '30px', width: '65px', padding: 0}}
                         label={this.props.type}
-                        handleChange={this.props.handleChange}/>
+                    handleChange={this.props.handleChange}/>
                     <div>
                         <a
                             className="button secondary hollow"
@@ -79,7 +82,48 @@ class DraggablePositionDownload extends Component {
                             {t('common.download')}
                         </a>
                     </div>
-                </div>
+                </div> :
+                    <div
+                        style={{
+                            textAlign: 'center',
+                            padding: '1em',
+                            width: '22em',
+                            height: '18em',
+                            marginLeft: '100px',
+                            borderRadius: '5px'
+                        }}
+                        className="dropdown-pane"
+                        id={this.props.dataToggle}
+                        data-position="right"
+                        data-alignment="center"
+                        data-close-on-click={true}
+                        data-dropdown data-auto-focus={true}>
+                        <DraggablePosition
+                            style={{
+                                height: '215px',
+                                width: '320px',
+                                position: 'relative',
+                                overflow: 'auto',
+                                padding: '0',
+                                display: 'flex',
+                                background: this.state.imageUrl,
+                                backgroundRepeat: 'no-repeat'
+                            }}
+                            position={this.props.position}
+                            boxStyle={{height: '30px', width: '65px', padding: 0}}
+                            label={this.props.type}
+                            bounds={{top:10, left: 10, right: 250, bottom: 180}}
+                            handleChange={this.props.handleChange}/>
+                        <div>
+                            <a
+                                className="button secondary hollow"
+                                href={this.props.href}
+                                target="_blank">
+                                {t('common.download')}
+                            </a>
+                        </div>
+                    </div>
+                }
             </li>
         )
     }
