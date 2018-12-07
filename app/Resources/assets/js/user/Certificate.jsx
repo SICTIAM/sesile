@@ -60,7 +60,7 @@ class Certificate extends Component {
                 <SimpleContent className="panel">
                     <div className="grid-x grid-margin-x grid-padding-x">
                         <div className="medium-12 cell">
-                            <h3>Informations</h3>
+                            <h3>{t('common.infos')}</h3>
                         </div>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x">
