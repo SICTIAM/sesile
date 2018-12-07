@@ -150,7 +150,8 @@ class AdminClasseur extends Component {
                                         <div className="cell medium-auto">
                                             <ButtonDelete
                                                 classeurs={[classeur]}
-                                                deleteClasseur={this.deleteClasseurs}/>
+                                                deleteClasseur={this.deleteClasseurs}
+                                                deletable={classeur.status === 3}/>
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +186,8 @@ class AdminClasseur extends Component {
                                             <div className="cell medium-auto">
                                                 <ButtonDelete
                                                     classeurs={[classeur]}
-                                                    deleteClasseur={this.deleteClasseurs}/>
+                                                    deleteClasseur={this.deleteClasseurs}
+                                                    deletable={classeur.status === 3}/>
                                             </div>
                                         </div>
                                     </div>
@@ -503,14 +505,16 @@ ButtonRemove.propTypes = {
     remove: func
 }
 
-const ButtonDelete = ({classeurs, deleteClasseur}, {t}) => {
+const ButtonDelete = ({classeurs, deleteClasseur, deletable}, {t}) => {
     return (
+        deletable ?
         <div className="tooltip">
             <a
                 onClick={(e) => deleteClasseur(e, classeurs)}
                 className="fa fa-trash alert hollow"/>
             <span className="tooltiptext">{t('common.classeurs.button.delete_tooltip')}</span>
-        </div>
+        </div> :
+            <i title={t('common.classeurs.button.delete_title')} className="fa fa-trash disabled hollow"/>
     )
 }
 ButtonDelete.contextTypes = { t: func }
