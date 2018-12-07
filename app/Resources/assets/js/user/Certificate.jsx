@@ -4,6 +4,8 @@ import { translate } from 'react-i18next'
 import { basicNotification } from '../_components/Notifications'
 import { handleErrors } from '../_utils/Utils'
 import Moment from 'moment'
+import {AdminPage, SimpleContent} from "../_components/AdminUI";
+import {Form} from "../_components/Form";
 
 class Certificate extends Component {
 
@@ -29,7 +31,7 @@ class Certificate extends Component {
     }
 
     fetchUser() {
-        const { t, _addNotification } = this.context
+        const {t, _addNotification} = this.context
         fetch(Routing.generate("sesile_user_userapi_getcurrent"), {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
@@ -46,106 +48,105 @@ class Certificate extends Component {
             .then(certificate => this.setState({certificate}))
     }
 
-    render () {
-        const { t } = this.context
-        const { user, certificate } = this.state
+    render() {
+        const {t} = this.context
+        const {user, certificate} = this.state
 
         return (
-        <div className="grid-x">
-            <div className="admin-details medium-12 cell">
-                <div className="grid-x admin-head-details">
-                    {user._prenom + " " + user._nom + " - " + user.email}
+            <AdminPage>
+                <div className="cell medium-12 text-center">
+                    <h2>{t('common.user.certificate')}</h2>
                 </div>
-                <div className="admin-content-details">
-
+                <SimpleContent className="panel">
                     <div className="grid-x grid-margin-x grid-padding-x">
                         <div className="medium-12 cell">
-                            <h3>{t('common.user.certificate')}</h3>
+                            <h3>{t('common.infos')}</h3>
                         </div>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-4 cell">
+                        <div className="medium-4 cell text-bold">
                             {t('common.user.certificate_serial')}
                         </div>
                         <div className="medium-8 cell">
-                            { certificate.HTTP_X_SSL_CLIENT_M_SERIAL }
+                            {certificate.HTTP_X_SSL_CLIENT_M_SERIAL}
                         </div>
                     </div>
                     <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-4 cell">
+                        <div className="medium-4 cell text-bold">
                             {t('common.user.certificate_transmitter')}
                         </div>
                         <div className="medium-8 cell">
-                            { certificate.HTTP_X_SSL_CLIENT_I_DN }
+                            {certificate.HTTP_X_SSL_CLIENT_I_DN}
                         </div>
                     </div>
 
                     <div className="grid-x grid-margin-x grid-padding-x">
-                        <div className="medium-4 cell">
+                        <div className="medium-4 cell text-bold">
                             <div className="grid-x">
                                 <div className="medium-12 text-center">
-                                    <h3>{t('common.user.transmitter_for')}</h3>
+                                    <h2>{t('common.user.transmitter_for')}</h2>
                                 </div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.common_name')}</div>
-                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_S_DN_CN }</div>
+                                <div className="medium-6 text-bold">{t('common.user.common_name')}</div>
+                                <div className="medium-6" style={{fontWeight:"500"}}>{certificate.HTTP_X_SSL_CLIENT_S_DN_CN}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.organisation')}</div>
-                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_S_DN_O }</div>
+                                <div className="medium-6 text-bold">{t('common.user.organisation')}</div>
+                                <div className="medium-6" style={{fontWeight:"500"}}>{certificate.HTTP_X_SSL_CLIENT_S_DN_O}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.organisation_unit')}</div>
-                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_S_DN_OU }</div>
+                                <div className="medium-6 text-bold">{t('common.user.organisation_unit')}</div>
+                                <div className="medium-6" style={{fontWeight:"500"}}>{certificate.HTTP_X_SSL_CLIENT_S_DN_OU}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.email')}</div>
-                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_S_DN_EMAIL }</div>
+                                <div className="medium-6 text-bold">{t('common.user.email')}</div>
+                                <div className="medium-6" style={{fontWeight:"500"}}>{certificate.HTTP_X_SSL_CLIENT_S_DN_EMAIL}</div>
                             </div>
                         </div>
 
                         <div className="medium-4 cell">
                             <div className="grid-x">
                                 <div className="medium-12 text-center">
-                                    <h3>{t('common.user.transmitter_from')}</h3>
+                                    <h2>{t('common.user.transmitter_from')}</h2>
                                 </div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.common_name')}</div>
-                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_I_DN_CN }</div>
+                                <div className="medium-6 text-bold">{t('common.user.common_name')}</div>
+                                <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_I_DN_CN}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.organisation')}</div>
-                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_I_DN_O }</div>
+                                <div className="medium-6 text-bold">{t('common.user.organisation')}</div>
+                                <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_I_DN_O}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.email')}</div>
-                                <div className="medium-6">{ certificate.HTTP_X_SSL_CLIENT_I_DN_EMAIL }</div>
+                                <div className="medium-6 text-bold">{t('common.user.email')}</div>
+                                <div className="medium-6">{certificate.HTTP_X_SSL_CLIENT_I_DN_EMAIL}</div>
                             </div>
                         </div>
 
                         <div className="medium-4 cell">
                             <div className="grid-x">
                                 <div className="medium-12 text-center">
-                                    <h3>{t('common.user.validity')}</h3>
+                                    <h2>{t('common.user.validity')}</h2>
                                 </div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.from')}</div>
-                                <div className="medium-6">{ Moment(certificate.HTTP_X_SSL_CLIENT_NOT_BEFORE).format('LL') }</div>
+                                <div className="medium-6 text-bold">{t('common.user.from')}</div>
+                                <div
+                                    className="medium-6">{Moment(certificate.HTTP_X_SSL_CLIENT_NOT_BEFORE).format('LL')}</div>
                             </div>
                             <div className="grid-x">
-                                <div className="medium-6">{t('common.user.to')}</div>
-                                <div className="medium-6">{ Moment(certificate.HTTP_X_SSL_CLIENT_NOT_AFTER).format('LL') }</div>
+                                <div className="medium-6 text-bold">{t('common.user.to')}</div>
+                                <div
+                                    className="medium-6">{Moment(certificate.HTTP_X_SSL_CLIENT_NOT_AFTER).format('LL')}</div>
                             </div>
                         </div>
 
                     </div>
-                </div>
-            </div>
-        </div>
-    )
+                </SimpleContent>
+            </AdminPage>
+        )
     }
 }
 
