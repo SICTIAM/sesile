@@ -17,16 +17,13 @@ class Account extends Component {
         user: object
     }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            certificate: null,
-            user: {
-                _nom: '',
-                _prenom: '',
-                qualite: ' ',
-                userrole: []
-            }
+    state = {
+        certificate: null,
+        user: {
+            _nom: '',
+            _prenom: '',
+            qualite: ' ',
+            userrole: []
         }
     }
 
