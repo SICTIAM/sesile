@@ -98,7 +98,7 @@ class CollectiviteInfos extends Component {
         return (
             <div>
                 <div className="grid-x grid-padding-x grid-padding-y panel"
-                     style={{borderTop: '2px solid #663399'}}>
+                     style={{borderTop: '2px solid #2C56A2'}}>
                     <div className="cell medium-12" style={{padding: '20px'}}>
                         <div className="grid-x grid-padding-y">
                             <label className="cell medium-2 text-bold" htmlFor="nom">
@@ -126,10 +126,10 @@ class CollectiviteInfos extends Component {
                         </div>
                         <div className="grid-x grid-padding-y">
                             <div className="cell medium-12 text-right text-bold">
-                                <a href={"https://" + ozwilloUrl + "/my/organization/" + ozwilloId} target="_blank"
+                                <a href={ozwilloUrl + "/my/organization/" + ozwilloId} target="_blank"
                                    className="button hollow ozwillo">
-                                    <img src="https://www.ozwillo.com/static/img/favicons/favicon-96x96.png"
-                                         alt="Ozwillo" className="image-button"/>
+                                    <img src="https://services.sictiam.fr/img/favicons/sictiam/favicon-32x32.png"
+                                         alt="Portail Services" className="image-button"/>
                                     Organisation
                                 </a>
                             </div>
