@@ -33,10 +33,10 @@ class RolesUser extends Component {
         const { roles, changeUserRole, removeUserRole, addUserRole } = this.props
 
         return (
-            <div className="medium-12 cell" style={{marginLeft:"0.8em"}}>
+            <div className="medium-12 cell" style={{marginLeft:'0.8em', marginTop:'0'}}>
                 <label className="text-bold text-capitalize-first-letter">Rôles</label>
                 <div className="grid-x">
-                    <div className="medium-9">
+                    <div className="medium-11">
                         <form onSubmit={this.handleSubmit} style={{display:"flex"}}>
                             <input type="text" value={this.state.value} onChange={this.handleChange} />
                             <button type="submit" style={{marginLeft:"0.6em", marginBottom:"0.6em"}}><i className="fa fa-plus-circle icon-action"></i></button>
@@ -46,8 +46,8 @@ class RolesUser extends Component {
                 { roles.map((role, key) =>
                     (
                         <div key={key} className="grid-x align-middle">
-                            <ul className="cell medium-7" id={key} style={{marginLeft:"0.2em"}}>{role.user_roles}</ul>
-                            <div className="cell medium-1 text-center align-center-middle" style={{marginBottom:"0.6em", marginLeft:"3.95em"}}>
+                            <ul className="cell medium-10" id={key} style={{marginLeft:"0.2em"}}>{role.user_roles}</ul>
+                            <div className="cell medium-1 text-center align-center-middle" style={{marginBottom:"0.6em", marginLeft:"-0.15em"}}>
                                 <button className="fa fa-minus-circle medium icon-action float-right" onClick={() => removeUserRole(key)}></button>
                             </div>
                         </div>

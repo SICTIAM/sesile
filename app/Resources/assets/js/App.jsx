@@ -54,6 +54,7 @@ class App extends Component {
         fetchUserNote: PropTypes.func,
         user: PropTypes.object,
         t: PropTypes.func,
+        updateUser: PropTypes.func,
     }
 
     createMarkup(message) {
@@ -65,6 +66,7 @@ class App extends Component {
             _addNotification: this._addNotification,
             fetchUserNote: this.fetchUserNote,
             user: this.state.user,
+            updateUser: this.fetchUser,
             t: this.t
         }
     }
