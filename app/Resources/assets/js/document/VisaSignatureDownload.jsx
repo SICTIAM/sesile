@@ -69,7 +69,8 @@ class DraggablePositionVisaSignatureDownload extends Component {
                                 padding: '0',
                                 display: 'flex',
                                 marginRight: '10px',
-                                background: `url(data:image/jpg;base64,${this.state.imageFirstPage})`
+                                background: `url(data:image/jpg;base64,${this.state.imageFirstPage})`,
+                                backgroundRepeat: 'no-repeat'
                             }}
                             position={this.props.positionVisa}
                             boxStyle={{height: '30px', width: '65px', padding: 0}}
@@ -83,7 +84,9 @@ class DraggablePositionVisaSignatureDownload extends Component {
                                 overflow: 'auto',
                                 padding: '0',
                                 display: 'flex',
-                                background: this.state.imageUrl
+                                background: this.state.imageUrl,
+                                backgroundRepeat: 'no-repeat'
+
                             }}
                             position={this.props.positionSignature}
                             boxStyle={{height: '30px', width: '65px', padding: 0}}
@@ -122,7 +125,8 @@ class DraggablePositionVisaSignatureDownload extends Component {
                                 padding: '0',
                                 display: 'flex',
                                 marginRight: '10px',
-                                background: `url(data:image/jpg;base64,${this.state.imageFirstPage})`
+                                background: `url(data:image/jpg;base64,${this.state.imageFirstPage})`,
+                                backgroundRepeat: 'no-repeat'
                             }}
                             position={this.props.positionVisa}
                             boxStyle={{height: '30px', width: '65px', padding: 0}}
@@ -137,7 +141,8 @@ class DraggablePositionVisaSignatureDownload extends Component {
                                 overflow: 'auto',
                                 padding: '0',
                                 display: 'flex',
-                                background: this.state.imageUrl
+                                background: this.state.imageUrl,
+                                backgroundRepeat: 'no-repeat'
                             }}
                             position={this.props.positionSignature}
                             boxStyle={{height: '30px', width: '65px', padding: 0}}

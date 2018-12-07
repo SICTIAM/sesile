@@ -66,7 +66,9 @@ class DraggablePositionDownload extends Component {
                             overflow: 'auto',
                             padding: '0',
                             display: 'flex',
-                            background: this.state.imageUrl
+                            background: this.state.imageUrl,
+                            backgroundRepeat: 'no-repeat'
+
                         }}
                         position={this.props.position}
                         boxStyle={{height: '30px', width: '65px', padding: 0}}
@@ -104,7 +106,8 @@ class DraggablePositionDownload extends Component {
                                 overflow: 'auto',
                                 padding: '0',
                                 display: 'flex',
-                                background: this.state.imageUrl
+                                background: this.state.imageUrl,
+                                backgroundRepeat: 'no-repeat'
                             }}
                             position={this.props.position}
                             boxStyle={{height: '30px', width: '65px', padding: 0}}
