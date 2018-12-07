@@ -340,6 +340,7 @@ class AdminClasseur extends Component {
                                     <div className="grid-x grid-margin-x grid-padding-x">
                                         <h3 className="cell medium-12">{t('common.classeurs.comments.name')}</h3>
                                     </div>
+                                    <div style={{maxHeight:"22em", overflow:"auto"}}>
                                     {classeur.actions.map((action, key) =>
                                         <div key={action.id}>
                                             <div className="align-middle" style={{display: 'flex'}}>
@@ -354,8 +355,18 @@ class AdminClasseur extends Component {
                                                         width: '90%',
                                                         marginLeft: '1em'
                                                     }}>
-                                                    {action.action}
-                                                    <br/>
+                                                    {action.action &&
+                                                    <div>
+                                                        <span className="text-bold">{action.action}</span>
+                                                        <br />
+                                                    </div>
+                                                    }
+                                                    {action.commentaire &&
+                                                    <div>
+                                                        {action.commentaire}
+                                                        <br/>
+                                                    </div>
+                                                    }
                                                     <span className="text-author text-capitalize">
                                                             {action.user_action ?
                                                                 `${action.user_action._prenom}  ${action.user_action._nom}` :
@@ -369,6 +380,7 @@ class AdminClasseur extends Component {
                                             {key < classeur.actions.length - 1 &&
                                             <hr style={{height: '0.2rem', margin: '1rem auto'}}/>}
                                         </div>)}
+                                    </div>
                                 </div>
                             </div>}
                         </div>
