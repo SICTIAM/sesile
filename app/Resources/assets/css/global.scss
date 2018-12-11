@@ -1366,6 +1366,19 @@ select {
   color: rgba(138, 138, 137, 0.58);
 }
 
+progress[value] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+progress[value]::-webkit-progress-value {
+  background-color: $sesile-color-1;
+}
+progress[value]::-webkit-progress-bar {
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
 .doc-action-button {
   cursor: pointer;
   font-size: 0.85em;
