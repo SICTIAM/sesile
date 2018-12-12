@@ -49,6 +49,7 @@ class ClasseurNew extends Component {
 
     componentDidMount() {
         this.getCircuitsValidation()
+        this.setState({progress:0})
     }
 
     getCircuitsValidation() {
@@ -238,11 +239,11 @@ class ClasseurNew extends Component {
                     </div>
                 </div>
                 {this.state.progress > 0 &&
-                <div style={{top:'3.5em', left:'19em', height: '99%', width: '82%', position:'absolute', zIndex:'9'}}>
-                <div style={{height:'100%', width:'100%', background:'white', opacity:'0.7', filter: 'blur(8px)', zIndex:'9'}}></div>
-                    <div style={{top: '45%', right: '33%', position: 'absolute', zIndex:'10'}}>
+                <div className="progress-bar-background" style={{top:'3.5em', height: '99%', position:'absolute', zIndex:'9'}}>
+                <div style={{height:'100%', width:'100%', background:'white', opacity:'0.7', zIndex:'9'}}></div>
+                    <div style={{top: '45%', left: 'calc(50% - 15em)', position: 'absolute', zIndex:'10'}}>
                         <progress max="100" style={{width: "30em", height:'1.2em'}} value={this.state.progress}>
-                            <strong>Skill Level: 50%</strong>
+                            <strong>Upload progress</strong>
                         </progress>
                     </div>
                 </div>
