@@ -142,6 +142,13 @@ class ClasseurNew extends Component {
                     const classeur = JSON.parse(http.response)
                     History.push(`/classeur/${classeur.id}`)
                 }
+                else {
+                    this.context._addNotification(basicNotification(
+                        'error',
+                        this.context.t('common.classeurs.error.post', {errorCode: http.status}),
+                        http.statusText))
+                    this.setState({progress:0})
+                }
             }
         }.bind(this)
         http.onerror = function (e) {
@@ -149,6 +156,7 @@ class ClasseurNew extends Component {
                 'error',
                 this.context.t('common.classeurs.error.post', {errorCode: http.status}),
                 http.statusText))
+            this.setState({progress:0})
         }.bind(this)
         http.send(formData)
     }
