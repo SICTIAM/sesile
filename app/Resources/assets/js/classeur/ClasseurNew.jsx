@@ -25,7 +25,6 @@ class ClasseurNew extends Component {
 
     state = {
         edit: true,
-        sending: false,
         circuits: [],
         circuit: {
             users_copy: []
@@ -129,7 +128,6 @@ class ClasseurNew extends Component {
         formData.append('type', type.id)
         formData.append('circuit_id', circuit.id)
         formData.append('collectivite', user.current_org_id)
-        this.setState({sending: true})
 
 
         const http = new XMLHttpRequest()
@@ -138,9 +136,15 @@ class ClasseurNew extends Component {
         http.onload = function (e) {
             if (http.readyState === 4) {
                 if (http.status === 200) {
-                    this.setState({sending: false})
                     const classeur = JSON.parse(http.response)
                     History.push(`/classeur/${classeur.id}`)
+                }
+                else if (http.status === 413) {
+                    this.context._addNotification(basicNotification(
+                        'error',
+                        this.context.t('common.classeurs.error.post', {errorCode: http.status}),
+                        this.context.t('common.error413')))
+                    this.setState({progress:0})
                 }
                 else {
                     this.context._addNotification(basicNotification(
@@ -369,8 +373,6 @@ class ClasseurNew extends Component {
                                 <Button id="submit-classeur-infos"
                                         className="cell medium-12"
                                         classNameButton="float-right hollow"
-                                        loading={this.state.sending}
-                                        disabled={this.state.sending}
                                         onClick={this.saveClasseur}
                                         labelText={t('common.button.save')}/>
                             </div>
