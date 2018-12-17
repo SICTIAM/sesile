@@ -205,6 +205,8 @@
             "validity": "validité",
             "from": "émis le",
             "to": "expire le",
+            "enabled" : "Actif",
+            "disabled": "Inactif",
             "upadate_account": "Modifier mon profil"
         },
         "help_board":{
