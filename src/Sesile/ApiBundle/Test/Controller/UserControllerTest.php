@@ -75,10 +75,10 @@ class UserControllerTest extends SesileWebTestCase
         );
         $this->assertStatusCode(200, $this->client);
         $responseData = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(3, $responseData);
+        self::assertCount(4, $responseData);
         self::assertEquals($user->getId(), $responseData[0]['id']);
         self::assertEquals('username2', $responseData[1]['username']);
-        self::assertEquals('super', $responseData[2]['username']);
+        self::assertEquals('username3', $responseData[2]['username']);
     }
 
     public function testGetServicesOrganisationnelsAction()
@@ -385,6 +385,72 @@ class UserControllerTest extends SesileWebTestCase
             json_encode($postData)
         );
         $this->assertStatusCode(201, $this->client);
+    }
+
+    public function testDisabelUser() {
+        $user = $this->fixtures->getReference('user-two');
+        $collectivite1 = $this->fixtures->getReference('collectivite-one');
+
+        $postData = [
+            'instance_id' => $collectivite1->getOzwillo()->getInstanceId(),
+            'client_id' => $collectivite1->getOzwillo()->getClientId(),
+            'organization' => [
+                'id'=> $collectivite1->getOzwillo()->getOrganizationId(),
+                'name' => $collectivite1->getNom()
+            ],
+            'user' => [
+                'email_address' => $user->getEmail()
+            ]
+        ];
+
+        $this->client->request(
+            'DELETE',
+            sprintf('/api/users/ozwillo/%s', $user->getOzwilloId()),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_X-Hub-Signature' => 'sha1='. hash_hmac('sha1', json_encode($postData), $this->ozwilloSecret)
+            ),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(200, $this->client);
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(sprintf('The User %s was disabled', $user->getEmail()), $responseData);
+        $this->assertCount(0, $user->getCollectivities());
+    }
+
+    public function testRemoveUserToCollectivite() {
+        $user = $this->fixtures->getReference('user-three');
+        $collectivite1 = $this->fixtures->getReference('collectivite-one');
+
+        $postData = [
+            'instance_id' => $collectivite1->getOzwillo()->getInstanceId(),
+            'client_id' => $collectivite1->getOzwillo()->getClientId(),
+            'organization' => [
+                'id'=> $collectivite1->getOzwillo()->getOrganizationId(),
+                'name' => $collectivite1->getNom()
+            ],
+            'user' => [
+                'email_address' => $user->getEmail()
+            ]
+        ];
+
+        $this->client->request(
+            'DELETE',
+            sprintf('/api/users/ozwillo/%s', $user->getOzwilloId()),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_X-Hub-Signature' => 'sha1='. hash_hmac('sha1', json_encode($postData), $this->ozwilloSecret)
+            ),
+            json_encode($postData)
+        );
+        $this->assertStatusCode(200, $this->client);
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(sprintf('The User %s was removed to this organization %s', $user->getEmail(), $collectivite1->getNom()), $responseData);
+        $this->assertCount(1, $user->getCollectivities());
     }
 
 }

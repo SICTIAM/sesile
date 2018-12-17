@@ -20,6 +20,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
 {
     const USER_ONE_REFERENCE = 'user-one';
     const USER_TWO_REFERENCE = 'user-two';
+    const USER_THREE_REFERENCE = 'user-three';
     const USER_SUPER_REFERENCE = 'user-super';
 
     /**
@@ -90,6 +91,29 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Contain
         // Update the user
         $userManager->updateUser($user2, true);
         $this->addReference(self::USER_TWO_REFERENCE, $user2);
+
+        // Create our user and set details
+        $user3 = $userManager->createUser();
+        $user3->setNom('nom3');
+        $user3->setPrenom('prenom3');
+        $user3->setUsername('username3');
+        $user3->setEmail('email3@domain.com');
+        $user3->setPlainPassword('password3');
+        //$user->setPassword('3NCRYPT3D-V3R51ON');
+        $user3->setEnabled(true);
+        $user3->setRoles(array('ROLE_USER'));
+        $user3->addUserrole(self::aValidUserRole($user, 'President'));
+        $user3->setApitoken('token_43286cb2457c4ce2d8d4z45893211a3g');
+        $user3->setApisecret('secret_tr365bf44b62815f29c5f81fbf87f7c6');
+        $user3->setApiactivated(true);
+        $user3->setOzwilloId('43fd57f5-762b-2810-abtr-t6f67e56b8re');
+//        $user3->setCollectivite($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        $user3->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_ONE_REFERENCE));
+        $user3->addCollectivity($this->getReference(CollectiviteFixtures::COLLECTIVITE_TWO_REFERENCE));
+
+        // Update the user
+        $userManager->updateUser($user3, true);
+        $this->addReference(self::USER_THREE_REFERENCE, $user3);
 
         // Create our user and set details
         $superUser = $userManager->createUser();
