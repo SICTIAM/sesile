@@ -279,6 +279,134 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
      * )
      */
     public function createNewUserOrAddItToCollectivityFromOzwilloAction(Request $request, $userOzwilloId) {
+        $this->violationControlOfRequestFromUserGW($request);
+
+        $result = $this->get('collectivite.manager')->getOzwilloCollectivityByClientId($request->request->get('client_id'));
+        if (false === $result->isSuccess() || $result->getData() == null) {
+            return new JsonResponse(sprintf('No Collectivity found with the given Client_id %s', $request->request->get('client_id')), Response::HTTP_NOT_FOUND);
+        }
+        $collectiviteOzwillo = $result->getData();
+
+        if(!$collectiviteOzwillo instanceof CollectiviteOzwillo && $collectiviteOzwillo->getOrganizationId() !== $request->request->get('organization')["id"]) {
+            return new JsonResponse(sprintf('The organization id don\'t match  %s with organization id of collectivity', $request->request->get('organization')["id"]), Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($request->request->get('user')['email_address']);
+        if(!$user instanceof User) {
+            $user = $em->getRepository('SesileUserBundle:User')->addOzwilloUser($collectiviteOzwillo->getCollectivite(), $request->request->get('user'), $request->request->get('organization'), $userOzwilloId);
+            $this->get('logger')->info('New user {email} created', array('email' => $user->getEmail()));
+            return new JsonResponse('', Response::HTTP_CREATED);
+        } else  {
+            if ($this->get('collectivite.manager')->userHasOzwilloCollectivity($user->getId(), $request->request->get('client_id'))->getData()) {
+                return new JsonResponse(sprintf('The user %s exist and already have collectivity with ozwillo client_id %s', $user->getEmail(), $request->request->get('client_id')), Response::HTTP_CONFLICT);
+            } else {
+                $em->getRepository('SesileUserBundle:User')->addCollectiviteToUser($user, $collectiviteOzwillo->getCollectivite());
+                $this->get('logger')->info('Collectivity {collectiviteId} added to user {email}', array('email' => $user->getEmail(), 'collectiviteId' => $collectiviteOzwillo->getCollectivite()->getId()));
+                return new JsonResponse('', Response::HTTP_OK);
+            }
+        }
+    }
+
+    /**
+     * Cette méthode permet de désactiver un utilisateur ou le détacher d'une collectivité si il en a plusieurs
+     * (à condition que la colléctivité (organisation) soit déjà instancier dans Ozwillo)
+     *
+     * @var Request $request
+     * @return JsonResponse
+     * @Route("s/ozwillo/{userOzwilloId}")
+     * @Rest\View()
+     * @Method("DELETE")
+     *
+     *
+     * @param ParamFetcher $param
+     *
+     * @ApiDoc(
+     *  resource=false,
+     *  description="Cette méthode permet de désactiver un utilisateur",
+     *  requirements={
+     *      {"name"="userOzwilloId", "dataType"="integer", "user id"}
+     *  },
+     *  parameters={
+     *      {"name"="instance_id", "dataType"="string", "required"=true, "Ozwillo application instance id"},
+     *      {"name"="client_id", "dataType"="string", "required"=true, "description"="used for authentication purposes"},
+     *      {"name"="organization", "dataType"="object", "required"=true, "a description of the organization, containing at least Ozwillo organization id and name"},
+     *      {"name"="user", "dataType"="object", "required"=true, "user"}
+     *  }
+     * )
+     */
+    public function disabelUserOrRemoveItFromCollectivityFromOzwilloAction(Request $request, $userOzwilloId) {
+        $this->violationControlOfRequestFromUserGW($request);
+
+        $result =
+            $this
+                ->get('collectivite.manager')
+                ->getOzwilloCollectivityByClientId($request->request->get('client_id'));
+
+        if (false === $result->isSuccess() || $result->getData() == null) {
+            return new JsonResponse(
+                sprintf(
+                    'No Collectivity found with the given Client_id %s',
+                    $request->request->get('client_id')),
+                Response::HTTP_NOT_FOUND);
+        }
+        $collectiviteOzwillo = $result->getData();
+
+        if(!$collectiviteOzwillo instanceof CollectiviteOzwillo &&
+            $collectiviteOzwillo->getOrganizationId() !==
+            $request->request->get('organization')["id"]) {
+            return new JsonResponse(
+                sprintf('The organization id don\'t match  %s with organization id of collectivity',
+                    $request->request->get('organization')["id"]),
+                Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user =
+            $em
+                ->getRepository('SesileUserBundle:User')
+                ->findOneByEmail($request->request->get('user')['email_address']);
+
+        if($user instanceof User) {
+            $result =
+                $this
+                    ->get('collectivite.manager')
+                    ->userHasOzwilloCollectivity($user->getId(), $request->request->get('client_id'));
+
+            if ($result->getData()) {
+                $em
+                    ->getRepository('SesileUserBundle:User')
+                    ->removeCollectiviteFromUser($user, $collectiviteOzwillo->getCollectivite());
+            } else {
+                return new JsonResponse(
+                    sprintf(
+                        'The user doesn\'t attached to this organization %s ', $user->getEmail(),
+                        $request->request->get('organization')["name"]),
+                    Response::HTTP_NOT_ACCEPTABLE);
+            }
+
+            if(!$user->getCollectivities()->count() > 0) {
+                $em->getRepository('SesileUserBundle:User')->disabelUser($user);
+                return new JsonResponse(
+                    sprintf('The User %s was disabled', $user->getEmail()),
+                    Response::HTTP_OK);
+            }
+
+            return new JsonResponse(
+                sprintf(
+                    'The User %s was removed to this organization %s',
+                    $user->getEmail(),
+                    $request->request->get('organization')["name"]),
+                Response::HTTP_OK);
+        } else  {
+            return new JsonResponse(
+                sprintf('No user found with the given email %s',
+                    $request->request->get('user')['email_address']),
+                Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    private function violationControlOfRequestFromUserGW(Request $request) {
         $validator = Validation::createValidator();
 
         $constraint = new Assert\Collection(array(
@@ -300,35 +428,18 @@ class UserController extends FOSRestController implements TokenAuthenticatedCont
         $violations = $validator->validate($request->request->all(), $constraint);
 
         if($violations->count() > 0) {
-            $messageViolations =  array_map(function ($violation) {return $violation->getMessage() . " " . $violation->getInvalidValue();}, iterator_to_array($violations));
-            $this->get('logger')->error(sprintf("StatusCode : %s, Errors : %s", Response::HTTP_BAD_REQUEST, $messageViolations));
+            $messageViolations =
+                array_map(
+                    function ($violation) {return $violation->getMessage() . " " . $violation->getInvalidValue();},
+                    iterator_to_array($violations));
+
+            $this->get('logger')->error(
+                sprintf(
+                    "StatusCode : %s, Errors : %s",
+                    Response::HTTP_BAD_REQUEST,
+                    $messageViolations));
+
             return new JsonResponse($messageViolations, Response::HTTP_BAD_REQUEST);
-        }
-
-        $result = $this->get('collectivite.manager')->getOzwilloCollectivityByClientId($request->request->get('client_id'));
-        if (false === $result->isSuccess() || $result->getData() == null) {
-            return new JsonResponse(sprintf('No Collectivity found with the given Client_id %s', $request->request->get('client_id')), Response::HTTP_NOT_FOUND);
-        }
-        $collectivteOzwillo = $result->getData();
-
-        if(!$collectivteOzwillo instanceof CollectiviteOzwillo && $collectivteOzwillo->getOrganizationId() !== $request->request->get('organization')["id"]) {
-            return new JsonResponse(sprintf('The organization id don\'t match  %s with organization id of collectivity', $request->request->get('organization')["id"]), Response::HTTP_NOT_ACCEPTABLE);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('SesileUserBundle:User')->findOneByEmail($request->request->get('user')['email_address']);
-        if(!$user instanceof User) {
-            $user = $em->getRepository('SesileUserBundle:User')->addOzwilloUser($collectivteOzwillo->getCollectivite(), $request->request->get('user'), $request->request->get('organization'), $userOzwilloId);
-            $this->get('logger')->info('New user {email} created', array('email' => $user->getEmail()));
-            return new JsonResponse('', Response::HTTP_CREATED);
-        } else  {
-            if ($this->get('collectivite.manager')->userHasOzwilloCollectivity($user->getId(), $request->request->get('client_id'))->getData()) {
-                return new JsonResponse(sprintf('The user %s exist and already have collectivity with ozwillo client_id %s', $user->getEmail(), $request->request->get('client_id')), Response::HTTP_CONFLICT);
-            } else {
-                $em->getRepository('SesileUserBundle:User')->addCollectiviteToUser($user, $collectivteOzwillo->getCollectivite());
-                $this->get('logger')->info('Collectivity {collectiviteId} added to user {email}', array('email' => $user->getEmail(), 'collectiviteId' => $collectivteOzwillo->getCollectivite()->getId()));
-                return new JsonResponse('', Response::HTTP_OK);
-            }
         }
     }
 }
