@@ -128,7 +128,7 @@ class Groups extends Component {
                                 {t('admin.group.add_group')}
                             </button>
                         </div>
-                        <table style={{borderRadius:"6px"}}>
+                        <table style={{borderRadius:"6px", margin:"10px"}}>
                             <thead>
                             <tr style={{backgroundColor:"#CC0066", color:"white"}}>
                                 <td width="240px" className="text-bold">{ t('common.label.name') }</td>

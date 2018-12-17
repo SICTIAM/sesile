@@ -54,7 +54,6 @@ class ClasseursButtonList extends Component {
                                         <button
                                             style={{border: 'none'}}
                                             data-toggle={id + 'sign'}
-                                            title={t('common.classeurs.button.sign_title')}
                                             className="fa fa-edit success button hollow"/>
                                         <span className="tooltiptext">{t('common.classeurs.button.sign_tooltip')}</span>
                                     </div>

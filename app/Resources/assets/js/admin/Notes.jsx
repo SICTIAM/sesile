@@ -103,7 +103,7 @@ class Notes extends Component {
                                 {t('common.button.add')}
                             </button>
                         </div>
-                        <table style={{borderRadius:"6px"}}>
+                        <table style={{borderRadius:"6px", margin:"10px"}}>
                             <thead>
                             <tr style={{backgroundColor:"#CC0066", color:"white"}}>
                                 <td width="300px" className="text-bold">{ t('common.label.title') }</td>
