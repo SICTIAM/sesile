@@ -65,7 +65,7 @@ class AdminDashboard extends Component {
             .then(response => response.json())
             .then(json => {
                 let users = json.filter(user => user.enabled)
-                this.setState({users, filteredUsers: users})
+                this.setState({users, filteredUsers: users.slice(0,9)})
             })
             .catch(error => _addNotification(basicNotification(
                 'error',
@@ -80,7 +80,7 @@ class AdminDashboard extends Component {
         const {t, _addNotification} = this.context
         fetch(Routing.generate('sesile_user_userpackapi_getbycollectivite', {collectiviteId}), {credentials: 'same-origin'})
             .then(response => response.json())
-            .then(json => this.setState({groups: json, filteredGroups: json}))
+            .then(json => this.setState({groups: json, filteredGroups: json.slice(0,4)}))
     }
 
     fetchCircuitsValidations(collectiviteId) {
@@ -91,7 +91,7 @@ class AdminDashboard extends Component {
             {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
-            .then(json => this.setState({circuits: json, filteredCircuits: json}))
+            .then(json => this.setState({circuits: json, filteredCircuits: json.slice(0,4)}))
             .catch(() =>
                 this.context._addNotification(basicNotification(
                     'error',
@@ -102,19 +102,19 @@ class AdminDashboard extends Component {
         this.setState({circuitName})
         const regex = escapedValue(circuitName, this.state.filteredCircuits, this.state.circuits)
         const filteredCircuits = this.state.circuits.filter(circuit => regex.test(circuit.nom))
-        this.setState({filteredCircuits})
+        this.setState({filteredCircuits : filteredCircuits.slice(0,4)})
     }
     handleChangeGroupName = (key, groupName) => {
         this.setState({groupName})
         const regex = escapedValue(groupName, this.state.filteredGroups, this.state.groups)
         const filteredGroups = this.state.groups.filter(group => regex.test(group.nom))
-        this.setState({filteredGroups})
+        this.setState({filteredGroups: filteredGroups.slice(0,4)})
     }
     handleChangeName = (key, UserName) => {
         this.setState({UserName})
         const regex = escapedValue(UserName, this.state.filteredUsers, this.state.users)
         const filteredUsers = this.state.users.filter(user => regex.test(user._nom))
-        this.setState({filteredUsers})
+        this.setState({filteredUsers : filteredUsers.slice(0,9)})
     }
     onClickButtonClasseurList = (e, user) => {
         e.preventDefault()
