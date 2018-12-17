@@ -112,6 +112,7 @@ class Users extends Component {
                                     <td width="160px" className="text-bold">{ t('admin.user.label_name') }</td>
                                     <td width="160px" className="text-bold">{ t('admin.user.label_firstname') }</td>
                                     <td width="210px" className="text-bold">{  t('admin.user.label_email') }</td>
+                                    <td width="30px" className="text-bold">{ t('common.classeurs.sort_label.status') }</td>
                                     <td width="30px" className="text-bold">{ t('common.label.actions') }</td>
                                 </tr>
                                 </thead>
@@ -152,6 +153,9 @@ const RowUser = ({user, onClick, handleDeleteUser, collectiviteId}, {t}) =>
         </td>
         <td>
             {user.email}
+        </td>
+        <td>
+            {(user.enabled) ? <div className="text-success">{t('common.user.enabled')}</div> : <div className="text-alert">{t('common.user.disabled')}</div>}
         </td>
         <td>
             <span
