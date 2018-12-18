@@ -10,7 +10,7 @@
         "confirm_deletion_item": "Voulez-vous vraiment supprimer cet élément ?",
         "drop_file_here": "Déposer le fichier ici",
         "file_is_required": "Le fichier est requis",
-        "error413": "Les documents sont trop lourds",
+        "request_too_large": "Les documents sont trop lourds",
         "helios": {
             "title": "Visualiseur de fichier PES",
             "voucher": "Bordereau",

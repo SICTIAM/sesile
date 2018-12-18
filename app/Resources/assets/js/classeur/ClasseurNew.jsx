@@ -143,7 +143,7 @@ class ClasseurNew extends Component {
                     this.context._addNotification(basicNotification(
                         'error',
                         this.context.t('common.classeurs.error.post', {errorCode: http.status}),
-                        this.context.t('common.error413')))
+                        this.context.t('common.request_too_large')))
                     this.setState({progress:0})
                 }
                 else {
