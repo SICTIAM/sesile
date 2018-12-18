@@ -745,6 +745,32 @@ class DocumentController extends Controller
     }
 
     /**
+     * @param $visible
+     * @param $user
+     * @param $OrgId
+     * @return bool
+     */
+    private function checkAuthorizeToDownloadDocument($visible, $user, $OrgId)
+    {
+        // user courant
+        $users = [];
+        $users[0] = $user;
+        $em = $this->getDoctrine()->getManager();
+        $collectivite =  $em->getRepository('SesileMainBundle:collectivite')->findOneByid($OrgId);
+        // Verification que l utilisateur a bien les droits
+        $usersForClasseur = $visible;
+        // Si l'utilisateur n a pas les droits, on l eject
+        if(count(array_intersect($users, $usersForClasseur->toArray())) > 0 ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') ||
+            ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') &&
+                $this->getUser()->getCollectivities()->contains($collectivite))) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * @param string $orgId
      * @param $classeur
      * @param $type
@@ -754,14 +780,14 @@ class DocumentController extends Controller
     private function zipFileDownload ($orgId, $classeur, $type) {
 
         // Verif des autorisations
-        if(!$this->authorizeToDownloadDocument($classeur->getVisible(), $this->getUser())) {
-            return $this->render('SesileMainBundle:Default:errorrestricted.html.twig');
+        if($this->CheckAuthorizeToDownloadDocument($classeur->getVisible(), $this->getUser(), $orgId)) {
+            return new JsonResponse(['message' => 'Vous n\'avez pas accès à la collectivité demandé'], Response::HTTP_FORBIDDEN);
         }
 
         // Ecriture de l'historique du document
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if (!$user || false === $user->hasCollectivity($orgId)) {
-            return new JsonResponse(['message' => 'Vous n\'avez pas accès à la collectivité demandé'], Response::HTTP_FORBIDDEN);
+            return new JsonResponse(['message' => 'Vous n\'avez pas accès au Classeur demandé'], Response::HTTP_FORBIDDEN);
         }
         $docs = $classeur->getDocuments();
 
@@ -785,11 +811,6 @@ class DocumentController extends Controller
                 if ($doc->getType() != "application/pdf" || $type == "NONE") {
                     // On ajoute le fichier original
                     $zip->addFile($path . $doc->getRepourl(), $doc->getName());
-
-                    // On ajoute tous les fichiers signés
-                    foreach ($doc->getDetachedsign() as $detachedFile) {
-                        $zip->addFile($path . $detachedFile->getRepourl(), $detachedFile->getName());
-                    }
                 }
                 else {
                     $collectivity = $user->getCollectivityById($orgId);
