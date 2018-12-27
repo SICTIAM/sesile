@@ -48,7 +48,7 @@ class UserRepositoryTest extends SesileWebTestCase
     {
         $collectivity = $this->fixtures->getReference('collectivite-one');
         $result = $this->em->getRepository(User::class)->getUsersByCollectivityId($collectivity->getId());
-        self::assertCount(3, $result);
+        self::assertCount(4, $result);
         /**
          * user One
          */
@@ -75,8 +75,22 @@ class UserRepositoryTest extends SesileWebTestCase
             'username' => $userTwo->getUsername(),
         ];
         self::assertArraySubset($userTwoArray, $result[1]);
-        self::assertArrayHasKey('roles', $result[0]);
-        self::assertArrayHasKey('ozwilloId', $result[0]);
+        self::assertArrayHasKey('roles', $result[1]);
+        self::assertArrayHasKey('ozwilloId', $result[1]);
+        /**
+         * user three
+         */
+        $userTwo = $this->fixtures->getReference('user-three');
+        $userTwoArray = [
+            'id' => $userTwo->getId(),
+            'nom' => $userTwo->getNom(),
+            'prenom' => $userTwo->getPrenom(),
+            'email' => $userTwo->getEmail(),
+            'username' => $userTwo->getUsername(),
+        ];
+        self::assertArraySubset($userTwoArray, $result[2]);
+        self::assertArrayHasKey('roles', $result[2]);
+        self::assertArrayHasKey('ozwilloId', $result[2]);
         /**
          * super user
          */
@@ -88,12 +102,12 @@ class UserRepositoryTest extends SesileWebTestCase
             'email' => $superUser->getEmail(),
             'username' => $superUser->getUsername(),
         ];
-        self::assertArraySubset($superUserArray, $result[2]);
+        self::assertArraySubset($superUserArray, $result[3]);
     }
 
     public function testGetUsersByCollectivityIdShouldReturnEmptyArrayOfUsersIsCollectivityHaseNone()
     {
-        $collectivity = $this->fixtures->getReference('collectivite-two');
+        $collectivity = $this->fixtures->getReference('collectivite-three');
         $result = $this->em->getRepository(User::class)->getUsersByCollectivityId($collectivity->getId());
         self::assertCount(0, $result);
     }

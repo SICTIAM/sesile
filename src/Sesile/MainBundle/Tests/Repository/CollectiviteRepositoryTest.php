@@ -113,7 +113,7 @@ class CollectiviteRepositoryTest extends WebTestCase
          * check DB
          */
         $res = $this->em->getRepository(Collectivite::class)->find($collectivityOne->getId());
-        self::assertCount(3, $res->getUsers());
+        self::assertCount(4, $res->getUsers());
 
         $result = $this->em->getRepository(Collectivite::class)->clearCollectivityUsers($collectivityOne->getId());
         self::assertTrue($result);

@@ -122,76 +122,6 @@ class ClasseurApiControllerTest extends SesileWebTestCase
         self::assertEquals($formData['collectivite']->getId(), $data->getCollectivite()->getId());
     }
 
-    public function testPostActionWithCallback()
-    {
-        $this->logIn($this->fixtures->getReference('user-one'));
-        $collectivite = $this->fixtures->getReference('collectivite-one');
-        $formData = $this->getFormData();
-        $postData = [
-            'circuit_id' => $formData['circuitValidation']->getId(),
-            'copy' => [$formData['user']->getId()],
-            'description' => "test",
-            'etapeClasseurs' => [
-                [
-                    "ordre" => "0",
-                    "users" => [$formData['user']->getId()],
-                    "user_packs" => [$formData['userPack']->getId()],
-                ],
-                ["ordre" => "1", "users" => [$formData['user']->getId()]],
-            ],
-            'nom' => "The Name Callback",
-            'type' => $formData['typeClasseur']->getId(),
-            'user' => $formData['user']->getId(),
-            'validation' => "2018-11-11 11:36",
-            'visibilite' => 0,
-            'collectivite' => $formData['collectivite']->getId(),
-            'callback' => true,
-            'url_delete' => 'http://test.com/delete',
-            'url_signed' => 'http://test.com/signed',
-            'url_withdrawn' => 'http://test.com/withdrawn'
-        ];
-
-        $this->client->enableProfiler();
-        $this->client->request(
-            'POST',
-            sprintf('/api/v4/classeur/new', $collectivite->getId()),
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode($postData)
-        );
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
-        self::assertTrue(
-            $this->client->getResponse()->isSuccessful(),
-            sprintf('response status is %s', $this->client->getResponse()->getStatusCode())
-        );
-        self::assertTrue(
-            $this->client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            ),
-            'the "Content-Type" header is "application/json"' // optional message shown on failure
-        );
-        /**
-         * check database data
-         */
-        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $entityManager->clear();
-        $data = $entityManager->getRepository(Classeur::class)->findOneBy(['nom' => 'The Name Callback']);
-
-        //callbacks
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $sql = 'SELECT * FROM `Callback` WHERE classeur_id = :classeurId';
-        $connection = $em->getConnection()->prepare($sql);
-        $connection->bindValue('classeurId', $data->getId());
-        $connection->execute();
-        $datacallback = $connection->fetchAll();
-
-        self::assertEquals('http://test.com/delete', $datacallback[0]['url_delete']);
-        self::assertEquals('http://test.com/signed', $datacallback[0]['url_signed']);
-        self::assertEquals('http://test.com/withdrawn', $datacallback[0]['url_withdrawn']);
-    }
-
     public function testUpdateActionShouldReturnSuccess()
     {
         $this->logIn($this->fixtures->getReference('user-one'));
@@ -405,8 +335,8 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(1, $data);
-        self::assertEquals($classeur->getId(), $data[0]['id']);
+        self::assertCount(1, $data['list']);
+        self::assertEquals($classeur->getId(), $data['list'][0]['id']);
     }
 
     public function testListActionForSuperUserShouldReturnOnlySuperuserClasseursByCollectivity()
@@ -429,7 +359,7 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(0, $data);
+        self::assertCount(0, $data['list']);
     }
 
     public function testValidActionShouldReturnAllClasseursToBeValidatedByTheUser()
@@ -453,8 +383,8 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(1, $data);
-        self::assertEquals($classeur->getId(), $data[0]['id']);
+        self::assertCount(1, $data['list']);
+        self::assertEquals($classeur->getId(), $data['list'][0]['id']);
     }
 
     public function testListRetractActionShouldReturnAllClasseursThatCanBeRetractableByTheUser()
@@ -478,8 +408,8 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(1, $data);
-        self::assertEquals($classeur->getId(), $data[0]['id']);
+        self::assertCount(1, $data['list']);
+        self::assertEquals($classeur->getId(), $data['list'][0]['id']);
     }
 
     public function testListRemovableActionShouldReturnAllClasseursThatCanBeRemovedByTheUser()
@@ -509,8 +439,8 @@ class ClasseurApiControllerTest extends SesileWebTestCase
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(1, $data);
-        self::assertEquals($classeur->getId(), $data[0]['id']);
+        self::assertCount(1, $data['list']);
+        self::assertEquals($classeur->getId(), $data['list'][0]['id']);
     }
 
     public function testGetClasseurByIdShouldReturnSerializedClasseur()
