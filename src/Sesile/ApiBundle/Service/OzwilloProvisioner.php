@@ -19,8 +19,7 @@ use Symfony\Component\Routing\Router;
 class OzwilloProvisioner
 {
     const SERVICE_LOCAL_ID = "sesile";
-    //TODO: modify icon
-    const SESILE_ICON_URI = 'https://www.ozwillo.com/static/img/editors/sesile-icon-64x64.png';
+    const SESILE_ICON_URI = 'images/favicons/favicon-64x64.png';
     const OZWILLO_CONNECT_URI = 'connect/ozwillo';
     /**
      * @var Client
@@ -179,7 +178,9 @@ class OzwilloProvisioner
             'name' => sprintf("SESILE - %s", $collectivite->getNom()),
             'tos_uri' => "https://sesile.fr/tos",
             'policy_uri' => "https://sesile.fr/policy",
-            'icon' => self::SESILE_ICON_URI,
+            'icon' => $this->urlRegistrationToKernel(
+                $collectivite,
+                $this->router->generate('sesile_main_default_app')).self::SESILE_ICON_URI,
             'contacts' => $contacts,
             'payment_option' => "PAID",
             'target_audience' => ["PUBLIC_BODIES"],
