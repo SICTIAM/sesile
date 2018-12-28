@@ -91,7 +91,7 @@ class UserApiControllerTest extends SesileWebTestCase
         $this->assertStatusCode(200, $this->client);
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(3, $data);
+        self::assertCount(4, $data);
         self::assertEquals($user->getId(), $data[0]['id']);
     }
 
@@ -104,7 +104,7 @@ class UserApiControllerTest extends SesileWebTestCase
         $this->assertStatusCode(200, $this->client);
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        self::assertCount(3, $data);
+        self::assertCount(4, $data);
         self::assertArraySubset(['label' => $user->getPrenom() . " " . $user->getNom(), 'value' => $user->getId()], $data[0]);
     }
 

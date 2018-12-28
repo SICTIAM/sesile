@@ -63,6 +63,7 @@ class Document
      * @var boolean
      *
      * @ORM\Column(name="signed", type="boolean")
+     * @Groups({"classeurById"})
      *  
      */
     private $signed;

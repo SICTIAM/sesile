@@ -73,7 +73,7 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         $userProviderResponseMock
             ->expects($this->once())
             ->method('getResourceOwner')
-            ->will($this->returnValue($this->createResourceOwnerMock('ozwillo-client-id')));
+            ->will($this->returnValue($this->createResourceOwnerMock('2e771747-f906-4125-ba96-806553bc2ce2')));
 
         $userProviderResponseMock
             ->expects($this->once())
@@ -119,7 +119,7 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         $userProviderResponseMock
             ->expects($this->once())
             ->method('getResourceOwner')
-            ->will($this->returnValue($this->createResourceOwnerMock('ozwillo-client-id')));
+            ->will($this->returnValue($this->createResourceOwnerMock('2e771747-f906-4125-ba96-806553bc2ce2')));
 
         $userProviderResponseMock
             ->expects($this->once())
@@ -151,7 +151,7 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         self::assertCount(1, $dbUser->getCollectivities());
         $collectivity = $dbUser->getCollectivities()->first();
         self::assertEquals($this->fixtures->getReference('collectivite-one')->getId(), $collectivity->getId());
-        self::assertEquals('ozwillo-client-id', $collectivity->getOzwillo()->getClientId());
+        self::assertEquals('2e771747-f906-4125-ba96-806553bc2ce2', $collectivity->getOzwillo()->getClientId());
     }
 
 
@@ -180,7 +180,7 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         $userProviderResponseMock
             ->expects($this->once())
             ->method('getResourceOwner')
-            ->will($this->returnValue($this->createResourceOwnerMock('nice-client-id')));
+            ->will($this->returnValue($this->createResourceOwnerMock('ad284e47-10ce-470a-9f33-bf1b74a46d60')));
 
         $userProviderResponseMock
             ->expects($this->once())
@@ -209,7 +209,7 @@ class MyFOSUBUserProviderTest extends SesileWebTestCase
         self::assertEquals($this->fixtures->getReference('collectivite-one')->getId(), $existingCollectivity->getId());
         $newCollectivity = $dbUser->getCollectivities()->last();
         self::assertEquals($this->fixtures->getReference('collectivite-two')->getId(), $newCollectivity->getId());
-        self::assertEquals('nice-client-id', $newCollectivity->getOzwillo()->getClientId());
+        self::assertEquals('ad284e47-10ce-470a-9f33-bf1b74a46d60', $newCollectivity->getOzwillo()->getClientId());
     }
 
     public function testLoadUserByOAuthUserResponseShouldThrowExceptionIfOzwilloCollectiviteNotFoundForClientId()

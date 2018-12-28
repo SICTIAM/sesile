@@ -123,7 +123,7 @@ class Migration extends Component {
         .then(handleErrors)
         .then(response => response.json())
         .then(() => {
-            _addNotification(basicNotification(
+            this.context._addNotification(basicNotification(
                 'success',
                 t('common.export_user_is_begin')
             ))

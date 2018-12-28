@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     cron \
     libmagickwand-dev \
-    imagemagick
+    imagemagick \
+    libzip-dev
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -27,6 +28,7 @@ RUN docker-php-ext-install pdo pdo_mysql
 # install xdebug
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
+RUN docker-php-ext-install zip
 RUN echo 'memory_limit = 1024M' >> /usr/local/etc/php/conf.d/memory-limit-php.ini
 RUN echo 'upload_max_filesize = 150M' >> /usr/local/etc/php/conf.d/upload-max-filesize-php.ini
 RUN echo 'post_max_size = 150M' >> /usr/local/etc/php/conf.d/post-max-size-php.ini

@@ -142,7 +142,7 @@ class Types extends Component {
                                     handleChange={this.handleChangeCollectivite}/>
                             </div>}
                         </div>
-                        <table style={{borderRadius:"6px"}}>
+                        <table style={{borderRadius:"6px", margin:"10px"}}>
                             <thead>
                             <tr style={{backgroundColor:"#CC0066", color:"white"}}>
                                 <td width="600px" className="text-bold">{ t('admin.user.label_name') }</td>

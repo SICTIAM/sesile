@@ -279,4 +279,22 @@ class UserRepository extends EntityRepository {
         $em->persist($user);
         $em->flush();
     }
+
+    public function removeCollectiviteFromUser(User $user, Collectivite $collectivite) {
+        $em = $this->getEntityManager();
+
+        $user = $user->removeCollectivity($collectivite);
+
+        $em->persist($user);
+        $em->flush();
+    }
+
+    public function disabelUser(User $user) {
+        $em = $this->getEntityManager();
+
+        $user = $user->setEnabled(false);
+
+        $em->persist($user);
+        $em->flush();
+    }
 }

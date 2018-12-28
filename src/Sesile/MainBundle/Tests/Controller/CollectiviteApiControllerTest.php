@@ -62,7 +62,7 @@ class CollectiviteApiControllerTest extends SesileWebTestCase
         $this->logIn($this->fixtures->getReference('user-one'));
         $collectivite = $this->fixtures->getReference('collectivite-one');
         $postData = [
-            'nom' => 'this is the new name'
+            'active' => false
         ];
         $this->client->request('PATCH', sprintf('/apirest/collectivite/%s', $collectivite->getId()));
 
@@ -81,7 +81,7 @@ class CollectiviteApiControllerTest extends SesileWebTestCase
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $entityManager->clear();
         $data = $entityManager->getRepository(Collectivite::class)->find($collectivite->getId());
-        self::assertEquals('this is the new name', $data->getNom());
+        self::assertFalse( $data->getActive());
     }
 
     public function testUpdateCollectiviteShouldNotBeAllowedIfUserIsNotInDemandedCollectivite()

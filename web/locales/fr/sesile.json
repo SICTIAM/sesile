@@ -11,6 +11,7 @@
         "drop_file_here": "Déposer le fichier ici",
         "file_is_required": "Le fichier est requis",
         "request_too_large": "Les documents sont trop lourds",
+        "download_all_files": "Télécharger tous les fichiers",
         "helios": {
             "title": "Visualiseur de fichier PES",
             "voucher": "Bordereau",
@@ -206,6 +207,8 @@
             "validity": "validité",
             "from": "émis le",
             "to": "expire le",
+            "enabled" : "Actif",
+            "disabled": "Inactif",
             "upadate_account": "Modifier mon profil"
         },
         "help_board":{

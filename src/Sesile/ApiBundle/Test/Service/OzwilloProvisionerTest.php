@@ -91,7 +91,7 @@ class OzwilloProvisionerTest extends SesileWebTestCase
             'name' => "SESILE - ".$collectivite->getNom(),
             'tos_uri' => "https://sesile.fr/tos",
             'policy_uri' => "https://sesile.fr/policy",
-            'icon' => "https://www.ozwillo.com/static/img/editors/sesile-icon-64x64.png",
+            'icon' => "https://sictiam.sesile-dev.local/images/favicons/favicon-64x64.png",
             'contacts' => ['mailto:'.$this->getContainer()->getParameter('contact')],//demat@sictiam.fr
             'payment_option' => "PAID",
             'target_audience' => ["PUBLIC_BODIES"],
