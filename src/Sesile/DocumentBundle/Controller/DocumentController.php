@@ -695,7 +695,7 @@ class DocumentController extends Controller
 
 
     /**
-     * @Route("/org/{orgId}/download_doc_all_files/{id}", name="download_doc_all_files")
+     * @Route("/org/{orgId}/download_doc_all_files/{id}", name="download_doc_all_files", options={"expose"=true})
      * @ParamConverter("Classeur", options={"mapping": {"id": "id"}})
      * @param string $orgId
      * @param Classeur $classeur
