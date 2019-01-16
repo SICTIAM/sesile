@@ -44,14 +44,16 @@ parameters:
 monolog:
     handlers:
         main:
-            type:  stream
+            type:  rotating_file
             path:  '%kernel.logs_dir%/%kernel.environment%.log'
             level: error
+            max_files: 10
         migrator:
-            type:  stream
+            type:  rotating_file
             path:  '%kernel.logs_dir%/migrator-%kernel.environment%.log'
             level: info
             channels: ['!security', '!doctrine']
+            max_files: 10
         logstash:
             type: gelf
             publisher:
