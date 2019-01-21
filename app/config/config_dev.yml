@@ -53,7 +53,7 @@ parameters:
         logo_coll: '%kernel.root_dir%/../web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         fics: '%kernel.project_dir%/web/uploads/docs/'
-    url_applet: signature.dev.sesile.fr
+    url_applet: '%signature_url_applet%'
     ovh:
         environnement: demo.sesile
         zone: sictiam.fr
