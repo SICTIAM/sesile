@@ -911,7 +911,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             'username' => $action->getUsername(),
             'date' => $action->getDate(),
             'action' => $action->getAction(),
-            'observation' => $action->getObservation()
+            //TODO: make observation field deprecated
+            'observation' => $action->getObservation(),
+            'commentaire' => $action->getCommentaire()
         );
     }
 
