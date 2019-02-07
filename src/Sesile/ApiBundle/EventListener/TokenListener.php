@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Doctrine\ORM\EntityManager;
 
@@ -49,7 +50,7 @@ class TokenListener
                 $entity = $this->em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $headers->get('token'), 'apisecret' => $headers->get('secret'), 'apiactivated' => true));;
 
                 if (empty($entity)) {
-                    throw new AccessDeniedHttpException('Cette action nécessite un couple token - secret valide!');
+                    throw new UnauthorizedHttpException('Basic realm=Access to a ressource', 'Cette action nécessite un couple token - secret valide!');
                 }
 
 

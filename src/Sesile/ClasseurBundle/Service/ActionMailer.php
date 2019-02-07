@@ -46,7 +46,7 @@ class ActionMailer
                     ->render('SesileClasseurBundle:Notifications:CommentClasseur.html.twig',
                         array(
                             "classeur" => $classeur,
-                            "comment" => $action->getAction(),
+                            "comment" => $action->getCommentaire(),
                             "user" => $action->getUserAction()
                         )),
                     'text/html');

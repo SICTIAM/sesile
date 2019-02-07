@@ -2,7 +2,6 @@
 namespace Sesile\ApiBundle\Controller;
 
 use Sesile\ClasseurBundle\Entity\Callback;
-use Sesile\MainBundle\Domain\Message;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,7 +18,6 @@ use Sesile\ClasseurBundle\Entity\Action;
 use Sesile\ClasseurBundle\Entity\ClasseursUsers;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sesile\ClasseurBundle\Service\ActionMailer;
-use Sesile\ClasseurBundle\Entity\CallbackRepository;
 
 
 /**
@@ -177,13 +175,12 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
     /**
      * Cette méthode permet de récupérer un classeur
      *
-     * Si l'utilisateur courant n'as pas accès au classeur, un 403 not allowed sera renvoyé
-     *
-     *
      * Status des classeurs : En cours = 1 finalisé = 2, refusé = 0, retiré = 3
      *
-     * @var Request $request
-     * @return array
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
      * @Route("/{id}")
      * @Rest\View()
      * @Method("get")
@@ -192,28 +189,33 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
      *  resource=false,
      *  description="Permet de récupérer un classeur",
      *  requirements={
-     *      {"name"="id", "dataType"="integer", "required"=true, "description"="Id du classeur à obtenir"}
+     *      {"name"="id", "dataType"="integer", "requirement"="\d+", "description"="Id du classeur"}
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      401="Returned when token is invalid",
+     *      403="Returned when the user is not authorized to access to this classeur",
+     *      404="Returned when the classeur is not found"
      *  }
      * )
      */
-    public function getAction(Request $request, $id)
+    public function getAction(Request $request, int $id)
     {
-
-
         $em = $this->getDoctrine()->getManager();
 
 
         $user = $em->getRepository('SesileUserBundle:User')->findOneBy(array('apitoken' => $request->headers->get('token'), 'apisecret' => $request->headers->get('secret')));
         $classeur = $em->getRepository('SesileClasseurBundle:Classeur')->findOneById($id);
 
+        if(is_null($classeur)) {
+            return new JsonResponse(sprintf("Aucun classeur trouvé avec l'id %s", $id), JsonResponse::HTTP_NOT_FOUND);
+        }
 
         if (!in_array($classeur, $user->getClasseurs()->toArray())) {
             throw new AccessDeniedHttpException("Vous n'avez pas accès à ce classeur");
         }
 
         return $this->classeurToArray($classeur);
-
-
     }
 
 
@@ -911,7 +913,9 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             'username' => $action->getUsername(),
             'date' => $action->getDate(),
             'action' => $action->getAction(),
-            'observation' => $action->getObservation()
+            //TODO: make observation field deprecated
+            'observation' => $action->getObservation(),
+            'commentaire' => $action->getCommentaire()
         );
     }
 

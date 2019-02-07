@@ -10,6 +10,8 @@
         "confirm_deletion_item": "Voulez-vous vraiment supprimer cet élément ?",
         "drop_file_here": "Déposer le fichier ici",
         "file_is_required": "Le fichier est requis",
+        "request_too_large": "Les documents sont trop lourds",
+        "download_all_files": "Télécharger tous les fichiers",
         "helios": {
             "title": "Visualiseur de fichier PES",
             "voucher": "Bordereau",

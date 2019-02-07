@@ -6,6 +6,7 @@ import {array, func, object, bool} from 'prop-types'
 import {Cell, GridX} from '../_components/UI'
 import { BytesToSize, handleErrors } from '../_utils/Utils'
 import DowSign from "./DowSign"
+import {Button} from "../_components/Form"
 
 
 class DocumentsNew extends Component {
@@ -81,10 +82,12 @@ class DocumentsNew extends Component {
     isPdfAndExistingDocument = (document) => {
         return document.id && document.type === "application/pdf"
     }
+    isAllDocSigned = () => this.props.documents.every(document => document.signed)
     classeurIsFinalized = () => this.props.statusClasseur === 2
     isFinalizedOrRetiredClasseur = () => this.classeurIsFinalized() || this.props.statusClasseur === 3
     userNotHaveSignatureImage = () => this.props.user.path_signature && this.props.user.path_signature.trim() !== ""
     isPendingAndHeliosTypeCLasseur = () => this.props.statusClasseur === 1 && this.props.typeClasseur.nom === 'Helios'
+    downloadDoc = () =>  window.location.href=`/doc/org/${this.props.user.current_org_id}/download_doc_all_files/${this.props.classeurId}`
 
     render() {
         const {t} = this.context
@@ -227,10 +230,15 @@ class DocumentsNew extends Component {
                         </div>
                     </div>}
                     <GridX className="grid-margin-x grid-padding-x grid-padding-y">
+                        {(this.isAllDocSigned() && this.classeurIsFinalized() && this.props.documents.length > 0) &&
+                            <Button
+                                id="download-doc-signed"
+                                className="cell small-12 medium-12"
+                                classNameButton="float-right"
+                                onClick={this.downloadDoc}
+                                labelText={t('common.download_all_files')}/>}
                         <Cell>
-                            <div className="">
-                                {docs}
-                            </div>
+                            {docs}
                         </Cell>
                     </GridX>
                 </div>
