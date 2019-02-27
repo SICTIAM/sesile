@@ -653,7 +653,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         foreach ($request->files->all() as $file) {
 
             $name = $file->getClientOriginalName();
-            $movedfile = $file->move($this->get('kernel')->getRootDir() . '/../web/uploads/docs/', uniqid() . '.' . $file->getExtension());
+            $movedfile = $file->move($this->get('kernel')->getRootDir() . '/../web/uploads/docs/', uniqid() . '.' . $file->guessExtension());
 
 
             $document = new Document();
