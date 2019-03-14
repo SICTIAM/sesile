@@ -2,6 +2,7 @@
 namespace Sesile\ApiBundle\Controller;
 
 use Sesile\ClasseurBundle\Entity\Callback;
+use Sesile\ClasseurBundle\Entity\TypeClasseur;
 use Sesile\UserBundle\Entity\EtapeClasseur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -294,8 +295,21 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             return $this->handleView($view);
         }
 
-        $tip = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($request->request->get('type'));
-        $tabgroups_types = $tip->getGroupes();
+        $typeClasseur = new TypeClasseur();
+        // little hack for retro compatibilty with previous version and business applications
+        if($request->request->get('type') == 2) {
+            $typeClasseur =
+                $em
+                    ->getRepository('SesileClasseurBundle:TypeClasseur')
+                    ->findOneBy(array('collectivites' => $collectivity->getId(), 'nom' => "Helios"));
+        } else {
+            $typeClasseur =
+                $em
+                    ->getRepository('SesileClasseurBundle:TypeClasseur')
+                    ->findOneById($request->request->get('type'));
+        }
+
+        $tabgroups_types = $typeClasseur->getGroupes();
         $tabidG = array();
         foreach ($tabgroups_types as $objGroupe) {
             $tabidG[] = $objGroupe->getId();
@@ -305,21 +319,10 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
             return $this->handleView($view);
         }
 
-
-
         $name = $request->request->get('name');
-
-
-
         $validation = $request->request->get('validation');
 
-        $type= $request->request->get('type');
-
-
-
-
-
-        if (empty($name)|| empty($validation)||empty($type)||empty($request->request->get('groupe'))) {
+        if (empty($name)|| empty($validation) || empty($request->request->get('groupe'))) {
             $view = $this->view(array('code' => '400', 'message' => 'Paramètres manquants', "parametres_recus"=> $request->request ), 400);
             return $this->handleView($view);
         }
@@ -336,9 +339,7 @@ class ClasseurController extends FOSRestController implements TokenAuthenticated
         $valid = new \DateTime($m . "/" . $d . "/" . $a);
         $classeur->setValidation($valid);
 
-
-        $type = $em->getRepository('SesileClasseurBundle:TypeClasseur')->findOneById($type);
-        $classeur->setType($type);
+        $classeur->setType($typeClasseur);
 
 
         $classeur->setUser($user);

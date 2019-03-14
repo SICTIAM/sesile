@@ -236,4 +236,63 @@ class ClasseurControllerTest extends SesileWebTestCase
         self::assertEquals($this->fixtures->getReference(TypeClasseurFixtures::CLASSEUR_TYPE_TWO_REFERENCE)->getId(), $response[1]['id']);
     }
 
+    public function testNewActionHeliosTypeIdRetroCompatibility()
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+
+        $user = $this->fixtures->getReference('user-one');
+        $collectivite = $this->fixtures->getReference('collectivite-one');
+
+        $type = TypeClasseurFixtures::aValidClasseurType('Helios', $collectivite);
+        $em->persist($type);
+
+        $etape = CircuitValidationFixtures::aValidEtapeGroupe(0, [$user]);
+        $em->persist($etape);
+
+        $circuitDeValidation = CircuitValidationFixtures::aValidCircuitDeValidation(
+            'circuit helios',
+            $collectivite,
+            [$type],
+            [$etape]
+        );
+        $em->persist($circuitDeValidation);
+
+
+        $em->flush();
+        $data = [
+            'name' => 'name',
+            'desc' => 'description',
+            'validation' => '11/08/2018',
+            'type' => 2,
+            'groupe' => $circuitDeValidation->getId(),
+            'visibilite' => 0,
+            'siren' => $collectivite->getSiren()
+//            'email' => $user->getEmail()
+        ];
+        $this->client->request(
+            'POST',
+            sprintf('/api/classeur/'),
+            array(),
+            array(),
+            array(
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_token' => $user->getApitoken(),
+                'HTTP_secret' => $user->getApisecret()
+            ),
+            json_encode($data)
+        );
+        $this->assertStatusCode(200, $this->client);
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+        /**
+         * check database data
+         */
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager->clear();
+
+        $classeur = $entityManager->getRepository(Classeur::class)->find($responseData['id']);
+        self::assertInstanceOf(Classeur::class, $classeur);
+        self::assertEquals($collectivite->getId(), $classeur->getCollectivite()->getId());
+        self::assertEquals($user->getId(), $classeur->getUser()->getId());
+    }
+
 }
