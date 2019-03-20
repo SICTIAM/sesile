@@ -207,6 +207,10 @@ services:
         tags:
             -  { name: console.command }
         arguments: ["@monolog.logger.request","@doctrine.orm.entity_manager" , '@service_container', '@mailer']
+    sesile.command.update_classeur_type_of_group:
+        class: Sesile\UserBundle\Command\UpdateClasseurTypeOfGroup
+        tags:
+            -  { name: console.command }
     Sesile\ClasseurBundle\Service\ActionMailer:
         autowire: true
         autoconfigure: true
