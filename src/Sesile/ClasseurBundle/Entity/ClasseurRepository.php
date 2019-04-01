@@ -624,7 +624,7 @@ class ClasseurRepository extends EntityRepository {
     public function validerClasseur (Classeur $classeur, User $user) {
 
         foreach ($classeur->getEtapeClasseurs() as $etape) {
-            if ($etape->getEtapeValidante()) {
+            if ($etape->getEtapeValidante() && $this->userIsInValidatingStep($etape, $user->getId())) {
                 $etape->setEtapeValide(1);
                 $etape->setEtapeValidante(0);
                 $etape->setUserValidant($user);
