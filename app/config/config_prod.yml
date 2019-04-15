@@ -1,35 +1,7 @@
 imports:
     - { resource: config.yml }
 
-hwi_oauth:
-    firewall_names: [secured_area]
-    use_referer: true
-    resource_owners:
-        ozwillo:
-            type:                ozwillo
-            client_id:           '%ozwillo_client_id%'
-            client_secret:       '%ozwillo_client_secret%'
-            access_token_url:    '%ozwillo_access_token_url%'
-            authorization_url:   '%ozwillo_authorization_url%'
-            infos_url:           '%ozwillo_infos_url%'
-
 parameters:
-#    domain: sesile.fr
-#    database_driver: pdo_mysql
-#    database_host: 127.0.0.1
-#    database_port: null
-#    database_name: sesileprod
-#    database_user: root
-#    database_password: ***REMOVED***
-    secret: ***REMOVED***
-    domain_parse:
-        default: sesile
-        dbname: sictiam
-    ovh:
-        environnement: ""
-        zone: sesile.fr
-        target: sesile.fr.
-    email_sender_address: sictiam@sesile.fr
     url_applet: '%signature_url_applet%'
     upload:
         path: '%kernel.root_dir%/../web/uploads/avatars/'
@@ -37,10 +9,6 @@ parameters:
         logo_coll: '%kernel.root_dir%/../web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'
-    ovh_credential:
-        application: ***REMOVED***
-        secret: ***REMOVED***
-        consumer_key: ***REMOVED***
 monolog:
     handlers:
         main:
@@ -57,6 +25,6 @@ monolog:
         logstash:
             type: gelf
             publisher:
-                hostname: ***REMOVED***
+                hostname: '%logstash_hostname%'
                 port: 12201
             formatter: monolog.formatter.gelf_message

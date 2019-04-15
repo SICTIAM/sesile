@@ -25,10 +25,7 @@ Debug::enable();
 require_once __DIR__ . '/../app/AppKernel.php';
 
 $kernel = new AppKernel('dev', true);
-Request::setTrustedProxies(
-    ['***REMOVED***', '***REMOVED***'],
-    Request::HEADER_FORWARDED
-);
+
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

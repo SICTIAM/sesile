@@ -30,8 +30,6 @@ class AppKernel extends Kernel
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Sesile\ClasseurBundle\SesileClasseurBundle(),
             new Sesile\DocumentBundle\SesileDocumentBundle(),
-            new Sesile\CircuitBundle\SesileCircuitBundle(),
-            new Sesile\DelegationsBundle\SesileDelegationsBundle(),
             new Sesile\ApiBundle\SesileApiBundle(),
             new Sesile\MigrationBundle\SesileMigrationBundle(),
         );

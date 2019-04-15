@@ -40,4 +40,3 @@ swiftmailer:
     disable_delivery: true
 parameters:
     domain: '%sesile_domain%'
-    secret: ***REMOVED***

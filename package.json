@@ -1,8 +1,8 @@
 {
-  "name": "sesile",
+  "name": "sesile-front",
   "version": "4.0.0-dev",
   "main": "build/app.js",
-  "repository": "ssh://git@forge.sictiam.fr:6666/internet/sesile.git",
+  "repository": "https://github.com/SICTIAM/sesile",
   "author": "ali boulajine <abdelaliboulajine@gmail.com>",
   "license": "null",
   "devDependencies": {

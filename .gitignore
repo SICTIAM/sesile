@@ -69,3 +69,7 @@ app/SymfonyRequirements\.php
 /docker-symfony/logs
 /docker-symfony/.data*
 /docker-symfony/.env
+
+# Composer authentication
+
+auth.json

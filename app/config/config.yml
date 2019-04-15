@@ -16,7 +16,6 @@ framework:
         engines: ['twig']
         #assets_version: SomeVersionScheme
     default_locale:  fr
-    session:         ~
     fragments:       ~
     http_method_override: true
     session:
@@ -25,20 +24,6 @@ framework:
       json_manifest_path: '%kernel.project_dir%/web/build/manifest.json'
     serializer:
       enabled: false
-# Twig Configuration
-twig:
-    debug:            '%kernel.debug%'
-    strict_variables: '%kernel.debug%'
-    globals:
-        upload_path: uploads/avatars/
-        upload_path_logo: uploads/logo_coll/
-        upload_path_docs: /uploads/docs/
-        upload_path_signatures: /uploads/signatures/
-        sesile_version: 3.5
-        id_video_yt: 'ms-YYoaU4PE'
-#        only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
-        only_office_url: '%only_office_url%'
-    exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 stof_doctrine_extensions:
     default_locale: fr
@@ -80,8 +65,11 @@ hwi_oauth:
     resource_owners:
         ozwillo:
             type:                ozwillo
-            client_id:           2e771747-f906-4125-ba96-806553bc2ce2
-            client_secret:       ***REMOVED***
+            client_id:           '%ozwillo_client_id%'
+            client_secret:       '%ozwillo_client_secret%'
+            access_token_url:    '%ozwillo_access_token_url%'
+            authorization_url:   '%ozwillo_authorization_url%'
+            infos_url:           '%ozwillo_infos_url%'
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -106,7 +94,7 @@ parameters:
     domain: '%sesile_domain%'
     informations:
         version: 4.0-sprint11
-        contact_link: http://support.sictiam.fr/declarer-un-incident/
+        contact_link: '%contact_link%'
         id_yt_video: '%id_yt_video%'
     upload:
         path: '%kernel.project_dir%/web/uploads/avatars/'
@@ -114,17 +102,8 @@ parameters:
         logo_coll: '%kernel.project_dir%/web/uploads/logo_coll/'
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         signatures: '%kernel.root_dir%/../web/uploads/signatures/'
-    build:
-        repository: "git@gitlab.sictiam.fr:sesile/sesile.git"
-        branch: master
-        commit: 994e6f7902355e6bf62dde14804e0bd9863d5662
-        buildnumber: 0
     majorversion: 4
     url_applet: '%signature_url_applet%'
-    ovh_credential:
-        application: ***REMOVED***
-        secret: ***REMOVED***
-        consumer_key: ***REMOVED***
     hwi_oauth.authentication.provider.oauth.class: Sesile\UserBundle\Security\OAuthProvider
     contact: '%contact_email%'
 # La suite, c'est pour l'api
