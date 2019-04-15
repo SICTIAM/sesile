@@ -12,6 +12,7 @@ import History from '../_utils/History'
 import { Intervenants, StatusLabel } from '../_utils/Classeur'
 
 import ClasseurPagination from '../classeur/ClasseurPagination'
+import Debounce from "debounce"
 
 class UserListClasseurs extends Component {
 
@@ -41,32 +42,35 @@ class UserListClasseurs extends Component {
 
     changeLimit = (name, value) => {
         this.setState({limit: parseInt(value)})
-        this.listClasseurs(this.state.sort, this.state.order, value, this.state.start, this.props.match.params.userId)
+        this.listClasseurs(this.state.sort, this.state.order, value, this.state.start, this.props.match.params.userId, this.state.valueSearchByTitle)
     }
 
     changePage = (start) => {
         const newStart = (start * this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.props.match.params.userId)
+        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.props.match.params.userId, this.state.valueSearchByTitle)
     }
 
     changePreviousPage = () => {
         const newStart = (this.state.start - this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.props.match.params.userId)
+        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.props.match.params.userId, this.state.valueSearchByTitle)
     }
 
     changeNextPage = () => {
         const newStart = (this.state.start + this.state.limit)
-        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.props.match.params.userId)
+        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, newStart, this.props.match.params.userId, this.state.valueSearchByTitle)
     }
 
-    listClasseurs = (sort, order, limit, start, userId) => {
+    listClasseurs = Debounce((sort, order, limit, start, userId, name) => {
         const { t, _addNotification } = this.context
+        if (name === "" || name === undefined) name = "null"
+        const type = "null"
+        const status = "null"
         this.setState({message: t('common.loading')})
         fetch(
             Routing.generate(
-                'sesile_classeur_classeurapi_list',
-                {orgId: this.props.match.params.collectiviteId, sort, order, limit, start, userId}),
-            { credentials: 'same-origin' })
+                'sesile_classeur_classeurapi_listsorted',
+                {orgId: this.props.match.params.collectiviteId, sort, order, limit, start, userId, name, type, status}),
+            {credentials: 'same-origin'})
             .then(handleErrors)
             .then(response => response.json())
             .then(json => {
@@ -89,14 +93,12 @@ class UserListClasseurs extends Component {
                     t('admin.error.not_extractable_list', {name: t('common.classeurs.name'), errorCode: error.status}),
                     error.statusText))
             })
-    }
+    }, 500)
 
     handleSearchByClasseurTitle = (e) => {
         const { value } = e.target
         this.setState({valueSearchByTitle: value})
-        const regex = escapedValue(value, this.state.filteredClasseurs, this.state.groups)
-        const filteredClasseurs = this.state.classeurs.filter(classeur => regex.test(classeur.nom))
-        this.setState({filteredClasseurs})
+        this.listClasseurs(this.state.sort, this.state.order, this.state.limit, this.state.start, this.props.match.params.userId, value)
     }
 
     render(){
