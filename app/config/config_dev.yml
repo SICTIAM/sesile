@@ -32,19 +32,6 @@ monolog:
 assetic:
     use_controller: true
 
-hwi_oauth:
-    # list of names of the firewalls in which this bundle is active, this setting MUST be set
-    firewall_names: [secured_area]
-    use_referer: true
-    resource_owners:
-        ozwillo:
-            type:                ozwillo
-            client_id:           '%ozwillo_client_id%'
-            client_secret:       '%ozwillo_client_secret%'
-            access_token_url:    '%ozwillo_access_token_url%'
-            authorization_url:   '%ozwillo_authorization_url%'
-            infos_url:           '%ozwillo_infos_url%'
-
 parameters:
     domain: '%sesile_domain%'
     upload:
@@ -54,11 +41,6 @@ parameters:
         msg_acc: '%kernel.root_dir%/../web/uploads/documents/msg_accueil.txt'
         fics: '%kernel.project_dir%/web/uploads/docs/'
     url_applet: '%signature_url_applet%'
-    ovh:
-        environnement: demo.sesile
-        zone: sictiam.fr
-        target: dmzproxy.sictiam.fr.
-    email_sender_address: sictiam@sesile.fr
 
 # Twig Configuration
 twig:

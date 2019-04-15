@@ -17,10 +17,7 @@ require_once __DIR__ . '/../app/AppKernel.php';
 //require_once __DIR__.'/../app/AppCache.php';
 
 $kernel = new AppKernel('prod', false);
-Request::setTrustedProxies(
-    ['***REMOVED***', '***REMOVED***'],
-    Request::HEADER_FORWARDED
-);
+
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

@@ -3,30 +3,33 @@ parameters:
     database_driver: pdo_mysql
     database_host: db
     database_port: 3306
-    database_name: sesile-react
+    database_name: sesile
     database_user: root
-    database_password: sictiam
+    database_password: mdp
     mailer_transport: smtp
-    mailer_host: ***REMOVED***
+    mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
     locale: fr
     sesile_domain: sesile-dev.local
-    secret: ***REMOVED***
-    ozwillo_domain: 'ozwillo-preprod.eu'
+    secret: changeme
+    ozwillo_domain: 'services.sictiam.fr'
     ozwillo_user_gateway_uri: 'https://usersgw.%ozwillo_domain%/api/usersgw'
-    ozwillo_user_gateway_username: admin
-    ozwillo_user_gateway_password: ***REMOVED***
+    ozwillo_user_gateway_username: username
+    ozwillo_user_gateway_password: mdp
     ozwillo_access_token_url: 'https://accounts.%ozwillo_domain%/a/token'
     ozwillo_authorization_url: 'https://accounts.%ozwillo_domain%/a/auth'
     ozwillo_acl_instance_url: 'https://kernel.%ozwillo_domain%/apps/acl/instance'
     ozwillo_infos_url: 'https://accounts.%ozwillo_domain%/a/userinfo'
     ozwillo_logout_url: 'https://accounts.%ozwillo_domain%/a/logout'
-    ozwillo_client_id: 2e771747-f906-4125-ba96-806553bc2ce2
-    ozwillo_client_secret: ***REMOVED***
-    contact_email: demat@sictiam.fr
-    ozwillo_secret: ***REMOVED***
+    ozwillo_client_id: uuid-client
+    ozwillo_client_secret: changeme
+    contact_email: contact@support.fr
+    ozwillo_secret: changeme
     only_office_url: 'https://office.sictiam.fr/web-apps/apps/api/documents/api.js'
-    signature_url_applet: 'https://signature.dev.sesile.fr'
+    signature_url_applet: 'https://applet.signature.fr'
     id_yt_video: 'C72d6DJBkgw'
     ozwillo_portal: 'https://portal.ozwillo-preprod.eu'
+    contact_link: http://support.fr/incident/
+    logstash_hostname: 127.0.0.1
+    email_sender_address: demat@sictiam.fr
