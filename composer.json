@@ -71,10 +71,7 @@
     },
     "config": {
         "bin-dir": "bin",
-        "component-dir": "web/components",
-        "github-oauth": {
-            "github.com": "d08abfeb7f2e6f4565cb93c1fc459080f3747cfe"
-        }
+        "component-dir": "web/components"
     },
     "prefer-stable": true,
     "extra": {

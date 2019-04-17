@@ -1,8 +1,11 @@
 {
-  "http-basic": {
-    "www.setasign.com": {
-      "username": "username@gmail.com",
-      "password": "mdp"
+    "http-basic": {
+        "www.setasign.com": {
+            "username": "username@gmail.com",
+            "password": "mdp"
+        }
+    },
+    "github-oauth": {
+        "github.com": "OAuth-token"
     }
-  }
 }
